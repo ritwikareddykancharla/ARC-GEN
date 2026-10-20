@@ -2111,4 +2111,36 @@ class GeneratorTests(unittest.TestCase):
                         self.assertEqual(bool(same-reached),decoy)
                         self.assertEqual(p['output'],grid(call(solver('9ba4a9aa'),p['input'])))
 
+    def test_chiral_reflection_excludes_copy_and_halfturn_shortcuts(self):
+        m=importlib.import_module('tasks.task_9bebae7a')
+        largest=0
+        for kind in ('T','cross'):
+            for arm,(dy,dx) in {'down':(0,1),'up':(0,-1),'left':(1,0),'right':(-1,0)}.items():
+                for seed in range(10):
+                    random.seed(80000+seed)
+                    p=m.generate(height=30,width=30,kind=kind,arm=arm)
+                    fig={(y,x) for y,row in enumerate(p['input']) for x,c in enumerate(row) if c==4}
+                    ys,xs=zip(*fig);t,b,l,r=min(ys),max(ys),min(xs),max(xs)
+                    fh,fw=b-t+1,r-l+1;largest=max(largest,fh,fw)
+                    added={(y,x) for y,row in enumerate(p['output']) for x,c in enumerate(row) if c==4}-fig
+                    copied={(y+dy*fh,x+dx*fw) for y,x in fig}
+                    halfturn={(t+b-y+dy*fh,l+r-x+dx*fw) for y,x in fig}
+                    self.assertNotEqual(added,copied);self.assertNotEqual(added,halfturn)
+                    self.assertEqual(p['output'],grid(call(solver('9bebae7a'),p['input'])))
+        self.assertGreater(largest,8)
+
+    def test_chiral_reflection_rejects_bad_controls_and_preserves_explicit_scope(self):
+        m=importlib.import_module('tasks.task_9bebae7a')
+        for kw in ({'arm':['up']},{'arm':{}},{'kind':[]},{'fig_top':-1},
+                   {'marker_left':30},{'height':6,'fig_top':6},{'pattern':['1','11']}):
+            with self.assertRaises(ValueError):m.generate(**kw)
+        random.seed(80000)
+        p=m.generate(pattern=['1101'],arm='down',height=8,width=12)
+        self.assertEqual(p['output'],grid(call(solver('9bebae7a'),p['input'])))
+        for h,w in ((6,6),(6,30),(30,6)):
+            random.seed(80000)
+            p=m.generate(height=h,width=w)
+            self.assertEqual((len(p['input']),len(p['input'][0])),(h,w))
+            self.assertEqual(p['output'],grid(call(solver('9bebae7a'),p['input'])))
+
 if __name__=='__main__':unittest.main()

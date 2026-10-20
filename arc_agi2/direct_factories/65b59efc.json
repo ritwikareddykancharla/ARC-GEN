@@ -1,0 +1,16 @@
+{
+  "task_id": "65b59efc",
+  "factory_sha256": "4f9dbb2c8bfde0f96c4337329374200a655873524c0e5be96980875b11f209e4",
+  "constructor_sha256": "a9975dcb8d672978349083515084e86cd5e790d23a3a31786bb19e8699859b9f",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 230659904806208,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 8.05797900003381,
+  "provenance": "Opus 5.5 subscription CLI draft; host source review and execution audit",
+  "limitations": "This has not been executed. It assumes the constructor's domain:\n- k is between 3 and 5.\n- The motif-edge line (canonical row 0) never has an erased dash, so k is read from the first separator pixel there.\n- Grey does not appear inside cells.\n- The bottom paint strip holds only paint colours, background, and possibly separators.\n- The palette maps colours bijectively.\n\nIf no separator is found, it returns the input unchanged as a fallback. Position maps are disjoint in the generator, so stamping order never matters. If they overlapped, later middle columns would overwrite earlier ones, matching the archived solver. I found no contradictions between the fixtures and the rule."
+}

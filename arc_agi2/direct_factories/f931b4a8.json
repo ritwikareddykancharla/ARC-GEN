@@ -1,0 +1,16 @@
+{
+  "task_id": "f931b4a8",
+  "factory_sha256": "8de848237a3cc8a81f1d799f998ffb0556b26dff0397a2e4ff9a850ba97c6a31",
+  "constructor_sha256": "81e2330ae828b40b7be1554528aac5652963831e51030101e4c43788384f2a5d",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 34740125697823,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 4.587594875018112,
+  "provenance": "Opus 5.5 subscription CLI draft; host source review and execution audit",
+  "limitations": "This assumes the generator's domain: an even-sided square input split into equal quadrants, at least one non-background cell in each count quadrant, and a fill quadrant with no background colour. Odd or non-square inputs are handled by splitting at floor(R/2) and floor(C/2), but the generator never produces them. Demonstrations are not used, because the roles follow fully from d4 and palette. No fixture contradicts the uniform rule. I have not run any tests."
+}

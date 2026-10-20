@@ -1,6 +1,6 @@
 # /// script
 # requires-python = ">=3.12"
-# dependencies = ["numpy>=2,<3", "pyarrow>=19,<26", "huggingface-hub>=1,<2"]
+# dependencies = ["numpy>=2,<3", "pyarrow>=19,<26", "huggingface-hub>=1,<2", "Pillow>=11,<13"]
 # ///
 """Two-stage adaptive episode builder. Run as python -m arc_agi2.build_million.
 
@@ -25,7 +25,8 @@ from .audit import relation,UPSTREAM_IDS
 from .augmentation import transformed, exhaustive_variants
 from .contextual import CONTEXTUAL_TASK_IDS, verify_shared_picture_episode
 from .motif_context import MissingMotifEvidence, solve_demonstrated_motifs
-from .program_targets import compile_target, audit_target
+from .program_targets import compile_target, audit_target, make_record, TargetError
+from .visual_shards import VisualShardWriter
 
 LEGEND_TASK_IDS = frozenset(('27a28665', '9110e3c5', 'd4469b4b'))
 
@@ -40,7 +41,12 @@ def legend_solver(tid):
 POLICY=json.loads((BASE/'training_policy.json').read_text())
 
 SEED=20261021
-REPO='ritwika96/arc-agi2-arcgen-1m-episodes'
+# Library callers retain the legacy grid-pool API; the CLI defaults to the
+# combined PNG dataset below. Production jobs must use the CLI.
+OUTPUT_FORMAT=os.environ.get('ARCGEN_OUTPUT_FORMAT','legacy-grid-parquet')
+if OUTPUT_FORMAT not in ('program-grid-png','legacy-grid-parquet'):
+    raise ValueError('Unsupported output format')
+REPO=os.environ.get('ARCGEN_DATASET_REPO', 'ritwika96/arc-agi2-program-grid-sft' if OUTPUT_FORMAT=='program-grid-png' else 'ritwika96/arc-agi2-arcgen-1m-episodes')
 OUT=Path(os.environ.get('ARCGEN_BUILD_ROOT','/tmp/arcgen-million'))
 WORKERS=int(os.environ.get('ARCGEN_WORKERS','32'))
 POOL_SIZE=int(os.environ.get('ARCGEN_POOL_SIZE','1200'))
@@ -106,7 +112,7 @@ def picture_episode(module, tid, sample_seed):
 
 def pool_signature(tid,configs):
     # Invalidate cached pools after constructor, verifier, policy or selection changes.
-    files=[Path(__file__),BASE/'runtime.py',BASE/'verified_rules.py',BASE/'contextual.py',BASE/'motif_context.py',BASE/'program_targets.py',BASE/'direct_programs.py',BASE/'fixture_policy.py',BASE/'helpers.py',BASE/'training_policy.json',
+    files=[Path(__file__),BASE/'runtime.py',BASE/'verified_rules.py',BASE/'joint_fragments.py',BASE/'contextual.py',BASE/'motif_context.py',BASE/'program_targets.py',BASE/'direct_programs.py',BASE/'fixture_policy.py',BASE/'helpers.py',BASE/'training_policy.json',
            BASE/'references'/f'{tid}.json',BASE.parent/'common.py',BASE/'task_registry.py']
     files+=sorted((BASE/'generators').glob('*.py'))
     native=BASE.parent/'tasks'/f'task_{tid}.py'
@@ -212,10 +218,15 @@ def make_episodes(arg):
         hist={which:{axis:Counter() for axis in ['height','width','longest','shapes']} for which in ['input','output']};relations=Counter()
         path=OUT/'data'/split/f'{tid}.parquet';path.parent.mkdir(parents=True,exist_ok=True)
         temporary=path.with_suffix('.parquet.tmp');writer=None;buffer=[]
+        if OUTPUT_FORMAT == 'program-grid-png':
+            writer=VisualShardWriter(OUT/'shards'/split,tid)
         fresh_count=0;variant_count=0;symmetric_duplicates=0;variant_counts=Counter()
         def flush():
             nonlocal writer
             if not buffer:return
+            if OUTPUT_FORMAT == 'program-grid-png':
+                for record in buffer:writer.write(record)
+                buffer.clear();return
             table=pa.Table.from_pylist(buffer)
             if writer is None:writer=pq.ParquetWriter(temporary,table.schema,compression='zstd')
             writer.write_table(table);buffer.clear()
@@ -268,6 +279,7 @@ def make_episodes(arg):
                         if cfg['colour_permutation_default'] or tid in cfg['colour_permutation_task_ids']:rng.shuffle(palette)
                         variants=exhaustive_variants(four,palette)
                         base_id=f'arcgen-{tid}-{split}-base-{fresh_count:05d}'
+                        pending=[]
                         for variant in variants:
                             d4=variant['d4_transform'];transformed_pairs=variant['pairs']
                             train=transformed_pairs[:3];query=transformed_pairs[-1]
@@ -293,6 +305,19 @@ def make_episodes(arg):
                               'query_output_height':len(query['output']),'query_output_width':len(query['output'][0]),
                               'query_relation':relation(query),'source_commit':os.environ.get('ARCGEN_SOURCE_COMMIT','local')}
                             assert json.loads(row['completion'])=={'outputs':row['solutions']}
+                            if OUTPUT_FORMAT == 'program-grid-png':
+                                try:
+                                    row.update(make_record(row,source_repo='ritwikareddykancharla/ARC-GEN',source_revision=row['source_commit']))
+                                except (TargetError,ValueError,TypeError,IndexError,TimeoutError) as exc:
+                                    failures['program_verification_rejected']+=1
+                                    # Keep the failing episode for repair; do not accept
+                                    # only the easy orientations of a fresh episode.
+                                    dump(OUT/'rejections'/split/f'{tid}.json',{'task_id':tid,'error':str(exc),'episode':row})
+                                    pending=[];break
+                            pending.append(row)
+                        if not pending:continue
+                        for row in pending:
+                            query={'input':row['test'][0]['input'],'output':row['solutions'][0]}
                             buffer.append(row);variant_count+=1
                             if len(buffer)>=64:flush()
                             for which in hist:
@@ -304,13 +329,19 @@ def make_episodes(arg):
                         accepted=True;break
                     if not accepted:failures['episode_constraints_exhausted']+=1
             flush()
+        except BaseException:
+            if OUTPUT_FORMAT == 'program-grid-png':writer.abort()
+            raise
         finally:
             if writer is not None:writer.close()
-        if variant_count:
+        if OUTPUT_FORMAT == 'program-grid-png':
+            assert writer.records==variant_count
+        elif variant_count:
             assert pq.read_metadata(temporary).num_rows==variant_count
             temporary.replace(path)
         elif path.exists():path.unlink()  # Never republish a stale nonempty shard.
-        result[split]={'episodes':variant_count,'fresh_episodes':fresh_count,
+        result[split]={'files':[str(p.relative_to(OUT)) for p in writer.paths] if OUTPUT_FORMAT=='program-grid-png' else ([str(path.relative_to(OUT))] if variant_count else []),
+            'shards':writer.manifest if OUTPUT_FORMAT=='program-grid-png' else [],'episodes':variant_count,'fresh_episodes':fresh_count,
             'requested_fresh_episodes':sum(quota.values()),'spatial_variant_upper_bound':8*fresh_count,
             'symmetric_variants_removed':symmetric_duplicates,'variants_per_fresh_episode':dict(variant_counts),
             'query_histograms':hist,'relations':dict(relations),'failures':dict(failures),
@@ -319,6 +350,9 @@ def make_episodes(arg):
     report={'task_id':tid,'splits':result};dump(OUT/'episode_reports'/f'{tid}.json',report);return report
 
 def card(m):
+    if OUTPUT_FORMAT == 'program-grid-png':
+        from .visual_card import card as visual_card
+        return visual_card(m)
     n=m.get('train_episodes',0);v=m.get('validation_episodes',0)
     fresh=m.get('train_fresh_episodes',0)
     return f'''---
@@ -401,8 +435,25 @@ def require_build_ready(inv):
     if pending:
         raise RuntimeError(f'{len(pending)} families still need reviewed standalone task files before bulk generation.')
 
+def require_program_ready(task_ids):
+    missing=[]
+    for tid in task_ids:
+        try:
+            for d4 in range(8):
+                compile_target(tid,d4,[3,9,0,7,2,8,1,6,4,5])
+        except TargetError:
+            missing.append(tid)
+    if missing:
+        raise RuntimeError(f"{len(missing)} families lack verified direct augmented programs; "
+                           f"no generation launched. First missing: {', '.join(missing[:12])}")
+
 def main():
-    ap=argparse.ArgumentParser();ap.add_argument('--local',action='store_true');ap.add_argument('--tasks',nargs='*');ap.add_argument('--resume',action='store_true');args=ap.parse_args()
+    global OUTPUT_FORMAT, REPO
+    ap=argparse.ArgumentParser();ap.add_argument('--local',action='store_true');ap.add_argument('--tasks',nargs='*');ap.add_argument('--resume',action='store_true');ap.add_argument('--format',choices=['program-grid-png','legacy-grid-parquet'],default=os.environ.get('ARCGEN_OUTPUT_FORMAT','program-grid-png'));args=ap.parse_args()
+    OUTPUT_FORMAT=args.format
+    # Spawned workers import this module afresh; propagate the selected format.
+    os.environ["ARCGEN_OUTPUT_FORMAT"]=OUTPUT_FORMAT
+    REPO=os.environ.get('ARCGEN_DATASET_REPO','ritwika96/arc-agi2-program-grid-sft' if OUTPUT_FORMAT=='program-grid-png' else 'ritwika96/arc-agi2-arcgen-1m-episodes')
     for d in ['pools','pool_reports','episode_reports','data/train','data/validation']: (OUT/d).mkdir(parents=True,exist_ok=True)
     inv=json.loads((BASE/'reports/inventory.json').read_text());pv=json.loads((BASE/'reports/parameter-validation.json').read_text())
     eligible=eligible_tasks(inv)
@@ -410,6 +461,8 @@ def main():
         require_build_ready(inv)
     if args.tasks:
         assert set(args.tasks)<=set(eligible);eligible=args.tasks
+    if OUTPUT_FORMAT == 'program-grid-png':
+        require_program_ready(eligible)
     api=None if args.local else HfApi()
     if api:
         assert api.whoami()['name']=='ritwika96'
@@ -424,12 +477,14 @@ def main():
        'completed_pools':0,'train_episodes':0,'validation_episodes':0,
        'train_fresh_episodes':0,'validation_fresh_episodes':0,
        'train_symmetric_variants_removed':0,'validation_symmetric_variants_removed':0,
-       'errors':[],'model_training_launched':False}
+       'errors':[],'model_training_launched':False,'output_format':OUTPUT_FORMAT,'episode_files':{'train':[],'validation':[]}}
     assert not set(eligible)&set(m['excluded_task_ids'])
     def publish(files=()):
         dump(OUT/'manifest.json',m);(OUT/'README.md').write_text(card(m))
         if api:
-            ops=[CommitOperationAdd(path_in_repo=f,path_or_fileobj=str(OUT/f)) for f in ['manifest.json','README.md',*files] if (OUT/f).exists()]
+            # Keep the working viewer/card until a complete visual shard exists.
+            card_files=['README.md'] if OUTPUT_FORMAT!='program-grid-png' or m['train_episodes'] else []
+            ops=[CommitOperationAdd(path_in_repo=f,path_or_fileobj=str(OUT/f)) for f in ['manifest.json',*card_files,*files] if (OUT/f).exists()]
             for retry in range(5):
                 try:api.create_commit(REPO,repo_type='dataset',operations=ops,commit_message=f"{m['status']}: {m['train_episodes']:,} training episodes");break
                 except Exception:
@@ -470,7 +525,8 @@ def main():
                     m[split+'_episodes']+=x['episodes']
                     m[split+'_fresh_episodes']+=x['fresh_episodes']
                     m[split+'_symmetric_variants_removed']+=x['symmetric_variants_removed']
-                    if x['episodes']:files.append(f'data/{split}/{tid}.parquet')
+                    if x['episodes']:
+                        files.extend(x['files']);m['episode_files'][split].extend(x['files'])
             except Exception as e:m['errors'].append({'task_id':tid,'stage':'episodes','error':repr(e)})
             print(compact({'stage':'episodes','task_id':tid,'train':m['train_episodes'],'validation':m['validation_episodes']}),flush=True)
             if len(files)>=24 or time.monotonic()-last>60:publish(files);files=[];last=time.monotonic()

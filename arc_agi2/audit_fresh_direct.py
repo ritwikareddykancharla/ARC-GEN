@@ -36,27 +36,42 @@ def check(args):
         if all(old.get(k)==v for k,v in signature.items()):
             return old
     report = dict(task_id=tid, **signature, passed=False, basis=basis,
-        fresh_pairs_checked=0, augmented_pair_checks=0)
+        fresh_pairs_checked=0, augmented_pair_checks=0, sampler_rejections=[])
     seen = set(); start = time.monotonic()
+    stage = "sampling"
+    ep = None
     try:
-        for episode_index in range((requested+3)//4):
+        for episode_index in range(requested * 2):
+            ep = None
+            stage = "sampling"
             if time.monotonic()-start > 300:
                 raise TimeoutError("Family audit exceeded five minutes; incomplete, not accepted")
             seed = int(hashlib.sha256(f"fresh-direct:{tid}:{episode_index}".encode()).hexdigest()[:12],16)
             random.seed(seed)
             report["last_seed"] = seed
-            if hasattr(module, "generate_episode"):
-                scene = call(module.generate_episode, seconds=5)
-                pairs = scene["train"] + scene["test"]
-                demos = scene["train"]
-                queries = scene["test"]
-            else:
-                pairs = [call(module.generate, seconds=5) for _ in range(4)]
-                demos, queries = pairs[:3], pairs[3:]
+            try:
+                if hasattr(module, "generate_episode"):
+                    scene = call(module.generate_episode, seconds=5)
+                    pairs = scene["train"] + scene["test"]
+                    demos = scene["train"]
+                    queries = scene["test"]
+                else:
+                    pairs = [call(module.generate, seconds=5) for _ in range(4)]
+                    demos, queries = pairs[:3], pairs[3:]
+                if not demos or not queries:
+                    raise ValueError("Episode needs demonstrations and a query")
+                for pair in pairs:
+                    grid(pair["input"]); grid(pair["output"])
+            except Exception as exc:
+                report["sampler_rejections"].append(
+                    {"seed": seed, "error": type(exc).__name__ + ": " + str(exc)[:200]})
+                if len(report["sampler_rejections"]) > 50:
+                    raise RuntimeError("Sampler rejection budget exhausted") from exc
+                continue
             for pair in pairs:
-                grid(pair["input"]); grid(pair["output"])
                 seen.add(digest(json.dumps(pair["input"]).encode()))
             palette = list(range(10)); random.Random(seed+1).shuffle(palette)
+            stage = "program_verification"
             for d4 in range(8):
                 ep = dict(
                     train=[{k:transformed(p[k],d4,palette) for k in ("input","output")} for p in demos],
@@ -68,10 +83,13 @@ def check(args):
             report["fresh_pairs_checked"] += len(pairs)
             if report["fresh_pairs_checked"] >= requested:
                 break
+        if report["fresh_pairs_checked"] < requested:
+            raise RuntimeError("Insufficient fresh pairs; audit incomplete")
         report["passed"] = True
     except Exception as exc:
+        report["failure_stage"] = stage
         report["error"] = type(exc).__name__ + ": " + str(exc)[:600]
-        if "ep" in locals():
+        if ep is not None and stage == "program_verification":
             (root / f"{tid}-counterexample.json").write_text(json.dumps({
                 "seed":report["last_seed"],"d4":report.get("last_d4"),
                 "palette":palette,"episode":ep},separators=(",",":"))+"\n")
@@ -86,8 +104,13 @@ def main():
     parser.add_argument("--samples",type=int,default=1000)
     parser.add_argument("--candidates",type=Path,default=BASE/"reports/direct-candidate-audit.json")
     parser.add_argument("--output",type=Path,required=True)
+    parser.add_argument("--only", nargs="+")
     args=parser.parse_args();args.output.mkdir(parents=True,exist_ok=True)
     ids=[r["task_id"] for r in json.loads(args.candidates.read_text())["tasks"] if r["passed"]]
+    if args.only:
+        if not set(args.only) <= set(ids):
+            raise ValueError("Requested task did not pass the fixture screening")
+        ids=[tid for tid in ids if tid in args.only]
     results=[]
     with ProcessPoolExecutor(max_workers=args.workers) as pool:
         futures=[pool.submit(check,(tid,args.samples,str(args.output))) for tid in ids]

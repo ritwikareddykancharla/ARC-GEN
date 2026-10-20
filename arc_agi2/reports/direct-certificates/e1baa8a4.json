@@ -1,0 +1,25 @@
+{
+  "task_id": "e1baa8a4",
+  "program_sha256": "1ea8faba096be93707572504b493494bac9d59551b129392fe92ba4fda7a548d",
+  "constructor_sha256": "77dd2230c9a4540aace1815938f7a15b4e9f3b8ae3f5f1d2e2b405344984e689",
+  "samples_requested": 1000,
+  "auditor_sha256": "edd715c3518cbd19307ef82ac23978b67e49257a62cabbfa7d0c3d049bde7f50",
+  "passed": true,
+  "basis": "saved_teacher_transform",
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "sampler_rejections": [
+    {
+      "seed": 247340509191121,
+      "error": "TimeoutError: reference/generator deadline"
+    }
+  ],
+  "last_seed": 237161253801134,
+  "last_d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 95.44807241600938,
+  "certificate_version": 1,
+  "fixture_variants_checked": 16,
+  "fixture_basis": "canonical",
+  "requires_per_episode_verification": true
+}

@@ -1,0 +1,53 @@
+{
+  "task_id": "f21745ec",
+  "program_sha256": "0a4923b464525f96195a2ee8420f37802d95e0eb961611ccbb90bf284a45e05d",
+  "constructor_sha256": "1e7687d945d4e1173d8abaa97f2f3a60c685017e4998f8c313b7d6f9d2f00aa1",
+  "samples_requested": 1000,
+  "auditor_sha256": "edd715c3518cbd19307ef82ac23978b67e49257a62cabbfa7d0c3d049bde7f50",
+  "passed": true,
+  "basis": "saved_teacher_transform",
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "sampler_rejections": [
+    {
+      "seed": 219208017119816,
+      "error": "TimeoutError: reference/generator deadline"
+    },
+    {
+      "seed": 207760016368653,
+      "error": "TimeoutError: reference/generator deadline"
+    },
+    {
+      "seed": 244253033412375,
+      "error": "TimeoutError: reference/generator deadline"
+    },
+    {
+      "seed": 182158761733234,
+      "error": "TimeoutError: reference/generator deadline"
+    },
+    {
+      "seed": 128042480436589,
+      "error": "TimeoutError: reference/generator deadline"
+    },
+    {
+      "seed": 100863787576050,
+      "error": "TimeoutError: reference/generator deadline"
+    },
+    {
+      "seed": 40088572043597,
+      "error": "TimeoutError: reference/generator deadline"
+    },
+    {
+      "seed": 261797778700708,
+      "error": "TimeoutError: reference/generator deadline"
+    }
+  ],
+  "last_seed": 53233854757870,
+  "last_d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 155.07251091697253,
+  "certificate_version": 1,
+  "fixture_variants_checked": 16,
+  "fixture_basis": "canonical",
+  "requires_per_episode_verification": true
+}

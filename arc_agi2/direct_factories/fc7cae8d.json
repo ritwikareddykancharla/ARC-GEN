@@ -1,0 +1,16 @@
+{
+  "task_id": "fc7cae8d",
+  "factory_sha256": "6c0777a66665ef3e0d9f135110786954cb248c111ab4e672f966f3a021d67d53",
+  "constructor_sha256": "51538d0634ab67860d75ec6bc815374b999bd74341be0c83509f9ebae9875a41",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 163258879670768,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 10.63091266702395,
+  "provenance": "Opus 5.5 subscription CLI draft; host source review and execution audit",
+  "limitations": "- **Assumed domain.** The program assumes the constructor's domain: exactly one rectangle with two marker lines on adjacent sides, and no distractor objects.\n- **Border separation.** The rectangle and markers must be separated from all border-touching fringe and dot structures by at least one background cell, as the generator's margins guarantee. If a rectangle touched a border component, it would be discarded.\n- **Corrupted scenes.** If no transform satisfies both constraints, the one satisfying the most constraints is used, and the first in mirror/rotation order wins ties. If no inner object is found, the input grid is returned unchanged.\n- **Demonstrations unused.** They are not needed because the rule is fully determined by the query input."
+}

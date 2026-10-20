@@ -1,0 +1,16 @@
+{
+  "task_id": "142ca369",
+  "factory_sha256": "aa7b0d497ce9b325ca7199967d0205be7df9da2b0724edc80f83129a93f63a0a",
+  "constructor_sha256": "b3b82a68fd750e59fa20956c331a74c2345355e09196d13cf97f3e2f92794f05",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 73471469777355,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 8.88637766696047,
+  "provenance": "Opus 5.5 subscription CLI draft; host source review and execution audit",
+  "limitations": "- The generator excludes cells that touch more than one reflector, so the colour and order used for those cells follow the archived solver's neighbour order (up, down, left, right). That order is not D4-equivariant, but such cells never occur in the domain.\n- Ray paths never overlap, so the order in which emitters are processed has no effect.\n- The background is assumed to be exactly palette[0].\n- The parallel-emitter branch relies on adjacent L shapes having different colours, which the generator guarantees. Otherwise touching same-colour L shapes would merge into one non-L object.\n- No fixture contradicts the uniform rule.\n- This has not been tested."
+}

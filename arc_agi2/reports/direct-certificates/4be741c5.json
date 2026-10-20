@@ -1,0 +1,37 @@
+{
+  "task_id": "4be741c5",
+  "program_sha256": "8982347416f60cb865d205dc2a718a3fa3e7577a50fc774acff56e01aba02003",
+  "constructor_sha256": "531879dd76206f0556dd709de8e16b7fc9e479d60d5e2f39ac7561d3cb2ffe4c",
+  "samples_requested": 1000,
+  "auditor_sha256": "edd715c3518cbd19307ef82ac23978b67e49257a62cabbfa7d0c3d049bde7f50",
+  "passed": true,
+  "basis": "saved_teacher_transform",
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "sampler_rejections": [
+    {
+      "seed": 220370285117968,
+      "error": "ValueError: Invalid ARC grid"
+    },
+    {
+      "seed": 41830076826040,
+      "error": "ValueError: Invalid ARC grid"
+    },
+    {
+      "seed": 260490677937059,
+      "error": "ValueError: Invalid ARC grid"
+    },
+    {
+      "seed": 143792595135999,
+      "error": "ValueError: Invalid ARC grid"
+    }
+  ],
+  "last_seed": 144337834322121,
+  "last_d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 2.8115024579456076,
+  "certificate_version": 1,
+  "fixture_variants_checked": 16,
+  "fixture_basis": "canonical",
+  "requires_per_episode_verification": true
+}

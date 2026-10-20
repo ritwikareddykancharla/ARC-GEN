@@ -1,0 +1,29 @@
+{
+  "task_id": "7d1f7ee8",
+  "program_sha256": "52c426716c047023f71fb2f643164c59b6542ade24e7a3f5ff89f580fbe5f96b",
+  "constructor_sha256": "9867c2548da096bd9f3d9dd115a021ee70e36c9f00745e2537f2fad6e6065f0b",
+  "samples_requested": 1000,
+  "auditor_sha256": "edd715c3518cbd19307ef82ac23978b67e49257a62cabbfa7d0c3d049bde7f50",
+  "passed": true,
+  "basis": "saved_teacher_transform",
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "sampler_rejections": [
+    {
+      "seed": 124407493252043,
+      "error": "TimeoutError: reference/generator deadline"
+    },
+    {
+      "seed": 178177245853999,
+      "error": "TimeoutError: reference/generator deadline"
+    }
+  ],
+  "last_seed": 106568138402175,
+  "last_d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 102.87394850002602,
+  "certificate_version": 1,
+  "fixture_variants_checked": 16,
+  "fixture_basis": "canonical",
+  "requires_per_episode_verification": true
+}

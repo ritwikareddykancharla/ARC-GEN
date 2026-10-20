@@ -1,0 +1,69 @@
+{
+  "task_id": "1a2e2828",
+  "program_sha256": "dea565475c10bd596514dff3688eb00723089a6e1ee5b5ed19e7fd746d569fe5",
+  "constructor_sha256": "08c225512bd97578c8632a959280441543a9f8a37125f9c4b7e459edd6bbff57",
+  "samples_requested": 1000,
+  "auditor_sha256": "edd715c3518cbd19307ef82ac23978b67e49257a62cabbfa7d0c3d049bde7f50",
+  "passed": true,
+  "basis": "saved_teacher_transform",
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "sampler_rejections": [
+    {
+      "seed": 165968513623261,
+      "error": "TimeoutError: reference/generator deadline"
+    },
+    {
+      "seed": 180697250882901,
+      "error": "TimeoutError: reference/generator deadline"
+    },
+    {
+      "seed": 253228844028464,
+      "error": "TimeoutError: reference/generator deadline"
+    },
+    {
+      "seed": 155404213020880,
+      "error": "TimeoutError: reference/generator deadline"
+    },
+    {
+      "seed": 174280313137840,
+      "error": "TimeoutError: reference/generator deadline"
+    },
+    {
+      "seed": 131186150022049,
+      "error": "TimeoutError: reference/generator deadline"
+    },
+    {
+      "seed": 122188819856725,
+      "error": "TimeoutError: reference/generator deadline"
+    },
+    {
+      "seed": 228094889561232,
+      "error": "TimeoutError: reference/generator deadline"
+    },
+    {
+      "seed": 48809252706577,
+      "error": "TimeoutError: reference/generator deadline"
+    },
+    {
+      "seed": 39079390553936,
+      "error": "TimeoutError: reference/generator deadline"
+    },
+    {
+      "seed": 37749193841470,
+      "error": "TimeoutError: reference/generator deadline"
+    },
+    {
+      "seed": 87825060969624,
+      "error": "TimeoutError: reference/generator deadline"
+    }
+  ],
+  "last_seed": 277453687755238,
+  "last_d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 144.05717312498018,
+  "certificate_version": 1,
+  "fixture_variants_checked": 16,
+  "fixture_basis": "canonical",
+  "requires_per_episode_verification": true
+}

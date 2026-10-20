@@ -170,8 +170,14 @@ class MotifEvidenceTests(unittest.TestCase):
                 self.assertEqual(result['fresh_episodes'],1)
                 generated=b.pq.read_table(root/'data/train'/f'{tid}.parquet').to_pylist()
                 native=next(row for row in generated if row['d4_transform']==0)
-                self.assertEqual(solve_demonstrated_motifs(native['train'],native['test'][0]['input']),
-                                 native['solutions'][0])
+                # d4=0 fixes geometry, not the episode's colour permutation.
+                # This test calls the native verifier, not an SFT program.
+                inverse = {v:k for k,v in enumerate(native['color_permutation'])}
+                uncolour = lambda g:[[inverse[c] for c in row] for row in g]
+                demos = [{k:uncolour(p[k]) for k in ('input','output')}
+                         for p in native['train']]
+                self.assertEqual(solve_demonstrated_motifs(demos,uncolour(native['test'][0]['input'])),
+                                 uncolour(native['solutions'][0]))
                 self.assertNotIn('output',native['test'][0])
 
 

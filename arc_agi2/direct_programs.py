@@ -256,4 +256,5 @@ def solve(demonstrations, grid):
                 return self.generic_visit(node)
         tree=Colours().visit(ast.parse(source));ast.fix_missing_locations(tree)
         return ast.unparse(tree)+'\n'
-    return None
+    from .direct_certificates import certified_source, certified_factory_source
+    return certified_factory_source(task_id, d4, palette) or certified_source(task_id)

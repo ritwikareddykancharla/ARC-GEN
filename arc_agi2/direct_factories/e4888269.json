@@ -1,0 +1,16 @@
+{
+  "task_id": "e4888269",
+  "factory_sha256": "41a90bb03233af59c408b30223a789823d9dc3494cbca4e5d7e5afef2339a019",
+  "constructor_sha256": "919ac789f1b91ce4851dc117d29f7c69aeead9f47981daf795ad7bacb30a6e46",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 164570296869837,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 9.242460250039585,
+  "provenance": "Opus 5.5 subscription CLI draft; host source review and execution audit",
+  "limitations": "Assumes the generator's guarantees: the background strictly dominates, and the legend is the only multicoloured component. A legend exactly 2x2 would be ambiguous, but the generator always produces 3 to 7 rows. If no legend is found, the input is returned unchanged. I have not run any tests. The fixtures are consistent with the uniform sequential-substitution rule."
+}

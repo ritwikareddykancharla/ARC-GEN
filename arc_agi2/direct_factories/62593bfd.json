@@ -1,0 +1,16 @@
+{
+  "task_id": "62593bfd",
+  "factory_sha256": "e357e5c857c4977ab23473a667a28780df0b47f2facdea48fcda78aba955bf2f",
+  "constructor_sha256": "6cc108ff1b6630f51819fb0a275a1257c5dff43d3e160611e3bd0be9f6a304d5",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 79284365378158,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 9.693868292029947,
+  "provenance": "Opus 5.5 subscription CLI draft; host source review and execution audit",
+  "limitations": "Background is taken as the most common colour. The generator keeps objects under half the grid area, so this holds in its domain. The program assumes input objects do not touch each other, even diagonally, as the generator guarantees; same-colour objects touching diagonally would merge into one. If shifted objects collided in the output, later writes would win (sinkers over risers), as in the archived solver; the generator prevents such collisions. Demonstrations are not used, since the rule is fully determined by the query grid. The fixtures appear consistent with the uniform rule, and no contradiction was found. Nothing has been executed or tested."
+}

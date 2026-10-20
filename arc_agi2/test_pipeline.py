@@ -1729,12 +1729,15 @@ class GeneratorTests(unittest.TestCase):
               {'input':[[2,1]],'output':[[4,3]]},
               {'input':[[5]],'output':[[6]]}]
         self.assertEqual(len(exhaustive_variants(swap)),2)
-    def test_default_augmentation_preserves_native_colours(self):
-        rng=random.Random(42);seen=set()
+    def test_default_augmentation_includes_bijective_colour_changes(self):
+        rng=random.Random(42);seen=set();palettes=set()
         for _ in range(1000):
             d,p=settings(rng,'example',b.POLICY);seen.add(d)
-            self.assertEqual(p,list(range(10)))
+            self.assertEqual(sorted(p),list(range(10)))
+            palettes.add(tuple(p))
         self.assertEqual(seen,set(range(8)))
+        self.assertGreater(len(palettes),100)
+        self.assertIn(tuple(range(10)),palettes)
     def test_original_and_independent_construction(self):
         for tid in GENERATORS:
             self.assertTrue(check_reference(tid)[fixture_basis(tid)['fixture']]['all_exact'],tid)

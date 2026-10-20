@@ -1,0 +1,1220 @@
+{
+  "task_id": "6350f1f4",
+  "ready": true,
+  "samples_requested": 1000,
+  "samples_attempted": 1000,
+  "samples_passed": 1000,
+  "seed_start": 20000,
+  "seed_end_exclusive": 21000,
+  "unique_inputs": 1000,
+  "changed_pairs": 1000,
+  "fixture_replays": 0,
+  "shapes": [
+    [
+      5,
+      5,
+      5,
+      5
+    ],
+    [
+      5,
+      8,
+      5,
+      8
+    ],
+    [
+      5,
+      11,
+      5,
+      11
+    ],
+    [
+      5,
+      14,
+      5,
+      14
+    ],
+    [
+      5,
+      17,
+      5,
+      17
+    ],
+    [
+      7,
+      7,
+      7,
+      7
+    ],
+    [
+      7,
+      11,
+      7,
+      11
+    ],
+    [
+      7,
+      15,
+      7,
+      15
+    ],
+    [
+      7,
+      19,
+      7,
+      19
+    ],
+    [
+      7,
+      23,
+      7,
+      23
+    ],
+    [
+      8,
+      5,
+      8,
+      5
+    ],
+    [
+      8,
+      8,
+      8,
+      8
+    ],
+    [
+      8,
+      11,
+      8,
+      11
+    ],
+    [
+      8,
+      14,
+      8,
+      14
+    ],
+    [
+      8,
+      17,
+      8,
+      17
+    ],
+    [
+      9,
+      9,
+      9,
+      9
+    ],
+    [
+      9,
+      14,
+      9,
+      14
+    ],
+    [
+      9,
+      19,
+      9,
+      19
+    ],
+    [
+      9,
+      24,
+      9,
+      24
+    ],
+    [
+      9,
+      29,
+      9,
+      29
+    ],
+    [
+      11,
+      5,
+      11,
+      5
+    ],
+    [
+      11,
+      7,
+      11,
+      7
+    ],
+    [
+      11,
+      8,
+      11,
+      8
+    ],
+    [
+      11,
+      11,
+      11,
+      11
+    ],
+    [
+      11,
+      14,
+      11,
+      14
+    ],
+    [
+      11,
+      15,
+      11,
+      15
+    ],
+    [
+      11,
+      17,
+      11,
+      17
+    ],
+    [
+      11,
+      19,
+      11,
+      19
+    ],
+    [
+      11,
+      23,
+      11,
+      23
+    ],
+    [
+      11,
+      29,
+      11,
+      29
+    ],
+    [
+      13,
+      13,
+      13,
+      13
+    ],
+    [
+      13,
+      20,
+      13,
+      20
+    ],
+    [
+      13,
+      27,
+      13,
+      27
+    ],
+    [
+      14,
+      5,
+      14,
+      5
+    ],
+    [
+      14,
+      8,
+      14,
+      8
+    ],
+    [
+      14,
+      9,
+      14,
+      9
+    ],
+    [
+      14,
+      11,
+      14,
+      11
+    ],
+    [
+      14,
+      14,
+      14,
+      14
+    ],
+    [
+      14,
+      17,
+      14,
+      17
+    ],
+    [
+      14,
+      19,
+      14,
+      19
+    ],
+    [
+      14,
+      24,
+      14,
+      24
+    ],
+    [
+      14,
+      29,
+      14,
+      29
+    ],
+    [
+      15,
+      7,
+      15,
+      7
+    ],
+    [
+      15,
+      11,
+      15,
+      11
+    ],
+    [
+      15,
+      15,
+      15,
+      15
+    ],
+    [
+      15,
+      19,
+      15,
+      19
+    ],
+    [
+      15,
+      23,
+      15,
+      23
+    ],
+    [
+      17,
+      5,
+      17,
+      5
+    ],
+    [
+      17,
+      8,
+      17,
+      8
+    ],
+    [
+      17,
+      11,
+      17,
+      11
+    ],
+    [
+      17,
+      14,
+      17,
+      14
+    ],
+    [
+      17,
+      17,
+      17,
+      17
+    ],
+    [
+      17,
+      23,
+      17,
+      23
+    ],
+    [
+      17,
+      29,
+      17,
+      29
+    ],
+    [
+      19,
+      7,
+      19,
+      7
+    ],
+    [
+      19,
+      9,
+      19,
+      9
+    ],
+    [
+      19,
+      11,
+      19,
+      11
+    ],
+    [
+      19,
+      14,
+      19,
+      14
+    ],
+    [
+      19,
+      15,
+      19,
+      15
+    ],
+    [
+      19,
+      19,
+      19,
+      19
+    ],
+    [
+      19,
+      23,
+      19,
+      23
+    ],
+    [
+      19,
+      24,
+      19,
+      24
+    ],
+    [
+      19,
+      29,
+      19,
+      29
+    ],
+    [
+      20,
+      13,
+      20,
+      13
+    ],
+    [
+      20,
+      20,
+      20,
+      20
+    ],
+    [
+      20,
+      27,
+      20,
+      27
+    ],
+    [
+      23,
+      7,
+      23,
+      7
+    ],
+    [
+      23,
+      11,
+      23,
+      11
+    ],
+    [
+      23,
+      15,
+      23,
+      15
+    ],
+    [
+      23,
+      17,
+      23,
+      17
+    ],
+    [
+      23,
+      19,
+      23,
+      19
+    ],
+    [
+      23,
+      23,
+      23,
+      23
+    ],
+    [
+      23,
+      29,
+      23,
+      29
+    ],
+    [
+      24,
+      9,
+      24,
+      9
+    ],
+    [
+      24,
+      14,
+      24,
+      14
+    ],
+    [
+      24,
+      19,
+      24,
+      19
+    ],
+    [
+      24,
+      24,
+      24,
+      24
+    ],
+    [
+      24,
+      29,
+      24,
+      29
+    ],
+    [
+      27,
+      13,
+      27,
+      13
+    ],
+    [
+      27,
+      20,
+      27,
+      20
+    ],
+    [
+      27,
+      27,
+      27,
+      27
+    ],
+    [
+      29,
+      9,
+      29,
+      9
+    ],
+    [
+      29,
+      11,
+      29,
+      11
+    ],
+    [
+      29,
+      14,
+      29,
+      14
+    ],
+    [
+      29,
+      17,
+      29,
+      17
+    ],
+    [
+      29,
+      19,
+      29,
+      19
+    ],
+    [
+      29,
+      23,
+      29,
+      23
+    ],
+    [
+      29,
+      24,
+      29,
+      24
+    ],
+    [
+      29,
+      29,
+      29,
+      29
+    ]
+  ],
+  "fixture_matches": {
+    "canonical": true,
+    "teaching_fixture": true
+  },
+  "original_solver_replay": {
+    "canonical": {
+      "correct": 5,
+      "total": 5,
+      "all_exact": true
+    },
+    "teaching_fixture": {
+      "correct": 5,
+      "total": 5,
+      "all_exact": true
+    }
+  },
+  "errors": [],
+  "sha256": "e3d95e484da04f870526648589cbba9f95065aab2bcdaa15e736a4646e39463d",
+  "status": "reviewed_bounded_validation_passed",
+  "limitations": "Bounded randomized agreement with a saved solver is not proof of semantic completeness.",
+  "candidate_path": "/Users/ritwika/projects/arc-agi2/outputs/research/arcgen-coverage-cli/host-reviewed/6350f1f4/task_6350f1f4.py",
+  "attempts": 1,
+  "model_usage": {
+    "claude-opus-5-5": {
+      "inputTokens": 2,
+      "outputTokens": 13757,
+      "cacheReadInputTokens": 1682,
+      "cacheCreationInputTokens": 13947,
+      "webSearchRequests": 0,
+      "costUSD": 0.3870604,
+      "contextWindow": 1000000,
+      "maxOutputTokens": 128000,
+      "thinkingTokens": 7096,
+      "canonicalModel": "claude-opus-5-5",
+      "provider": "firstParty",
+      "costBasis": "list"
+    }
+  },
+  "rule": "Divider lines of colour 0 split the grid into equal square panels, and colour 5 noise covers some cells. Each panel is either the two-colour motif or solid in the motif's minority colour. In the output, solid panels receive the motif, pattern panels become solid in the majority colour, and all noise is removed.",
+  "scope": "Recover a repeated two-colour motif through noise, classify solid versus motif panels, swap their roles and restore dividers.",
+  "constraints": [
+    "Read source against saved noise/classification mechanism and all canonical fixtures.",
+    "Panel size sampling now respects requested row/column counts; dimensions, palette and cell coordinates are validated.",
+    "120 larger panel layouts were reconstructed from latent motif and solid sets; 60 scenes had 40 percent noise.",
+    "Checks covered 18089 noisy cells including 4244 on dividers; reference replay stayed exact."
+  ],
+  "known_limitations": [
+    "A fully clean motif panel is always available; this does not model recovery only from complementary partial observations.",
+    "Solid panels retain visible evidence distinguishing them from motif panels.",
+    "Noise is colour 5 and dividers zero; at least one solid and one motif panel are required.",
+    "Default panel sizes are 2..6; explicit larger layouts are bounded by 30x30. Noise sampling can return a noiseless latent scene."
+  ],
+  "billing": "Claude Max CLI; API credentials excluded; no API fallback",
+  "fixture_basis": {
+    "fixture": "canonical",
+    "corrected": false
+  },
+  "authored_sha256": "3dded314f9677cc983122bb74039d7ec86a150765187aaf78428fb14d61a5789",
+  "stress_test": {
+    "task_id": "6350f1f4",
+    "ready": true,
+    "samples_requested": 1000,
+    "samples_attempted": 1000,
+    "samples_passed": 1000,
+    "seed_start": 20000,
+    "seed_end_exclusive": 21000,
+    "fixture_basis": {
+      "fixture": "canonical",
+      "corrected": false
+    },
+    "unique_inputs": 1000,
+    "changed_pairs": 1000,
+    "fixture_replays": 0,
+    "shapes": [
+      [
+        5,
+        5,
+        5,
+        5
+      ],
+      [
+        5,
+        8,
+        5,
+        8
+      ],
+      [
+        5,
+        11,
+        5,
+        11
+      ],
+      [
+        5,
+        14,
+        5,
+        14
+      ],
+      [
+        5,
+        17,
+        5,
+        17
+      ],
+      [
+        7,
+        7,
+        7,
+        7
+      ],
+      [
+        7,
+        11,
+        7,
+        11
+      ],
+      [
+        7,
+        15,
+        7,
+        15
+      ],
+      [
+        7,
+        19,
+        7,
+        19
+      ],
+      [
+        7,
+        23,
+        7,
+        23
+      ],
+      [
+        8,
+        5,
+        8,
+        5
+      ],
+      [
+        8,
+        8,
+        8,
+        8
+      ],
+      [
+        8,
+        11,
+        8,
+        11
+      ],
+      [
+        8,
+        14,
+        8,
+        14
+      ],
+      [
+        8,
+        17,
+        8,
+        17
+      ],
+      [
+        9,
+        9,
+        9,
+        9
+      ],
+      [
+        9,
+        14,
+        9,
+        14
+      ],
+      [
+        9,
+        19,
+        9,
+        19
+      ],
+      [
+        9,
+        24,
+        9,
+        24
+      ],
+      [
+        9,
+        29,
+        9,
+        29
+      ],
+      [
+        11,
+        5,
+        11,
+        5
+      ],
+      [
+        11,
+        7,
+        11,
+        7
+      ],
+      [
+        11,
+        8,
+        11,
+        8
+      ],
+      [
+        11,
+        11,
+        11,
+        11
+      ],
+      [
+        11,
+        14,
+        11,
+        14
+      ],
+      [
+        11,
+        15,
+        11,
+        15
+      ],
+      [
+        11,
+        17,
+        11,
+        17
+      ],
+      [
+        11,
+        19,
+        11,
+        19
+      ],
+      [
+        11,
+        23,
+        11,
+        23
+      ],
+      [
+        11,
+        29,
+        11,
+        29
+      ],
+      [
+        13,
+        13,
+        13,
+        13
+      ],
+      [
+        13,
+        20,
+        13,
+        20
+      ],
+      [
+        13,
+        27,
+        13,
+        27
+      ],
+      [
+        14,
+        5,
+        14,
+        5
+      ],
+      [
+        14,
+        8,
+        14,
+        8
+      ],
+      [
+        14,
+        9,
+        14,
+        9
+      ],
+      [
+        14,
+        11,
+        14,
+        11
+      ],
+      [
+        14,
+        14,
+        14,
+        14
+      ],
+      [
+        14,
+        17,
+        14,
+        17
+      ],
+      [
+        14,
+        19,
+        14,
+        19
+      ],
+      [
+        14,
+        24,
+        14,
+        24
+      ],
+      [
+        14,
+        29,
+        14,
+        29
+      ],
+      [
+        15,
+        7,
+        15,
+        7
+      ],
+      [
+        15,
+        11,
+        15,
+        11
+      ],
+      [
+        15,
+        15,
+        15,
+        15
+      ],
+      [
+        15,
+        19,
+        15,
+        19
+      ],
+      [
+        15,
+        23,
+        15,
+        23
+      ],
+      [
+        17,
+        5,
+        17,
+        5
+      ],
+      [
+        17,
+        8,
+        17,
+        8
+      ],
+      [
+        17,
+        11,
+        17,
+        11
+      ],
+      [
+        17,
+        14,
+        17,
+        14
+      ],
+      [
+        17,
+        17,
+        17,
+        17
+      ],
+      [
+        17,
+        23,
+        17,
+        23
+      ],
+      [
+        17,
+        29,
+        17,
+        29
+      ],
+      [
+        19,
+        7,
+        19,
+        7
+      ],
+      [
+        19,
+        9,
+        19,
+        9
+      ],
+      [
+        19,
+        11,
+        19,
+        11
+      ],
+      [
+        19,
+        14,
+        19,
+        14
+      ],
+      [
+        19,
+        15,
+        19,
+        15
+      ],
+      [
+        19,
+        19,
+        19,
+        19
+      ],
+      [
+        19,
+        23,
+        19,
+        23
+      ],
+      [
+        19,
+        24,
+        19,
+        24
+      ],
+      [
+        19,
+        29,
+        19,
+        29
+      ],
+      [
+        20,
+        13,
+        20,
+        13
+      ],
+      [
+        20,
+        20,
+        20,
+        20
+      ],
+      [
+        20,
+        27,
+        20,
+        27
+      ],
+      [
+        23,
+        7,
+        23,
+        7
+      ],
+      [
+        23,
+        11,
+        23,
+        11
+      ],
+      [
+        23,
+        15,
+        23,
+        15
+      ],
+      [
+        23,
+        17,
+        23,
+        17
+      ],
+      [
+        23,
+        19,
+        23,
+        19
+      ],
+      [
+        23,
+        23,
+        23,
+        23
+      ],
+      [
+        23,
+        29,
+        23,
+        29
+      ],
+      [
+        24,
+        9,
+        24,
+        9
+      ],
+      [
+        24,
+        14,
+        24,
+        14
+      ],
+      [
+        24,
+        19,
+        24,
+        19
+      ],
+      [
+        24,
+        24,
+        24,
+        24
+      ],
+      [
+        24,
+        29,
+        24,
+        29
+      ],
+      [
+        27,
+        13,
+        27,
+        13
+      ],
+      [
+        27,
+        20,
+        27,
+        20
+      ],
+      [
+        27,
+        27,
+        27,
+        27
+      ],
+      [
+        29,
+        9,
+        29,
+        9
+      ],
+      [
+        29,
+        11,
+        29,
+        11
+      ],
+      [
+        29,
+        14,
+        29,
+        14
+      ],
+      [
+        29,
+        17,
+        29,
+        17
+      ],
+      [
+        29,
+        19,
+        29,
+        19
+      ],
+      [
+        29,
+        23,
+        29,
+        23
+      ],
+      [
+        29,
+        24,
+        29,
+        24
+      ],
+      [
+        29,
+        29,
+        29,
+        29
+      ]
+    ],
+    "fixture_matches": {
+      "canonical": true,
+      "teaching_fixture": true
+    },
+    "original_solver_replay": {
+      "canonical": {
+        "correct": 5,
+        "total": 5,
+        "all_exact": true
+      },
+      "teaching_fixture": {
+        "correct": 5,
+        "total": 5,
+        "all_exact": true
+      }
+    },
+    "errors": [],
+    "sha256": "e3d95e484da04f870526648589cbba9f95065aab2bcdaa15e736a4646e39463d",
+    "status": "validated_candidate_needs_semantic_review",
+    "limitations": "Bounded randomized agreement with a saved solver is not proof of semantic completeness."
+  },
+  "authored_scope": "Supported:\n- Panel size 2..6.\n- 2..6 panels per axis when sampled, with independent row and column counts, fitting within 30x30.\n- A random two-colour motif from the colours excluding 0 and 5, with a strict majority and 1..(s^2-1)//2 minority cells.\n- A random set of solid panels: at least one, at most half.\n- Random-walk noise blobs of 5 that may cross dividers and cover both kinds of panel.\n- Explicit latent arguments that reconstruct all five fixtures.\n\nPanel sizes 5..6, layouts of 5 or more panels per axis, and non-square layouts are synthetic extensions beyond the fixtures.\n\nNot supported:\n- Unequal panel sizes.\n- Thicker dividers.\n- Motifs with three or more colours.\n- Tied colour counts.\n- Noise in colours other than 5.\n- Scenes where no clean pattern panel exists.",
+  "authored_constraints": [
+    "Grid dimensions are rows*(size+1)-1 by cols*(size+1)-1, at most 30 per side.",
+    "The motif uses exactly two colours, neither 0 nor 5, and its majority is strict.",
+    "There is at least one solid panel and at least one pattern panel; random sampling uses at most half the panels as solids.",
+    "Every divider row and column keeps at least one visible 0.",
+    "No panel row or column has all its panel cells covered by 5, so the divider detector cannot be fooled.",
+    "At least one pattern panel is noise-free, so the motif is the unique clean non-uniform panel.",
+    "Every solid panel has at least one visible cell at a motif-majority position, so it cannot be mistaken for a pattern panel.",
+    "Every sample is non-identity, because pattern panels lose their minority cells in the output.",
+    "Explicit noise maps are checked by the same constraints and raise ValueError if they give an ambiguous scene."
+  ],
+  "semantic_review": {
+    "status": "reviewed",
+    "checks": [
+      "Read source against saved noise/classification mechanism and all canonical fixtures.",
+      "Panel size sampling now respects requested row/column counts; dimensions, palette and cell coordinates are validated.",
+      "120 larger panel layouts were reconstructed from latent motif and solid sets; 60 scenes had 40 percent noise.",
+      "Checks covered 18089 noisy cells including 4244 on dividers; reference replay stayed exact.",
+      "1000 independent seeds 20000..20999; approved validation fixtures reconstructed exactly; canonical replay reported separately"
+    ],
+    "limitations": [
+      "A fully clean motif panel is always available; this does not model recovery only from complementary partial observations.",
+      "Solid panels retain visible evidence distinguishing them from motif panels.",
+      "Noise is colour 5 and dividers zero; at least one solid and one motif panel are required.",
+      "Default panel sizes are 2..6; explicit larger layouts are bounded by 30x30. Noise sampling can return a noiseless latent scene."
+    ]
+  },
+  "diversity_audit": {
+    "samples": 120,
+    "seed_range": [
+      30000,
+      30119
+    ],
+    "metrics": {
+      "noise_cells": 18089,
+      "forty_percent_noise_scenes": 60,
+      "noisy_divider_cells": 4244
+    },
+    "seconds": 0.05292987823486328,
+    "passed": true
+  }
+}

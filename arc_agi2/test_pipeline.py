@@ -11,6 +11,37 @@ from .fixture_policy import fixture_basis
 from .augmentation import apply_episode,settings,exhaustive_variants
 
 class GeneratorTests(unittest.TestCase):
+    def test_large_equal_area_shapes_and_panel_device_controls(self):
+        comparison=importlib.import_module('tasks.task_6165ea8f')
+        random.seed(30000)
+        p=comparison.generate(height=30,width=30,n=7,num_classes=3,shape_cells=25)
+        counts=Counter(v for row in p['input'] for v in row if v!=0)
+        self.assertEqual(set(counts.values()),{26})  # Shape plus legend pixel.
+        self.assertEqual(p['output'],grid(call(solver('6165ea8f'),p['input'])))
+        with self.assertRaises(ValueError):
+            comparison.generate(shape_cells=2)
+        panels=importlib.import_module('tasks.task_6350f1f4')
+        # Requested counts force size two; sampling size six first used to fail.
+        for seed in range(10):
+            random.seed(seed)
+            p=panels.generate(rows=10,cols=10)
+            self.assertEqual((len(p['input']),len(p['input'][0])),(29,29))
+            self.assertEqual(p['output'],grid(call(solver('6350f1f4'),p['input'])))
+        device=importlib.import_module('tasks.task_64efde09')
+        for seed in range(20):
+            random.seed(seed)
+            far,near=device._sample_templates(4,None,[1]*4)
+            device._check_templates(far,near)
+            self.assertFalse(device._doubled_end(far))
+        random.seed(30080)
+        p=device.generate(width=30,height=30,near=[1]*4,num_devices=4,num_markers=2)
+        self.assertEqual(p['output'],grid(call(solver('64efde09'),p['input'])))
+        motif=importlib.import_module('tasks.task_65b59efc')
+        with self.assertRaises(ValueError):
+            motif.generate(k=3,trailing=2)
+        with self.assertRaises(ValueError):
+            motif._check_mask([[1.0,0,0],[0,0,0],[0,0,0]],3,'motif')
+
     def test_panel_frame_mirror_and_exact_tiling_controls(self):
         panel=importlib.import_module('tasks.task_5a719d11')
         with self.assertRaises(ValueError):

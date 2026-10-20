@@ -951,6 +951,38 @@ class GeneratorTests(unittest.TestCase):
                 self.assertEqual(refreshed['source_signature'],report['source_signature'])
                 self.assertEqual(refreshed['modes'],{'standalone_constructor':8})
 
+    def test_sliding_rows_and_two_stage_defects(self):
+        slide=importlib.import_module('tasks.task_6e453dd6')
+        # Diagonal connections belong to one object; gaps without divider
+        # contact must not be painted.
+        pair=slide.generate(width=12,height=12,divider=7,shapes=[
+            (0,0,['X.X.','.X..','..X.','...X']),
+            (6,0,['XXX','X.X','XXX'])])
+        self.assertEqual(pair['output'][0][8:], [6]*4)
+        self.assertEqual(pair['output'][7][8:], [2]*4)
+        self.assertEqual(pair['output'],grid(call(solver('6e453dd6'),pair['input'])))
+        with self.assertRaises(ValueError):
+            slide.generate(width=12,height=12,divider=7,shapes=[(0,0,['X.X'])])
+        with self.assertRaises(ValueError):
+            slide.generate(width=8,height=4,divider=5,
+                           shapes=[(0,0,['XX','X.','X.','XX'])])
+        defects=importlib.import_module('tasks.task_71e489b6')
+        pair=defects.generate(width=12,height=12,background=0,
+                             rects=[(2,2,9,9,1)],
+                             holes=[(4,5),(5,4),(5,6)],specks=[(1,3)])
+        self.assertEqual(pair['input'][5][5],1)
+        self.assertEqual(pair['output'][5][5],7)
+        self.assertEqual(pair['output'][1][3],0)
+        self.assertEqual(pair['output'],grid(call(solver('71e489b6'),pair['input'])))
+        with self.assertRaises(ValueError):
+            defects.generate(width=10,height=10,background=1,rects=[],
+                             holes=[(5,5)],specks=[(5,5)])
+        for seed in range(4):
+            random.seed(30000+seed)
+            pair=defects.generate(width=30,height=30,num_holes=8,num_specks=10,
+                                  num_attached_specks=3,bridge_holes=True)
+            self.assertEqual(pair['output'],grid(call(solver('71e489b6'),pair['input'])))
+
     def test_episode_contract_and_disjoint_splits(self):
         with tempfile.TemporaryDirectory() as directory:
             previous=b.OUT;b.OUT=Path(directory);(b.OUT/'pools').mkdir()

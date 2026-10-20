@@ -1,0 +1,3488 @@
+{
+  "task_id": "88e364bc",
+  "ready": true,
+  "samples_requested": 1000,
+  "samples_attempted": 1000,
+  "samples_passed": 1000,
+  "verifier_mode": "archived_pair_solver",
+  "verifier_evidence": {
+    "mode": "archived_pair_solver"
+  },
+  "improved_verifier_fixture_replay": null,
+  "seed_start": 20000,
+  "seed_end_exclusive": 21000,
+  "fixture_basis": {
+    "fixture": "canonical",
+    "corrected": false
+  },
+  "unique_inputs": 1000,
+  "changed_pairs": 1000,
+  "fixture_replays": 0,
+  "shapes": [
+    [
+      12,
+      13,
+      12,
+      13
+    ],
+    [
+      12,
+      17,
+      12,
+      17
+    ],
+    [
+      12,
+      19,
+      12,
+      19
+    ],
+    [
+      12,
+      20,
+      12,
+      20
+    ],
+    [
+      12,
+      21,
+      12,
+      21
+    ],
+    [
+      12,
+      22,
+      12,
+      22
+    ],
+    [
+      12,
+      23,
+      12,
+      23
+    ],
+    [
+      12,
+      24,
+      12,
+      24
+    ],
+    [
+      12,
+      25,
+      12,
+      25
+    ],
+    [
+      12,
+      26,
+      12,
+      26
+    ],
+    [
+      12,
+      28,
+      12,
+      28
+    ],
+    [
+      13,
+      13,
+      13,
+      13
+    ],
+    [
+      13,
+      14,
+      13,
+      14
+    ],
+    [
+      13,
+      15,
+      13,
+      15
+    ],
+    [
+      13,
+      18,
+      13,
+      18
+    ],
+    [
+      13,
+      19,
+      13,
+      19
+    ],
+    [
+      13,
+      20,
+      13,
+      20
+    ],
+    [
+      13,
+      21,
+      13,
+      21
+    ],
+    [
+      13,
+      22,
+      13,
+      22
+    ],
+    [
+      13,
+      25,
+      13,
+      25
+    ],
+    [
+      13,
+      27,
+      13,
+      27
+    ],
+    [
+      14,
+      12,
+      14,
+      12
+    ],
+    [
+      14,
+      15,
+      14,
+      15
+    ],
+    [
+      14,
+      16,
+      14,
+      16
+    ],
+    [
+      14,
+      17,
+      14,
+      17
+    ],
+    [
+      14,
+      18,
+      14,
+      18
+    ],
+    [
+      14,
+      19,
+      14,
+      19
+    ],
+    [
+      14,
+      20,
+      14,
+      20
+    ],
+    [
+      14,
+      22,
+      14,
+      22
+    ],
+    [
+      14,
+      23,
+      14,
+      23
+    ],
+    [
+      14,
+      24,
+      14,
+      24
+    ],
+    [
+      14,
+      25,
+      14,
+      25
+    ],
+    [
+      14,
+      26,
+      14,
+      26
+    ],
+    [
+      14,
+      27,
+      14,
+      27
+    ],
+    [
+      14,
+      28,
+      14,
+      28
+    ],
+    [
+      15,
+      12,
+      15,
+      12
+    ],
+    [
+      15,
+      13,
+      15,
+      13
+    ],
+    [
+      15,
+      14,
+      15,
+      14
+    ],
+    [
+      15,
+      16,
+      15,
+      16
+    ],
+    [
+      15,
+      17,
+      15,
+      17
+    ],
+    [
+      15,
+      18,
+      15,
+      18
+    ],
+    [
+      15,
+      19,
+      15,
+      19
+    ],
+    [
+      15,
+      20,
+      15,
+      20
+    ],
+    [
+      15,
+      21,
+      15,
+      21
+    ],
+    [
+      15,
+      22,
+      15,
+      22
+    ],
+    [
+      15,
+      23,
+      15,
+      23
+    ],
+    [
+      15,
+      24,
+      15,
+      24
+    ],
+    [
+      15,
+      25,
+      15,
+      25
+    ],
+    [
+      15,
+      27,
+      15,
+      27
+    ],
+    [
+      15,
+      28,
+      15,
+      28
+    ],
+    [
+      16,
+      14,
+      16,
+      14
+    ],
+    [
+      16,
+      15,
+      16,
+      15
+    ],
+    [
+      16,
+      16,
+      16,
+      16
+    ],
+    [
+      16,
+      17,
+      16,
+      17
+    ],
+    [
+      16,
+      18,
+      16,
+      18
+    ],
+    [
+      16,
+      19,
+      16,
+      19
+    ],
+    [
+      16,
+      20,
+      16,
+      20
+    ],
+    [
+      16,
+      21,
+      16,
+      21
+    ],
+    [
+      16,
+      22,
+      16,
+      22
+    ],
+    [
+      16,
+      23,
+      16,
+      23
+    ],
+    [
+      16,
+      24,
+      16,
+      24
+    ],
+    [
+      16,
+      25,
+      16,
+      25
+    ],
+    [
+      16,
+      26,
+      16,
+      26
+    ],
+    [
+      16,
+      27,
+      16,
+      27
+    ],
+    [
+      16,
+      28,
+      16,
+      28
+    ],
+    [
+      17,
+      12,
+      17,
+      12
+    ],
+    [
+      17,
+      13,
+      17,
+      13
+    ],
+    [
+      17,
+      14,
+      17,
+      14
+    ],
+    [
+      17,
+      15,
+      17,
+      15
+    ],
+    [
+      17,
+      16,
+      17,
+      16
+    ],
+    [
+      17,
+      17,
+      17,
+      17
+    ],
+    [
+      17,
+      18,
+      17,
+      18
+    ],
+    [
+      17,
+      20,
+      17,
+      20
+    ],
+    [
+      17,
+      21,
+      17,
+      21
+    ],
+    [
+      17,
+      22,
+      17,
+      22
+    ],
+    [
+      17,
+      23,
+      17,
+      23
+    ],
+    [
+      17,
+      24,
+      17,
+      24
+    ],
+    [
+      17,
+      25,
+      17,
+      25
+    ],
+    [
+      17,
+      26,
+      17,
+      26
+    ],
+    [
+      17,
+      27,
+      17,
+      27
+    ],
+    [
+      17,
+      28,
+      17,
+      28
+    ],
+    [
+      18,
+      14,
+      18,
+      14
+    ],
+    [
+      18,
+      16,
+      18,
+      16
+    ],
+    [
+      18,
+      17,
+      18,
+      17
+    ],
+    [
+      18,
+      18,
+      18,
+      18
+    ],
+    [
+      18,
+      19,
+      18,
+      19
+    ],
+    [
+      18,
+      20,
+      18,
+      20
+    ],
+    [
+      18,
+      21,
+      18,
+      21
+    ],
+    [
+      18,
+      22,
+      18,
+      22
+    ],
+    [
+      18,
+      23,
+      18,
+      23
+    ],
+    [
+      18,
+      24,
+      18,
+      24
+    ],
+    [
+      18,
+      25,
+      18,
+      25
+    ],
+    [
+      18,
+      26,
+      18,
+      26
+    ],
+    [
+      18,
+      27,
+      18,
+      27
+    ],
+    [
+      18,
+      28,
+      18,
+      28
+    ],
+    [
+      19,
+      13,
+      19,
+      13
+    ],
+    [
+      19,
+      14,
+      19,
+      14
+    ],
+    [
+      19,
+      15,
+      19,
+      15
+    ],
+    [
+      19,
+      16,
+      19,
+      16
+    ],
+    [
+      19,
+      17,
+      19,
+      17
+    ],
+    [
+      19,
+      18,
+      19,
+      18
+    ],
+    [
+      19,
+      19,
+      19,
+      19
+    ],
+    [
+      19,
+      21,
+      19,
+      21
+    ],
+    [
+      19,
+      22,
+      19,
+      22
+    ],
+    [
+      19,
+      23,
+      19,
+      23
+    ],
+    [
+      19,
+      24,
+      19,
+      24
+    ],
+    [
+      19,
+      25,
+      19,
+      25
+    ],
+    [
+      19,
+      26,
+      19,
+      26
+    ],
+    [
+      19,
+      27,
+      19,
+      27
+    ],
+    [
+      19,
+      28,
+      19,
+      28
+    ],
+    [
+      20,
+      13,
+      20,
+      13
+    ],
+    [
+      20,
+      14,
+      20,
+      14
+    ],
+    [
+      20,
+      16,
+      20,
+      16
+    ],
+    [
+      20,
+      17,
+      20,
+      17
+    ],
+    [
+      20,
+      18,
+      20,
+      18
+    ],
+    [
+      20,
+      19,
+      20,
+      19
+    ],
+    [
+      20,
+      20,
+      20,
+      20
+    ],
+    [
+      20,
+      21,
+      20,
+      21
+    ],
+    [
+      20,
+      22,
+      20,
+      22
+    ],
+    [
+      20,
+      23,
+      20,
+      23
+    ],
+    [
+      20,
+      24,
+      20,
+      24
+    ],
+    [
+      20,
+      25,
+      20,
+      25
+    ],
+    [
+      20,
+      26,
+      20,
+      26
+    ],
+    [
+      20,
+      27,
+      20,
+      27
+    ],
+    [
+      20,
+      28,
+      20,
+      28
+    ],
+    [
+      21,
+      14,
+      21,
+      14
+    ],
+    [
+      21,
+      15,
+      21,
+      15
+    ],
+    [
+      21,
+      16,
+      21,
+      16
+    ],
+    [
+      21,
+      17,
+      21,
+      17
+    ],
+    [
+      21,
+      18,
+      21,
+      18
+    ],
+    [
+      21,
+      19,
+      21,
+      19
+    ],
+    [
+      21,
+      20,
+      21,
+      20
+    ],
+    [
+      21,
+      21,
+      21,
+      21
+    ],
+    [
+      21,
+      22,
+      21,
+      22
+    ],
+    [
+      21,
+      23,
+      21,
+      23
+    ],
+    [
+      21,
+      24,
+      21,
+      24
+    ],
+    [
+      21,
+      25,
+      21,
+      25
+    ],
+    [
+      21,
+      26,
+      21,
+      26
+    ],
+    [
+      21,
+      27,
+      21,
+      27
+    ],
+    [
+      21,
+      28,
+      21,
+      28
+    ],
+    [
+      22,
+      12,
+      22,
+      12
+    ],
+    [
+      22,
+      13,
+      22,
+      13
+    ],
+    [
+      22,
+      14,
+      22,
+      14
+    ],
+    [
+      22,
+      15,
+      22,
+      15
+    ],
+    [
+      22,
+      16,
+      22,
+      16
+    ],
+    [
+      22,
+      17,
+      22,
+      17
+    ],
+    [
+      22,
+      18,
+      22,
+      18
+    ],
+    [
+      22,
+      19,
+      22,
+      19
+    ],
+    [
+      22,
+      20,
+      22,
+      20
+    ],
+    [
+      22,
+      21,
+      22,
+      21
+    ],
+    [
+      22,
+      22,
+      22,
+      22
+    ],
+    [
+      22,
+      23,
+      22,
+      23
+    ],
+    [
+      22,
+      24,
+      22,
+      24
+    ],
+    [
+      22,
+      25,
+      22,
+      25
+    ],
+    [
+      22,
+      26,
+      22,
+      26
+    ],
+    [
+      22,
+      27,
+      22,
+      27
+    ],
+    [
+      22,
+      28,
+      22,
+      28
+    ],
+    [
+      23,
+      12,
+      23,
+      12
+    ],
+    [
+      23,
+      14,
+      23,
+      14
+    ],
+    [
+      23,
+      15,
+      23,
+      15
+    ],
+    [
+      23,
+      16,
+      23,
+      16
+    ],
+    [
+      23,
+      17,
+      23,
+      17
+    ],
+    [
+      23,
+      18,
+      23,
+      18
+    ],
+    [
+      23,
+      19,
+      23,
+      19
+    ],
+    [
+      23,
+      20,
+      23,
+      20
+    ],
+    [
+      23,
+      22,
+      23,
+      22
+    ],
+    [
+      23,
+      23,
+      23,
+      23
+    ],
+    [
+      23,
+      24,
+      23,
+      24
+    ],
+    [
+      23,
+      25,
+      23,
+      25
+    ],
+    [
+      23,
+      26,
+      23,
+      26
+    ],
+    [
+      23,
+      27,
+      23,
+      27
+    ],
+    [
+      23,
+      28,
+      23,
+      28
+    ],
+    [
+      24,
+      14,
+      24,
+      14
+    ],
+    [
+      24,
+      15,
+      24,
+      15
+    ],
+    [
+      24,
+      16,
+      24,
+      16
+    ],
+    [
+      24,
+      17,
+      24,
+      17
+    ],
+    [
+      24,
+      18,
+      24,
+      18
+    ],
+    [
+      24,
+      19,
+      24,
+      19
+    ],
+    [
+      24,
+      20,
+      24,
+      20
+    ],
+    [
+      24,
+      21,
+      24,
+      21
+    ],
+    [
+      24,
+      22,
+      24,
+      22
+    ],
+    [
+      24,
+      23,
+      24,
+      23
+    ],
+    [
+      24,
+      24,
+      24,
+      24
+    ],
+    [
+      24,
+      25,
+      24,
+      25
+    ],
+    [
+      24,
+      26,
+      24,
+      26
+    ],
+    [
+      24,
+      27,
+      24,
+      27
+    ],
+    [
+      24,
+      28,
+      24,
+      28
+    ],
+    [
+      25,
+      12,
+      25,
+      12
+    ],
+    [
+      25,
+      14,
+      25,
+      14
+    ],
+    [
+      25,
+      15,
+      25,
+      15
+    ],
+    [
+      25,
+      16,
+      25,
+      16
+    ],
+    [
+      25,
+      17,
+      25,
+      17
+    ],
+    [
+      25,
+      18,
+      25,
+      18
+    ],
+    [
+      25,
+      19,
+      25,
+      19
+    ],
+    [
+      25,
+      20,
+      25,
+      20
+    ],
+    [
+      25,
+      21,
+      25,
+      21
+    ],
+    [
+      25,
+      22,
+      25,
+      22
+    ],
+    [
+      25,
+      23,
+      25,
+      23
+    ],
+    [
+      25,
+      24,
+      25,
+      24
+    ],
+    [
+      25,
+      25,
+      25,
+      25
+    ],
+    [
+      25,
+      26,
+      25,
+      26
+    ],
+    [
+      25,
+      27,
+      25,
+      27
+    ],
+    [
+      25,
+      28,
+      25,
+      28
+    ],
+    [
+      26,
+      14,
+      26,
+      14
+    ],
+    [
+      26,
+      15,
+      26,
+      15
+    ],
+    [
+      26,
+      16,
+      26,
+      16
+    ],
+    [
+      26,
+      17,
+      26,
+      17
+    ],
+    [
+      26,
+      18,
+      26,
+      18
+    ],
+    [
+      26,
+      19,
+      26,
+      19
+    ],
+    [
+      26,
+      20,
+      26,
+      20
+    ],
+    [
+      26,
+      21,
+      26,
+      21
+    ],
+    [
+      26,
+      22,
+      26,
+      22
+    ],
+    [
+      26,
+      23,
+      26,
+      23
+    ],
+    [
+      26,
+      24,
+      26,
+      24
+    ],
+    [
+      26,
+      25,
+      26,
+      25
+    ],
+    [
+      26,
+      26,
+      26,
+      26
+    ],
+    [
+      26,
+      27,
+      26,
+      27
+    ],
+    [
+      26,
+      28,
+      26,
+      28
+    ],
+    [
+      27,
+      12,
+      27,
+      12
+    ],
+    [
+      27,
+      13,
+      27,
+      13
+    ],
+    [
+      27,
+      14,
+      27,
+      14
+    ],
+    [
+      27,
+      15,
+      27,
+      15
+    ],
+    [
+      27,
+      16,
+      27,
+      16
+    ],
+    [
+      27,
+      17,
+      27,
+      17
+    ],
+    [
+      27,
+      18,
+      27,
+      18
+    ],
+    [
+      27,
+      19,
+      27,
+      19
+    ],
+    [
+      27,
+      20,
+      27,
+      20
+    ],
+    [
+      27,
+      21,
+      27,
+      21
+    ],
+    [
+      27,
+      22,
+      27,
+      22
+    ],
+    [
+      27,
+      23,
+      27,
+      23
+    ],
+    [
+      27,
+      24,
+      27,
+      24
+    ],
+    [
+      27,
+      25,
+      27,
+      25
+    ],
+    [
+      27,
+      26,
+      27,
+      26
+    ],
+    [
+      27,
+      27,
+      27,
+      27
+    ],
+    [
+      27,
+      28,
+      27,
+      28
+    ],
+    [
+      28,
+      12,
+      28,
+      12
+    ],
+    [
+      28,
+      13,
+      28,
+      13
+    ],
+    [
+      28,
+      14,
+      28,
+      14
+    ],
+    [
+      28,
+      16,
+      28,
+      16
+    ],
+    [
+      28,
+      17,
+      28,
+      17
+    ],
+    [
+      28,
+      18,
+      28,
+      18
+    ],
+    [
+      28,
+      19,
+      28,
+      19
+    ],
+    [
+      28,
+      20,
+      28,
+      20
+    ],
+    [
+      28,
+      21,
+      28,
+      21
+    ],
+    [
+      28,
+      22,
+      28,
+      22
+    ],
+    [
+      28,
+      23,
+      28,
+      23
+    ],
+    [
+      28,
+      24,
+      28,
+      24
+    ],
+    [
+      28,
+      25,
+      28,
+      25
+    ],
+    [
+      28,
+      26,
+      28,
+      26
+    ],
+    [
+      28,
+      27,
+      28,
+      27
+    ],
+    [
+      28,
+      28,
+      28,
+      28
+    ]
+  ],
+  "fixture_matches": {
+    "canonical": true,
+    "teaching_fixture": true
+  },
+  "original_solver_replay": {
+    "canonical": {
+      "correct": 5,
+      "total": 5,
+      "all_exact": true
+    },
+    "teaching_fixture": {
+      "correct": 5,
+      "total": 5,
+      "all_exact": true
+    }
+  },
+  "errors": [],
+  "sha256": "dddaa22910a27105d7a38443d6ce5e37cf73c9d0e031d07bd76e2af91905bca6",
+  "status": "reviewed_bounded_validation_passed",
+  "limitations": "Bounded randomized agreement with a saved solver is not proof of semantic completeness.",
+  "candidate_path": "/Users/ritwika/projects/arc-agi2/outputs/research/arcgen-coverage-cli/host-reviewed/88e364bc/task_88e364bc.py",
+  "attempts": 1,
+  "model_usage": {
+    "claude-opus-5-5": {
+      "inputTokens": 2,
+      "outputTokens": 24651,
+      "cacheReadInputTokens": 1892,
+      "cacheCreationInputTokens": 48226,
+      "webSearchRequests": 0,
+      "costUSD": 0.8792144,
+      "contextWindow": 1000000,
+      "maxOutputTokens": 128000,
+      "thinkingTokens": 10036,
+      "canonicalModel": "claude-opus-5-5",
+      "provider": "firstParty",
+      "costBasis": "list"
+    }
+  },
+  "rule": "Corner legends (solid frames of colour C containing tail->2 arrows) each fix one of 8 directions. Lift every 4-marker. Each marker slides in the direction of the legend whose colour matches its enclosing outline. It moves while the next cell is background, and a diagonal step is refused if either orthogonal side cell is a wall. All slides are computed on the lifted grid, and the markers are then redrawn at their end cells.",
+  "scope": "Decode corner arrow legends and slide markers inside corresponding coloured outlines, including diagonal corner guards, touching outlines, preserved interior pillars and actual outline-wall markers.",
+  "constraints": [
+    "Fixed wall-marker selection to draw candidates only from the outline ring while retaining pillars as obstacles; original code consumed pillar cells in 24/80 forced trials and removed every pillar in 2/80. Repaired 80/80 controls retained all pillars and had an actual outline marker.",
+    "Independent input-only legend, region and ray-prefix verification passed 1160 distinct scenes containing 5577 markers and 496 corner-guard stops, spanning all eight directions.",
+    "Forty 16x16 diagonal-wall cases without pillars and forty 30x30 multicolour/touching/pillar/wall-marker combinations succeeded.",
+    "Explicit replay now requires nonempty markers and rejects a marker starting on another path; all five canonical fixtures remain exact.",
+    "Unhashable colour entries reject as ValueError after type validation precedes distinctness checking.",
+    "Documented two-outline cap below 500 cells and same-colour touching/shared-wall semantics.",
+    "Final parameter retest: 30 successes and six expected rejections, no overrides."
+  ],
+  "known_limitations": [
+    "Each generated marker region has one bordering legend colour; multi-colour border-majority inference is not exercised.",
+    "Original hand-drawn outlines are replayed from explicit layouts; procedural scenes use unions of rectangles and staircases.",
+    "Explicit replay trusts supplied legend direction, but rejects absent markers, unmoving markers, duplicate endpoints and starts on another marker's path.",
+    "Under 500 cells there are at most two outlines per colour; larger canvases allow three subject to packing.",
+    "Non-20x20 sizes and optional shape/control combinations are synthetic extensions."
+  ],
+  "billing": "Claude Max CLI; API credentials excluded; no API fallback",
+  "authored_sha256": "ea78270bfc350f7a1f2a3690e4be16fee14dbbfcc61131d12ea2d308a30d30a5",
+  "stress_test": {
+    "task_id": "88e364bc",
+    "ready": true,
+    "samples_requested": 1000,
+    "samples_attempted": 1000,
+    "samples_passed": 1000,
+    "verifier_mode": "archived_pair_solver",
+    "verifier_evidence": {
+      "mode": "archived_pair_solver"
+    },
+    "improved_verifier_fixture_replay": null,
+    "seed_start": 20000,
+    "seed_end_exclusive": 21000,
+    "fixture_basis": {
+      "fixture": "canonical",
+      "corrected": false
+    },
+    "unique_inputs": 1000,
+    "changed_pairs": 1000,
+    "fixture_replays": 0,
+    "shapes": [
+      [
+        12,
+        13,
+        12,
+        13
+      ],
+      [
+        12,
+        17,
+        12,
+        17
+      ],
+      [
+        12,
+        19,
+        12,
+        19
+      ],
+      [
+        12,
+        20,
+        12,
+        20
+      ],
+      [
+        12,
+        21,
+        12,
+        21
+      ],
+      [
+        12,
+        22,
+        12,
+        22
+      ],
+      [
+        12,
+        23,
+        12,
+        23
+      ],
+      [
+        12,
+        24,
+        12,
+        24
+      ],
+      [
+        12,
+        25,
+        12,
+        25
+      ],
+      [
+        12,
+        26,
+        12,
+        26
+      ],
+      [
+        12,
+        28,
+        12,
+        28
+      ],
+      [
+        13,
+        13,
+        13,
+        13
+      ],
+      [
+        13,
+        14,
+        13,
+        14
+      ],
+      [
+        13,
+        15,
+        13,
+        15
+      ],
+      [
+        13,
+        18,
+        13,
+        18
+      ],
+      [
+        13,
+        19,
+        13,
+        19
+      ],
+      [
+        13,
+        20,
+        13,
+        20
+      ],
+      [
+        13,
+        21,
+        13,
+        21
+      ],
+      [
+        13,
+        22,
+        13,
+        22
+      ],
+      [
+        13,
+        25,
+        13,
+        25
+      ],
+      [
+        13,
+        27,
+        13,
+        27
+      ],
+      [
+        14,
+        12,
+        14,
+        12
+      ],
+      [
+        14,
+        15,
+        14,
+        15
+      ],
+      [
+        14,
+        16,
+        14,
+        16
+      ],
+      [
+        14,
+        17,
+        14,
+        17
+      ],
+      [
+        14,
+        18,
+        14,
+        18
+      ],
+      [
+        14,
+        19,
+        14,
+        19
+      ],
+      [
+        14,
+        20,
+        14,
+        20
+      ],
+      [
+        14,
+        22,
+        14,
+        22
+      ],
+      [
+        14,
+        23,
+        14,
+        23
+      ],
+      [
+        14,
+        24,
+        14,
+        24
+      ],
+      [
+        14,
+        25,
+        14,
+        25
+      ],
+      [
+        14,
+        26,
+        14,
+        26
+      ],
+      [
+        14,
+        27,
+        14,
+        27
+      ],
+      [
+        14,
+        28,
+        14,
+        28
+      ],
+      [
+        15,
+        12,
+        15,
+        12
+      ],
+      [
+        15,
+        13,
+        15,
+        13
+      ],
+      [
+        15,
+        14,
+        15,
+        14
+      ],
+      [
+        15,
+        16,
+        15,
+        16
+      ],
+      [
+        15,
+        17,
+        15,
+        17
+      ],
+      [
+        15,
+        18,
+        15,
+        18
+      ],
+      [
+        15,
+        19,
+        15,
+        19
+      ],
+      [
+        15,
+        20,
+        15,
+        20
+      ],
+      [
+        15,
+        21,
+        15,
+        21
+      ],
+      [
+        15,
+        22,
+        15,
+        22
+      ],
+      [
+        15,
+        23,
+        15,
+        23
+      ],
+      [
+        15,
+        24,
+        15,
+        24
+      ],
+      [
+        15,
+        25,
+        15,
+        25
+      ],
+      [
+        15,
+        27,
+        15,
+        27
+      ],
+      [
+        15,
+        28,
+        15,
+        28
+      ],
+      [
+        16,
+        14,
+        16,
+        14
+      ],
+      [
+        16,
+        15,
+        16,
+        15
+      ],
+      [
+        16,
+        16,
+        16,
+        16
+      ],
+      [
+        16,
+        17,
+        16,
+        17
+      ],
+      [
+        16,
+        18,
+        16,
+        18
+      ],
+      [
+        16,
+        19,
+        16,
+        19
+      ],
+      [
+        16,
+        20,
+        16,
+        20
+      ],
+      [
+        16,
+        21,
+        16,
+        21
+      ],
+      [
+        16,
+        22,
+        16,
+        22
+      ],
+      [
+        16,
+        23,
+        16,
+        23
+      ],
+      [
+        16,
+        24,
+        16,
+        24
+      ],
+      [
+        16,
+        25,
+        16,
+        25
+      ],
+      [
+        16,
+        26,
+        16,
+        26
+      ],
+      [
+        16,
+        27,
+        16,
+        27
+      ],
+      [
+        16,
+        28,
+        16,
+        28
+      ],
+      [
+        17,
+        12,
+        17,
+        12
+      ],
+      [
+        17,
+        13,
+        17,
+        13
+      ],
+      [
+        17,
+        14,
+        17,
+        14
+      ],
+      [
+        17,
+        15,
+        17,
+        15
+      ],
+      [
+        17,
+        16,
+        17,
+        16
+      ],
+      [
+        17,
+        17,
+        17,
+        17
+      ],
+      [
+        17,
+        18,
+        17,
+        18
+      ],
+      [
+        17,
+        20,
+        17,
+        20
+      ],
+      [
+        17,
+        21,
+        17,
+        21
+      ],
+      [
+        17,
+        22,
+        17,
+        22
+      ],
+      [
+        17,
+        23,
+        17,
+        23
+      ],
+      [
+        17,
+        24,
+        17,
+        24
+      ],
+      [
+        17,
+        25,
+        17,
+        25
+      ],
+      [
+        17,
+        26,
+        17,
+        26
+      ],
+      [
+        17,
+        27,
+        17,
+        27
+      ],
+      [
+        17,
+        28,
+        17,
+        28
+      ],
+      [
+        18,
+        14,
+        18,
+        14
+      ],
+      [
+        18,
+        16,
+        18,
+        16
+      ],
+      [
+        18,
+        17,
+        18,
+        17
+      ],
+      [
+        18,
+        18,
+        18,
+        18
+      ],
+      [
+        18,
+        19,
+        18,
+        19
+      ],
+      [
+        18,
+        20,
+        18,
+        20
+      ],
+      [
+        18,
+        21,
+        18,
+        21
+      ],
+      [
+        18,
+        22,
+        18,
+        22
+      ],
+      [
+        18,
+        23,
+        18,
+        23
+      ],
+      [
+        18,
+        24,
+        18,
+        24
+      ],
+      [
+        18,
+        25,
+        18,
+        25
+      ],
+      [
+        18,
+        26,
+        18,
+        26
+      ],
+      [
+        18,
+        27,
+        18,
+        27
+      ],
+      [
+        18,
+        28,
+        18,
+        28
+      ],
+      [
+        19,
+        13,
+        19,
+        13
+      ],
+      [
+        19,
+        14,
+        19,
+        14
+      ],
+      [
+        19,
+        15,
+        19,
+        15
+      ],
+      [
+        19,
+        16,
+        19,
+        16
+      ],
+      [
+        19,
+        17,
+        19,
+        17
+      ],
+      [
+        19,
+        18,
+        19,
+        18
+      ],
+      [
+        19,
+        19,
+        19,
+        19
+      ],
+      [
+        19,
+        21,
+        19,
+        21
+      ],
+      [
+        19,
+        22,
+        19,
+        22
+      ],
+      [
+        19,
+        23,
+        19,
+        23
+      ],
+      [
+        19,
+        24,
+        19,
+        24
+      ],
+      [
+        19,
+        25,
+        19,
+        25
+      ],
+      [
+        19,
+        26,
+        19,
+        26
+      ],
+      [
+        19,
+        27,
+        19,
+        27
+      ],
+      [
+        19,
+        28,
+        19,
+        28
+      ],
+      [
+        20,
+        13,
+        20,
+        13
+      ],
+      [
+        20,
+        14,
+        20,
+        14
+      ],
+      [
+        20,
+        16,
+        20,
+        16
+      ],
+      [
+        20,
+        17,
+        20,
+        17
+      ],
+      [
+        20,
+        18,
+        20,
+        18
+      ],
+      [
+        20,
+        19,
+        20,
+        19
+      ],
+      [
+        20,
+        20,
+        20,
+        20
+      ],
+      [
+        20,
+        21,
+        20,
+        21
+      ],
+      [
+        20,
+        22,
+        20,
+        22
+      ],
+      [
+        20,
+        23,
+        20,
+        23
+      ],
+      [
+        20,
+        24,
+        20,
+        24
+      ],
+      [
+        20,
+        25,
+        20,
+        25
+      ],
+      [
+        20,
+        26,
+        20,
+        26
+      ],
+      [
+        20,
+        27,
+        20,
+        27
+      ],
+      [
+        20,
+        28,
+        20,
+        28
+      ],
+      [
+        21,
+        14,
+        21,
+        14
+      ],
+      [
+        21,
+        15,
+        21,
+        15
+      ],
+      [
+        21,
+        16,
+        21,
+        16
+      ],
+      [
+        21,
+        17,
+        21,
+        17
+      ],
+      [
+        21,
+        18,
+        21,
+        18
+      ],
+      [
+        21,
+        19,
+        21,
+        19
+      ],
+      [
+        21,
+        20,
+        21,
+        20
+      ],
+      [
+        21,
+        21,
+        21,
+        21
+      ],
+      [
+        21,
+        22,
+        21,
+        22
+      ],
+      [
+        21,
+        23,
+        21,
+        23
+      ],
+      [
+        21,
+        24,
+        21,
+        24
+      ],
+      [
+        21,
+        25,
+        21,
+        25
+      ],
+      [
+        21,
+        26,
+        21,
+        26
+      ],
+      [
+        21,
+        27,
+        21,
+        27
+      ],
+      [
+        21,
+        28,
+        21,
+        28
+      ],
+      [
+        22,
+        12,
+        22,
+        12
+      ],
+      [
+        22,
+        13,
+        22,
+        13
+      ],
+      [
+        22,
+        14,
+        22,
+        14
+      ],
+      [
+        22,
+        15,
+        22,
+        15
+      ],
+      [
+        22,
+        16,
+        22,
+        16
+      ],
+      [
+        22,
+        17,
+        22,
+        17
+      ],
+      [
+        22,
+        18,
+        22,
+        18
+      ],
+      [
+        22,
+        19,
+        22,
+        19
+      ],
+      [
+        22,
+        20,
+        22,
+        20
+      ],
+      [
+        22,
+        21,
+        22,
+        21
+      ],
+      [
+        22,
+        22,
+        22,
+        22
+      ],
+      [
+        22,
+        23,
+        22,
+        23
+      ],
+      [
+        22,
+        24,
+        22,
+        24
+      ],
+      [
+        22,
+        25,
+        22,
+        25
+      ],
+      [
+        22,
+        26,
+        22,
+        26
+      ],
+      [
+        22,
+        27,
+        22,
+        27
+      ],
+      [
+        22,
+        28,
+        22,
+        28
+      ],
+      [
+        23,
+        12,
+        23,
+        12
+      ],
+      [
+        23,
+        14,
+        23,
+        14
+      ],
+      [
+        23,
+        15,
+        23,
+        15
+      ],
+      [
+        23,
+        16,
+        23,
+        16
+      ],
+      [
+        23,
+        17,
+        23,
+        17
+      ],
+      [
+        23,
+        18,
+        23,
+        18
+      ],
+      [
+        23,
+        19,
+        23,
+        19
+      ],
+      [
+        23,
+        20,
+        23,
+        20
+      ],
+      [
+        23,
+        22,
+        23,
+        22
+      ],
+      [
+        23,
+        23,
+        23,
+        23
+      ],
+      [
+        23,
+        24,
+        23,
+        24
+      ],
+      [
+        23,
+        25,
+        23,
+        25
+      ],
+      [
+        23,
+        26,
+        23,
+        26
+      ],
+      [
+        23,
+        27,
+        23,
+        27
+      ],
+      [
+        23,
+        28,
+        23,
+        28
+      ],
+      [
+        24,
+        14,
+        24,
+        14
+      ],
+      [
+        24,
+        15,
+        24,
+        15
+      ],
+      [
+        24,
+        16,
+        24,
+        16
+      ],
+      [
+        24,
+        17,
+        24,
+        17
+      ],
+      [
+        24,
+        18,
+        24,
+        18
+      ],
+      [
+        24,
+        19,
+        24,
+        19
+      ],
+      [
+        24,
+        20,
+        24,
+        20
+      ],
+      [
+        24,
+        21,
+        24,
+        21
+      ],
+      [
+        24,
+        22,
+        24,
+        22
+      ],
+      [
+        24,
+        23,
+        24,
+        23
+      ],
+      [
+        24,
+        24,
+        24,
+        24
+      ],
+      [
+        24,
+        25,
+        24,
+        25
+      ],
+      [
+        24,
+        26,
+        24,
+        26
+      ],
+      [
+        24,
+        27,
+        24,
+        27
+      ],
+      [
+        24,
+        28,
+        24,
+        28
+      ],
+      [
+        25,
+        12,
+        25,
+        12
+      ],
+      [
+        25,
+        14,
+        25,
+        14
+      ],
+      [
+        25,
+        15,
+        25,
+        15
+      ],
+      [
+        25,
+        16,
+        25,
+        16
+      ],
+      [
+        25,
+        17,
+        25,
+        17
+      ],
+      [
+        25,
+        18,
+        25,
+        18
+      ],
+      [
+        25,
+        19,
+        25,
+        19
+      ],
+      [
+        25,
+        20,
+        25,
+        20
+      ],
+      [
+        25,
+        21,
+        25,
+        21
+      ],
+      [
+        25,
+        22,
+        25,
+        22
+      ],
+      [
+        25,
+        23,
+        25,
+        23
+      ],
+      [
+        25,
+        24,
+        25,
+        24
+      ],
+      [
+        25,
+        25,
+        25,
+        25
+      ],
+      [
+        25,
+        26,
+        25,
+        26
+      ],
+      [
+        25,
+        27,
+        25,
+        27
+      ],
+      [
+        25,
+        28,
+        25,
+        28
+      ],
+      [
+        26,
+        14,
+        26,
+        14
+      ],
+      [
+        26,
+        15,
+        26,
+        15
+      ],
+      [
+        26,
+        16,
+        26,
+        16
+      ],
+      [
+        26,
+        17,
+        26,
+        17
+      ],
+      [
+        26,
+        18,
+        26,
+        18
+      ],
+      [
+        26,
+        19,
+        26,
+        19
+      ],
+      [
+        26,
+        20,
+        26,
+        20
+      ],
+      [
+        26,
+        21,
+        26,
+        21
+      ],
+      [
+        26,
+        22,
+        26,
+        22
+      ],
+      [
+        26,
+        23,
+        26,
+        23
+      ],
+      [
+        26,
+        24,
+        26,
+        24
+      ],
+      [
+        26,
+        25,
+        26,
+        25
+      ],
+      [
+        26,
+        26,
+        26,
+        26
+      ],
+      [
+        26,
+        27,
+        26,
+        27
+      ],
+      [
+        26,
+        28,
+        26,
+        28
+      ],
+      [
+        27,
+        12,
+        27,
+        12
+      ],
+      [
+        27,
+        13,
+        27,
+        13
+      ],
+      [
+        27,
+        14,
+        27,
+        14
+      ],
+      [
+        27,
+        15,
+        27,
+        15
+      ],
+      [
+        27,
+        16,
+        27,
+        16
+      ],
+      [
+        27,
+        17,
+        27,
+        17
+      ],
+      [
+        27,
+        18,
+        27,
+        18
+      ],
+      [
+        27,
+        19,
+        27,
+        19
+      ],
+      [
+        27,
+        20,
+        27,
+        20
+      ],
+      [
+        27,
+        21,
+        27,
+        21
+      ],
+      [
+        27,
+        22,
+        27,
+        22
+      ],
+      [
+        27,
+        23,
+        27,
+        23
+      ],
+      [
+        27,
+        24,
+        27,
+        24
+      ],
+      [
+        27,
+        25,
+        27,
+        25
+      ],
+      [
+        27,
+        26,
+        27,
+        26
+      ],
+      [
+        27,
+        27,
+        27,
+        27
+      ],
+      [
+        27,
+        28,
+        27,
+        28
+      ],
+      [
+        28,
+        12,
+        28,
+        12
+      ],
+      [
+        28,
+        13,
+        28,
+        13
+      ],
+      [
+        28,
+        14,
+        28,
+        14
+      ],
+      [
+        28,
+        16,
+        28,
+        16
+      ],
+      [
+        28,
+        17,
+        28,
+        17
+      ],
+      [
+        28,
+        18,
+        28,
+        18
+      ],
+      [
+        28,
+        19,
+        28,
+        19
+      ],
+      [
+        28,
+        20,
+        28,
+        20
+      ],
+      [
+        28,
+        21,
+        28,
+        21
+      ],
+      [
+        28,
+        22,
+        28,
+        22
+      ],
+      [
+        28,
+        23,
+        28,
+        23
+      ],
+      [
+        28,
+        24,
+        28,
+        24
+      ],
+      [
+        28,
+        25,
+        28,
+        25
+      ],
+      [
+        28,
+        26,
+        28,
+        26
+      ],
+      [
+        28,
+        27,
+        28,
+        27
+      ],
+      [
+        28,
+        28,
+        28,
+        28
+      ]
+    ],
+    "fixture_matches": {
+      "canonical": true,
+      "teaching_fixture": true
+    },
+    "original_solver_replay": {
+      "canonical": {
+        "correct": 5,
+        "total": 5,
+        "all_exact": true
+      },
+      "teaching_fixture": {
+        "correct": 5,
+        "total": 5,
+        "all_exact": true
+      }
+    },
+    "errors": [],
+    "sha256": "dddaa22910a27105d7a38443d6ce5e37cf73c9d0e031d07bd76e2af91905bca6",
+    "status": "validated_candidate_needs_semantic_review",
+    "limitations": "Bounded randomized agreement with a saved solver is not proof of semantic completeness."
+  },
+  "authored_scope": "Random scenes have 1..3 shape colours plus an optional distractor legend, which may be any unused palette colour, including 1. Supported variations: all 8 directions; 1..3 arrows per legend in 5..7-sided corner boxes; a colour-1 legend with a non-1 tail; rectangle-union or staircase interiors; optional touching and shared walls; optional pillars; an optional wall-replacing marker; diagonal guard-biased markers. Sides run from 10+2*legends up to 28 when random, or up to 30 when explicit; sizes other than 20x20 are synthetic extensions. Deliberately not supported: free-form hand-drawn outlines in random mode, nested outlines, markers outside any outline, and legends that are not in corners. Canonical fixtures are replayed from explicit lifted layouts plus marker tuples, because the hand-drawn walls are not parameterised by the random constructor.",
+  "authored_constraints": [
+    "Every 2 has exactly seven frame neighbours and exactly one tail neighbour. The tail colour differs from the frame and is never 0, 2 or 4.",
+    "Every interior is the hole-free, 4-connected interior of its own 8-ring wall, so its lifted region borders only its own colour, and that colour has a legend.",
+    "Outlines never overlap legends. In non-touching mode they keep a 1-cell background gap from each other.",
+    "Every marker moves at least one cell. No marker starts on another marker's path, and all end cells are distinct.",
+    "Background is more than half of the grid.",
+    "A wall marker's outward neighbours are thickened so that, once lifted, it joins only its own interior.",
+    "Explicit sides must be integers in 12..30 and at least 10+2*legends. Flags must be None or bool. Colours and directions must be ints, not bools.",
+    "Replay layouts must be rectangular digit strings without colour 4. Replay markers must be in bounds, on background, have unit directions, move at least one cell, and have distinct starts and ends."
+  ],
+  "semantic_review": {
+    "status": "reviewed",
+    "checks": [
+      "Fixed wall-marker selection to draw candidates only from the outline ring while retaining pillars as obstacles; original code consumed pillar cells in 24/80 forced trials and removed every pillar in 2/80. Repaired 80/80 controls retained all pillars and had an actual outline marker.",
+      "Independent input-only legend, region and ray-prefix verification passed 1160 distinct scenes containing 5577 markers and 496 corner-guard stops, spanning all eight directions.",
+      "Forty 16x16 diagonal-wall cases without pillars and forty 30x30 multicolour/touching/pillar/wall-marker combinations succeeded.",
+      "Explicit replay now requires nonempty markers and rejects a marker starting on another path; all five canonical fixtures remain exact.",
+      "Unhashable colour entries reject as ValueError after type validation precedes distinctness checking.",
+      "Documented two-outline cap below 500 cells and same-colour touching/shared-wall semantics.",
+      "Final parameter retest: 30 successes and six expected rejections, no overrides.",
+      "1000 independent seeds 20000..20999; approved validation fixtures reconstructed exactly; canonical replay reported separately"
+    ],
+    "limitations": [
+      "Each generated marker region has one bordering legend colour; multi-colour border-majority inference is not exercised.",
+      "Original hand-drawn outlines are replayed from explicit layouts; procedural scenes use unions of rectangles and staircases.",
+      "Explicit replay trusts supplied legend direction, but rejects absent markers, unmoving markers, duplicate endpoints and starts on another marker's path.",
+      "Under 500 cells there are at most two outlines per colour; larger canvases allow three subject to packing.",
+      "Non-20x20 sizes and optional shape/control combinations are synthetic extensions."
+    ]
+  },
+  "diversity_audit": {
+    "task_id": "88e364bc",
+    "source_sha256": "dddaa22910a27105d7a38443d6ce5e37cf73c9d0e031d07bd76e2af91905bca6",
+    "method": "Decode two-cell-tail arrows from visible legends; flood-fill lifted-marker regions; recover outline colour and compute unobstructed ray prefix with diagonal side-cell guard. Separately instrument constructor controls to verify wall-versus-pillar identity.",
+    "counts": {
+      "markers": 5577,
+      "corner_guard_stops": 496,
+      "unused_legend_scenes": 374,
+      "checked": 1160,
+      "default": 1000,
+      "wall_marker_scenes": 441,
+      "pillar_scenes": 435,
+      "retained_pillar_cells": 1995,
+      "wall_and_pillar": 80,
+      "diagonal_wall": 40,
+      "large_multicolour": 40
+    },
+    "unique_inputs": 1160,
+    "direction_counts": {
+      "(-1, 1)": 674,
+      "(1, -1)": 662,
+      "(-1, 0)": 683,
+      "(0, -1)": 666,
+      "(1, 1)": 644,
+      "(0, 1)": 641,
+      "(1, 0)": 792,
+      "(-1, -1)": 815
+    },
+    "shape_histogram": {
+      "12x15": 3,
+      "12x16": 1,
+      "12x17": 2,
+      "12x18": 1,
+      "12x19": 3,
+      "12x20": 2,
+      "12x21": 1,
+      "12x22": 1,
+      "12x23": 1,
+      "12x25": 1,
+      "12x27": 1,
+      "12x28": 1,
+      "13x13": 1,
+      "13x14": 1,
+      "13x15": 2,
+      "13x16": 2,
+      "13x17": 2,
+      "13x18": 1,
+      "13x19": 2,
+      "13x20": 2,
+      "13x21": 1,
+      "13x25": 1,
+      "13x26": 2,
+      "13x27": 1,
+      "13x28": 1,
+      "14x12": 1,
+      "14x13": 1,
+      "14x15": 4,
+      "14x16": 1,
+      "14x17": 3,
+      "14x18": 1,
+      "14x19": 2,
+      "14x20": 2,
+      "14x21": 3,
+      "14x22": 4,
+      "14x23": 6,
+      "14x24": 2,
+      "14x25": 1,
+      "14x26": 2,
+      "14x27": 1,
+      "14x28": 4,
+      "15x12": 1,
+      "15x13": 2,
+      "15x14": 2,
+      "15x15": 2,
+      "15x16": 4,
+      "15x17": 4,
+      "15x18": 1,
+      "15x19": 1,
+      "15x20": 3,
+      "15x21": 4,
+      "15x23": 4,
+      "15x24": 1,
+      "15x25": 4,
+      "15x26": 5,
+      "15x27": 4,
+      "15x28": 1,
+      "16x13": 1,
+      "16x14": 1,
+      "16x15": 3,
+      "16x16": 41,
+      "16x17": 3,
+      "16x18": 4,
+      "16x19": 7,
+      "16x20": 6,
+      "16x21": 3,
+      "16x22": 4,
+      "16x23": 5,
+      "16x24": 4,
+      "16x25": 3,
+      "16x26": 2,
+      "16x27": 5,
+      "16x28": 9,
+      "17x12": 1,
+      "17x14": 3,
+      "17x15": 3,
+      "17x16": 3,
+      "17x17": 3,
+      "17x18": 4,
+      "17x19": 4,
+      "17x20": 5,
+      "17x21": 5,
+      "17x22": 4,
+      "17x23": 4,
+      "17x24": 3,
+      "17x25": 5,
+      "17x26": 3,
+      "17x27": 3,
+      "17x28": 4,
+      "18x12": 3,
+      "18x13": 1,
+      "18x14": 4,
+      "18x15": 4,
+      "18x16": 4,
+      "18x17": 3,
+      "18x18": 3,
+      "18x19": 3,
+      "18x20": 8,
+      "18x21": 3,
+      "18x22": 5,
+      "18x23": 2,
+      "18x24": 10,
+      "18x25": 2,
+      "18x26": 8,
+      "18x27": 2,
+      "18x28": 4,
+      "19x12": 2,
+      "19x13": 1,
+      "19x14": 2,
+      "19x15": 2,
+      "19x16": 2,
+      "19x17": 5,
+      "19x18": 4,
+      "19x19": 5,
+      "19x20": 6,
+      "19x21": 4,
+      "19x22": 5,
+      "19x23": 4,
+      "19x24": 6,
+      "19x25": 6,
+      "19x26": 3,
+      "19x27": 5,
+      "19x28": 4,
+      "20x12": 1,
+      "20x13": 2,
+      "20x14": 3,
+      "20x15": 3,
+      "20x16": 3,
+      "20x17": 6,
+      "20x18": 8,
+      "20x19": 8,
+      "20x20": 3,
+      "20x21": 4,
+      "20x22": 4,
+      "20x23": 4,
+      "20x24": 7,
+      "20x25": 5,
+      "20x26": 7,
+      "20x27": 4,
+      "20x28": 3,
+      "21x13": 1,
+      "21x14": 3,
+      "21x16": 6,
+      "21x17": 4,
+      "21x18": 5,
+      "21x19": 7,
+      "21x20": 6,
+      "21x21": 6,
+      "21x22": 3,
+      "21x23": 6,
+      "21x24": 4,
+      "21x25": 7,
+      "21x26": 5,
+      "21x27": 6,
+      "21x28": 7,
+      "22x12": 1,
+      "22x13": 2,
+      "22x14": 3,
+      "22x15": 1,
+      "22x16": 2,
+      "22x17": 1,
+      "22x18": 9,
+      "22x19": 5,
+      "22x20": 4,
+      "22x21": 8,
+      "22x22": 15,
+      "22x23": 5,
+      "22x24": 4,
+      "22x25": 6,
+      "22x26": 4,
+      "22x27": 9,
+      "22x28": 7,
+      "23x12": 2,
+      "23x13": 2,
+      "23x14": 3,
+      "23x15": 1,
+      "23x16": 4,
+      "23x17": 4,
+      "23x18": 2,
+      "23x19": 7,
+      "23x20": 5,
+      "23x21": 3,
+      "23x22": 3,
+      "23x23": 8,
+      "23x24": 5,
+      "23x25": 6,
+      "23x26": 3,
+      "23x27": 9,
+      "23x28": 6,
+      "24x12": 2,
+      "24x13": 1,
+      "24x14": 1,
+      "24x15": 1,
+      "24x16": 3,
+      "24x17": 8,
+      "24x18": 3,
+      "24x19": 8,
+      "24x20": 3,
+      "24x21": 5,
+      "24x22": 7,
+      "24x23": 5,
+      "24x24": 4,
+      "24x25": 5,
+      "24x26": 5,
+      "24x27": 6,
+      "24x28": 6,
+      "25x13": 1,
+      "25x14": 3,
+      "25x15": 2,
+      "25x16": 3,
+      "25x17": 5,
+      "25x18": 3,
+      "25x19": 3,
+      "25x20": 8,
+      "25x21": 5,
+      "25x22": 10,
+      "25x23": 9,
+      "25x24": 7,
+      "25x25": 7,
+      "25x26": 5,
+      "25x28": 3,
+      "26x12": 1,
+      "26x13": 1,
+      "26x14": 4,
+      "26x15": 4,
+      "26x16": 2,
+      "26x17": 3,
+      "26x18": 3,
+      "26x19": 8,
+      "26x20": 3,
+      "26x21": 9,
+      "26x22": 8,
+      "26x23": 7,
+      "26x24": 4,
+      "26x25": 7,
+      "26x26": 7,
+      "26x27": 8,
+      "26x28": 5,
+      "27x13": 1,
+      "27x14": 2,
+      "27x15": 2,
+      "27x16": 3,
+      "27x17": 7,
+      "27x18": 4,
+      "27x19": 3,
+      "27x20": 3,
+      "27x21": 4,
+      "27x22": 10,
+      "27x23": 3,
+      "27x24": 7,
+      "27x25": 8,
+      "27x26": 3,
+      "27x27": 4,
+      "27x28": 8,
+      "28x12": 2,
+      "28x13": 3,
+      "28x15": 1,
+      "28x16": 5,
+      "28x17": 7,
+      "28x18": 5,
+      "28x19": 10,
+      "28x20": 4,
+      "28x21": 6,
+      "28x22": 4,
+      "28x23": 11,
+      "28x24": 7,
+      "28x25": 7,
+      "28x26": 6,
+      "28x27": 10,
+      "28x28": 8,
+      "30x30": 40
+    },
+    "max_generation_seconds": {
+      "default": 0.07875016599427909,
+      "wall_and_pillar": 0.010292291990481317,
+      "diagonal_wall": 0.008453208021819592,
+      "large_multicolour": 0.02168875001370907
+    },
+    "original_wall_pillar_controls": {
+      "checked": 80,
+      "marker_consumed_pillar": 24,
+      "no_outline_wall_marker": 24,
+      "all_pillars_consumed": 2
+    },
+    "limitations": [
+      "Each generated marker region has one bordering legend colour; multi-colour border-majority inference is not exercised.",
+      "Original hand-drawn outlines are replayed from explicit layouts; procedural scenes use unions of rectangles and staircases.",
+      "Explicit replay trusts supplied legend direction, but rejects absent markers, unmoving markers, duplicate endpoints and starts on another marker's path.",
+      "Under 500 cells there are at most two outlines per colour; larger canvases allow three subject to packing.",
+      "Non-20x20 sizes and optional shape/control combinations are synthetic extensions."
+    ]
+  }
+}

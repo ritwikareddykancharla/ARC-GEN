@@ -11,6 +11,51 @@ from .fixture_policy import fixture_basis
 from .augmentation import apply_episode,settings,exhaustive_variants
 
 class GeneratorTests(unittest.TestCase):
+    def test_sliding_wall_markers_preserve_interior_pillars(self):
+        sliding=importlib.import_module('tasks.task_88e364bc')
+        original_attempt,original_place=sliding._attempt,sliding._place_shape
+        successful_shapes=[]
+        def track_attempt(*args,**kwargs):
+            successful_shapes.clear()
+            return original_attempt(*args,**kwargs)
+        def track_place(*args,**kwargs):
+            shape=original_place(*args,**kwargs)
+            if shape is not None:successful_shapes.append(shape)
+            return shape
+        with patch.object(sliding,'_attempt',side_effect=track_attempt), \
+             patch.object(sliding,'_place_shape',side_effect=track_place):
+            for seed in range(42000,42010):
+                random.seed(seed)
+                pair=sliding.generate(colours=[8],pillars=True,
+                                      wall_marker=True,touching=False)
+                starts={(r,c) for r,row in enumerate(pair['input'])
+                        for c,v in enumerate(row) if v==4}
+                rings=set().union(*(s['ring'] for s in successful_shapes))
+                pillars=set().union(*(s['pillar'] for s in successful_shapes))
+                self.assertTrue(pillars)
+                self.assertEqual(len(starts&rings),1)
+                self.assertFalse(starts&pillars)
+                for r,c in pillars:
+                    self.assertEqual(pair['input'][r][c],8)
+                    self.assertEqual(pair['output'][r][c],8)
+                self.assertEqual(pair['output'],
+                                 grid(call(solver('88e364bc'),pair['input'])))
+
+    def test_sliding_replay_requires_markers_and_separate_paths(self):
+        sliding=importlib.import_module('tasks.task_88e364bc')
+        for markers in (None,[],3):
+            with self.subTest(markers=markers),self.assertRaises(ValueError):
+                sliding.generate(layout=['00000']*3,markers=markers)
+        with self.assertRaisesRegex(ValueError,'another marker'):
+            sliding.generate(layout=['00000']*3,
+                             markers=[(0,0,0,1),(0,2,1,0)])
+
+    def test_sliding_bad_colour_types_reject_cleanly(self):
+        sliding=importlib.import_module('tasks.task_88e364bc')
+        for colours in ([[3]],[{}],[True],[3.5]):
+            with self.subTest(colours=colours),self.assertRaises(ValueError):
+                sliding.generate(colours=colours)
+
     def test_slab_random_retries_keep_selected_piece_count(self):
         slab=importlib.import_module('tasks.task_83eb0a57')
         for seed in range(41000,41012):

@@ -11,6 +11,62 @@ from .fixture_policy import fixture_basis
 from .augmentation import apply_episode,settings,exhaustive_variants
 
 class GeneratorTests(unittest.TestCase):
+    def test_bracket_count_is_retained_and_tight_packing_is_constructive(self):
+        m=importlib.import_module('tasks.task_93c31fbe')
+        random.seed(40000)
+        with patch.object(m,'_sample_boxes',return_value=None):
+            pair=m.generate(width=5,height=30,num_frames=4,colour=2)
+        self.assertEqual(sum(row.count(2) for row in pair['input']),48)
+        self.assertEqual(pair['output'],grid(call(solver('93c31fbe'),pair['input'])))
+        attempts=[];original=m._sample_boxes
+        def fail_45(h,w,n):
+            attempts.append(n)
+            return None if len(attempts)<=45 else original(h,w,n)
+        random.seed(6)
+        with patch.object(m,'_sample_boxes',fail_45):m.generate(width=30,height=30)
+        self.assertEqual(len(set(attempts)),1)
+
+    def test_bracket_explicit_marker_density_and_malformed_containers(self):
+        m=importlib.import_module('tasks.task_93c31fbe')
+        for kw in ({'frames':[5],'ones':[]},{'frames':5,'ones':[]},
+                   {'frames':[(0,0,4,5)],'ones':[3]}):
+            with self.assertRaises(ValueError):m.generate(width=10,height=10,**kw)
+        pair=m.generate(width=10,height=10,colour=2,frames=[(0,0,8,9)],
+                        ones=[(r,c) for r in range(1,8) for c in range(1,5)])
+        counts=Counter(sum(pair['output'],[]))
+        self.assertGreater(counts[1],counts[0])
+        self.assertEqual(pair['output'],grid(call(solver('93c31fbe'),pair['input'])))
+
+    def test_panel_small_canvas_and_transposed_dot_span(self):
+        m=importlib.import_module('tasks.task_94133066')
+        for h,w in [(11,11),(12,12),(14,14),(7,11),(11,7),(10,25)]:
+            random.seed(40021)
+            pair=m.generate(height=h,width=w,transform='transpose')
+            self.assertEqual((len(pair['input']),len(pair['input'][0])),(h,w))
+            self.assertEqual(pair['output'],grid(call(solver('94133066'),pair['input'])))
+        with self.assertRaisesRegex(ValueError,'feasible'):
+            m.generate(height=10,width=10)
+        with self.assertRaisesRegex(ValueError,'feasible'):
+            m.generate(panel_height=26,panel_width=5,transform='rot90')
+        for _ in range(10):
+            self.assertGreaterEqual(m._sep_axis(20,5,2,True,None,10)[1],14)
+            self.assertLessEqual(m._sep_axis(20,5,2,False,None,10)[1],4)
+
+    def test_panel_connected_border_guard_and_corrected_reference_prose(self):
+        m=importlib.import_module('tasks.task_94133066')
+        cells=[(r,c) for r in range(2,12) for c in range(2,12)
+               if (r,c) not in {(6,6),(6,7),(7,6),(7,7)}]
+        with self.assertRaisesRegex(ValueError,'unique largest'):
+            m.generate(height=30,width=30,panel_top=1,panel_left=1,
+                       panel_height=14,panel_width=14,corners=(2,3,4,0),
+                       shape_color=5,shape_cells=cells,transform='rot90')
+        r=reference('94133066')
+        self.assertIn('180° rotation',r['original_teacher_explanation'])
+        self.assertIn('required transform is anti-transpose',r['explanation'])
+        self.assertEqual(r['explanation_review']['canonical_transforms'],
+                         ['transpose','anti_transpose','flip_v','anti_transpose'])
+        self.assertTrue(check_reference('94133066')['canonical']['all_exact'])
+
     def test_noise_triangle_counts_cells_excludes_marker_and_preserves_figure(self):
         m=importlib.import_module('tasks.task_902510d5')
         figure=[(4,4),(5,5),(6,4),(7,5),(8,4)]

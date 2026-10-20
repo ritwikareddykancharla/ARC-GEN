@@ -1005,8 +1005,31 @@ class GeneratorTests(unittest.TestCase):
                     modified[variant]['train'][0]['input'][0][0] + 1) % 10
                 with self.assertRaisesRegex(ValueError, 'hashes changed'):
                     fixture_basis(tid, modified)
-        self.assertEqual(fixture_basis('e12f9a14'),
+        self.assertEqual(fixture_basis('unreviewed_task'),
                          {'fixture': 'canonical', 'corrected': False})
+
+    def test_local_ray_correction_is_pinned_and_not_official(self):
+        import copy
+        packet = reference('e12f9a14')
+        basis = fixture_basis('e12f9a14', packet)
+        self.assertEqual(basis['evidence_status'],
+                         'locally_reviewed_hypothesis_not_official_correction')
+        reconstructed = copy.deepcopy(packet['canonical'])
+        for cell in basis['changed_cells']:
+            self.assertEqual((cell['split'], cell['pair'], cell['field']),
+                             ('train', 2, 'output'))
+            row, col = cell['row'], cell['col']
+            self.assertEqual(packet['canonical']['train'][2]['input'][row][col], 8)
+            self.assertEqual(reconstructed['train'][2]['output'][row][col], 8)
+            reconstructed['train'][2]['output'][row][col] = 4
+        self.assertEqual(len(basis['changed_cells']), 6)
+        self.assertEqual(reconstructed, packet['teaching_fixture'])
+        self.assertEqual(check_reference('e12f9a14')['canonical']['correct'], 5)
+        self.assertEqual(check_reference('e12f9a14')['teaching_fixture']['correct'], 6)
+        modified = copy.deepcopy(packet)
+        modified['teaching_fixture']['train'][2]['output'][13][14] = 8
+        with self.assertRaisesRegex(ValueError, 'hashes changed'):
+            fixture_basis('e12f9a14', modified)
 
     def test_panel_style_clean_line_recovery_and_periodic_strip_controls(self):
         panels=importlib.import_module('tasks.task_4e45f183')

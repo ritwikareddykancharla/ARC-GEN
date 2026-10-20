@@ -72,6 +72,18 @@ APPROVED_CORRECTIONS = {
  ('train', 0, 8, 8, 7, 9)]
         ],
     },
+    'e12f9a14': {
+        'canonical_sha256': 'a1cc429cf5f97fd8dcb45a950adb349efbe656e1df910f345f15fe2f70b7aa9e',
+        'teaching_sha256': '93f840ad5d248dd01325d6fda5de589534b81c28a7289f98775d0bf21b1e7355',
+        'source': 'arc_agi2/reports/label-reviews/e12f9a14.json',
+        'approval': 'User requested corrected training copies and delegated investigation/finalization on 2026-10-20; local review selected the uniform-ray teaching hypothesis.',
+        'evidence_status': 'locally_reviewed_hypothesis_not_official_correction',
+        'description': 'Add the six-cell yellow ray from the open bottom-right corner in train[2]. Original labels and benchmark scoring remain unchanged; intended-label uncertainty remains explicit.',
+        'changed_cells': [
+            dict(split='train', pair=2, field='output', row=y, col=x, canonical=8, teaching=4)
+            for y,x in [(13,14),(14,15),(15,16),(16,17),(17,18),(18,19)]
+        ],
+    },
 }
 
 def digest(task):

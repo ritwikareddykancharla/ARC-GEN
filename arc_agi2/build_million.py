@@ -258,6 +258,8 @@ def make_episodes(arg):
                               'fixture_basis':basis['fixture'],
                               'corrected_teaching_fixture':basis['corrected'],
                               'correction_source':basis.get('source',''),
+                              'correction_evidence_status':basis.get('evidence_status',
+                                  'reviewed_upstream_proposal' if basis['corrected'] else 'canonical'),
                               'base_input_hashes':[p['input_hash'] for p in four],
                               'canonical_input_hashes':[p['canonical_input_hash'] for p in four],
                               'base_episode_sha256':basehash,'d4_transform':d4,'color_permutation':palette,
@@ -347,7 +349,7 @@ Quantity-controlled dimensions and pattern composition:
 
 [Manifest](manifest.json), [pool reports](pool_reports), [episode reports](episode_reports), [allocation targets](allocation.json). Master seed {SEED}. Published partial shards are complete episodes; failed families and shortfalls remain visible. No model training or LLM calls occur in this job.
 
-Corrected teaching fixtures are explicitly approved and hash-pinned; episode metadata records `fixture_basis`, `corrected_teaching_fixture` and `correction_source`. Canonical benchmark data is preserved unchanged.
+Corrected teaching fixtures are reviewed and hash-pinned; episode metadata records `fixture_basis`, `corrected_teaching_fixture`, `correction_source` and `correction_evidence_status`. These fields describe the constructor's validation basis, not a claim that synthetic pairs are original fixtures. The `e12f9a14` teaching correction is a locally reviewed hypothesis, not an official correction. Canonical benchmark data is preserved unchanged.
 
 The reference packets include saved Opus/Fable solutions; they guide input construction and validation but are not exposed in episode prompts. Public evaluation tasks used in generation are training data for subsequent models, not independent evaluation. The historical holdout list is retained as provenance only; the active exclusion list is empty.
 

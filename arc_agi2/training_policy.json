@@ -1,5 +1,5 @@
 {
-  "version": "2026-10-20-coverage-first",
+  "version": "2026-10-20-reviewed-teaching-labels",
   "required_task_count": 1120,
   "excluded_task_ids": [],
   "include_former_holdouts": true,
@@ -23,5 +23,21 @@
     "adaptive_fewer_for_limited_diversity": true,
     "deduplicate_symmetric_episode_variants": true,
     "bulk_builder_expansion_pending": false
+  },
+  "label_policy": {
+    "public_training_pairs": "Use the hash-pinned teaching_fixture for explicitly reviewed corrections; otherwise use canonical labels. Never include conflicting original/corrected versions in the training mixture.",
+    "corrected_task_ids": [
+      "581f7754",
+      "a6f40cea",
+      "b74ca5d1",
+      "f18ec8cc",
+      "e12f9a14"
+    ],
+    "local_hypothesis_task_ids": [
+      "e12f9a14"
+    ],
+    "provenance_required": true,
+    "official_evaluation": "Always retain original benchmark labels for original-benchmark scoring.",
+    "synthetic_eligibility": "Correction approval does not register a generator; randomized and independent semantic validation are still required."
   }
 }

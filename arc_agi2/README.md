@@ -662,4 +662,12 @@ The badge and hole-count revisions now sample mechanisms that previous drafts re
 
 ## Additional teaching-copy approvals
 
-On 2026-10-20 the user approved the hash-pinned labelled teaching copies for `a6f40cea` (eight cells; upstream PR #64), `b74ca5d1` (three cells; PR #16), and `f18ec8cc` (52 cells; PR #37). Original benchmark inputs/outputs and original-label scoring remain unchanged. These three constructor candidates passed 1,000 independent seed checks each against their teaching rules, but remain outside the covered total pending semantic review. `e12f9a14` is not approved and requires further investigation. The fixture-provenance regression confirms every approved cell change and rejects hash drift; **196 tests pass**.
+On 2026-10-20 the user approved the hash-pinned labelled teaching copies for `a6f40cea` (eight cells; upstream PR #64), `b74ca5d1` (three cells; PR #16), and `f18ec8cc` (52 cells; PR #37). Original benchmark inputs/outputs and original-label scoring remain unchanged. These three constructor candidates passed 1,000 independent seed checks each against their teaching rules, but remain outside the covered total pending semantic review. The later local review below resolves the `e12f9a14` teaching decision. The fixture-provenance regression confirms every approved cell change and rejects hash drift; **197 tests pass**.
+
+## Final local ray-label review
+
+After the user delegated investigation and finalization, the `e12f9a14` teaching copy was selected as a **locally reviewed hypothesis, not an official correction**. Independent enumeration finds 50 frame openings across the six supplied pairs: 49 emit a beam; the sole exception is the open yellow bottom-right corner in demonstration 3. Adding its six unobstructed diagonal cells makes the uniform simulator match all six teaching pairs and all 48 rotated/reflected checks. Both original query answers already match. The upstream issue search returned no matching task-ID discussions; this absence is not confirmation of a label error.
+
+Exact evidence: [label review](reports/label-reviews/e12f9a14.json). Randomized candidate check: [1,000 independent seeds](reports/label-reviews/e12f9a14-candidate-validation.json), all passed with 1,000 unique inputs and zero original-input replays. These checks do not prove intended labels or complete the generator's semantic review. Registered coverage remains **1,110/1,120**.
+
+Training will use the five explicitly reviewed teaching versions and retain their provenance, without mixing contradictory original labels into training. Canonical benchmark files and scoring remain unchanged. No bulk generation or training was launched for this review.

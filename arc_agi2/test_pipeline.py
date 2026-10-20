@@ -11,6 +11,58 @@ from .fixture_policy import fixture_basis
 from .augmentation import apply_episode,settings,exhaustive_variants
 
 class GeneratorTests(unittest.TestCase):
+    def test_snake_target_rejects_metric_dependent_distractor(self):
+        snake=importlib.import_module('tasks.task_88bcf3b4')
+        scene=dict(line_colour=1,end=(10,10),direction=(1,0),length=5,
+                   side=(0,1),snake_colour=2,
+                   snake_cells=[(10,11),(9,12),(8,12),(7,13)],
+                   target_colour=3,target_cells=[(15,15)])
+        # Target offset (5,4) is closer in Chebyshev distance but farther
+        # in Manhattan distance than the distractor at offset (0,6).
+        self.assertFalse(snake._nearest_is_robust(scene,[[(10,17)]]))
+        p=snake.generate(width=30,height=30,background=0,scenes=[scene],
+                         extras=[(6,[(10,17)])])
+        self.assertFalse(snake._reading_is_unique(p['input'],0,[scene]))
+        self.assertTrue(snake._nearest_is_robust(scene,[[(24,24)]]))
+        p=snake.generate(width=30,height=30,background=0,scenes=[scene],
+                         extras=[(6,[(24,24)])])
+        self.assertTrue(snake._reading_is_unique(p['input'],0,[scene]))
+
+    def test_snake_count_is_retained_after_rejected_attempt(self):
+        snake=importlib.import_module('tasks.task_88bcf3b4')
+        original=snake._reading_is_unique
+        for seed in range(41000,41008):
+            calls=[]
+            def reject_first(*args,**kwargs):
+                calls.append(True)
+                return False if len(calls)==1 else original(*args,**kwargs)
+            expected=random.Random(seed).choice((1,1,1,2,2,3))
+            random.seed(seed)
+            with patch.object(snake,'_reading_is_unique',side_effect=reject_first):
+                _,_,_,scenes,_=snake._sample(None,None,None,None)
+            self.assertGreaterEqual(len(calls),2)
+            self.assertEqual(len(scenes),expected)
+
+    def test_snake_explicit_geometry_rejects_missing_and_bad_cells(self):
+        import copy
+        snake=importlib.import_module('tasks.task_88bcf3b4')
+        base=dict(line_colour=8,end=[3,5],direction=[-1,0],length=4,
+                  side=[0,-1],snake_colour=4,
+                  snake_cells=[[3,3],[3,4],[4,3],[5,2],[5,3],[6,1]],
+                  target_colour=2,target_cells=[[1,5]])
+        variants=[]
+        missing=copy.deepcopy(base);del missing['side'];variants.append(missing)
+        for key,value in [('end',3),('snake_cells',5),
+                          ('snake_cells',[[3,4],[3,4]]),
+                          ('target_cells',[[3,5]]),
+                          ('target_cells',[[1,5],[0,0]])]:
+            item=copy.deepcopy(base);item[key]=value;variants.append(item)
+        for item in variants:
+            with self.subTest(scene=item),self.assertRaises(ValueError):
+                snake.generate(width=7,height=7,background=0,scenes=[item])
+        with self.assertRaises(ValueError):
+            snake.generate(width=7,height=7,background=0,scenes=[base],extras=3)
+
     def test_sliding_wall_markers_preserve_interior_pillars(self):
         sliding=importlib.import_module('tasks.task_88e364bc')
         original_attempt,original_place=sliding._attempt,sliding._place_shape

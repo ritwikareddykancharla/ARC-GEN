@@ -63,6 +63,16 @@ def _hole_count(cells):
 
 
 def require_colour_evidence(task_id, demonstrations, queries, palette=None, d4=0):
+    if task_id == 'b0722778':
+        from .analogy_priority_evidence import require_analogy_evidence
+        require_analogy_evidence(demonstrations, queries,
+                                list(range(10)) if palette is None else palette,d4)
+        return
+    if task_id == '7447852a':
+        from .zigzag_evidence import require_zigzag_evidence
+        require_zigzag_evidence(demonstrations, queries,
+                                list(range(10)) if palette is None else palette)
+        return
     if task_id == 'bd283c4a':
         from .count_sort_evidence import require_count_sort_evidence
         require_count_sort_evidence(demonstrations, queries)

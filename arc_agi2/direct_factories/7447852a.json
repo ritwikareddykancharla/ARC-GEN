@@ -1,0 +1,30 @@
+{
+  "task_id": "7447852a",
+  "factory_sha256": "1db682b081bebe4ef8906a96d180184e35c58489efad3857c2fbbae5db12b210",
+  "constructor_sha256": "156bcf1eceed521fa76578ee653e2d1d8ecf3cbf1bb21042722c9a7f3ae3d2d6",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 126293046805137,
+  "d4": 7,
+  "unique_base_inputs": 21,
+  "seconds": 4.136553167016245,
+  "finite_default_domain": {
+    "exhaustive": true,
+    "cases_checked": 21,
+    "augmented_checks": 336,
+    "scope": "Default height=3, width integer 5..25, fixed native colours. Tested emitted program and evidence with original demonstrations under 8 D4 x 2 palettes. This does not claim 1000 distinct native inputs.",
+    "adaptive_quota_required": true
+  },
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The constructor draws a zigzag of colour 2 along a 3-cell-high strip. In the original frame it is 3 rows by W columns, starting at the corner (0,0) with period 4. A 6-state mode counter turns this into triangular pockets of colour 4, repeating every 12 columns. Lower pockets are centred at 12k: wide line on cross index 2 at t-1, t, t+1, plus the middle cell at t. Upper pockets are centred at 6+12k, with the wide line on cross index 0. Cells outside the grid are clipped. The factory works out how the original row and column directions appear on screen under the given D4 transform. It does this by applying the transform to a small index array inside the factory and finding where original cells (0,0), (0,1) and (1,0) land. That fixes three constants: which visible axis is the long axis, which end the walk starts from, and which side the cross index counts from. The emitted solve() then walks the visible long axis in steps of 6. It alternates between the far-side and the near-side wide line, and stamps palette[4] onto cells that hold palette[0]. All of this happens directly in visible coordinates; no grid is rotated back and no colours are remapped.",
+    "limitations": "1) Ambiguity in the constructor, for host review: when W \u2261 1 (mod 4), e.g. W=5, 9, 13, 17, 21, 25, the input zigzag reads the same from both ends. So the D4 index-0 and index-4 inputs are identical, but their outputs differ unless W-1 is a multiple of 12. For these widths the query input alone cannot tell which end the pocket phase starts from. The emitted program takes that end from d4, which the factory receives, rather than from the pixels; demonstrations could also show the phase. 2) The step of 6, the 12-column pocket period and the middle cross index 1 assume the constructor's fixed height of 3. Other heights are outside its domain. 3) Background and fill colours are the constants palette[0] and palette[4]. Only background cells are overwritten, which matches the constructor, since pocket cells are never on the zigzag. 4) The archived solver's no-op 'changed' flag and the rule text's 'emit after each stamp' do not affect the final grid and are not reproduced. 5) No tests have been run by me.",
+    "host_review": "Keep native generator and direct factory unchanged. Gate renders eight visible long-axis/sign/cross-sign frames, fits demonstration inputs and outputs, eliminates frames inconsistent with query inputs and requires query-output agreement. Exhaustive widths5..25 expose both mirror and half-turn ambiguity classes; distinguishing demos restore all. New finite-domain certificate checks all21 default inputs under16 D4/palette variants,336 checks; report genuine21-input diversity and adaptive quota, no padding. No ambiguous-odd-width narrowing.",
+    "semantic_draft_review": "Use independent episode gate rather than CLI prior fallback. Native constructor/factory hashes match prior complete audit. 7447852a also has new exhaustive finite-default-domain certificate. Complete episode audit follows."
+  }
+}

@@ -956,8 +956,6 @@ single-pair distributions are unchanged. Remaining: 65 semantic/context holds,
 9 execution failures, 3 missing factories. Bulk generation and model training
 have not launched.
 
-All 467 regression tests passed for this checkpoint.
-
 ## 1046-family checkpoint
 
 - `ae3edfdc`: require a demonstrated satellite-to-centre association for each
@@ -1169,3 +1167,39 @@ production dataset launch.
 All 518 regression tests passed. Remaining: 48 semantic/context holds,
 9 execution failures, 3 missing factories. Bulk generation and training
 have not launched.
+
+## 1062-family checkpoint
+
+- `7447852a`: keep every native width, including odd strips whose input has
+  a mirror or half-turn symmetry but whose pocket colouring does not. Render
+  all eight visible frames, fit demo input/output pairs and query input pixels,
+  and require agreement among survivors. No D4 prior is used to admit ambiguous
+  contexts. Tests cover all 441 native single-demo/query width combinations
+  and both ambiguity classes under all D4 transforms. Default generation has
+  only 21 distinct inputs (height 3, widths 5–25), so it needs an adaptive
+  diversity quota, not duplicate padding. A new finite-domain audit executed
+  the program with all 21 cases under eight D4 transforms and two palettes:
+  336 checks. See `7447852a-finite-phase-audit.json`.
+- `b0722778`: preserve odd-cell analogy bands and recolouring bands.
+  Independently parse visible A/B/C blocks, enumerate fitting D4 operations
+  and compare all 40,320 operation priorities for each of two stages: pure
+  geometry, then geometry plus a colour map. Demonstrations constrain priority
+  orders; surviving query predictions must agree. This covers mirror/rotation
+  ties and the secondary identity/recolouring ambiguity. It retains the stated
+  geometry-before-recolouring structure, rather than claiming identifiability
+  against all possible rules. Tests show recovery with relevant demos and
+  rejection of inconsistent priorities or changed separator cells.
+
+Constructor and direct-factory sources remain unchanged. Their previous
+1,000-sampled-pair/8,000-D4/16-fixture audits match current hashes; the zigzag
+audit repeats its finite 21-input domain, not 1,000 distinct inputs. New
+complete-episode auditing accepted 30 of 40 independent bases, excluded ten
+analogy contexts missing evidence and verified 240 augmented program/grid
+records, with no sampler rejections or execution errors. The production
+assembler retries demonstrations while retaining the selected query.
+
+All 525 regression tests passed. Remaining: 46 semantic/context holds,
+9 execution failures and 3 missing factories. Bulk generation and model
+training have not launched.
+
+All 467 regression tests passed for this checkpoint.

@@ -2805,4 +2805,21 @@ class GeneratorTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError,'meet every bar'):
             m.generate(length=10,width=10,seed=5,bars=[(4,'L',3,1)])
 
+    def test_lattice_four_oranges_fit_minimum_canvas(self):
+        m=importlib.import_module('tasks.task_cc9053aa')
+        for seed in (40030,40031):
+            random.seed(seed)
+            p=m.generate(width=7,height=7,num_oranges=4)
+            self.assertEqual(sum(row.count(7) for row in p['input']),4)
+            self.assertEqual(p['output'],grid(call(solver('cc9053aa'),p['input'])))
+
+    def test_lattice_malformed_cells_and_boolean_integer_rejected(self):
+        m=importlib.import_module('tasks.task_cc9053aa')
+        import numpy as np
+        explicit=dict(width=9,height=9,wall_rows=[1,3,5,7],wall_cols=[1,3,5,7],
+                      oranges=[[2,4]],endpoints=[[0,1],[0,7]])
+        for kw in (dict(explicit,wall_rows=3),dict(explicit,oranges=[5]),
+                   dict(explicit,oranges=[{2,4}]),{'num_oranges':np.bool_(True)}):
+            with self.assertRaises(ValueError):m.generate(**kw)
+
 if __name__=='__main__':unittest.main()

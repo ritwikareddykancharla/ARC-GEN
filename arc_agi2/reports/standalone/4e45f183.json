@@ -1,0 +1,208 @@
+{
+  "task_id": "4e45f183",
+  "ready": true,
+  "samples_requested": 1000,
+  "samples_attempted": 1000,
+  "samples_passed": 1000,
+  "seed_start": 20000,
+  "seed_end_exclusive": 21000,
+  "unique_inputs": 1000,
+  "changed_pairs": 1000,
+  "fixture_replays": 0,
+  "shapes": [
+    [
+      16,
+      16,
+      16,
+      16
+    ],
+    [
+      19,
+      19,
+      19,
+      19
+    ],
+    [
+      22,
+      22,
+      22,
+      22
+    ],
+    [
+      25,
+      25,
+      25,
+      25
+    ],
+    [
+      28,
+      28,
+      28,
+      28
+    ]
+  ],
+  "fixture_matches": {
+    "canonical": true,
+    "teaching_fixture": true
+  },
+  "original_solver_replay": {
+    "canonical": {
+      "correct": 4,
+      "total": 4,
+      "all_exact": true
+    },
+    "teaching_fixture": {
+      "correct": 4,
+      "total": 4,
+      "all_exact": true
+    }
+  },
+  "errors": [],
+  "sha256": "dff0fefd65c54ecc19a1acfb4255e81000c2baee03bc0b172bb97d48ab777176",
+  "status": "reviewed_bounded_validation_passed",
+  "limitations": "Bounded randomized agreement with a saved solver is not proof of semantic completeness.",
+  "candidate_path": "/Users/ritwika/projects/arc-agi2/outputs/research/arcgen-coverage-cli/host-reviewed/4e45f183/task_4e45f183.py",
+  "attempts": 1,
+  "model_usage": {
+    "claude-opus-5-5": {
+      "inputTokens": 2,
+      "outputTokens": 21838,
+      "cacheReadInputTokens": 0,
+      "cacheCreationInputTokens": 24987,
+      "webSearchRequests": 0,
+      "costUSD": 0.636664,
+      "contextWindow": 1000000,
+      "maxOutputTokens": 128000,
+      "thinkingTokens": 14149,
+      "canonicalModel": "claude-opus-5-5",
+      "provider": "firstParty",
+      "costBasis": "list"
+    }
+  },
+  "rule": "The grid is a 3x3 arrangement of equal panels separated by lines of 0. For each panel, take the bounding box of its foreground pattern and compare the box centre with the panel centre. Above, at or below gives the destination row; left, at or right gives the destination column. The pattern is copied into that destination panel at the same local cells. All other panel cells become background.",
+  "scope": "Reorder nine panels by the local bounding-box centre of each foreground pattern. Panel sizes 4..8 (grids 16..28), distinct shared foreground/background colours, independent blobs or reflected/unioned motifs with occasional blob substitutions.",
+  "constraints": [
+    "Read latent region construction and saved centre-based rule",
+    "Enforce requested motif style instead of silently changing to independent blobs; reject invalid string-pattern characters",
+    "120 controlled examples cover all five panel sizes and both styles, 12 each",
+    "Every destination is unique, copies exactly preserve local cells, divider zeros and colour counts, and background remains strictly most frequent"
+  ],
+  "known_limitations": [
+    "Exactly nine nonempty panels with one pattern per destination; no collisions or multiple foreground colours.",
+    "Default patterns need not be connected.",
+    "Only native panel size 5 is fixture-supported; other panel sizes are synthetic extensions.",
+    "Motif mode intentionally permits occasional independent-blob substitutions."
+  ],
+  "billing": "Claude Max CLI; API credentials excluded; no API fallback",
+  "authored_sha256": "66f1f36bc5fe781254c2bc603ffafbabaef86e93524072bc313ee641adcf5bde",
+  "stress_test": {
+    "task_id": "4e45f183",
+    "ready": true,
+    "samples_requested": 1000,
+    "samples_attempted": 1000,
+    "samples_passed": 1000,
+    "seed_start": 20000,
+    "seed_end_exclusive": 21000,
+    "unique_inputs": 1000,
+    "changed_pairs": 1000,
+    "fixture_replays": 0,
+    "shapes": [
+      [
+        16,
+        16,
+        16,
+        16
+      ],
+      [
+        19,
+        19,
+        19,
+        19
+      ],
+      [
+        22,
+        22,
+        22,
+        22
+      ],
+      [
+        25,
+        25,
+        25,
+        25
+      ],
+      [
+        28,
+        28,
+        28,
+        28
+      ]
+    ],
+    "fixture_matches": {
+      "canonical": true,
+      "teaching_fixture": true
+    },
+    "original_solver_replay": {
+      "canonical": {
+        "correct": 4,
+        "total": 4,
+        "all_exact": true
+      },
+      "teaching_fixture": {
+        "correct": 4,
+        "total": 4,
+        "all_exact": true
+      }
+    },
+    "errors": [],
+    "sha256": "dff0fefd65c54ecc19a1acfb4255e81000c2baee03bc0b172bb97d48ab777176",
+    "status": "validated_candidate_needs_semantic_review",
+    "limitations": "Bounded randomized agreement with a saved solver is not proof of semantic completeness."
+  },
+  "authored_scope": "Supported:\n- Panel sizes 4..8. Size 5 (19x19) matches the fixtures; sizes 4, 6, 7 and 8 (grids 16, 22, 25 and 28) are synthetic extensions.\n- Any distinct background and foreground colours in 1..9.\n- Any non-identity source permutation.\n- Two pattern styles. The first is independent random blobs per region, with optional symmetric mirroring on centred axes. The second is a reflected corner motif, with about a quarter of the panels replaced by blobs.\n- Explicit patterns and sources, used to rebuild the fixtures.\n\nDeliberately not supported:\n- Collisions, where two panels map to the same destination.\n- Empty panels.\n- Multiple foreground colours.\n- Arrangements other than 3x3.\n- Divider width other than 1, or divider colour other than 0.",
+  "authored_constraints": [
+    "Every panel holds exactly one non-empty single-colour pattern; the destination regions are distinct and form a permutation.",
+    "Pattern d's bounding box is constructed exactly, with all four box edges touched, so its centre category equals region d.",
+    "Background and foreground are distinct, nonzero and in 1..9; dividers are 0.",
+    "Total foreground cells stay within a budget. This makes background strictly more frequent than both the divider zeros and the foreground, so background detection is unambiguous.",
+    "A random sources permutation is never the identity. Because the regions differ, every moved panel's content changes, so the output differs from the input.",
+    "Explicit patterns are bounds-checked, region-checked and budget-checked. Incompatible combinations (style together with patterns, bad sizes, non-permutations) raise ValueError."
+  ],
+  "semantic_review": {
+    "status": "reviewed",
+    "checks": [
+      "Read latent region construction and saved centre-based rule",
+      "Enforce requested motif style instead of silently changing to independent blobs; reject invalid string-pattern characters",
+      "120 controlled examples cover all five panel sizes and both styles, 12 each",
+      "Every destination is unique, copies exactly preserve local cells, divider zeros and colour counts, and background remains strictly most frequent",
+      "1000 independent seeds 20000..20999; canonical fixtures reconstructed exactly"
+    ],
+    "limitations": [
+      "Exactly nine nonempty panels with one pattern per destination; no collisions or multiple foreground colours.",
+      "Default patterns need not be connected.",
+      "Only native panel size 5 is fixture-supported; other panel sizes are synthetic extensions.",
+      "Motif mode intentionally permits occasional independent-blob substitutions."
+    ]
+  },
+  "diversity_audit": {
+    "samples": 120,
+    "seed_range": [
+      30000,
+      30119
+    ],
+    "metrics": {
+      "panel_4_random": 12,
+      "panel_5_random": 12,
+      "panel_6_random": 12,
+      "panel_7_random": 12,
+      "panel_8_random": 12,
+      "panel_4_motif": 12,
+      "panel_5_motif": 12,
+      "panel_6_motif": 12,
+      "panel_7_motif": 12,
+      "panel_8_motif": 12
+    },
+    "seconds": 0.031664133071899414,
+    "passed": true
+  }
+}

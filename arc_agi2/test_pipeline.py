@@ -10,6 +10,41 @@ from .task_registry import NEW_TASK_IDS
 from .augmentation import apply_episode,settings,exhaustive_variants
 
 class GeneratorTests(unittest.TestCase):
+    def test_panel_style_clean_line_recovery_and_periodic_strip_controls(self):
+        panels=importlib.import_module('tasks.task_4e45f183')
+        with patch.object(panels,'_motif_patterns',return_value=None):
+            with self.assertRaisesRegex(ValueError,'motif patterns'):
+                panels.generate(panel_size=4,style='motif')
+        with self.assertRaisesRegex(ValueError,'dot and hash'):
+            panels._parse(['#...','....','....','...x'],4)
+        plaid=importlib.import_module('tasks.task_4ff4c9da')
+        for seed in range(30060,30065):
+            random.seed(seed)
+            p=plaid.generate(size=30,num_templates=2,palette=[0,4,7],recovery='clean')
+            mask={(y,x) for y,row in enumerate(p['input']) for x,c in enumerate(row) if c==8}
+            self.assertTrue(any((x,y) in mask for y,x in mask))
+            self.assertEqual(len(plaid._components(p['input'],8)),2)
+            self.assertEqual(p['output'],grid(call(solver('4ff4c9da'),p['input'])))
+        template=importlib.import_module('tasks.task_50f325b5')
+        random.seed(30000)
+        p=template.generate(width=30,height=30,num_copies=3,num_distractors=2)
+        cells={(y,x) for y,row in enumerate(p['input']) for x,c in enumerate(row) if c==8}
+        matches=template._all_placements(p['input'],template._variants(cells))
+        self.assertEqual(len(matches),3)
+        union=set().union(*matches)
+        self.assertTrue(all(z==(8 if (y,x) in union else p['input'][y][x])
+                            for y,row in enumerate(p['output']) for x,z in enumerate(row)))
+        strips=importlib.import_module('tasks.task_53fb4810')
+        bad=strips._obj(3,3,3,3,'right',True,[[2]])
+        with self.assertRaisesRegex(ValueError,'reach the border'):
+            strips.generate(height=12,width=12,objects=[bad])
+        bad=strips._obj(3,3,3,4,'up',False,[[2]])
+        with self.assertRaisesRegex(ValueError,'outermost blob edge'):
+            strips.generate(height=12,width=12,objects=[bad])
+        random.seed(31000)
+        a,z=strips._band_scene(24,30,4)
+        self.assertEqual(z,grid(call(solver('53fb4810'),a)))
+
     def test_empty_votes_corner_template_and_connector_partial_matches(self):
         votes=importlib.import_module('tasks.task_4b6b68e5')
         random.seed(30000)

@@ -988,3 +988,27 @@ Remaining: 62 semantic/context holds, 9 execution failures, 3 missing factories.
 Bulk generation and training have not launched.
 
 All 475 regression tests passed for this checkpoint.
+
+## 1049-family checkpoint
+
+- `ac605cbb`: compute seed stamps, copies and crossings from the query input.
+  Require each query seed's association and crossing paint to be demonstrated.
+  Compare four diagonal directions plus crossing-only against demonstration
+  outputs and require agreement on the same query. An explicit clipped-border
+  regression shows why a crossing colour alone need not reveal ray direction.
+- `dc2e9a9d`: parse each connected frame's nub side and project its reflected
+  copy. Require colour evidence at copied cells for every query-needed visible
+  axis. Preserve one-object grids and single-axis demonstrations; odd D4
+  rotations swap the colour roles consistently.
+- `db93a21d`: preserve beamless/clipped scenes. Compare down/left/up/right beam
+  hypotheses on demonstrations and require same-query agreement. Also require
+  demonstrated beam colour when a query needs a beam. An all-clipped query is
+  allowed when the surviving hypotheses agree.
+
+No constructor or direct-factory source changed. All three current certificate
+hashes were rechecked (1,000 fresh pairs, 8,000 augmented checks and 16 fixture
+variants each). New complete-episode checks accepted 57 of 60 bases and excluded
+three lacking evidence, verifying 456 augmented records with no execution errors
+or sampler rejections. All 481 regression tests passed. Remaining: 59 semantic/
+context holds, 9 execution failures and 3 missing factories. Bulk generation and
+training have not launched.

@@ -63,6 +63,11 @@ def _hole_count(cells):
 
 
 def require_colour_evidence(task_id, demonstrations, queries, palette=None, d4=0):
+    if task_id in ('ac605cbb', 'dc2e9a9d', 'db93a21d'):
+        from .spatial_evidence import require_spatial_evidence
+        require_spatial_evidence(task_id, demonstrations, queries,
+                                 list(range(10)) if palette is None else palette, d4)
+        return
     if task_id not in ('6ea4a07e', '913fb3ed', '494ef9d7', '995c5fa3',
                        'a834deea', 'a9f96cdd', 'a416fc5b', 'a740d043',
                        'a6953f00', 'aaecdb9a', 'a68b268e',

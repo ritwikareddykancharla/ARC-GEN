@@ -1,0 +1,23 @@
+{
+  "task_id": "ac605cbb",
+  "factory_sha256": "04f0409b5a3104265de89feaf99e5359381a7651f13eb030761e8ca96b3cd8f9",
+  "constructor_sha256": "bb331178ae148c3793c69dd555a81e854ae3dcbae25a77b5cafba90fc1fb7f3e",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 209471487797182,
+  "d4": 7,
+  "unique_base_inputs": 936,
+  "seconds": 9.119295791024342,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "Each seed colour has a fixed stamp. The stamp is a grey bar of fixed length in a fixed direction, plus a copy of the seed colour at a fixed offset. In native coordinates the stamps are: colour 1 goes right 2 with its copy at (-1,+2); colour 2 goes left 3 with its copy at -4; colour 3 goes down 2 with its copy at +3; colour 6 goes up 5 with its copy at -6. Cells covered by two or more bars become yellow (4). From each such crossing, a yellow diagonal runs down-left over background cells to the border. The factory rewrites every displacement vector directly into visible coordinates. This covers the bar directions, the copy offsets and the diagonal direction. For d4>=4 it negates dx (the row reversal), then applies the clockwise rotation (dy,dx)->(dx,-dy) d4%4 times. Colour roles become literal constants: seeds palette[1,2,3,6], background palette[0], grey palette[5], crossing palette[4]. The emitted program applies the archived mechanism natively in the visible grid: draw bars and count coverage, place the copies, then mark crossings and extend their diagonals. It handles rectangular grids and clips at the borders.",
+    "limitations": "Background is taken as the constant palette[0] rather than inferred. The generator only produces scenes where every stamp lies fully in bounds, stamps never overlap except at grey-grey crossings, there is at most one crossing, and the diagonal passes only over background. The emitted program clips and skips non-background cells outside that domain, following the archived solver. No fixture contradictions or constructor defects were found. One generator detail: for colour 1, the copy cell (-1,+2) is not on the bar axis. This is handled as a genuine stamp offset and transformed like any other vector. No tests were run.",
+    "host_review": "Retain original constructor/direct factory. Episode gate computes stamps, copies and crossings from visible inputs, requires every query seed association and crossing colour in demos, then compares four diagonal directions plus crossing-only against demos and requires same-query agreement. No query solution used. Covers clipped crossing-only ambiguity without forcing per-pair colour mixtures.",
+    "semantic_draft_review": "Opus5.5 subscription CLI reviewed; keep native diversity, enforce context evidence at episode level."
+  }
+}

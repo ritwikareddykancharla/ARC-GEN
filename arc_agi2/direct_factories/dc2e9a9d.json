@@ -1,0 +1,23 @@
+{
+  "task_id": "dc2e9a9d",
+  "factory_sha256": "e7d1855b3d43a5346db50ab74376b2335af690735bada29339feaa44f448e901",
+  "constructor_sha256": "57726e7c447a7ed908124731d3de434fda8b8a593489b88965aed6f1812152b6",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 221017950526620,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 16.213571541011333,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "Each object is a 4-connected component in the frame colour (palette[3]). It is a hollow rectangle with a one-cell nub at the middle of one side. The program finds the nub side: it is the bounding-box edge that holds exactly one cell. It then mirrors the object's mask across the axis perpendicular to that side. The mirrored copy is placed on the opposite side, offset by bbox extent + 1 (so there is a one-cell gap), and clipped at the grid border. All of this is done directly in visible coordinates.\n\nThe colour depends on the visible nub axis. In the original orientation, top/bottom nubs give colour 8 and left/right nubs give colour 1. An odd number of quarter-turns swaps the visible axes, so the factory swaps palette[8] and palette[1] between the vertical and horizontal roles when d4 is odd. A row reflection keeps the axes, so it changes nothing here. The background and frame colours are the palette constants palette[0] and palette[3].",
+    "limitations": "Under the constructor's domain, input objects are always complete. The generator rejects scenes where the input nub is out of bounds, and the frames always lie inside the grid. Only the copy's nub can be clipped off at the border, and the clipping handles that. Objects and copies are kept apart by the constructor's overlap margin, so no tie-breaking between objects is needed. A component with no unique single-cell side is skipped (the archived solver would instead pick the first such side); this cannot happen for generated scenes. No fixture contradictions or constructor defects were found. This was not executed by me.",
+    "host_review": "Retain native one-object/single-axis scenes and original direct factory. Parse connected frame+nub components in visible coordinates; project reflected copy cells; require demonstrated colour on each query-needed visible axis. Odd-D4 colour roles handled explicitly. No majority/fallback inference changes or forced axes in constructor.",
+    "semantic_draft_review": "Opus5.5 subscription CLI reviewed; keep native diversity, enforce context evidence at episode level."
+  }
+}

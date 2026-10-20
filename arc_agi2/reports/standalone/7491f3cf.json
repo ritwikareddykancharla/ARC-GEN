@@ -1,0 +1,201 @@
+{
+  "task_id": "7491f3cf",
+  "ready": true,
+  "samples_requested": 1000,
+  "samples_attempted": 1000,
+  "samples_passed": 1000,
+  "seed_start": 20000,
+  "seed_end_exclusive": 21000,
+  "unique_inputs": 1000,
+  "changed_pairs": 1000,
+  "fixture_replays": 0,
+  "shapes": [
+    [
+      6,
+      21,
+      6,
+      21
+    ],
+    [
+      7,
+      25,
+      7,
+      25
+    ],
+    [
+      8,
+      29,
+      8,
+      29
+    ]
+  ],
+  "fixture_matches": {
+    "canonical": true,
+    "teaching_fixture": true
+  },
+  "original_solver_replay": {
+    "canonical": {
+      "correct": 5,
+      "total": 5,
+      "all_exact": true
+    },
+    "teaching_fixture": {
+      "correct": 5,
+      "total": 5,
+      "all_exact": true
+    }
+  },
+  "errors": [],
+  "sha256": "43812195d7d1ce3fd651303304e14a0704538f14222d7ce7f082922c0c5e39ff",
+  "status": "reviewed_bounded_validation_passed",
+  "limitations": "Bounded randomized agreement with a saved solver is not proof of semantic completeness.",
+  "candidate_path": "/Users/ritwika/projects/arc-agi2/outputs/research/arcgen-coverage-cli/host-reviewed/7491f3cf/task_7491f3cf.py",
+  "attempts": 1,
+  "model_usage": {
+    "claude-opus-5-5": {
+      "inputTokens": 2,
+      "outputTokens": 15868,
+      "cacheReadInputTokens": 1682,
+      "cacheCreationInputTokens": 17219,
+      "webSearchRequests": 0,
+      "costUSD": 0.4554564,
+      "contextWindow": 1000000,
+      "maxOutputTokens": 128000,
+      "thinkingTokens": 7452,
+      "canonicalModel": "claude-opus-5-5",
+      "provider": "firstParty",
+      "costBasis": "list"
+    }
+  },
+  "rule": "Four square panels sit inside a frame. Panel 1 has a wall line and a separate dot. Panel 4 is filled as follows: the dot's side of the wall copies panel 2's pattern, and the other side copies panel 3's pattern. Wall cells show panel 2's colour where panel 2 is not fill, and panel 3's cell otherwise.",
+  "scope": "Four square panels route two patterns through the two regions of an 8-connected wall, selected by a separate dot. The wall overlays panel 2 over panel 3. Random palette, wall families and motif mixtures support panel sides 4..6 (total widths 21..29).",
+  "constraints": [
+    "Read full source, canonical fixtures and saved transform; adjudicated independent Opus audit",
+    "Exclude scenes whose result equals either unconditional overlay, so ignoring the wall/dot cannot solve them",
+    "Optional wall_evidence requires both priority and fallback branches; half of unconstrained calls request it",
+    "Removed arbitrary two-thirds pattern density cap; actual fill-colour dominance still enforced, including 24 dense 4x4 ring scenes",
+    "Validate typed colours/geometry and reject invalid fixed walls/dots across all feasible sizes before retries",
+    "120 targeted cases: all defeat both overlays; 97 demonstrate priority and 107 fallback; 93 walls are not straight; 40 scenes at each panel side 4/5/6",
+    "Independent component extraction and region routing reproduce output exactly; canonical reconstruction and 1000 independent seeds passed"
+  ],
+  "known_limitations": [
+    "Four square panels limit panel side to six within the ARC 30-cell grid bound",
+    "Wall families are straight, diagonal, L-corner or monotone edge-to-edge paths; arbitrary closed regions and nonmonotone walls are not sampled",
+    "Motif mixture includes fixed-shape parametric motifs alongside fresh random patterns; not every motif fits every requested geometry",
+    "Original panel side five; sides four/six are labelled synthetic extensions"
+  ],
+  "billing": "Claude Max CLI; API credentials excluded; no API fallback",
+  "fixture_basis": {
+    "fixture": "canonical",
+    "corrected": false
+  },
+  "authored_sha256": "3c25a20df5a8fcef449896731238ab494da09c948a0e8ab2e5f61d9a1db8a1bd",
+  "stress_test": {
+    "task_id": "7491f3cf",
+    "ready": true,
+    "samples_requested": 1000,
+    "samples_attempted": 1000,
+    "samples_passed": 1000,
+    "seed_start": 20000,
+    "seed_end_exclusive": 21000,
+    "fixture_basis": {
+      "fixture": "canonical",
+      "corrected": false
+    },
+    "unique_inputs": 1000,
+    "changed_pairs": 1000,
+    "fixture_replays": 0,
+    "shapes": [
+      [
+        6,
+        21,
+        6,
+        21
+      ],
+      [
+        7,
+        25,
+        7,
+        25
+      ],
+      [
+        8,
+        29,
+        8,
+        29
+      ]
+    ],
+    "fixture_matches": {
+      "canonical": true,
+      "teaching_fixture": true
+    },
+    "original_solver_replay": {
+      "canonical": {
+        "correct": 5,
+        "total": 5,
+        "all_exact": true
+      },
+      "teaching_fixture": {
+        "correct": 5,
+        "total": 5,
+        "all_exact": true
+      }
+    },
+    "errors": [],
+    "sha256": "43812195d7d1ce3fd651303304e14a0704538f14222d7ce7f082922c0c5e39ff",
+    "status": "validated_candidate_needs_semantic_review",
+    "limitations": "Bounded randomized agreement with a saved solver is not proof of semantic completeness."
+  },
+  "authored_scope": "Supported:\n- Colour: five distinct sampled colours.\n- Walls: straight, diagonal, corner-L, and random monotone 8-connected paths, with reflections and transposes.\n- Dot: placed in a randomly chosen region.\n- Patterns: a parametric motif family.\n- Panel size: N=5 matches all originals. N=4 and N=6 (grids 6x21 and 8x29) are synthetic extensions.\n\nNot supported:\n- non-square panels;\n- layouts other than one row of four panels;\n- more than one dot;\n- multi-colour patterns;\n- branching walls or walls that cut more than two regions.",
+  "authored_constraints": [
+    "frame, fill, line, panel-2 and panel-3 colours are pairwise distinct",
+    "the wall is 8-connected and splits panel 1 into exactly two 4-connected regions, each of at least 2 cells",
+    "the dot is not 8-adjacent to the wall, so it forms a separate, smaller component",
+    "the fill colour is strictly the most common colour across panels 1-3",
+    "the dot region contains at least one panel-2 pattern cell, and the other region contains at least one panel-3 pattern cell",
+    "pattern2 differs from pattern3; each pattern has 3..floor(2N^2/3) cells",
+    "frame colour appears at (0,0) and divider columns are the only full frame-colour columns inside the grid",
+    "explicit argument combinations that are impossible raise ValueError instead of looping or being silently ignored"
+  ],
+  "semantic_review": {
+    "status": "reviewed",
+    "checks": [
+      "Read full source, canonical fixtures and saved transform; adjudicated independent Opus audit",
+      "Exclude scenes whose result equals either unconditional overlay, so ignoring the wall/dot cannot solve them",
+      "Optional wall_evidence requires both priority and fallback branches; half of unconstrained calls request it",
+      "Removed arbitrary two-thirds pattern density cap; actual fill-colour dominance still enforced, including 24 dense 4x4 ring scenes",
+      "Validate typed colours/geometry and reject invalid fixed walls/dots across all feasible sizes before retries",
+      "120 targeted cases: all defeat both overlays; 97 demonstrate priority and 107 fallback; 93 walls are not straight; 40 scenes at each panel side 4/5/6",
+      "Independent component extraction and region routing reproduce output exactly; canonical reconstruction and 1000 independent seeds passed",
+      "1000 independent seeds 20000..20999; approved validation fixtures reconstructed exactly; canonical replay reported separately"
+    ],
+    "limitations": [
+      "Four square panels limit panel side to six within the ARC 30-cell grid bound",
+      "Wall families are straight, diagonal, L-corner or monotone edge-to-edge paths; arbitrary closed regions and nonmonotone walls are not sampled",
+      "Motif mixture includes fixed-shape parametric motifs alongside fresh random patterns; not every motif fits every requested geometry",
+      "Original panel side five; sides four/six are labelled synthetic extensions"
+    ]
+  },
+  "diversity_audit": {
+    "samples": 120,
+    "seed_range": [
+      30000,
+      30119
+    ],
+    "metrics": {
+      "both_overlay_shortcuts_fail": 120,
+      "priority_evidence": 97,
+      "fallback_evidence": 107,
+      "panel_size_4": 40,
+      "nonstraight_walls": 93,
+      "panel_size_5": 40,
+      "panel_size_6": 40
+    },
+    "seconds": 0.0251619815826416,
+    "passed": true,
+    "control_audit": {
+      "dense_four_by_four_ring_scenes": 24,
+      "invalid_or_degenerate_requests_rejected": 5
+    }
+  }
+}

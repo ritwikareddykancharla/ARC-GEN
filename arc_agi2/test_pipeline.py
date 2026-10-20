@@ -1017,6 +1017,38 @@ class GeneratorTests(unittest.TestCase):
             rotate.generate(size=20,figure=['110','010','011'],top=2,left=6,
                             legend=[(1,[(-1,1)])])
 
+    def test_routing_pockets_and_nonadjacent_bands(self):
+        route=importlib.import_module('tasks.task_7491f3cf')
+        with self.assertRaises(ValueError):
+            route.generate(frame=1,background=0,line_color=4,color2=2,color3=3,
+                           panel_size=5,line=[(0,2),(1,2),(2,2),(2,1),(2,0)],
+                           dot=(0,0),pattern2=['##...','##...','.....','.....','.....'],
+                           pattern3=['...##','...##','.....','...##','...##'])
+        random.seed(41000)
+        pair=route.generate(panel_size=4,pattern2=['####','#..#','#..#','####'])
+        self.assertEqual(pair['output'],grid(call(solver('7491f3cf'),pair['input'])))
+        pockets=importlib.import_module('tasks.task_753ea09b')
+        random.seed(30000)
+        with patch.object(pockets,'_replay',side_effect=AssertionError('replay used')):
+            pair=pockets.generate(width=30,height=30,outward_stubs=3,
+                                  bg=0,wall=9,stick=5)
+        self.assertEqual(pair['output'],grid(call(solver('753ea09b'),pair['input'])))
+        band=importlib.import_module('tasks.task_7666fa5d')
+        pair=band.generate(width=16,height=16,color=4,mechanism='notch',
+                           segments=[(12,-12,-6),(12,4,8),(17,-9,11)])
+        self.assertEqual(pair['output'][7][7],8)
+        self.assertEqual(pair['output'][3][11],2)
+        pair=band.generate(width=16,height=16,color=3,mechanism='crossing',
+                           segments=[(8,-8,0),(12,8,10),(16,-8,8)])
+        self.assertEqual(pair['output'][4][6],2)
+        self.assertEqual(pair['output'],grid(call(solver('7666fa5d'),pair['input'])))
+        for seed in (20036,20874):
+            random.seed(seed)
+            pair=band.generate(width=16,height=16,num_segments=3,mechanism='notch')
+            self.assertEqual(pair['output'],grid(call(solver('7666fa5d'),pair['input'])))
+        with self.assertRaises(ValueError):
+            band.generate(segments=[(12,4.9,8)])
+
     def test_episode_contract_and_disjoint_splits(self):
         with tempfile.TemporaryDirectory() as directory:
             previous=b.OUT;b.OUT=Path(directory);(b.OUT/'pools').mkdir()

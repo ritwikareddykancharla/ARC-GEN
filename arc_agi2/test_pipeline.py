@@ -985,6 +985,29 @@ class GeneratorTests(unittest.TestCase):
             fixture_basis('581f7754',changed)
         self.assertEqual(fixture_basis('unapproved',changed)['fixture'],'canonical')
 
+    def test_three_additional_approved_copies_keep_exact_label_provenance(self):
+        import copy
+        for tid, count in [('a6f40cea', 8), ('b74ca5d1', 3), ('f18ec8cc', 52)]:
+            packet = reference(tid)
+            basis = fixture_basis(tid, packet)
+            self.assertTrue(basis['corrected'])
+            self.assertEqual(len(basis['changed_cells']), count)
+            reconstructed = copy.deepcopy(packet['canonical'])
+            for change in basis['changed_cells']:
+                self.assertEqual(change['field'], 'output')
+                row = reconstructed[change['split']][change['pair']]['output'][change['row']]
+                self.assertEqual(row[change['col']], change['canonical'])
+                row[change['col']] = change['teaching']
+            self.assertEqual(reconstructed, packet['teaching_fixture'])
+            for variant in ('canonical', 'teaching_fixture'):
+                modified = copy.deepcopy(packet)
+                modified[variant]['train'][0]['input'][0][0] = (
+                    modified[variant]['train'][0]['input'][0][0] + 1) % 10
+                with self.assertRaisesRegex(ValueError, 'hashes changed'):
+                    fixture_basis(tid, modified)
+        self.assertEqual(fixture_basis('e12f9a14'),
+                         {'fixture': 'canonical', 'corrected': False})
+
     def test_panel_style_clean_line_recovery_and_periodic_strip_controls(self):
         panels=importlib.import_module('tasks.task_4e45f183')
         with patch.object(panels,'_motif_patterns',return_value=None):

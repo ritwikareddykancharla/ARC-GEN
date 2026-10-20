@@ -659,3 +659,7 @@ Registered `dbff022c`, `e729b7be`, `e9fc42f2`, `fd096ab6`, `d35bdbdc` and `e3721
 | e3721c99 | 1,200 | Independent hole counts; 516 corner dividers, 449 also with zero-hole keys |
 
 The badge and hole-count revisions now sample mechanisms that previous drafts reconstructed only in fixture replay. Bounded scope remains explicit: the hole-count generator excludes corner scenes having zero-hole blobs without a zero-hole key, and the marker assembly keeps its original palette. **195 regression tests pass. Coverage is 1,110/1,120; 10 remain.** These are task-family and sampled semantic checks, not a claim of exhaustive scene coverage.
+
+## Additional teaching-copy approvals
+
+On 2026-10-20 the user approved the hash-pinned labelled teaching copies for `a6f40cea` (eight cells; upstream PR #64), `b74ca5d1` (three cells; PR #16), and `f18ec8cc` (52 cells; PR #37). Original benchmark inputs/outputs and original-label scoring remain unchanged. These three constructor candidates passed 1,000 independent seed checks each against their teaching rules, but remain outside the covered total pending semantic review. `e12f9a14` is not approved and requires further investigation. The fixture-provenance regression confirms every approved cell change and rejects hash drift; **196 tests pass**.

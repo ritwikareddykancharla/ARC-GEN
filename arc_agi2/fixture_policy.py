@@ -20,6 +20,58 @@ APPROVED_CORRECTIONS = {
                             (4,10,3,1),(4,11,8,3),(5,8,3,8),(5,11,8,3)]
         ],
     },
+    'a6f40cea': {
+        'canonical_sha256': '190ecfbdad5e3d57ab8f8262bc8f088fd7474896c23225d0275da1d2c76b60e1',
+        'teaching_sha256': '02fa6d0273346512cbd6e4ab4d02e75024c788b2080671985f005ac0a946f253',
+        'source': 'https://github.com/arcprize/ARC-AGI-2/pull/64',
+        'approval': 'User approved the three upstream-backed labelled teaching copies on 2026-10-20; originals and scores remain unchanged.',
+        'description': '8 output cells; upstream proposal remains unmerged. e12f9a14 is not included in this approval.',
+        'changed_cells': [
+            dict(split=split, pair=pair, field='output', row=y, col=x, canonical=a, teaching=b)
+            for split,pair,y,x,a,b in [('train', 2, 5, 1, 8, 9), ('train', 2, 5, 2, 9, 8), ('train', 2, 5, 3, 8, 9),
+ ('train', 2, 5, 4, 9, 8), ('train', 2, 5, 5, 8, 9), ('train', 2, 5, 6, 9, 8),
+ ('train', 2, 5, 7, 8, 9), ('train', 2, 6, 1, 9, 8)]
+        ],
+    },
+    'b74ca5d1': {
+        'canonical_sha256': 'deb310c21d0c047427a32197353b8b5baa1290dd46ddd9418821651e88a4bb51',
+        'teaching_sha256': '151170dee30f4367c0cf22b17f1ba0fa3547d33cfd74859b5a5336699e730616',
+        'source': 'https://github.com/arcprize/ARC-AGI-2/pull/16',
+        'approval': 'User approved the three upstream-backed labelled teaching copies on 2026-10-20; originals and scores remain unchanged.',
+        'description': '3 output cells; upstream proposal remains unmerged. e12f9a14 is not included in this approval.',
+        'changed_cells': [
+            dict(split=split, pair=pair, field='output', row=y, col=x, canonical=a, teaching=b)
+            for split,pair,y,x,a,b in [('train', 2, 3, 27, 8, 4), ('train', 2, 4, 27, 8, 4), ('test', 1, 13, 15, 4, 6)]
+        ],
+    },
+    'f18ec8cc': {
+        'canonical_sha256': 'fc8ce6bdc6ea151735fff7baf9daf16737de59483927de510656fc4263021b18',
+        'teaching_sha256': '7da42321e65a82b2d55ea8419893a808a0d1921987d0dfcce636a48afda8f3b8',
+        'source': 'https://github.com/arcprize/ARC-AGI-2/pull/37',
+        'approval': 'User approved the three upstream-backed labelled teaching copies on 2026-10-20; originals and scores remain unchanged.',
+        'description': '52 output cells; upstream proposal remains unmerged. e12f9a14 is not included in this approval.',
+        'changed_cells': [
+            dict(split=split, pair=pair, field='output', row=y, col=x, canonical=a, teaching=b)
+            for split,pair,y,x,a,b in [('train', 0, 0, 0, 9, 7), ('train', 0, 0, 1, 9, 7), ('train', 0, 0, 2, 9, 7),
+ ('train', 0, 0, 6, 7, 9), ('train', 0, 0, 7, 7, 9), ('train', 0, 0, 8, 7, 9),
+ ('train', 0, 1, 0, 9, 7), ('train', 0, 1, 1, 9, 7), ('train', 0, 1, 2, 9, 7),
+ ('train', 0, 1, 6, 7, 9), ('train', 0, 1, 7, 7, 9), ('train', 0, 1, 8, 7, 9),
+ ('train', 0, 2, 0, 9, 7), ('train', 0, 2, 1, 9, 7), ('train', 0, 2, 2, 9, 7),
+ ('train', 0, 2, 6, 7, 9), ('train', 0, 2, 7, 7, 9), ('train', 0, 2, 8, 7, 9),
+ ('train', 0, 3, 0, 9, 7), ('train', 0, 3, 1, 9, 7), ('train', 0, 3, 2, 9, 7),
+ ('train', 0, 3, 6, 7, 9), ('train', 0, 3, 7, 7, 9), ('train', 0, 3, 8, 7, 9),
+ ('train', 0, 4, 0, 9, 7), ('train', 0, 4, 1, 9, 7), ('train', 0, 4, 2, 9, 7),
+ ('train', 0, 4, 6, 7, 9), ('train', 0, 4, 7, 7, 9), ('train', 0, 4, 8, 7, 9),
+ ('train', 0, 5, 0, 9, 7), ('train', 0, 5, 1, 9, 7), ('train', 0, 5, 5, 9, 7),
+ ('train', 0, 5, 6, 7, 9), ('train', 0, 5, 7, 7, 9), ('train', 0, 5, 8, 7, 9),
+ ('train', 0, 6, 0, 9, 7), ('train', 0, 6, 2, 9, 7), ('train', 0, 6, 6, 7, 9),
+ ('train', 0, 6, 8, 7, 9), ('train', 0, 7, 0, 9, 7), ('train', 0, 7, 1, 5, 7),
+ ('train', 0, 7, 2, 9, 7), ('train', 0, 7, 4, 7, 5), ('train', 0, 7, 6, 7, 9),
+ ('train', 0, 7, 8, 7, 9), ('train', 0, 8, 0, 9, 7), ('train', 0, 8, 1, 9, 7),
+ ('train', 0, 8, 2, 9, 7), ('train', 0, 8, 6, 7, 9), ('train', 0, 8, 7, 7, 9),
+ ('train', 0, 8, 8, 7, 9)]
+        ],
+    },
 }
 
 def digest(task):

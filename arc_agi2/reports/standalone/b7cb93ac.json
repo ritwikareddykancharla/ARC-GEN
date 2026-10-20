@@ -1,0 +1,2313 @@
+{
+  "task_id": "b7cb93ac",
+  "ready": true,
+  "samples_requested": 1000,
+  "samples_attempted": 1000,
+  "samples_passed": 1000,
+  "verifier_mode": "archived_pair_solver",
+  "verifier_evidence": {
+    "mode": "archived_pair_solver"
+  },
+  "improved_verifier_fixture_replay": null,
+  "seed_start": 20000,
+  "seed_end_exclusive": 21000,
+  "fixture_basis": {
+    "fixture": "canonical",
+    "corrected": false
+  },
+  "unique_inputs": 1000,
+  "changed_pairs": 1000,
+  "fixture_replays": 0,
+  "shapes": [
+    [
+      8,
+      8,
+      3,
+      4
+    ],
+    [
+      8,
+      9,
+      3,
+      4
+    ],
+    [
+      8,
+      10,
+      3,
+      4
+    ],
+    [
+      8,
+      11,
+      3,
+      4
+    ],
+    [
+      8,
+      12,
+      3,
+      4
+    ],
+    [
+      8,
+      13,
+      3,
+      4
+    ],
+    [
+      8,
+      14,
+      3,
+      4
+    ],
+    [
+      8,
+      15,
+      3,
+      4
+    ],
+    [
+      8,
+      16,
+      3,
+      4
+    ],
+    [
+      9,
+      8,
+      3,
+      4
+    ],
+    [
+      9,
+      9,
+      3,
+      4
+    ],
+    [
+      9,
+      10,
+      3,
+      4
+    ],
+    [
+      9,
+      11,
+      3,
+      4
+    ],
+    [
+      9,
+      12,
+      3,
+      4
+    ],
+    [
+      9,
+      13,
+      3,
+      4
+    ],
+    [
+      9,
+      14,
+      3,
+      4
+    ],
+    [
+      9,
+      15,
+      3,
+      4
+    ],
+    [
+      9,
+      16,
+      3,
+      4
+    ],
+    [
+      10,
+      8,
+      3,
+      4
+    ],
+    [
+      10,
+      9,
+      3,
+      4
+    ],
+    [
+      10,
+      10,
+      3,
+      4
+    ],
+    [
+      10,
+      11,
+      3,
+      4
+    ],
+    [
+      10,
+      12,
+      3,
+      4
+    ],
+    [
+      10,
+      13,
+      3,
+      4
+    ],
+    [
+      10,
+      14,
+      3,
+      4
+    ],
+    [
+      10,
+      15,
+      3,
+      4
+    ],
+    [
+      10,
+      16,
+      3,
+      4
+    ],
+    [
+      11,
+      8,
+      3,
+      4
+    ],
+    [
+      11,
+      9,
+      3,
+      4
+    ],
+    [
+      11,
+      10,
+      3,
+      4
+    ],
+    [
+      11,
+      11,
+      3,
+      4
+    ],
+    [
+      11,
+      12,
+      3,
+      4
+    ],
+    [
+      11,
+      13,
+      3,
+      4
+    ],
+    [
+      11,
+      14,
+      3,
+      4
+    ],
+    [
+      11,
+      15,
+      3,
+      4
+    ],
+    [
+      11,
+      16,
+      3,
+      4
+    ],
+    [
+      12,
+      8,
+      3,
+      4
+    ],
+    [
+      12,
+      9,
+      3,
+      4
+    ],
+    [
+      12,
+      10,
+      3,
+      4
+    ],
+    [
+      12,
+      11,
+      3,
+      4
+    ],
+    [
+      12,
+      12,
+      3,
+      4
+    ],
+    [
+      12,
+      13,
+      3,
+      4
+    ],
+    [
+      12,
+      14,
+      3,
+      4
+    ],
+    [
+      12,
+      15,
+      3,
+      4
+    ],
+    [
+      12,
+      16,
+      3,
+      4
+    ],
+    [
+      13,
+      8,
+      3,
+      4
+    ],
+    [
+      13,
+      9,
+      3,
+      4
+    ],
+    [
+      13,
+      10,
+      3,
+      4
+    ],
+    [
+      13,
+      11,
+      3,
+      4
+    ],
+    [
+      13,
+      12,
+      3,
+      4
+    ],
+    [
+      13,
+      13,
+      3,
+      4
+    ],
+    [
+      13,
+      14,
+      3,
+      4
+    ],
+    [
+      13,
+      15,
+      3,
+      4
+    ],
+    [
+      13,
+      16,
+      3,
+      4
+    ],
+    [
+      14,
+      8,
+      3,
+      4
+    ],
+    [
+      14,
+      9,
+      3,
+      4
+    ],
+    [
+      14,
+      10,
+      3,
+      4
+    ],
+    [
+      14,
+      11,
+      3,
+      4
+    ],
+    [
+      14,
+      12,
+      3,
+      4
+    ],
+    [
+      14,
+      13,
+      3,
+      4
+    ],
+    [
+      14,
+      14,
+      3,
+      4
+    ],
+    [
+      14,
+      15,
+      3,
+      4
+    ],
+    [
+      14,
+      16,
+      3,
+      4
+    ],
+    [
+      15,
+      8,
+      3,
+      4
+    ],
+    [
+      15,
+      9,
+      3,
+      4
+    ],
+    [
+      15,
+      10,
+      3,
+      4
+    ],
+    [
+      15,
+      11,
+      3,
+      4
+    ],
+    [
+      15,
+      12,
+      3,
+      4
+    ],
+    [
+      15,
+      13,
+      3,
+      4
+    ],
+    [
+      15,
+      14,
+      3,
+      4
+    ],
+    [
+      15,
+      15,
+      3,
+      4
+    ],
+    [
+      15,
+      16,
+      3,
+      4
+    ],
+    [
+      16,
+      8,
+      3,
+      4
+    ],
+    [
+      16,
+      9,
+      3,
+      4
+    ],
+    [
+      16,
+      10,
+      3,
+      4
+    ],
+    [
+      16,
+      11,
+      3,
+      4
+    ],
+    [
+      16,
+      12,
+      3,
+      4
+    ],
+    [
+      16,
+      13,
+      3,
+      4
+    ],
+    [
+      16,
+      14,
+      3,
+      4
+    ],
+    [
+      16,
+      15,
+      3,
+      4
+    ],
+    [
+      16,
+      16,
+      3,
+      4
+    ]
+  ],
+  "fixture_matches": {
+    "canonical": true,
+    "teaching_fixture": true
+  },
+  "original_solver_replay": {
+    "canonical": {
+      "correct": 4,
+      "total": 4,
+      "all_exact": true
+    },
+    "teaching_fixture": {
+      "correct": 4,
+      "total": 4,
+      "all_exact": true
+    }
+  },
+  "errors": [],
+  "sha256": "8a656f32ac253bad48390e10ee27e41e32068bc6a9b93412e93a3bf51f0cb70d",
+  "status": "reviewed_bounded_validation_passed",
+  "limitations": "Bounded randomized agreement with a saved solver is not proof of semantic completeness.",
+  "candidate_path": "/Users/ritwika/projects/arc-agi2/outputs/research/arcgen-coverage-cli/host-reviewed/b7cb93ac/task_b7cb93ac.py",
+  "attempts": 1,
+  "model_usage": {
+    "claude-opus-5-5": {
+      "inputTokens": 2,
+      "outputTokens": 84901,
+      "cacheReadInputTokens": 1225,
+      "cacheCreationInputTokens": 22093,
+      "webSearchRequests": 0,
+      "costUSD": 1.8750170000000002,
+      "contextWindow": 1000000,
+      "maxOutputTokens": 128000,
+      "thinkingTokens": 64627,
+      "canonicalModel": "claude-opus-5-5",
+      "provider": "firstParty",
+      "costBasis": "list"
+    }
+  },
+  "rule": "Separated single-colour polyominoes (total area 12) are assembled into a 3x4 rectangle, using only quarter-turn rotations (no mirroring). The tiling with the fewest rotated pieces is chosen; rotation cost is counted per piece, not per angle. In the demonstrated swap tie between congruent pieces of different colours, the piece lying further left in the input stays unrotated.",
+  "scope": "Assemble separated polyominoes into a3x4 rectangle minimizing the number of rotated pieces; resolve the demonstrated two-piece equal-cost swap by keeping the entirely leftward piece unrotated.",
+  "constraints": [
+    "Four canonical pairs and1000 independent archived-solver checks pass;1000 distinct inputs.",
+    "Independent input-only exact-cover enumeration passes1465 distinct scenes:1000defaults,200count/extreme combinations,100six-piece6x6 cases,160strict tie/critical combinations,4fixtures and1explicit witness.",
+    "Default1000:317tie scenes,880preference-critical scenes,381zero-rotation/552one-rotation/67two-rotation answers. Piececounts2:446,3:400,4:133,5:21;51reusecolours.",
+    "All100 six-piece6x6 cases succeed, allminimumrotationcost0 and preference-critical; repeatedcolours support unique paintedanswers. Maximum2.461seconds across this subgroup.",
+    "Critical now means a higher-cost tiling with a DIFFERENT painted grid. Fixed prechecks use supplied actual colours; no unique-colour surrogate.",
+    "12invalidcontrols reject;critic14valid11rejection pass. Independent enumerator visits atmost1179nodes;138constructor fallbackcalls over the audit."
+  ],
+  "known_limitations": [
+    "Output3x4 is intrinsic. Native inputs8..16;explicit randomcanvases6..30. Default2..5pieces,requested2..6,explicitregions2..8.",
+    "Allties accepted are the demonstrated two-piece congruent swap; more complex ambiguous tilings and positional ties are rejected.",
+    "Base proposals start unrotated and may be perturbed; tight six-piece scenes in thisaudit allhavecost0. This improvement in feasibility doesnot demonstrate diverse high-rotation six-piece scenes.",
+    "Defaults strongly favor two/three-piece scenes after acceptance. Nominaltie/criticalseeking probabilities are not finalmixture quotas.",
+    "Bounded randomized proposals can invoke exhaustive partition fallback;138calls observed. Node/leaf/search budgets can still reject feasible controls.",
+    "Finite exact-cover comparisons establish sampled ruleagreement, not benchmarkdifficulty equivalence."
+  ],
+  "billing": "Claude Max CLI; API credentials excluded; no API fallback",
+  "authored_sha256": "8a656f32ac253bad48390e10ee27e41e32068bc6a9b93412e93a3bf51f0cb70d",
+  "stress_test": {
+    "task_id": "b7cb93ac",
+    "ready": true,
+    "samples_requested": 1000,
+    "samples_attempted": 1000,
+    "samples_passed": 1000,
+    "verifier_mode": "archived_pair_solver",
+    "verifier_evidence": {
+      "mode": "archived_pair_solver"
+    },
+    "improved_verifier_fixture_replay": null,
+    "seed_start": 20000,
+    "seed_end_exclusive": 21000,
+    "fixture_basis": {
+      "fixture": "canonical",
+      "corrected": false
+    },
+    "unique_inputs": 1000,
+    "changed_pairs": 1000,
+    "fixture_replays": 0,
+    "shapes": [
+      [
+        8,
+        8,
+        3,
+        4
+      ],
+      [
+        8,
+        9,
+        3,
+        4
+      ],
+      [
+        8,
+        10,
+        3,
+        4
+      ],
+      [
+        8,
+        11,
+        3,
+        4
+      ],
+      [
+        8,
+        12,
+        3,
+        4
+      ],
+      [
+        8,
+        13,
+        3,
+        4
+      ],
+      [
+        8,
+        14,
+        3,
+        4
+      ],
+      [
+        8,
+        15,
+        3,
+        4
+      ],
+      [
+        8,
+        16,
+        3,
+        4
+      ],
+      [
+        9,
+        8,
+        3,
+        4
+      ],
+      [
+        9,
+        9,
+        3,
+        4
+      ],
+      [
+        9,
+        10,
+        3,
+        4
+      ],
+      [
+        9,
+        11,
+        3,
+        4
+      ],
+      [
+        9,
+        12,
+        3,
+        4
+      ],
+      [
+        9,
+        13,
+        3,
+        4
+      ],
+      [
+        9,
+        14,
+        3,
+        4
+      ],
+      [
+        9,
+        15,
+        3,
+        4
+      ],
+      [
+        9,
+        16,
+        3,
+        4
+      ],
+      [
+        10,
+        8,
+        3,
+        4
+      ],
+      [
+        10,
+        9,
+        3,
+        4
+      ],
+      [
+        10,
+        10,
+        3,
+        4
+      ],
+      [
+        10,
+        11,
+        3,
+        4
+      ],
+      [
+        10,
+        12,
+        3,
+        4
+      ],
+      [
+        10,
+        13,
+        3,
+        4
+      ],
+      [
+        10,
+        14,
+        3,
+        4
+      ],
+      [
+        10,
+        15,
+        3,
+        4
+      ],
+      [
+        10,
+        16,
+        3,
+        4
+      ],
+      [
+        11,
+        8,
+        3,
+        4
+      ],
+      [
+        11,
+        9,
+        3,
+        4
+      ],
+      [
+        11,
+        10,
+        3,
+        4
+      ],
+      [
+        11,
+        11,
+        3,
+        4
+      ],
+      [
+        11,
+        12,
+        3,
+        4
+      ],
+      [
+        11,
+        13,
+        3,
+        4
+      ],
+      [
+        11,
+        14,
+        3,
+        4
+      ],
+      [
+        11,
+        15,
+        3,
+        4
+      ],
+      [
+        11,
+        16,
+        3,
+        4
+      ],
+      [
+        12,
+        8,
+        3,
+        4
+      ],
+      [
+        12,
+        9,
+        3,
+        4
+      ],
+      [
+        12,
+        10,
+        3,
+        4
+      ],
+      [
+        12,
+        11,
+        3,
+        4
+      ],
+      [
+        12,
+        12,
+        3,
+        4
+      ],
+      [
+        12,
+        13,
+        3,
+        4
+      ],
+      [
+        12,
+        14,
+        3,
+        4
+      ],
+      [
+        12,
+        15,
+        3,
+        4
+      ],
+      [
+        12,
+        16,
+        3,
+        4
+      ],
+      [
+        13,
+        8,
+        3,
+        4
+      ],
+      [
+        13,
+        9,
+        3,
+        4
+      ],
+      [
+        13,
+        10,
+        3,
+        4
+      ],
+      [
+        13,
+        11,
+        3,
+        4
+      ],
+      [
+        13,
+        12,
+        3,
+        4
+      ],
+      [
+        13,
+        13,
+        3,
+        4
+      ],
+      [
+        13,
+        14,
+        3,
+        4
+      ],
+      [
+        13,
+        15,
+        3,
+        4
+      ],
+      [
+        13,
+        16,
+        3,
+        4
+      ],
+      [
+        14,
+        8,
+        3,
+        4
+      ],
+      [
+        14,
+        9,
+        3,
+        4
+      ],
+      [
+        14,
+        10,
+        3,
+        4
+      ],
+      [
+        14,
+        11,
+        3,
+        4
+      ],
+      [
+        14,
+        12,
+        3,
+        4
+      ],
+      [
+        14,
+        13,
+        3,
+        4
+      ],
+      [
+        14,
+        14,
+        3,
+        4
+      ],
+      [
+        14,
+        15,
+        3,
+        4
+      ],
+      [
+        14,
+        16,
+        3,
+        4
+      ],
+      [
+        15,
+        8,
+        3,
+        4
+      ],
+      [
+        15,
+        9,
+        3,
+        4
+      ],
+      [
+        15,
+        10,
+        3,
+        4
+      ],
+      [
+        15,
+        11,
+        3,
+        4
+      ],
+      [
+        15,
+        12,
+        3,
+        4
+      ],
+      [
+        15,
+        13,
+        3,
+        4
+      ],
+      [
+        15,
+        14,
+        3,
+        4
+      ],
+      [
+        15,
+        15,
+        3,
+        4
+      ],
+      [
+        15,
+        16,
+        3,
+        4
+      ],
+      [
+        16,
+        8,
+        3,
+        4
+      ],
+      [
+        16,
+        9,
+        3,
+        4
+      ],
+      [
+        16,
+        10,
+        3,
+        4
+      ],
+      [
+        16,
+        11,
+        3,
+        4
+      ],
+      [
+        16,
+        12,
+        3,
+        4
+      ],
+      [
+        16,
+        13,
+        3,
+        4
+      ],
+      [
+        16,
+        14,
+        3,
+        4
+      ],
+      [
+        16,
+        15,
+        3,
+        4
+      ],
+      [
+        16,
+        16,
+        3,
+        4
+      ]
+    ],
+    "fixture_matches": {
+      "canonical": true,
+      "teaching_fixture": true
+    },
+    "original_solver_replay": {
+      "canonical": {
+        "correct": 4,
+        "total": 4,
+        "all_exact": true
+      },
+      "teaching_fixture": {
+        "correct": 4,
+        "total": 4,
+        "all_exact": true
+      }
+    },
+    "errors": [],
+    "sha256": "8a656f32ac253bad48390e10ee27e41e32068bc6a9b93412e93a3bf51f0cb70d",
+    "status": "validated_candidate_needs_semantic_review",
+    "limitations": "Bounded randomized agreement with a saved solver is not proof of semantic completeness."
+  },
+  "authored_scope": "Supported: output always 3x4. Input canvas 6..30 per side (random default 8..16). 2..6 random pieces (default 2..5) and 2..8 explicit regions. Partitions are drawn by an anchored random sampler that guarantees exactly k regions; a randomized exhaustive partition DFS is the fallback. Same-colour reuse is allowed for congruent, non-touching pieces. Base proposals are unrotated (cost 0) and are then perturbed by rotating 1-2 pieces. Rotation-preference swap ties use the left-piece convention. Preference-critical scenes require a costlier tiling with a different painted grid. An exact gap-respecting packer handles tight canvases, including 6 pieces on 6x6. Explicit latent arguments reconstruct all canonical fixtures. Deliberately not supported: position ties (decided by an undemonstrated reading-order rule), mirrored pieces, ambiguous minimum-cost outputs, same-colour reuse between non-congruent pieces in random scenes, and same-colour regions touching on the board.",
+  "authored_constraints": [
+    "Regions partition the 3x4 board into 4-connected pieces; translated copies never touch on the board.",
+    "Translated copies share a colour; adjacent board regions always differ in colour; random scenes reuse a colour only among congruent pieces.",
+    "The constructed tiling has minimum rotation count, and every minimum-cost tiling paints the same grid, except the demonstrated swap tie, which the constructed grid wins.",
+    "In swap-tie scenes the unrotated winner lies entirely left of its rival in the input.",
+    "Pieces in the input never overlap and keep an empty cell between them, diagonals included; this is enforced exactly by disjoint 2x2-fattened shapes.",
+    "The critical flag means some strictly costlier tiling paints a different output grid; same-colour rearrangements that keep the grid do not count.",
+    "The fixed-scene critical precheck uses the actual colours and runs only when colours are supplied.",
+    "Explicit tie/critical flags are strict; default preferences are soft and are dropped after half the attempts and in the fallback DFS.",
+    "Malformed explicit arguments (wrong containers, lengths, types, ranges) raise ValueError."
+  ],
+  "semantic_review": {
+    "status": "reviewed",
+    "checks": [
+      "Four canonical pairs and1000 independent archived-solver checks pass;1000 distinct inputs.",
+      "Independent input-only exact-cover enumeration passes1465 distinct scenes:1000defaults,200count/extreme combinations,100six-piece6x6 cases,160strict tie/critical combinations,4fixtures and1explicit witness.",
+      "Default1000:317tie scenes,880preference-critical scenes,381zero-rotation/552one-rotation/67two-rotation answers. Piececounts2:446,3:400,4:133,5:21;51reusecolours.",
+      "All100 six-piece6x6 cases succeed, allminimumrotationcost0 and preference-critical; repeatedcolours support unique paintedanswers. Maximum2.461seconds across this subgroup.",
+      "Critical now means a higher-cost tiling with a DIFFERENT painted grid. Fixed prechecks use supplied actual colours; no unique-colour surrogate.",
+      "12invalidcontrols reject;critic14valid11rejection pass. Independent enumerator visits atmost1179nodes;138constructor fallbackcalls over the audit.",
+      "1000 independent seeds 20000..20999; approved validation fixtures reconstructed exactly; canonical replay reported separately"
+    ],
+    "limitations": [
+      "Output3x4 is intrinsic. Native inputs8..16;explicit randomcanvases6..30. Default2..5pieces,requested2..6,explicitregions2..8.",
+      "Allties accepted are the demonstrated two-piece congruent swap; more complex ambiguous tilings and positional ties are rejected.",
+      "Base proposals start unrotated and may be perturbed; tight six-piece scenes in thisaudit allhavecost0. This improvement in feasibility doesnot demonstrate diverse high-rotation six-piece scenes.",
+      "Defaults strongly favor two/three-piece scenes after acceptance. Nominaltie/criticalseeking probabilities are not finalmixture quotas.",
+      "Bounded randomized proposals can invoke exhaustive partition fallback;138calls observed. Node/leaf/search budgets can still reject feasible controls.",
+      "Finite exact-cover comparisons establish sampled ruleagreement, not benchmarkdifficulty equivalence."
+    ]
+  },
+  "diversity_audit": {
+    "task_id": "b7cb93ac",
+    "candidate_sha256": "8a656f32ac253bad48390e10ee27e41e32068bc6a9b93412e93a3bf51f0cb70d",
+    "pairs": 1465,
+    "unique_inputs": 1465,
+    "bycase": {
+      "default": 1000,
+      "counts_extremes": 200,
+      "six_piece_tight": 100,
+      "strict_flags": 160,
+      "canonical": 4,
+      "explicit_witness": 1
+    },
+    "default": {
+      "n": 1000,
+      "ties": 317,
+      "critical": 880,
+      "rotations": {
+        "0": 381,
+        "2": 67,
+        "1": 552
+      },
+      "counts": {
+        "3": 400,
+        "2": 446,
+        "4": 133,
+        "5": 21
+      },
+      "same_grid_only_costlier": 0,
+      "reused_colours": 51
+    },
+    "six_piece_tight": {
+      "n": 100,
+      "ties": 0,
+      "critical": 100,
+      "rotations": {
+        "0": 100
+      },
+      "counts": {
+        "6": 100
+      },
+      "same_grid_only_costlier": 0,
+      "reused_colours": 100
+    },
+    "fallback_calls": 138,
+    "max_oracle_nodes": 1179,
+    "invalid_rejected": 12,
+    "max_seconds_by_case": {
+      "default": 0.013420000090263784,
+      "counts_extremes": 2.0300134159624577,
+      "six_piece_tight": 2.4606308339862153,
+      "strict_flags": 0.5075182920554653,
+      "explicit_witness": 0.0005123330047354102
+    },
+    "examples": {
+      "minimum_rotated": {
+        "height": 16,
+        "width": 11,
+        "pieces": 3,
+        "minimum_rotated": 2,
+        "tie": false,
+        "critical": true,
+        "any_costlier": true,
+        "same_grid_only_costlier": false,
+        "distinct_grids": 2,
+        "tilings": 2,
+        "nodes": 21,
+        "reused_colours": false,
+        "case": "default",
+        "pair": {
+          "input": [
+            [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              4,
+              4,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              4,
+              0,
+              0,
+              0,
+              0,
+              3,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              4,
+              0,
+              0,
+              0,
+              3,
+              3,
+              0,
+              0,
+              0
+            ],
+            [
+              8,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              3,
+              0,
+              0,
+              0
+            ],
+            [
+              8,
+              8,
+              0,
+              0,
+              0,
+              0,
+              0,
+              3,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          ],
+          "output": [
+            [
+              8,
+              4,
+              4,
+              4
+            ],
+            [
+              8,
+              8,
+              3,
+              4
+            ],
+            [
+              3,
+              3,
+              3,
+              3
+            ]
+          ]
+        },
+        "seed": 60002,
+        "parameters": {}
+      },
+      "tilings": {
+        "height": 14,
+        "width": 16,
+        "pieces": 5,
+        "minimum_rotated": 0,
+        "tie": false,
+        "critical": true,
+        "any_costlier": true,
+        "same_grid_only_costlier": false,
+        "distinct_grids": 224,
+        "tilings": 240,
+        "nodes": 1179,
+        "reused_colours": true,
+        "case": "default",
+        "pair": {
+          "input": [
+            [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              9,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              4,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              0,
+              5,
+              0,
+              0,
+              9,
+              0,
+              0,
+              0,
+              0,
+              0,
+              4,
+              4,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              0,
+              5,
+              5,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              9,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              9,
+              0,
+              6,
+              6,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          ],
+          "output": [
+            [
+              9,
+              6,
+              6,
+              9
+            ],
+            [
+              9,
+              4,
+              5,
+              9
+            ],
+            [
+              4,
+              4,
+              5,
+              5
+            ]
+          ]
+        },
+        "seed": 60036,
+        "parameters": {}
+      },
+      "nodes": {
+        "height": 14,
+        "width": 16,
+        "pieces": 5,
+        "minimum_rotated": 0,
+        "tie": false,
+        "critical": true,
+        "any_costlier": true,
+        "same_grid_only_costlier": false,
+        "distinct_grids": 224,
+        "tilings": 240,
+        "nodes": 1179,
+        "reused_colours": true,
+        "case": "default",
+        "pair": {
+          "input": [
+            [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              9,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              4,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              0,
+              5,
+              0,
+              0,
+              9,
+              0,
+              0,
+              0,
+              0,
+              0,
+              4,
+              4,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              0,
+              5,
+              5,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              9,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              9,
+              0,
+              6,
+              6,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          ],
+          "output": [
+            [
+              9,
+              6,
+              6,
+              9
+            ],
+            [
+              9,
+              4,
+              5,
+              9
+            ],
+            [
+              4,
+              4,
+              5,
+              5
+            ]
+          ]
+        },
+        "seed": 60036,
+        "parameters": {}
+      },
+      "distinct_grids": {
+        "height": 14,
+        "width": 16,
+        "pieces": 5,
+        "minimum_rotated": 0,
+        "tie": false,
+        "critical": true,
+        "any_costlier": true,
+        "same_grid_only_costlier": false,
+        "distinct_grids": 224,
+        "tilings": 240,
+        "nodes": 1179,
+        "reused_colours": true,
+        "case": "default",
+        "pair": {
+          "input": [
+            [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              9,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              4,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              0,
+              5,
+              0,
+              0,
+              9,
+              0,
+              0,
+              0,
+              0,
+              0,
+              4,
+              4,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              0,
+              5,
+              5,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              9,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              9,
+              0,
+              6,
+              6,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          ],
+          "output": [
+            [
+              9,
+              6,
+              6,
+              9
+            ],
+            [
+              9,
+              4,
+              5,
+              9
+            ],
+            [
+              4,
+              4,
+              5,
+              5
+            ]
+          ]
+        },
+        "seed": 60036,
+        "parameters": {}
+      }
+    }
+  }
+}

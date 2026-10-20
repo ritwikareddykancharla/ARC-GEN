@@ -2683,4 +2683,21 @@ class GeneratorTests(unittest.TestCase):
                 with self.assertRaises(ValueError):m.generate(**kw)
         with self.assertRaises(ValueError):m.generate(offsets=iter([0,1,2]))
 
+    def test_tiling_six_pieces_fit_tight_canvas(self):
+        m=importlib.import_module('tasks.task_b7cb93ac')
+        for seed in (40035,40036,60000):
+            random.seed(seed)
+            p=m.generate(width=6,height=6,num_pieces=6)
+            self.assertEqual((len(p['input']),len(p['input'][0])),(6,6))
+            self.assertEqual(p['output'],grid(call(solver('b7cb93ac'),p['input'])))
+
+    def test_tiling_costlier_same_paint_is_not_preference_critical(self):
+        m=importlib.import_module('tasks.task_b7cb93ac')
+        bar=((0,0),(0,1),(0,2))
+        types=m._piece_types([bar]*4,[1]*4)
+        self.assertFalse(m._has_cheaper(types,1))
+        self.assertTrue(m._has_cheaper(types,2))
+        self.assertTrue(m._search(types,lambda cost:cost>1,lambda cost:False))
+        self.assertFalse(m._has_costlier_diff(types,1,[[1]*4 for _ in range(3)]))
+
 if __name__=='__main__':unittest.main()

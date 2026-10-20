@@ -1988,4 +1988,34 @@ class GeneratorTests(unittest.TestCase):
                        'color':4,'cells':[[0,0],[0,1],[0,2],[1,0],[1,2]]}])
         with self.assertRaises(ValueError):m.generate(background=True)
 
+    def test_row_relocation_uses_anchor_without_left_run(self):
+        m=importlib.import_module('tasks.task_984d8a3e')
+        pair=m.generate(width=9,colors=[8,0,2],rows=[(0,3),(4,6),(2,7),(1,6),(2,5)])
+        self.assertEqual(pair['output'],[[0,0,0,2,2,2,2,2,2],
+            [8,0,0,8,8,8,2,2,2],[0,0,0,0,0,8,8,2,2],
+            [0,0,0,0,0,8,2,2,2],[0,0,0,8,8,2,2,2,2]])
+        self.assertEqual(pair['output'],grid(call(solver('984d8a3e'),pair['input'])))
+        for options in ({'colors':5},{'width':6,'rows':[5]},
+                        {'width':6,'rows':5},{'width':6,'rows':[]}):
+            with self.assertRaises(ValueError):m.generate(**options)
+
+    def test_row_relocation_scales_features_and_preserves_minimum(self):
+        m=importlib.import_module('tasks.task_984d8a3e')
+        long_run=False;wide_edge=False
+        for seed in range(40):
+            random.seed(seed)
+            pair=m.generate(width=30,height=30,colors=[0,1,2])
+            self.assertEqual(pair['output'],grid(call(solver('984d8a3e'),pair['input'])))
+            starts=[]
+            for row in pair['input']:
+                left=next(i for i,c in enumerate(row) if c!=0)
+                long_run|=left>9
+                if 2 in row:starts.append(row.index(2))
+            wide_edge|=max(starts)-min(starts)>7
+        self.assertTrue(long_run);self.assertTrue(wide_edge)
+        for w,h in [(4,2),(5,3),(30,2),(4,30)]:
+            pair=m.generate(width=w,height=h)
+            self.assertEqual((len(pair['input']),len(pair['input'][0])),(h,w))
+            self.assertEqual(pair['output'],grid(call(solver('984d8a3e'),pair['input'])))
+
 if __name__=='__main__':unittest.main()

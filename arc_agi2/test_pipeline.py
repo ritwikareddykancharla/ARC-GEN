@@ -690,8 +690,13 @@ class GeneratorTests(unittest.TestCase):
             solve=solver(tid)
             for seed in range(10000,10020):
                 random.seed(seed)
-                pair=call(module.generate,seconds=3)
-                self.assertEqual(grid(pair['output']),grid(call(solve,grid(pair['input']),seconds=3)),(tid,seed))
+                from .contextual import CONTEXTUAL_TASK_IDS, verify_shared_picture_episode
+                if tid in CONTEXTUAL_TASK_IDS:
+                    episode=call(module.generate_episode,seconds=3)
+                    self.assertTrue(call(verify_shared_picture_episode,episode,seconds=3),(tid,seed))
+                else:
+                    pair=call(module.generate,seconds=3)
+                    self.assertEqual(grid(pair['output']),grid(call(solve,grid(pair['input']),seconds=3)),(tid,seed))
     def test_box_motion_and_lane_reading_preserve_mechanisms(self):
         boxes=importlib.import_module('tasks.task_271d71e2')
         lanes=importlib.import_module('tasks.task_291dc1e1')

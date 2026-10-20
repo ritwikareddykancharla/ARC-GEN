@@ -22,6 +22,7 @@ from .generators.registry import GENERATORS,generate
 from .task_registry import NEW_TASK_IDS
 from .audit import relation,UPSTREAM_IDS
 from .augmentation import transformed, exhaustive_variants
+from .contextual import CONTEXTUAL_TASK_IDS, verify_shared_picture_episode
 
 POLICY=json.loads((BASE/'training_policy.json').read_text())
 
@@ -56,9 +57,43 @@ def input_stats(g):
     c=Counter(v for row in g for v in row)
     return {'height':len(g),'width':len(g[0]),'colours':len(c),'dominant_fraction':max(c.values())/sum(c.values())}
 
+def picture_episode(module, tid, sample_seed):
+    """Preserve episode context AND deterministic input-equivalence splits."""
+    random.seed(sample_seed)
+    first=call(module.generate_episode,seconds=3)
+    # A demonstrated full picture is sufficient context; no canonical bitmap.
+    picture=first['train'][0]['output']
+    colours=sorted({v for row in picture for v in row})
+    template=[[int(v==colours[0]) for v in row] for row in picture]
+    context_id=canonical_input(picture)
+    split='validation' if int(context_id[:8],16)%20==0 else 'train'
+    selected=[];seen=set()
+    initial=first['train']+first['test']
+    for attempt in range(400):
+        pair_seed=sample_seed if attempt<len(initial) else seed(tid,sample_seed,'context-crop',attempt)
+        if attempt<len(initial):
+            pair=initial[attempt]
+        else:
+            random.seed(pair_seed)
+            pair=call(module.generate,template=template,seconds=3)
+        pair={k:grid(pair[k]) for k in ['input','output']}
+        identity=canonical_input(pair['input'])
+        pair_split='validation' if int(identity[:8],16)%20==0 else 'train'
+        if pair_split!=split or identity in seen:continue
+        seen.add(identity)
+        selected.append(dict(pair,task_id=tid,seed=pair_seed,
+            parameters=compact({'context_id':context_id,'episode_seed':sample_seed}),
+            generator_mode='episode_shared_picture',input_hash=digest(pair['input']),
+            canonical_input_hash=identity,split=split,stratum=stratum(pair)))
+        if len(selected)==4:
+            episode={'train':selected[:3],'test':selected[3:]}
+            call(verify_shared_picture_episode,episode,seconds=3)
+            return selected,context_id
+    raise ValueError('Could not obtain four distinct crops in the shared-picture split')
+
 def pool_signature(tid,configs):
     # Invalidate cached pools after constructor, verifier, policy or selection changes.
-    files=[Path(__file__),BASE/'runtime.py',BASE/'fixture_policy.py',BASE/'helpers.py',BASE/'training_policy.json',
+    files=[Path(__file__),BASE/'runtime.py',BASE/'contextual.py',BASE/'fixture_policy.py',BASE/'helpers.py',BASE/'training_policy.json',
            BASE/'references'/f'{tid}.json',BASE.parent/'common.py',BASE/'task_registry.py']
     files+=sorted((BASE/'generators').glob('*.py'))
     native=BASE.parent/'tasks'/f'task_{tid}.py'
@@ -78,7 +113,8 @@ def make_pool(tid):
                 and old.get('requested_pool_size')==POOL_SIZE
                 and old.get('sha256')==hashlib.sha256(file.read_bytes()).hexdigest()):return old
     existing=(BASE.parent/'tasks'/f'task_{tid}.py').exists()
-    native=importlib.import_module('tasks.task_'+tid).generate if existing else None
+    native_module=importlib.import_module('tasks.task_'+tid) if existing else None
+    native=native_module.generate if existing else None
     refs=solver(tid) if tid in GENERATORS or tid not in UPSTREAM_IDS else None
     if configs and refs is None:refs=solver(tid)
     rows=[];seen={};canonical=set();reject=Counter();stale=0;trials=0
@@ -88,10 +124,17 @@ def make_pool(tid):
             pass  # Reviewed standalone replaces, rather than mixes with, its archived draft.
         elif tid in GENERATORS and (native is None or rng.random()<.6):mode='extension'
         elif configs and rng.random()<.6:kw=rng.choice(configs)['parameters'];mode='parameter_override'
+        contextual=None
         try:
-            p=call(generate,tid,s,seconds=2) if mode=='extension' else call(native,seconds=2,**kw)
-            p={k:grid(p[k]) for k in ['input','output']}
-            if mode!='default' and grid(call(refs,p['input'],seconds=2))!=p['output']:
+            if tid in CONTEXTUAL_TASK_IDS:
+                four,context_id=picture_episode(native_module,tid,s)
+                contextual=dict(four[-1],context_pairs=four[:3],context_id=context_id)
+                p={k:four[-1][k] for k in ['input','output']}
+                mode='episode_shared_picture'
+            else:
+                p=call(generate,tid,s,seconds=2) if mode=='extension' else call(native,seconds=2,**kw)
+                p={k:grid(p[k]) for k in ['input','output']}
+            if tid not in CONTEXTUAL_TASK_IDS and mode!='default' and grid(call(refs,p['input'],seconds=2))!=p['output']:
                 reject['reference_disagreement']+=1;continue
         except Exception as e:reject[type(e).__name__]+=1;continue
         ih,oh=digest(p['input']),digest(p['output'])
@@ -102,8 +145,9 @@ def make_pool(tid):
         stale=0;seen[ih]=oh;c=canonical_input(p['input']);canonical.add(c)
         # Split assignment depends only on input equivalence class, not family/seed/output.
         split='validation' if int(c[:8],16)%20==0 else 'train'
-        rows.append(dict(task_id=tid,input=p['input'],output=p['output'],seed=s,parameters=compact(kw),
-            generator_mode=mode,input_hash=ih,canonical_input_hash=c,split=split,stratum=stratum(p)))
+        rows.append(contextual if contextual is not None else
+                    dict(task_id=tid,input=p['input'],output=p['output'],seed=s,parameters=compact(kw),
+                    generator_mode=mode,input_hash=ih,canonical_input_hash=c,split=split,stratum=stratum(p)))
     if not rows:return {'task_id':tid,'complete':False,'pairs':0,'reason':'no valid unique pairs','rejections':dict(reject)}
     file.parent.mkdir(parents=True,exist_ok=True)
     pq.write_table(pa.Table.from_pylist(rows),file,compression='zstd')
@@ -112,6 +156,9 @@ def make_pool(tid):
        'train_strata':counts(rows,'train'),'validation_strata':counts(rows,'validation'),
        'train_canonical':len({r['canonical_input_hash'] for r in rows if r['split']=='train'}),
        'validation_canonical':len({r['canonical_input_hash'] for r in rows if r['split']=='validation'}),
+       'contextual':tid in CONTEXTUAL_TASK_IDS,
+       'train_context_episodes':sum(r['split']=='train' for r in rows) if tid in CONTEXTUAL_TASK_IDS else 0,
+       'validation_context_episodes':sum(r['split']=='validation' for r in rows) if tid in CONTEXTUAL_TASK_IDS else 0,
        'modes':dict(Counter(r['generator_mode'] for r in rows)),'rejections':dict(reject),'seconds':time.monotonic()-start,
        'sha256':hashlib.sha256(file.read_bytes()).hexdigest()}
     dump(report_path,report);return report
@@ -119,7 +166,8 @@ def make_pool(tid):
 def allocate(reports,split,target,desired):
     # Fresh episode quotas, before augmentation. Small pools get fewer examples.
     ceiling=POLICY['planned_dataset']['fresh_episodes_per_family']
-    capacity={r['task_id']:min(ceiling,2*r[split+'_canonical']) for r in reports if r[split+'_canonical']>=4}
+    capacity={r['task_id']:min(ceiling,r[split+'_context_episodes'] if r.get('contextual') else
+                              2*r[split+'_canonical']) for r in reports if r[split+'_canonical']>=4}
     support={r['task_id']:r[split+'_strata'] for r in reports if r['task_id'] in capacity}
     budgets={};keys=sorted(desired);total=sum(desired.values())
     for k in keys:budgets[k]=int(target*desired[k]/total)
@@ -167,9 +215,17 @@ def make_episodes(arg):
                     for retry in range(50):
                         q=candidates[(j+retry)%len(candidates)]
                         if query_uses[q['input_hash']]>=4:continue
-                        ds=[p for p in rows if p['input_hash']!=q['input_hash'] and pair_uses[p['input_hash']]<32]
-                        if len(ds)<3:break
-                        demos=rng.sample(ds,3);four=demos+[q]
+                        if tid in CONTEXTUAL_TASK_IDS:
+                            demos=q['context_pairs']
+                            if len(demos)!=3 or any(p['split']!=split for p in demos):
+                                raise ValueError('Invalid stored shared-picture context')
+                        else:
+                            ds=[p for p in rows if p['input_hash']!=q['input_hash'] and pair_uses[p['input_hash']]<32]
+                            if len(ds)<3:break
+                            demos=rng.sample(ds,3)
+                        four=demos+[q]
+                        if tid in CONTEXTUAL_TASK_IDS:
+                            call(verify_shared_picture_episode,{'train':demos,'test':[q]},seconds=3)
                         if len({p['canonical_input_hash'] for p in four})<4:continue
                         if all(p['input']==p['output'] for p in four):continue
                         basehash=digest([sorted(p['input_hash'] for p in demos),q['input_hash']])
@@ -189,6 +245,7 @@ def make_episodes(arg):
                               'prompt':prompt,'completion':compact({'outputs':[query['output']]}),
                               'pair_seeds':[p['seed'] for p in four],'pair_parameters':[p['parameters'] for p in four],
                               'pair_generator_modes':[p['generator_mode'] for p in four],
+                              'context_id':q.get('context_id',''),
                               'fixture_basis':basis['fixture'],
                               'corrected_teaching_fixture':basis['corrected'],
                               'correction_source':basis.get('source',''),
@@ -255,9 +312,10 @@ Three demonstration pairs and one query per episode, with generator-produced out
 - All fixture-verified ARC-GEN generators whose task IDs occur in ARC-AGI-2, plus independently constructed, tested extensions.
 - Adaptive fresh quotas: at most two episodes per unique canonical input in the pair pool, with a {POLICY['planned_dataset']['fresh_episodes_per_family']:,}-episode family ceiling before augmentation. Families with little variation receive fewer examples.
 - Target query longest-side distribution at each integer size 1–30 jointly with output expansion/shrinkage/same-shape, measured on all 1,120 public tasks. Exact height, width and rectangular-shape histograms are reported separately. Unsupported targets become explicit shortfalls; difficulty is not proven equal by dimensions.
-- Size overrides require original replay and differential seed checks. Every overridden/extended pair is checked against its saved teacher solver. Default upstream generators have fixture checks, not full semantic proofs.
+- Size overrides require original replay and differential seed checks. Overridden/extended pairs use saved teacher solvers, except episode-shared picture family `269e22fb`: it uses an independent verifier conditioned on a demonstration output, since its archived solver contains only the original picture. Default upstream generators have fixture checks, not full semantic proofs.
 - Fresh input pool, no duplicated full native episodes, no equivalent inputs inside an episode. Every fresh episode expands into all eight D4 transforms. Symmetric identical episodes are stored once, with every represented transform recorded in `equivalent_d4`; fresh and augmented counts remain separate. Colours are generated natively; extra palette permutation is opt-in per family. One transformation applies consistently to all demonstration inputs/outputs and the query input/output.
 - Input equivalence classes under palette renaming and D4 are assigned to one split before episode construction, including across families. All 1,120 public task families, including the former 20 holdouts, are training-eligible after generator validation. Synthetic validation measures new-input generalization within known families.
+- For `269e22fb`, each fresh picture is shared by its three demonstrations and query. These pairs are stored together and never mixed with a different picture. The picture equivalence class and every crop belong to the same deterministic split. Fresh-episode capacity is limited to the number of complete context bundles, rather than multiplying the number of queries.
 
 ## Generator examples
 

@@ -5,6 +5,7 @@ from pathlib import Path
 from .runtime import BASE,reference,solver,check_reference,call,grid,pairs
 from .generators.registry import GENERATORS,generate
 from .fixture_policy import fixture_basis
+from .contextual import CONTEXTUAL_TASK_IDS, verify_shared_picture_episode
 ROOT=BASE.parent
 UPSTREAM_IDS=set(json.loads((BASE/'upstream_task_ids.json').read_text()))
 
@@ -19,19 +20,28 @@ def fixture_check(tid):
 def extension_check(tid):
     f=solver(tid);shapes=Counter();errors=[];n=300
     standalone=(ROOT/'tasks'/f'task_{tid}.py').exists() and tid not in UPSTREAM_IDS
-    constructor=importlib.import_module('tasks.task_'+tid).generate if standalone else None
+    module=importlib.import_module('tasks.task_'+tid) if standalone else None
+    constructor=module.generate if module else None
     for seed in range(n):
         try:
             random.seed(seed)
-            p=call(constructor,seconds=3) if standalone else generate(tid,seed)
+            if tid in CONTEXTUAL_TASK_IDS and standalone:
+                episode=call(module.generate_episode,seconds=3)
+                call(verify_shared_picture_episode,episode,seconds=3)
+                p=episode['test'][0]
+            else:
+                p=call(constructor,seconds=3) if standalone else generate(tid,seed)
             grid(p['input']);grid(p['output'])
-            assert grid(call(f,p['input']))==p['output'],'reference mismatch'
+            if tid not in CONTEXTUAL_TASK_IDS:
+                assert grid(call(f,p['input']))==p['output'],'reference mismatch'
             shapes[f"{len(p['input'])}x{len(p['input'][0])}->{len(p['output'])}x{len(p['output'][0])}"]+=1
         except Exception as e:errors.append({'seed':seed,'error':str(e)})
     orig=check_reference(tid);basis=fixture_basis(tid)
     return {'task_id':tid,'sampled':n,'passed':n-len(errors),'errors':errors,'shapes':dict(shapes),'original_replay':orig,
         'ready':not errors and orig[basis['fixture']]['all_exact'], 'fixture_basis':basis,
-        'scope':'Independent constructor vs saved solver and original fixtures; agreement does not prove semantic completeness.'}
+        'scope':('Fresh shared-picture episodes vs a demonstration-conditioned verifier; original fixtures also checked with archived solver.'
+                 if tid in CONTEXTUAL_TASK_IDS else
+                 'Independent constructor vs saved solver and original fixtures; agreement does not prove semantic completeness.')}
 
 def summarise(ps):
     out={'pairs':len(ps),'input':{},'output':{},'relations':dict(Counter(relation(p) for p in ps))}

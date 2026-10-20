@@ -9,6 +9,7 @@ import numpy as np
 from .runtime import reference,solver,grid,call,pairs,check_reference
 
 from .fixture_policy import fixture_basis
+from .contextual import CONTEXTUAL_TASK_IDS, verify_shared_picture_episode
 
 ALLOWED={'random','math','collections','itertools','functools','copy','heapq','statistics','numpy','common'}
 
@@ -62,11 +63,17 @@ def validate(tid,path,samples=300,seed_start=0):
         attempted+=1
         random.seed(seed);np.random.seed(seed)
         try:
-            raw=call(m.generate,seconds=3)
+            if tid in CONTEXTUAL_TASK_IDS:
+                episode=call(m.generate_episode,seconds=3)
+                call(verify_shared_picture_episode,episode,seconds=3)
+                raw=episode['test'][0]
+            else:
+                raw=call(m.generate,seconds=3)
             p={k:grid(raw[k]) for k in ['input','output']}
-            actual=grid(call(f,p['input'],seconds=3))
-            if actual!=p['output']:
-                raise ValueError(json.dumps({'reason':'reference_disagreement','input':p['input'],'candidate':p['output'],'reference':actual}))
+            if tid not in CONTEXTUAL_TASK_IDS:
+                actual=grid(call(f,p['input'],seconds=3))
+                if actual!=p['output']:
+                    raise ValueError(json.dumps({'reason':'reference_disagreement','input':p['input'],'candidate':p['output'],'reference':actual}))
             seen.add(key(p['input']));changed+=p['input']!=p['output'];replays+=key(p['input']) in canonical_inputs
             shapes.add((len(p['input']),len(p['input'][0]),len(p['output']),len(p['output'][0])))
             passed+=1
@@ -76,6 +83,7 @@ def validate(tid,path,samples=300,seed_start=0):
     basis=fixture_basis(tid,r)
     ready=not errors and len(seen)>=20 and changed>=20 and replays<=samples//10 and matches[basis['fixture']] and original[basis['fixture']]['all_exact']
     return {'task_id':tid,'ready':ready,'samples_requested':samples,'samples_attempted':attempted,'samples_passed':passed,
+            'verifier_mode':'demonstration_conditioned_episode' if tid in CONTEXTUAL_TASK_IDS else 'archived_pair_solver',
             'seed_start':seed_start,'seed_end_exclusive':seed_start+attempted,
             'fixture_basis':basis,'unique_inputs':len(seen),'changed_pairs':changed,'fixture_replays':replays,
             'shapes':[list(s) for s in sorted(shapes)],'fixture_matches':matches,'original_solver_replay':original,

@@ -554,7 +554,7 @@ task_id,split,former_holdout,training_eligible,status,standalone_module,candidat
 833dafe3,training,False,True,upstream_fixture_verified,tasks/task_833dafe3.py,rigid;template;crop,references/833dafe3.json,8x8->16x16,Expand semantic and boundary-case tests
 834ec97d,training,False,True,upstream_fixture_verified,tasks/task_834ec97d.py,movement;count,references/834ec97d.json,12x12->12x12,Expand semantic and boundary-case tests
 83b6b474,training,False,True,upstream_fixture_verified,tasks/task_83b6b474.py,rigid;movement;repeat;template;topology;count;order;assembly,references/83b6b474.json,8x8->6x6,Expand semantic and boundary-case tests
-83eb0a57,training,False,True,generator_missing,,selection;movement;repeat;count;crop;assembly,references/83eb0a57.json,30x30->10x10,"Construct, validate and review standalone generator"
+83eb0a57,training,False,True,extension_validated,tasks/task_83eb0a57.py,selection;movement;repeat;count;crop;assembly,references/83eb0a57.json,30x30->10x10,Expand semantic and boundary-case tests
 8403a5d5,training,False,True,upstream_fixture_verified,tasks/task_8403a5d5.py,repeat;paths,references/8403a5d5.json,10x10->10x10,Expand semantic and boundary-case tests
 84551f4c,training,False,True,upstream_fixture_verified,tasks/task_84551f4c.py,dynamics,references/84551f4c.json,9x30->9x30;3x30->3x30,Expand semantic and boundary-case tests
 845d6e51,training,False,True,extension_validated,tasks/task_845d6e51.py,legend;recolour;rigid;count,references/845d6e51.json,18x17->18x17,Expand semantic and boundary-case tests

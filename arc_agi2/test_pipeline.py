@@ -11,6 +11,55 @@ from .fixture_policy import fixture_basis
 from .augmentation import apply_episode,settings,exhaustive_variants
 
 class GeneratorTests(unittest.TestCase):
+    def test_slab_random_retries_keep_selected_piece_count(self):
+        slab=importlib.import_module('tasks.task_83eb0a57')
+        for seed in range(41000,41012):
+            expected=random.Random(seed).choice([1,2,2,3,3,4])
+            random.seed(seed)
+            pair=slab.generate()
+            g=pair['input'];bg=Counter(sum(g,[])).most_common(1)[0][0]
+            pending={(r,c) for r,row in enumerate(g) for c,v in enumerate(row) if v!=bg}
+            components=0
+            while pending:
+                components+=1;stack=[pending.pop()]
+                while stack:
+                    r,c=stack.pop()
+                    for p in ((r-1,c),(r+1,c),(r,c-1),(r,c+1)):
+                        if p in pending:
+                            pending.remove(p);stack.append(p)
+            self.assertEqual(components,expected+1)
+            self.assertEqual(pair['output'],grid(call(solver('83eb0a57'),g)))
+
+    def test_slab_explicit_offset_defines_visible_host_keys(self):
+        slab=importlib.import_module('tasks.task_83eb0a57')
+        pair=slab.generate(size=[30,30],bg=8,host=[2,15,9,5,1],
+                           pieces=[[16,5,[[3,3,3],[2,2,2],[3,3,3]],3,0,1]])
+        self.assertEqual(pair['output'][0][1:4],[3,3,3])
+        self.assertEqual(pair['output'][1][1:4],[2,2,2])
+        self.assertEqual(pair['output'],grid(call(solver('83eb0a57'),pair['input'])))
+
+    def test_slab_explicit_overlap_and_more_than_four_pieces(self):
+        slab=importlib.import_module('tasks.task_83eb0a57')
+        p=slab.generate(size=[30,30],bg=0,host=[0,0,8,8,1],pieces=[
+            [12,0,[[3]*4,[2]*4,[2]*4],3,1,1],
+            [12,8,[[4]*3,[5]*3],5,3,3]])
+        self.assertEqual(p['output'][3][3:6],[4,4,4])
+        self.assertEqual(p['output'],grid(call(solver('83eb0a57'),p['input'])))
+        parts=[[22+3*(i//3),9*(i%3),[[i+2]+[1]*(i+1)],i+2,2+2*i,2]
+               for i in range(6)]
+        p=slab.generate(size=[30,30],bg=0,host=[0,0,20,20,1],
+                        pieces=parts,num_pieces=6)
+        self.assertEqual(p['output'],grid(call(solver('83eb0a57'),p['input'])))
+
+    def test_slab_malformed_patterns_reject_cleanly(self):
+        slab=importlib.import_module('tasks.task_83eb0a57')
+        for pat in (5,[5],[[3,3],5],[[3,3],[]]):
+            with self.subTest(pattern=pat),self.assertRaises(ValueError):
+                slab.generate(size=[30,30],bg=8,host=[2,15,9,5,1],
+                              pieces=[[16,5,pat,3,1,1]])
+        with self.assertRaises(ValueError):
+            slab.generate(bg=8,host=[2,15,9,5,1],pieces=7,num_pieces=1)
+
     def test_border_cycle_preserves_skeleton_and_palette_direction(self):
         cycle=importlib.import_module('tasks.task_880c1354')
         colours=[0,9,2,6,5,3,8,1]

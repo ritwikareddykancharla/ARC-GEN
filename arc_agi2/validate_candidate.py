@@ -26,7 +26,9 @@ def screen(source):
         raise ValueError('validate() must construct fixtures via generate(...) calls')
     return tree
 
-def validate(tid,path,samples=300):
+def validate(tid,path,samples=300,seed_start=0):
+    if samples < 1 or seed_start < 0:
+        raise ValueError('samples must be positive and seed_start nonnegative')
     source=path.read_text();screen(source)
     spec=importlib.util.spec_from_file_location('candidate_'+tid,path);m=importlib.util.module_from_spec(spec)
     call(spec.loader.exec_module,m,seconds=5)
@@ -52,9 +54,10 @@ def validate(tid,path,samples=300):
                     diffs.append({'split':split,'pair':i,'field':field,'actual_shape':[len(a[field]),len(a[field][0])],
                                   'expected_shape':[len(b[field]),len(b[field][0])],'cell_mismatches':cells})
         raise ValueError(json.dumps({'reason':'validate() does not reproduce original fixture','details':diffs[:12]}))
-    errors=[];shapes=set();seen=set();changed=0;replays=0
+    errors=[];shapes=set();seen=set();changed=0;replays=0;passed=0;attempted=0
     canonical_inputs={key(p['input']) for p in pairs(r['canonical'])}
-    for seed in range(samples):
+    for seed in range(seed_start,seed_start+samples):
+        attempted+=1
         random.seed(seed);np.random.seed(seed)
         try:
             raw=call(m.generate,seconds=3)
@@ -64,11 +67,13 @@ def validate(tid,path,samples=300):
                 raise ValueError(json.dumps({'reason':'reference_disagreement','input':p['input'],'candidate':p['output'],'reference':actual}))
             seen.add(key(p['input']));changed+=p['input']!=p['output'];replays+=key(p['input']) in canonical_inputs
             shapes.add((len(p['input']),len(p['input'][0]),len(p['output']),len(p['output'][0])))
+            passed+=1
         except Exception as e:
             errors.append({'seed':seed,'error':str(e)[:16000]})
             if len(errors)>=3:break
     ready=not errors and len(seen)>=20 and changed>=20 and replays<=samples//10
-    return {'task_id':tid,'ready':ready,'samples_requested':samples,'samples_passed':len(seen) if errors else samples,
+    return {'task_id':tid,'ready':ready,'samples_requested':samples,'samples_attempted':attempted,'samples_passed':passed,
+            'seed_start':seed_start,'seed_end_exclusive':seed_start+attempted,
             'unique_inputs':len(seen),'changed_pairs':changed,'fixture_replays':replays,
             'shapes':[list(s) for s in sorted(shapes)],'fixture_matches':matches,'original_solver_replay':original,
             'errors':errors,'sha256':hashlib.sha256(source.encode()).hexdigest(),
@@ -76,8 +81,8 @@ def validate(tid,path,samples=300):
             'limitations':'Bounded randomized agreement with a saved solver is not proof of semantic completeness.'}
 
 def main():
-    ap=argparse.ArgumentParser();ap.add_argument('task_id');ap.add_argument('path',type=Path);ap.add_argument('--samples',type=int,default=300);a=ap.parse_args()
-    try:r=validate(a.task_id,a.path,a.samples)
+    ap=argparse.ArgumentParser();ap.add_argument('task_id');ap.add_argument('path',type=Path);ap.add_argument('--samples',type=int,default=300);ap.add_argument('--seed-start',type=int,default=0);a=ap.parse_args()
+    try:r=validate(a.task_id,a.path,a.samples,a.seed_start)
     except Exception as e:r={'task_id':a.task_id,'ready':False,'errors':[{'error':str(e),'traceback':traceback.format_exc()}]}
     print(json.dumps(r,separators=(',',':')))
 

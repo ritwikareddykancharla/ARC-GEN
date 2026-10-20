@@ -9,6 +9,16 @@ from .task_registry import NEW_TASK_IDS
 from .augmentation import apply_episode,settings
 
 class GeneratorTests(unittest.TestCase):
+    def test_fixed_canvas_requests_do_not_silently_expand(self):
+        for tid in ['cd3c21df','d4c90558']:
+            module=importlib.import_module('tasks.task_'+tid)
+            for seed in range(5):
+                random.seed(seed)
+                pair=call(lambda:module.generate(width=18,height=24),seconds=3)
+                self.assertEqual((len(pair['input']),len(pair['input'][0])),(24,18))
+        frame=importlib.import_module('tasks.task_d4c90558')
+        with self.assertRaisesRegex(ValueError,'minimum frame'):
+            frame.generate(width=3,height=3)
     def test_registered_standalone_sources_and_fixtures(self):
         # Validate the registered files, not only the older research registry.
         for tid in NEW_TASK_IDS:

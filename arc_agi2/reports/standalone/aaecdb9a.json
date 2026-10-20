@@ -1,0 +1,126 @@
+{
+  "task_id": "aaecdb9a",
+  "ready": true,
+  "samples_requested": 1000,
+  "samples_passed": 1000,
+  "unique_inputs": 1000,
+  "changed_pairs": 1000,
+  "fixture_replays": 0,
+  "shapes": [
+    [
+      10,
+      10,
+      2,
+      5
+    ],
+    [
+      10,
+      10,
+      3,
+      5
+    ],
+    [
+      10,
+      10,
+      4,
+      5
+    ],
+    [
+      10,
+      10,
+      5,
+      5
+    ],
+    [
+      10,
+      10,
+      6,
+      5
+    ]
+  ],
+  "fixture_matches": {
+    "canonical": true,
+    "teaching_fixture": true
+  },
+  "original_solver_replay": {
+    "canonical": {
+      "correct": 4,
+      "total": 4,
+      "all_exact": true
+    },
+    "teaching_fixture": {
+      "correct": 4,
+      "total": 4,
+      "all_exact": true
+    }
+  },
+  "errors": [],
+  "sha256": "7b741f69796170929c3c78b21f3955f1f4c47d3635a55b9347c0e0a6b6deb73a",
+  "status": "reviewed_bounded_validation_passed",
+  "limitations": "Bounded randomized agreement with a saved solver is not proof of semantic completeness.",
+  "candidate_path": "/Users/ritwika/projects/arc-agi2/outputs/research/arcgen-coverage-cli/aaecdb9a/task_aaecdb9a.py",
+  "attempts": 1,
+  "model_usage": {
+    "claude-fable-5-1": {
+      "inputTokens": 2,
+      "outputTokens": 10917,
+      "cacheReadInputTokens": 1225,
+      "cacheCreationInputTokens": 5440,
+      "webSearchRequests": 0,
+      "costUSD": 0.6549762499999999,
+      "contextWindow": 1000000,
+      "maxOutputTokens": 64000,
+      "thinkingTokens": 5780,
+      "canonicalModel": "claude-fable-5-1",
+      "provider": "firstParty",
+      "costBasis": "list"
+    }
+  },
+  "rule": "On a 10x10 background-7 canvas, count the 8-connected (diagonal-inclusive) objects of each legend colour; output a 5-wide bar chart whose height is the largest count, with a bottom-anchored bar of that colour's count in its fixed column (5->0, 2->1, 8->2, 9->3, 6->4).",
+  "scope": "Supported: fixed 10x10 size and background 7 (intrinsic to the task), random subsets of 2..5 legend colours, per-colour object counts 1..6 with the maximum in 2..6, a varied shape library (singles, dominoes, diagonal chains that only connect diagonally, pluses, X's, rings, blocks, L's, T's, lines up to 9 long, random blobs) at random positions, and different-colour objects that may touch. Deliberately not supported: other grid sizes/backgrounds, non-legend colours (the archived solver would let them affect the output height), and same-colour objects touching diagonally (which would merge into one object).",
+  "constraints": [
+    "Every input is exactly 10x10 with background 7 and only legend colours 5, 2, 8, 9, 6.",
+    "Objects of the same colour never share an 8-neighbourhood, so each placed object is exactly one diagonally-connected component.",
+    "Objects never overlap cells; different colours may be adjacent since counting is per colour.",
+    "At least one colour has two or more objects, so the output height is at least 2 and the output is never a trivial one-row chart.",
+    "generate(objects=...) raises ValueError if the supplied objects overlap, touch same-colour objects, or use non-legend colours."
+  ],
+  "known_limitations": [
+    "Grid size (10x10), background (7) and the colour-to-column legend are fixed because they are intrinsic to the task.",
+    "Placement uses bounded retries; with many objects the sampler falls back to small shapes, so scenes with 10+ objects are dominated by 1-4 cell shapes.",
+    "Random shape placement may produce different-colour objects touching each other, which is allowed by the rule but not required to look exactly like the originals.",
+    "Fixture replay requires explicit per-object cell lists rather than higher-level shape descriptors."
+  ],
+  "billing": "Claude Max CLI; API credentials excluded; no API fallback",
+  "authored_sha256": "7b741f69796170929c3c78b21f3955f1f4c47d3635a55b9347c0e0a6b6deb73a",
+  "samples_attempted": 1000,
+  "seed_start": 20000,
+  "seed_end_exclusive": 21000,
+  "semantic_review": {
+    "status": "reviewed",
+    "checks": [
+      "Latent object counts determine bars; 8-connectivity includes diagonal chains",
+      "Same-colour objects cannot touch; different colours may touch",
+      "Fixed 10x10 input and colour-column legend documented as current scope",
+      "Exact original train/test reconstruction",
+      "No archived solver import or file I/O"
+    ],
+    "limitations": [
+      "Grid size (10x10), background (7) and the colour-to-column legend are fixed because they are intrinsic to the task.",
+      "Placement uses bounded retries; with many objects the sampler falls back to small shapes, so scenes with 10+ objects are dominated by 1-4 cell shapes.",
+      "Random shape placement may produce different-colour objects touching each other, which is allowed by the rule but not required to look exactly like the originals.",
+      "Fixture replay requires explicit per-object cell lists rather than higher-level shape descriptors."
+    ]
+  },
+  "stress_test": {
+    "samples_requested": 1000,
+    "samples_passed": 1000,
+    "unique_inputs": 1000,
+    "changed_pairs": 1000,
+    "fixture_replays": 0,
+    "ready": true,
+    "sha256": "7b741f69796170929c3c78b21f3955f1f4c47d3635a55b9347c0e0a6b6deb73a",
+    "seed_start": 20000,
+    "seed_end_exclusive": 21000
+  }
+}

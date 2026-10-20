@@ -39,7 +39,10 @@ def generate(brows=None, bcols=None, lengths=None, colors=None):
         bcols.extend([common.randint(0, 16 - size) for size in sizes])
         lengths.extend(sizes)
         colors.extend([color] * count)
-      if not common.overlaps(brows, bcols, lengths, lengths, 1): break
+      placed = common.place_rectangles(16, 16, lengths, lengths, spacing=1)
+      if placed is not None:
+        brows, bcols = placed
+        break
 
   grid = common.grid(16, 16)
   for brow, bcol, length, color in zip(brows, bcols, lengths, colors):

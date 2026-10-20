@@ -1,0 +1,30 @@
+{
+  "task_id": "2753e76c",
+  "factory_sha256": "bbaabcee780070b622bc055542d64354cb4e0b2862c0c62737f8c99bb625f463",
+  "constructor_sha256": "f520fe92c371777225a84d3ca21a2e4d33d402706f5f92672746b16e3489f06e",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 182130989540221,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 10.054136625025421,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "Mechanism: count 4-connected single-colour objects per non-background colour (background = palette[0]); build a bar chart with one bar per colour whose length equals the object count, bars ordered by descending count, filled with palette[0] elsewhere. Canonically bars are rows, right-aligned, largest on top. The factory hand-derives, for each D4 index, the visible bar orientation (rows vs columns), the anchoring edge (start vs end of the bar axis) and whether the largest bar is at index 0 or last: d4=0 rows/right/top; 1 columns/bottom/largest rightmost; 2 rows/left/largest bottom; 3 columns/top/largest leftmost; 4 rows/left/top; 5 columns/top/largest rightmost; 6 rows/right/largest bottom; 7 columns/bottom/largest leftmost. The emitted program builds the output directly in visible coordinates with these constants; no rotation or colour unmapping is performed.",
+    "limitations": "The generator samples distinct counts per colour, so ties never occur; if they did, the emitted program breaks ties by visible colour value ascending, which under a palette permutation may differ from the canonical (original-colour) tie order. Background is assumed to be palette[0] (always true for this generator). Objects are assumed non-touching across same colour, as guaranteed by the constructor's overlap check with margin 1. Fixtures are consistent with the uniform rule.",
+    "host_review": "Read constructor and factory. Keep distinct colour counts and2..5square lengths; use bounded rectangle packing with one-cell separation. Solver counts connected objects and draws count-sorted bars with direct D4-specialized order and alignment.",
+    "repair_verification": {
+      "fresh_pairs": 1000,
+      "augmented_pair_checks": 8000,
+      "fixture_variants": 16,
+      "supplied_fixtures_unchanged": true,
+      "common_sha256": "4f0e06022661a3cc457bb0ff3895cd046189049047c26b744f8c73157bb859f0",
+      "additional_cli_review_claimed": false
+    }
+  }
+}

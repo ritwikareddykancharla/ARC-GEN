@@ -1,0 +1,30 @@
+{
+  "task_id": "230f2e48",
+  "factory_sha256": "b0f407719717f90198b3612b66d88a084e67e8529266cc1f33bf7380d688ea17",
+  "constructor_sha256": "9bfcbda616d64dab12343d67c6a77b4196479bc4e16bdf45afe14cdd50a40f56",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 173312686312680,
+  "d4": 7,
+  "unique_base_inputs": 983,
+  "seconds": 3.527006042073481,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "Every object is a straight line: an anchor cell (original colour 5), a body run (2), a knee (0), then a tail of body cells. In the output, the tail swings 90 degrees about the knee, keeps its length, and points toward the grid centre. The factory turns the colour roles into constants palette[7] (background), palette[5] (anchor), palette[2] (body) and palette[0] (knee).\n\nThe emitted solve works directly in visible coordinates. For each knee, it walks the four directions through body cells. A walk that ends on an anchor is the femur. A walk that ends elsewhere with length n>0 is the tail. If the line is vertical in the visible grid, the new tail goes horizontally: right if the knee column is left of centre, otherwise left. Horizontal lines bend down or up in the same way using the knee row.\n\nThe generator only makes even square sizes, and the toward-centre rule is unchanged under every D4 transform for even sizes. The factory still handles the generator's odd-size centre tie: it maps the original tie directions (left/up) through the D4 transform and emits them as constants. All tails are erased first and then redrawn, so lines that sit close together cannot corrupt each other.",
+    "limitations": "Assumes the lines are 8-separated and straight, as the constructor guarantees, and that the palette maps 0, 2, 5 and 7 to distinct colours. Rectangular grids are handled with a separate centre threshold for each axis, but the constructor only produces square, even-sized grids. A knee with no detectable tail is left unchanged. The fixtures agree with the uniform rule; no contradictions were found. I have not run any tests.",
+    "host_review": "Read draw(bend) and emitted knee solver. Incrementally place all1..7 segments after validating both straight and inward-bent footprints and eight-neighbour clearance; bounded restart retains requested segment count. Sample anchors across full valid canvas rather than using positive-direction bounds for negative directions. Grey anchor, red segments, black knee and inward bend rule unchanged.",
+    "repair_verification": {
+      "fresh_pairs": 1000,
+      "augmented_pair_checks": 8000,
+      "fixture_variants": 16,
+      "supplied_fixtures_unchanged": true,
+      "common_sha256": "4f0e06022661a3cc457bb0ff3895cd046189049047c26b744f8c73157bb859f0",
+      "additional_cli_review_claimed": false
+    }
+  }
+}

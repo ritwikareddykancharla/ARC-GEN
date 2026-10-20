@@ -41,6 +41,27 @@ def _colour_components(g, colour):
         yield component
 
 
+def _hole_count(cells):
+    """Count bounded four-connected empty regions inside an object's box."""
+    top, bottom = min(r for r, c in cells), max(r for r, c in cells)
+    left, right = min(c for r, c in cells), max(c for r, c in cells)
+    remaining = {(r, c) for r in range(top, bottom+1)
+                 for c in range(left, right+1)} - set(cells)
+    holes = 0
+    while remaining:
+        stack = [remaining.pop()]
+        touches = False
+        while stack:
+            r, c = stack.pop()
+            touches |= r in (top, bottom) or c in (left, right)
+            for p in ((r+1, c), (r-1, c), (r, c+1), (r, c-1)):
+                if p in remaining:
+                    remaining.remove(p)
+                    stack.append(p)
+        holes += not touches
+    return holes
+
+
 def require_colour_evidence(task_id, demonstrations, queries, palette=None, d4=0):
     if task_id not in ('6ea4a07e', '913fb3ed', '494ef9d7', '995c5fa3',
                        'a834deea', 'a9f96cdd', 'a416fc5b', 'a740d043',
@@ -52,13 +73,25 @@ def require_colour_evidence(task_id, demonstrations, queries, palette=None, d4=0
                        'd631b094', 'd5d6de2d', 'd90796e8', 'd364b489',
                        'dbc1a6ce', 'dc1df850', 'dd6b8c4b', 'dce56571',
                        'e45ef808', 'e345f17b', 'e3497940',
-                       'e760a62e', 'e8593010', 'e99362f0', 'e6de6e8f'):
+                       'e760a62e', 'e8593010', 'e99362f0', 'e6de6e8f',
+                       '37d3e8b2'):
         return
     palette = list(range(10)) if palette is None else palette
     bg = palette[0]
     colours = lambda g: {c for row in g for c in row} - {bg}
     required, seen = set(), set()
-    if task_id == 'e6de6e8f':
+    if task_id == '37d3e8b2':
+        mapping = {1: palette[1], 2: palette[2], 3: palette[3], 4: palette[7]}
+        for demo in demonstrations:
+            for cells in _colour_components(demo['input'], palette[8]):
+                n = _hole_count(cells)
+                if n in mapping and all(demo['output'][r][c] == mapping[n]
+                                        for r, c in cells):
+                    seen.add(n)
+        for query in queries:
+            required.update(_hole_count(cells) for cells in
+                            _colour_components(query['input'], palette[8]))
+    elif task_id == 'e6de6e8f':
         def commands(g):
             for cells in _colour_components(g, palette[2]):
                 y0, x0 = min(r for r, c in cells), min(c for r, c in cells)

@@ -1,0 +1,30 @@
+{
+  "task_id": "2c0b0aff",
+  "factory_sha256": "554dab3695d2617bad65df4796574d219ece17511867c1c835b1e063c4c04545",
+  "constructor_sha256": "112cb5091a1134b3a412e0563f8a9bea1fbf72467bdee00a5778ba569db7deff",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 185826539457145,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 12.824314625002444,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The rule picks the rectangular panel that contains the most complete plus shapes and outputs that panel as a crop. Panels are 4-connected regions of non-background cells, so they are found with no assumption about orientation. A plus is a 4-connected group of exactly 5 mark-coloured cells with a 3x3 bounding box and a filled centre. Inside each panel's crop, the program counts these groups the same way the archived solver does. Plus shapes, connected components, bounding boxes and crops all map onto themselves under every D4 transform. Because of that, the emitted program works directly in visible coordinates and needs no direction handling. Only the colour roles are specialised: background is palette[0] and the plus/dust colour is palette[3]. The panel fill palette[8] is recorded but is not needed, since panels are simply 'not background'. If two panels tie, the first one in visible reading order is kept, which matches the archived solver's strict '>' comparison. The generator gives every panel a distinct plus count, so ties never actually occur.",
+    "limitations": "Panels are assumed to be separated by at least one background cell, which the generator guarantees through its margin-1 overlap check. If dust cells happen to touch a plus, that 3-group no longer has exactly 5 cells and is not counted. This is the same behaviour as the archived solver, and the fixtures are consistent with it. If plus counts tie, the result depends on visible reading order, but the generator samples distinct counts, so this does not arise. The fixtures showed no contradiction with the uniform rule. I have not run any tests on this factory.",
+    "host_review": "Read constructor and factory. Pack all3..4panels; independently pack the required1..4pluses with separation. Dust may cluster but cannot join an intended plus or create an extra cross. Preserve full plus counts; noise count may be below7when space is exhausted. Factory now requires exact five-cell plus shape, not just any five-cell3x3component. Maximum-plus panel remains the target.",
+    "repair_verification": {
+      "fresh_pairs": 1000,
+      "augmented_pair_checks": 8000,
+      "fixture_variants": 16,
+      "supplied_fixtures_unchanged": true,
+      "common_sha256": "4f0e06022661a3cc457bb0ff3895cd046189049047c26b744f8c73157bb859f0",
+      "additional_cli_review_claimed": false
+    }
+  }
+}

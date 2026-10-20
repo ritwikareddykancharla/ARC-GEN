@@ -1,0 +1,30 @@
+{
+  "task_id": "37d3e8b2",
+  "factory_sha256": "25c7c9893325fbca6ece04632de0b48288e518ef0e71dcb34fa35e21b92a8f65",
+  "constructor_sha256": "676cd3abbc08181069779cf3bbd9c84740f2bca11fd4cefa4a952278a442e41a",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 178454009005453,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 18.102043792023323,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The emitted program finds every 4-connected single-colour object that is not the background colour palette[0]. For each object it crops the bounding box, keeping only that object's cells and treating everything else as background. It then counts the 4-connected background regions in the crop that do not touch the crop border; these are the object's holes. The object is repainted with a constant from the table {1: palette[1], 2: palette[2], 3: palette[3], 4: palette[7]}. Any other hole count keeps the original colour, the same fallback the archived solver uses. Hole counting, connectivity and bounding boxes are all unchanged by rotation and reflection, so the d4 argument does not alter the mechanism. Only the colour constants are specialized through the palette. Shapes and positions are preserved in visible coordinates, and no normalization is used.",
+    "limitations": "Hole counts outside 1 to 4 keep the object's input colour, matching the archived solver; the generator only produces 1 to 4. The background is fixed as palette[0], not inferred. The colour table is built from constants rather than learned from the demonstrations. This works within the generator's domain, where boxes are spaced so objects never touch and hole rectangles are spaced apart. I found no contradictions between the fixtures and the rule. I have not run any tests on this factory.",
+    "host_review": "Read constructor and factory. Pack4..6outer rectangles then1..4interior rectangular holes with the original one-cell margins. Dimensions and holes sampled from existing supports. Solver counts bounded background regions and maps count to colour. Added mandatory demonstration evidence for every query hole count; query answers never enter that gate.",
+    "repair_verification": {
+      "fresh_pairs": 1000,
+      "augmented_pair_checks": 8000,
+      "fixture_variants": 16,
+      "supplied_fixtures_unchanged": true,
+      "common_sha256": "4f0e06022661a3cc457bb0ff3895cd046189049047c26b744f8c73157bb859f0",
+      "additional_cli_review_claimed": false
+    }
+  }
+}

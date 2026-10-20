@@ -38,18 +38,20 @@ def generate(width=None, height=None, colors=None):
     while True:
       wides = [common.choice(box_choices) for _ in range(num_boxes)]
       talls = [common.choice(box_choices) for _ in range(num_boxes)]
-      brows = [common.randint(0, height - tall) for tall in talls]
-      bcols = [common.randint(0, width - wide) for wide in wides]
-      if not common.overlaps(brows, bcols, wides, talls, 1): break
+      placed = common.place_rectangles(width, height, wides, talls, spacing=1)
+      if placed is not None:
+        brows, bcols = placed
+        break
     grid = common.grid(width, height)
     for wide, tall, brow, bcol in zip(wides, talls, brows, bcols):
       while True:
         cells = common.choice(cell_choices)
         ws = [(1 if wide == 3 else common.choice(pixel_choices)) for _ in range(cells)]
         ts = [(1 if tall == 3 else common.choice(pixel_choices)) for _ in range(cells)]
-        rs = [common.randint(1, tall - 1 - t) for t in ts]
-        cs = [common.randint(1, wide - 1 - w) for w in ws]
-        if not common.overlaps(rs, cs, ws, ts, 1): break
+        placed = common.place_rectangles(wide - 2, tall - 2, ws, ts, spacing=1)
+        if placed is not None:
+          rs, cs = ([p + 1 for p in axis] for axis in placed)
+          break
       common.rect(grid, wide, tall, brow, bcol, color_map[cells])
       for w, t, r, c in zip(ws, ts, rs, cs):
         common.rect(grid, w, t, brow + r, bcol + c, 0)

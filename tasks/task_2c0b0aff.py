@@ -39,9 +39,9 @@ def generate(width=None, height=None, wide=None, tall=None, brow=None,
       # First, place and plot the sky blue rectangles.
       wides = [common.randint(7, 11) for _ in range(boxes)]
       talls = [common.randint(7, 11) for _ in range(boxes)]
-      brows = [common.randint(0, height - t) for t in talls]
-      bcols = [common.randint(0, width - w) for w in wides]
-      if common.overlaps(brows, bcols, wides, talls, 1): continue
+      placed = common.place_rectangles(width, height, wides, talls, spacing=1)
+      if placed is None: continue
+      brows, bcols = placed
       grid = common.grid(width, height)
       for w, t, brow, bcol in zip(wides, talls, brows, bcols):
         common.rect(grid, w, t, brow, bcol, 8)
@@ -49,22 +49,33 @@ def generate(width=None, height=None, wide=None, tall=None, brow=None,
       prows, pcols, plengths = [], [], []
       good = True
       for count, w, t, brow, bcol in zip(counts, wides, talls, brows, bcols):
+        pluses = common.place_rectangles(w, t, [3] * count, [3] * count, spacing=1)
+        if pluses is None:
+          good = False
+          break
+        local_rows, local_cols = pluses
+        cells = {(r + dr, c + dc) for r, c in zip(local_rows, local_cols)
+                 for dr, dc in [(0, 1), (1, 0), (1, 1), (1, 2), (2, 1)]}
+        # Dust can cluster but must not merge into a counted plus or make
+        # another full plus whose count would contradict the output label.
+        blocked = {(r + dr, c + dc) for r, c in cells
+                   for dr, dc in [(0, 0), (-1, 0), (1, 0), (0, -1), (0, 1)]}
+        available = [(r, c) for r in range(t) for c in range(w)
+                     if (r, c) not in blocked]
         good = False
-        for _ in range(10):  # Try 10 times before giving up
-          prow = common.sample(list(range(brow, brow + t - 3)), count)
-          pcol = common.sample(list(range(bcol, bcol + w - 3)), count)
-          plength = [3] * count
-          for _ in range(7):  # Random dust particles
-            row = common.randint(brow, brow + t - 1)
-            col = common.randint(bcol, bcol + w - 1)
-            if row - 1 in prow or col - 1 in pcol: continue
-            prow, pcol, plength = prow + [row], pcol + [col], plength + [1]
-          if not common.overlaps(prow, pcol, plength, plength):
-            prows.extend(prow)
-            pcols.extend(pcol)
-            plengths.extend(plength)
-            good = True
-            break
+        for _ in range(32):
+          dust = common.sample(available, min(7, len(available)))
+          painted = cells | set(dust)
+          visible_count = sum(
+              all((r + dr, c + dc) in painted
+                  for dr, dc in [(-1, 0), (1, 0), (0, -1), (0, 1)])
+              for r, c in painted)
+          if visible_count != count: continue
+          prows.extend([brow + r for r in local_rows] + [brow + r for r, c in dust])
+          pcols.extend([bcol + c for c in local_cols] + [bcol + c for r, c in dust])
+          plengths.extend([3] * count + [1] * len(dust))
+          good = True
+          break
         if not good: break
       if good: break
     for prow, pcol, length in zip(prows, pcols, plengths):

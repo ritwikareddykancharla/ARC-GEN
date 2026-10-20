@@ -1,0 +1,30 @@
+{
+  "task_id": "5e6bbc0b",
+  "factory_sha256": "ec96b8e90f0ecf7da936e2cd154e5fdf0020f7d370ec46b02a327cda5d88f86b",
+  "constructor_sha256": "c0961beb936e142476a027bebf25fdc22bfd9e196cc00195b7192cede32d3739",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 253831299315705,
+  "d4": 7,
+  "unique_base_inputs": 515,
+  "seconds": 2.0287136250408366,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The emitted program works in visible coordinates. It finds the palette[8] marker and identifies the border it sits on (left, right, top or bottom). It then walks every line perpendicular to that border, ordered from the marker's edge outward, so no rotation is involved. In each line it counts the palette[1] cells and packs them against the marker's edge; every other cell becomes palette[0]. In the marker's own line the marker keeps its cell, the 1s pack directly after it, and the cells from the end of the packed block out to the farthest original 1 are painted palette[9]. This follows the generator's count of (H-1)//2 nines: odd lengths fill up to the far end, and even lengths leave the last cell as 0. Because the rule is defined by the marker's edge, every D4 transform simply changes which border the marker is on, and the program handles each of the four directions explicitly. Colour roles are fixed constants taken from the palette.",
+    "limitations": "The program assumes the generator's domain: exactly one marker, sitting on a border but never in a corner (the constructor uses col in 1..W-2). If a corner marker did occur, the edge would be picked in the order left, right, top, bottom. Demonstrations are not used because the colour roles are fixed by the palette. I have not run any tests. Checked by hand, the program agrees with all approved fixtures, and I found no contradictions between the fixtures and the rule.",
+    "host_review": "Read constructor and marker-directed compaction solver. Width3 has only one interior column and can have no valid column for a randomly fixed parity. Sample the column then its valid checkerboard parity; retain all3..9sizes and both flips/transposes. No target or rule changed.",
+    "repair_verification": {
+      "fresh_pairs": 1000,
+      "augmented_pair_checks": 8000,
+      "fixture_variants": 16,
+      "supplied_fixtures_unchanged": true,
+      "common_sha256": "4f0e06022661a3cc457bb0ff3895cd046189049047c26b744f8c73157bb859f0",
+      "additional_cli_review_claimed": false
+    }
+  }
+}

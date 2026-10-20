@@ -31,11 +31,14 @@ def generate(selected=None, top=None, rows=None, cols=None):
     selected, top = common.randint(1, 4), common.randint(0, 1)
     num_lines = common.randint(10, 15)
     while True:
-      rows = [common.randint(0, 16 - max(10 - 2 * idx, 2)) for idx in range(num_lines)]
-      cols = [common.randint(0, 15) for _ in range(num_lines)]
       wides = [2] * num_lines
       talls = [max(10 - 2 * idx, 2) + 1 for idx in range(num_lines)]
-      if not common.overlaps(rows, cols, wides, talls): break
+      # These rectangles include an empty right/bottom margin. The margin
+      # may lie just outside the 16-cell canvas; actual line pixels may not.
+      placed = common.place_rectangles(17, 17, wides, talls)
+      if placed is not None:
+        rows, cols = placed
+        break
 
   grid, output = common.grids(16, 16, 7)
   for idx, (row, col) in enumerate(zip(rows, cols)):

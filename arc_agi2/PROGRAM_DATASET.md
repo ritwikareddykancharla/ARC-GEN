@@ -35,7 +35,7 @@ recorded. Passing finite audits does not prove unrestricted generalization.
 
 - 213 native direct-coordinate certificates admitted after fresh audits and
   supplied-fixture checks.
-- 711 admitted factories. Each passed 1,000 fresh pairs, 8,000 augmented pair
+- 718 admitted factories. Each passed 1,000 fresh pairs, 8,000 augmented pair
   checks and 16 supplied-fixture variants. Their audit records retain draft
   limitations and source/constructor hashes. These checks are finite evidence,
   not proof of correctness on every generated input.
@@ -46,7 +46,7 @@ recorded. Passing finite audits does not prove unrestricted generalization.
   counts must be computed as a union, not added.
 - Local exporter test: 18 fresh base episodes, 144 augmented PNG/program/grid
   records. It requested 20 bases and reported a two-episode shortfall.
-- The union currently admits 930 of 1,120 families; 190 still need direct
+- The union currently admits 937 of 1,120 families; 183 still need direct
   augmented program admission. Constructor coverage and program coverage are
   different gates.
 - Synthetic labels for `00d62c1b` now fill every enclosed background component,
@@ -360,3 +360,36 @@ on hold pending a justified rule or approved teaching correction.
 The production setting remains 1,000 fresh episodes per family before shared
 rotations/reflections/colour augmentation. Bulk generation and training have not
 been launched.
+
+## Bounded-placement checkpoint: 937 verified program families
+
+Seven more families bring coverage to **937/1,120**, with **183 remaining**
+and 718 direct factory certificates.
+
+A bounded randomized rectangle packer replaces repeated sampling of entire
+crowded layouts. It keeps requested rectangle counts and sizes, returns positions
+in the caller's order, preserves the original spacing convention, and fails
+closed on its search budget. It never shrinks rectangles or drops objects.
+Packing changes the layout sampling distribution; it does not claim uniform
+sampling over all possible layouts.
+
+- `22806e14`: place all squares, then choose a legal plus centre matching the requested alignment state. Correct the centre-versus-corner clearance check.
+- `230f2e48`: incrementally validate straight and bent footprints for all one to seven segments; use full valid anchor coordinates in every direction.
+- `2753e76c`: pack the distinct colour-count groups without changing counts or square-size support.
+- `2c0b0aff`: pack panels and their pluses, keeping dust separate from plus components and rejecting accidental extra crosses. The program checks the exact five-cell cross rather than a loose bounding-box proxy.
+- `37d3e8b2`: pack outer rectangles and internal holes; require demo evidence for each query hole-count-to-colour association.
+- `48634b99`: pack all 10–15 lines using clearance rectangles that may extend one cell beyond the visible canvas; actual line pixels stay within it.
+- `5e6bbc0b`: sample a valid checkerboard column/parity pair directly, avoiding an impossible fixed-parity retry when width is three.
+
+Each family passed 1,000 fresh-pair checks, 8,000 augmented checks and 16 supplied
+fixture variants, without sampler rejections. All original supplied fixtures
+remain unchanged. A separate audit sampled 140 base episodes, admitted 139 and
+excluded one missing a demonstrated hole-count association. All 1,112 augmented
+records from the admitted episodes passed program-and-grid verification.
+Hash-pinned evidence: `reports/episode-evidence-937-audit.json`.
+
+The production target remains 1,000 fresh episodes per family, each containing
+three demonstrations, one query, a program and its grid answer; augmentations
+follow. Bulk generation and training are still unlaunched.
+
+Regression validation for this checkpoint: **331 tests passed**.

@@ -469,6 +469,57 @@ def overlaps_1d(cols, wides, spacing=0):
   return False
 
 
+def place_rectangles(width, height, wides, talls, spacing=0, max_nodes=512):
+  """Place the requested rectangles with bounded randomized backtracking.
+
+  Returns (rows, cols) in the caller's rectangle order, or None if no packing
+  is found within the node budget. Dimensions and rectangle counts are never
+  reduced to make a scene fit. Spacing has the same meaning as overlaps().
+  """
+  if len(wides) != len(talls) or spacing < 0:
+    raise ValueError("Expected matching dimensions and nonnegative spacing")
+  if any(w < 1 or t < 1 or w > width or t > height
+         for w, t in zip(wides, talls)):
+    return None
+  if sum(w * t for w, t in zip(wides, talls)) > width * height:
+    return None
+
+  def mask(top, left, wide, tall):
+    bits = (1 << wide) - 1
+    return sum(bits << (r * width + left) for r in range(top, top + tall))
+
+  options = []
+  for wide, tall in zip(wides, talls):
+    choices = []
+    for r in range(height - tall + 1):
+      for c in range(width - wide + 1):
+        top, left = max(0, r - spacing), max(0, c - spacing)
+        bottom, right = min(height, r + tall + spacing), min(width, c + wide + spacing)
+        choices.append((r, c, mask(r, c, wide, tall),
+                        mask(top, left, right - left, bottom - top)))
+    random.shuffle(choices)
+    options.append(choices)
+  order = sorted(range(len(wides)), key=lambda i: -wides[i] * talls[i])
+  positions, nodes = [None] * len(wides), 0
+
+  def search(depth, blocked):
+    nonlocal nodes
+    if nodes >= max_nodes: return False
+    nodes += 1
+    if depth == len(order): return True
+    i = order[depth]
+    for r, c, cells, margin in options[i]:
+      if cells & blocked: continue
+      positions[i] = (r, c)
+      if search(depth + 1, blocked | margin): return True
+      if nodes >= max_nodes: break
+    positions[i] = None
+    return False
+
+  if not search(0, 0): return None
+  return [p[0] for p in positions], [p[1] for p in positions]
+
+
 def randint(start, stop):
   return random.randint(start, stop)
 

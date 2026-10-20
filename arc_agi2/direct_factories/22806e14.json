@@ -1,0 +1,30 @@
+{
+  "task_id": "22806e14",
+  "factory_sha256": "a8bba8f2ec001ba2f35c7849f1fdcfafe1721f8c334d57b0250da04872d55c2e",
+  "constructor_sha256": "0a091d4b088719e35936bfe648086afc860ea7ab4230301a205344026372afde",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 22467898640369,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 89.27142495801672,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "Mechanism, taken from the generator: the background is palette[7]. There is one 5-cell plus marker in a colour used nowhere else, and a set of solid squares in another colour. The centre of every odd-sized square is painted with the plus colour. The generator keeps the plus in the output only when some odd-square centre lies in the plus centre's row and some odd-square centre lies in its column. It rejects scenes where only one of those holds, so the two conditions always agree. The emitted program therefore keeps the plus when either alignment holds and otherwise erases it to the background. The archived solver instead keeps the plus when the number of targets is at least 5. That matches the fixtures by coincidence, but it is not the generator's rule. All four fixtures agree with the alignment rule: pairs 1 and 2 have no alignment and the plus is erased; pair 3 and the test are aligned and the plus is kept. The rule is D4-invariant: the plus is symmetric, square centres map to square centres, rows and columns swap under rotation, and the condition is symmetric between rows and columns. So d4 needs no special handling, and everything is computed directly in the visible coordinates. Colour roles are found from the pixels: the plus is the component with the exact plus shape, and squares are full odd-sided square components of any other non-background colour. The background is the constant palette[7].",
+    "limitations": "This assumes the generator's constraints: squares do not touch each other or the plus (4-connected components are exactly the squares), the plus lies fully inside the grid, and the background is palette[7]. If squares of the same colour touched orthogonally, they would merge into one non-square component and be skipped. Ties between the row and column conditions cannot occur, because the generator rejects scenes where they differ. The archived solver's 'targets < 5' erase rule disagrees with the generator on fresh scenes; this factory follows the generator. None of this has been tested.",
+    "host_review": "Read constructor and emitted component solver. Replace blind crowd rejection with bounded rectangle placement. Pick a plus centre from legal positions with the requested both-axis alignment state; its actual3x3 box is centred at(pr,pc), not top-left there. Counts5..10 and square sizes1..7 remain; no dropped objects. Odd-square centre recolouring and conditional plus preservation unchanged; domain excludes one-axis-only cases.",
+    "repair_verification": {
+      "fresh_pairs": 1000,
+      "augmented_pair_checks": 8000,
+      "fixture_variants": 16,
+      "supplied_fixtures_unchanged": true,
+      "common_sha256": "4f0e06022661a3cc457bb0ff3895cd046189049047c26b744f8c73157bb859f0",
+      "additional_cli_review_claimed": false
+    }
+  }
+}

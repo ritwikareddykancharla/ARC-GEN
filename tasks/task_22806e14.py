@@ -55,11 +55,24 @@ def generate(prow=None, pcol=None, brows=None, bcols=None, sizes=None,
     colors = common.random_colors(2, exclude=[7])
     alignment = True if common.randint(0, 1) else False
     while True:
-      prow, pcol = common.randint(1, 14), common.randint(1, 14)
       sizes = [common.randint(1, 7) for _ in range(num_boxes)]
-      brows = [common.randint(0, 16 - s) for s in sizes]
-      bcols = [common.randint(0, 16 - s) for s in sizes]
-      if common.overlaps(brows + [prow], bcols + [pcol], sizes + [3], sizes + [3], 1): continue
+      placed = common.place_rectangles(16, 16, sizes, sizes, spacing=1)
+      if placed is None: continue
+      brows, bcols = placed
+      odd_rows = {r + s // 2 for r, s in zip(brows, sizes) if s % 2}
+      odd_cols = {c + s // 2 for c, s in zip(bcols, sizes) if s % 2}
+      candidates = []
+      for pr in range(1, 15):
+        for pc in range(1, 15):
+          if (pr in odd_rows) != alignment or (pc in odd_cols) != alignment:
+            continue
+          if any(not (pr + 3 <= r or r + s + 1 <= pr - 1 or
+                      pc + 3 <= c or c + s + 1 <= pc - 1)
+                 for r, c, s in zip(brows, bcols, sizes)):
+            continue
+          candidates.append((pr, pc))
+      if not candidates: continue
+      prow, pcol = common.choice(candidates)
       grid, _ = draw(alignment)
       if grid: break
 

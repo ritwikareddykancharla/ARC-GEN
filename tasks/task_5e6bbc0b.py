@@ -50,12 +50,11 @@ def generate(width=None, height=None, col=None, offset=None, flip=None,
 
   if width is None:
     width, height = common.randint(3, 9), common.randint(3, 9)
-    offset = common.randint(0, 1)
+    col = common.randint(1, width - 2)
+    # With width three, the sole interior column has only one valid parity.
+    # Sample that valid pair directly instead of retrying a fixed bad offset.
+    offset = (height - 1 + col) % 2
     flip, xpose = common.randint(0, 1), common.randint(0, 1)
-    while True:
-      col = common.randint(1, width - 2)
-      grid, _ = draw()
-      if grid: break
 
   grid, output = draw()
   return {"input": grid, "output": output}

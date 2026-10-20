@@ -74,19 +74,54 @@ def generate(size=None, grows=None, gcols=None, femurs=None, tibias=None,
   if size is None:
     segments = common.randint(1, 7)
     size = min(2 * segments + 6, 16)
-    while True:
-      lengths = [common.randint(3, size - 2) for _ in range(segments)]
-      angles = [common.randint(0, 3) for _ in range(segments)]
-      grows, gcols, femurs, tibias = [], [], [], []
-      for length, angle in zip(lengths, angles):
-        grows.append(common.randint(0, size - (length if angle in [0, 2] else 1)))
-        gcols.append(common.randint(0, size - (length if angle in [1, 3] else 1)))
-        tibia = common.randint(1, length - 2)  # - 2 because of grey and black
-        fremur = length - 2 - tibia
-        femurs.append(fremur)
-        tibias.append(tibia)
-      grid, output = draw(bend=False), draw(bend=True)
-      if grid and output: break
+
+    def footprint(row, col, femur, tibia, angle, bend):
+      drs, dcs = [-1, 0, 1, 0], [0, 1, 0, -1]
+      points = [(row, col)]
+      for _ in range(femur + 1):  # Red femur followed by black knee.
+        row, col = row + drs[angle], col + dcs[angle]
+        points.append((row, col))
+      if bend:
+        if angle in [0, 2]: angle = 1 if col < size // 2 else 3
+        else: angle = 2 if row < size // 2 else 0
+      for _ in range(tibia):
+        row, col = row + drs[angle], col + dcs[angle]
+        points.append((row, col))
+      if any(r < 0 or c < 0 or r >= size or c >= size for r, c in points):
+        return None
+      return set(points)
+
+    # Keep every requested segment, validating both its straight and bent
+    # footprints as it is placed rather than rejecting an entire random scene.
+    for _ in range(256):
+      grows, gcols, femurs, tibias, angles = [], [], [], [], []
+      blocked = [set(), set()]
+      for _ in range(segments):
+        for _ in range(512):
+          length, angle = common.randint(3, size - 2), common.randint(0, 3)
+          grow, gcol = common.randint(0, size - 1), common.randint(0, size - 1)
+          tibia = common.randint(1, length - 2)
+          femur = length - 2 - tibia
+          scenes = [footprint(grow, gcol, femur, tibia, angle, bend)
+                    for bend in (False, True)]
+          if any(cells is None or cells & forbidden
+                 for cells, forbidden in zip(scenes, blocked)): continue
+          grows.append(grow)
+          gcols.append(gcol)
+          femurs.append(femur)
+          tibias.append(tibia)
+          angles.append(angle)
+          for cells, forbidden in zip(scenes, blocked):
+            forbidden.update((r + dr, c + dc) for r, c in cells
+                             for dr in [-1, 0, 1] for dc in [-1, 0, 1])
+          break
+        else:
+          break
+      if len(grows) == segments:
+        grid, output = draw(bend=False), draw(bend=True)
+        if grid and output: break
+    else:
+      raise ValueError("Could not place all straight and bent segments")
 
   grid, output = draw(bend=False), draw(bend=True)
   return {"input": grid, "output": output}

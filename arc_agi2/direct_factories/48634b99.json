@@ -1,0 +1,30 @@
+{
+  "task_id": "48634b99",
+  "factory_sha256": "fab4eb1da2ec32196d7a841f4a87e6ee57666166523ac11139451d9702dbc511",
+  "constructor_sha256": "f9a34a05023c88bfc3b3ccae0902810ee289da3cf54ae02f151813450827fb31",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 274611828019138,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 9.47418270795606,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The scene is a set of straight lines with lengths 10, 8, 6, 4, 2, 2, ... One line has a marker colour covering half of it, at one end. The program finds lines as 4-connected components of line or marker cells, so separate runs in the same column or row stay separate. It finds the line that contains the marker and records its length L, its marker count k, and which end the marker is on. It recolours that line's marker cells back to the line colour. It then finds the line of length L+2 and paints its k+1 cells nearest the same end with the marker colour. All colours are emitted as constants: palette[7] for background, palette[8] for lines, palette[9] for the marker. The line axis is fixed from d4: odd rotation counts make the lines horizontal, and cells are then ordered by column instead of row. The marked end is not taken from d4. It is read from the visible source line, so reflections and rotations that reverse direction are handled without any normalisation.",
+    "limitations": "This relies on the generator's guarantees. There is exactly one marked line, and the target length L+2 is unique (target lengths are 4 to 10, which never repeat). Lines never touch each other orthogonally, because the overlap check uses padded boxes. If the marker or the target line is missing, the program returns the partially edited grid, as the archived solver does. Demonstrations are not used. I have not run any tests. The fixtures matched the uniform rule when checked by hand, and no contradictions were found.",
+    "host_review": "Read constructor and factory. Pack10..15lines using their2-wide,(length+1)-tall clearance rectangles on17x17because only the margin may cross the16x16canvas. Preserve every original line length. Solver transfers the marked half to the uniquely next-longer line in displayed orientation.",
+    "repair_verification": {
+      "fresh_pairs": 1000,
+      "augmented_pair_checks": 8000,
+      "fixture_variants": 16,
+      "supplied_fixtures_unchanged": true,
+      "common_sha256": "4f0e06022661a3cc457bb0ff3895cd046189049047c26b744f8c73157bb859f0",
+      "additional_cli_review_claimed": false
+    }
+  }
+}

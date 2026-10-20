@@ -484,3 +484,23 @@ class ColourEvidenceTests(unittest.TestCase):
             require_colour_evidence('995c5fa3', pairs[:-len(fixtures['test'])],
                                     [{'input': p['input']} for p in pairs[-len(fixtures['test']):]],
                                     d4=d4)
+
+    def test_hole_count_mapping_requires_seen_count(self):
+        one = {'input': [[8, 8, 8], [8, 0, 8], [8, 8, 8]],
+               'output': [[1, 1, 1], [1, 0, 1], [1, 1, 1]]}
+        two = {'input': [[8]*5, [8, 0, 8, 0, 8], [8]*5],
+               'output': [[2]*5, [2, 0, 2, 0, 2], [2]*5]}
+        pal = [3, 9, 0, 7, 2, 8, 1, 6, 4, 5]
+        for d4 in range(8):
+            a, b = apply_episode([one, two], d4, pal)
+            with self.assertRaises(MissingColourEvidence):
+                require_colour_evidence('37d3e8b2', [a],
+                                        [{'input': b['input']}], pal, d4)
+            require_colour_evidence('37d3e8b2', [a, b],
+                                    [{'input': b['input']}], pal, d4)
+
+    def test_incorrect_hole_mapping_does_not_count_as_evidence(self):
+        bad = {'input': [[8, 8, 8], [8, 0, 8], [8, 8, 8]],
+               'output': [[2, 2, 2], [2, 0, 2], [2, 2, 2]]}
+        with self.assertRaises(MissingColourEvidence):
+            require_colour_evidence('37d3e8b2', [bad], [{'input': bad['input']}])

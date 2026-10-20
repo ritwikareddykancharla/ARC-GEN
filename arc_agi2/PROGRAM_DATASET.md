@@ -1397,3 +1397,45 @@ Evidence is in `reports/c3202e5a-divider-period-proof.json`,
 `reports/query-preserving-assembly-1068-c3202e5a.json`.
 Remaining: 40 semantic/context holds, 9 execution failures and 3 missing
 factories. Expanded bulk publication and model training remain pending coverage.
+
+
+## Coverage checkpoint: 1,069 families
+
+Added `c35c1b4c` without changing its constructor or benchmark labels.
+The foreground is not necessarily the most common colour: native seed 1 has
+29 foreground cells and 30 cells of a noise colour. The old program selected
+an anchor and axis from generator metadata. The new program learns both from
+complete demonstration pairs: four relative central-cell selectors times two
+mirror axes, retaining all matching rules and requiring their query predictions
+to agree. No D4-derived anchor, majority-colour heuristic or coordinate clamp
+remains. A separately implemented NumPy mask check gates episode assembly.
+
+A query-fixed contextual audit verified 1,000 unique pairs, 8,000 augmented
+checks and 16 fixture variants, requiring 26 demonstration-context retries.
+The initial unconditioned audit correctly stopped on an ambiguous context;
+this is preserved in the local audit history. Six tests cover minority-colour
+foregrounds, ambiguous-context rejection and recovery, query-label poisoning,
+D4 closure, multiple agreeing hypotheses and invalid contexts. Replacing the
+demonstrated axis changes the prediction for the same query input in all D4
+orientations; the program actually follows its context.
+
+The independent episode audit accepted 19/20 contexts, excluded one ambiguous
+context and verified 152 augmented records. The full-quota production assembler
+completed 1,000/1,000 bases and 8,000 combined program/grid records using 55
+context retries, zero shortfalls and maximum pair reuse 9. Query answers are
+used for final verification only, not demonstration selection. Audit records
+were temporary local artifacts, not a bulk dataset publication.
+
+All 561 regression tests passed. Reports:
+`c35c1b4c-demonstrated-mirror-evidence.json`, `episode-evidence-1069-audit.json`,
+and `query-preserving-assembly-1069-c35c1b4c.json` in `arc_agi2/reports`.
+
+Also confirmed a true native label collision for `7b7f7511`: the same 4x4 input
+can be produced by horizontal or vertical repetition, with different output
+shapes. The concrete witness is `reports/7b7f7511-latent-collision.json`.
+That family remains held: independent random orientations cannot be recovered
+from a demonstration vote. Retaining both cases requires consistent episode-level
+conventions and informative demonstrations, not blanket removal of the cases.
+
+Remaining: 39 semantic/context holds, 9 execution failures and 3 missing
+factories. Expanded bulk publication and model training remain pending coverage.

@@ -1,0 +1,25 @@
+{
+  "task_id": "c35c1b4c",
+  "constructor_unchanged": true,
+  "hypotheses": 8,
+  "rule_class": "Four relative central cells select a colour; two mirror axes complete that colour. All rules fitting every demonstration must agree on the query.",
+  "independent_gate": "NumPy colour mask plus np.flip; emitted program paints reflected cells using loops. Neither sees query answers.",
+  "native_counterexample_to_majority_colour": {
+    "seed": 1,
+    "foreground": 1,
+    "counts": {
+      "5": 30,
+      "0": 25,
+      "2": 16,
+      "1": 29
+    }
+  },
+  "tests": 6,
+  "test_module": "arc_agi2.test_central_mirror_evidence",
+  "counterfactual": "Changing demonstration outputs to the other mirror axis changes predictions for the same query input, verified under all eight D4 transforms and a nonidentity palette.",
+  "context_retries": 26,
+  "fresh_pairs": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants": 16,
+  "bounded_scope": "Evidence identifies predictions within these eight rules, not all possible ARC programs. Native random domain and supplied fixtures certified; arbitrary explicit colors outside native structural assumptions are not."
+}

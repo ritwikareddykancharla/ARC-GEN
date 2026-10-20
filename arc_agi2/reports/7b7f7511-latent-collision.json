@@ -1,0 +1,96 @@
+{
+  "task_id": "7b7f7511",
+  "status": "hold_confirmed_true_latent_collision",
+  "same_input": [
+    [
+      1,
+      2,
+      1,
+      2
+    ],
+    [
+      3,
+      1,
+      3,
+      1
+    ],
+    [
+      1,
+      2,
+      1,
+      2
+    ],
+    [
+      3,
+      1,
+      3,
+      1
+    ]
+  ],
+  "horizontal_output": [
+    [
+      1,
+      2
+    ],
+    [
+      3,
+      1
+    ],
+    [
+      1,
+      2
+    ],
+    [
+      3,
+      1
+    ]
+  ],
+  "vertical_output": [
+    [
+      1,
+      2,
+      1,
+      2
+    ],
+    [
+      3,
+      1,
+      3,
+      1
+    ]
+  ],
+  "horizontal_parameters": {
+    "width": 2,
+    "height": 4,
+    "vert": 0,
+    "colors": [
+      1,
+      2,
+      3,
+      1,
+      1,
+      2,
+      3,
+      1
+    ]
+  },
+  "vertical_parameters": {
+    "width": 4,
+    "height": 2,
+    "vert": 1,
+    "colors": [
+      1,
+      2,
+      1,
+      2,
+      3,
+      1,
+      3,
+      1
+    ]
+  },
+  "proof": "For a collision between vertical and horizontal copies in tile dimensions2..4, input height2h must equal horizontal tile height<=4 and input width2w must equal vertical tile width<=4. Bothinput dimensionsmust be4. Thus a4x4tile repeatingbothways has two valid labels. Native orientation choices are independent between pairs: demo majority cannot reveal the query latent.",
+  "retention_requirement": "Preserve both labels through explicitly consistent episode-level tie conventions with informative demonstrations; do not simply reject all ambiguous scenes or infer independent query latent from demonstration majority. Episode-construction integration is pending.",
+  "constructor_changed": false,
+  "admitted": false
+}

@@ -1095,4 +1095,29 @@ class GeneratorTests(unittest.TestCase):
                     self.assertLessEqual(stats['max_pair_reuse_in_fresh_episodes'],32)
                 self.assertFalse(used['train'] & used['validation'])
             finally:b.OUT=previous
+    def test_clipped_motif_decoys_and_cup_capacity_controls(self):
+        motif=importlib.import_module('tasks.task_79369cc6')
+        cups=importlib.import_module('tasks.task_7acdf6d3')
+        random.seed(32000)
+        p=motif.generate(width=30,height=30,motif=[[6,6,4],[6,4,4],[4,4,4]],
+                         motif_row=5,motif_col=5,copies=[(28,28,0,False)],
+                         clip=True,num_decoys=2)
+        self.assertEqual(p['output'],grid(call(solver('79369cc6'),p['input'])))
+        self.assertEqual(p['output'][29][29],4)
+        self.assertEqual(sum(a!=b for r,s in zip(p['input'],p['output']) for a,b in zip(r,s)),1)
+        for options in ({'clip':'yes'},{'num_decoys':1.5},{'num_copies':True}):
+            with self.assertRaises(ValueError):motif.generate(**options)
+        for options in ({'num_cups':2.5},{'cup_color':True},
+                        {'width':8,'height':8,'cups':[('V',0,0,1,0),('V',0,3,1,0)],
+                         'fill':[(5,0),(5,2),(5,4),(5,6)]},
+                        {'width':8,'height':8,'cups':[('V',0,0,2,0)],
+                         'fill':[(0,2),(6,0),(6,3),(6,6)]}):
+            with self.assertRaises(ValueError):cups.generate(**options)
+        for cup,fill in ((2,9),(9,2),(0,8)):
+            random.seed(30000)
+            p=cups.generate(width=30,height=12,num_cups=4,cup_color=cup,fill_color=fill)
+            self.assertEqual(p['output'],grid(call(solver('7acdf6d3'),p['input'])))
+            self.assertEqual(sum(r.count(fill) for r in p['input']),
+                             sum(r.count(fill) for r in p['output']))
+
 if __name__=='__main__':unittest.main()

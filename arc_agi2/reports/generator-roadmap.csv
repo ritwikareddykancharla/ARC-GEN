@@ -508,11 +508,11 @@ task_id,split,former_holdout,training_eligible,status,standalone_module,candidat
 78332cb0,evaluation,False,True,generator_missing,,panels,references/78332cb0.json,11x11->5x23;23x5->23x5,"Construct, validate and review standalone generator"
 7837ac64,training,False,True,upstream_fixture_verified,tasks/task_7837ac64.py,selection;topology;scale;layers,references/7837ac64.json,29x29->3x3,Expand semantic and boundary-case tests
 78e78cff,training,False,True,upstream_fixture_verified,tasks/task_78e78cff.py,selection;recolour;topology;crop,references/78e78cff.json,12x12->12x12,Expand semantic and boundary-case tests
-79369cc6,training,False,True,generator_missing,,rigid;template;dynamics;crop,references/79369cc6.json,16x15->16x15,"Construct, validate and review standalone generator"
+79369cc6,training,False,True,extension_validated,tasks/task_79369cc6.py,rigid;template;dynamics;crop,references/79369cc6.json,16x15->16x15,Expand semantic and boundary-case tests
 794b24be,training,False,True,upstream_fixture_verified,tasks/task_794b24be.py,selection;count,references/794b24be.json,3x3->3x3;3x3->3x3,Expand semantic and boundary-case tests
 7953d61e,training,False,True,upstream_fixture_verified,tasks/task_7953d61e.py,rigid;template;crop,references/7953d61e.json,4x4->8x8,Expand semantic and boundary-case tests
 79cce52d,training,False,True,upstream_fixture_verified,tasks/task_79cce52d.py,movement;crop,references/79cce52d.json,7x7->6x6,Expand semantic and boundary-case tests
-7acdf6d3,training,False,True,generator_missing,,objects;topology;dynamics;count,references/7acdf6d3.json,15x15->15x15,"Construct, validate and review standalone generator"
+7acdf6d3,training,False,True,extension_validated,tasks/task_7acdf6d3.py,objects;topology;dynamics;count,references/7acdf6d3.json,15x15->15x15,Expand semantic and boundary-case tests
 7b0280bc,evaluation,False,True,generator_missing,,objects;selection;recolour;paths;assembly,references/7b0280bc.json,30x30->30x30,"Construct, validate and review standalone generator"
 7b3084d4,evaluation,False,True,generator_missing,,rigid;repeat;count;order;crop;assembly,references/7b3084d4.json,20x20->14x14,"Construct, validate and review standalone generator"
 7b5033c1,evaluation,False,True,generator_missing,,paths;count;order,references/7b5033c1.json,16x16->25x1,"Construct, validate and review standalone generator"

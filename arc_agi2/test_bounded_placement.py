@@ -9,7 +9,7 @@ from unittest.mock import patch
 import common
 from arc_agi2.runtime import call, grid
 from tasks import (task_22806e14, task_230f2e48, task_2753e76c, task_2c0b0aff,
-                   task_37d3e8b2, task_48634b99, task_5e6bbc0b)
+                   task_37d3e8b2, task_48634b99, task_5e6bbc0b, task_a934301b)
 
 
 class BoundedPlacementTests(unittest.TestCase):
@@ -71,11 +71,48 @@ class BoundedPlacementTests(unittest.TestCase):
             (task_37d3e8b2, "ebff8b75533af00feea84511546876faa741a15a2b6c72b20575a5fbd1bdc91c"),
             (task_48634b99, "c6972e530e6c3d2b035cd414123f58f0dccd39d36630cc4b7885c0b72544578e"),
             (task_5e6bbc0b, "612569fb6909795e424fb46142b2d622ce1d8b1cf2e067c07f68d41c3cca54c2"),
+            (task_a934301b, "b7835e96b19f5ae685628a54312a233fb4809f6dad2be75618fd8acac93cc444"),
         ]
         for module, digest in cases:
             actual = hashlib.sha256(json.dumps(
                 module.validate(), sort_keys=True).encode()).hexdigest()
             self.assertEqual(actual, digest)
+
+    def test_small_crowded_canvas_retains_seven_boxes_and_three_survivors(self):
+        settings = iter([13, -1, -1, 7])
+        real = common.randint
+
+        def choose(low, high):
+            value = next(settings, None)
+            return real(low, high) if value is None else value
+
+        with patch.object(common, "randint", side_effect=choose):
+            pair = call(task_a934301b.generate, seconds=5)
+        g = pair["input"]
+        self.assertEqual((len(g), len(g[0])), (12, 12))
+        unseen = {(r, c) for r in range(12) for c in range(12) if g[r][c]}
+        components = []
+        while unseen:
+            component = {unseen.pop()}
+            stack = list(component)
+            while stack:
+                r, c = stack.pop()
+                for p in ((r+1, c), (r-1, c), (r, c+1), (r, c-1)):
+                    if p in unseen:
+                        unseen.remove(p)
+                        component.add(p)
+                        stack.append(p)
+            components.append(component)
+        self.assertEqual(len(components), 7)
+        survivors = 0
+        for cells in components:
+            rs, cs = zip(*cells)
+            self.assertEqual(len(cells), (max(rs)-min(rs)+1)*(max(cs)-min(cs)+1))
+            keep = sum(g[r][c] == 8 for r, c in cells) < 2
+            survivors += keep
+            for r, c in cells:
+                self.assertEqual(pair["output"][r][c], g[r][c] if keep else 0)
+        self.assertEqual(survivors, 3)
 
     def test_width_three_checkerboards_finish_for_every_height(self):
         real = common.randint

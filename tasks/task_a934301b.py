@@ -30,13 +30,19 @@ def generate(width=None, height=None, wides=None, talls=None, brows=None,
     width = base + common.randint(-1, 1)
     height = base + common.randint(-1, 1)
     num_boxes = common.randint(6, 7)
-    while True:
+    # Keep the requested count. Resample dimensions only when the bounded
+    # packer cannot fit them; never make a crowded scene easier by dropping
+    # boxes. Layout sampling is randomized, not uniform over all packings.
+    for _ in range(2000):
       wides = [common.randint(2, 6) for _ in range(num_boxes)]
       talls = [common.randint(2, 6) for _ in range(num_boxes)]
-      brows = [common.randint(0, height - tall) for tall in talls]
-      bcols = [common.randint(0, width - wide) for wide in wides]
-      if not common.overlaps(brows, bcols, wides, talls, 1): break
-    while True:
+      placement = common.place_rectangles(width, height, wides, talls, spacing=1)
+      if placement is not None:
+        brows, bcols = placement
+        break
+    else:
+      raise RuntimeError("bounded sampler failed to place all boxes")
+    for _ in range(10000):
       prows, pcols, pidxs, num_small = [], [], [], 0
       for i in range(num_boxes):
         for r in range(talls[i]):
@@ -47,6 +53,8 @@ def generate(width=None, height=None, wides=None, talls=None, brows=None,
             pidxs.append(i)
         if pidxs.count(i) < 2: num_small += 1
       if num_small == 3: break
+    else:
+      raise RuntimeError("bounded sampler failed to mark exactly three survivors")
 
   grid, output = common.grids(width, height)
   for i, (wide, tall, brow, bcol) in enumerate(zip(wides, talls, brows, bcols)):

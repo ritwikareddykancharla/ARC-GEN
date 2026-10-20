@@ -1,0 +1,38 @@
+{
+  "task_id": "a934301b",
+  "factory_sha256": "070fce0e5421fc68adf17c3e7bad7b23aad85b569238013bd77a35dc43fe50e3",
+  "constructor_sha256": "1fd471c5e1a91034e564c5a54b49142652c4bcf93182e6c9815386761fea947f",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 260781569400127,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 8.090139582986012,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The emitted program works directly on the visible grid. Background is palette[0] and the marker colour is palette[8]. The program finds 4-connected multicolour components of non-background cells; each component is one rectangular block of body colour plus its marker cells. If a block contains two or more marker cells, every cell of that block is set to background. Every other block is copied unchanged. Connected components, cell counting and erasure all stay the same under rotation and reflection, so d4 changes no axis or direction. Only the colour constants are specialized from the palette. The rule matches all three training pairs and the test pair.",
+    "limitations": "The constructor's overlaps(..., 1) check is assumed to keep at least one background cell between boxes, so that each block is its own 4-connected component. If two blocks could touch orthogonally, they would merge and be counted together. The constructor resamples marker placement until exactly three boxes have fewer than two markers. That is a property of the generated scenes, not a tie-break, and the visible count rule decides every case without relying on it. A block made entirely of marker cells is still one component and is treated by the same count rule. No fixture contradicts the uniform rule. No tests have been run.",
+    "host_review": "Reviewed constructor and emitted program: disjoint solid rectangles with marker cells; keep components with fewer than two marker cells. All operations use visible coordinates, are D4-invariant, and use palette-specialized roles. No latent coordinates or query answers in solver. Original fixture structures hash unchanged.",
+    "host_sampler_revision": "Replace unbounded joint-position rejection with bounded randomized packing, retaining requested six/seven boxes, widths/heights 2..6 and original canvas range 12..16. Keep Bernoulli marker sampling conditioned on exactly three survivors; cap retries and raise on exhaustion. Placement distribution changes; no claim of uniformity. No reduced object counts or dimensions to force success.",
+    "repair_verification": {
+      "task_id": "a934301b",
+      "factory_sha256": "070fce0e5421fc68adf17c3e7bad7b23aad85b569238013bd77a35dc43fe50e3",
+      "constructor_sha256": "1fd471c5e1a91034e564c5a54b49142652c4bcf93182e6c9815386761fea947f",
+      "passed": true,
+      "fresh_pairs_checked": 1000,
+      "augmented_pair_checks": 8000,
+      "fixture_variants_checked": 16,
+      "sampler_rejections": [],
+      "seed": 260781569400127,
+      "d4": 7,
+      "unique_base_inputs": 1000,
+      "seconds": 8.090139582986012
+    },
+    "common_sha256": "4f0e06022661a3cc457bb0ff3895cd046189049047c26b744f8c73157bb859f0"
+  }
+}

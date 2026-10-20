@@ -35,7 +35,7 @@ recorded. Passing finite audits does not prove unrestricted generalization.
 
 - 213 native direct-coordinate certificates admitted after fresh audits and
   supplied-fixture checks.
-- 718 admitted factories. Each passed 1,000 fresh pairs, 8,000 augmented pair
+- 719 admitted factories. Each passed 1,000 fresh pairs, 8,000 augmented pair
   checks and 16 supplied-fixture variants. Their audit records retain draft
   limitations and source/constructor hashes. These checks are finite evidence,
   not proof of correctness on every generated input.
@@ -46,7 +46,7 @@ recorded. Passing finite audits does not prove unrestricted generalization.
   counts must be computed as a union, not added.
 - Local exporter test: 18 fresh base episodes, 144 augmented PNG/program/grid
   records. It requested 20 bases and reported a two-episode shortfall.
-- The union currently admits 937 of 1,120 families; 183 still need direct
+- The union currently admits 938 of 1,120 families; 182 still need direct
   augmented program admission. Constructor coverage and program coverage are
   different gates.
 - Synthetic labels for `00d62c1b` now fill every enclosed background component,
@@ -393,3 +393,24 @@ three demonstrations, one query, a program and its grid answer; augmentations
 follow. Bulk generation and training are still unlaunched.
 
 Regression validation for this checkpoint: **331 tests passed**.
+
+## Crowded-rectangle checkpoint: 938 verified program families
+
+`a934301b` now uses bounded rectangle packing instead of unbounded joint
+position rejection. It retains six/seven objects, 2..6-cell object dimensions,
+the 12..16-cell canvas range, one-cell separation and exactly three surviving
+objects with fewer than two markers. Marker sampling remains Bernoulli,
+conditioned on that survivor count. Exhaustion raises instead of simplifying
+the scene. Layout sampling is randomized, not uniform over valid packings.
+Original fixture hashes are unchanged.
+
+The unchanged visible-coordinate solver passed 1,000 fresh unique inputs,
+8,000 augmented checks and 16 fixture variants with no sampler rejections
+in 8.09 seconds. Twenty complete episodes passed all 160 D4 record checks.
+Evidence: `reports/episode-evidence-938-audit.json`. All **332 regression tests
+passed**, including the seven-object case on a 12x12 canvas.
+
+Coverage is 938/1,120, leaving 182 families. Bulk generation remains gated.
+The requested quota remains **1,000 fresh episodes per family**, with program
+and grid together, followed by augmentation; the audits above are not the
+expanded training corpus.

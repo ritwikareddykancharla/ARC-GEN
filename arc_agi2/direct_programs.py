@@ -5,6 +5,51 @@ families require a reviewed native-coordinate variant before augmented SFT.
 """
 
 def direct_source(task_id, d4, palette):
+    if task_id == 'f0100645':
+        return '''from collections import Counter
+
+def solve(demonstrations, grid):
+    height, width = len(grid), len(grid[0])
+    background = Counter(cell for row in grid for cell in row).most_common(1)[0][0]
+    if len({row[0] for row in grid}) == 1 and len({row[-1] for row in grid}) == 1 and grid[0][0] != grid[0][-1]:
+        walls = [(grid[0][-1], 0, 1), (grid[0][0], 0, -1)]
+        border = {(row, col) for row in range(height) for col in (0, width - 1)}
+    elif len(set(grid[0])) == 1 and len(set(grid[-1])) == 1 and grid[0][0] != grid[-1][0]:
+        walls = [(grid[-1][0], 1, 0), (grid[0][0], -1, 0)]
+        border = {(row, col) for row in (0, height - 1) for col in range(width)}
+    else:
+        raise ValueError("Expected two differently coloured opposite walls")
+    out = [row[:] for row in grid]
+    for colour, dy, dx in walls:
+        remaining = {(row, col) for row in range(height) for col in range(width)
+                     if grid[row][col] == colour and (row, col) not in border}
+        objects = []
+        while remaining:
+            start = min(remaining)
+            remaining.remove(start)
+            cells = [start]
+            for row, col in cells:
+                for dr in (-1, 0, 1):
+                    for dc in (-1, 0, 1):
+                        point = (row + dr, col + dc)
+                        if point in remaining:
+                            remaining.remove(point)
+                            cells.append(point)
+            objects.append(cells)
+        objects.sort(key=lambda cells: -max(row * dy + col * dx for row, col in cells))
+        for cells in objects:
+            for row, col in cells:
+                out[row][col] = background
+            shift = 0
+            while all(0 <= row + (shift + 1) * dy < height
+                      and 0 <= col + (shift + 1) * dx < width
+                      and out[row + (shift + 1) * dy][col + (shift + 1) * dx] == background
+                      for row, col in cells):
+                shift += 1
+            for row, col in cells:
+                out[row + shift * dy][col + shift * dx] = colour
+    return out
+'''
     if task_id in ('27a28665', '9110e3c5', 'd4469b4b'):
         # These are demonstration-defined legends, not fixed answer tables.
         # A valid generated episode must demonstrate the query's legend key.
@@ -38,9 +83,9 @@ def solve(demonstrations, grid):
         raise ValueError("Contradictory demonstrated legend")
     return [row[:] for row in matches[0]]
 '''.replace('BACKGROUND', repr(palette[0])).replace('KEY_BODY', key_body)
-    if task_id == 'a6f40cea':
-        # The solver discovers frame bounds and checkerboard colour phase from
-        # visible cells. Both roles adapt directly to D4 and palette changes.
+    if task_id in ('a6f40cea', 'e12f9a14'):
+        # These solvers recover their colour roles and geometry from visible
+        # cells. Their reviewed domains support D4/palette changes directly.
         import ast
         from .program_targets import native_program
         source, _ = native_program(task_id)

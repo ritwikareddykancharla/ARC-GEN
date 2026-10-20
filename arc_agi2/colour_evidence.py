@@ -78,13 +78,82 @@ def require_colour_evidence(task_id, demonstrations, queries, palette=None, d4=0
                        'f1bcbc2c', 'f5b8619d', 'f3e62deb',
                        'fafffa47', 'fd02da9e', 'fe9372f3', 'f9d67f8b',
                        'fea12743', 'ff28f65a', 'eee78d87', 'f28a3cbb', 'f8be4b64',
-                       '37d3e8b2', 'ba9d41b8', 'd2abd087', 'e39e9282'):
+                       '37d3e8b2', 'ba9d41b8', 'd2abd087', 'e39e9282',
+                       'b0c4d837', 'e133d23d', 'b27ca6d3', 'd94c3b52'):
         return
     palette = list(range(10)) if palette is None else palette
     bg = palette[0]
     colours = lambda g: {c for row in g for c in row} - {bg}
     required, seen = set(), set()
-    if task_id == 'f8be4b64':
+    if task_id == 'b0c4d837':
+        from .augmentation import transformed
+        def empty_layers(g):
+            cells = [(r, c) for r, row in enumerate(g)
+                     for c, ink in enumerate(row) if ink == palette[5]]
+            if not cells:
+                raise MissingColourEvidence('b0c4d837: missing cup walls')
+            r0, r1 = min(r for r, c in cells), max(r for r, c in cells)
+            c0, c1 = min(c for r, c in cells), max(c for r, c in cells)
+            segments = ([g[r][c0+1:c1] for r in range(r0, r1+1)]
+                        if d4 % 2 == 0 else
+                        [[g[r][c] for r in range(r0+1, r1)] for c in range(c0, c1+1)])
+            return sum(bool(line) and all(ink == bg for ink in line) for line in segments)
+        def variants(g):
+            n = empty_layers(g)
+            outputs = []
+            # Up to the first row, snake and raster traversal coincide. Compare
+            # both orders in every orientation on this query, not query labels.
+            for snake in (False, True):
+                order = [(r, c) for r in range(3)
+                         for c in (range(2, -1, -1) if snake and r % 2 else range(3))]
+                out = [[bg]*3 for _ in range(3)]
+                for r, c in order[:n]: out[r][c] = palette[8]
+                outputs.extend(transformed(out, orient, list(range(10))) for orient in range(8))
+            return outputs
+        _require_rule_agreement(task_id, demonstrations, queries, variants)
+        return
+    elif task_id == 'e133d23d':
+        def marked(g):
+            return any(ink in (palette[6], palette[8]) for row in g for ink in row)
+        if any(marked(q['input']) for q in queries): required.add('union-paint')
+        if any(marked(d['input']) and palette[2] in colours(d['output']) for d in demonstrations):
+            seen.add('union-paint')
+    elif task_id == 'b27ca6d3':
+        def ring_cells(g):
+            cells = set()
+            for part in _colour_components(g, palette[2]):
+                if len(part) != 2: continue
+                r0, r1 = min(r for r, c in part), max(r for r, c in part)
+                c0, c1 = min(c for r, c in part), max(c for r, c in part)
+                cells.update((r, c) for r in range(max(0, r0-1), min(len(g), r1+2))
+                             for c in range(max(0, c0-1), min(len(g[0]), c1+2)) if g[r][c] == bg)
+            return cells
+        if any(ring_cells(q['input']) for q in queries): required.add('domino-ring-paint')
+        if any(any(d['output'][r][c] == palette[3] for r, c in ring_cells(d['input']))
+               for d in demonstrations): seen.add('domino-ring-paint')
+    elif task_id == 'd94c3b52':
+        def between_cells(g):
+            h, w = (len(g)-1)//4, (len(g[0])-1)//4
+            masks = {(r, c): frozenset((y, x) for y in range(3) for x in range(3)
+                                      if g[1+4*r+y][1+4*c+x] != bg)
+                     for r in range(h) for c in range(w)}
+            templates = [masks[r, c] for r in range(h) for c in range(w)
+                         if any(g[1+4*r+y][1+4*c+x] == palette[8]
+                                for y in range(3) for x in range(3))]
+            if not templates: return set()
+            matches = {p for p, mask in masks.items() if mask == templates[0]}
+            fill = set()
+            for r in range(h):
+                xs = [c for y, c in matches if y == r]
+                if len(xs) >= 2: fill.update((r, c) for c in range(min(xs)+1, max(xs)))
+            for c in range(w):
+                ys = [r for r, x in matches if x == c]
+                if len(ys) >= 2: fill.update((r, c) for r in range(min(ys)+1, max(ys)))
+            return {(1+4*r+y, 1+4*c+x) for r, c in fill-matches for y, x in masks[r, c]}
+        if any(between_cells(q['input']) for q in queries): required.add('between-tiles-paint')
+        if any(any(d['output'][r][c] == palette[7] for r, c in between_cells(d['input']))
+               for d in demonstrations): seen.add('between-tiles-paint')
+    elif task_id == 'f8be4b64':
         def variants(g):
             h, w = len(g), len(g[0])
             steps = ((1, 0), (-1, 0), (0, 1), (0, -1))

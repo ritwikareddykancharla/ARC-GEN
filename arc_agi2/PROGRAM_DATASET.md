@@ -927,3 +927,33 @@ Remaining: 69 semantic/context holds, 9 execution failures and 3 missing factori
 Bulk generation and model training have not launched.
 
 All 461 regression tests passed for this checkpoint.
+
+## 1043-family checkpoint
+
+Four episode-evidence holds are resolved without changing the native generators
+or the previously verified direct-coordinate programs:
+
+- `b0c4d837`: compare snake and raster traversal in all eight orientations.
+  Retain hypotheses fitting demonstration outputs and require agreement on each
+  query input. A three-cell line does not teach the fourth-cell turn; a lone
+  corner does not teach the line direction. Shorter queries remain admissible
+  when surviving hypotheses agree.
+- `e133d23d`: retain blank panel pairs. A nonempty query union requires a
+  demonstration showing its output paint; an empty query does not.
+- `b27ca6d3`: retain identity scenes without dominoes. A query needing an outline
+  requires a demonstrated outline-colour change at an actual domino ring cell.
+- `d94c3b52`: the native sampler already guarantees between-tile fills. The
+  episode gate independently checks matching tile masks and between positions
+  before requiring demonstrated fill colour, including externally supplied
+  episodes outside that stricter sampler domain.
+
+No query answers enter these gates. All four existing certificates were checked
+against current source hashes: each records 1,000 fresh pairs, 8,000 D4 pair
+checks and 16 fixture variants. New complete-episode auditing accepted 77 of
+80 bases, rejected three cup episodes with insufficient traversal evidence,
+and verified all 616 augmented records. Constructors, original fixtures and
+single-pair distributions are unchanged. Remaining: 65 semantic/context holds,
+9 execution failures, 3 missing factories. Bulk generation and model training
+have not launched.
+
+All 467 regression tests passed for this checkpoint.

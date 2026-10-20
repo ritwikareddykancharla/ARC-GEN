@@ -1,0 +1,23 @@
+{
+  "task_id": "b27ca6d3",
+  "factory_sha256": "5eabef0ed78e10d8f3b4ba5a28a9ea393313402e294733d50c9c94993730f13c",
+  "constructor_sha256": "a8b58058df969c4c19e368677650587e693f51091a5d3c7f70a71312f434e63b",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 119539714978591,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 7.81326666707173,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The emitted program finds every edge-connected component of each non-background colour directly in the visible grid. In practice this is only the red colour palette[2] on the background palette[0]. For each component of size exactly 2 (a domino), it paints the one-cell ring around the domino's bounding box with palette[3]. The ring is clipped at the grid edges, and only background cells are painted. Components are found on an unmodified copy of the input, so painted rings cannot change how later components are detected. The rule is the same under all eight D4 transforms. Rotating or reflecting turns horizontal dominoes into vertical ones and the reverse, and the ring around a bounding box maps onto the ring around the transformed box. So no axis or direction needs to be specialised: the program works in visible coordinates for any d4. Colour roles are fixed as constants through the palette. Background is palette[0] rather than the most common colour, which is equivalent here because background always dominates.",
+    "limitations": "I have not run any tests. The program assumes the generator's domain: isolated single static pixels plus dominoes whose 3x3 neighbourhoods do not overlap. The generator's green drawing deletes static pixels next to dominoes, so no larger red components occur. If an unexpected input had a red component of size 3 or more, it would get no frame, matching the archived solver. If two frames overlapped, both would simply be painted. I found no constructor defects or fixture contradictions. The demonstrations are not needed and are ignored.",
+    "host_review": "Reject proposed removal of identity scenes and fallback placement. Keep original factory and constructor. Gate requires paint observed on a background cell around a demonstrated domino only when query contains a domino with an available ring cell. Identity queries remain allowed. Original single-pair domain unchanged.",
+    "semantic_draft_review": "Subscription Opus 5.5 semantic-repairs-v2 reviewed; constructor changes not applied."
+  }
+}

@@ -11,6 +11,45 @@ from .fixture_policy import fixture_basis
 from .augmentation import apply_episode,settings,exhaustive_variants
 
 class GeneratorTests(unittest.TestCase):
+    def test_containment_keeps_outside_distractors_at_requested_counts(self):
+        m=importlib.import_module('tasks.task_9720b24f')
+        original=m._random_scene;scenes=[]
+        def trace(*args,**kwargs):
+            scene=original(*args,**kwargs);scenes.append(scene);return scene
+        with patch.object(m,'_random_scene',trace):
+            for n in (0,9,12):
+                random.seed(40000)
+                pair=m.generate(width=30,height=30,num_containers=1,num_loose=n)
+                self.assertEqual(len(scenes[-1][2]),n)
+                self.assertEqual(pair['output'],grid(call(solver('9720b24f'),pair['input'])))
+        with self.assertRaises(ValueError):m.generate(width=4,height=4,num_containers=1,num_loose=12)
+        for n in (-1,True,13):
+            with self.assertRaises(ValueError):m.generate(num_loose=n)
+
+    def test_containment_background_and_valid_identity(self):
+        m=importlib.import_module('tasks.task_9720b24f')
+        pair=m.validate()['train'][0];freq=Counter(sum(pair['input'],[]))
+        self.assertGreater(freq[1],freq[0])
+        self.assertEqual(pair['output'][1][1],0)
+        self.assertEqual(pair['output'],grid(call(solver('9720b24f'),pair['input'])))
+        identity=m.generate(width=3,height=3,containers=[],num_containers=0,num_loose=0)
+        self.assertEqual(identity['input'],identity['output'])
+        with self.assertRaises(ValueError):m.generate(width=3,height=3,containers=[],num_loose=1)
+
+    def test_containment_explicit_size_and_colour_qualifications(self):
+        m=importlib.import_module('tasks.task_9720b24f')
+        ring=[(y,x) for y in range(1,8) for x in range(1,8) if y in (1,7) or x in (1,7)]
+        p=m.generate(width=9,height=9,containers=[(2,ring)],inners=[(3,[(3,3)])],loose=[(2,[(4,4)])])
+        self.assertEqual(p['output'][4][4],2);self.assertEqual(p['output'][3][3],0)
+        self.assertEqual(p['output'],grid(call(solver('9720b24f'),p['input'])))
+        border=[(1,x) for x in range(1,7)]+[(y,1) for y in range(2,7)]
+        larger=[(y,x) for y in range(2,6) for x in range(3,6)]
+        for cells in (larger,larger[:-1]):
+            p=m.generate(width=8,height=8,containers=[(2,border)],inners=[(3,[(5,2)])],loose=[(4,cells)])
+            self.assertEqual(sum(row.count(4) for row in p['output']),len(cells))
+            self.assertEqual(p['output'][5][2],0)
+            self.assertEqual(p['output'],grid(call(solver('9720b24f'),p['input'])))
+
     def test_anchor_reflection_rejects_rotation_shortcuts_and_fits_extremes(self):
         m=importlib.import_module('tasks.task_963f59bc')
         for kw in [dict(sides=['right'],box_height=3,box_width=5),

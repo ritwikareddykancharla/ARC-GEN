@@ -123,6 +123,44 @@ class GeneratorTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError,'background 4'):
             stamp.generate(background=1)
 
+    def test_symmetry_recovery_and_region_construction_constraints(self):
+        symmetry=importlib.import_module('tasks.task_0934a4d8')
+        for size in range(4,9):
+            for seed in range(5):
+                random.seed(seed)
+                p=symmetry.generate(block_size=size,layout='interior')
+                self.assertEqual((len(p['input']),len(p['input'][0])),(4*size-2,4*size-2))
+                self.assertEqual(p['output'],grid(call(solver('0934a4d8'),p['input'])))
+        with self.assertRaisesRegex(ValueError,'edge layout'):
+            symmetry.generate(block_size=4,layout='edge')
+        with self.assertRaisesRegex(ValueError,'mask colour'):
+            symmetry.generate(palette=[1,2,8])
+        for tid in ['09c534e7','13e47133','184a9768']:
+            module=importlib.import_module('tasks.task_'+tid)
+            for seed in range(5):
+                random.seed(seed)
+                p=call(lambda:module.generate(width=24,height=30),seconds=3)
+                self.assertEqual((len(p['input']),len(p['input'][0])),(30,24))
+                self.assertEqual(p['output'],grid(call(solver(tid),p['input'])),tid)
+        blocks=importlib.import_module('tasks.task_09c534e7')
+        with patch.object(blocks,'_random_structures',return_value=None):
+            with self.assertRaisesRegex(RuntimeError,'requested structures'):
+                blocks.generate(width=24,height=30,num_structures=3)
+        with self.assertRaisesRegex(ValueError,'colors length'):
+            blocks.generate(num_structures=3,colors=[2,3])
+        rings=importlib.import_module('tasks.task_13e47133')
+        p=rings.generate(height=12,width=14,background=0,divider=8,
+                         segments=[(0,6,11,6)],chains=[(0,0,1,1,[0,2,3])])
+        self.assertEqual([p['output'][i][i] for i in range(3)],[0,2,3])
+        self.assertTrue(all(row[6]==8 and row[7:]==[0]*7 for row in p['output']))
+        with self.assertRaisesRegex(ValueError,'must differ'):
+            rings.generate(background=2,divider=2)
+        jigsaw=importlib.import_module('tasks.task_184a9768')
+        # Identical shapes of different colours can swap holes: reject that ambiguity.
+        holes={(0,0),(0,3)}
+        self.assertTrue(jigsaw._ambiguous(holes,[(2,1,1),(3,1,1)]))
+        self.assertFalse(jigsaw._ambiguous(holes,[(2,1,1),(2,1,1)]))
+
     def test_registered_standalone_sources_and_fixtures(self):
         # Validate the registered files, not only the older research registry.
         for tid in NEW_TASK_IDS:

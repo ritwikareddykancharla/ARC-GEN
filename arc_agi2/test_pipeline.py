@@ -2725,4 +2725,39 @@ class GeneratorTests(unittest.TestCase):
             self.assertGreater(len(p['input'][0]),5)
             self.assertEqual(p['output'],grid(call(solver('c4d1a9ae'),p['input'])))
 
+    def test_line_shape_halo_and_pinned_controls_reject_upfront(self):
+        m=importlib.import_module('tasks.task_c6141b15')
+        for kw in ({'height':7,'width':7,'shape':'x','layout':'right'},
+                   {'height':7,'width':7,'shape':'ring','layout':'right'},
+                   {'line_start':[29,29],'shape':'plus'},
+                   {'centres':[[5,5],[5,6]],'shape':'dot'}, {'layout':[]}):
+            with self.assertRaises(ValueError):m.generate(**kw)
+
+    def test_line_shape_one_row_extension_remains_valid(self):
+        m=importlib.import_module('tasks.task_c6141b15')
+        p=m.generate(height=1,width=30,shape='dot',centres=[[0,0],[0,3]],
+                     line_start=[0,15],line_dir=[0,1],line_length=3,
+                     line_color=1,shape_color=2)
+        self.assertEqual(p['output'][0][:4],[1]*4)
+        self.assertEqual(p['output'][0][15:18],[2,7,2])
+        self.assertEqual(p['output'],grid(call(solver('c6141b15'),p['input'])))
+
+    def test_dense_chain_requested_counts_preserved(self):
+        m=importlib.import_module('tasks.task_c9680e90')
+        for touch,n in ((True,20),(False,15)):
+            p=m.generate(height=5,width=30,num_objects=n,touching_reds=touch)
+            self.assertEqual(sum(row.count(2) for row in p['input']),n)
+            self.assertEqual(sum(row.count(2) for row in p['output']),n)
+            self.assertEqual(p['output'],grid(call(solver('c9680e90'),p['input'])))
+        p=m.generate(height=5,width=5,num_objects=3)
+        self.assertEqual(sum(row.count(2) for row in p['input']),3)
+
+    def test_chain_one_row_half_extension_and_impossible_canvas(self):
+        m=importlib.import_module('tasks.task_c9680e90')
+        p=m.generate(height=3,width=10,num_objects=2,dense=True)
+        self.assertEqual(p['output'],grid(call(solver('c9680e90'),p['input'])))
+        with self.assertRaisesRegex(ValueError,'no feasible'):
+            m.generate(height=3,width=3)
+        with self.assertRaises(ValueError):m.generate(height=9,width=9,objects=5)
+
 if __name__=='__main__':unittest.main()

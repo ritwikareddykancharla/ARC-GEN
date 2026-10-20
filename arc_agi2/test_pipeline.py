@@ -2582,4 +2582,28 @@ class GeneratorTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError,'raw template'):
             m.generate(template=t,template_pos=(-1,5),targets=[(5,20,2)])
 
+    def test_lattice_mask_rectangular_grids_and_diagonal_minimum(self):
+        m=importlib.import_module('tasks.task_b99e7126')
+        for nr,nc,offset in ((4,7,(1,4)),(7,4,(4,1))):
+            random.seed(96000)
+            with patch.object(m,'_MASK_SIZES',[3]):
+                p=m.generate(rows=nr,cols=nc,offset=offset)
+            self.assertEqual((len(p['input']),len(p['input'][0])),(4*nr+1,4*nc+1))
+            self.assertEqual(p['output'],grid(call(solver('b99e7126'),p['input'])))
+            changed=sum(a!=b for ar,br in zip(p['input'],p['output']) for a,b in zip(ar,br))
+            self.assertGreaterEqual(changed,3)
+            self.assertLessEqual(changed,9)  # One missing tile, three encoded cells.
+
+    def test_lattice_mask_rejects_edge_only_disambiguation(self):
+        m=importlib.import_module('tasks.task_b99e7126')
+        normal=[[1]*3 for _ in range(3)]
+        special=[[2,1,1],[1,2,1],[1,1,2]]
+        with self.assertRaisesRegex(ValueError,'uniquely'):
+            m.generate(rows=4,cols=4,normal=normal,special=special,
+                       shown=[(0,0),(1,1)],offset=(0,0))
+        p=m.generate(rows=4,cols=4,normal=normal,special=special,
+                     shown=[(0,0),(2,2)],offset=(0,0))
+        self.assertEqual(p['output'][5][5],2)
+        self.assertEqual(p['output'],grid(call(solver('b99e7126'),p['input'])))
+
 if __name__=='__main__':unittest.main()

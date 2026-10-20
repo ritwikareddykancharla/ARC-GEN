@@ -36651,6 +36651,51 @@
     "scope": "Independent constructor vs the documented rule verifier and original fixtures; agreement does not prove semantic completeness."
   },
   {
+    "task_id": "b99e7126",
+    "sampled": 300,
+    "passed": 300,
+    "errors": [],
+    "shapes": {
+      "29x17->29x17": 7,
+      "29x29->29x29": 165,
+      "17x17->17x17": 8,
+      "25x17->25x17": 12,
+      "17x29->17x29": 9,
+      "25x25->25x25": 5,
+      "17x21->17x21": 11,
+      "21x25->21x25": 13,
+      "21x21->21x21": 16,
+      "17x25->17x25": 8,
+      "21x29->21x29": 11,
+      "21x17->21x17": 5,
+      "25x29->25x29": 10,
+      "25x21->25x21": 4,
+      "29x25->29x25": 7,
+      "29x21->29x21": 9
+    },
+    "original_replay": {
+      "canonical": {
+        "correct": 4,
+        "total": 4,
+        "all_exact": true
+      },
+      "teaching_fixture": {
+        "correct": 4,
+        "total": 4,
+        "all_exact": true
+      }
+    },
+    "ready": true,
+    "fixture_basis": {
+      "fixture": "canonical",
+      "corrected": false
+    },
+    "verifier_evidence": {
+      "mode": "archived_pair_solver"
+    },
+    "scope": "Independent constructor vs the documented rule verifier and original fixtures; agreement does not prove semantic completeness."
+  },
+  {
     "task_id": "bf45cf4b",
     "sampled": 300,
     "passed": 300,

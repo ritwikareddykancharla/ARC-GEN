@@ -14,11 +14,11 @@ This fork adds a reference-guided generator workflow and an adaptive episode bui
 
 - All **1,120** canonical tasks inventoried with saved Opus/Fable explanations, `transform(grid)` programs, provenance and separately labelled teaching fixtures.
 - **891 existing upstream generators** reproduce the canonical pair sets (pair ordering can differ between releases).
-- **186 new constructive implementations** have passed bounded validation, covering counting, selection, geometry, legends, relational motion, scaling, pattern construction and repair. Standalone conversion and review are tracked separately below.
+- **187 new constructive implementations** have passed bounded validation, covering counting, selection, geometry, legends, relational motion, scaling, pattern construction and repair. Standalone conversion and review are tracked separately below.
 - **Two variable-size extensions**: `0692e18c` (inverse self-tiling) and `00576224` (three-by-three tiling with mirrored middle band).
-- All 188 constructors (186 new families plus two size extensions) passed **300 bounded randomized checks each**: 185 use the archived pair solver, `78332cb0` uses the documented complete-chain verifier, `de493100` uses the dimension-aware reflection verifier, and `269e22fb` uses a demonstration-conditioned episode verifier. Of these, 187 reproduce all original examples; `581f7754` uses the explicitly approved, hash-pinned eight-cell teaching correction. Its unchanged canonical replay is reported separately as 4/5, versus 5/5 on the teaching copy. Outputs are constructed independently from latent parameters. New pictures in `269e22fb` are compared with an independent contextual verifier; its original fixtures still match the archived fixed-picture transform.
+- All 189 constructors (187 new families plus two size extensions) passed **300 bounded randomized checks each**: 186 use the archived pair solver, `78332cb0` uses the documented complete-chain verifier, `de493100` uses the dimension-aware reflection verifier, and `269e22fb` uses a demonstration-conditioned episode verifier. Of these, 188 reproduce all original examples; `581f7754` uses the explicitly approved, hash-pinned eight-cell teaching correction. Its unchanged canonical replay is reported separately as 4/5, versus 5/5 on the teaching copy. Outputs are constructed independently from latent parameters. New pictures in `269e22fb` are compared with an independent contextual verifier; its original fixtures still match the archived fixed-picture transform.
 - **22 additional fixed-size families / 111 size-parameter configurations** passed bounded 12-seed differential tests. Every such generated pair is checked again during generation. This is agreement evidence, not proof of semantic correctness.
-- **43 tasks still need constructive generators**. A saved transform is not itself an input generator. Reference packets and `reports/generator-roadmap.csv` provide the task-by-task backlog.
+- **42 tasks still need constructive generators**. A saved transform is not itself an input generator. Reference packets and `reports/generator-roadmap.csv` provide the task-by-task backlog.
 
 ## Inspect
 
@@ -74,9 +74,9 @@ The authoring campaign uses eight concurrent Claude CLI processes under the user
 
 A zero-error differential check is a bounded agreement test. It does not prove the saved solver is universally correct or that every original mechanism variant is covered.
 
-**180 standalone modules are now reviewed and registered** (the exact list lives in `task_registry.py`). Each passed 1,000 seed checks and exact reconstruction of its approved validation fixture: canonical for 179 modules, the labelled teaching copy for `581f7754`. The first sixteen used seeds 0..999 (including their 300 author-validation seeds); the next one hundred and sixty-four used independent seeds 20,000..20,999. The regression suite also checks registered source hashes and seeds 10,000..10,019.
+**181 standalone modules are now reviewed and registered** (the exact list lives in `task_registry.py`). Each passed 1,000 seed checks and exact reconstruction of its approved validation fixture: canonical for 180 modules, the labelled teaching copy for `581f7754`. The first sixteen used seeds 0..999 (including their 300 author-validation seeds); the next one hundred and sixty-five used independent seeds 20,000..20,999. The regression suite also checks registered source hashes and seeds 10,000..10,019.
 
-Twenty-four conversions replace earlier research constructors with the upstream task-file interface. The total is now 186 new constructive families, with 6 still awaiting standalone conversion/review. Remaining CLI drafts are authored and validated locally. Restricted shape and dimension ranges are documented per file and in `reports/standalone/`; the size-matching builder must respect those ranges.
+Twenty-four conversions replace earlier research constructors with the upstream task-file interface. The total is now 187 new constructive families, with 6 still awaiting standalone conversion/review. Remaining CLI drafts are authored and validated locally. Restricted shape and dimension ranges are documented per file and in `reports/standalone/`; the size-matching builder must respect those ranges.
 
 Independent validation exposed a background-inference failure in the saved `d4c90558` solver: a thick frame can dominate a small grid, causing the checker to interpret the wrong colour as background. The constructor now samples the explicit domain where 0 strictly outnumbers every other colour. The failing examples are retained in `reports/standalone/d4c90558-counterexamples.json`. This restriction is not evidence that the conceptual counting rule fails on denser scenes.
 
@@ -552,3 +552,14 @@ All **155 regression tests** pass. Coverage is **1,074/1,120**, with **46 missin
 - Quadrant scaling: **1,931 distinct inputs**, 800 extreme-layout controls across both modes and all quadrants, 600 shrinking cases, 1,035 clipped cases and 1,011 nonsquare grids. Every target retains all attachment colours and differs from all three incorrect mirror orientations.
 
 All **161 regression tests** pass. Coverage is **1,077/1,120**, with **43 missing**, **180 reviewed standalone additions**, and six older constructors awaiting standalone review. Per-file reports preserve restrictions: reflection uses small separated polyominoes; gravity uses vertical lanes; scaling uses aligned/fine rectangular templates with lossless scale ratios. Bulk generation and training remain stopped pending complete coverage.
+
+
+### Reviewed nested-scale tile-pattern completion
+
+`b99e7126` reconstructs all four original pairs and passes 1,000 independent archived-solver checks with 1,000 distinct inputs. The host review corrected the documented size-sampling bias and directly constructs the two possible three-cell diagonal masks rather than relying on repeated growth attempts.
+
+An independent input-only tile-frequency, new-colour and translation oracle passes **1,664 cases / 1,662 unique inputs**. This includes every 196 supported size/offset combination, all **232 supported 3x3 masks**, and 464 rendered checks using their minimum/maximum unique shown-subset sizes. The mask audit enumerates 9,924 uniquely locating shown subsets; it checks alternatives extending outside the lattice, so an edge cannot be the sole disambiguator. There are 1,157 scenes where non-mask tile cells also change, and 992 nonsquare scenes. Eleven malformed/ambiguous controls reject; all 21 valid and ten rejection critic cases pass.
+
+The fixed 3x3 tiles, one-cell dividers, 3..8-cell masks and 4..7-tile sides remain explicit restrictions. Three-cell masks have only two native geometries, so a large episode quota cannot be assumed to yield independent shapes. Smaller/rectangular lattices are labelled extensions of the original 7x7 lattice. Coverage is **1,078/1,120**, with **42 missing**, **181 reviewed standalone additions**, and six older constructors awaiting standalone review. Bulk generation and training remain stopped pending complete coverage.
+
+All **163 regression tests** pass after this addition.

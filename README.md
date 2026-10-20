@@ -1,3 +1,5 @@
+> **Fork research:** [ARC-AGI-2 reference-guided generators, exact-size audit and adaptive episode builder](arc_agi2/README.md). This work is separate from the upstream registry.
+
 <p align="center">
 <img src="misc/images/arc-gen-logo.jpg">
 </p>

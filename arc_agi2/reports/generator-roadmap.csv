@@ -1,0 +1,1121 @@
+task_id,split,held_out,status,candidate_tactics,reference_file,query_shapes,required_next_step
+00576224,training,False,upstream_fixture_verified,rigid;repeat;crop,references/00576224.json,2x2->6x6,Randomized semantic audit and diversity profiling
+007bbfb7,training,False,upstream_fixture_verified,template;count;order;crop,references/007bbfb7.json,3x3->9x9,Randomized semantic audit and diversity profiling
+009d5c81,training,False,generator_missing,legend;recolour;crop,references/009d5c81.json,14x14->14x14,"Construct valid latent inputs, independently render output, differential-test, audit ambiguity and edge cases"
+00d62c1b,training,False,upstream_fixture_verified,objects;topology,references/00d62c1b.json,20x20->20x20,Randomized semantic audit and diversity profiling
+00dbd492,training,False,upstream_fixture_verified,topology;count;crop,references/00dbd492.json,20x20->20x20,Randomized semantic audit and diversity profiling
+017c7c7b,training,False,upstream_fixture_verified,selection;recolour;repeat,references/017c7c7b.json,6x3->9x3,Randomized semantic audit and diversity profiling
+025d127b,training,False,upstream_fixture_verified,objects;movement;template;topology;dynamics,references/025d127b.json,10x10->10x10,Randomized semantic audit and diversity profiling
+03560426,training,False,upstream_fixture_verified,template;order;crop,references/03560426.json,10x10->10x10,Randomized semantic audit and diversity profiling
+045e512c,training,False,upstream_fixture_verified,repeat;template;rays,references/045e512c.json,21x21->21x21,Randomized semantic audit and diversity profiling
+0520fde7,training,False,upstream_fixture_verified,panels;selection;template;count;boolean;crop,references/0520fde7.json,3x7->3x3,Randomized semantic audit and diversity profiling
+05269061,training,False,upstream_fixture_verified,movement;repeat,references/05269061.json,7x7->7x7,Randomized semantic audit and diversity profiling
+05a7bcf2,training,False,upstream_fixture_verified,panels;recolour;rigid;movement;rays;dynamics;count,references/05a7bcf2.json,30x30->30x30,Randomized semantic audit and diversity profiling
+05f2a901,training,False,upstream_fixture_verified,movement;template;count;crop;layers,references/05f2a901.json,11x10->11x10,Randomized semantic audit and diversity profiling
+0607ce86,training,False,upstream_fixture_verified,selection;repeat;template;repair;count;order;boolean;layers,references/0607ce86.json,24x22->24x22,Randomized semantic audit and diversity profiling
+0692e18c,training,False,upstream_fixture_verified,repeat;template;crop;assembly,references/0692e18c.json,3x3->9x9,Randomized semantic audit and diversity profiling
+06df4c85,training,False,upstream_fixture_verified,panels;selection;movement,references/06df4c85.json,26x26->26x26,Randomized semantic audit and diversity profiling
+070dd51e,training,False,upstream_fixture_verified,objects;paths;layers,references/070dd51e.json,20x20->20x20,Randomized semantic audit and diversity profiling
+08ed6ac7,training,False,upstream_fixture_verified,selection;recolour,references/08ed6ac7.json,9x9->9x9,Randomized semantic audit and diversity profiling
+0934a4d8,evaluation,False,generator_missing,selection;rigid;movement;repair;topology;dynamics;crop,references/0934a4d8.json,30x30->9x3,"Construct valid latent inputs, independently render output, differential-test, audit ambiguity and edge cases"
+09629e4f,training,False,upstream_fixture_verified,panels;selection;template;boolean;scale,references/09629e4f.json,11x11->11x11,Randomized semantic audit and diversity profiling
+0962bcdd,training,False,upstream_fixture_verified,template,references/0962bcdd.json,12x12->12x12,Randomized semantic audit and diversity profiling
+09c534e7,training,False,generator_missing,recolour;topology;paths,references/09c534e7.json,30x30->30x30,"Construct valid latent inputs, independently render output, differential-test, audit ambiguity and edge cases"
+0a1d4ef5,training,False,upstream_fixture_verified,template;dynamics;crop;scale;layers,references/0a1d4ef5.json,30x30->4x3,Randomized semantic audit and diversity profiling
+0a2355a6,training,False,generator_missing,selection;recolour;topology;count;order;crop;layers,references/0a2355a6.json,15x17->15x17,"Construct valid latent inputs, independently render output, differential-test, audit ambiguity and edge cases"
+0a938d79,training,False,upstream_fixture_verified,repeat;rays,references/0a938d79.json,11x27->11x27,Randomized semantic audit and diversity profiling
+0b148d64,training,False,upstream_fixture_verified,selection;template;topology;count;crop,references/0b148d64.json,15x17->6x6,Randomized semantic audit and diversity profiling
+0b17323b,training,False,upstream_fixture_verified,repeat;paths,references/0b17323b.json,15x15->15x15,Randomized semantic audit and diversity profiling
+0bb8deee,training,False,upstream_fixture_verified,panels;template;order;crop,references/0bb8deee.json,14x13->6x6,Randomized semantic audit and diversity profiling
+0becf7df,training,False,upstream_fixture_verified,selection;legend;recolour,references/0becf7df.json,10x10->10x10,Randomized semantic audit and diversity profiling
+0c786b71,training,False,upstream_fixture_verified,rigid;repeat;crop;assembly,references/0c786b71.json,3x4->6x8,Randomized semantic audit and diversity profiling
+0c9aba6e,training,False,upstream_fixture_verified,panels;dynamics;count;crop,references/0c9aba6e.json,13x4->6x4,Randomized semantic audit and diversity profiling
+0ca9ddb6,training,False,upstream_fixture_verified,legend;template;count;order,references/0ca9ddb6.json,9x9->9x9,Randomized semantic audit and diversity profiling
+0d3d703e,training,False,upstream_fixture_verified,recolour;crop,references/0d3d703e.json,3x3->3x3,Randomized semantic audit and diversity profiling
+0d87d2a6,training,False,upstream_fixture_verified,recolour;topology;count,references/0d87d2a6.json,23x25->23x25,Randomized semantic audit and diversity profiling
+0e206a2e,training,False,upstream_fixture_verified,selection;legend;rigid;movement;template,references/0e206a2e.json,24x19->24x19,Randomized semantic audit and diversity profiling
+0e671a1a,training,False,upstream_fixture_verified,paths;layers,references/0e671a1a.json,13x13->13x13,Randomized semantic audit and diversity profiling
+0f63c0b9,training,False,upstream_fixture_verified,selection;rays;order,references/0f63c0b9.json,15x15->15x15,Randomized semantic audit and diversity profiling
+103eff5b,training,False,upstream_fixture_verified,legend;recolour;rigid;scale,references/103eff5b.json,16x26->16x26,Randomized semantic audit and diversity profiling
+10fcaaa3,training,False,upstream_fixture_verified,repeat;crop;assembly,references/10fcaaa3.json,6x5->12x10,Randomized semantic audit and diversity profiling
+11852cab,training,False,upstream_fixture_verified,rigid;repair;crop,references/11852cab.json,10x10->10x10,Randomized semantic audit and diversity profiling
+1190bc91,training,False,upstream_fixture_verified,objects;topology;rays,references/1190bc91.json,8x8->8x8,Randomized semantic audit and diversity profiling
+1190e5a7,training,False,upstream_fixture_verified,panels;count;crop;scale,references/1190e5a7.json,22x22->5x3,Randomized semantic audit and diversity profiling
+11dc524f,training,False,upstream_fixture_verified,rigid;movement;template;crop;layers,references/11dc524f.json,13x13->13x13,Randomized semantic audit and diversity profiling
+11e1fe23,training,False,upstream_fixture_verified,template;scale,references/11e1fe23.json,12x14->12x14,Randomized semantic audit and diversity profiling
+12422b43,training,False,upstream_fixture_verified,template,references/12422b43.json,10x7->10x7,Randomized semantic audit and diversity profiling
+12997ef3,training,False,upstream_fixture_verified,recolour;template;order;crop,references/12997ef3.json,9x11->12x3;11x11->3x12,Randomized semantic audit and diversity profiling
+12eac192,training,False,upstream_fixture_verified,objects;selection;recolour;topology,references/12eac192.json,8x8->8x8,Randomized semantic audit and diversity profiling
+135a2760,evaluation,True,generator_missing,panels;selection;rigid;movement;repeat;repair;topology;count;crop,references/135a2760.json,29x29->29x29,"Construct valid latent inputs, independently render output, differential-test, audit ambiguity and edge cases"
+136b0064,evaluation,False,generator_missing,panels;legend;paths;crop;instructions,references/136b0064.json,19x15->19x7,"Construct valid latent inputs, independently render output, differential-test, audit ambiguity and edge cases"
+13713586,training,False,upstream_fixture_verified,panels;template;order;crop;layers,references/13713586.json,19x18->19x18,Randomized semantic audit and diversity profiling
+137eaa0f,training,False,upstream_fixture_verified,movement;template;layers,references/137eaa0f.json,11x11->3x3,Randomized semantic audit and diversity profiling
+137f0df0,training,False,upstream_fixture_verified,crop,references/137f0df0.json,10x10->10x10,Randomized semantic audit and diversity profiling
+13e47133,evaluation,False,generator_missing,objects;panels;selection;layers,references/13e47133.json,30x30->30x30;30x30->30x30,"Construct valid latent inputs, independently render output, differential-test, audit ambiguity and edge cases"
+13f06aa5,training,False,upstream_fixture_verified,rays;layers,references/13f06aa5.json,15x17->15x17,Randomized semantic audit and diversity profiling
+140c817e,training,False,upstream_fixture_verified,selection;recolour;rays;dynamics,references/140c817e.json,14x14->14x14,Randomized semantic audit and diversity profiling
+142ca369,evaluation,False,generator_missing,recolour;movement;repair;paths;rays;dynamics;scale,references/142ca369.json,18x18->18x18;20x19->20x19,"Construct valid latent inputs, independently render output, differential-test, audit ambiguity and edge cases"
+14754a24,training,False,generator_missing,objects;recolour;repair;order;assembly,references/14754a24.json,19x19->19x19,"Construct valid latent inputs, independently render output, differential-test, audit ambiguity and edge cases"
+1478ab18,training,False,upstream_fixture_verified,crop,references/1478ab18.json,8x8->8x8,Randomized semantic audit and diversity profiling
+14b8e18c,training,False,upstream_fixture_verified,dynamics;count;crop,references/14b8e18c.json,10x10->10x10,Randomized semantic audit and diversity profiling
+150deff5,training,False,upstream_fixture_verified,recolour;repeat;count;order;boolean;assembly,references/150deff5.json,8x11->8x11,Randomized semantic audit and diversity profiling
+15113be4,training,False,upstream_fixture_verified,panels;legend;recolour;template;topology;boolean;scale,references/15113be4.json,23x23->23x23,Randomized semantic audit and diversity profiling
+15660dd6,training,False,upstream_fixture_verified,legend;recolour;template;topology;crop;assembly,references/15660dd6.json,25x25->7x23,Randomized semantic audit and diversity profiling
+15663ba9,training,False,upstream_fixture_verified,objects;selection;recolour;topology,references/15663ba9.json,15x16->15x16,Randomized semantic audit and diversity profiling
+15696249,training,False,upstream_fixture_verified,repeat;template;crop;instructions,references/15696249.json,3x3->9x9,Randomized semantic audit and diversity profiling
+16b78196,evaluation,False,generator_missing,selection;rigid;movement;template;count;crop;assembly,references/16b78196.json,30x30->30x30,"Construct valid latent inputs, independently render output, differential-test, audit ambiguity and edge cases"
+16de56c4,evaluation,False,generator_missing,legend;recolour;rigid;repeat;rays,references/16de56c4.json,9x21->9x21;9x21->9x21,"Construct valid latent inputs, independently render output, differential-test, audit ambiguity and edge cases"
+17829a00,training,False,generator_missing,movement;topology;boolean;layers,references/17829a00.json,16x16->16x16,"Construct valid latent inputs, independently render output, differential-test, audit ambiguity and edge cases"
+178fcbfb,training,False,upstream_fixture_verified,rays;boolean;layers,references/178fcbfb.json,12x11->12x11,Randomized semantic audit and diversity profiling
+17b80ad2,training,False,upstream_fixture_verified,topology,references/17b80ad2.json,17x17->17x17,Randomized semantic audit and diversity profiling
+17b866bd,training,False,upstream_fixture_verified,repair;dynamics;count,references/17b866bd.json,21x16->21x16;16x16->16x16,Randomized semantic audit and diversity profiling
+17cae0c1,training,False,upstream_fixture_verified,panels;legend,references/17cae0c1.json,3x9->3x9,Randomized semantic audit and diversity profiling
+1818057f,evaluation,False,generator_missing,selection;recolour;repeat;template;order;assembly;layers,references/1818057f.json,22x22->22x22,"Construct valid latent inputs, independently render output, differential-test, audit ambiguity and edge cases"
+18286ef8,training,False,upstream_fixture_verified,panels;recolour;movement;crop,references/18286ef8.json,19x19->19x19,Randomized semantic audit and diversity profiling
+182e5d0f,training,False,upstream_fixture_verified,paths,references/182e5d0f.json,14x14->14x14,Randomized semantic audit and diversity profiling
+18419cfa,training,False,generator_missing,selection;legend;rigid;template;topology;count;crop;layers,references/18419cfa.json,28x26->28x26,"Construct valid latent inputs, independently render output, differential-test, audit ambiguity and edge cases"
+18447a8d,training,False,upstream_fixture_verified,movement;count,references/18447a8d.json,17x11->17x11,Randomized semantic audit and diversity profiling
+184a9768,training,False,generator_missing,movement;repeat;template;topology;count;order;assembly,references/184a9768.json,25x26->25x26,"Construct valid latent inputs, independently render output, differential-test, audit ambiguity and edge cases"
+195ba7dc,training,False,upstream_fixture_verified,panels;template;boolean;crop,references/195ba7dc.json,5x13->5x6,Randomized semantic audit and diversity profiling
+195c6913,evaluation,False,generator_missing,legend;repeat;paths;count,references/195c6913.json,30x30->30x30;30x30->30x30,"Construct valid latent inputs, independently render output, differential-test, audit ambiguity and edge cases"
+1990f7a8,training,False,upstream_fixture_verified,objects;template;crop,references/1990f7a8.json,17x17->7x7,Randomized semantic audit and diversity profiling
+19bb5feb,training,False,upstream_fixture_verified,objects;selection;template;order;scale,references/19bb5feb.json,14x15->2x2,Randomized semantic audit and diversity profiling
+1a07d186,training,False,upstream_fixture_verified,movement,references/1a07d186.json,19x26->19x26,Randomized semantic audit and diversity profiling
+1a244afd,training,False,upstream_fixture_verified,selection;rigid;movement;template;assembly,references/1a244afd.json,16x16->16x16,Randomized semantic audit and diversity profiling
+1a2e2828,training,False,upstream_fixture_verified,panels;layers,references/1a2e2828.json,11x13->1x1,Randomized semantic audit and diversity profiling
+1a6449f1,training,False,upstream_fixture_verified,selection;topology;crop,references/1a6449f1.json,27x25->10x10,Randomized semantic audit and diversity profiling
+1acc24af,training,False,generator_missing,recolour;rigid;topology;layers,references/1acc24af.json,12x12->12x12,"Construct valid latent inputs, independently render output, differential-test, audit ambiguity and edge cases"
+1ae2feb7,evaluation,False,generator_missing,panels;repeat;template;repair;layers,references/1ae2feb7.json,10x20->10x20;8x15->8x15;8x15->8x15,"Construct valid latent inputs, independently render output, differential-test, audit ambiguity and edge cases"
+1b2d62fb,training,False,upstream_fixture_verified,panels;layers,references/1b2d62fb.json,5x7->5x3,Randomized semantic audit and diversity profiling
+1b59e163,training,False,generator_missing,objects;selection;legend;template;topology;layers,references/1b59e163.json,18x18->18x18,"Construct valid latent inputs, independently render output, differential-test, audit ambiguity and edge cases"
+1b60fb0c,training,False,upstream_fixture_verified,rigid;count,references/1b60fb0c.json,10x10->10x10,Randomized semantic audit and diversity profiling
+1b8318e3,training,False,upstream_fixture_verified,movement;topology;paths;count;crop;scale,references/1b8318e3.json,15x15->15x15,Randomized semantic audit and diversity profiling
+1be83260,training,False,upstream_fixture_verified,selection;repeat;template;topology;crop,references/1be83260.json,16x25->11x23;27x27->23x23,Randomized semantic audit and diversity profiling
+1bfc4729,training,False,upstream_fixture_verified,rigid,references/1bfc4729.json,10x10->10x10,Randomized semantic audit and diversity profiling
+1c02dbbe,training,False,upstream_fixture_verified,selection;crop;layers,references/1c02dbbe.json,15x15->15x15,Randomized semantic audit and diversity profiling
+1c0d0a4b,training,False,upstream_fixture_verified,repeat;count;order,references/1c0d0a4b.json,13x13->13x13,Randomized semantic audit and diversity profiling
+1c56ad9f,training,False,upstream_fixture_verified,movement;count,references/1c56ad9f.json,15x15->15x15,Randomized semantic audit and diversity profiling
+1c786137,training,False,upstream_fixture_verified,selection;topology;crop,references/1c786137.json,17x16->8x9,Randomized semantic audit and diversity profiling
+1caeab9d,training,False,upstream_fixture_verified,objects;selection;movement;crop,references/1caeab9d.json,10x10->10x10,Randomized semantic audit and diversity profiling
+1cf80156,training,False,upstream_fixture_verified,recolour;rigid;topology;crop,references/1cf80156.json,12x12->4x6,Randomized semantic audit and diversity profiling
+1d0a4b61,training,False,upstream_fixture_verified,selection;movement;repeat;template;repair;topology;layers,references/1d0a4b61.json,25x25->25x25,Randomized semantic audit and diversity profiling
+1d398264,training,False,upstream_fixture_verified,rays;crop,references/1d398264.json,16x16->16x16;12x12->12x12,Randomized semantic audit and diversity profiling
+1d61978c,training,False,upstream_fixture_verified,selection;recolour;count,references/1d61978c.json,16x16->16x16,Randomized semantic audit and diversity profiling
+1da012fc,training,False,generator_missing,objects;selection;recolour;count;crop;scale,references/1da012fc.json,19x25->19x25,"Construct valid latent inputs, independently render output, differential-test, audit ambiguity and edge cases"
+1e0a9b12,training,False,upstream_fixture_verified,dynamics;count;order,references/1e0a9b12.json,5x5->5x5,Randomized semantic audit and diversity profiling
+1e32b0e9,training,False,upstream_fixture_verified,panels;template;dynamics;boolean,references/1e32b0e9.json,17x17->17x17,Randomized semantic audit and diversity profiling
+1e5d6875,training,False,upstream_fixture_verified,selection;recolour;movement;template;dynamics;crop;layers,references/1e5d6875.json,16x16->16x16,Randomized semantic audit and diversity profiling
+1e81d6f9,training,False,upstream_fixture_verified,objects;selection;legend;crop,references/1e81d6f9.json,15x15->15x15,Randomized semantic audit and diversity profiling
+1efba499,training,False,upstream_fixture_verified,selection,references/1efba499.json,12x14->12x14,Randomized semantic audit and diversity profiling
+1f0c79e5,training,False,upstream_fixture_verified,recolour;rays,references/1f0c79e5.json,9x9->9x9,Randomized semantic audit and diversity profiling
+1f642eb9,training,False,upstream_fixture_verified,recolour;template;rays;crop,references/1f642eb9.json,10x10->10x10,Randomized semantic audit and diversity profiling
+1f85a75f,training,False,upstream_fixture_verified,objects;selection;template;topology;crop,references/1f85a75f.json,30x30->4x4,Randomized semantic audit and diversity profiling
+1f876c06,training,False,upstream_fixture_verified,paths,references/1f876c06.json,10x10->10x10,Randomized semantic audit and diversity profiling
+1fad071e,training,False,upstream_fixture_verified,movement;repeat;count;scale,references/1fad071e.json,9x9->1x5,Randomized semantic audit and diversity profiling
+2013d3e2,training,False,upstream_fixture_verified,rigid;repeat;crop,references/2013d3e2.json,10x10->3x3,Randomized semantic audit and diversity profiling
+20270e3b,evaluation,False,generator_missing,objects;selection;movement;template;count;boolean;crop;assembly;layers,references/20270e3b.json,11x10->5x10;11x5->8x8,"Construct valid latent inputs, independently render output, differential-test, audit ambiguity and edge cases"
+2037f2c7,training,False,generator_missing,objects;selection;movement;template;repair;count;crop;layers,references/2037f2c7.json,24x25->2x10,"Construct valid latent inputs, independently render output, differential-test, audit ambiguity and edge cases"
+2072aba6,training,False,upstream_fixture_verified,selection;template;crop,references/2072aba6.json,3x3->6x6,Randomized semantic audit and diversity profiling
+20818e16,training,False,upstream_fixture_verified,selection;template;dynamics;order;crop;layers,references/20818e16.json,16x16->6x10,Randomized semantic audit and diversity profiling
+20981f0e,training,False,upstream_fixture_verified,selection;movement;template;topology,references/20981f0e.json,17x13->17x13,Randomized semantic audit and diversity profiling
+20a9e565,evaluation,False,generator_missing,rigid;movement;repeat;dynamics;crop,references/20a9e565.json,30x30->2x21;29x29->8x17,"Construct valid latent inputs, independently render output, differential-test, audit ambiguity and edge cases"
+20fb2937,training,False,upstream_fixture_verified,panels;legend;template;crop,references/20fb2937.json,20x11->13x11,Randomized semantic audit and diversity profiling
+212895b5,training,False,upstream_fixture_verified,rigid;repeat;paths;rays,references/212895b5.json,21x23->21x23,Randomized semantic audit and diversity profiling
+21897d95,evaluation,True,generator_missing,rigid;layers;instructions,references/21897d95.json,30x30->30x30;24x24->24x24,"Construct valid latent inputs, independently render output, differential-test, audit ambiguity and edge cases"
+21f83797,training,False,upstream_fixture_verified,topology;count;order;crop,references/21f83797.json,13x13->13x13,Randomized semantic audit and diversity profiling
+2204b7a8,training,False,upstream_fixture_verified,recolour,references/2204b7a8.json,10x10->10x10,Randomized semantic audit and diversity profiling
+22168020,training,False,upstream_fixture_verified,,references/22168020.json,10x10->10x10,Randomized semantic audit and diversity profiling
+221dfab4,evaluation,False,generator_missing,recolour;repeat,references/221dfab4.json,25x25->25x25;30x30->30x30,"Construct valid latent inputs, independently render output, differential-test, audit ambiguity and edge cases"
+22208ba4,training,False,upstream_fixture_verified,movement;topology;count;boolean;layers,references/22208ba4.json,7x30->7x30,Randomized semantic audit and diversity profiling
+22233c11,training,False,upstream_fixture_verified,selection;dynamics,references/22233c11.json,10x10->10x10,Randomized semantic audit and diversity profiling
+22425bda,training,False,upstream_fixture_verified,selection;repair;dynamics;count;assembly;layers,references/22425bda.json,16x16->1x6,Randomized semantic audit and diversity profiling
+22806e14,training,False,upstream_fixture_verified,legend;recolour,references/22806e14.json,16x16->16x16,Randomized semantic audit and diversity profiling
+2281f1f4,training,False,upstream_fixture_verified,,references/2281f1f4.json,10x10->10x10,Randomized semantic audit and diversity profiling
+228f6490,training,False,upstream_fixture_verified,objects;movement;template;topology;dynamics;order,references/228f6490.json,10x10->10x10,Randomized semantic audit and diversity profiling
+22a4bbc2,training,False,upstream_fixture_verified,recolour;repeat;count,references/22a4bbc2.json,22x4->22x4,Randomized semantic audit and diversity profiling
+22eb0ac0,training,False,upstream_fixture_verified,paths,references/22eb0ac0.json,10x10->10x10,Randomized semantic audit and diversity profiling
+230f2e48,training,False,upstream_fixture_verified,rigid,references/230f2e48.json,16x16->16x16,Randomized semantic audit and diversity profiling
+234bbc79,training,False,upstream_fixture_verified,objects;recolour;repeat;crop;assembly,references/234bbc79.json,3x11->3x8,Randomized semantic audit and diversity profiling
+23581191,training,False,upstream_fixture_verified,rays;count,references/23581191.json,9x9->9x9,Randomized semantic audit and diversity profiling
+239be575,training,False,upstream_fixture_verified,objects;topology;paths,references/239be575.json,8x6->1x1;8x6->1x1,Randomized semantic audit and diversity profiling
+23b5c85d,training,False,upstream_fixture_verified,selection;count;crop;layers,references/23b5c85d.json,18x18->3x3,Randomized semantic audit and diversity profiling
+247ef758,evaluation,False,generator_missing,panels;legend;template;topology;order;layers,references/247ef758.json,15x20->15x20;12x18->12x18,"Construct valid latent inputs, independently render output, differential-test, audit ambiguity and edge cases"
+25094a63,training,False,upstream_fixture_verified,selection;recolour,references/25094a63.json,30x30->30x30,Randomized semantic audit and diversity profiling
+252143c9,training,False,upstream_fixture_verified,legend,references/252143c9.json,13x13->13x13,Randomized semantic audit and diversity profiling
+253bf280,training,False,upstream_fixture_verified,movement,references/253bf280.json,12x13->12x13,Randomized semantic audit and diversity profiling
+2546ccf6,training,False,upstream_fixture_verified,panels;rigid;template,references/2546ccf6.json,26x23->26x23,Randomized semantic audit and diversity profiling
+256b0a75,training,False,upstream_fixture_verified,topology;rays;assembly,references/256b0a75.json,25x26->25x26,Randomized semantic audit and diversity profiling
+25c199f5,training,False,generator_missing,panels;movement;template;dynamics;layers,references/25c199f5.json,5x17->5x5;5x17->5x5,"Construct valid latent inputs, independently render output, differential-test, audit ambiguity and edge cases"
+25d487eb,training,False,upstream_fixture_verified,selection;rays,references/25d487eb.json,16x11->16x11,Randomized semantic audit and diversity profiling
+25d8a9c8,training,False,upstream_fixture_verified,selection,references/25d8a9c8.json,3x3->3x3,Randomized semantic audit and diversity profiling
+25e02866,training,False,upstream_fixture_verified,panels;selection;template;crop;layers,references/25e02866.json,18x18->6x6,Randomized semantic audit and diversity profiling
+25ff71a9,training,False,upstream_fixture_verified,selection;movement;template;dynamics,references/25ff71a9.json,3x3->3x3;3x3->3x3,Randomized semantic audit and diversity profiling
+2601afb7,training,False,upstream_fixture_verified,rigid;movement;order,references/2601afb7.json,11x11->11x11,Randomized semantic audit and diversity profiling
+264363fd,training,False,upstream_fixture_verified,selection;legend;template;rays;count;crop,references/264363fd.json,30x30->30x30,Randomized semantic audit and diversity profiling
+2685904e,training,False,upstream_fixture_verified,panels;template;count,references/2685904e.json,10x10->10x10,Randomized semantic audit and diversity profiling
+2697da3f,training,False,upstream_fixture_verified,rigid;template;crop;layers,references/2697da3f.json,8x10->17x17,Randomized semantic audit and diversity profiling
+269e22fb,evaluation,False,generator_missing,selection;recolour;rigid;template;repair;crop,references/269e22fb.json,10x10->20x20;11x10->20x20,"Construct valid latent inputs, independently render output, differential-test, audit ambiguity and edge cases"
+271d71e2,evaluation,False,generator_missing,recolour;rigid;movement;template;topology;dynamics;count,references/271d71e2.json,26x26->26x26,"Construct valid latent inputs, independently render output, differential-test, audit ambiguity and edge cases"
+272f95fa,training,False,upstream_fixture_verified,panels;legend,references/272f95fa.json,17x15->17x15,Randomized semantic audit and diversity profiling
+2753e76c,training,False,upstream_fixture_verified,selection;movement;count;order;crop,references/2753e76c.json,16x16->3x5,Randomized semantic audit and diversity profiling
+278e5215,training,False,upstream_fixture_verified,legend;template;topology;crop,references/278e5215.json,18x18->7x10,Randomized semantic audit and diversity profiling
+27a28665,training,False,upstream_fixture_verified,selection;legend,references/27a28665.json,3x3->1x1;3x3->1x1;3x3->1x1,Randomized semantic audit and diversity profiling
+27a77e38,training,False,upstream_fixture_verified,panels;selection;template,references/27a77e38.json,9x9->9x9,Randomized semantic audit and diversity profiling
+27f8ce4f,training,False,upstream_fixture_verified,selection;repeat;template;crop;scale,references/27f8ce4f.json,3x3->9x9,Randomized semantic audit and diversity profiling
+281123b4,training,False,upstream_fixture_verified,panels;count;layers,references/281123b4.json,4x19->4x4,Randomized semantic audit and diversity profiling
+28a6681f,evaluation,False,generator_missing,topology;dynamics,references/28a6681f.json,10x10->10x10,"Construct valid latent inputs, independently render output, differential-test, audit ambiguity and edge cases"
+28bf18c6,training,False,upstream_fixture_verified,objects;repeat;template;crop,references/28bf18c6.json,8x8->3x6,Randomized semantic audit and diversity profiling
+28e73c20,training,False,upstream_fixture_verified,selection;paths,references/28e73c20.json,18x18->18x18,Randomized semantic audit and diversity profiling
+291dc1e1,evaluation,False,generator_missing,selection;rigid;count;order;crop,references/291dc1e1.json,28x8->18x8,"Construct valid latent inputs, independently render output, differential-test, audit ambiguity and edge cases"
+292dd178,training,False,upstream_fixture_verified,topology;rays;crop,references/292dd178.json,11x15->11x15,Randomized semantic audit and diversity profiling
+29623171,training,False,upstream_fixture_verified,panels;count,references/29623171.json,11x11->11x11,Randomized semantic audit and diversity profiling
+29700607,training,False,upstream_fixture_verified,layers,references/29700607.json,11x11->11x11,Randomized semantic audit and diversity profiling
+29c11459,training,False,upstream_fixture_verified,rays,references/29c11459.json,5x11->5x11,Randomized semantic audit and diversity profiling
+2a28add5,training,False,upstream_fixture_verified,movement;template;dynamics;count,references/2a28add5.json,10x10->10x10,Randomized semantic audit and diversity profiling
+2a5f8217,training,False,upstream_fixture_verified,selection;recolour;template;crop,references/2a5f8217.json,13x13->13x13,Randomized semantic audit and diversity profiling
+2b01abd0,training,False,upstream_fixture_verified,panels;recolour;rigid,references/2b01abd0.json,14x16->14x16,Randomized semantic audit and diversity profiling
+2b83f449,evaluation,False,generator_missing,rigid;repeat;paths;count,references/2b83f449.json,19x17->19x17,"Construct valid latent inputs, independently render output, differential-test, audit ambiguity and edge cases"
+2b9ef948,training,False,upstream_fixture_verified,objects;selection;template;paths;rays,references/2b9ef948.json,12x13->12x13;25x20->25x20,Randomized semantic audit and diversity profiling
+2ba387bc,evaluation,True,generator_missing,template;topology;count;order;crop,references/2ba387bc.json,24x19->16x8,"Construct valid latent inputs, independently render output, differential-test, audit ambiguity and edge cases"
+2bcee788,training,False,upstream_fixture_verified,recolour;rigid;template;crop,references/2bcee788.json,10x10->10x10,Randomized semantic audit and diversity profiling
+2bee17df,training,False,upstream_fixture_verified,topology;crop,references/2bee17df.json,14x14->14x14,Randomized semantic audit and diversity profiling
+2c0b0aff,training,False,upstream_fixture_verified,panels;recolour;count;crop,references/2c0b0aff.json,22x23->8x10,Randomized semantic audit and diversity profiling
+2c181942,evaluation,False,generator_missing,rigid;movement;template;count,references/2c181942.json,24x26->24x26,"Construct valid latent inputs, independently render output, differential-test, audit ambiguity and edge cases"
+2c608aff,training,False,upstream_fixture_verified,selection;movement;paths;dynamics,references/2c608aff.json,19x21->19x21,Randomized semantic audit and diversity profiling
+2c737e39,training,False,upstream_fixture_verified,objects;selection;movement;template;layers,references/2c737e39.json,11x10->11x10,Randomized semantic audit and diversity profiling
+2ccd9fef,training,False,generator_missing,panels;selection;movement;repeat;template;order;boolean;crop;analogy,references/2ccd9fef.json,11x25->11x5;11x27->11x9,"Construct valid latent inputs, independently render output, differential-test, audit ambiguity and edge cases"
+2d0172a1,evaluation,False,generator_missing,objects;selection;movement;topology;crop;layers,references/2d0172a1.json,25x25->9x13;25x25->14x11,"Construct valid latent inputs, independently render output, differential-test, audit ambiguity and edge cases"
+2dc579da,training,False,upstream_fixture_verified,panels;dynamics;boolean;crop,references/2dc579da.json,13x13->6x6,Randomized semantic audit and diversity profiling
+2dd70a9a,training,False,upstream_fixture_verified,selection;movement;paths,references/2dd70a9a.json,13x13->13x13,Randomized semantic audit and diversity profiling
+2de01db2,training,False,generator_missing,selection;repeat,references/2de01db2.json,3x10->3x10,"Construct valid latent inputs, independently render output, differential-test, audit ambiguity and edge cases"
+2dee498d,training,False,upstream_fixture_verified,rigid;repeat;crop,references/2dee498d.json,5x15->5x5,Randomized semantic audit and diversity profiling
+2e65ae53,training,False,upstream_fixture_verified,selection;legend;crop,references/2e65ae53.json,28x28->28x28,Randomized semantic audit and diversity profiling
+2f0c5170,training,False,upstream_fixture_verified,objects;movement;template;topology;count;crop,references/2f0c5170.json,19x19->7x9,Randomized semantic audit and diversity profiling
+2f767503,training,False,generator_missing,objects;rays,references/2f767503.json,9x11->9x11,"Construct valid latent inputs, independently render output, differential-test, audit ambiguity and edge cases"
+2faf500b,training,False,upstream_fixture_verified,objects;movement;repeat;dynamics;count,references/2faf500b.json,19x19->19x19,Randomized semantic audit and diversity profiling
+305b1341,training,False,upstream_fixture_verified,legend;repair;crop;layers,references/305b1341.json,20x20->20x20,Randomized semantic audit and diversity profiling
+30f42897,training,False,upstream_fixture_verified,repeat;template;count,references/30f42897.json,3x14->3x14,Randomized semantic audit and diversity profiling
+310f3251,training,False,upstream_fixture_verified,movement;repeat;template;crop;assembly,references/310f3251.json,4x4->12x12,Randomized semantic audit and diversity profiling
+3194b014,training,False,generator_missing,objects;selection;count;crop;layers,references/3194b014.json,20x20->3x3,"Construct valid latent inputs, independently render output, differential-test, audit ambiguity and edge cases"
+319f2597,training,False,upstream_fixture_verified,,references/319f2597.json,20x20->20x20,Randomized semantic audit and diversity profiling
+31aa019c,training,False,upstream_fixture_verified,count,references/31aa019c.json,10x10->10x10,Randomized semantic audit and diversity profiling
+31adaf00,training,False,upstream_fixture_verified,selection;template;topology;order;layers,references/31adaf00.json,10x10->10x10,Randomized semantic audit and diversity profiling
+31d5ba1a,training,False,upstream_fixture_verified,panels;boolean;crop;layers,references/31d5ba1a.json,6x5->3x5;6x5->3x5,Randomized semantic audit and diversity profiling
+31f7f899,evaluation,False,generator_missing,panels;selection;rigid;movement;order,references/31f7f899.json,17x17->17x17,"Construct valid latent inputs, independently render output, differential-test, audit ambiguity and edge cases"
+320afe60,training,False,generator_missing,movement;template;topology;crop;layers,references/320afe60.json,22x26->22x26;22x24->22x24,"Construct valid latent inputs, independently render output, differential-test, audit ambiguity and edge cases"
+321b1fc6,training,False,upstream_fixture_verified,movement;template;crop;layers,references/321b1fc6.json,10x10->10x10,Randomized semantic audit and diversity profiling
+32597951,training,False,upstream_fixture_verified,recolour;repeat;dynamics;crop,references/32597951.json,17x17->17x17,Randomized semantic audit and diversity profiling
+32e9702f,training,False,upstream_fixture_verified,selection;recolour;movement;template;dynamics;count;crop,references/32e9702f.json,10x10->10x10,Randomized semantic audit and diversity profiling
+33067df9,training,False,upstream_fixture_verified,crop,references/33067df9.json,7x7->26x26,Randomized semantic audit and diversity profiling
+332202d5,training,False,upstream_fixture_verified,selection;recolour;dynamics,references/332202d5.json,16x16->16x16,Randomized semantic audit and diversity profiling
+332efdb3,training,False,upstream_fixture_verified,repeat;topology;count,references/332efdb3.json,11x11->11x11,Randomized semantic audit and diversity profiling
+332f06d7,evaluation,False,generator_missing,movement;template;topology;paths,references/332f06d7.json,20x20->20x20,"Construct valid latent inputs, independently render output, differential-test, audit ambiguity and edge cases"
+3345333e,training,False,upstream_fixture_verified,rigid;repair;layers,references/3345333e.json,16x16->16x16,Randomized semantic audit and diversity profiling
+337b420f,training,False,upstream_fixture_verified,panels;selection;movement;template;dynamics;crop;assembly;layers,references/337b420f.json,5x17->5x5;5x17->5x5,Randomized semantic audit and diversity profiling
+3391f8c0,training,False,generator_missing,selection;repeat;template;order;crop;layers,references/3391f8c0.json,11x14->11x14,"Construct valid latent inputs, independently render output, differential-test, audit ambiguity and edge cases"
+33b52de3,training,False,upstream_fixture_verified,selection;recolour;order;crop;scale,references/33b52de3.json,23x23->23x23,Randomized semantic audit and diversity profiling
+3428a4f5,training,False,upstream_fixture_verified,panels;selection;boolean;crop,references/3428a4f5.json,13x5->6x5;13x5->6x5,Randomized semantic audit and diversity profiling
+342ae2ed,training,False,upstream_fixture_verified,crop,references/342ae2ed.json,16x16->16x16,Randomized semantic audit and diversity profiling
+342dd610,training,False,upstream_fixture_verified,legend;movement,references/342dd610.json,16x16->16x16,Randomized semantic audit and diversity profiling
+3490cc26,training,False,upstream_fixture_verified,movement;paths,references/3490cc26.json,22x23->22x23,Randomized semantic audit and diversity profiling
+34b99a2b,training,False,upstream_fixture_verified,panels;selection;boolean;crop,references/34b99a2b.json,5x9->5x4,Randomized semantic audit and diversity profiling
+34cfa167,training,False,upstream_fixture_verified,legend;repeat,references/34cfa167.json,19x16->19x16;30x30->30x30,Randomized semantic audit and diversity profiling
+351d6448,training,False,generator_missing,panels;movement;template;rays,references/351d6448.json,15x13->3x13,"Construct valid latent inputs, independently render output, differential-test, audit ambiguity and edge cases"
+358ba94e,training,False,upstream_fixture_verified,selection;topology;count;crop,references/358ba94e.json,17x19->5x5,Randomized semantic audit and diversity profiling
+35ab12c3,evaluation,False,generator_missing,selection;movement;topology,references/35ab12c3.json,21x21->21x21,"Construct valid latent inputs, independently render output, differential-test, audit ambiguity and edge cases"
+3618c87e,training,False,upstream_fixture_verified,template;layers,references/3618c87e.json,5x5->5x5,Randomized semantic audit and diversity profiling
+363442ee,training,False,upstream_fixture_verified,panels;template;crop;layers,references/363442ee.json,9x13->9x13,Randomized semantic audit and diversity profiling
+36a08778,evaluation,False,generator_missing,dynamics;layers,references/36a08778.json,16x16->16x16;30x30->30x30,"Construct valid latent inputs, independently render output, differential-test, audit ambiguity and edge cases"
+36d67576,training,False,upstream_fixture_verified,objects;rigid;template;dynamics;layers,references/36d67576.json,14x15->14x15,Randomized semantic audit and diversity profiling
+36fdfd69,training,False,upstream_fixture_verified,recolour;repair;crop,references/36fdfd69.json,17x18->17x18,Randomized semantic audit and diversity profiling
+37ce87bb,training,False,upstream_fixture_verified,count,references/37ce87bb.json,9x15->9x15,Randomized semantic audit and diversity profiling
+37d3e8b2,training,False,upstream_fixture_verified,recolour;topology;count;crop,references/37d3e8b2.json,17x18->17x18,Randomized semantic audit and diversity profiling
+38007db0,evaluation,False,generator_missing,panels;selection;template;repair;topology,references/38007db0.json,29x29->29x8;25x25->25x7,"Construct valid latent inputs, independently render output, differential-test, audit ambiguity and edge cases"
+3906de3d,training,False,upstream_fixture_verified,movement;dynamics;count,references/3906de3d.json,10x10->10x10,Randomized semantic audit and diversity profiling
+396d80d7,training,False,generator_missing,selection;crop;layers,references/396d80d7.json,16x16->16x16,"Construct valid latent inputs, independently render output, differential-test, audit ambiguity and edge cases"
+3979b1a8,training,False,upstream_fixture_verified,repeat;crop;layers,references/3979b1a8.json,5x5->10x10,Randomized semantic audit and diversity profiling
+39a8645d,training,False,upstream_fixture_verified,objects;selection;template;count;crop,references/39a8645d.json,14x14->3x3,Randomized semantic audit and diversity profiling
+39e1d7f9,training,False,upstream_fixture_verified,objects;selection;template;dynamics;count,references/39e1d7f9.json,29x29->29x29,Randomized semantic audit and diversity profiling
+3a25b0d8,evaluation,False,generator_missing,template;topology;dynamics;crop;layers,references/3a25b0d8.json,30x30->18x13;28x28->14x11,"Construct valid latent inputs, independently render output, differential-test, audit ambiguity and edge cases"
+3a301edc,training,False,upstream_fixture_verified,selection;repair;layers,references/3a301edc.json,21x21->21x21,Randomized semantic audit and diversity profiling
+3aa6fb7a,training,False,upstream_fixture_verified,crop,references/3aa6fb7a.json,7x7->7x7,Randomized semantic audit and diversity profiling
+3ac3eb23,training,False,upstream_fixture_verified,repeat;layers,references/3ac3eb23.json,6x12->6x12,Randomized semantic audit and diversity profiling
+3ad05f52,training,False,generator_missing,objects;topology;paths;count;crop,references/3ad05f52.json,28x28->28x28,"Construct valid latent inputs, independently render output, differential-test, audit ambiguity and edge cases"
+3af2c5a8,training,False,upstream_fixture_verified,rigid;crop,references/3af2c5a8.json,3x4->6x8,Randomized semantic audit and diversity profiling
+3b4c2228,training,False,upstream_fixture_verified,count;crop,references/3b4c2228.json,8x8->3x3;8x5->3x3,Randomized semantic audit and diversity profiling
+3bd292e8,training,False,upstream_fixture_verified,objects;repeat,references/3bd292e8.json,9x9->9x9,Randomized semantic audit and diversity profiling
+3bd67248,training,False,upstream_fixture_verified,,references/3bd67248.json,10x10->10x10,Randomized semantic audit and diversity profiling
+3bdb4ada,training,False,upstream_fixture_verified,repeat;topology,references/3bdb4ada.json,11x20->11x20,Randomized semantic audit and diversity profiling
+3befdf3e,training,False,upstream_fixture_verified,recolour;topology,references/3befdf3e.json,12x12->12x12,Randomized semantic audit and diversity profiling
+3c9b0459,training,False,upstream_fixture_verified,rigid;count,references/3c9b0459.json,3x3->3x3,Randomized semantic audit and diversity profiling
+3cd86f4f,training,False,upstream_fixture_verified,movement;template;order;crop,references/3cd86f4f.json,4x1->4x4;10x2->10x11;2x4->2x5,Randomized semantic audit and diversity profiling
+3d31c5b3,training,False,upstream_fixture_verified,crop;layers,references/3d31c5b3.json,12x6->3x6,Randomized semantic audit and diversity profiling
+3d588dc9,training,False,generator_missing,selection;recolour;movement;layers,references/3d588dc9.json,16x16->16x16,"Construct valid latent inputs, independently render output, differential-test, audit ambiguity and edge cases"
+3d6c6e23,training,False,upstream_fixture_verified,count,references/3d6c6e23.json,30x10->30x10,Randomized semantic audit and diversity profiling
+3dc255db,evaluation,False,generator_missing,rays;count;crop,references/3dc255db.json,12x13->12x13,"Construct valid latent inputs, independently render output, differential-test, audit ambiguity and edge cases"
+3de23699,training,False,upstream_fixture_verified,recolour;topology;crop,references/3de23699.json,18x19->8x10,Randomized semantic audit and diversity profiling
+3e6067c3,evaluation,False,generator_missing,legend;paths;assembly,references/3e6067c3.json,29x29->29x29;30x30->30x30,"Construct valid latent inputs, independently render output, differential-test, audit ambiguity and edge cases"
+3e980e27,training,False,upstream_fixture_verified,objects;legend;rigid;movement;template;crop,references/3e980e27.json,13x13->13x13,Randomized semantic audit and diversity profiling
+3eda0437,training,False,upstream_fixture_verified,selection;recolour;assembly,references/3eda0437.json,4x24->4x24,Randomized semantic audit and diversity profiling
+3ee1011a,training,False,upstream_fixture_verified,selection;count;order;crop;layers,references/3ee1011a.json,21x23->7x7,Randomized semantic audit and diversity profiling
+3f23242b,training,False,upstream_fixture_verified,template;dynamics;layers,references/3f23242b.json,17x19->17x19,Randomized semantic audit and diversity profiling
+3f7978a0,training,False,upstream_fixture_verified,topology;dynamics;crop,references/3f7978a0.json,14x13->10x4,Randomized semantic audit and diversity profiling
+4093f84a,training,False,upstream_fixture_verified,movement;dynamics;count,references/4093f84a.json,14x14->14x14,Randomized semantic audit and diversity profiling
+409aa875,evaluation,False,generator_missing,objects;selection;recolour;dynamics,references/409aa875.json,16x16->16x16,"Construct valid latent inputs, independently render output, differential-test, audit ambiguity and edge cases"
+40f6cd08,training,False,upstream_fixture_verified,selection;template;order;crop;layers,references/40f6cd08.json,30x30->30x30,Randomized semantic audit and diversity profiling
+412b6263,training,False,upstream_fixture_verified,rigid;repeat;template;crop,references/412b6263.json,5x10->23x7,Randomized semantic audit and diversity profiling
+414297c0,training,False,upstream_fixture_verified,template;dynamics;crop,references/414297c0.json,26x24->9x15,Randomized semantic audit and diversity profiling
+41ace6b5,training,False,upstream_fixture_verified,selection;movement;count,references/41ace6b5.json,15x15->15x15,Randomized semantic audit and diversity profiling
+41e4d17e,training,False,upstream_fixture_verified,crop,references/41e4d17e.json,15x15->15x15,Randomized semantic audit and diversity profiling
+423a55dc,training,False,generator_missing,movement;dynamics;count,references/423a55dc.json,11x13->11x13,"Construct valid latent inputs, independently render output, differential-test, audit ambiguity and edge cases"
+4258a5f9,training,False,upstream_fixture_verified,template;layers,references/4258a5f9.json,9x9->9x9,Randomized semantic audit and diversity profiling
+4290ef0e,training,False,upstream_fixture_verified,selection;rigid;dynamics;count;order;boolean;crop;layers,references/4290ef0e.json,19x19->11x11,Randomized semantic audit and diversity profiling
+42918530,training,False,upstream_fixture_verified,objects;panels;template;topology;crop,references/42918530.json,25x25->25x25,Randomized semantic audit and diversity profiling
+42a15761,training,False,upstream_fixture_verified,panels;selection;topology;count;order,references/42a15761.json,11x19->11x19,Randomized semantic audit and diversity profiling
+42a50994,training,False,upstream_fixture_verified,objects;count,references/42a50994.json,17x14->17x14,Randomized semantic audit and diversity profiling
+42f14c03,training,False,upstream_fixture_verified,objects;selection;template;crop,references/42f14c03.json,16x16->7x4,Randomized semantic audit and diversity profiling
+42f83767,training,False,upstream_fixture_verified,selection;legend;template;topology;crop;scale,references/42f83767.json,15x27->21x21;15x29->30x30,Randomized semantic audit and diversity profiling
+4347f46a,training,False,upstream_fixture_verified,selection;topology;crop,references/4347f46a.json,17x19->17x19,Randomized semantic audit and diversity profiling
+4364c1c4,training,False,upstream_fixture_verified,objects;movement;template;topology;count;crop;assembly;layers,references/4364c1c4.json,14x13->14x13,Randomized semantic audit and diversity profiling
+444801d8,training,False,upstream_fixture_verified,topology;crop;layers,references/444801d8.json,10x10->10x10,Randomized semantic audit and diversity profiling
+445eab21,training,False,upstream_fixture_verified,selection;topology;count;crop,references/445eab21.json,10x10->2x2,Randomized semantic audit and diversity profiling
+446ef5d2,evaluation,False,generator_missing,rigid;movement;repeat;template;count;order;assembly,references/446ef5d2.json,26x26->26x26;20x20->20x20,"Construct valid latent inputs, independently render output, differential-test, audit ambiguity and edge cases"
+447fd412,training,False,upstream_fixture_verified,objects;selection;template;scale,references/447fd412.json,17x21->17x21,Randomized semantic audit and diversity profiling
+44d8ac46,training,False,upstream_fixture_verified,objects;topology;count;crop,references/44d8ac46.json,12x12->12x12,Randomized semantic audit and diversity profiling
+44f52bb0,training,False,upstream_fixture_verified,rigid;order,references/44f52bb0.json,3x3->1x1;3x3->1x1,Randomized semantic audit and diversity profiling
+4522001f,training,False,upstream_fixture_verified,rigid;template;crop,references/4522001f.json,3x3->9x9,Randomized semantic audit and diversity profiling
+456873bc,training,False,upstream_fixture_verified,selection;repeat;template;repair,references/456873bc.json,19x19->19x19,Randomized semantic audit and diversity profiling
+45737921,training,False,upstream_fixture_verified,recolour,references/45737921.json,8x9->8x9,Randomized semantic audit and diversity profiling
+458e3a53,training,False,upstream_fixture_verified,panels;count,references/458e3a53.json,27x27->3x2,Randomized semantic audit and diversity profiling
+45a5af55,evaluation,False,generator_missing,crop;layers,references/45a5af55.json,14x11->26x26,"Construct valid latent inputs, independently render output, differential-test, audit ambiguity and edge cases"
+45bbe264,training,False,upstream_fixture_verified,selection;count,references/45bbe264.json,15x15->15x15,Randomized semantic audit and diversity profiling
+4612dd53,training,False,upstream_fixture_verified,dynamics;crop,references/4612dd53.json,13x13->13x13,Randomized semantic audit and diversity profiling
+46442a0e,training,False,upstream_fixture_verified,rigid;template;crop,references/46442a0e.json,3x3->6x6,Randomized semantic audit and diversity profiling
+465b7d93,training,False,upstream_fixture_verified,selection;topology,references/465b7d93.json,10x10->10x10,Randomized semantic audit and diversity profiling
+469497ad,training,False,upstream_fixture_verified,topology;rays;count;crop;scale,references/469497ad.json,5x5->25x25,Randomized semantic audit and diversity profiling
+46c35fc7,training,False,upstream_fixture_verified,objects;crop,references/46c35fc7.json,7x7->7x7,Randomized semantic audit and diversity profiling
+46f33fce,training,False,upstream_fixture_verified,template;order;crop,references/46f33fce.json,10x10->20x20,Randomized semantic audit and diversity profiling
+470c91de,training,False,upstream_fixture_verified,movement;crop;layers,references/470c91de.json,11x11->11x11,Randomized semantic audit and diversity profiling
+47c1f68c,training,False,upstream_fixture_verified,panels;recolour;rigid;crop;assembly,references/47c1f68c.json,13x13->12x12,Randomized semantic audit and diversity profiling
+48131b3c,training,False,upstream_fixture_verified,selection;recolour;repeat;crop;assembly,references/48131b3c.json,4x4->8x8,Randomized semantic audit and diversity profiling
+484b58aa,training,False,upstream_fixture_verified,objects;selection;rigid;movement;repeat;template;repair;order;assembly;layers,references/484b58aa.json,29x29->29x29,Randomized semantic audit and diversity profiling
+4852f2fa,training,False,upstream_fixture_verified,movement;repeat;template;count;crop,references/4852f2fa.json,9x9->3x12;9x9->3x6,Randomized semantic audit and diversity profiling
+48634b99,training,False,upstream_fixture_verified,objects;recolour;count,references/48634b99.json,16x16->16x16,Randomized semantic audit and diversity profiling
+48d8fb45,training,False,upstream_fixture_verified,crop,references/48d8fb45.json,10x10->3x3,Randomized semantic audit and diversity profiling
+48f8583b,training,False,upstream_fixture_verified,selection;repeat;template;count;crop;scale,references/48f8583b.json,3x3->9x9,Randomized semantic audit and diversity profiling
+4938f0c2,training,False,upstream_fixture_verified,rigid;dynamics;crop,references/4938f0c2.json,18x14->18x14,Randomized semantic audit and diversity profiling
+494ef9d7,training,False,upstream_fixture_verified,movement,references/494ef9d7.json,4x4->4x4,Randomized semantic audit and diversity profiling
+496994bd,training,False,upstream_fixture_verified,rigid;template,references/496994bd.json,10x6->10x6,Randomized semantic audit and diversity profiling
+49d1d64f,training,False,upstream_fixture_verified,crop,references/49d1d64f.json,3x2->5x4,Randomized semantic audit and diversity profiling
+4a1cacc2,training,False,upstream_fixture_verified,template;dynamics,references/4a1cacc2.json,10x10->10x10,Randomized semantic audit and diversity profiling
+4a21e3da,evaluation,False,generator_missing,movement;dynamics;crop,references/4a21e3da.json,20x20->20x20,"Construct valid latent inputs, independently render output, differential-test, audit ambiguity and edge cases"
+4acc7107,training,False,generator_missing,selection;movement;order,references/4acc7107.json,10x10->10x10,"Construct valid latent inputs, independently render output, differential-test, audit ambiguity and edge cases"
+4b6b68e5,training,False,generator_missing,topology,references/4b6b68e5.json,26x24->26x24,"Construct valid latent inputs, independently render output, differential-test, audit ambiguity and edge cases"
+4be741c5,training,False,upstream_fixture_verified,order;scale;layers,references/4be741c5.json,14x14->1x4,Randomized semantic audit and diversity profiling
+4c177718,training,False,upstream_fixture_verified,panels;legend;movement;template;crop;layers,references/4c177718.json,15x15->9x15;15x15->9x15,Randomized semantic audit and diversity profiling
+4c3d4a41,evaluation,True,generator_missing,selection;movement;template;topology;count;layers,references/4c3d4a41.json,8x20->8x20;8x20->8x20,"Construct valid latent inputs, independently render output, differential-test, audit ambiguity and edge cases"
+4c416de3,evaluation,False,generator_missing,rigid;template,references/4c416de3.json,19x22->19x22,"Construct valid latent inputs, independently render output, differential-test, audit ambiguity and edge cases"
+4c4377d9,training,False,upstream_fixture_verified,rigid;crop;layers,references/4c4377d9.json,3x4->6x4,Randomized semantic audit and diversity profiling
+4c5c2cf0,training,False,upstream_fixture_verified,rigid;dynamics;count;crop,references/4c5c2cf0.json,15x15->15x15,Randomized semantic audit and diversity profiling
+4c7dc4dd,evaluation,True,generator_missing,selection;rigid;movement;repeat;template;topology;count;assembly;layers;analogy,references/4c7dc4dd.json,30x30->5x5;30x30->6x6,"Construct valid latent inputs, independently render output, differential-test, audit ambiguity and edge cases"
+4cd1b7b2,training,False,upstream_fixture_verified,selection;topology;assembly,references/4cd1b7b2.json,4x4->4x4,Randomized semantic audit and diversity profiling
+4df5b0ae,training,False,generator_missing,selection;movement;template;order;crop,references/4df5b0ae.json,10x10->10x10,"Construct valid latent inputs, independently render output, differential-test, audit ambiguity and edge cases"
+4e34c42c,evaluation,False,generator_missing,objects;selection;movement;template;boolean;crop;assembly;layers,references/4e34c42c.json,26x20->14x19;20x20->9x19,"Construct valid latent inputs, independently render output, differential-test, audit ambiguity and edge cases"
+4e45f183,training,False,generator_missing,panels;crop;layers,references/4e45f183.json,19x19->19x19,"Construct valid latent inputs, independently render output, differential-test, audit ambiguity and edge cases"
+4e469f39,training,False,upstream_fixture_verified,topology;crop,references/4e469f39.json,10x10->10x10,Randomized semantic audit and diversity profiling
+4e7e0eb9,training,False,upstream_fixture_verified,panels;repeat,references/4e7e0eb9.json,19x29->19x29;29x29->29x29,Randomized semantic audit and diversity profiling
+4f537728,training,False,upstream_fixture_verified,selection;recolour,references/4f537728.json,20x20->20x20,Randomized semantic audit and diversity profiling
+4ff4c9da,training,False,generator_missing,recolour;rigid;template;count,references/4ff4c9da.json,27x27->27x27,"Construct valid latent inputs, independently render output, differential-test, audit ambiguity and edge cases"
+5034a0b5,training,False,upstream_fixture_verified,topology,references/5034a0b5.json,9x9->9x9,Randomized semantic audit and diversity profiling
+505fff84,training,False,generator_missing,count;order;crop,references/505fff84.json,9x14->5x5,"Construct valid latent inputs, independently render output, differential-test, audit ambiguity and edge cases"
+506d28a5,training,False,upstream_fixture_verified,panels;dynamics;boolean;crop,references/506d28a5.json,9x5->4x5,Randomized semantic audit and diversity profiling
+50846271,training,False,upstream_fixture_verified,selection;repair,references/50846271.json,19x22->19x22,Randomized semantic audit and diversity profiling
+508bd3b6,training,False,upstream_fixture_verified,rigid;paths;rays;dynamics,references/508bd3b6.json,12x12->12x12,Randomized semantic audit and diversity profiling
+50a16a69,training,False,upstream_fixture_verified,selection;movement;repeat;assembly;analogy,references/50a16a69.json,6x6->6x6,Randomized semantic audit and diversity profiling
+50aad11f,training,False,upstream_fixture_verified,recolour;order;crop,references/50aad11f.json,18x13->12x4,Randomized semantic audit and diversity profiling
+50c07299,training,False,upstream_fixture_verified,selection;count;scale,references/50c07299.json,16x16->16x16,Randomized semantic audit and diversity profiling
+50cb2852,training,False,upstream_fixture_verified,topology;crop,references/50cb2852.json,14x13->14x13,Randomized semantic audit and diversity profiling
+50f325b5,training,False,generator_missing,selection;recolour;rigid;repeat;template;layers,references/50f325b5.json,16x17->16x17,"Construct valid latent inputs, independently render output, differential-test, audit ambiguity and edge cases"
+5117e062,training,False,upstream_fixture_verified,selection;count;crop,references/5117e062.json,13x13->3x3,Randomized semantic audit and diversity profiling
+5168d44c,training,False,upstream_fixture_verified,movement;repeat;template;repair;count,references/5168d44c.json,7x17->7x17,Randomized semantic audit and diversity profiling
+516b51b7,training,False,upstream_fixture_verified,objects;selection;repeat;layers,references/516b51b7.json,15x17->15x17,Randomized semantic audit and diversity profiling
+5207a7b5,training,False,upstream_fixture_verified,,references/5207a7b5.json,15x9->15x9,Randomized semantic audit and diversity profiling
+522fdd07,training,False,upstream_fixture_verified,dynamics;crop;layers,references/522fdd07.json,16x16->16x16,Randomized semantic audit and diversity profiling
+52364a65,training,False,generator_missing,crop,references/52364a65.json,8x8->8x8,"Construct valid latent inputs, independently render output, differential-test, audit ambiguity and edge cases"
+5289ad53,training,False,upstream_fixture_verified,objects;count;order;crop,references/5289ad53.json,15x10->2x3,Randomized semantic audit and diversity profiling
+52df9849,training,False,upstream_fixture_verified,repair;crop;layers,references/52df9849.json,16x16->16x16;16x16->16x16,Randomized semantic audit and diversity profiling
+52fd389e,training,False,upstream_fixture_verified,count;crop,references/52fd389e.json,29x29->29x29,Randomized semantic audit and diversity profiling
+538b439f,training,False,upstream_fixture_verified,objects;panels;selection;rigid;count,references/538b439f.json,19x23->19x23,Randomized semantic audit and diversity profiling
+539a4f51,training,False,upstream_fixture_verified,repeat;crop;layers,references/539a4f51.json,5x5->10x10,Randomized semantic audit and diversity profiling
+53b68214,training,False,upstream_fixture_verified,selection;movement;repeat;dynamics;crop,references/53b68214.json,5x10->10x10;8x10->10x10,Randomized semantic audit and diversity profiling
+53fb4810,evaluation,False,generator_missing,repeat;rays;layers,references/53fb4810.json,25x18->25x18,"Construct valid latent inputs, independently render output, differential-test, audit ambiguity and edge cases"
+543a7ed5,training,False,upstream_fixture_verified,topology;crop;layers,references/543a7ed5.json,15x15->15x15,Randomized semantic audit and diversity profiling
+54d82841,training,False,upstream_fixture_verified,crop,references/54d82841.json,7x11->7x11,Randomized semantic audit and diversity profiling
+54d9e175,training,False,upstream_fixture_verified,panels,references/54d9e175.json,7x11->7x11,Randomized semantic audit and diversity profiling
+54db823b,training,False,upstream_fixture_verified,objects;selection;count,references/54db823b.json,15x15->15x15,Randomized semantic audit and diversity profiling
+54dc2872,training,False,generator_missing,movement,references/54dc2872.json,12x13->12x13,"Construct valid latent inputs, independently render output, differential-test, audit ambiguity and edge cases"
+55059096,training,False,upstream_fixture_verified,movement;count;crop,references/55059096.json,17x13->17x13,Randomized semantic audit and diversity profiling
+551d5bf1,training,False,upstream_fixture_verified,repair;topology;rays;crop,references/551d5bf1.json,26x26->26x26,Randomized semantic audit and diversity profiling
+5521c0d9,training,False,upstream_fixture_verified,movement;count;crop;layers,references/5521c0d9.json,15x15->15x15,Randomized semantic audit and diversity profiling
+5545f144,evaluation,False,generator_missing,panels;rigid;template;paths;analogy,references/5545f144.json,15x15->15x15,"Construct valid latent inputs, independently render output, differential-test, audit ambiguity and edge cases"
+5582e5ca,training,False,upstream_fixture_verified,selection;topology;count,references/5582e5ca.json,3x3->3x3,Randomized semantic audit and diversity profiling
+5587a8d0,training,False,generator_missing,selection;count;order;crop;layers,references/5587a8d0.json,8x8->11x11,"Construct valid latent inputs, independently render output, differential-test, audit ambiguity and edge cases"
+5614dbcf,training,False,upstream_fixture_verified,crop;scale,references/5614dbcf.json,9x9->3x3,Randomized semantic audit and diversity profiling
+5623160b,training,False,generator_missing,movement;dynamics,references/5623160b.json,16x16->16x16,"Construct valid latent inputs, independently render output, differential-test, audit ambiguity and edge cases"
+56dc2b01,training,False,upstream_fixture_verified,movement;count;crop,references/56dc2b01.json,4x18->4x18,Randomized semantic audit and diversity profiling
+56ff96f3,training,False,upstream_fixture_verified,crop,references/56ff96f3.json,9x8->9x8,Randomized semantic audit and diversity profiling
+5751f35e,training,False,upstream_fixture_verified,selection;repair;crop;layers,references/5751f35e.json,12x12->12x12,Randomized semantic audit and diversity profiling
+575b1a71,training,False,upstream_fixture_verified,selection;recolour;order,references/575b1a71.json,10x10->10x10,Randomized semantic audit and diversity profiling
+5783df64,training,False,upstream_fixture_verified,crop,references/5783df64.json,9x9->3x3,Randomized semantic audit and diversity profiling
+5792cb4d,training,False,upstream_fixture_verified,objects;paths,references/5792cb4d.json,10x10->10x10,Randomized semantic audit and diversity profiling
+57aa92db,training,False,upstream_fixture_verified,recolour;template;count;scale,references/57aa92db.json,19x30->19x30,Randomized semantic audit and diversity profiling
+57edb29d,training,False,upstream_fixture_verified,rigid;template;layers,references/57edb29d.json,28x28->9x5,Randomized semantic audit and diversity profiling
+581f7754,evaluation,False,generator_missing,selection;legend;recolour;movement;topology;dynamics;count;order;layers,references/581f7754.json,14x20->14x20;11x22->11x22,"Construct valid latent inputs, independently render output, differential-test, audit ambiguity and edge cases"
+5833af48,training,False,generator_missing,objects;selection;template;count;crop;scale,references/5833af48.json,19x27->12x24,"Construct valid latent inputs, independently render output, differential-test, audit ambiguity and edge cases"
+58490d8a,evaluation,False,generator_missing,objects;panels;legend;template;count;crop,references/58490d8a.json,22x25->9x11,"Construct valid latent inputs, independently render output, differential-test, audit ambiguity and edge cases"
+58743b76,training,False,upstream_fixture_verified,legend;recolour;crop;scale,references/58743b76.json,14x14->14x14,Randomized semantic audit and diversity profiling
+58c02a16,training,False,upstream_fixture_verified,selection;repeat;template;assembly,references/58c02a16.json,16x16->16x16,Randomized semantic audit and diversity profiling
+58e15b12,training,False,upstream_fixture_verified,dynamics;layers,references/58e15b12.json,24x20->24x20,Randomized semantic audit and diversity profiling
+58f5dbd5,evaluation,False,generator_missing,legend;template;topology;crop;instructions,references/58f5dbd5.json,19x23->19x13,"Construct valid latent inputs, independently render output, differential-test, audit ambiguity and edge cases"
+59341089,training,False,upstream_fixture_verified,rigid;template;crop,references/59341089.json,3x3->3x12,Randomized semantic audit and diversity profiling
+5961cc34,evaluation,False,generator_missing,recolour;rays;crop;layers,references/5961cc34.json,27x27->27x27,"Construct valid latent inputs, independently render output, differential-test, audit ambiguity and edge cases"
+5a5a2103,training,False,upstream_fixture_verified,panels;recolour;template,references/5a5a2103.json,24x24->24x24,Randomized semantic audit and diversity profiling
+5a719d11,training,False,generator_missing,panels;recolour,references/5a719d11.json,30x16->30x16,"Construct valid latent inputs, independently render output, differential-test, audit ambiguity and edge cases"
+5ad4f10b,training,False,upstream_fixture_verified,objects;selection;count;crop;scale;assembly,references/5ad4f10b.json,22x26->3x3,Randomized semantic audit and diversity profiling
+5ad8a7c0,training,False,upstream_fixture_verified,selection;rigid,references/5ad8a7c0.json,4x6->4x6,Randomized semantic audit and diversity profiling
+5adee1b2,training,False,generator_missing,objects;legend;template;topology;crop,references/5adee1b2.json,26x26->26x26,"Construct valid latent inputs, independently render output, differential-test, audit ambiguity and edge cases"
+5af49b42,training,False,upstream_fixture_verified,movement;template;dynamics,references/5af49b42.json,17x18->17x18,Randomized semantic audit and diversity profiling
+5b37cb25,training,False,upstream_fixture_verified,objects;template;crop,references/5b37cb25.json,30x30->30x30,Randomized semantic audit and diversity profiling
+5b526a93,training,False,upstream_fixture_verified,template,references/5b526a93.json,21x30->21x30,Randomized semantic audit and diversity profiling
+5b692c0f,training,False,generator_missing,selection;rigid;repair;layers,references/5b692c0f.json,24x28->24x28,"Construct valid latent inputs, independently render output, differential-test, audit ambiguity and edge cases"
+5b6cbef5,training,False,upstream_fixture_verified,selection;template;crop,references/5b6cbef5.json,4x4->16x16,Randomized semantic audit and diversity profiling
+5bd6f4ac,training,False,upstream_fixture_verified,crop,references/5bd6f4ac.json,9x9->3x3,Randomized semantic audit and diversity profiling
+5c0a986e,training,False,upstream_fixture_verified,rays,references/5c0a986e.json,10x10->10x10,Randomized semantic audit and diversity profiling
+5c2c9af4,training,False,upstream_fixture_verified,template;dynamics;layers,references/5c2c9af4.json,28x28->28x28,Randomized semantic audit and diversity profiling
+5d2a5c43,training,False,upstream_fixture_verified,panels;boolean;crop,references/5d2a5c43.json,6x9->6x4;6x9->6x4,Randomized semantic audit and diversity profiling
+5d588b4d,training,False,upstream_fixture_verified,dynamics;order;crop,references/5d588b4d.json,13x16->5x16;7x10->7x10,Randomized semantic audit and diversity profiling
+5daaa586,training,False,upstream_fixture_verified,selection;topology;rays;count;crop,references/5daaa586.json,16x15->12x10,Randomized semantic audit and diversity profiling
+5dbc8537,evaluation,False,generator_missing,objects;selection;repeat;template;topology;order;crop;assembly;layers,references/5dbc8537.json,25x25->10x25;20x20->20x8,"Construct valid latent inputs, independently render output, differential-test, audit ambiguity and edge cases"
+5e6bbc0b,training,False,upstream_fixture_verified,rigid;movement;dynamics;count;assembly,references/5e6bbc0b.json,5x5->5x5,Randomized semantic audit and diversity profiling
+5ecac7f7,training,False,upstream_fixture_verified,panels;template;order,references/5ecac7f7.json,5x17->5x5;5x17->5x5;6x20->6x6,Randomized semantic audit and diversity profiling
+5ffb2104,training,False,upstream_fixture_verified,objects;movement;paths;dynamics;count;order,references/5ffb2104.json,10x10->10x10,Randomized semantic audit and diversity profiling
+60a26a3e,training,False,upstream_fixture_verified,movement;paths;order,references/60a26a3e.json,9x15->9x15,Randomized semantic audit and diversity profiling
+60b61512,training,False,upstream_fixture_verified,objects;topology;count;crop,references/60b61512.json,9x9->9x9,Randomized semantic audit and diversity profiling
+60c09cac,training,False,upstream_fixture_verified,recolour;template;crop;scale,references/60c09cac.json,5x5->10x10,Randomized semantic audit and diversity profiling
+60d73be6,training,False,upstream_fixture_verified,panels;rigid;dynamics;layers,references/60d73be6.json,11x17->11x17,Randomized semantic audit and diversity profiling
+6150a2bd,training,False,upstream_fixture_verified,rigid,references/6150a2bd.json,3x3->3x3,Randomized semantic audit and diversity profiling
+6165ea8f,training,False,generator_missing,selection;legend;rigid;count;order;crop,references/6165ea8f.json,25x21->23x23;22x23->20x20,"Construct valid latent inputs, independently render output, differential-test, audit ambiguity and edge cases"
+623ea044,training,False,upstream_fixture_verified,rays,references/623ea044.json,17x17->17x17,Randomized semantic audit and diversity profiling
+62593bfd,evaluation,True,generator_missing,objects;selection;movement;template;count,references/62593bfd.json,25x25->25x25;19x28->19x28,"Construct valid latent inputs, independently render output, differential-test, audit ambiguity and edge cases"
+626c0bcc,training,False,upstream_fixture_verified,legend;recolour;repeat;dynamics;count;order;assembly,references/626c0bcc.json,7x7->7x7,Randomized semantic audit and diversity profiling
+62ab2642,training,False,upstream_fixture_verified,objects;selection;recolour;dynamics,references/62ab2642.json,5x12->5x12,Randomized semantic audit and diversity profiling
+62b74c02,training,False,upstream_fixture_verified,template,references/62b74c02.json,4x14->4x14,Randomized semantic audit and diversity profiling
+62c24649,training,False,upstream_fixture_verified,rigid;crop,references/62c24649.json,3x3->6x6,Randomized semantic audit and diversity profiling
+6350f1f4,training,False,generator_missing,panels;selection;template;repair;count,references/6350f1f4.json,19x19->19x19,"Construct valid latent inputs, independently render output, differential-test, audit ambiguity and edge cases"
+63613498,training,False,upstream_fixture_verified,recolour;rigid;movement;topology,references/63613498.json,10x10->10x10,Randomized semantic audit and diversity profiling
+639f5a19,training,False,upstream_fixture_verified,recolour;layers,references/639f5a19.json,23x23->23x23,Randomized semantic audit and diversity profiling
+642248e4,training,False,upstream_fixture_verified,template,references/642248e4.json,16x18->16x18,Randomized semantic audit and diversity profiling
+642d658d,training,False,upstream_fixture_verified,selection;count,references/642d658d.json,27x22->1x1,Randomized semantic audit and diversity profiling
+6430c8c4,training,False,upstream_fixture_verified,panels;crop,references/6430c8c4.json,9x4->4x4,Randomized semantic audit and diversity profiling
+6455b5f5,training,False,upstream_fixture_verified,objects;selection;recolour;topology;count,references/6455b5f5.json,13x16->13x16,Randomized semantic audit and diversity profiling
+64a7c07e,training,False,upstream_fixture_verified,objects;movement;repeat;template;count;crop,references/64a7c07e.json,12x12->12x12,Randomized semantic audit and diversity profiling
+64efde09,evaluation,False,generator_missing,template;rays,references/64efde09.json,29x29->29x29,"Construct valid latent inputs, independently render output, differential-test, audit ambiguity and edge cases"
+652646ff,training,False,upstream_fixture_verified,selection;template;repair;order;crop;layers,references/652646ff.json,17x17->24x6,Randomized semantic audit and diversity profiling
+65b59efc,evaluation,False,generator_missing,panels;repeat;template;crop,references/65b59efc.json,16x30->25x25;12x20->16x16,"Construct valid latent inputs, independently render output, differential-test, audit ambiguity and edge cases"
+662c240a,training,False,upstream_fixture_verified,rigid;dynamics;count;crop,references/662c240a.json,9x3->3x3,Randomized semantic audit and diversity profiling
+668eec9a,training,False,upstream_fixture_verified,selection;movement;template;order;crop;layers,references/668eec9a.json,16x16->5x3,Randomized semantic audit and diversity profiling
+66ac4c3b,training,False,generator_missing,selection;recolour;rigid;template;dynamics,references/66ac4c3b.json,22x22->22x22,"Construct valid latent inputs, independently render output, differential-test, audit ambiguity and edge cases"
+66e6c45b,training,False,upstream_fixture_verified,movement;dynamics,references/66e6c45b.json,4x4->4x4,Randomized semantic audit and diversity profiling
+66f2d22f,training,False,upstream_fixture_verified,panels;crop,references/66f2d22f.json,4x14->4x7,Randomized semantic audit and diversity profiling
+67385a82,training,False,upstream_fixture_verified,objects;selection;recolour,references/67385a82.json,5x5->5x5,Randomized semantic audit and diversity profiling
+673ef223,training,False,upstream_fixture_verified,recolour;rigid,references/673ef223.json,21x12->21x12,Randomized semantic audit and diversity profiling
+67636eac,training,False,upstream_fixture_verified,objects;template;order;crop,references/67636eac.json,14x18->3x12,Randomized semantic audit and diversity profiling
+6773b310,training,False,upstream_fixture_verified,panels;count;order;scale,references/6773b310.json,11x11->3x3,Randomized semantic audit and diversity profiling
+67a3c6ac,training,False,upstream_fixture_verified,selection;rigid;count;crop,references/67a3c6ac.json,3x3->3x3,Randomized semantic audit and diversity profiling
+67a423a3,training,False,upstream_fixture_verified,template;boolean,references/67a423a3.json,12x12->12x12,Randomized semantic audit and diversity profiling
+67c52801,training,False,upstream_fixture_verified,rigid;template,references/67c52801.json,7x11->7x11,Randomized semantic audit and diversity profiling
+67e490f4,evaluation,False,generator_missing,selection;rigid;topology;count;crop,references/67e490f4.json,30x30->7x30,"Construct valid latent inputs, independently render output, differential-test, audit ambiguity and edge cases"
+67e8384a,training,False,upstream_fixture_verified,rigid;crop,references/67e8384a.json,3x3->6x6,Randomized semantic audit and diversity profiling
+681b3aeb,training,False,upstream_fixture_verified,movement;repeat;topology;count;crop;assembly,references/681b3aeb.json,10x10->3x3,Randomized semantic audit and diversity profiling
+6855a6e4,training,False,upstream_fixture_verified,rigid,references/6855a6e4.json,15x15->15x15,Randomized semantic audit and diversity profiling
+689c358e,training,False,upstream_fixture_verified,selection,references/689c358e.json,11x11->11x11,Randomized semantic audit and diversity profiling
+68b16354,training,False,upstream_fixture_verified,selection;rigid;count;order,references/68b16354.json,7x7->7x7,Randomized semantic audit and diversity profiling
+68b67ca3,training,False,upstream_fixture_verified,count;crop,references/68b67ca3.json,6x6->3x3,Randomized semantic audit and diversity profiling
+68bc2e87,training,False,upstream_fixture_verified,selection;order;crop;scale;layers,references/68bc2e87.json,18x19->5x1,Randomized semantic audit and diversity profiling
+692cd3b6,training,False,upstream_fixture_verified,repair;paths;crop,references/692cd3b6.json,15x15->15x15,Randomized semantic audit and diversity profiling
+694f12f3,training,False,upstream_fixture_verified,objects;selection;recolour;topology;count;order,references/694f12f3.json,10x10->10x10,Randomized semantic audit and diversity profiling
+695367ec,training,False,upstream_fixture_verified,repeat;crop,references/695367ec.json,5x5->15x15,Randomized semantic audit and diversity profiling
+696d4842,training,False,generator_missing,recolour;paths;count,references/696d4842.json,20x20->20x20,"Construct valid latent inputs, independently render output, differential-test, audit ambiguity and edge cases"
+69889d6e,training,False,upstream_fixture_verified,repeat;paths,references/69889d6e.json,10x10->10x10,Randomized semantic audit and diversity profiling
+6a11f6da,training,False,upstream_fixture_verified,selection;crop;layers,references/6a11f6da.json,15x5->5x5,Randomized semantic audit and diversity profiling
+6a1e5592,training,False,upstream_fixture_verified,selection;movement;template;assembly,references/6a1e5592.json,10x15->10x15,Randomized semantic audit and diversity profiling
+6a980be1,training,False,upstream_fixture_verified,selection;rigid;repeat;topology;rays,references/6a980be1.json,19x19->19x19,Randomized semantic audit and diversity profiling
+6aa20dc0,training,False,upstream_fixture_verified,objects;selection;rigid;template;topology;scale,references/6aa20dc0.json,22x22->22x22,Randomized semantic audit and diversity profiling
+6ad5bdfd,training,False,upstream_fixture_verified,objects;movement;dynamics;order,references/6ad5bdfd.json,10x10->10x10,Randomized semantic audit and diversity profiling
+6b9890af,training,False,upstream_fixture_verified,template;topology;crop;scale,references/6b9890af.json,24x26->14x14,Randomized semantic audit and diversity profiling
+6bcdb01e,training,False,upstream_fixture_verified,paths,references/6bcdb01e.json,8x8->8x8,Randomized semantic audit and diversity profiling
+6c434453,training,False,upstream_fixture_verified,objects;crop,references/6c434453.json,10x10->10x10,Randomized semantic audit and diversity profiling
+6ca952ad,training,False,upstream_fixture_verified,movement;dynamics;crop,references/6ca952ad.json,14x14->14x14,Randomized semantic audit and diversity profiling
+6cbe9eb8,training,False,upstream_fixture_verified,objects;selection;topology;crop,references/6cbe9eb8.json,19x27->15x13,Randomized semantic audit and diversity profiling
+6cdd2623,training,False,upstream_fixture_verified,topology,references/6cdd2623.json,16x19->16x19,Randomized semantic audit and diversity profiling
+6cf79266,training,False,upstream_fixture_verified,order;layers,references/6cf79266.json,20x20->20x20,Randomized semantic audit and diversity profiling
+6d0160f0,training,False,upstream_fixture_verified,panels;template,references/6d0160f0.json,11x11->11x11,Randomized semantic audit and diversity profiling
+6d0aefbc,training,False,upstream_fixture_verified,rigid;template;count;crop,references/6d0aefbc.json,3x3->3x6,Randomized semantic audit and diversity profiling
+6d1d5c90,training,False,upstream_fixture_verified,movement;crop,references/6d1d5c90.json,6x7->6x6,Randomized semantic audit and diversity profiling
+6d58a25d,training,False,upstream_fixture_verified,selection;dynamics,references/6d58a25d.json,20x20->20x20,Randomized semantic audit and diversity profiling
+6d75e8bb,training,False,upstream_fixture_verified,count;crop,references/6d75e8bb.json,9x11->9x11,Randomized semantic audit and diversity profiling
+6df30ad6,training,False,generator_missing,selection;recolour;count,references/6df30ad6.json,10x10->10x10,"Construct valid latent inputs, independently render output, differential-test, audit ambiguity and edge cases"
+6e02f1e3,training,False,upstream_fixture_verified,selection;count;crop,references/6e02f1e3.json,3x3->3x3,Randomized semantic audit and diversity profiling
+6e19193c,training,False,upstream_fixture_verified,rays,references/6e19193c.json,10x10->10x10,Randomized semantic audit and diversity profiling
+6e453dd6,evaluation,False,generator_missing,panels;movement;topology;count,references/6e453dd6.json,25x12->25x12,"Construct valid latent inputs, independently render output, differential-test, audit ambiguity and edge cases"
+6e4f6532,evaluation,False,generator_missing,objects;panels;legend;rigid;movement;template;topology;rays;count;layers,references/6e4f6532.json,30x28->30x28;30x16->30x16,"Construct valid latent inputs, independently render output, differential-test, audit ambiguity and edge cases"
+6e82a1ae,training,False,upstream_fixture_verified,objects;selection;recolour;count,references/6e82a1ae.json,10x10->10x10,Randomized semantic audit and diversity profiling
+6ea4a07e,training,False,upstream_fixture_verified,,references/6ea4a07e.json,3x3->3x3;3x3->3x3,Randomized semantic audit and diversity profiling
+6ecd11f4,training,False,upstream_fixture_verified,panels;selection;crop,references/6ecd11f4.json,21x24->4x4,Randomized semantic audit and diversity profiling
+6f473927,training,False,upstream_fixture_verified,panels;rigid;crop,references/6f473927.json,12x6->12x12,Randomized semantic audit and diversity profiling
+6f8cd79b,training,False,upstream_fixture_verified,selection;rigid;topology,references/6f8cd79b.json,7x6->7x6,Randomized semantic audit and diversity profiling
+6fa7a44f,training,False,upstream_fixture_verified,rigid;crop,references/6fa7a44f.json,3x3->6x3,Randomized semantic audit and diversity profiling
+6ffbe589,evaluation,False,generator_missing,objects;selection;legend;rigid;count;crop;layers,references/6ffbe589.json,20x20->13x13,"Construct valid latent inputs, independently render output, differential-test, audit ambiguity and edge cases"
+6ffe8f07,training,False,upstream_fixture_verified,rays,references/6ffe8f07.json,19x19->19x19;19x19->19x19,Randomized semantic audit and diversity profiling
+7039b2d7,training,False,upstream_fixture_verified,panels;rigid;count;scale,references/7039b2d7.json,16x16->3x5,Randomized semantic audit and diversity profiling
+705a3229,training,False,upstream_fixture_verified,rays;layers,references/705a3229.json,11x16->11x16,Randomized semantic audit and diversity profiling
+712bf12e,training,False,upstream_fixture_verified,paths,references/712bf12e.json,13x13->13x13,Randomized semantic audit and diversity profiling
+71e489b6,evaluation,False,generator_missing,objects;topology;dynamics;layers,references/71e489b6.json,16x16->16x16;18x19->18x19,"Construct valid latent inputs, independently render output, differential-test, audit ambiguity and edge cases"
+72207abc,training,False,upstream_fixture_verified,repeat;order,references/72207abc.json,3x29->3x29,Randomized semantic audit and diversity profiling
+72322fa7,training,False,upstream_fixture_verified,objects;movement;template;dynamics;crop,references/72322fa7.json,19x19->19x19,Randomized semantic audit and diversity profiling
+72a961c9,training,False,upstream_fixture_verified,selection;rigid,references/72a961c9.json,9x11->9x11,Randomized semantic audit and diversity profiling
+72ca375d,training,False,upstream_fixture_verified,rigid;boolean;crop,references/72ca375d.json,10x10->3x4,Randomized semantic audit and diversity profiling
+73182012,training,False,upstream_fixture_verified,rigid;crop,references/73182012.json,12x12->4x4,Randomized semantic audit and diversity profiling
+73c3b0d8,training,False,upstream_fixture_verified,movement;rays;dynamics,references/73c3b0d8.json,12x8->12x8,Randomized semantic audit and diversity profiling
+73ccf9c2,training,False,generator_missing,objects;rigid;count;crop,references/73ccf9c2.json,22x22->7x5,"Construct valid latent inputs, independently render output, differential-test, audit ambiguity and edge cases"
+7447852a,training,False,upstream_fixture_verified,selection;rigid;repeat;template,references/7447852a.json,3x25->3x25,Randomized semantic audit and diversity profiling
+7468f01a,training,False,upstream_fixture_verified,rigid;count;order;crop,references/7468f01a.json,17x17->7x8,Randomized semantic audit and diversity profiling
+746b3537,training,False,upstream_fixture_verified,count;scale,references/746b3537.json,4x9->1x5,Randomized semantic audit and diversity profiling
+7491f3cf,evaluation,False,generator_missing,objects;panels;selection;paths;layers,references/7491f3cf.json,7x25->7x25,"Construct valid latent inputs, independently render output, differential-test, audit ambiguity and edge cases"
+74dd1130,training,False,upstream_fixture_verified,rigid;count,references/74dd1130.json,3x3->3x3,Randomized semantic audit and diversity profiling
+753ea09b,training,False,generator_missing,objects;selection;topology;order,references/753ea09b.json,30x30->30x30,"Construct valid latent inputs, independently render output, differential-test, audit ambiguity and edge cases"
+758abdf0,training,False,upstream_fixture_verified,,references/758abdf0.json,8x16->8x16,Randomized semantic audit and diversity profiling
+759f3fd3,training,False,upstream_fixture_verified,layers,references/759f3fd3.json,12x12->12x12,Randomized semantic audit and diversity profiling
+75b8110e,training,False,upstream_fixture_verified,crop;layers,references/75b8110e.json,8x8->4x4,Randomized semantic audit and diversity profiling
+760b3cac,training,False,upstream_fixture_verified,rigid;template,references/760b3cac.json,6x9->6x9,Randomized semantic audit and diversity profiling
+762cd429,training,False,upstream_fixture_verified,template;scale,references/762cd429.json,16x30->16x30,Randomized semantic audit and diversity profiling
+7666fa5d,evaluation,False,generator_missing,rigid;layers,references/7666fa5d.json,16x16->16x16,"Construct valid latent inputs, independently render output, differential-test, audit ambiguity and edge cases"
+770cc55f,training,False,upstream_fixture_verified,panels;topology;layers,references/770cc55f.json,11x5->11x5,Randomized semantic audit and diversity profiling
+776ffc46,training,False,upstream_fixture_verified,recolour;template;topology;count;crop;layers,references/776ffc46.json,20x20->20x20,Randomized semantic audit and diversity profiling
+77fdfe62,training,False,upstream_fixture_verified,recolour;crop,references/77fdfe62.json,10x10->6x6,Randomized semantic audit and diversity profiling
+780d0b14,training,False,upstream_fixture_verified,panels;selection;topology;crop;scale,references/780d0b14.json,23x28->3x3,Randomized semantic audit and diversity profiling
+782b5218,training,False,upstream_fixture_verified,objects;repeat;topology;paths,references/782b5218.json,10x10->10x10,Randomized semantic audit and diversity profiling
+78332cb0,evaluation,False,generator_missing,panels,references/78332cb0.json,11x11->5x23;23x5->23x5,"Construct valid latent inputs, independently render output, differential-test, audit ambiguity and edge cases"
+7837ac64,training,False,upstream_fixture_verified,selection;topology;scale;layers,references/7837ac64.json,29x29->3x3,Randomized semantic audit and diversity profiling
+78e78cff,training,False,upstream_fixture_verified,selection;recolour;topology;crop,references/78e78cff.json,12x12->12x12,Randomized semantic audit and diversity profiling
+79369cc6,training,False,generator_missing,rigid;template;dynamics;crop,references/79369cc6.json,16x15->16x15,"Construct valid latent inputs, independently render output, differential-test, audit ambiguity and edge cases"
+794b24be,training,False,upstream_fixture_verified,selection;count,references/794b24be.json,3x3->3x3;3x3->3x3,Randomized semantic audit and diversity profiling
+7953d61e,training,False,upstream_fixture_verified,rigid;template;crop,references/7953d61e.json,4x4->8x8,Randomized semantic audit and diversity profiling
+79cce52d,training,False,upstream_fixture_verified,movement;crop,references/79cce52d.json,7x7->6x6,Randomized semantic audit and diversity profiling
+7acdf6d3,training,False,generator_missing,objects;topology;dynamics;count,references/7acdf6d3.json,15x15->15x15,"Construct valid latent inputs, independently render output, differential-test, audit ambiguity and edge cases"
+7b0280bc,evaluation,False,generator_missing,objects;selection;recolour;paths;assembly,references/7b0280bc.json,30x30->30x30,"Construct valid latent inputs, independently render output, differential-test, audit ambiguity and edge cases"
+7b3084d4,evaluation,False,generator_missing,rigid;repeat;count;order;crop;assembly,references/7b3084d4.json,20x20->14x14,"Construct valid latent inputs, independently render output, differential-test, audit ambiguity and edge cases"
+7b5033c1,evaluation,False,generator_missing,paths;count;order,references/7b5033c1.json,16x16->25x1,"Construct valid latent inputs, independently render output, differential-test, audit ambiguity and edge cases"
+7b6016b9,training,False,upstream_fixture_verified,objects;recolour;topology,references/7b6016b9.json,22x25->22x25,Randomized semantic audit and diversity profiling
+7b7f7511,training,False,upstream_fixture_verified,repeat;crop,references/7b7f7511.json,8x3->4x3,Randomized semantic audit and diversity profiling
+7b80bb43,evaluation,False,generator_missing,rays,references/7b80bb43.json,29x17->29x17,"Construct valid latent inputs, independently render output, differential-test, audit ambiguity and edge cases"
+7bb29440,training,False,generator_missing,objects;selection;recolour;count;crop,references/7bb29440.json,22x25->6x4,"Construct valid latent inputs, independently render output, differential-test, audit ambiguity and edge cases"
+7c008303,training,False,upstream_fixture_verified,panels;legend;recolour;crop,references/7c008303.json,9x9->6x6,Randomized semantic audit and diversity profiling
+7c66cb00,evaluation,False,generator_missing,movement;template;topology;dynamics;crop,references/7c66cb00.json,30x24->30x24,"Construct valid latent inputs, independently render output, differential-test, audit ambiguity and edge cases"
+7c8af763,training,False,upstream_fixture_verified,objects;count,references/7c8af763.json,10x10->10x10,Randomized semantic audit and diversity profiling
+7c9b52a0,training,False,upstream_fixture_verified,objects;selection;template;order;crop;layers,references/7c9b52a0.json,16x16->5x3,Randomized semantic audit and diversity profiling
+7d18a6fb,training,False,upstream_fixture_verified,template;crop,references/7d18a6fb.json,16x17->7x7,Randomized semantic audit and diversity profiling
+7d1f7ee8,training,False,upstream_fixture_verified,selection;recolour;topology;crop,references/7d1f7ee8.json,29x28->29x28,Randomized semantic audit and diversity profiling
+7d419a02,training,False,upstream_fixture_verified,recolour;rigid;topology,references/7d419a02.json,25x20->25x20,Randomized semantic audit and diversity profiling
+7d7772cc,training,False,upstream_fixture_verified,rigid,references/7d7772cc.json,8x8->8x8,Randomized semantic audit and diversity profiling
+7ddcd7ec,training,False,upstream_fixture_verified,rays,references/7ddcd7ec.json,10x10->10x10,Randomized semantic audit and diversity profiling
+7df24a62,training,False,upstream_fixture_verified,selection;rigid;movement;template;topology;dynamics;count,references/7df24a62.json,23x23->23x23,Randomized semantic audit and diversity profiling
+7e02026e,training,False,upstream_fixture_verified,recolour;template;topology;layers,references/7e02026e.json,12x12->12x12,Randomized semantic audit and diversity profiling
+7e0986d6,training,False,upstream_fixture_verified,,references/7e0986d6.json,12x17->12x17,Randomized semantic audit and diversity profiling
+7e2bad24,training,False,upstream_fixture_verified,rigid;repeat;rays;dynamics,references/7e2bad24.json,16x16->16x16;16x16->16x16,Randomized semantic audit and diversity profiling
+7e4d4f7c,training,False,upstream_fixture_verified,selection;rigid;template;crop,references/7e4d4f7c.json,3x5->3x5,Randomized semantic audit and diversity profiling
+7e576d6e,training,False,upstream_fixture_verified,rigid;movement;paths,references/7e576d6e.json,30x30->30x30,Randomized semantic audit and diversity profiling
+7ec998c9,training,False,upstream_fixture_verified,,references/7ec998c9.json,7x7->7x7,Randomized semantic audit and diversity profiling
+7ed72f31,evaluation,False,generator_missing,objects;rigid;dynamics,references/7ed72f31.json,18x18->18x18;28x28->28x28,"Construct valid latent inputs, independently render output, differential-test, audit ambiguity and edge cases"
+7ee1c6ea,training,False,upstream_fixture_verified,recolour;topology;crop,references/7ee1c6ea.json,10x10->10x10,Randomized semantic audit and diversity profiling
+7f4411dc,training,False,upstream_fixture_verified,template;crop;layers,references/7f4411dc.json,10x10->10x10,Randomized semantic audit and diversity profiling
+7fe24cdd,training,False,upstream_fixture_verified,rigid;repeat;template;crop,references/7fe24cdd.json,3x3->6x6,Randomized semantic audit and diversity profiling
+800d221b,evaluation,False,generator_missing,objects;selection;recolour;paths;dynamics;count,references/800d221b.json,30x30->30x30,"Construct valid latent inputs, independently render output, differential-test, audit ambiguity and edge cases"
+80214e03,training,False,upstream_fixture_verified,rigid;topology;count,references/80214e03.json,22x19->4x3,Randomized semantic audit and diversity profiling
+80a900e0,evaluation,False,generator_missing,selection;recolour;rays;dynamics;layers,references/80a900e0.json,22x21->22x21,"Construct valid latent inputs, independently render output, differential-test, audit ambiguity and edge cases"
+80af3007,training,False,upstream_fixture_verified,recolour;template;crop;scale,references/80af3007.json,17x19->9x9,Randomized semantic audit and diversity profiling
+810b9b61,training,False,upstream_fixture_verified,recolour;topology;layers,references/810b9b61.json,12x12->12x12,Randomized semantic audit and diversity profiling
+817e6c09,training,False,upstream_fixture_verified,recolour;repeat;count;order;crop,references/817e6c09.json,7x15->7x15,Randomized semantic audit and diversity profiling
+81c0276b,training,False,upstream_fixture_verified,panels;selection;count;order;crop,references/81c0276b.json,19x21->4x4,Randomized semantic audit and diversity profiling
+825aa9e9,training,False,generator_missing,topology;dynamics;count;layers,references/825aa9e9.json,10x20->10x20,"Construct valid latent inputs, independently render output, differential-test, audit ambiguity and edge cases"
+82819916,training,False,upstream_fixture_verified,recolour;template,references/82819916.json,14x10->14x10,Randomized semantic audit and diversity profiling
+83302e8f,training,False,upstream_fixture_verified,objects;recolour,references/83302e8f.json,27x27->27x27,Randomized semantic audit and diversity profiling
+833966f4,training,False,upstream_fixture_verified,rigid,references/833966f4.json,5x1->5x1,Randomized semantic audit and diversity profiling
+833dafe3,training,False,upstream_fixture_verified,rigid;template;crop,references/833dafe3.json,8x8->16x16,Randomized semantic audit and diversity profiling
+834ec97d,training,False,upstream_fixture_verified,movement;count,references/834ec97d.json,12x12->12x12,Randomized semantic audit and diversity profiling
+83b6b474,training,False,upstream_fixture_verified,rigid;movement;repeat;template;topology;count;order;assembly,references/83b6b474.json,8x8->6x6,Randomized semantic audit and diversity profiling
+83eb0a57,training,False,generator_missing,selection;movement;repeat;count;crop;assembly,references/83eb0a57.json,30x30->10x10,"Construct valid latent inputs, independently render output, differential-test, audit ambiguity and edge cases"
+8403a5d5,training,False,upstream_fixture_verified,repeat;paths,references/8403a5d5.json,10x10->10x10,Randomized semantic audit and diversity profiling
+84551f4c,training,False,upstream_fixture_verified,dynamics,references/84551f4c.json,9x30->9x30;3x30->3x30,Randomized semantic audit and diversity profiling
+845d6e51,training,False,generator_missing,legend;recolour;rigid;count,references/845d6e51.json,18x17->18x17,"Construct valid latent inputs, independently render output, differential-test, audit ambiguity and edge cases"
+846bdb03,training,False,upstream_fixture_verified,rigid;topology;crop,references/846bdb03.json,13x13->6x8,Randomized semantic audit and diversity profiling
+84ba50d3,training,False,upstream_fixture_verified,topology;dynamics,references/84ba50d3.json,18x18->18x18,Randomized semantic audit and diversity profiling
+84db8fc4,training,False,upstream_fixture_verified,objects;selection;recolour;topology,references/84db8fc4.json,10x10->10x10,Randomized semantic audit and diversity profiling
+84f2aca1,training,False,upstream_fixture_verified,objects;topology,references/84f2aca1.json,13x12->13x12,Randomized semantic audit and diversity profiling
+855e0971,training,False,upstream_fixture_verified,rigid,references/855e0971.json,17x15->17x15,Randomized semantic audit and diversity profiling
+8597cfd7,training,False,upstream_fixture_verified,panels;selection;dynamics;count,references/8597cfd7.json,11x9->2x2,Randomized semantic audit and diversity profiling
+85b81ff1,training,False,upstream_fixture_verified,selection;topology;count;order,references/85b81ff1.json,13x14->13x14,Randomized semantic audit and diversity profiling
+85c4e7cd,training,False,upstream_fixture_verified,recolour;count;layers,references/85c4e7cd.json,14x14->14x14,Randomized semantic audit and diversity profiling
+85fa5666,training,False,upstream_fixture_verified,rigid;rays,references/85fa5666.json,8x8->8x8,Randomized semantic audit and diversity profiling
+8618d23e,training,False,upstream_fixture_verified,movement;template;crop,references/8618d23e.json,4x5->5x6,Randomized semantic audit and diversity profiling
+868de0fa,training,False,upstream_fixture_verified,topology;count;crop,references/868de0fa.json,20x20->20x20,Randomized semantic audit and diversity profiling
+8698868d,evaluation,True,generator_missing,objects;panels;selection;template;topology;count;crop,references/8698868d.json,30x30->14x21,"Construct valid latent inputs, independently render output, differential-test, audit ambiguity and edge cases"
+8719f442,training,False,upstream_fixture_verified,repeat;template;crop;scale,references/8719f442.json,3x3->15x15,Randomized semantic audit and diversity profiling
+8731374e,training,False,upstream_fixture_verified,objects;selection;crop,references/8731374e.json,19x17->10x8,Randomized semantic audit and diversity profiling
+878187ab,training,False,generator_missing,count;crop;layers,references/878187ab.json,16x16->16x16,"Construct valid latent inputs, independently render output, differential-test, audit ambiguity and edge cases"
+87ab05b8,training,False,upstream_fixture_verified,,references/87ab05b8.json,4x4->4x4,Randomized semantic audit and diversity profiling
+880c1354,training,False,generator_missing,rigid,references/880c1354.json,8x8->8x8,"Construct valid latent inputs, independently render output, differential-test, audit ambiguity and edge cases"
+88207623,training,False,upstream_fixture_verified,objects;selection;rigid;template;topology,references/88207623.json,16x18->16x18,Randomized semantic audit and diversity profiling
+8886d717,training,False,upstream_fixture_verified,count,references/8886d717.json,13x13->13x13,Randomized semantic audit and diversity profiling
+88a10436,training,False,upstream_fixture_verified,template;dynamics;crop;layers,references/88a10436.json,10x11->10x11,Randomized semantic audit and diversity profiling
+88a62173,training,False,upstream_fixture_verified,panels;count;crop,references/88a62173.json,5x5->2x2,Randomized semantic audit and diversity profiling
+88bcf3b4,evaluation,False,generator_missing,paths;count;scale,references/88bcf3b4.json,22x22->22x22;27x27->27x27,"Construct valid latent inputs, independently render output, differential-test, audit ambiguity and edge cases"
+88e364bc,evaluation,False,generator_missing,selection;legend;movement;topology,references/88e364bc.json,20x20->20x20;20x20->20x20,"Construct valid latent inputs, independently render output, differential-test, audit ambiguity and edge cases"
+890034e9,training,False,upstream_fixture_verified,template;topology;order;crop,references/890034e9.json,21x21->21x21,Randomized semantic audit and diversity profiling
+891232d6,training,False,upstream_fixture_verified,movement;paths,references/891232d6.json,27x25->27x25,Randomized semantic audit and diversity profiling
+89565ca0,evaluation,False,generator_missing,objects;panels;selection;count;order;crop;layers,references/89565ca0.json,29x30->5x6,"Construct valid latent inputs, independently render output, differential-test, audit ambiguity and edge cases"
+896d5239,training,False,upstream_fixture_verified,selection,references/896d5239.json,15x18->15x18,Randomized semantic audit and diversity profiling
+898e7135,evaluation,False,generator_missing,selection;rigid;topology;scale;assembly,references/898e7135.json,30x30->30x30,"Construct valid latent inputs, independently render output, differential-test, audit ambiguity and edge cases"
+8a004b2b,training,False,upstream_fixture_verified,movement;template;crop;scale,references/8a004b2b.json,19x18->14x18,Randomized semantic audit and diversity profiling
+8a371977,training,False,upstream_fixture_verified,objects;selection;topology;count;crop,references/8a371977.json,30x30->30x30,Randomized semantic audit and diversity profiling
+8a6d367c,training,False,generator_missing,panels;legend;topology;crop;scale;instructions,references/8a6d367c.json,27x21->14x18,"Construct valid latent inputs, independently render output, differential-test, audit ambiguity and edge cases"
+8abad3cf,training,False,upstream_fixture_verified,selection;movement;template;count;order;crop,references/8abad3cf.json,5x10->4x9,Randomized semantic audit and diversity profiling
+8b28cd80,training,False,upstream_fixture_verified,recolour;repeat;rays;count;scale;layers,references/8b28cd80.json,3x3->9x9;3x3->9x9,Randomized semantic audit and diversity profiling
+8b7bacbf,evaluation,False,generator_missing,objects;topology;paths;layers,references/8b7bacbf.json,30x30->30x30;22x26->22x26,"Construct valid latent inputs, independently render output, differential-test, audit ambiguity and edge cases"
+8b9c3697,evaluation,False,generator_missing,movement;template;paths;dynamics;crop;assembly,references/8b9c3697.json,23x27->23x27,"Construct valid latent inputs, independently render output, differential-test, audit ambiguity and edge cases"
+8ba14f53,training,False,upstream_fixture_verified,topology;count;crop,references/8ba14f53.json,4x9->3x3,Randomized semantic audit and diversity profiling
+8be77c9e,training,False,upstream_fixture_verified,rigid;dynamics;crop;layers,references/8be77c9e.json,3x3->6x3,Randomized semantic audit and diversity profiling
+8cb8642d,training,False,upstream_fixture_verified,selection;topology,references/8cb8642d.json,19x24->19x24,Randomized semantic audit and diversity profiling
+8d5021e8,training,False,upstream_fixture_verified,rigid;repeat;assembly,references/8d5021e8.json,3x2->9x4,Randomized semantic audit and diversity profiling
+8d510a79,training,False,upstream_fixture_verified,panels,references/8d510a79.json,10x10->10x10,Randomized semantic audit and diversity profiling
+8dab14c2,training,False,upstream_fixture_verified,movement;dynamics,references/8dab14c2.json,16x16->16x16;16x16->16x16;16x16->16x16;16x16->16x16,Randomized semantic audit and diversity profiling
+8dae5dfc,training,False,upstream_fixture_verified,objects;selection;recolour;order;crop;layers,references/8dae5dfc.json,20x19->20x19,Randomized semantic audit and diversity profiling
+8e1813be,training,False,upstream_fixture_verified,selection;count;order;crop,references/8e1813be.json,19x19->7x7,Randomized semantic audit and diversity profiling
+8e2edd66,training,False,upstream_fixture_verified,repeat;template;crop,references/8e2edd66.json,3x3->9x9,Randomized semantic audit and diversity profiling
+8e301a54,training,False,upstream_fixture_verified,movement;template;dynamics;count;layers,references/8e301a54.json,10x10->10x10,Randomized semantic audit and diversity profiling
+8e5a5113,training,False,upstream_fixture_verified,panels;rigid,references/8e5a5113.json,3x11->3x11,Randomized semantic audit and diversity profiling
+8e5c0c38,evaluation,False,generator_missing,rigid,references/8e5c0c38.json,22x22->22x22;22x22->22x22,"Construct valid latent inputs, independently render output, differential-test, audit ambiguity and edge cases"
+8eb1be9a,training,False,upstream_fixture_verified,repeat;template,references/8eb1be9a.json,14x13->14x13,Randomized semantic audit and diversity profiling
+8ee62060,training,False,upstream_fixture_verified,objects;rigid;template;crop,references/8ee62060.json,14x14->14x14,Randomized semantic audit and diversity profiling
+8efcae92,training,False,upstream_fixture_verified,selection;count;crop,references/8efcae92.json,20x20->9x10,Randomized semantic audit and diversity profiling
+8f215267,evaluation,False,generator_missing,objects;template;topology;count,references/8f215267.json,27x23->27x23,"Construct valid latent inputs, independently render output, differential-test, audit ambiguity and edge cases"
+8f2ea7aa,training,False,upstream_fixture_verified,template;count;crop,references/8f2ea7aa.json,9x9->9x9,Randomized semantic audit and diversity profiling
+8f3a5a89,evaluation,False,generator_missing,topology,references/8f3a5a89.json,12x12->12x12,"Construct valid latent inputs, independently render output, differential-test, audit ambiguity and edge cases"
+8fbca751,training,False,upstream_fixture_verified,repeat;dynamics;assembly,references/8fbca751.json,8x12->8x12,Randomized semantic audit and diversity profiling
+8fff9e47,training,False,upstream_fixture_verified,count;order;crop;layers,references/8fff9e47.json,4x4->8x8,Randomized semantic audit and diversity profiling
+902510d5,training,False,generator_missing,objects;selection;count,references/902510d5.json,12x11->12x11,"Construct valid latent inputs, independently render output, differential-test, audit ambiguity and edge cases"
+90347967,training,False,upstream_fixture_verified,rigid;template;dynamics,references/90347967.json,9x9->9x9,Randomized semantic audit and diversity profiling
+90c28cc7,training,False,upstream_fixture_verified,count;crop;scale,references/90c28cc7.json,21x21->3x3,Randomized semantic audit and diversity profiling
+90f3ed37,training,False,upstream_fixture_verified,objects;selection;movement;rays,references/90f3ed37.json,15x10->15x10,Randomized semantic audit and diversity profiling
+9110e3c5,training,False,upstream_fixture_verified,selection;legend;recolour;template;count;crop,references/9110e3c5.json,7x7->3x3;7x7->3x3,Randomized semantic audit and diversity profiling
+913fb3ed,training,False,upstream_fixture_verified,legend;template;dynamics;order;layers,references/913fb3ed.json,16x16->16x16,Randomized semantic audit and diversity profiling
+91413438,training,False,upstream_fixture_verified,repeat;template;count;order;scale,references/91413438.json,3x3->21x21,Randomized semantic audit and diversity profiling
+91714a58,training,False,upstream_fixture_verified,selection;movement;template;crop,references/91714a58.json,16x16->16x16,Randomized semantic audit and diversity profiling
+9172f3a0,training,False,upstream_fixture_verified,count;crop;scale,references/9172f3a0.json,3x3->9x9,Randomized semantic audit and diversity profiling
+917bccba,training,False,upstream_fixture_verified,movement;topology;crop;layers,references/917bccba.json,12x12->12x12,Randomized semantic audit and diversity profiling
+928ad970,training,False,upstream_fixture_verified,selection,references/928ad970.json,15x15->15x15,Randomized semantic audit and diversity profiling
+92e50de0,training,False,upstream_fixture_verified,panels;repeat;template;count,references/92e50de0.json,29x29->29x29,Randomized semantic audit and diversity profiling
+9344f635,training,False,upstream_fixture_verified,layers,references/9344f635.json,10x10->10x10,Randomized semantic audit and diversity profiling
+9356391f,training,False,upstream_fixture_verified,panels;legend;layers,references/9356391f.json,16x16->16x16,Randomized semantic audit and diversity profiling
+9385bd28,evaluation,False,generator_missing,legend;recolour;layers,references/9385bd28.json,19x13->19x13;13x19->13x19,"Construct valid latent inputs, independently render output, differential-test, audit ambiguity and edge cases"
+93b4f4b3,training,False,upstream_fixture_verified,objects;selection;rigid;template;topology;crop,references/93b4f4b3.json,17x10->17x5,Randomized semantic audit and diversity profiling
+93b581b8,training,False,upstream_fixture_verified,template,references/93b581b8.json,6x6->6x6,Randomized semantic audit and diversity profiling
+93c31fbe,training,False,generator_missing,rigid;repair,references/93c31fbe.json,26x28->26x28,"Construct valid latent inputs, independently render output, differential-test, audit ambiguity and edge cases"
+94133066,training,False,generator_missing,panels;selection;rigid;boolean;crop,references/94133066.json,19x30->10x13,"Construct valid latent inputs, independently render output, differential-test, audit ambiguity and edge cases"
+941d9a10,training,False,upstream_fixture_verified,panels;selection;count,references/941d9a10.json,10x10->10x10,Randomized semantic audit and diversity profiling
+94414823,training,False,upstream_fixture_verified,topology;order;crop,references/94414823.json,10x10->10x10,Randomized semantic audit and diversity profiling
+9473c6fb,training,False,upstream_fixture_verified,selection;recolour;order;scale,references/9473c6fb.json,9x12->9x12,Randomized semantic audit and diversity profiling
+94be5b80,training,False,upstream_fixture_verified,objects;legend;template;layers,references/94be5b80.json,18x15->18x15,Randomized semantic audit and diversity profiling
+94f9d214,training,False,upstream_fixture_verified,crop,references/94f9d214.json,8x4->4x4,Randomized semantic audit and diversity profiling
+952a094c,training,False,upstream_fixture_verified,selection;rigid;topology;crop,references/952a094c.json,10x10->10x10,Randomized semantic audit and diversity profiling
+9565186b,training,False,upstream_fixture_verified,selection;recolour;count,references/9565186b.json,3x3->3x3,Randomized semantic audit and diversity profiling
+95755ff2,training,False,upstream_fixture_verified,objects;legend;topology;rays,references/95755ff2.json,11x11->11x11,Randomized semantic audit and diversity profiling
+95990924,training,False,upstream_fixture_verified,template;count;order;crop,references/95990924.json,15x15->15x15,Randomized semantic audit and diversity profiling
+95a58926,training,False,upstream_fixture_verified,panels;selection;boolean,references/95a58926.json,22x27->22x27,Randomized semantic audit and diversity profiling
+963c33f8,training,False,upstream_fixture_verified,movement;paths;dynamics;count;order;layers,references/963c33f8.json,16x16->16x16,Randomized semantic audit and diversity profiling
+963e52fc,training,False,upstream_fixture_verified,selection;repeat;crop,references/963e52fc.json,5x9->5x18,Randomized semantic audit and diversity profiling
+963f59bc,training,False,generator_missing,rigid;topology;dynamics;crop,references/963f59bc.json,14x16->14x16,"Construct valid latent inputs, independently render output, differential-test, audit ambiguity and edge cases"
+96a8c0cd,training,False,upstream_fixture_verified,paths,references/96a8c0cd.json,13x29->13x29,Randomized semantic audit and diversity profiling
+9720b24f,training,False,generator_missing,objects;selection;topology;dynamics;crop;layers,references/9720b24f.json,13x12->13x12,"Construct valid latent inputs, independently render output, differential-test, audit ambiguity and edge cases"
+97239e3d,training,False,upstream_fixture_verified,repeat;topology;dynamics;crop;layers,references/97239e3d.json,17x17->17x17,Randomized semantic audit and diversity profiling
+973e499e,training,False,upstream_fixture_verified,template;crop;scale,references/973e499e.json,5x5->25x25;4x4->16x16,Randomized semantic audit and diversity profiling
+9772c176,training,False,upstream_fixture_verified,layers,references/9772c176.json,20x20->20x20,Randomized semantic audit and diversity profiling
+97999447,training,False,upstream_fixture_verified,repeat;rays;count;order,references/97999447.json,9x8->9x8,Randomized semantic audit and diversity profiling
+97a05b5b,training,False,upstream_fixture_verified,selection;rigid;template;topology;crop,references/97a05b5b.json,19x15->8x12,Randomized semantic audit and diversity profiling
+97c75046,training,False,generator_missing,movement;dynamics,references/97c75046.json,10x16->10x16,"Construct valid latent inputs, independently render output, differential-test, audit ambiguity and edge cases"
+97d7923e,evaluation,True,generator_missing,selection;legend;instructions,references/97d7923e.json,10x20->10x20,"Construct valid latent inputs, independently render output, differential-test, audit ambiguity and edge cases"
+981571dc,evaluation,False,generator_missing,rigid;repair,references/981571dc.json,30x30->30x30,"Construct valid latent inputs, independently render output, differential-test, audit ambiguity and edge cases"
+981add89,training,False,upstream_fixture_verified,legend,references/981add89.json,30x30->30x30,Randomized semantic audit and diversity profiling
+9841fdad,training,False,upstream_fixture_verified,panels;selection,references/9841fdad.json,12x26->12x26,Randomized semantic audit and diversity profiling
+984d8a3e,training,False,generator_missing,selection;movement,references/984d8a3e.json,17x17->17x17,"Construct valid latent inputs, independently render output, differential-test, audit ambiguity and edge cases"
+985ae207,training,False,upstream_fixture_verified,repeat;template;paths;rays;layers,references/985ae207.json,25x25->25x25,Randomized semantic audit and diversity profiling
+98c475bf,training,False,generator_missing,legend;template;topology,references/98c475bf.json,20x20->20x20,"Construct valid latent inputs, independently render output, differential-test, audit ambiguity and edge cases"
+98cf29f8,training,False,upstream_fixture_verified,movement;template;count;crop,references/98cf29f8.json,12x17->12x17,Randomized semantic audit and diversity profiling
+992798f6,training,False,upstream_fixture_verified,paths,references/992798f6.json,16x16->16x16,Randomized semantic audit and diversity profiling
+99306f82,training,False,upstream_fixture_verified,topology;layers,references/99306f82.json,20x20->20x20,Randomized semantic audit and diversity profiling
+995c5fa3,training,False,upstream_fixture_verified,panels;legend;topology;order;crop,references/995c5fa3.json,4x14->3x3,Randomized semantic audit and diversity profiling
+9968a131,training,False,upstream_fixture_verified,movement;repeat;crop,references/9968a131.json,5x5->5x5,Randomized semantic audit and diversity profiling
+996ec1f3,training,False,upstream_fixture_verified,panels;selection;crop,references/996ec1f3.json,19x19->3x3,Randomized semantic audit and diversity profiling
+99b1bc43,training,False,upstream_fixture_verified,panels;boolean;crop;layers,references/99b1bc43.json,9x4->4x4,Randomized semantic audit and diversity profiling
+99caaf76,training,False,upstream_fixture_verified,selection;rigid;movement,references/99caaf76.json,18x17->18x17,Randomized semantic audit and diversity profiling
+99fa7670,training,False,upstream_fixture_verified,paths;rays,references/99fa7670.json,7x8->7x8,Randomized semantic audit and diversity profiling
+9a4bb226,training,False,upstream_fixture_verified,count;crop,references/9a4bb226.json,15x15->3x3,Randomized semantic audit and diversity profiling
+9aaea919,evaluation,False,generator_missing,recolour;template;count;layers,references/9aaea919.json,30x30->30x30,"Construct valid latent inputs, independently render output, differential-test, audit ambiguity and edge cases"
+9aec4887,training,False,upstream_fixture_verified,recolour;template;topology;crop;layers,references/9aec4887.json,16x16->7x7,Randomized semantic audit and diversity profiling
+9af7a82c,training,False,upstream_fixture_verified,selection;count;order;crop,references/9af7a82c.json,4x4->6x5,Randomized semantic audit and diversity profiling
+9b2a60aa,training,False,upstream_fixture_verified,recolour;template,references/9b2a60aa.json,13x24->13x24,Randomized semantic audit and diversity profiling
+9b30e358,training,False,upstream_fixture_verified,repeat;template;assembly,references/9b30e358.json,10x5->10x5,Randomized semantic audit and diversity profiling
+9b365c51,training,False,upstream_fixture_verified,objects;legend;recolour;count,references/9b365c51.json,7x28->7x28,Randomized semantic audit and diversity profiling
+9b4c17c4,training,False,upstream_fixture_verified,movement;count;layers,references/9b4c17c4.json,9x9->9x9;10x11->10x11,Randomized semantic audit and diversity profiling
+9b5080bb,training,False,generator_missing,objects;panels;repair;count,references/9b5080bb.json,27x27->27x27,"Construct valid latent inputs, independently render output, differential-test, audit ambiguity and edge cases"
+9ba4a9aa,training,False,generator_missing,topology;paths;crop,references/9ba4a9aa.json,22x22->3x3,"Construct valid latent inputs, independently render output, differential-test, audit ambiguity and edge cases"
+9bbf930d,evaluation,False,generator_missing,paths;analogy,references/9bbf930d.json,23x21->23x21,"Construct valid latent inputs, independently render output, differential-test, audit ambiguity and edge cases"
+9bebae7a,training,False,generator_missing,legend;rigid;template;crop;layers,references/9bebae7a.json,11x12->11x12,"Construct valid latent inputs, independently render output, differential-test, audit ambiguity and edge cases"
+9c1e755f,training,False,upstream_fixture_verified,repeat;rays;assembly,references/9c1e755f.json,10x10->10x10,Randomized semantic audit and diversity profiling
+9c56f360,training,False,upstream_fixture_verified,movement;template;dynamics,references/9c56f360.json,9x9->9x9,Randomized semantic audit and diversity profiling
+9caba7c3,training,False,upstream_fixture_verified,template,references/9caba7c3.json,19x19->19x19,Randomized semantic audit and diversity profiling
+9caf5b84,training,False,upstream_fixture_verified,selection;recolour;count,references/9caf5b84.json,6x4->6x4,Randomized semantic audit and diversity profiling
+9d9215db,training,False,upstream_fixture_verified,legend;rigid;layers,references/9d9215db.json,19x19->19x19,Randomized semantic audit and diversity profiling
+9ddd00f0,training,False,upstream_fixture_verified,repeat;template;topology;crop,references/9ddd00f0.json,19x19->19x19,Randomized semantic audit and diversity profiling
+9def23fe,training,False,upstream_fixture_verified,paths;rays,references/9def23fe.json,20x20->20x20,Randomized semantic audit and diversity profiling
+9dfd6313,training,False,upstream_fixture_verified,rigid,references/9dfd6313.json,6x6->6x6,Randomized semantic audit and diversity profiling
+9edfc990,training,False,upstream_fixture_verified,objects;selection;recolour;topology;dynamics,references/9edfc990.json,16x16->16x16,Randomized semantic audit and diversity profiling
+9f236235,training,False,upstream_fixture_verified,panels;rigid,references/9f236235.json,23x23->4x4,Randomized semantic audit and diversity profiling
+9f27f097,training,False,upstream_fixture_verified,selection;rigid;topology;crop,references/9f27f097.json,12x12->12x12,Randomized semantic audit and diversity profiling
+9f41bd9c,training,False,upstream_fixture_verified,movement;count;layers,references/9f41bd9c.json,18x18->18x18,Randomized semantic audit and diversity profiling
+9f5f939b,training,False,upstream_fixture_verified,,references/9f5f939b.json,20x20->20x20,Randomized semantic audit and diversity profiling
+9f669b64,training,False,generator_missing,paths;dynamics,references/9f669b64.json,10x10->10x10,"Construct valid latent inputs, independently render output, differential-test, audit ambiguity and edge cases"
+9f8de559,training,False,upstream_fixture_verified,topology;paths;rays,references/9f8de559.json,14x14->14x14,Randomized semantic audit and diversity profiling
+a04b2602,training,False,upstream_fixture_verified,crop;layers,references/a04b2602.json,16x27->16x27,Randomized semantic audit and diversity profiling
+a096bf4d,training,False,upstream_fixture_verified,panels;selection;movement;repeat;template,references/a096bf4d.json,26x26->26x26,Randomized semantic audit and diversity profiling
+a09f6c25,training,False,generator_missing,legend;recolour;rigid;instructions,references/a09f6c25.json,28x27->28x27;26x27->26x27,"Construct valid latent inputs, independently render output, differential-test, audit ambiguity and edge cases"
+a1570a43,training,False,upstream_fixture_verified,selection;movement;template;topology;crop,references/a1570a43.json,10x8->10x8,Randomized semantic audit and diversity profiling
+a1aa0c1e,training,False,upstream_fixture_verified,count;scale,references/a1aa0c1e.json,21x21->3x5,Randomized semantic audit and diversity profiling
+a251c730,evaluation,False,generator_missing,selection;template;topology;crop,references/a251c730.json,30x30->9x14,"Construct valid latent inputs, independently render output, differential-test, audit ambiguity and edge cases"
+a25697e4,evaluation,True,generator_missing,recolour;rigid;movement;topology;crop;layers,references/a25697e4.json,30x30->30x30;30x25->30x25,"Construct valid latent inputs, independently render output, differential-test, audit ambiguity and edge cases"
+a2d730bd,training,False,upstream_fixture_verified,paths,references/a2d730bd.json,30x30->30x30,Randomized semantic audit and diversity profiling
+a2fd1cf0,training,False,upstream_fixture_verified,paths,references/a2fd1cf0.json,12x14->12x14,Randomized semantic audit and diversity profiling
+a32d8b75,evaluation,False,generator_missing,panels;legend;rigid;movement;repeat;template;scale,references/a32d8b75.json,30x30->30x20;30x30->30x22,"Construct valid latent inputs, independently render output, differential-test, audit ambiguity and edge cases"
+a3325580,training,False,upstream_fixture_verified,selection;count;order;crop,references/a3325580.json,10x10->4x3,Randomized semantic audit and diversity profiling
+a395ee82,evaluation,False,generator_missing,selection;recolour;movement;template,references/a395ee82.json,22x22->22x22,"Construct valid latent inputs, independently render output, differential-test, audit ambiguity and edge cases"
+a3f84088,training,False,upstream_fixture_verified,selection;repeat;topology;crop;layers,references/a3f84088.json,30x30->30x30,Randomized semantic audit and diversity profiling
+a406ac07,training,False,upstream_fixture_verified,template,references/a406ac07.json,10x10->10x10,Randomized semantic audit and diversity profiling
+a416b8f3,training,False,upstream_fixture_verified,recolour;movement;repeat;template;crop;assembly,references/a416b8f3.json,5x4->5x8,Randomized semantic audit and diversity profiling
+a416fc5b,training,False,upstream_fixture_verified,panels;legend;recolour;template,references/a416fc5b.json,11x11->11x11,Randomized semantic audit and diversity profiling
+a47bf94d,evaluation,True,generator_missing,legend;paths;instructions,references/a47bf94d.json,26x26->26x26,"Construct valid latent inputs, independently render output, differential-test, audit ambiguity and edge cases"
+a48eeaf7,training,False,upstream_fixture_verified,,references/a48eeaf7.json,10x10->10x10,Randomized semantic audit and diversity profiling
+a5313dff,training,False,upstream_fixture_verified,objects;topology,references/a5313dff.json,9x9->9x9,Randomized semantic audit and diversity profiling
+a57f2f04,training,False,upstream_fixture_verified,repeat;template;crop,references/a57f2f04.json,26x22->26x22,Randomized semantic audit and diversity profiling
+a59b95c0,training,False,upstream_fixture_verified,repeat;template;count;crop;assembly,references/a59b95c0.json,3x3->12x12,Randomized semantic audit and diversity profiling
+a5f85a15,training,False,upstream_fixture_verified,recolour;repeat,references/a5f85a15.json,12x12->12x12,Randomized semantic audit and diversity profiling
+a61ba2ce,training,False,upstream_fixture_verified,template;topology;crop,references/a61ba2ce.json,13x13->4x4,Randomized semantic audit and diversity profiling
+a61f2674,training,False,upstream_fixture_verified,selection;recolour,references/a61f2674.json,9x9->9x9,Randomized semantic audit and diversity profiling
+a644e277,training,False,upstream_fixture_verified,selection;topology;crop,references/a644e277.json,19x20->11x6,Randomized semantic audit and diversity profiling
+a64e4611,training,False,upstream_fixture_verified,selection;rigid;movement;order;boolean,references/a64e4611.json,30x30->30x30,Randomized semantic audit and diversity profiling
+a65b410d,training,False,upstream_fixture_verified,,references/a65b410d.json,9x9->9x9,Randomized semantic audit and diversity profiling
+a680ac02,training,False,upstream_fixture_verified,template;topology;order;crop;layers,references/a680ac02.json,22x21->12x4,Randomized semantic audit and diversity profiling
+a68b268e,training,False,upstream_fixture_verified,panels;selection;crop;layers,references/a68b268e.json,9x9->4x4,Randomized semantic audit and diversity profiling
+a6953f00,training,False,generator_missing,count;crop,references/a6953f00.json,8x8->2x2,"Construct valid latent inputs, independently render output, differential-test, audit ambiguity and edge cases"
+a699fb00,training,False,upstream_fixture_verified,,references/a699fb00.json,10x10->10x10,Randomized semantic audit and diversity profiling
+a6f40cea,evaluation,False,generator_missing,objects;selection;repeat;topology;count;crop,references/a6f40cea.json,24x24->8x10,"Construct valid latent inputs, independently render output, differential-test, audit ambiguity and edge cases"
+a740d043,training,False,upstream_fixture_verified,recolour;topology;crop,references/a740d043.json,6x6->2x2,Randomized semantic audit and diversity profiling
+a78176bb,training,False,upstream_fixture_verified,movement;crop,references/a78176bb.json,10x10->10x10,Randomized semantic audit and diversity profiling
+a79310a0,training,False,upstream_fixture_verified,selection;recolour;rigid;movement;template,references/a79310a0.json,5x5->5x5,Randomized semantic audit and diversity profiling
+a834deea,training,False,upstream_fixture_verified,legend;recolour;topology;crop,references/a834deea.json,16x16->16x16,Randomized semantic audit and diversity profiling
+a85d4709,training,False,upstream_fixture_verified,crop,references/a85d4709.json,3x3->3x3,Randomized semantic audit and diversity profiling
+a8610ef7,training,False,upstream_fixture_verified,recolour;rigid,references/a8610ef7.json,6x6->6x6,Randomized semantic audit and diversity profiling
+a87f7484,training,False,upstream_fixture_verified,selection;crop,references/a87f7484.json,15x3->3x3,Randomized semantic audit and diversity profiling
+a8c38be5,training,False,upstream_fixture_verified,repeat;repair;topology;order;crop,references/a8c38be5.json,16x15->9x9,Randomized semantic audit and diversity profiling
+a8d7556c,training,False,upstream_fixture_verified,selection;recolour;order;layers,references/a8d7556c.json,18x18->18x18,Randomized semantic audit and diversity profiling
+a934301b,training,False,upstream_fixture_verified,objects,references/a934301b.json,13x12->13x12,Randomized semantic audit and diversity profiling
+a9f96cdd,training,False,upstream_fixture_verified,template;dynamics,references/a9f96cdd.json,3x5->3x5,Randomized semantic audit and diversity profiling
+aa18de87,training,False,upstream_fixture_verified,,references/aa18de87.json,4x9->4x9,Randomized semantic audit and diversity profiling
+aa300dc3,training,False,upstream_fixture_verified,selection;paths;order,references/aa300dc3.json,10x10->10x10,Randomized semantic audit and diversity profiling
+aa4ec2a5,evaluation,False,generator_missing,objects;recolour;topology;count,references/aa4ec2a5.json,26x27->26x27,"Construct valid latent inputs, independently render output, differential-test, audit ambiguity and edge cases"
+aa62e3f4,training,False,generator_missing,selection;dynamics;layers,references/aa62e3f4.json,5x5->5x5,"Construct valid latent inputs, independently render output, differential-test, audit ambiguity and edge cases"
+aab50785,training,False,upstream_fixture_verified,count;order;crop,references/aab50785.json,15x17->8x4,Randomized semantic audit and diversity profiling
+aabf363d,training,False,upstream_fixture_verified,selection;recolour;template,references/aabf363d.json,7x7->7x7,Randomized semantic audit and diversity profiling
+aaecdb9a,training,False,generator_missing,objects;selection;legend;count;crop,references/aaecdb9a.json,10x10->6x5,"Construct valid latent inputs, independently render output, differential-test, audit ambiguity and edge cases"
+aaef0977,training,False,upstream_fixture_verified,,references/aaef0977.json,8x8->8x8,Randomized semantic audit and diversity profiling
+aba27056,training,False,upstream_fixture_verified,movement;topology;rays;crop,references/aba27056.json,10x10->10x10,Randomized semantic audit and diversity profiling
+abbfd121,training,False,upstream_fixture_verified,selection;repeat;template;repair;crop;layers,references/abbfd121.json,23x22->8x9,Randomized semantic audit and diversity profiling
+abc82100,evaluation,False,generator_missing,objects;legend;rigid;repeat;template;layers,references/abc82100.json,20x20->20x20,"Construct valid latent inputs, independently render output, differential-test, audit ambiguity and edge cases"
+ac0a08a4,training,False,upstream_fixture_verified,template;count;crop;scale,references/ac0a08a4.json,3x3->12x12,Randomized semantic audit and diversity profiling
+ac0c2ac3,training,False,upstream_fixture_verified,layers,references/ac0c2ac3.json,13x13->13x13,Randomized semantic audit and diversity profiling
+ac0c5833,training,False,upstream_fixture_verified,rigid;template,references/ac0c5833.json,27x27->27x27,Randomized semantic audit and diversity profiling
+ac2e8ecf,training,False,generator_missing,topology;dynamics;crop;layers,references/ac2e8ecf.json,16x15->16x15,"Construct valid latent inputs, independently render output, differential-test, audit ambiguity and edge cases"
+ac3e2b04,training,False,upstream_fixture_verified,template;layers,references/ac3e2b04.json,16x18->16x18,Randomized semantic audit and diversity profiling
+ac605cbb,training,False,upstream_fixture_verified,selection;template;count,references/ac605cbb.json,11x11->11x11,Randomized semantic audit and diversity profiling
+ac6f9922,training,False,upstream_fixture_verified,selection;topology;count;order;crop;scale,references/ac6f9922.json,19x19->3x3,Randomized semantic audit and diversity profiling
+ad173014,training,False,upstream_fixture_verified,recolour;rigid;order,references/ad173014.json,27x27->27x27,Randomized semantic audit and diversity profiling
+ad38a9d0,training,False,upstream_fixture_verified,objects;selection;legend;recolour;repeat;crop,references/ad38a9d0.json,9x9->9x9,Randomized semantic audit and diversity profiling
+ad3b40cf,training,False,generator_missing,selection;rigid;template;dynamics;count,references/ad3b40cf.json,17x17->17x17,"Construct valid latent inputs, independently render output, differential-test, audit ambiguity and edge cases"
+ad7e01d0,training,False,upstream_fixture_verified,repeat;template;topology;order;crop,references/ad7e01d0.json,5x5->25x25,Randomized semantic audit and diversity profiling
+ae3edfdc,training,False,upstream_fixture_verified,movement,references/ae3edfdc.json,15x15->15x15,Randomized semantic audit and diversity profiling
+ae4f1146,training,False,upstream_fixture_verified,objects;repeat;count;crop,references/ae4f1146.json,9x9->3x3,Randomized semantic audit and diversity profiling
+ae58858e,training,False,upstream_fixture_verified,objects;selection;recolour;dynamics,references/ae58858e.json,6x8->6x8,Randomized semantic audit and diversity profiling
+aedd82e4,training,False,upstream_fixture_verified,recolour,references/aedd82e4.json,5x4->5x4,Randomized semantic audit and diversity profiling
+aee291af,training,False,generator_missing,movement;topology;count;crop,references/aee291af.json,18x18->5x5,"Construct valid latent inputs, independently render output, differential-test, audit ambiguity and edge cases"
+af24b4cc,training,False,upstream_fixture_verified,selection;repeat;topology;crop;scale,references/af24b4cc.json,9x10->4x5,Randomized semantic audit and diversity profiling
+af726779,training,False,upstream_fixture_verified,repeat;dynamics,references/af726779.json,13x15->13x15;21x17->21x17;10x24->10x24,Randomized semantic audit and diversity profiling
+af902bf9,training,False,upstream_fixture_verified,movement;topology;order,references/af902bf9.json,10x10->10x10,Randomized semantic audit and diversity profiling
+afe3afe9,training,False,upstream_fixture_verified,rigid;movement;dynamics;crop;layers,references/afe3afe9.json,30x30->6x7,Randomized semantic audit and diversity profiling
+b0039139,evaluation,True,generator_missing,panels;repeat;template;count;crop,references/b0039139.json,26x7->19x5;7x29->5x29,"Construct valid latent inputs, independently render output, differential-test, audit ambiguity and edge cases"
+b0722778,training,False,upstream_fixture_verified,recolour;rigid;crop;analogy,references/b0722778.json,8x9->8x2,Randomized semantic audit and diversity profiling
+b0c4d837,training,False,upstream_fixture_verified,topology;paths;count;crop,references/b0c4d837.json,9x9->3x3,Randomized semantic audit and diversity profiling
+b0f4d537,training,False,upstream_fixture_verified,legend;repeat;count;order;crop;layers,references/b0f4d537.json,12x15->12x7,Randomized semantic audit and diversity profiling
+b10624e5,evaluation,False,generator_missing,rigid;movement;template;dynamics;scale,references/b10624e5.json,27x27->27x27,"Construct valid latent inputs, independently render output, differential-test, audit ambiguity and edge cases"
+b15fca0b,training,False,generator_missing,objects;selection;paths,references/b15fca0b.json,10x10->10x10,"Construct valid latent inputs, independently render output, differential-test, audit ambiguity and edge cases"
+b190f7f5,training,False,upstream_fixture_verified,recolour;template;crop;scale,references/b190f7f5.json,8x4->16x16,Randomized semantic audit and diversity profiling
+b1948b0a,training,False,upstream_fixture_verified,recolour,references/b1948b0a.json,4x4->4x4,Randomized semantic audit and diversity profiling
+b1986d4b,training,False,upstream_fixture_verified,selection;count;order;crop,references/b1986d4b.json,26x25->5x27,Randomized semantic audit and diversity profiling
+b1fc8b8e,training,False,upstream_fixture_verified,template;count;order;crop,references/b1fc8b8e.json,6x6->5x5;6x6->5x5,Randomized semantic audit and diversity profiling
+b20f7c8b,training,False,generator_missing,legend;rigid;instructions,references/b20f7c8b.json,18x22->18x22,"Construct valid latent inputs, independently render output, differential-test, audit ambiguity and edge cases"
+b230c067,training,False,upstream_fixture_verified,objects;selection;recolour;movement;count;crop,references/b230c067.json,10x10->10x10,Randomized semantic audit and diversity profiling
+b25e450b,training,False,upstream_fixture_verified,template;layers,references/b25e450b.json,18x14->18x14,Randomized semantic audit and diversity profiling
+b27ca6d3,training,False,upstream_fixture_verified,objects;count;crop,references/b27ca6d3.json,17x16->17x16,Randomized semantic audit and diversity profiling
+b2862040,training,False,upstream_fixture_verified,objects;selection;recolour;topology,references/b2862040.json,16x15->16x15,Randomized semantic audit and diversity profiling
+b2bc3ffd,training,False,upstream_fixture_verified,panels;movement;count;crop,references/b2bc3ffd.json,8x8->8x8,Randomized semantic audit and diversity profiling
+b457fec5,training,False,upstream_fixture_verified,legend;recolour;movement,references/b457fec5.json,27x23->27x23,Randomized semantic audit and diversity profiling
+b4a43f3b,training,False,upstream_fixture_verified,panels;repeat;template;dynamics;count;crop;scale,references/b4a43f3b.json,13x6->18x18,Randomized semantic audit and diversity profiling
+b527c5c6,training,False,upstream_fixture_verified,rays,references/b527c5c6.json,20x20->20x20,Randomized semantic audit and diversity profiling
+b548a754,training,False,upstream_fixture_verified,topology;crop,references/b548a754.json,13x13->13x13,Randomized semantic audit and diversity profiling
+b5bb5719,training,False,upstream_fixture_verified,,references/b5bb5719.json,6x12->6x12,Randomized semantic audit and diversity profiling
+b5ca7ac4,evaluation,True,generator_missing,selection;rigid;movement;topology;dynamics;order;layers,references/b5ca7ac4.json,22x22->22x22,"Construct valid latent inputs, independently render output, differential-test, audit ambiguity and edge cases"
+b60334d2,training,False,upstream_fixture_verified,template;count;order,references/b60334d2.json,9x9->9x9,Randomized semantic audit and diversity profiling
+b6afb2da,training,False,upstream_fixture_verified,objects;selection;repeat;topology;count,references/b6afb2da.json,10x10->10x10,Randomized semantic audit and diversity profiling
+b6f77b65,evaluation,False,generator_missing,legend;movement;rays;dynamics;count;layers,references/b6f77b65.json,12x12->12x12;12x12->12x12,"Construct valid latent inputs, independently render output, differential-test, audit ambiguity and edge cases"
+b71a7747,training,False,generator_missing,selection;paths,references/b71a7747.json,28x28->20x20,"Construct valid latent inputs, independently render output, differential-test, audit ambiguity and edge cases"
+b7249182,training,False,upstream_fixture_verified,rigid;rays,references/b7249182.json,19x9->19x9,Randomized semantic audit and diversity profiling
+b7256dcd,training,False,upstream_fixture_verified,selection;recolour;count,references/b7256dcd.json,7x7->7x7,Randomized semantic audit and diversity profiling
+b745798f,training,False,upstream_fixture_verified,repair,references/b745798f.json,15x15->15x15,Randomized semantic audit and diversity profiling
+b74ca5d1,training,False,generator_missing,legend;recolour;repeat;template;dynamics;boolean;crop;layers;instructions,references/b74ca5d1.json,30x30->30x30;30x30->30x30,"Construct valid latent inputs, independently render output, differential-test, audit ambiguity and edge cases"
+b775ac94,training,False,upstream_fixture_verified,objects;selection;rigid;topology,references/b775ac94.json,24x24->24x24,Randomized semantic audit and diversity profiling
+b782dc8a,training,False,upstream_fixture_verified,topology;paths;count,references/b782dc8a.json,15x15->15x15,Randomized semantic audit and diversity profiling
+b7955b3c,training,False,upstream_fixture_verified,objects;template;repair;dynamics;crop;assembly;layers,references/b7955b3c.json,26x22->26x22;18x22->18x22,Randomized semantic audit and diversity profiling
+b7999b51,training,False,upstream_fixture_verified,objects;selection;repair;count;order;crop;layers,references/b7999b51.json,12x18->6x5,Randomized semantic audit and diversity profiling
+b7cb93ac,training,False,generator_missing,selection;rigid;repeat;template;topology;count;order;crop;assembly,references/b7cb93ac.json,10x10->3x4,"Construct valid latent inputs, independently render output, differential-test, audit ambiguity and edge cases"
+b7f8a4d8,training,False,upstream_fixture_verified,selection;movement;topology,references/b7f8a4d8.json,30x30->30x30,Randomized semantic audit and diversity profiling
+b7fb29bc,training,False,upstream_fixture_verified,selection;repeat;topology;crop;layers,references/b7fb29bc.json,15x15->15x15,Randomized semantic audit and diversity profiling
+b8825c91,training,False,upstream_fixture_verified,rigid;repair,references/b8825c91.json,16x16->16x16,Randomized semantic audit and diversity profiling
+b8cdaf2b,training,False,upstream_fixture_verified,rays,references/b8cdaf2b.json,9x9->9x9,Randomized semantic audit and diversity profiling
+b91ae062,training,False,upstream_fixture_verified,template;count;crop;scale,references/b91ae062.json,3x3->12x12,Randomized semantic audit and diversity profiling
+b942fd60,training,False,upstream_fixture_verified,rays,references/b942fd60.json,10x12->10x12,Randomized semantic audit and diversity profiling
+b94a9452,training,False,upstream_fixture_verified,recolour;count;crop,references/b94a9452.json,14x13->6x6,Randomized semantic audit and diversity profiling
+b9630600,training,False,upstream_fixture_verified,selection;topology;dynamics;order;boolean;layers,references/b9630600.json,30x30->30x30,Randomized semantic audit and diversity profiling
+b99e7126,evaluation,False,generator_missing,panels;repeat;template;scale,references/b99e7126.json,29x29->29x29,"Construct valid latent inputs, independently render output, differential-test, audit ambiguity and edge cases"
+b9b7f026,training,False,upstream_fixture_verified,topology;count;crop,references/b9b7f026.json,14x15->1x1,Randomized semantic audit and diversity profiling
+b9e38dc0,evaluation,False,generator_missing,objects;selection;rigid;topology;dynamics;count;crop,references/b9e38dc0.json,15x19->15x19,"Construct valid latent inputs, independently render output, differential-test, audit ambiguity and edge cases"
+ba1aa698,training,False,upstream_fixture_verified,panels;movement;template;topology;count,references/ba1aa698.json,16x25->16x7,Randomized semantic audit and diversity profiling
+ba26e723,training,False,upstream_fixture_verified,rigid;repeat;count,references/ba26e723.json,3x17->3x17,Randomized semantic audit and diversity profiling
+ba97ae07,training,False,upstream_fixture_verified,boolean;layers,references/ba97ae07.json,11x6->11x6,Randomized semantic audit and diversity profiling
+ba9d41b8,training,False,upstream_fixture_verified,movement;repeat;topology;count;crop,references/ba9d41b8.json,19x19->19x19,Randomized semantic audit and diversity profiling
+bae5c565,training,False,upstream_fixture_verified,dynamics,references/bae5c565.json,11x11->11x11,Randomized semantic audit and diversity profiling
+baf41dbf,training,False,upstream_fixture_verified,panels;crop,references/baf41dbf.json,16x17->16x17,Randomized semantic audit and diversity profiling
+bb43febb,training,False,upstream_fixture_verified,selection;topology;crop,references/bb43febb.json,10x10->10x10,Randomized semantic audit and diversity profiling
+bb52a14b,training,False,upstream_fixture_verified,movement;template;crop,references/bb52a14b.json,22x22->22x22,Randomized semantic audit and diversity profiling
+bbb1b8b6,training,False,upstream_fixture_verified,panels;topology,references/bbb1b8b6.json,4x9->4x4;4x9->4x4,Randomized semantic audit and diversity profiling
+bbc9ae5d,training,False,upstream_fixture_verified,crop,references/bbc9ae5d.json,1x12->6x12,Randomized semantic audit and diversity profiling
+bc1d5164,training,False,upstream_fixture_verified,template;boolean;crop;layers,references/bc1d5164.json,5x7->3x3,Randomized semantic audit and diversity profiling
+bc4146bd,training,False,upstream_fixture_verified,rigid;repeat;template;crop,references/bc4146bd.json,4x4->4x20,Randomized semantic audit and diversity profiling
+bc93ec48,training,False,generator_missing,objects;movement;template;crop,references/bc93ec48.json,16x16->16x16,"Construct valid latent inputs, independently render output, differential-test, audit ambiguity and edge cases"
+bcb3040b,training,False,upstream_fixture_verified,selection;recolour;topology;paths;count,references/bcb3040b.json,18x18->18x18,Randomized semantic audit and diversity profiling
+bd14c3bf,training,False,upstream_fixture_verified,selection;recolour;rigid;template;crop;layers,references/bd14c3bf.json,19x19->19x19,Randomized semantic audit and diversity profiling
+bd283c4a,training,False,upstream_fixture_verified,selection;count;order,references/bd283c4a.json,10x10->10x10,Randomized semantic audit and diversity profiling
+bd4472b8,training,False,upstream_fixture_verified,panels;legend;rigid;count,references/bd4472b8.json,12x5->12x5,Randomized semantic audit and diversity profiling
+bd5af378,training,False,upstream_fixture_verified,panels;topology,references/bd5af378.json,10x8->10x8,Randomized semantic audit and diversity profiling
+bda2d7a6,training,False,upstream_fixture_verified,recolour;rigid;movement;layers,references/bda2d7a6.json,8x8->8x8;6x6->6x6,Randomized semantic audit and diversity profiling
+bdad9b1f,training,False,upstream_fixture_verified,rays,references/bdad9b1f.json,6x6->6x6,Randomized semantic audit and diversity profiling
+be03b35f,training,False,upstream_fixture_verified,rigid;crop,references/be03b35f.json,5x5->2x2,Randomized semantic audit and diversity profiling
+be94b721,training,False,upstream_fixture_verified,objects;selection;topology;crop,references/be94b721.json,9x9->4x3,Randomized semantic audit and diversity profiling
+beb8660c,training,False,upstream_fixture_verified,selection;movement;dynamics;crop;layers,references/beb8660c.json,11x8->11x8,Randomized semantic audit and diversity profiling
+bf32578f,training,False,generator_missing,rigid;topology;crop,references/bf32578f.json,8x8->8x8,"Construct valid latent inputs, independently render output, differential-test, audit ambiguity and edge cases"
+bf45cf4b,evaluation,False,generator_missing,objects;repeat;template;crop,references/bf45cf4b.json,14x13->25x25,"Construct valid latent inputs, independently render output, differential-test, audit ambiguity and edge cases"
+bf699163,training,False,upstream_fixture_verified,topology;dynamics;crop;layers,references/bf699163.json,13x14->3x3,Randomized semantic audit and diversity profiling
+bf89d739,training,False,upstream_fixture_verified,paths,references/bf89d739.json,14x17->14x17,Randomized semantic audit and diversity profiling
+c074846d,training,False,upstream_fixture_verified,recolour;rigid;dynamics;count,references/c074846d.json,9x11->9x11;9x9->9x9,Randomized semantic audit and diversity profiling
+c0f76784,training,False,upstream_fixture_verified,topology;crop,references/c0f76784.json,12x12->12x12,Randomized semantic audit and diversity profiling
+c1990cce,training,False,upstream_fixture_verified,crop;layers,references/c1990cce.json,1x17->17x17,Randomized semantic audit and diversity profiling
+c1d99e64,training,False,upstream_fixture_verified,panels;recolour,references/c1d99e64.json,27x25->27x25,Randomized semantic audit and diversity profiling
+c3202e5a,training,False,upstream_fixture_verified,panels;selection;dynamics;count;boolean;crop,references/c3202e5a.json,29x29->5x5,Randomized semantic audit and diversity profiling
+c35c1b4c,training,False,upstream_fixture_verified,objects;selection;recolour;rigid,references/c35c1b4c.json,10x10->10x10,Randomized semantic audit and diversity profiling
+c3e719e8,training,False,upstream_fixture_verified,selection;repeat;template;order;crop,references/c3e719e8.json,3x3->9x9,Randomized semantic audit and diversity profiling
+c3fa4749,training,False,generator_missing,topology,references/c3fa4749.json,30x30->30x30;30x30->30x30,"Construct valid latent inputs, independently render output, differential-test, audit ambiguity and edge cases"
+c444b776,training,False,upstream_fixture_verified,panels;recolour;rigid;movement;boolean,references/c444b776.json,19x29->19x29,Randomized semantic audit and diversity profiling
+c48954c1,training,False,upstream_fixture_verified,rigid;repeat;template;order;crop;assembly,references/c48954c1.json,3x3->9x9,Randomized semantic audit and diversity profiling
+c4d067a0,evaluation,True,generator_missing,legend;movement;template;dynamics;scale,references/c4d067a0.json,27x27->27x27,"Construct valid latent inputs, independently render output, differential-test, audit ambiguity and edge cases"
+c4d1a9ae,training,False,generator_missing,,references/c4d1a9ae.json,10x8->10x8,"Construct valid latent inputs, independently render output, differential-test, audit ambiguity and edge cases"
+c59eb873,training,False,upstream_fixture_verified,template;crop;scale,references/c59eb873.json,5x5->10x10,Randomized semantic audit and diversity profiling
+c6141b15,training,False,generator_missing,objects;template;paths;rays;crop,references/c6141b15.json,16x16->16x16,"Construct valid latent inputs, independently render output, differential-test, audit ambiguity and edge cases"
+c61be7dc,training,False,upstream_fixture_verified,panels;rigid;movement;topology;count,references/c61be7dc.json,19x19->19x19,Randomized semantic audit and diversity profiling
+c62e2108,training,False,upstream_fixture_verified,legend;repeat;assembly;layers;instructions,references/c62e2108.json,24x24->24x24,Randomized semantic audit and diversity profiling
+c64f1187,training,False,upstream_fixture_verified,legend;recolour;template;crop,references/c64f1187.json,20x18->11x11,Randomized semantic audit and diversity profiling
+c658a4bd,training,False,upstream_fixture_verified,selection;template;order;crop;layers,references/c658a4bd.json,19x19->10x10,Randomized semantic audit and diversity profiling
+c6e1b8da,training,False,upstream_fixture_verified,movement;repair;count;crop;layers,references/c6e1b8da.json,20x20->20x20,Randomized semantic audit and diversity profiling
+c7d4e6ad,training,False,upstream_fixture_verified,selection;legend;recolour,references/c7d4e6ad.json,10x10->10x10,Randomized semantic audit and diversity profiling
+c7f57c3e,evaluation,True,generator_missing,selection;template;count;crop;scale,references/c7f57c3e.json,28x28->28x28,"Construct valid latent inputs, independently render output, differential-test, audit ambiguity and edge cases"
+c803e39c,training,False,upstream_fixture_verified,panels;template;crop,references/c803e39c.json,7x30->25x25,Randomized semantic audit and diversity profiling
+c87289bb,training,False,upstream_fixture_verified,rays;dynamics,references/c87289bb.json,10x15->10x15,Randomized semantic audit and diversity profiling
+c8b7cc0f,training,False,upstream_fixture_verified,selection;topology;count;order;crop,references/c8b7cc0f.json,9x9->3x3,Randomized semantic audit and diversity profiling
+c8cbb738,training,False,upstream_fixture_verified,selection;template;crop,references/c8cbb738.json,18x19->7x7,Randomized semantic audit and diversity profiling
+c8f0f002,training,False,upstream_fixture_verified,recolour;count,references/c8f0f002.json,3x5->3x5,Randomized semantic audit and diversity profiling
+c909285e,training,False,upstream_fixture_verified,objects;panels;repeat;crop;assembly,references/c909285e.json,24x24->6x6,Randomized semantic audit and diversity profiling
+c920a713,training,False,upstream_fixture_verified,repeat;paths;dynamics;order;crop;layers,references/c920a713.json,25x25->13x13,Randomized semantic audit and diversity profiling
+c92b942c,training,False,upstream_fixture_verified,repeat;dynamics;crop,references/c92b942c.json,3x3->9x9,Randomized semantic audit and diversity profiling
+c9680e90,training,False,generator_missing,objects;panels;rigid;movement,references/c9680e90.json,11x11->11x11,"Construct valid latent inputs, independently render output, differential-test, audit ambiguity and edge cases"
+c97c0139,training,False,upstream_fixture_verified,layers,references/c97c0139.json,21x22->21x22,Randomized semantic audit and diversity profiling
+c9e6f938,training,False,upstream_fixture_verified,rigid;template;crop,references/c9e6f938.json,3x3->3x6,Randomized semantic audit and diversity profiling
+c9f8e694,training,False,upstream_fixture_verified,legend;recolour;count,references/c9f8e694.json,12x12->12x12,Randomized semantic audit and diversity profiling
+ca8de6ea,training,False,upstream_fixture_verified,rigid;movement;crop,references/ca8de6ea.json,5x5->3x3,Randomized semantic audit and diversity profiling
+caa06a1f,training,False,upstream_fixture_verified,selection;movement;repeat;count,references/caa06a1f.json,18x18->18x18,Randomized semantic audit and diversity profiling
+cad67732,training,False,upstream_fixture_verified,selection;movement;repeat;template;dynamics;crop,references/cad67732.json,10x10->20x20,Randomized semantic audit and diversity profiling
+cb227835,training,False,upstream_fixture_verified,,references/cb227835.json,13x14->13x14,Randomized semantic audit and diversity profiling
+cb2d8a2c,evaluation,False,generator_missing,objects;recolour;paths;count,references/cb2d8a2c.json,14x26->14x26;29x16->29x16,"Construct valid latent inputs, independently render output, differential-test, audit ambiguity and edge cases"
+cbded52d,training,False,upstream_fixture_verified,panels;movement,references/cbded52d.json,8x8->8x8,Randomized semantic audit and diversity profiling
+cbebaa4b,evaluation,False,generator_missing,objects;selection;movement;template;dynamics;count;assembly;layers,references/cbebaa4b.json,26x26->26x26;26x26->26x26,"Construct valid latent inputs, independently render output, differential-test, audit ambiguity and edge cases"
+cc9053aa,training,False,generator_missing,selection;recolour;rigid;topology;paths;count,references/cc9053aa.json,9x9->9x9,"Construct valid latent inputs, independently render output, differential-test, audit ambiguity and edge cases"
+ccd554ac,training,False,upstream_fixture_verified,rigid;repeat;template;crop;scale;assembly,references/ccd554ac.json,5x5->25x25,Randomized semantic audit and diversity profiling
+cce03e0d,training,False,upstream_fixture_verified,template;crop,references/cce03e0d.json,3x3->9x9,Randomized semantic audit and diversity profiling
+cd3c21df,training,False,generator_missing,crop,references/cd3c21df.json,13x13->3x2,"Construct valid latent inputs, independently render output, differential-test, audit ambiguity and edge cases"
+cdecee7f,training,False,upstream_fixture_verified,order;crop,references/cdecee7f.json,10x10->3x3,Randomized semantic audit and diversity profiling
+ce039d91,training,False,upstream_fixture_verified,recolour;rigid,references/ce039d91.json,10x10->10x10,Randomized semantic audit and diversity profiling
+ce22a75a,training,False,upstream_fixture_verified,template;boolean;crop;layers,references/ce22a75a.json,9x9->9x9,Randomized semantic audit and diversity profiling
+ce4f8723,training,False,upstream_fixture_verified,panels;dynamics;boolean;crop,references/ce4f8723.json,9x4->4x4,Randomized semantic audit and diversity profiling
+ce602527,training,False,upstream_fixture_verified,objects;selection;rigid;movement;dynamics;crop;scale,references/ce602527.json,18x18->4x3,Randomized semantic audit and diversity profiling
+ce8d95cc,training,False,upstream_fixture_verified,scale;layers,references/ce8d95cc.json,12x13->7x9,Randomized semantic audit and diversity profiling
+ce9e57f2,training,False,upstream_fixture_verified,objects;recolour;count;order,references/ce9e57f2.json,11x9->11x9,Randomized semantic audit and diversity profiling
+cf133acc,training,False,upstream_fixture_verified,,references/cf133acc.json,15x15->15x15,Randomized semantic audit and diversity profiling
+cf5fd0ad,training,False,upstream_fixture_verified,rigid;repeat;crop,references/cf5fd0ad.json,3x3->12x12,Randomized semantic audit and diversity profiling
+cf98881b,training,False,upstream_fixture_verified,panels;crop;layers,references/cf98881b.json,4x14->4x4,Randomized semantic audit and diversity profiling
+cfb2ce5a,training,False,upstream_fixture_verified,selection;recolour;rigid;template;crop,references/cfb2ce5a.json,10x10->10x10,Randomized semantic audit and diversity profiling
+d017b73f,training,False,upstream_fixture_verified,selection;movement;paths;order;crop;assembly,references/d017b73f.json,3x11->3x8,Randomized semantic audit and diversity profiling
+d037b0a7,training,False,upstream_fixture_verified,dynamics,references/d037b0a7.json,3x3->3x3,Randomized semantic audit and diversity profiling
+d06dbe63,training,False,upstream_fixture_verified,selection;rigid;dynamics,references/d06dbe63.json,13x13->13x13,Randomized semantic audit and diversity profiling
+d07ae81c,training,False,upstream_fixture_verified,selection;recolour;rays,references/d07ae81c.json,17x19->17x19,Randomized semantic audit and diversity profiling
+d0f5fe59,training,False,upstream_fixture_verified,objects;count;crop;scale,references/d0f5fe59.json,15x12->5x5,Randomized semantic audit and diversity profiling
+d10ecb37,training,False,upstream_fixture_verified,repeat;crop;assembly,references/d10ecb37.json,4x8->2x2,Randomized semantic audit and diversity profiling
+d13f3404,training,False,upstream_fixture_verified,template;count;crop;layers,references/d13f3404.json,3x3->6x6,Randomized semantic audit and diversity profiling
+d19f7514,training,False,upstream_fixture_verified,boolean;crop,references/d19f7514.json,12x4->6x4,Randomized semantic audit and diversity profiling
+d22278a0,training,False,upstream_fixture_verified,selection,references/d22278a0.json,17x17->17x17,Randomized semantic audit and diversity profiling
+d23f8c26,training,False,upstream_fixture_verified,crop,references/d23f8c26.json,7x7->7x7,Randomized semantic audit and diversity profiling
+d255d7a7,training,False,upstream_fixture_verified,rigid;movement;crop,references/d255d7a7.json,20x20->20x20,Randomized semantic audit and diversity profiling
+d282b262,training,False,upstream_fixture_verified,movement;dynamics;layers,references/d282b262.json,15x15->15x15,Randomized semantic audit and diversity profiling
+d2abd087,training,False,upstream_fixture_verified,recolour;count,references/d2abd087.json,10x10->10x10,Randomized semantic audit and diversity profiling
+d2acf2cb,training,False,upstream_fixture_verified,count,references/d2acf2cb.json,10x9->10x9,Randomized semantic audit and diversity profiling
+d304284e,training,False,upstream_fixture_verified,template;crop,references/d304284e.json,23x28->23x28,Randomized semantic audit and diversity profiling
+d35bdbdc,evaluation,False,generator_missing,repair;paths;count;layers,references/d35bdbdc.json,10x10->10x10;10x10->10x10;10x10->10x10,"Construct valid latent inputs, independently render output, differential-test, audit ambiguity and edge cases"
+d364b489,training,False,upstream_fixture_verified,dynamics;count;order,references/d364b489.json,10x10->10x10,Randomized semantic audit and diversity profiling
+d37a1ef5,training,False,upstream_fixture_verified,selection;topology;crop,references/d37a1ef5.json,13x12->13x12,Randomized semantic audit and diversity profiling
+d406998b,training,False,upstream_fixture_verified,recolour;count,references/d406998b.json,3x17->3x17,Randomized semantic audit and diversity profiling
+d43fd935,training,False,upstream_fixture_verified,movement;paths;rays,references/d43fd935.json,10x10->10x10,Randomized semantic audit and diversity profiling
+d4469b4b,training,False,upstream_fixture_verified,selection;legend;template;crop,references/d4469b4b.json,5x5->3x3;5x5->3x3,Randomized semantic audit and diversity profiling
+d47aa2ff,training,False,upstream_fixture_verified,panels;selection;recolour;boolean,references/d47aa2ff.json,10x21->10x10,Randomized semantic audit and diversity profiling
+d492a647,training,False,upstream_fixture_verified,count,references/d492a647.json,15x17->15x17,Randomized semantic audit and diversity profiling
+d4a91cb9,training,False,upstream_fixture_verified,paths,references/d4a91cb9.json,12x13->12x13,Randomized semantic audit and diversity profiling
+d4b1c2b1,training,False,upstream_fixture_verified,count;crop;scale,references/d4b1c2b1.json,3x3->15x15,Randomized semantic audit and diversity profiling
+d4c90558,training,False,generator_missing,selection;movement;count;order;crop,references/d4c90558.json,21x21->3x8,"Construct valid latent inputs, independently render output, differential-test, audit ambiguity and edge cases"
+d4f3cd78,training,False,upstream_fixture_verified,repair;topology;rays;crop,references/d4f3cd78.json,10x10->10x10,Randomized semantic audit and diversity profiling
+d511f180,training,False,upstream_fixture_verified,selection;recolour,references/d511f180.json,4x4->4x4,Randomized semantic audit and diversity profiling
+d56f2372,training,False,generator_missing,selection;rigid;dynamics;crop,references/d56f2372.json,22x20->6x9,"Construct valid latent inputs, independently render output, differential-test, audit ambiguity and edge cases"
+d59b0160,evaluation,False,extension_validated,objects;selection;legend;topology;crop,references/d59b0160.json,16x16->16x16,Randomized semantic audit and diversity profiling
+d5c634a2,training,False,upstream_fixture_verified,movement;count;crop;layers,references/d5c634a2.json,10x11->3x6;10x9->3x6,Randomized semantic audit and diversity profiling
+d5d6de2d,training,False,upstream_fixture_verified,topology;order;crop,references/d5d6de2d.json,25x25->25x25;10x10->10x10,Randomized semantic audit and diversity profiling
+d631b094,training,False,upstream_fixture_verified,objects;selection;count;crop,references/d631b094.json,3x3->1x5,Randomized semantic audit and diversity profiling
+d6542281,training,False,generator_missing,objects;selection;movement;template;count,references/d6542281.json,24x24->24x24;23x23->23x23,"Construct valid latent inputs, independently render output, differential-test, audit ambiguity and edge cases"
+d687bc17,training,False,upstream_fixture_verified,movement;topology;order,references/d687bc17.json,14x17->14x17,Randomized semantic audit and diversity profiling
+d6ad076f,training,False,upstream_fixture_verified,template,references/d6ad076f.json,10x10->10x10,Randomized semantic audit and diversity profiling
+d6e50e54,training,False,upstream_fixture_verified,recolour;movement,references/d6e50e54.json,16x16->16x16,Randomized semantic audit and diversity profiling
+d749d46f,training,False,upstream_fixture_verified,selection;count;order;crop,references/d749d46f.json,3x14->10x15,Randomized semantic audit and diversity profiling
+d753a70b,training,False,upstream_fixture_verified,objects;selection;layers,references/d753a70b.json,16x16->16x16,Randomized semantic audit and diversity profiling
+d89b689b,training,False,upstream_fixture_verified,scale,references/d89b689b.json,10x10->10x10,Randomized semantic audit and diversity profiling
+d8c310e9,training,False,upstream_fixture_verified,selection;movement;repeat;template,references/d8c310e9.json,5x15->5x15,Randomized semantic audit and diversity profiling
+d8e07eb2,evaluation,False,generator_missing,legend;movement;crop;instructions,references/d8e07eb2.json,30x22->30x22;30x22->30x22,"Construct valid latent inputs, independently render output, differential-test, audit ambiguity and edge cases"
+d90796e8,training,False,upstream_fixture_verified,count,references/d90796e8.json,7x9->7x9,Randomized semantic audit and diversity profiling
+d931c21c,training,False,upstream_fixture_verified,objects;topology,references/d931c21c.json,30x30->30x30,Randomized semantic audit and diversity profiling
+d93c6891,training,False,upstream_fixture_verified,dynamics;count;crop;layers,references/d93c6891.json,16x18->16x18,Randomized semantic audit and diversity profiling
+d94c3b52,training,False,upstream_fixture_verified,recolour;repeat;template;count,references/d94c3b52.json,17x25->17x25,Randomized semantic audit and diversity profiling
+d968ffd4,training,False,upstream_fixture_verified,topology,references/d968ffd4.json,22x3->22x3;17x6->17x6,Randomized semantic audit and diversity profiling
+d9f24cd1,training,False,upstream_fixture_verified,paths;order,references/d9f24cd1.json,10x10->10x10,Randomized semantic audit and diversity profiling
+d9fac9be,training,False,upstream_fixture_verified,selection;topology;crop,references/d9fac9be.json,12x12->1x1,Randomized semantic audit and diversity profiling
+da2b0fe3,training,False,upstream_fixture_verified,crop,references/da2b0fe3.json,10x10->10x10;10x10->10x10,Randomized semantic audit and diversity profiling
+da515329,evaluation,True,generator_missing,paths;rays;count;instructions,references/da515329.json,26x26->26x26,"Construct valid latent inputs, independently render output, differential-test, audit ambiguity and edge cases"
+da6e95e5,training,False,generator_missing,count;crop,references/da6e95e5.json,30x30->3x3;30x30->3x3,"Construct valid latent inputs, independently render output, differential-test, audit ambiguity and edge cases"
+dae9d2b5,training,False,upstream_fixture_verified,panels;boolean;crop;layers,references/dae9d2b5.json,3x6->3x3;3x6->3x3,Randomized semantic audit and diversity profiling
+db0c5428,evaluation,False,generator_missing,rigid;repeat;template;topology;dynamics,references/db0c5428.json,17x17->17x17,"Construct valid latent inputs, independently render output, differential-test, audit ambiguity and edge cases"
+db118e2a,training,False,upstream_fixture_verified,selection;template;topology;crop,references/db118e2a.json,6x5->15x15,Randomized semantic audit and diversity profiling
+db3e9e38,training,False,upstream_fixture_verified,rigid;repeat;dynamics;layers,references/db3e9e38.json,9x9->9x9,Randomized semantic audit and diversity profiling
+db615bd4,training,False,generator_missing,selection;recolour;topology;count;crop;assembly,references/db615bd4.json,25x25->25x25,"Construct valid latent inputs, independently render output, differential-test, audit ambiguity and edge cases"
+db695cfb,evaluation,False,generator_missing,rays;count,references/db695cfb.json,25x21->25x21,"Construct valid latent inputs, independently render output, differential-test, audit ambiguity and edge cases"
+db7260a4,training,False,upstream_fixture_verified,topology;dynamics,references/db7260a4.json,10x10->10x10,Randomized semantic audit and diversity profiling
+db93a21d,training,False,upstream_fixture_verified,repair;layers,references/db93a21d.json,30x30->30x30,Randomized semantic audit and diversity profiling
+dbc1a6ce,training,False,upstream_fixture_verified,,references/dbc1a6ce.json,19x21->19x21,Randomized semantic audit and diversity profiling
+dbff022c,evaluation,False,generator_missing,legend;topology;count;layers,references/dbff022c.json,13x13->13x13,"Construct valid latent inputs, independently render output, differential-test, audit ambiguity and edge cases"
+dc1df850,training,False,upstream_fixture_verified,boolean;layers,references/dc1df850.json,10x10->10x10,Randomized semantic audit and diversity profiling
+dc2aa30b,training,False,upstream_fixture_verified,panels;selection;template;count;order;crop,references/dc2aa30b.json,11x11->11x11,Randomized semantic audit and diversity profiling
+dc2e9a9d,training,False,upstream_fixture_verified,rigid;movement;crop;layers,references/dc2e9a9d.json,28x29->28x29,Randomized semantic audit and diversity profiling
+dc433765,training,False,upstream_fixture_verified,movement;rays,references/dc433765.json,3x3->3x3;11x11->11x11,Randomized semantic audit and diversity profiling
+dc46ea44,training,False,upstream_fixture_verified,panels;selection;movement;template;crop;layers,references/dc46ea44.json,11x11->11x11,Randomized semantic audit and diversity profiling
+dce56571,training,False,upstream_fixture_verified,count,references/dce56571.json,11x28->11x28,Randomized semantic audit and diversity profiling
+dd2401ed,training,False,upstream_fixture_verified,recolour;movement;count,references/dd2401ed.json,7x15->7x15,Randomized semantic audit and diversity profiling
+dd6b8c4b,evaluation,False,generator_missing,objects;topology;paths;count;order;scale,references/dd6b8c4b.json,11x11->11x11;11x11->11x11,"Construct valid latent inputs, independently render output, differential-test, audit ambiguity and edge cases"
+ddf7fa4f,training,False,upstream_fixture_verified,selection;recolour;movement;dynamics,references/ddf7fa4f.json,10x10->10x10,Randomized semantic audit and diversity profiling
+de1cd16c,training,False,upstream_fixture_verified,selection;count,references/de1cd16c.json,18x19->1x1,Randomized semantic audit and diversity profiling
+de493100,training,False,generator_missing,rigid;dynamics;crop,references/de493100.json,30x30->10x2,"Construct valid latent inputs, independently render output, differential-test, audit ambiguity and edge cases"
+de809cff,evaluation,True,generator_missing,template;topology;crop;assembly;layers,references/de809cff.json,30x30->30x30,"Construct valid latent inputs, independently render output, differential-test, audit ambiguity and edge cases"
+ded97339,training,False,upstream_fixture_verified,movement;paths;order,references/ded97339.json,10x10->10x10,Randomized semantic audit and diversity profiling
+df8cc377,training,False,upstream_fixture_verified,topology;count,references/df8cc377.json,22x26->22x26,Randomized semantic audit and diversity profiling
+df978a02,training,False,generator_missing,selection;template;rays,references/df978a02.json,16x16->16x16,"Construct valid latent inputs, independently render output, differential-test, audit ambiguity and edge cases"
+df9fd884,training,False,upstream_fixture_verified,selection;rigid;template;topology;crop,references/df9fd884.json,8x8->8x8,Randomized semantic audit and diversity profiling
+dfadab01,evaluation,False,generator_missing,objects;legend;template;layers,references/dfadab01.json,20x20->20x20,"Construct valid latent inputs, independently render output, differential-test, audit ambiguity and edge cases"
+e048c9ed,training,False,upstream_fixture_verified,scale,references/e048c9ed.json,10x12->10x12,Randomized semantic audit and diversity profiling
+e0fb7511,training,False,upstream_fixture_verified,objects;selection;recolour;count;order;crop,references/e0fb7511.json,13x13->13x13,Randomized semantic audit and diversity profiling
+e12f9a14,evaluation,False,generator_missing,rays;dynamics,references/e12f9a14.json,30x30->30x30;30x30->30x30,"Construct valid latent inputs, independently render output, differential-test, audit ambiguity and edge cases"
+e133d23d,training,False,upstream_fixture_verified,panels;dynamics;boolean;crop,references/e133d23d.json,3x7->3x3,Randomized semantic audit and diversity profiling
+e179c5f4,training,False,upstream_fixture_verified,rigid;repeat;paths;dynamics;count,references/e179c5f4.json,10x5->10x5,Randomized semantic audit and diversity profiling
+e1baa8a4,training,False,upstream_fixture_verified,scale,references/e1baa8a4.json,15x15->5x4,Randomized semantic audit and diversity profiling
+e1d2900e,training,False,upstream_fixture_verified,rigid;movement;order,references/e1d2900e.json,30x30->30x30,Randomized semantic audit and diversity profiling
+e2092e0c,training,False,upstream_fixture_verified,topology,references/e2092e0c.json,15x15->15x15,Randomized semantic audit and diversity profiling
+e21a174a,training,False,upstream_fixture_verified,layers,references/e21a174a.json,13x10->13x10;7x7->7x7,Randomized semantic audit and diversity profiling
+e21d9049,training,False,upstream_fixture_verified,repeat,references/e21d9049.json,20x20->20x20,Randomized semantic audit and diversity profiling
+e26a3af2,training,False,upstream_fixture_verified,selection;rigid,references/e26a3af2.json,15x15->15x15,Randomized semantic audit and diversity profiling
+e345f17b,training,False,upstream_fixture_verified,panels;movement;crop;layers,references/e345f17b.json,4x8->4x4;4x8->4x4,Randomized semantic audit and diversity profiling
+e3497940,training,False,upstream_fixture_verified,panels;rigid;template;layers,references/e3497940.json,10x9->10x4,Randomized semantic audit and diversity profiling
+e3721c99,evaluation,False,generator_missing,objects;panels;legend;recolour;topology;count;crop,references/e3721c99.json,30x30->30x30;30x30->30x30,"Construct valid latent inputs, independently render output, differential-test, audit ambiguity and edge cases"
+e376de54,evaluation,True,generator_missing,selection;movement;repair,references/e376de54.json,16x16->16x16,"Construct valid latent inputs, independently render output, differential-test, audit ambiguity and edge cases"
+e39e9282,training,False,upstream_fixture_verified,movement,references/e39e9282.json,13x13->13x13,Randomized semantic audit and diversity profiling
+e3f79277,training,False,upstream_fixture_verified,count;crop,references/e3f79277.json,6x6->16x16,Randomized semantic audit and diversity profiling
+e3fe1151,training,False,upstream_fixture_verified,panels;selection;topology;count,references/e3fe1151.json,5x5->5x5,Randomized semantic audit and diversity profiling
+e4075551,training,False,upstream_fixture_verified,count,references/e4075551.json,16x15->16x15,Randomized semantic audit and diversity profiling
+e40b9e2f,training,False,upstream_fixture_verified,selection;rigid;template;crop,references/e40b9e2f.json,10x10->10x10,Randomized semantic audit and diversity profiling
+e41c6fd3,training,False,upstream_fixture_verified,recolour;movement;template,references/e41c6fd3.json,17x30->17x30,Randomized semantic audit and diversity profiling
+e45ef808,training,False,upstream_fixture_verified,layers,references/e45ef808.json,12x12->12x12,Randomized semantic audit and diversity profiling
+e4888269,training,False,extension_validated,panels;legend;recolour;movement;topology;order;crop;instructions,references/e4888269.json,30x30->30x30;24x13->24x13,Randomized semantic audit and diversity profiling
+e48d4e1a,training,False,upstream_fixture_verified,movement;count,references/e48d4e1a.json,10x10->10x10,Randomized semantic audit and diversity profiling
+e4941b18,training,False,upstream_fixture_verified,dynamics;crop,references/e4941b18.json,19x19->19x19,Randomized semantic audit and diversity profiling
+e5062a87,training,False,upstream_fixture_verified,selection;movement;template;topology;paths;dynamics;order;crop;layers,references/e5062a87.json,10x10->10x10,Randomized semantic audit and diversity profiling
+e509e548,training,False,upstream_fixture_verified,recolour;paths;count;order;layers,references/e509e548.json,14x16->14x16,Randomized semantic audit and diversity profiling
+e50d258f,training,False,upstream_fixture_verified,objects;selection;count;crop,references/e50d258f.json,10x10->6x3,Randomized semantic audit and diversity profiling
+e57337a4,training,False,upstream_fixture_verified,selection;crop;scale,references/e57337a4.json,15x15->3x3,Randomized semantic audit and diversity profiling
+e5790162,training,False,upstream_fixture_verified,legend;paths,references/e5790162.json,10x12->10x12,Randomized semantic audit and diversity profiling
+e5c44e8f,training,False,upstream_fixture_verified,paths;dynamics;count,references/e5c44e8f.json,11x11->11x11,Randomized semantic audit and diversity profiling
+e619ca6e,training,False,upstream_fixture_verified,template;boolean;layers,references/e619ca6e.json,29x28->29x28,Randomized semantic audit and diversity profiling
+e633a9e5,training,False,upstream_fixture_verified,,references/e633a9e5.json,3x3->5x5,Randomized semantic audit and diversity profiling
+e6721834,training,False,upstream_fixture_verified,selection;movement,references/e6721834.json,24x12->12x12,Randomized semantic audit and diversity profiling
+e681b708,training,False,upstream_fixture_verified,objects;selection;recolour,references/e681b708.json,26x26->26x26,Randomized semantic audit and diversity profiling
+e69241bd,training,False,upstream_fixture_verified,objects;topology,references/e69241bd.json,9x9->9x9,Randomized semantic audit and diversity profiling
+e6de6e8f,training,False,upstream_fixture_verified,paths;count;crop;instructions,references/e6de6e8f.json,2x12->8x7,Randomized semantic audit and diversity profiling
+e729b7be,training,False,generator_missing,rigid;template,references/e729b7be.json,19x19->19x19,"Construct valid latent inputs, independently render output, differential-test, audit ambiguity and edge cases"
+e73095fd,training,False,upstream_fixture_verified,topology;count,references/e73095fd.json,16x18->16x18,Randomized semantic audit and diversity profiling
+e734a0e8,training,False,upstream_fixture_verified,panels;selection;template;topology,references/e734a0e8.json,17x17->17x17,Randomized semantic audit and diversity profiling
+e74e1818,training,False,upstream_fixture_verified,rigid;count;layers,references/e74e1818.json,15x15->15x15,Randomized semantic audit and diversity profiling
+e760a62e,training,False,upstream_fixture_verified,recolour;movement;paths,references/e760a62e.json,28x28->28x28,Randomized semantic audit and diversity profiling
+e7639916,training,False,upstream_fixture_verified,topology;count;crop,references/e7639916.json,14x13->14x13,Randomized semantic audit and diversity profiling
+e76a88a6,training,False,upstream_fixture_verified,objects;selection;movement;template;crop,references/e76a88a6.json,10x10->10x10,Randomized semantic audit and diversity profiling
+e78887d1,training,False,upstream_fixture_verified,legend;rigid;instructions,references/e78887d1.json,9x15->3x15,Randomized semantic audit and diversity profiling
+e7a25a18,training,False,upstream_fixture_verified,template;topology;crop;scale,references/e7a25a18.json,14x14->10x10,Randomized semantic audit and diversity profiling
+e7b06bea,training,False,upstream_fixture_verified,repeat;count,references/e7b06bea.json,9x9->9x9,Randomized semantic audit and diversity profiling
+e7dd8335,training,False,upstream_fixture_verified,objects;recolour;crop,references/e7dd8335.json,9x11->9x11,Randomized semantic audit and diversity profiling
+e84fef15,training,False,upstream_fixture_verified,panels;template;repair;boolean,references/e84fef15.json,29x29->5x5,Randomized semantic audit and diversity profiling
+e8593010,training,False,upstream_fixture_verified,objects;recolour,references/e8593010.json,10x10->10x10,Randomized semantic audit and diversity profiling
+e8686506,evaluation,False,generator_missing,selection;rigid;repeat;topology;crop;assembly,references/e8686506.json,15x15->8x5,"Construct valid latent inputs, independently render output, differential-test, audit ambiguity and edge cases"
+e87109e9,evaluation,True,generator_missing,panels;legend;paths;rays;layers,references/e87109e9.json,30x24->24x24,"Construct valid latent inputs, independently render output, differential-test, audit ambiguity and edge cases"
+e872b94a,training,False,generator_missing,objects;paths;count,references/e872b94a.json,9x10->3x1,"Construct valid latent inputs, independently render output, differential-test, audit ambiguity and edge cases"
+e88171ec,training,False,upstream_fixture_verified,selection;recolour;movement;topology,references/e88171ec.json,21x21->21x21,Randomized semantic audit and diversity profiling
+e8dc4411,training,False,upstream_fixture_verified,selection;movement;template;crop;layers,references/e8dc4411.json,18x16->18x16,Randomized semantic audit and diversity profiling
+e9614598,training,False,upstream_fixture_verified,,references/e9614598.json,10x6->10x6;12x12->12x12,Randomized semantic audit and diversity profiling
+e98196ab,training,False,upstream_fixture_verified,panels;selection;rigid;movement;dynamics;boolean;layers,references/e98196ab.json,11x11->5x11,Randomized semantic audit and diversity profiling
+e99362f0,training,False,upstream_fixture_verified,panels;crop;layers,references/e99362f0.json,11x9->5x4,Randomized semantic audit and diversity profiling
+e9ac8c9e,training,False,upstream_fixture_verified,objects;recolour;crop,references/e9ac8c9e.json,15x15->15x15,Randomized semantic audit and diversity profiling
+e9afcf9a,training,False,upstream_fixture_verified,recolour;repeat,references/e9afcf9a.json,2x6->2x6,Randomized semantic audit and diversity profiling
+e9b4f6fc,training,False,upstream_fixture_verified,objects;selection;legend;recolour;topology;crop,references/e9b4f6fc.json,13x13->6x5,Randomized semantic audit and diversity profiling
+e9bb6954,training,False,upstream_fixture_verified,template;repair;rays;dynamics,references/e9bb6954.json,19x19->19x19,Randomized semantic audit and diversity profiling
+e9c9d9a1,training,False,upstream_fixture_verified,panels;topology,references/e9c9d9a1.json,15x15->15x15,Randomized semantic audit and diversity profiling
+e9fc42f2,training,False,generator_missing,objects;movement;template;count;boolean;crop;assembly,references/e9fc42f2.json,13x13->11x7;13x13->8x11,"Construct valid latent inputs, independently render output, differential-test, audit ambiguity and edge cases"
+ea32f347,training,False,upstream_fixture_verified,selection;recolour;order,references/ea32f347.json,10x10->10x10,Randomized semantic audit and diversity profiling
+ea786f4a,training,False,upstream_fixture_verified,rays;dynamics,references/ea786f4a.json,11x11->11x11,Randomized semantic audit and diversity profiling
+ea959feb,training,False,generator_missing,selection;movement;repeat;repair;count,references/ea959feb.json,22x25->22x25,"Construct valid latent inputs, independently render output, differential-test, audit ambiguity and edge cases"
+ea9794b1,training,False,upstream_fixture_verified,crop;layers,references/ea9794b1.json,10x10->5x5,Randomized semantic audit and diversity profiling
+eb281b96,training,False,upstream_fixture_verified,rigid;dynamics,references/eb281b96.json,5x17->17x17,Randomized semantic audit and diversity profiling
+eb5a1d5d,training,False,upstream_fixture_verified,template;count;crop;layers,references/eb5a1d5d.json,26x27->9x9,Randomized semantic audit and diversity profiling
+ec883f72,training,False,upstream_fixture_verified,selection;rays;crop,references/ec883f72.json,12x12->12x12,Randomized semantic audit and diversity profiling
+ecaa0ec1,training,False,upstream_fixture_verified,rigid,references/ecaa0ec1.json,11x11->11x11,Randomized semantic audit and diversity profiling
+ecb67b6d,training,False,generator_missing,objects;selection;recolour;repeat;count,references/ecb67b6d.json,16x19->16x19,"Construct valid latent inputs, independently render output, differential-test, audit ambiguity and edge cases"
+ecdecbb3,training,False,upstream_fixture_verified,panels;rays;layers,references/ecdecbb3.json,17x19->17x19,Randomized semantic audit and diversity profiling
+ed36ccf7,training,False,upstream_fixture_verified,rigid;count,references/ed36ccf7.json,3x3->3x3,Randomized semantic audit and diversity profiling
+ed74f2f2,training,False,upstream_fixture_verified,selection;legend;recolour,references/ed74f2f2.json,5x9->3x3,Randomized semantic audit and diversity profiling
+ed98d772,training,False,upstream_fixture_verified,rigid;template;crop,references/ed98d772.json,3x3->6x6,Randomized semantic audit and diversity profiling
+edb79dae,evaluation,True,generator_missing,objects;selection;legend;recolour;repeat;template;topology;crop,references/edb79dae.json,30x30->21x21,"Construct valid latent inputs, independently render output, differential-test, audit ambiguity and edge cases"
+edcc2ff0,training,False,upstream_fixture_verified,objects;legend;count,references/edcc2ff0.json,20x10->20x10,Randomized semantic audit and diversity profiling
+eee78d87,evaluation,False,generator_missing,recolour;repeat;crop;layers,references/eee78d87.json,6x6->16x16,"Construct valid latent inputs, independently render output, differential-test, audit ambiguity and edge cases"
+ef135b50,training,False,upstream_fixture_verified,,references/ef135b50.json,10x10->10x10,Randomized semantic audit and diversity profiling
+ef26cbf6,training,False,upstream_fixture_verified,panels;legend;recolour;movement,references/ef26cbf6.json,11x7->11x7,Randomized semantic audit and diversity profiling
+f0100645,training,False,generator_missing,objects;movement,references/f0100645.json,9x9->9x9,"Construct valid latent inputs, independently render output, differential-test, audit ambiguity and edge cases"
+f0afb749,training,False,upstream_fixture_verified,rays;crop;scale,references/f0afb749.json,3x3->6x6,Randomized semantic audit and diversity profiling
+f0df5ff0,training,False,upstream_fixture_verified,count,references/f0df5ff0.json,15x15->15x15,Randomized semantic audit and diversity profiling
+f0f8a26d,training,False,upstream_fixture_verified,rigid;template;dynamics;boolean;layers,references/f0f8a26d.json,13x13->13x13,Randomized semantic audit and diversity profiling
+f15e1fac,training,False,upstream_fixture_verified,movement;count,references/f15e1fac.json,12x17->12x17,Randomized semantic audit and diversity profiling
+f18ec8cc,training,False,generator_missing,selection;rigid;movement;count;crop,references/f18ec8cc.json,8x13->8x13;7x15->7x15,"Construct valid latent inputs, independently render output, differential-test, audit ambiguity and edge cases"
+f1bcbc2c,training,False,upstream_fixture_verified,paths,references/f1bcbc2c.json,10x10->10x10,Randomized semantic audit and diversity profiling
+f1cefba8,training,False,upstream_fixture_verified,objects;selection;recolour;layers,references/f1cefba8.json,19x18->19x18,Randomized semantic audit and diversity profiling
+f21745ec,training,False,upstream_fixture_verified,selection;recolour;rigid;template;topology;count;crop,references/f21745ec.json,23x22->23x22,Randomized semantic audit and diversity profiling
+f25fbde4,training,False,upstream_fixture_verified,template;crop;scale,references/f25fbde4.json,9x9->6x10,Randomized semantic audit and diversity profiling
+f25ffba3,training,False,upstream_fixture_verified,rigid;template,references/f25ffba3.json,10x4->10x4,Randomized semantic audit and diversity profiling
+f2829549,training,False,upstream_fixture_verified,panels;crop,references/f2829549.json,4x7->4x3,Randomized semantic audit and diversity profiling
+f28a3cbb,training,False,upstream_fixture_verified,movement;count,references/f28a3cbb.json,9x9->9x9,Randomized semantic audit and diversity profiling
+f341894c,training,False,generator_missing,layers,references/f341894c.json,18x18->18x18,"Construct valid latent inputs, independently render output, differential-test, audit ambiguity and edge cases"
+f35d900a,training,False,upstream_fixture_verified,movement;repeat;order;layers,references/f35d900a.json,17x18->17x18,Randomized semantic audit and diversity profiling
+f3b10344,training,False,upstream_fixture_verified,movement;layers,references/f3b10344.json,30x29->30x29,Randomized semantic audit and diversity profiling
+f3cdc58f,training,False,upstream_fixture_verified,selection;template;count;order,references/f3cdc58f.json,10x10->10x10,Randomized semantic audit and diversity profiling
+f3e14006,training,False,upstream_fixture_verified,selection;dynamics;count;layers,references/f3e14006.json,25x15->25x15;10x10->10x10,Randomized semantic audit and diversity profiling
+f3e62deb,training,False,upstream_fixture_verified,selection;movement;template,references/f3e62deb.json,10x10->10x10;10x10->10x10,Randomized semantic audit and diversity profiling
+f45f5ca7,training,False,upstream_fixture_verified,legend;movement;crop,references/f45f5ca7.json,10x10->10x10,Randomized semantic audit and diversity profiling
+f560132c,evaluation,False,generator_missing,legend;rigid;repeat;crop;assembly,references/f560132c.json,26x26->12x12,"Construct valid latent inputs, independently render output, differential-test, audit ambiguity and edge cases"
+f5aa3634,training,False,generator_missing,objects;selection;dynamics;crop,references/f5aa3634.json,15x15->4x3,"Construct valid latent inputs, independently render output, differential-test, audit ambiguity and edge cases"
+f5b8619d,training,False,upstream_fixture_verified,repeat;crop;assembly,references/f5b8619d.json,4x4->8x8,Randomized semantic audit and diversity profiling
+f5c89df1,training,False,generator_missing,movement;template;count;order;boolean;layers,references/f5c89df1.json,13x13->13x13,"Construct valid latent inputs, independently render output, differential-test, audit ambiguity and edge cases"
+f76d97a5,training,False,upstream_fixture_verified,recolour,references/f76d97a5.json,5x5->5x5,Randomized semantic audit and diversity profiling
+f823c43c,training,False,upstream_fixture_verified,selection;repeat;template;repair;dynamics,references/f823c43c.json,16x16->16x16,Randomized semantic audit and diversity profiling
+f83cb3f6,training,False,upstream_fixture_verified,template,references/f83cb3f6.json,10x15->10x15,Randomized semantic audit and diversity profiling
+f8a8fe49,training,False,upstream_fixture_verified,rigid;template,references/f8a8fe49.json,15x15->15x15,Randomized semantic audit and diversity profiling
+f8b3ba0a,training,False,upstream_fixture_verified,selection;count;order;layers,references/f8b3ba0a.json,15x13->3x1,Randomized semantic audit and diversity profiling
+f8be4b64,training,False,upstream_fixture_verified,rigid;rays;layers,references/f8be4b64.json,19x19->19x19,Randomized semantic audit and diversity profiling
+f8c80d96,training,False,upstream_fixture_verified,repeat;boolean;layers,references/f8c80d96.json,10x10->10x10,Randomized semantic audit and diversity profiling
+f8cc533f,training,False,upstream_fixture_verified,selection;recolour;rigid;template;repair;topology;boolean;crop;assembly,references/f8cc533f.json,20x18->20x18;22x22->22x22,Randomized semantic audit and diversity profiling
+f8f52ecc,training,False,generator_missing,objects;paths;assembly,references/f8f52ecc.json,8x10->8x10;12x12->12x12,"Construct valid latent inputs, independently render output, differential-test, audit ambiguity and edge cases"
+f8ff0b80,training,False,upstream_fixture_verified,selection;count;order;scale,references/f8ff0b80.json,12x12->3x1,Randomized semantic audit and diversity profiling
+f9012d9b,training,False,upstream_fixture_verified,selection;repeat;repair;topology;crop,references/f9012d9b.json,7x7->3x3,Randomized semantic audit and diversity profiling
+f931b4a8,evaluation,False,extension_validated,repeat;count;crop,references/f931b4a8.json,8x8->10x8;4x4->4x4,Randomized semantic audit and diversity profiling
+f9a67cb5,training,False,upstream_fixture_verified,topology;paths;dynamics,references/f9a67cb5.json,15x14->15x14,Randomized semantic audit and diversity profiling
+f9d67f8b,training,False,generator_missing,rigid;repair;dynamics;layers,references/f9d67f8b.json,30x30->30x30,"Construct valid latent inputs, independently render output, differential-test, audit ambiguity and edge cases"
+faa9f03d,evaluation,True,generator_missing,repair;topology;paths;assembly;layers,references/faa9f03d.json,12x12->12x12,"Construct valid latent inputs, independently render output, differential-test, audit ambiguity and edge cases"
+fafd9572,training,False,upstream_fixture_verified,objects;selection;legend;recolour;template;dynamics;count;order;scale,references/fafd9572.json,14x12->14x12,Randomized semantic audit and diversity profiling
+fafffa47,training,False,upstream_fixture_verified,selection;crop,references/fafffa47.json,6x3->3x3,Randomized semantic audit and diversity profiling
+fb791726,training,False,upstream_fixture_verified,movement;template;crop,references/fb791726.json,4x4->8x8,Randomized semantic audit and diversity profiling
+fbf15a0b,training,False,upstream_fixture_verified,crop,references/fbf15a0b.json,4x8->4x4;10x28->10x14,Randomized semantic audit and diversity profiling
+fc10701f,training,False,upstream_fixture_verified,selection;movement;paths,references/fc10701f.json,26x26->26x26,Randomized semantic audit and diversity profiling
+fc4aaf52,training,False,upstream_fixture_verified,recolour;rigid;movement;count,references/fc4aaf52.json,16x16->16x16,Randomized semantic audit and diversity profiling
+fc754716,training,False,upstream_fixture_verified,selection;topology;count,references/fc754716.json,9x7->9x7,Randomized semantic audit and diversity profiling
+fc7cae8d,evaluation,False,generator_missing,rigid;crop;assembly,references/fc7cae8d.json,29x29->20x12,"Construct valid latent inputs, independently render output, differential-test, audit ambiguity and edge cases"
+fcb5c309,training,False,upstream_fixture_verified,selection;recolour;topology;crop,references/fcb5c309.json,17x17->8x8,Randomized semantic audit and diversity profiling
+fcc82909,training,False,upstream_fixture_verified,objects;count;layers,references/fcc82909.json,10x10->10x10,Randomized semantic audit and diversity profiling
+fd02da9e,training,False,upstream_fixture_verified,legend;rigid;template,references/fd02da9e.json,8x8->8x8,Randomized semantic audit and diversity profiling
+fd096ab6,training,False,generator_missing,movement;template,references/fd096ab6.json,30x30->30x30,"Construct valid latent inputs, independently render output, differential-test, audit ambiguity and edge cases"
+fd4b2b02,training,False,upstream_fixture_verified,recolour;rigid;repeat,references/fd4b2b02.json,16x16->16x16,Randomized semantic audit and diversity profiling
+fe45cba4,training,False,generator_missing,movement;template;dynamics;crop,references/fe45cba4.json,16x16->16x16,"Construct valid latent inputs, independently render output, differential-test, audit ambiguity and edge cases"
+fe9372f3,training,False,upstream_fixture_verified,rays,references/fe9372f3.json,30x17->30x17,Randomized semantic audit and diversity profiling
+fea12743,training,False,generator_missing,recolour;rigid;repeat;topology;count;order;boolean,references/fea12743.json,16x11->16x11,"Construct valid latent inputs, independently render output, differential-test, audit ambiguity and edge cases"
+feca6190,training,False,upstream_fixture_verified,movement;dynamics;count;crop,references/feca6190.json,1x5->20x20,Randomized semantic audit and diversity profiling
+ff2825db,training,False,upstream_fixture_verified,selection;recolour;topology;crop,references/ff2825db.json,10x10->10x10;10x10->10x10,Randomized semantic audit and diversity profiling
+ff28f65a,training,False,upstream_fixture_verified,count;crop,references/ff28f65a.json,7x7->3x3;6x6->3x3;7x7->3x3,Randomized semantic audit and diversity profiling
+ff72ca3e,training,False,upstream_fixture_verified,,references/ff72ca3e.json,30x20->30x20,Randomized semantic audit and diversity profiling
+ff805c23,training,False,upstream_fixture_verified,rigid;repair;dynamics;crop;layers,references/ff805c23.json,24x24->5x5,Randomized semantic audit and diversity profiling

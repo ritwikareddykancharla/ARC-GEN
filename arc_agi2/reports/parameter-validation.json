@@ -1,0 +1,2726 @@
+{
+  "0c9aba6e": {
+    "approved": [
+      {
+        "parameters": {
+          "width": 6,
+          "height": 4
+        },
+        "tested_seeds": 12,
+        "shapes": [
+          [
+            9,
+            6,
+            4,
+            6
+          ]
+        ]
+      },
+      {
+        "parameters": {
+          "width": 8,
+          "height": 6
+        },
+        "tested_seeds": 12,
+        "shapes": [
+          [
+            13,
+            8,
+            6,
+            8
+          ]
+        ]
+      },
+      {
+        "parameters": {
+          "width": 10,
+          "height": 8
+        },
+        "tested_seeds": 12,
+        "shapes": [
+          [
+            17,
+            10,
+            8,
+            10
+          ]
+        ]
+      },
+      {
+        "parameters": {
+          "width": 12,
+          "height": 10
+        },
+        "tested_seeds": 12,
+        "shapes": [
+          [
+            21,
+            12,
+            10,
+            12
+          ]
+        ]
+      },
+      {
+        "parameters": {
+          "width": 14,
+          "height": 12
+        },
+        "tested_seeds": 12,
+        "shapes": [
+          [
+            25,
+            14,
+            12,
+            14
+          ]
+        ]
+      },
+      {
+        "parameters": {
+          "width": 20,
+          "height": 14
+        },
+        "tested_seeds": 12,
+        "shapes": [
+          [
+            29,
+            20,
+            14,
+            20
+          ]
+        ]
+      }
+    ],
+    "rejected": [
+      {
+        "parameters": {
+          "width": 14,
+          "height": 20
+        },
+        "errors": [
+          "ValueError"
+        ]
+      },
+      {
+        "parameters": {
+          "width": 24,
+          "height": 21
+        },
+        "errors": [
+          "ValueError"
+        ]
+      },
+      {
+        "parameters": {
+          "width": 27,
+          "height": 24
+        },
+        "errors": [
+          "ValueError"
+        ]
+      },
+      {
+        "parameters": {
+          "width": 30,
+          "height": 27
+        },
+        "errors": [
+          "ValueError"
+        ]
+      }
+    ],
+    "scope": "Bounded differential validation against saved solver; original replay passed."
+  },
+  "15113be4": {
+    "approved": [
+      {
+        "parameters": {
+          "size": 12
+        },
+        "tested_seeds": 12,
+        "shapes": [
+          [
+            12,
+            12,
+            12,
+            12
+          ]
+        ]
+      },
+      {
+        "parameters": {
+          "size": 15
+        },
+        "tested_seeds": 12,
+        "shapes": [
+          [
+            15,
+            15,
+            15,
+            15
+          ]
+        ]
+      },
+      {
+        "parameters": {
+          "size": 24
+        },
+        "tested_seeds": 12,
+        "shapes": [
+          [
+            24,
+            24,
+            24,
+            24
+          ]
+        ]
+      },
+      {
+        "parameters": {
+          "size": 27
+        },
+        "tested_seeds": 12,
+        "shapes": [
+          [
+            27,
+            27,
+            27,
+            27
+          ]
+        ]
+      }
+    ],
+    "rejected": [
+      {
+        "parameters": {
+          "size": 6
+        },
+        "errors": [
+          "IndexError"
+        ]
+      },
+      {
+        "parameters": {
+          "size": 8
+        },
+        "errors": [
+          "TimeoutError"
+        ]
+      },
+      {
+        "parameters": {
+          "size": 10
+        },
+        "errors": [
+          "IndexError"
+        ]
+      },
+      {
+        "parameters": {
+          "size": 18
+        },
+        "errors": [
+          "IndexError"
+        ]
+      },
+      {
+        "parameters": {
+          "size": 21
+        },
+        "errors": [
+          "IndexError"
+        ]
+      },
+      {
+        "parameters": {
+          "size": 30
+        },
+        "errors": [
+          "IndexError"
+        ]
+      }
+    ],
+    "scope": "Bounded differential validation against saved solver; original replay passed."
+  },
+  "195ba7dc": {
+    "approved": [
+      {
+        "parameters": {
+          "width": 6,
+          "height": 4
+        },
+        "tested_seeds": 12,
+        "shapes": [
+          [
+            4,
+            13,
+            4,
+            6
+          ]
+        ]
+      },
+      {
+        "parameters": {
+          "width": 8,
+          "height": 6
+        },
+        "tested_seeds": 12,
+        "shapes": [
+          [
+            6,
+            17,
+            6,
+            8
+          ]
+        ]
+      },
+      {
+        "parameters": {
+          "width": 10,
+          "height": 8
+        },
+        "tested_seeds": 12,
+        "shapes": [
+          [
+            8,
+            21,
+            8,
+            10
+          ]
+        ]
+      },
+      {
+        "parameters": {
+          "width": 12,
+          "height": 10
+        },
+        "tested_seeds": 12,
+        "shapes": [
+          [
+            10,
+            25,
+            10,
+            12
+          ]
+        ]
+      },
+      {
+        "parameters": {
+          "width": 14,
+          "height": 12
+        },
+        "tested_seeds": 12,
+        "shapes": [
+          [
+            12,
+            29,
+            12,
+            14
+          ]
+        ]
+      },
+      {
+        "parameters": {
+          "width": 14,
+          "height": 20
+        },
+        "tested_seeds": 12,
+        "shapes": [
+          [
+            20,
+            29,
+            20,
+            14
+          ]
+        ]
+      }
+    ],
+    "rejected": [
+      {
+        "parameters": {
+          "width": 20,
+          "height": 14
+        },
+        "errors": [
+          "ValueError"
+        ]
+      },
+      {
+        "parameters": {
+          "width": 24,
+          "height": 21
+        },
+        "errors": [
+          "ValueError"
+        ]
+      },
+      {
+        "parameters": {
+          "width": 27,
+          "height": 24
+        },
+        "errors": [
+          "ValueError"
+        ]
+      },
+      {
+        "parameters": {
+          "width": 30,
+          "height": 27
+        },
+        "errors": [
+          "ValueError"
+        ]
+      }
+    ],
+    "scope": "Bounded differential validation against saved solver; original replay passed."
+  },
+  "281123b4": {
+    "approved": [
+      {
+        "parameters": {
+          "width": 6,
+          "height": 4
+        },
+        "tested_seeds": 12,
+        "shapes": [
+          [
+            4,
+            27,
+            4,
+            6
+          ]
+        ]
+      }
+    ],
+    "rejected": [
+      {
+        "parameters": {
+          "width": 8,
+          "height": 6
+        },
+        "errors": [
+          "ValueError"
+        ]
+      },
+      {
+        "parameters": {
+          "width": 10,
+          "height": 8
+        },
+        "errors": [
+          "ValueError"
+        ]
+      },
+      {
+        "parameters": {
+          "width": 12,
+          "height": 10
+        },
+        "errors": [
+          "ValueError"
+        ]
+      },
+      {
+        "parameters": {
+          "width": 14,
+          "height": 12
+        },
+        "errors": [
+          "ValueError"
+        ]
+      },
+      {
+        "parameters": {
+          "width": 20,
+          "height": 14
+        },
+        "errors": [
+          "ValueError"
+        ]
+      },
+      {
+        "parameters": {
+          "width": 14,
+          "height": 20
+        },
+        "errors": [
+          "ValueError"
+        ]
+      },
+      {
+        "parameters": {
+          "width": 24,
+          "height": 21
+        },
+        "errors": [
+          "ValueError"
+        ]
+      },
+      {
+        "parameters": {
+          "width": 27,
+          "height": 24
+        },
+        "errors": [
+          "ValueError"
+        ]
+      },
+      {
+        "parameters": {
+          "width": 30,
+          "height": 27
+        },
+        "errors": [
+          "ValueError"
+        ]
+      }
+    ],
+    "scope": "Bounded differential validation against saved solver; original replay passed."
+  },
+  "319f2597": {
+    "approved": [
+      {
+        "parameters": {
+          "size": 10
+        },
+        "tested_seeds": 12,
+        "shapes": [
+          [
+            10,
+            10,
+            10,
+            10
+          ]
+        ]
+      },
+      {
+        "parameters": {
+          "size": 12
+        },
+        "tested_seeds": 12,
+        "shapes": [
+          [
+            12,
+            12,
+            12,
+            12
+          ]
+        ]
+      },
+      {
+        "parameters": {
+          "size": 15
+        },
+        "tested_seeds": 12,
+        "shapes": [
+          [
+            15,
+            15,
+            15,
+            15
+          ]
+        ]
+      },
+      {
+        "parameters": {
+          "size": 18
+        },
+        "tested_seeds": 12,
+        "shapes": [
+          [
+            18,
+            18,
+            18,
+            18
+          ]
+        ]
+      },
+      {
+        "parameters": {
+          "size": 21
+        },
+        "tested_seeds": 12,
+        "shapes": [
+          [
+            21,
+            21,
+            21,
+            21
+          ]
+        ]
+      },
+      {
+        "parameters": {
+          "size": 24
+        },
+        "tested_seeds": 12,
+        "shapes": [
+          [
+            24,
+            24,
+            24,
+            24
+          ]
+        ]
+      },
+      {
+        "parameters": {
+          "size": 27
+        },
+        "tested_seeds": 12,
+        "shapes": [
+          [
+            27,
+            27,
+            27,
+            27
+          ]
+        ]
+      },
+      {
+        "parameters": {
+          "size": 30
+        },
+        "tested_seeds": 12,
+        "shapes": [
+          [
+            30,
+            30,
+            30,
+            30
+          ]
+        ]
+      }
+    ],
+    "rejected": [
+      {
+        "parameters": {
+          "size": 6
+        },
+        "errors": [
+          "ValueError"
+        ]
+      },
+      {
+        "parameters": {
+          "size": 8
+        },
+        "errors": [
+          "ValueError"
+        ]
+      }
+    ],
+    "scope": "Bounded differential validation against saved solver; original replay passed."
+  },
+  "31d5ba1a": {
+    "approved": [
+      {
+        "parameters": {
+          "width": 6,
+          "height": 4
+        },
+        "tested_seeds": 12,
+        "shapes": [
+          [
+            8,
+            6,
+            4,
+            6
+          ]
+        ]
+      },
+      {
+        "parameters": {
+          "width": 8,
+          "height": 6
+        },
+        "tested_seeds": 12,
+        "shapes": [
+          [
+            12,
+            8,
+            6,
+            8
+          ]
+        ]
+      },
+      {
+        "parameters": {
+          "width": 10,
+          "height": 8
+        },
+        "tested_seeds": 12,
+        "shapes": [
+          [
+            16,
+            10,
+            8,
+            10
+          ]
+        ]
+      },
+      {
+        "parameters": {
+          "width": 12,
+          "height": 10
+        },
+        "tested_seeds": 12,
+        "shapes": [
+          [
+            20,
+            12,
+            10,
+            12
+          ]
+        ]
+      },
+      {
+        "parameters": {
+          "width": 14,
+          "height": 12
+        },
+        "tested_seeds": 12,
+        "shapes": [
+          [
+            24,
+            14,
+            12,
+            14
+          ]
+        ]
+      },
+      {
+        "parameters": {
+          "width": 20,
+          "height": 14
+        },
+        "tested_seeds": 12,
+        "shapes": [
+          [
+            28,
+            20,
+            14,
+            20
+          ]
+        ]
+      }
+    ],
+    "rejected": [
+      {
+        "parameters": {
+          "width": 14,
+          "height": 20
+        },
+        "errors": [
+          "ValueError"
+        ]
+      },
+      {
+        "parameters": {
+          "width": 24,
+          "height": 21
+        },
+        "errors": [
+          "ValueError"
+        ]
+      },
+      {
+        "parameters": {
+          "width": 27,
+          "height": 24
+        },
+        "errors": [
+          "ValueError"
+        ]
+      },
+      {
+        "parameters": {
+          "width": 30,
+          "height": 27
+        },
+        "errors": [
+          "ValueError"
+        ]
+      }
+    ],
+    "scope": "Bounded differential validation against saved solver; original replay passed."
+  },
+  "34b99a2b": {
+    "approved": [
+      {
+        "parameters": {
+          "width": 8,
+          "height": 6
+        },
+        "tested_seeds": 12,
+        "shapes": [
+          [
+            6,
+            17,
+            6,
+            8
+          ]
+        ]
+      },
+      {
+        "parameters": {
+          "width": 10,
+          "height": 8
+        },
+        "tested_seeds": 12,
+        "shapes": [
+          [
+            8,
+            21,
+            8,
+            10
+          ]
+        ]
+      },
+      {
+        "parameters": {
+          "width": 14,
+          "height": 12
+        },
+        "tested_seeds": 12,
+        "shapes": [
+          [
+            12,
+            29,
+            12,
+            14
+          ]
+        ]
+      },
+      {
+        "parameters": {
+          "width": 14,
+          "height": 20
+        },
+        "tested_seeds": 12,
+        "shapes": [
+          [
+            20,
+            29,
+            20,
+            14
+          ]
+        ]
+      }
+    ],
+    "rejected": [
+      {
+        "parameters": {
+          "width": 6,
+          "height": 4
+        },
+        "errors": [
+          "ValueError"
+        ]
+      },
+      {
+        "parameters": {
+          "width": 12,
+          "height": 10
+        },
+        "errors": [
+          "IndexError"
+        ]
+      },
+      {
+        "parameters": {
+          "width": 20,
+          "height": 14
+        },
+        "errors": [
+          "ValueError"
+        ]
+      },
+      {
+        "parameters": {
+          "width": 24,
+          "height": 21
+        },
+        "errors": [
+          "ValueError"
+        ]
+      },
+      {
+        "parameters": {
+          "width": 27,
+          "height": 24
+        },
+        "errors": [
+          "ValueError"
+        ]
+      },
+      {
+        "parameters": {
+          "width": 30,
+          "height": 27
+        },
+        "errors": [
+          "ValueError"
+        ]
+      }
+    ],
+    "scope": "Bounded differential validation against saved solver; original replay passed."
+  },
+  "3d31c5b3": {
+    "approved": [
+      {
+        "parameters": {
+          "width": 6,
+          "height": 4
+        },
+        "tested_seeds": 12,
+        "shapes": [
+          [
+            16,
+            6,
+            4,
+            6
+          ]
+        ]
+      },
+      {
+        "parameters": {
+          "width": 8,
+          "height": 6
+        },
+        "tested_seeds": 12,
+        "shapes": [
+          [
+            24,
+            8,
+            6,
+            8
+          ]
+        ]
+      }
+    ],
+    "rejected": [
+      {
+        "parameters": {
+          "width": 10,
+          "height": 8
+        },
+        "errors": [
+          "ValueError"
+        ]
+      },
+      {
+        "parameters": {
+          "width": 12,
+          "height": 10
+        },
+        "errors": [
+          "ValueError"
+        ]
+      },
+      {
+        "parameters": {
+          "width": 14,
+          "height": 12
+        },
+        "errors": [
+          "ValueError"
+        ]
+      },
+      {
+        "parameters": {
+          "width": 20,
+          "height": 14
+        },
+        "errors": [
+          "ValueError"
+        ]
+      },
+      {
+        "parameters": {
+          "width": 14,
+          "height": 20
+        },
+        "errors": [
+          "ValueError"
+        ]
+      },
+      {
+        "parameters": {
+          "width": 24,
+          "height": 21
+        },
+        "errors": [
+          "ValueError"
+        ]
+      },
+      {
+        "parameters": {
+          "width": 27,
+          "height": 24
+        },
+        "errors": [
+          "ValueError"
+        ]
+      },
+      {
+        "parameters": {
+          "width": 30,
+          "height": 27
+        },
+        "errors": [
+          "ValueError"
+        ]
+      }
+    ],
+    "scope": "Bounded differential validation against saved solver; original replay passed."
+  },
+  "465b7d93": {
+    "approved": [
+      {
+        "parameters": {
+          "size": 30
+        },
+        "tested_seeds": 12,
+        "shapes": [
+          [
+            30,
+            30,
+            30,
+            30
+          ]
+        ]
+      }
+    ],
+    "rejected": [
+      {
+        "parameters": {
+          "size": 6
+        },
+        "errors": [
+          "ValueError"
+        ]
+      },
+      {
+        "parameters": {
+          "size": 8
+        },
+        "errors": [
+          "ValueError"
+        ]
+      },
+      {
+        "parameters": {
+          "size": 12
+        },
+        "errors": [
+          "ValueError"
+        ]
+      },
+      {
+        "parameters": {
+          "size": 15
+        },
+        "errors": [
+          "ValueError"
+        ]
+      },
+      {
+        "parameters": {
+          "size": 18
+        },
+        "errors": [
+          "ValueError"
+        ]
+      },
+      {
+        "parameters": {
+          "size": 21
+        },
+        "errors": [
+          "ValueError"
+        ]
+      },
+      {
+        "parameters": {
+          "size": 24
+        },
+        "errors": [
+          "ValueError"
+        ]
+      },
+      {
+        "parameters": {
+          "size": 27
+        },
+        "errors": [
+          "ValueError"
+        ]
+      }
+    ],
+    "scope": "Bounded differential validation against saved solver; original replay passed."
+  },
+  "506d28a5": {
+    "approved": [
+      {
+        "parameters": {
+          "width": 6,
+          "height": 4
+        },
+        "tested_seeds": 12,
+        "shapes": [
+          [
+            9,
+            6,
+            4,
+            6
+          ]
+        ]
+      },
+      {
+        "parameters": {
+          "width": 8,
+          "height": 6
+        },
+        "tested_seeds": 12,
+        "shapes": [
+          [
+            13,
+            8,
+            6,
+            8
+          ]
+        ]
+      },
+      {
+        "parameters": {
+          "width": 10,
+          "height": 8
+        },
+        "tested_seeds": 12,
+        "shapes": [
+          [
+            17,
+            10,
+            8,
+            10
+          ]
+        ]
+      },
+      {
+        "parameters": {
+          "width": 12,
+          "height": 10
+        },
+        "tested_seeds": 12,
+        "shapes": [
+          [
+            21,
+            12,
+            10,
+            12
+          ]
+        ]
+      },
+      {
+        "parameters": {
+          "width": 14,
+          "height": 12
+        },
+        "tested_seeds": 12,
+        "shapes": [
+          [
+            25,
+            14,
+            12,
+            14
+          ]
+        ]
+      },
+      {
+        "parameters": {
+          "width": 20,
+          "height": 14
+        },
+        "tested_seeds": 12,
+        "shapes": [
+          [
+            29,
+            20,
+            14,
+            20
+          ]
+        ]
+      }
+    ],
+    "rejected": [
+      {
+        "parameters": {
+          "width": 14,
+          "height": 20
+        },
+        "errors": [
+          "ValueError"
+        ]
+      },
+      {
+        "parameters": {
+          "width": 24,
+          "height": 21
+        },
+        "errors": [
+          "ValueError"
+        ]
+      },
+      {
+        "parameters": {
+          "width": 27,
+          "height": 24
+        },
+        "errors": [
+          "ValueError"
+        ]
+      },
+      {
+        "parameters": {
+          "width": 30,
+          "height": 27
+        },
+        "errors": [
+          "ValueError"
+        ]
+      }
+    ],
+    "scope": "Bounded differential validation against saved solver; original replay passed."
+  },
+  "5d2a5c43": {
+    "approved": [
+      {
+        "parameters": {
+          "width": 6,
+          "height": 4
+        },
+        "tested_seeds": 12,
+        "shapes": [
+          [
+            4,
+            13,
+            4,
+            6
+          ]
+        ]
+      },
+      {
+        "parameters": {
+          "width": 8,
+          "height": 6
+        },
+        "tested_seeds": 12,
+        "shapes": [
+          [
+            6,
+            17,
+            6,
+            8
+          ]
+        ]
+      },
+      {
+        "parameters": {
+          "width": 10,
+          "height": 8
+        },
+        "tested_seeds": 12,
+        "shapes": [
+          [
+            8,
+            21,
+            8,
+            10
+          ]
+        ]
+      },
+      {
+        "parameters": {
+          "width": 12,
+          "height": 10
+        },
+        "tested_seeds": 12,
+        "shapes": [
+          [
+            10,
+            25,
+            10,
+            12
+          ]
+        ]
+      },
+      {
+        "parameters": {
+          "width": 14,
+          "height": 12
+        },
+        "tested_seeds": 12,
+        "shapes": [
+          [
+            12,
+            29,
+            12,
+            14
+          ]
+        ]
+      },
+      {
+        "parameters": {
+          "width": 14,
+          "height": 20
+        },
+        "tested_seeds": 12,
+        "shapes": [
+          [
+            20,
+            29,
+            20,
+            14
+          ]
+        ]
+      }
+    ],
+    "rejected": [
+      {
+        "parameters": {
+          "width": 20,
+          "height": 14
+        },
+        "errors": [
+          "ValueError"
+        ]
+      },
+      {
+        "parameters": {
+          "width": 24,
+          "height": 21
+        },
+        "errors": [
+          "ValueError"
+        ]
+      },
+      {
+        "parameters": {
+          "width": 27,
+          "height": 24
+        },
+        "errors": [
+          "ValueError"
+        ]
+      },
+      {
+        "parameters": {
+          "width": 30,
+          "height": 27
+        },
+        "errors": [
+          "ValueError"
+        ]
+      }
+    ],
+    "scope": "Bounded differential validation against saved solver; original replay passed."
+  },
+  "626c0bcc": {
+    "approved": [
+      {
+        "parameters": {
+          "size": 6
+        },
+        "tested_seeds": 12,
+        "shapes": [
+          [
+            6,
+            6,
+            6,
+            6
+          ]
+        ]
+      },
+      {
+        "parameters": {
+          "size": 8
+        },
+        "tested_seeds": 12,
+        "shapes": [
+          [
+            8,
+            8,
+            8,
+            8
+          ]
+        ]
+      },
+      {
+        "parameters": {
+          "size": 10
+        },
+        "tested_seeds": 12,
+        "shapes": [
+          [
+            10,
+            10,
+            10,
+            10
+          ]
+        ]
+      },
+      {
+        "parameters": {
+          "size": 12
+        },
+        "tested_seeds": 12,
+        "shapes": [
+          [
+            12,
+            12,
+            12,
+            12
+          ]
+        ]
+      }
+    ],
+    "rejected": [
+      {
+        "parameters": {
+          "size": 15
+        },
+        "errors": [
+          "TimeoutError"
+        ]
+      },
+      {
+        "parameters": {
+          "size": 18
+        },
+        "errors": [
+          "TimeoutError"
+        ]
+      },
+      {
+        "parameters": {
+          "size": 21
+        },
+        "errors": [
+          "TimeoutError"
+        ]
+      },
+      {
+        "parameters": {
+          "size": 24
+        },
+        "errors": [
+          "TimeoutError"
+        ]
+      },
+      {
+        "parameters": {
+          "size": 27
+        },
+        "errors": [
+          "TimeoutError"
+        ]
+      },
+      {
+        "parameters": {
+          "size": 30
+        },
+        "errors": [
+          "TimeoutError"
+        ]
+      }
+    ],
+    "scope": "Bounded differential validation against saved solver; original replay passed."
+  },
+  "66f2d22f": {
+    "approved": [
+      {
+        "parameters": {
+          "width": 6,
+          "height": 4
+        },
+        "tested_seeds": 12,
+        "shapes": [
+          [
+            4,
+            12,
+            4,
+            6
+          ]
+        ]
+      },
+      {
+        "parameters": {
+          "width": 8,
+          "height": 6
+        },
+        "tested_seeds": 12,
+        "shapes": [
+          [
+            6,
+            16,
+            6,
+            8
+          ]
+        ]
+      },
+      {
+        "parameters": {
+          "width": 10,
+          "height": 8
+        },
+        "tested_seeds": 12,
+        "shapes": [
+          [
+            8,
+            20,
+            8,
+            10
+          ]
+        ]
+      },
+      {
+        "parameters": {
+          "width": 12,
+          "height": 10
+        },
+        "tested_seeds": 12,
+        "shapes": [
+          [
+            10,
+            24,
+            10,
+            12
+          ]
+        ]
+      },
+      {
+        "parameters": {
+          "width": 14,
+          "height": 12
+        },
+        "tested_seeds": 12,
+        "shapes": [
+          [
+            12,
+            28,
+            12,
+            14
+          ]
+        ]
+      },
+      {
+        "parameters": {
+          "width": 14,
+          "height": 20
+        },
+        "tested_seeds": 12,
+        "shapes": [
+          [
+            20,
+            28,
+            20,
+            14
+          ]
+        ]
+      }
+    ],
+    "rejected": [
+      {
+        "parameters": {
+          "width": 20,
+          "height": 14
+        },
+        "errors": [
+          "ValueError"
+        ]
+      },
+      {
+        "parameters": {
+          "width": 24,
+          "height": 21
+        },
+        "errors": [
+          "ValueError"
+        ]
+      },
+      {
+        "parameters": {
+          "width": 27,
+          "height": 24
+        },
+        "errors": [
+          "ValueError"
+        ]
+      },
+      {
+        "parameters": {
+          "width": 30,
+          "height": 27
+        },
+        "errors": [
+          "ValueError"
+        ]
+      }
+    ],
+    "scope": "Bounded differential validation against saved solver; original replay passed."
+  },
+  "6a11f6da": {
+    "approved": [
+      {
+        "parameters": {
+          "width": 6,
+          "height": 4
+        },
+        "tested_seeds": 12,
+        "shapes": [
+          [
+            12,
+            6,
+            4,
+            6
+          ]
+        ]
+      },
+      {
+        "parameters": {
+          "width": 8,
+          "height": 6
+        },
+        "tested_seeds": 12,
+        "shapes": [
+          [
+            18,
+            8,
+            6,
+            8
+          ]
+        ]
+      },
+      {
+        "parameters": {
+          "width": 10,
+          "height": 8
+        },
+        "tested_seeds": 12,
+        "shapes": [
+          [
+            24,
+            10,
+            8,
+            10
+          ]
+        ]
+      },
+      {
+        "parameters": {
+          "width": 12,
+          "height": 10
+        },
+        "tested_seeds": 12,
+        "shapes": [
+          [
+            30,
+            12,
+            10,
+            12
+          ]
+        ]
+      }
+    ],
+    "rejected": [
+      {
+        "parameters": {
+          "width": 14,
+          "height": 12
+        },
+        "errors": [
+          "ValueError"
+        ]
+      },
+      {
+        "parameters": {
+          "width": 20,
+          "height": 14
+        },
+        "errors": [
+          "ValueError"
+        ]
+      },
+      {
+        "parameters": {
+          "width": 14,
+          "height": 20
+        },
+        "errors": [
+          "ValueError"
+        ]
+      },
+      {
+        "parameters": {
+          "width": 24,
+          "height": 21
+        },
+        "errors": [
+          "ValueError"
+        ]
+      },
+      {
+        "parameters": {
+          "width": 27,
+          "height": 24
+        },
+        "errors": [
+          "ValueError"
+        ]
+      },
+      {
+        "parameters": {
+          "width": 30,
+          "height": 27
+        },
+        "errors": [
+          "ValueError"
+        ]
+      }
+    ],
+    "scope": "Bounded differential validation against saved solver; original replay passed."
+  },
+  "996ec1f3": {
+    "approved": [
+      {
+        "parameters": {
+          "size": 18
+        },
+        "tested_seeds": 12,
+        "shapes": [
+          [
+            18,
+            18,
+            3,
+            3
+          ]
+        ]
+      },
+      {
+        "parameters": {
+          "size": 21
+        },
+        "tested_seeds": 12,
+        "shapes": [
+          [
+            21,
+            21,
+            3,
+            3
+          ]
+        ]
+      },
+      {
+        "parameters": {
+          "size": 24
+        },
+        "tested_seeds": 12,
+        "shapes": [
+          [
+            24,
+            24,
+            3,
+            3
+          ]
+        ]
+      },
+      {
+        "parameters": {
+          "size": 27
+        },
+        "tested_seeds": 12,
+        "shapes": [
+          [
+            27,
+            27,
+            3,
+            3
+          ]
+        ]
+      },
+      {
+        "parameters": {
+          "size": 30
+        },
+        "tested_seeds": 12,
+        "shapes": [
+          [
+            30,
+            30,
+            3,
+            3
+          ]
+        ]
+      }
+    ],
+    "rejected": [
+      {
+        "parameters": {
+          "size": 6
+        },
+        "errors": [
+          "IndexError"
+        ]
+      },
+      {
+        "parameters": {
+          "size": 8
+        },
+        "errors": [
+          "IndexError"
+        ]
+      },
+      {
+        "parameters": {
+          "size": 10
+        },
+        "errors": [
+          "IndexError"
+        ]
+      },
+      {
+        "parameters": {
+          "size": 12
+        },
+        "errors": [
+          "ValueError"
+        ]
+      },
+      {
+        "parameters": {
+          "size": 15
+        },
+        "errors": [
+          "ValueError"
+        ]
+      }
+    ],
+    "scope": "Bounded differential validation against saved solver; original replay passed."
+  },
+  "d19f7514": {
+    "approved": [
+      {
+        "parameters": {
+          "width": 6,
+          "height": 4
+        },
+        "tested_seeds": 12,
+        "shapes": [
+          [
+            8,
+            6,
+            4,
+            6
+          ]
+        ]
+      },
+      {
+        "parameters": {
+          "width": 8,
+          "height": 6
+        },
+        "tested_seeds": 12,
+        "shapes": [
+          [
+            12,
+            8,
+            6,
+            8
+          ]
+        ]
+      },
+      {
+        "parameters": {
+          "width": 10,
+          "height": 8
+        },
+        "tested_seeds": 12,
+        "shapes": [
+          [
+            16,
+            10,
+            8,
+            10
+          ]
+        ]
+      },
+      {
+        "parameters": {
+          "width": 12,
+          "height": 10
+        },
+        "tested_seeds": 12,
+        "shapes": [
+          [
+            20,
+            12,
+            10,
+            12
+          ]
+        ]
+      },
+      {
+        "parameters": {
+          "width": 14,
+          "height": 12
+        },
+        "tested_seeds": 12,
+        "shapes": [
+          [
+            24,
+            14,
+            12,
+            14
+          ]
+        ]
+      },
+      {
+        "parameters": {
+          "width": 20,
+          "height": 14
+        },
+        "tested_seeds": 12,
+        "shapes": [
+          [
+            28,
+            20,
+            14,
+            20
+          ]
+        ]
+      }
+    ],
+    "rejected": [
+      {
+        "parameters": {
+          "width": 14,
+          "height": 20
+        },
+        "errors": [
+          "ValueError"
+        ]
+      },
+      {
+        "parameters": {
+          "width": 24,
+          "height": 21
+        },
+        "errors": [
+          "ValueError"
+        ]
+      },
+      {
+        "parameters": {
+          "width": 27,
+          "height": 24
+        },
+        "errors": [
+          "ValueError"
+        ]
+      },
+      {
+        "parameters": {
+          "width": 30,
+          "height": 27
+        },
+        "errors": [
+          "ValueError"
+        ]
+      }
+    ],
+    "scope": "Bounded differential validation against saved solver; original replay passed."
+  },
+  "d304284e": {
+    "approved": [
+      {
+        "parameters": {
+          "width": 12,
+          "height": 10
+        },
+        "tested_seeds": 12,
+        "shapes": [
+          [
+            10,
+            12,
+            10,
+            12
+          ]
+        ]
+      },
+      {
+        "parameters": {
+          "width": 14,
+          "height": 12
+        },
+        "tested_seeds": 12,
+        "shapes": [
+          [
+            12,
+            14,
+            12,
+            14
+          ]
+        ]
+      },
+      {
+        "parameters": {
+          "width": 20,
+          "height": 14
+        },
+        "tested_seeds": 12,
+        "shapes": [
+          [
+            14,
+            20,
+            14,
+            20
+          ]
+        ]
+      },
+      {
+        "parameters": {
+          "width": 14,
+          "height": 20
+        },
+        "tested_seeds": 12,
+        "shapes": [
+          [
+            20,
+            14,
+            20,
+            14
+          ]
+        ]
+      },
+      {
+        "parameters": {
+          "width": 24,
+          "height": 21
+        },
+        "tested_seeds": 12,
+        "shapes": [
+          [
+            21,
+            24,
+            21,
+            24
+          ]
+        ]
+      },
+      {
+        "parameters": {
+          "width": 27,
+          "height": 24
+        },
+        "tested_seeds": 12,
+        "shapes": [
+          [
+            24,
+            27,
+            24,
+            27
+          ]
+        ]
+      },
+      {
+        "parameters": {
+          "width": 30,
+          "height": 27
+        },
+        "tested_seeds": 12,
+        "shapes": [
+          [
+            27,
+            30,
+            27,
+            30
+          ]
+        ]
+      }
+    ],
+    "rejected": [
+      {
+        "parameters": {
+          "width": 6,
+          "height": 4
+        },
+        "errors": [
+          "ValueError"
+        ]
+      },
+      {
+        "parameters": {
+          "width": 8,
+          "height": 6
+        },
+        "errors": [
+          "ValueError"
+        ]
+      },
+      {
+        "parameters": {
+          "width": 10,
+          "height": 8
+        },
+        "errors": [
+          "ValueError"
+        ]
+      }
+    ],
+    "scope": "Bounded differential validation against saved solver; original replay passed."
+  },
+  "e133d23d": {
+    "approved": [
+      {
+        "parameters": {
+          "width": 6,
+          "height": 4
+        },
+        "tested_seeds": 12,
+        "shapes": [
+          [
+            4,
+            13,
+            4,
+            6
+          ]
+        ]
+      },
+      {
+        "parameters": {
+          "width": 8,
+          "height": 6
+        },
+        "tested_seeds": 12,
+        "shapes": [
+          [
+            6,
+            17,
+            6,
+            8
+          ]
+        ]
+      },
+      {
+        "parameters": {
+          "width": 10,
+          "height": 8
+        },
+        "tested_seeds": 12,
+        "shapes": [
+          [
+            8,
+            21,
+            8,
+            10
+          ]
+        ]
+      },
+      {
+        "parameters": {
+          "width": 12,
+          "height": 10
+        },
+        "tested_seeds": 12,
+        "shapes": [
+          [
+            10,
+            25,
+            10,
+            12
+          ]
+        ]
+      },
+      {
+        "parameters": {
+          "width": 14,
+          "height": 12
+        },
+        "tested_seeds": 12,
+        "shapes": [
+          [
+            12,
+            29,
+            12,
+            14
+          ]
+        ]
+      },
+      {
+        "parameters": {
+          "width": 14,
+          "height": 20
+        },
+        "tested_seeds": 12,
+        "shapes": [
+          [
+            20,
+            29,
+            20,
+            14
+          ]
+        ]
+      }
+    ],
+    "rejected": [
+      {
+        "parameters": {
+          "width": 20,
+          "height": 14
+        },
+        "errors": [
+          "ValueError"
+        ]
+      },
+      {
+        "parameters": {
+          "width": 24,
+          "height": 21
+        },
+        "errors": [
+          "ValueError"
+        ]
+      },
+      {
+        "parameters": {
+          "width": 27,
+          "height": 24
+        },
+        "errors": [
+          "ValueError"
+        ]
+      },
+      {
+        "parameters": {
+          "width": 30,
+          "height": 27
+        },
+        "errors": [
+          "ValueError"
+        ]
+      }
+    ],
+    "scope": "Bounded differential validation against saved solver; original replay passed."
+  },
+  "e2092e0c": {
+    "approved": [
+      {
+        "parameters": {
+          "size": 10
+        },
+        "tested_seeds": 12,
+        "shapes": [
+          [
+            10,
+            10,
+            10,
+            10
+          ]
+        ]
+      },
+      {
+        "parameters": {
+          "size": 12
+        },
+        "tested_seeds": 12,
+        "shapes": [
+          [
+            12,
+            12,
+            12,
+            12
+          ]
+        ]
+      },
+      {
+        "parameters": {
+          "size": 18
+        },
+        "tested_seeds": 12,
+        "shapes": [
+          [
+            18,
+            18,
+            18,
+            18
+          ]
+        ]
+      },
+      {
+        "parameters": {
+          "size": 21
+        },
+        "tested_seeds": 12,
+        "shapes": [
+          [
+            21,
+            21,
+            21,
+            21
+          ]
+        ]
+      },
+      {
+        "parameters": {
+          "size": 24
+        },
+        "tested_seeds": 12,
+        "shapes": [
+          [
+            24,
+            24,
+            24,
+            24
+          ]
+        ]
+      },
+      {
+        "parameters": {
+          "size": 27
+        },
+        "tested_seeds": 12,
+        "shapes": [
+          [
+            27,
+            27,
+            27,
+            27
+          ]
+        ]
+      },
+      {
+        "parameters": {
+          "size": 30
+        },
+        "tested_seeds": 12,
+        "shapes": [
+          [
+            30,
+            30,
+            30,
+            30
+          ]
+        ]
+      }
+    ],
+    "rejected": [
+      {
+        "parameters": {
+          "size": 6
+        },
+        "errors": [
+          "TimeoutError"
+        ]
+      },
+      {
+        "parameters": {
+          "size": 8
+        },
+        "errors": [
+          "TimeoutError"
+        ]
+      }
+    ],
+    "scope": "Bounded differential validation against saved solver; original replay passed."
+  },
+  "e345f17b": {
+    "approved": [
+      {
+        "parameters": {
+          "width": 6,
+          "height": 4
+        },
+        "tested_seeds": 12,
+        "shapes": [
+          [
+            4,
+            12,
+            4,
+            6
+          ]
+        ]
+      },
+      {
+        "parameters": {
+          "width": 8,
+          "height": 6
+        },
+        "tested_seeds": 12,
+        "shapes": [
+          [
+            6,
+            16,
+            6,
+            8
+          ]
+        ]
+      },
+      {
+        "parameters": {
+          "width": 10,
+          "height": 8
+        },
+        "tested_seeds": 12,
+        "shapes": [
+          [
+            8,
+            20,
+            8,
+            10
+          ]
+        ]
+      },
+      {
+        "parameters": {
+          "width": 12,
+          "height": 10
+        },
+        "tested_seeds": 12,
+        "shapes": [
+          [
+            10,
+            24,
+            10,
+            12
+          ]
+        ]
+      },
+      {
+        "parameters": {
+          "width": 14,
+          "height": 12
+        },
+        "tested_seeds": 12,
+        "shapes": [
+          [
+            12,
+            28,
+            12,
+            14
+          ]
+        ]
+      },
+      {
+        "parameters": {
+          "width": 14,
+          "height": 20
+        },
+        "tested_seeds": 12,
+        "shapes": [
+          [
+            20,
+            28,
+            20,
+            14
+          ]
+        ]
+      }
+    ],
+    "rejected": [
+      {
+        "parameters": {
+          "width": 20,
+          "height": 14
+        },
+        "errors": [
+          "ValueError"
+        ]
+      },
+      {
+        "parameters": {
+          "width": 24,
+          "height": 21
+        },
+        "errors": [
+          "ValueError"
+        ]
+      },
+      {
+        "parameters": {
+          "width": 27,
+          "height": 24
+        },
+        "errors": [
+          "ValueError"
+        ]
+      },
+      {
+        "parameters": {
+          "width": 30,
+          "height": 27
+        },
+        "errors": [
+          "ValueError"
+        ]
+      }
+    ],
+    "scope": "Bounded differential validation against saved solver; original replay passed."
+  },
+  "e99362f0": {
+    "approved": [
+      {
+        "parameters": {
+          "width": 6,
+          "height": 4
+        },
+        "tested_seeds": 12,
+        "shapes": [
+          [
+            9,
+            13,
+            4,
+            6
+          ]
+        ]
+      },
+      {
+        "parameters": {
+          "width": 8,
+          "height": 6
+        },
+        "tested_seeds": 12,
+        "shapes": [
+          [
+            13,
+            17,
+            6,
+            8
+          ]
+        ]
+      },
+      {
+        "parameters": {
+          "width": 10,
+          "height": 8
+        },
+        "tested_seeds": 12,
+        "shapes": [
+          [
+            17,
+            21,
+            8,
+            10
+          ]
+        ]
+      },
+      {
+        "parameters": {
+          "width": 12,
+          "height": 10
+        },
+        "tested_seeds": 12,
+        "shapes": [
+          [
+            21,
+            25,
+            10,
+            12
+          ]
+        ]
+      },
+      {
+        "parameters": {
+          "width": 14,
+          "height": 12
+        },
+        "tested_seeds": 12,
+        "shapes": [
+          [
+            25,
+            29,
+            12,
+            14
+          ]
+        ]
+      }
+    ],
+    "rejected": [
+      {
+        "parameters": {
+          "width": 20,
+          "height": 14
+        },
+        "errors": [
+          "ValueError"
+        ]
+      },
+      {
+        "parameters": {
+          "width": 14,
+          "height": 20
+        },
+        "errors": [
+          "ValueError"
+        ]
+      },
+      {
+        "parameters": {
+          "width": 24,
+          "height": 21
+        },
+        "errors": [
+          "ValueError"
+        ]
+      },
+      {
+        "parameters": {
+          "width": 27,
+          "height": 24
+        },
+        "errors": [
+          "ValueError"
+        ]
+      },
+      {
+        "parameters": {
+          "width": 30,
+          "height": 27
+        },
+        "errors": [
+          "ValueError"
+        ]
+      }
+    ],
+    "scope": "Bounded differential validation against saved solver; original replay passed."
+  },
+  "ea9794b1": {
+    "approved": [
+      {
+        "parameters": {
+          "width": 6,
+          "height": 4
+        },
+        "tested_seeds": 12,
+        "shapes": [
+          [
+            8,
+            12,
+            4,
+            6
+          ]
+        ]
+      },
+      {
+        "parameters": {
+          "width": 8,
+          "height": 6
+        },
+        "tested_seeds": 12,
+        "shapes": [
+          [
+            12,
+            16,
+            6,
+            8
+          ]
+        ]
+      },
+      {
+        "parameters": {
+          "width": 10,
+          "height": 8
+        },
+        "tested_seeds": 12,
+        "shapes": [
+          [
+            16,
+            20,
+            8,
+            10
+          ]
+        ]
+      },
+      {
+        "parameters": {
+          "width": 12,
+          "height": 10
+        },
+        "tested_seeds": 12,
+        "shapes": [
+          [
+            20,
+            24,
+            10,
+            12
+          ]
+        ]
+      },
+      {
+        "parameters": {
+          "width": 14,
+          "height": 12
+        },
+        "tested_seeds": 12,
+        "shapes": [
+          [
+            24,
+            28,
+            12,
+            14
+          ]
+        ]
+      }
+    ],
+    "rejected": [
+      {
+        "parameters": {
+          "width": 20,
+          "height": 14
+        },
+        "errors": [
+          "ValueError"
+        ]
+      },
+      {
+        "parameters": {
+          "width": 14,
+          "height": 20
+        },
+        "errors": [
+          "ValueError"
+        ]
+      },
+      {
+        "parameters": {
+          "width": 24,
+          "height": 21
+        },
+        "errors": [
+          "ValueError"
+        ]
+      },
+      {
+        "parameters": {
+          "width": 27,
+          "height": 24
+        },
+        "errors": [
+          "ValueError"
+        ]
+      },
+      {
+        "parameters": {
+          "width": 30,
+          "height": 27
+        },
+        "errors": [
+          "ValueError"
+        ]
+      }
+    ],
+    "scope": "Bounded differential validation against saved solver; original replay passed."
+  }
+}

@@ -2296,4 +2296,35 @@ class GeneratorTests(unittest.TestCase):
                            sockets=[(coordinate,1,['111','1.1','111'])],
                            chains=[(5,5,['22','33'])])
 
+    def test_constellation_clipping_mode_and_copy_cell_accounting(self):
+        m=importlib.import_module('tasks.task_a395ee82')
+        original=m._resolve_mode;modes=[]
+        def capture(*args):
+            mode=original(*args);modes.append(mode);return mode
+        with patch.object(m,'_resolve_mode',capture):
+            for h,w in ((12,30),(30,12)):
+                for clip in (False,True):
+                    for seed in range(5):
+                        random.seed(85000+seed);before=len(modes)
+                        p=m.generate(height=h,width=w,bg=0,shape_color=1,
+                                     dot_color=2,force_clip=clip)
+                        self.assertEqual(len(modes),before+1)
+                        area=sum(row.count(1) for row in p['input'])-1
+                        copies=sum(row.count(2) for row in p['input'])
+                        painted=sum(row.count(1) for row in p['output'])
+                        if clip:self.assertLess(painted,area*copies)
+                        else:self.assertEqual(painted,area*copies)
+                        self.assertEqual(p['output'],grid(call(solver('a395ee82'),p['input'])))
+
+    def test_constellation_invalid_positions_and_maximum_dot_count(self):
+        m=importlib.import_module('tasks.task_a395ee82')
+        for kw in ({'shape_pos':[-1,0]},{'shape_pos':[30,0]},
+                   {'force_clip':True,'allow_clip':False},{'offsets':[[2,0]]}):
+            with self.assertRaises(ValueError):m.generate(**kw)
+        random.seed(85000)
+        p=m.generate(height=30,width=30,bg=0,shape_color=1,dot_color=2,
+                     num_dots=24,allow_clip=False)
+        self.assertEqual(sum(row.count(2) for row in p['input']),24)
+        self.assertEqual(p['output'],grid(call(solver('a395ee82'),p['input'])))
+
 if __name__=='__main__':unittest.main()

@@ -540,9 +540,9 @@ task_id,split,former_holdout,training_eligible,status,standalone_module,candidat
 7ee1c6ea,training,False,True,upstream_fixture_verified,tasks/task_7ee1c6ea.py,recolour;topology;crop,references/7ee1c6ea.json,10x10->10x10,Expand semantic and boundary-case tests
 7f4411dc,training,False,True,upstream_fixture_verified,tasks/task_7f4411dc.py,template;crop;layers,references/7f4411dc.json,10x10->10x10,Expand semantic and boundary-case tests
 7fe24cdd,training,False,True,upstream_fixture_verified,tasks/task_7fe24cdd.py,rigid;repeat;template;crop,references/7fe24cdd.json,3x3->6x6,Expand semantic and boundary-case tests
-800d221b,evaluation,False,True,generator_missing,,objects;selection;recolour;paths;dynamics;count,references/800d221b.json,30x30->30x30,"Construct, validate and review standalone generator"
+800d221b,evaluation,False,True,extension_validated,tasks/task_800d221b.py,objects;selection;recolour;paths;dynamics;count,references/800d221b.json,30x30->30x30,Expand semantic and boundary-case tests
 80214e03,training,False,True,upstream_fixture_verified,tasks/task_80214e03.py,rigid;topology;count,references/80214e03.json,22x19->4x3,Expand semantic and boundary-case tests
-80a900e0,evaluation,False,True,generator_missing,,selection;recolour;rays;dynamics;layers,references/80a900e0.json,22x21->22x21,"Construct, validate and review standalone generator"
+80a900e0,evaluation,False,True,extension_validated,tasks/task_80a900e0.py,selection;recolour;rays;dynamics;layers,references/80a900e0.json,22x21->22x21,Expand semantic and boundary-case tests
 80af3007,training,False,True,upstream_fixture_verified,tasks/task_80af3007.py,recolour;template;crop;scale,references/80af3007.json,17x19->9x9,Expand semantic and boundary-case tests
 810b9b61,training,False,True,upstream_fixture_verified,tasks/task_810b9b61.py,recolour;topology;layers,references/810b9b61.json,12x12->12x12,Expand semantic and boundary-case tests
 817e6c09,training,False,True,upstream_fixture_verified,tasks/task_817e6c09.py,recolour;repeat;count;order;crop,references/817e6c09.json,7x15->7x15,Expand semantic and boundary-case tests

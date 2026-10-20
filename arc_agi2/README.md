@@ -12,11 +12,11 @@ This fork adds a reference-guided generator workflow and an adaptive episode bui
 
 - All **1,120** canonical tasks inventoried with saved Opus/Fable explanations, `transform(grid)` programs, provenance and separately labelled teaching fixtures.
 - **891 existing upstream generators** reproduce the canonical pair sets (pair ordering can differ between releases).
-- **139 new constructive implementations** have passed bounded validation, covering counting, selection, geometry, legends, relational motion, scaling, pattern construction and repair. Standalone conversion and review are tracked separately below.
+- **141 new constructive implementations** have passed bounded validation, covering counting, selection, geometry, legends, relational motion, scaling, pattern construction and repair. Standalone conversion and review are tracked separately below.
 - **Two variable-size extensions**: `0692e18c` (inverse self-tiling) and `00576224` (three-by-three tiling with mirrored middle band).
-- All 141 constructors (139 new families plus two size extensions) passed **300 bounded randomized checks each**: 138 use the archived pair solver, `78332cb0` uses the documented complete-chain verifier, `de493100` uses the dimension-aware reflection verifier, and `269e22fb` uses a demonstration-conditioned episode verifier. Of these, 140 reproduce all original examples; `581f7754` uses the explicitly approved, hash-pinned eight-cell teaching correction. Its unchanged canonical replay is reported separately as 4/5, versus 5/5 on the teaching copy. Outputs are constructed independently from latent parameters. New pictures in `269e22fb` are compared with an independent contextual verifier; its original fixtures still match the archived fixed-picture transform.
+- All 143 constructors (141 new families plus two size extensions) passed **300 bounded randomized checks each**: 140 use the archived pair solver, `78332cb0` uses the documented complete-chain verifier, `de493100` uses the dimension-aware reflection verifier, and `269e22fb` uses a demonstration-conditioned episode verifier. Of these, 142 reproduce all original examples; `581f7754` uses the explicitly approved, hash-pinned eight-cell teaching correction. Its unchanged canonical replay is reported separately as 4/5, versus 5/5 on the teaching copy. Outputs are constructed independently from latent parameters. New pictures in `269e22fb` are compared with an independent contextual verifier; its original fixtures still match the archived fixed-picture transform.
 - **22 additional fixed-size families / 111 size-parameter configurations** passed bounded 12-seed differential tests. Every such generated pair is checked again during generation. This is agreement evidence, not proof of semantic correctness.
-- **90 tasks still need constructive generators**. A saved transform is not itself an input generator. Reference packets and `reports/generator-roadmap.csv` provide the task-by-task backlog.
+- **88 tasks still need constructive generators**. A saved transform is not itself an input generator. Reference packets and `reports/generator-roadmap.csv` provide the task-by-task backlog.
 
 ## Inspect
 
@@ -72,9 +72,9 @@ The authoring campaign uses eight concurrent Claude CLI processes under the user
 
 A zero-error differential check is a bounded agreement test. It does not prove the saved solver is universally correct or that every original mechanism variant is covered.
 
-**133 standalone modules are now reviewed and registered** (the exact list lives in `task_registry.py`). Each passed 1,000 seed checks and exact reconstruction of its approved validation fixture: canonical for 132 modules, the labelled teaching copy for `581f7754`. The first sixteen used seeds 0..999 (including their 300 author-validation seeds); the next one hundred and seventeen used independent seeds 20,000..20,999. The regression suite also checks registered source hashes and seeds 10,000..10,019.
+**135 standalone modules are now reviewed and registered** (the exact list lives in `task_registry.py`). Each passed 1,000 seed checks and exact reconstruction of its approved validation fixture: canonical for 134 modules, the labelled teaching copy for `581f7754`. The first sixteen used seeds 0..999 (including their 300 author-validation seeds); the next one hundred and nineteen used independent seeds 20,000..20,999. The regression suite also checks registered source hashes and seeds 10,000..10,019.
 
-Twenty-four conversions replace earlier research constructors with the upstream task-file interface. The total is now 132 new constructive families, with 6 still awaiting standalone conversion/review. Remaining CLI drafts are authored and validated locally. Restricted shape and dimension ranges are documented per file and in `reports/standalone/`; the size-matching builder must respect those ranges.
+Twenty-four conversions replace earlier research constructors with the upstream task-file interface. The total is now 141 new constructive families, with 6 still awaiting standalone conversion/review. Remaining CLI drafts are authored and validated locally. Restricted shape and dimension ranges are documented per file and in `reports/standalone/`; the size-matching builder must respect those ranges.
 
 Independent validation exposed a background-inference failure in the saved `d4c90558` solver: a thick frame can dominate a small grid, causing the checker to interpret the wrong colour as background. The constructor now samples the explicit domain where 0 strictly outnumbers every other colour. The failing examples are retained in `reports/standalone/d4c90558-counterexamples.json`. This restriction is not evidence that the conceptual counting rule fails on denser scenes.
 
@@ -205,3 +205,12 @@ Coverage: **1,029/1,120**, **91 missing**, **132 reviewed standalone**. The 99-f
 Random masks still require direct visible partners: fresh examples do not yet require the weak transpose fallback. That limitation is explicit. Non-30 sizes are labelled synthetic extensions, not claimed to be uniquely established by the canonical data.
 
 Coverage: **1,030/1,120**, **90 missing**, **133 reviewed standalone**. Bulk episode generation and model training remain stopped pending complete coverage and review.
+
+
+### Branch-count decisions and clipped diamond rays (1,032 covered)
+
+Registered `800d221b` and `80a900e0`, bringing reviewed standalone additions to 135 and missing families to 88. Both reproduce their canonical fixtures and pass 1,000 independent seeds. The branch constructor now rejects coerced fractional/boolean texture cells and waypoints, while preserving valid digit-string texture rows. An independent painted-input oracle checked 1,120 unique scenes: 934 defeat at least one of five shortcuts, including 82 attachment-count and 80 corridor-only counterexamples; 255 have a relative centre-count margin below 0.1. These frequencies are measured results, not guaranteed mixture quotas. One large six-patch case exceeded a concurrent three-second check; the same three seeds replayed correctly in 2.054, 0.089 and 0.413 seconds. No universal latency guarantee is claimed.
+
+The diamond constructor passed 1,152 independent input-derived ray checks: 702 clipped scenes, 40 exact-four-badge controls, 80 rectangular controls and 32 explicit boundary controls. Default samples included 61 four-badge cases in 1,000. Rays arise from segment endpoints, not the middle cell, and preserve checker-zero cells. Original checker colours/phase, fully visible rings and nonintersecting rays remain documented restrictions. The canonical second test centre is `(14,12)`; a `(14,13)` typo in archived explanation text does not affect fixture reconstruction.
+
+A separate 32-worker Opus5.5 CLI campaign is reviewing 84 revised candidates; eight local validators execute its proposed tests. It does not automatically register or publish candidates.

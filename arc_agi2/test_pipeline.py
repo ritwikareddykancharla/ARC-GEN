@@ -11,6 +11,55 @@ from .fixture_policy import fixture_basis
 from .augmentation import apply_episode,settings,exhaustive_variants
 
 class GeneratorTests(unittest.TestCase):
+    def test_diamond_endpoint_rays_and_clipped_segments(self):
+        rays=importlib.import_module('tasks.task_80a900e0')
+        p=rays.generate(width=14,height=20,
+            patterns=[(10,6,3,[(-1,1,8),(1,-1,8)])])
+        self.assertEqual(p['output'][6][8],8)
+        self.assertEqual(p['output'][8][10],8)
+        self.assertEqual(p['output'][7][9],1)  # Middle segment cell emits no ray.
+        self.assertEqual(p['output'][13][3],1)
+        clipped=rays.generate(width=29,height=29,
+            patterns=[(2,14,3,[(-1,1,2),(1,-1,2)])])
+        self.assertEqual(clipped['output'][0][18],2)
+        self.assertEqual(clipped['output'],grid(call(solver('80a900e0'),clipped['input'])))
+        for seed in range(3):
+            random.seed(42000+seed)
+            p=rays.generate(width=30,height=30,num_patterns=4)
+            self.assertEqual(p['output'],grid(call(solver('80a900e0'),p['input'])))
+
+    def test_branch_patch_textures_reject_silent_numeric_coercion(self):
+        import copy
+        branch=importlib.import_module('tasks.task_800d221b')
+        original=branch.generate
+        calls=[]
+        def capture(*args,**kwargs):
+            calls.append(copy.deepcopy(kwargs))
+            return original(*args,**kwargs)
+        with patch.object(branch,'generate',side_effect=capture):
+            branch.validate()
+        for bad in (True,2.9,'2'):
+            kw=copy.deepcopy(calls[0])
+            top,left,rows=kw['patches'][0]
+            rows=[[int(v) for v in row] for row in rows]
+            rows[0][0]=bad
+            kw['patches'][0]=(top,left,rows)
+            with self.subTest(bad=bad),self.assertRaises(ValueError):
+                original(**kw)
+        for bad in (True,2.9,'2',None):
+            kw=copy.deepcopy(calls[0])
+            i,points=kw['paths'][0]
+            points=[list(p) for p in points]
+            points[0][0]=bad
+            kw['paths'][0]=(i,points)
+            with self.subTest(waypoint=bad),self.assertRaises(ValueError):
+                original(**kw)
+        for field,value in [('patches',[None]),('paths',[None])]:
+            kw=copy.deepcopy(calls[0])
+            kw[field]=value
+            with self.subTest(field=field),self.assertRaises(ValueError):
+                original(**kw)
+
     def test_fresh_hole_shapes_long_snakes_and_proximity_counts(self):
         holes=importlib.import_module('tasks.task_67e490f4')
         random.seed(30000)

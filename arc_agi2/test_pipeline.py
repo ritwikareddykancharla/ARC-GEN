@@ -2352,4 +2352,55 @@ class GeneratorTests(unittest.TestCase):
                     self.assertNotEqual(p['input'],p['output'])
                     self.assertEqual(p['output'],grid(call(solver('97c75046'),p['input'])))
 
+    def test_holes_diagonal_gap_is_enclosed_but_open_channel_is_not(self):
+        m=importlib.import_module('tasks.task_aa4ec2a5')
+        ring={'rects':[(1,1,3,3)],'holes':[(2,2,1,1)],'notches':[(1,1,1,1)]}
+        open_ring={'rects':[(5,5,3,3)],'notches':[(6,6,1,1),(5,6,1,1)]}
+        p=m.generate(width=10,height=10,shapes=[ring,open_ring])
+        self.assertEqual(p['output'][2][2],6)
+        self.assertEqual(p['output'][1][2],8)
+        self.assertEqual(p['output'][6][5],1)
+        self.assertEqual(p['output'][6][6],2)
+        self.assertEqual(p['output'][1][1],2)
+        self.assertEqual(p['output'],grid(call(solver('aa4ec2a5'),p['input'])))
+
+    def test_holes_small_packing_and_exact_six_objects(self):
+        m=importlib.import_module('tasks.task_aa4ec2a5')
+        for size,count in ((8,2),(30,6)):
+            for seed in range(10):
+                random.seed(87000+seed)
+                p=m.generate(height=size,width=size,num_shapes=count)
+                self.assertEqual((len(p['input']),len(p['input'][0])),(size,size))
+                self.assertEqual(p['output'],grid(call(solver('aa4ec2a5'),p['input'])))
+                self.assertGreater(sum(row.count(4) for row in p['input']),size*size/2)
+        for kw in ({'num_shapes':2.5},{'height':True},
+                   {'width':10,'height':10,'shapes':[]},
+                   {'width':8,'height':8,'num_shapes':6}):
+            with self.assertRaises(ValueError):m.generate(**kw)
+
+    def test_stencil_swap_is_simultaneous_and_background_anchor_is_reserved(self):
+        m=importlib.import_module('tasks.task_abc82100')
+        legs=[(1,2,(1,1),(0,1),[(1,3)]),
+              (2,1,(4,1),(0,1),[(4,3)])]
+        p=m.generate(height=10,width=10,legends=legs,loose=[(7,6,1),(7,8,2)])
+        self.assertEqual(p['output'][7][6],2)
+        self.assertEqual(p['output'][7][8],1)
+        self.assertEqual(sum(v!=0 for row in p['output'] for v in row),2)
+        with self.assertRaisesRegex(ValueError,'anchor'):
+            m.generate(height=5,width=5,
+                       legends=[(1,2,(0,0),(0,1),[(1,2)])],
+                       loose=[(0,2,2)])
+
+    def test_stencil_four_interlocked_legends_with_long_runs(self):
+        m=importlib.import_module('tasks.task_abc82100')
+        for seed in range(5):
+            random.seed(88000+seed)
+            p=m.generate(height=30,width=30,num_legends=4,
+                         interlock=True,long_runs=True)
+            self.assertEqual((len(p['input']),len(p['input'][0])),(30,30))
+            self.assertEqual(p['output'],grid(call(solver('abc82100'),p['input'])))
+        for bad in ({'interlock':1},{'long_runs':'yes'},
+                    {'num_legends':True},{'height':12.0}):
+            with self.assertRaises(ValueError):m.generate(**bad)
+
 if __name__=='__main__':unittest.main()

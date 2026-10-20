@@ -17,6 +17,46 @@
 import common
 
 
+def _unambiguous_motif(rows, cols, colors):
+  """Every symmetry preserving the visible core must preserve its decoration."""
+  marks = [(r, c) for r, c, ink in zip(rows, cols, colors) if ink == common.red()]
+  if len(marks) != 1: return False
+  mr, mc = marks[0]
+  full = {(r - mr, c - mc, ink) for r, c, ink in zip(rows, cols, colors)}
+  core = {(r, c, ink) for r, c, ink in full
+          if ink in (common.red(), common.yellow())}
+  for swap in (False, True):
+    for sy in (-1, 1):
+      for sx in (-1, 1):
+        def transform(points):
+          return {(sy * (c if swap else r), sx * (r if swap else c), ink)
+                  for r, c, ink in points}
+        if transform(core) == core and transform(full) != full: return False
+  return True
+
+
+def _sample_motif(wide, tall, num_blue, num_green, max_attempts=256):
+  extras = [common.red()] + [common.blue()] * num_blue + [common.green()] * num_green
+  for _ in range(max_attempts):
+    pixels = common.sample(common.all_pixels(wide, tall), 5)
+    if not common.diagonally_connected(pixels): continue
+    added = []
+    for color in extras:
+      candidates = [(r + dr, c + dc) for r, c in pixels
+                    for dr, dc in ((-1, 0), (1, 0), (0, -1), (0, 1))]
+      candidates = [(r, c) for r, c in candidates
+                    if (r, c) not in pixels and (r, c) not in added
+                    and (color != common.red() or (r != tall // 2 and c != wide // 2))]
+      if not candidates: break
+      added.append(common.choice(candidates))
+    if len(added) != len(extras): continue
+    points, colors = pixels + added, [common.yellow()] * 5 + extras
+    top, left = min(r for r, c in points), min(c for r, c in points)
+    rows, cols = [r - top for r, c in points], [c - left for r, c in points]
+    if _unambiguous_motif(rows, cols, colors): return rows, cols, colors
+  raise RuntimeError("Could not draw an orientation-identifiable motif")
+
+
 def generate(width=None, height=None, rows=None, cols=None, colors=None,
              megarows=None, megacols=None, megarotates=None):
   """Returns input and output grids according to the given parameters.
@@ -37,47 +77,22 @@ def generate(width=None, height=None, rows=None, cols=None, colors=None,
     sprite_type, wide, tall = common.randint(0, 2), 3, 3
     if sprite_type == 1: wide, tall = 4, 2
     if sprite_type == 2: wide, tall = 5, 1
-    # Choose the positions of the yellow pixels.
-    while True:
-      pixels = common.sample(common.all_pixels(wide, tall), 5)
-      if common.diagonally_connected(pixels): break
-    extra_pixels, colors, extra_colors = [], [4] * len(pixels), []
-    # Choose the number of pixels of each other color.
-    num_red, num_blue, num_green = 1, common.randint(1, 2), common.randint(1, 3)
-    extra_colors += [common.red()] * num_red
-    extra_colors += [common.blue()] * num_blue
-    extra_colors += [common.green()] * num_green
-    # Choose the positions of the other pixels (make sure they don't clobber).
-    for color in extra_colors:
-      while True:
-        pixel, angle = common.choice(pixels), common.randint(0, 3)
-        r, c = pixel[0], pixel[1]
-        if angle == 0: r -= 1
-        if angle == 1: r += 1
-        if angle == 2: c -= 1
-        if angle == 3: c += 1
-        # The red pixel is important; don't place it in the center.
-        if color == common.red() and (r == tall // 2 or c == wide // 2):
-          continue
-        if (r, c) not in pixels and (r, c) not in extra_pixels: break
-      extra_pixels.append((r, c))
-    # Add the extra pixels & colors, and shift the row/col values if needed.
-    colors, pixels = colors + extra_colors, pixels + extra_pixels
-    rows, cols = zip(*pixels)
-    rows, cols = [r - min(rows) for r in rows], [c - min(cols) for c in cols]
+    num_blue, num_green = common.randint(1, 2), common.randint(1, 3)
+    rows, cols, colors = _sample_motif(wide, tall, num_blue, num_green)
     wide, tall = max(cols) + 1, max(rows) + 1
     # Choose the positions of the mega-sprites, making sure they don't overlap.
     num_sprites = common.randint(3, 4)
     megarotates = [common.randint(0, 3) for _ in range(num_sprites)]
-    while True:
-      megarows, megacols, megawides, megatalls = [], [], [], []
-      for megarotate in megarotates:
-        w, t = (tall, wide) if megarotate == 1 else (wide, tall)
-        megarows.append(common.randint(0, height - t))
-        megacols.append(common.randint(0, width - w))
-        megawides.append(w)
-        megatalls.append(t)
-      if not common.overlaps(megarows, megacols, megawides, megatalls, 1): break
+    megawides = [tall if a == 1 else wide for a in megarotates]
+    megatalls = [wide if a == 1 else tall for a in megarotates]
+    for attempt in range(256):
+      if attempt: width, height = common.randint(13, 15), common.randint(13, 15)
+      placed = common.place_rectangles(width, height, megawides, megatalls, spacing=1)
+      if placed is not None:
+        megarows, megacols = placed
+        break
+    else:
+      raise RuntimeError("Could not place all motif copies")
 
   grid, output = common.grids(width, height)
   wide, tall = max(cols) + 1, max(rows) + 1

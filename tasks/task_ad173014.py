@@ -46,13 +46,13 @@ def generate(width=None, height=None, size=None, wide=None, tall=None,
       idx = ids[brow][bcol + col]
       if idx != -1 and idx not in order: order.append(idx)
     for row in range(tall):
-      idx = ids[row][bcol + wide - 1]
+      idx = ids[brow + row][bcol + wide - 1]
       if idx != -1 and idx not in order: order.append(idx)
     for col in range(wide - 1, -1, -1):
       idx = ids[brow + tall - 1][bcol + col]
       if idx != -1 and idx not in order: order.append(idx)
     for row in range(tall - 1, -1, -1):
-      idx = ids[row][bcol]
+      idx = ids[brow + row][bcol]
       if idx != -1 and idx not in order: order.append(idx)
     # Third, draw the rectangles.
     for i in range(len(order)):

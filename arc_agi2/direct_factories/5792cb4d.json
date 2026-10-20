@@ -1,0 +1,32 @@
+{
+  "task_id": "5792cb4d",
+  "factory_sha256": "9355f86343180a956b57415806282c0d2f3dc9ecb5823063eb19fd7d411803a7",
+  "constructor_sha256": "1aa0937e905577f9ae86c055e65297aeba19c914d832b60336d7e8aba5c8d6f6",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 243338511799875,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 2.0296494589420035,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "Each grid holds one-cell-wide 4-connected chains on background palette[8]. The rule is the same under every D4 transform: keep the path cells fixed and reverse the colour sequence along each path. A rotation or reflection of a path is still a path, and reversing it gives the same result whichever end the walk starts from. So the emitted program works directly in visible coordinates and needs no direction constant. The only specialised constant is the background colour BG = palette[8]. The generator draws path colours only from {1,2,4,5,6,7,9}, so BG never appears on a path. For each 4-connected non-background component, the program starts at a degree-1 end and walks the unique unvisited neighbour each step. It then writes the collected colours back onto the same cells in reverse order. If a component has no end, it falls back to a deterministic greedy walk, as the archived solver does.",
+    "limitations": "This was reasoned out by hand; nothing has been run, including on the supplied fixtures. The generator's adjacency check does not stop the walk from stepping straight back onto the start cell on its second move, and it may oscillate there several times. In those scenes, cells are overwritten in the input. The expected output then puts colours[0] (and possibly other overwritten colours) at the far end, so the answer depends on colours that are not visible in the input. No input-only rule can recover them. My program, like the archived solver, reverses the visible simple path, so it will disagree with generator labels whenever such backtracking happens. Judging from the candidate rules, this could affect a noticeable share of fresh pairs, not just rare edge cases; that is an estimate, not a measured rate. The supplied fixtures follow the uniform rule, and no fixture contradiction was found. Components that are loops or branched shapes cannot arise as simple paths in this domain; they would get the archived-style greedy handling.",
+    "host_review": "The old neighbour exclusion omitted the destination cell itself. A second step could revisit the starting cell, overwrite its colour, and still put that hidden colour into the reversed output. Require each destination unvisited. Visible simple-path reversal is now the generated rule.",
+    "host_sampler_revision": "Preserve10x10canvas, original colour domain, stopping probability and minimum7cells. Bound outer retries at256; a self-avoiding path terminates within the64interior cells. Factory and original fixtures unchanged.",
+    "repair_verification": {
+      "fresh_pairs_checked": 1000,
+      "augmented_pair_checks": 8000,
+      "fixture_variants_checked": 16,
+      "unique_base_inputs": 1000,
+      "constructor_sha256": "1aa0937e905577f9ae86c055e65297aeba19c914d832b60336d7e8aba5c8d6f6",
+      "factory_sha256": "9355f86343180a956b57415806282c0d2f3dc9ecb5823063eb19fd7d411803a7"
+    },
+    "common_sha256": "879eb61e360e4a47ee1d569408e8c66114ac068794721fe1de1b59aaa476586a"
+  }
+}

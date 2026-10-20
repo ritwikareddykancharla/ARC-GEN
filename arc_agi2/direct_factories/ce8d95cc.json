@@ -1,0 +1,32 @@
+{
+  "task_id": "ce8d95cc",
+  "factory_sha256": "ba400ab09cf20c8dc5d5a63f827e3edcfb6b678313c823557216385b2a5c0c53",
+  "constructor_sha256": "9244234087ab685cc1d8c02d626c49cddf85ad7152867b10b30e81dd01c382e4",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 32939515065126,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 2.407394582987763,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The background is the constant palette[0]. In the visible grid, a full horizontal line is a row with no background cell, and a full vertical line is a column with no background cell. The program picks one background row and one background column. It samples the input at the rows [bg, L1, bg, L2, ..., bg] and the columns built the same way. This keeps every line one cell thick, puts exactly one background separator between lines and at both ends, and copies each crossing's top colour. A rotation or reflection only swaps which lines are rows and which are columns, or reverses their order. Sampling keeps the visible order, so the same direct rule works in the visible coordinates for every D4 index. Only the background constant is specialised from the palette. The procedure matches the generator's removal of consecutive duplicate rows and columns. All background rows are identical, all background columns are identical, and the generator never places two lines next to each other or on the border. So the duplicate removal produces exactly this interleaved layout.",
+    "limitations": "The program assumes the generator's domain: lines are never adjacent and never on the grid border, each axis has at least one background row and one background column, and line colours are never the background colour. If an axis had no lines, the output along that axis would be a single background row or column. The generator never produces that case. The teaching description mentions two staged canvases, but only the final canvas is returned. No fixture contradictions or constructor defects were found.",
+    "host_review": "Random row positions were tagged as vertical lines and random column positions as horizontal lines. On nonsquare grids this could put lines on borders or out of bounds, violating the documented separation/domain. Correct only the two direction tags.",
+    "host_sampler_revision": "Dimensions8\u201313, random inter-line gaps2\u20135, palette and draw order preserved. Explicit fixtures unchanged; factory unchanged. The solver collapses repeated background rows/columns in visible coordinates.",
+    "repair_verification": {
+      "fresh_pairs_checked": 1000,
+      "augmented_pair_checks": 8000,
+      "fixture_variants_checked": 16,
+      "unique_base_inputs": 1000,
+      "constructor_sha256": "9244234087ab685cc1d8c02d626c49cddf85ad7152867b10b30e81dd01c382e4",
+      "factory_sha256": "ba400ab09cf20c8dc5d5a63f827e3edcfb6b678313c823557216385b2a5c0c53"
+    },
+    "common_sha256": "879eb61e360e4a47ee1d569408e8c66114ac068794721fe1de1b59aaa476586a"
+  }
+}

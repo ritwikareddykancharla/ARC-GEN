@@ -1,0 +1,32 @@
+{
+  "task_id": "36d67576",
+  "factory_sha256": "3934bd5ad34b65470268c88b488a7c290208a341959739cfe15da92356aed1fd",
+  "constructor_sha256": "1ddecfe2d25e5a67400b4fdf2cff8e042ca1d75a08227e6761a8758dd6c194f4",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 223821446155773,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 6.412451624986716,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The rule itself does not depend on orientation. The grid is split into 8-connected multicolour objects over the non-background colour, palette[0]. The template is the object that contains any colour other than the shape colour palette[4] and the marker colour palette[2]. Every target is an object that contains both the shape colour and the marker colour. For each target, the program tries a list of 2x2 linear point transforms on the template's shape-and-marker core. The translation comes from aligning the marker cells. The first transform whose moved core exactly equals the target is used, and the template's decoration cells are painted with that transform and offset, clipped to the grid. The factory builds the 8 transforms in visible coordinates by conjugating the archived solver's 8 maps with the D4 linear map: C_k = D * M_k * D^-1. Here D combines a row reversal x->-x with clockwise turns (y,x)->(x,-y). Because the transforms are tried in the archived solver's order, ties are broken the same way the native solver would break them in the original frame. This matters when the core plus marker is symmetric. Colour roles are fixed constants taken from the palette, and decoration colours are copied exactly as they appear.",
+    "limitations": "When the core with its marker has a symmetry, several transforms can match. If the decorations are not equally symmetric, the generator's random choice of megarotate cannot be recovered from the input. In that case the program reproduces the archived solver's tie-break, conjugated into the visible frame, which may differ from the generated label. The program assumes every target holds exactly one marker cell, as the constructor guarantees. Targets that match no transform are left unchanged. No tests were run.",
+    "host_review": "A saved mismatch has a diagonal reflection that preserves its red/yellow core but changes its decoration, so the intended orientation is not observable. Reject motifs only when a core-preserving D4 map changes the full coloured motif; fully symmetric decorations remain valid. All canonical motifs satisfy this condition.",
+    "host_sampler_revision": "Bounded motif sampling retains chosen3x3/4x2/5x1 core type, five yellow cells, one red, requested1\u20132blue and1\u20133green. Bounded packing preserves3\u20134copies and their sampled rotations/reflections, resampling infeasible canvas13\u201315. Factory and original fixtures unchanged.",
+    "repair_verification": {
+      "fresh_pairs_checked": 1000,
+      "augmented_pair_checks": 8000,
+      "fixture_variants_checked": 16,
+      "unique_base_inputs": 1000,
+      "constructor_sha256": "1ddecfe2d25e5a67400b4fdf2cff8e042ca1d75a08227e6761a8758dd6c194f4",
+      "factory_sha256": "3934bd5ad34b65470268c88b488a7c290208a341959739cfe15da92356aed1fd"
+    },
+    "common_sha256": "879eb61e360e4a47ee1d569408e8c66114ac068794721fe1de1b59aaa476586a"
+  }
+}

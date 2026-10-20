@@ -35,7 +35,7 @@ recorded. Passing finite audits does not prove unrestricted generalization.
 
 - 213 native direct-coordinate certificates admitted after fresh audits and
   supplied-fixture checks.
-- 733 admitted factories. Each passed 1,000 fresh pairs, 8,000 augmented pair
+- 738 admitted factories. Each passed 1,000 fresh pairs, 8,000 augmented pair
   checks and 16 supplied-fixture variants. Their audit records retain draft
   limitations and source/constructor hashes. These checks are finite evidence,
   not proof of correctness on every generated input.
@@ -46,7 +46,7 @@ recorded. Passing finite audits does not prove unrestricted generalization.
   counts must be computed as a union, not added.
 - Local exporter test: 18 fresh base episodes, 144 augmented PNG/program/grid
   records. It requested 20 bases and reported a two-episode shortfall.
-- The union currently admits 952 of 1,120 families; 168 still need direct
+- The union currently admits 957 of 1,120 families; 163 still need direct
   augmented program admission. Constructor coverage and program coverage are
   different gates.
 - Synthetic labels for `00d62c1b` now fill every enclosed background component,
@@ -544,3 +544,39 @@ program/grid records, with no missing-evidence exclusions or mismatches. Report:
 The production requirement remains **1,000 fresh episodes per family**, each
 with program and grid together, then consistent rotation/reflection/colour
 augmentation. Neither bulk production nor training has started.
+
+
+## Coverage checkpoint: 957 families
+
+Five further families are admitted: `36d67576`, `5792cb4d`, `ce8d95cc`,
+`e7a25a18`, and `ad173014`. The union is **957/1,120**, with 738 factory
+certificates. Remaining: 68 semantic/context holds, 33 failed execution audits,
+three native-label conflicts, and 59 pending independent source reviews.
+
+- Motif copying (`36d67576`): reject a motif only when a symmetry preserves the
+  visible core but changes its hidden decoration. Keep all three core types,
+  requested colour counts, and three/four copies. Bounded packing keeps the
+  chosen transformations; equivalent full-motif symmetries are allowed.
+- Path reversal (`5792cb4d`): check that a candidate destination is unvisited.
+  The old check omitted that cell, permitting backtracking and overwritten
+  colours which the expected output still used. Retain the original minimum
+  length, stopping probability and palette.
+- Grid compression (`ce8d95cc`): fix reversed row/column direction tags in the
+  random sampler. Height now bounds row lines and width bounds column lines.
+- Quadrant expansion (`e7a25a18`): copy the source pattern before clearing the
+  output. The former NumPy view was accidentally cleared with the output slice.
+- Perimeter colour rotation (`ad173014`): include the loop's row offset in both
+  side scans. The missing offset could omit objects and introduce unseen colours.
+
+Original supplied fixture hashes remain unchanged. Each family passed 1,000
+fresh input pairs (all unique), 8,000 D4 checks and 16 fixture variants. The
+perimeter sampler had 15 recorded per-call deadlines during the fresh audit;
+these are explicit sampler failures, not ignored program mismatches. Other
+four families had no sampler rejections. Complete-episode checking passed all
+100 base episodes and 800 augmented records. See
+`reports/episode-evidence-957-audit.json`. **370 regression tests passed**.
+
+The production target remains 1,000 fresh episodes per family, program and grid
+in the same row, with shared D4/colour augmentation afterward. These audit
+counts are not production dataset counts. Bulk generation and training remain
+unlaunched while coverage is incomplete.

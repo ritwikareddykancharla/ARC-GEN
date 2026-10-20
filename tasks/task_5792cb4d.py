@@ -28,7 +28,7 @@ def generate(row=None, col=None, angles=None, colors=None):
   """
 
   if row is None:
-    while True:
+    for _ in range(256):
       grid = common.grid(10, 10, 0)
       row, col = common.randint(1, 8), common.randint(1, 8)
       r, c, angles, colors = row, col, [], []
@@ -36,13 +36,13 @@ def generate(row=None, col=None, angles=None, colors=None):
         colors.append(common.choice([1, 2, 4, 5, 6, 7, 9]))
         grid[r][c] = 1
         candidates = []
-        if r > 1 and grid[r - 1][c - 1] + grid[r - 1][c + 1] + grid[r - 2][c - 1] + grid[r - 2][c] + grid[r - 2][c + 1] == 0:
+        if r > 1 and grid[r - 1][c] == 0 and grid[r - 1][c - 1] + grid[r - 1][c + 1] + grid[r - 2][c - 1] + grid[r - 2][c] + grid[r - 2][c + 1] == 0:
           candidates.append(0)
-        if c < 8 and grid[r - 1][c + 1] + grid[r + 1][c + 1] + grid[r - 1][c + 2] + grid[r][c + 2] + grid[r + 1][c + 2] == 0:
+        if c < 8 and grid[r][c + 1] == 0 and grid[r - 1][c + 1] + grid[r + 1][c + 1] + grid[r - 1][c + 2] + grid[r][c + 2] + grid[r + 1][c + 2] == 0:
           candidates.append(1)
-        if r < 8 and grid[r + 1][c - 1] + grid[r + 1][c + 1] + grid[r + 2][c - 1] + grid[r + 2][c] + grid[r + 2][c + 1] == 0:
+        if r < 8 and grid[r + 1][c] == 0 and grid[r + 1][c - 1] + grid[r + 1][c + 1] + grid[r + 2][c - 1] + grid[r + 2][c] + grid[r + 2][c + 1] == 0:
           candidates.append(2)
-        if c > 1 and grid[r - 1][c - 1] + grid[r + 1][c - 1] + grid[r - 1][c - 2] + grid[r][c - 2] + grid[r + 1][c - 2] == 0:
+        if c > 1 and grid[r][c - 1] == 0 and grid[r - 1][c - 1] + grid[r + 1][c - 1] + grid[r - 1][c - 2] + grid[r][c - 2] + grid[r + 1][c - 2] == 0:
           candidates.append(3)
         if not candidates: break
         if common.randint(0, 19) == 0: break
@@ -53,6 +53,8 @@ def generate(row=None, col=None, angles=None, colors=None):
         if angle == 2: r += 1
         if angle == 3: c -= 1
       if len(colors) > 6: break
+    else:
+      raise RuntimeError("Could not sample a self-avoiding path of at least seven cells")
     colors = "".join(map(str, colors))
     angles = "".join(map(str, angles))
 

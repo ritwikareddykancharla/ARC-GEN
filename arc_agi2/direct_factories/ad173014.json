@@ -1,0 +1,155 @@
+{
+  "task_id": "ad173014",
+  "factory_sha256": "aa2a2248e5d951969e8e7ee5e1a84d0e32a9d7d3f652fab2eb81b360a0a9f541",
+  "constructor_sha256": "8d3946eef5760e47d7599979575a8a0724424cac496339bffacd6e64254e6026",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [
+    {
+      "seed": 104990719723000,
+      "error": "reference/generator deadline"
+    },
+    {
+      "seed": 194371690803982,
+      "error": "reference/generator deadline"
+    },
+    {
+      "seed": 128148530605576,
+      "error": "reference/generator deadline"
+    },
+    {
+      "seed": 185384469013178,
+      "error": "reference/generator deadline"
+    },
+    {
+      "seed": 67482775154661,
+      "error": "reference/generator deadline"
+    },
+    {
+      "seed": 28584785072260,
+      "error": "reference/generator deadline"
+    },
+    {
+      "seed": 175046021708701,
+      "error": "reference/generator deadline"
+    },
+    {
+      "seed": 145476845448734,
+      "error": "reference/generator deadline"
+    },
+    {
+      "seed": 153739166761118,
+      "error": "reference/generator deadline"
+    },
+    {
+      "seed": 213335528267128,
+      "error": "reference/generator deadline"
+    },
+    {
+      "seed": 275461329516500,
+      "error": "reference/generator deadline"
+    },
+    {
+      "seed": 88665497072683,
+      "error": "reference/generator deadline"
+    },
+    {
+      "seed": 125603864545869,
+      "error": "reference/generator deadline"
+    },
+    {
+      "seed": 260181994076664,
+      "error": "reference/generator deadline"
+    },
+    {
+      "seed": 53547345403551,
+      "error": "reference/generator deadline"
+    }
+  ],
+  "seed": 59611221308662,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 136.20465341606177,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The scene has a hollow loop rectangle in palette[1]. Its four corners are always visible, so the bounding box of the loop colour gives the exact loop rectangle. Square frames in palette[2] sit on the loop, and each frame holds a one-colour shape. The emitted program works as follows:\n\n1. It finds every frame as a 4-connected component of the frame colour.\n2. It reads each frame's shape colour as the interior colour that is not the background (palette[0]).\n3. It projects each frame's centre onto the nearest side of the loop rectangle. This gives a perimeter coordinate that runs clockwise in visible coordinates: top side left to right, right side top to bottom, bottom side right to left, left side bottom to top.\n4. It changes the colour of each shape's cells (the cells themselves stay put) to the colour of the neighbouring frame.\n\nThe generator's rule is that each box takes the colour of the next box clockwise along the loop. Rotations preserve handedness, so for d4 < 4 the neighbour is the next box clockwise. Reflections (d4 >= 4) reverse handedness, so the original clockwise becomes visible counter-clockwise and the program takes the previous box in visible clockwise order.\n\nAs a safeguard, the program checks this direction against the demonstrations. It flips the direction only if the specialised one fails and the opposite one reproduces every demo.\n\nThe perimeter projection replaces the archived atan2-around-the-mean ordering. That ordering can misorder boxes when their centroid is not central, for example when all boxes sit on two adjacent sides. The archived solver's `math` import issue does not apply here.",
+    "limitations": "Constructor defect needing host review: the order scan in draw() reads the right and left loop sides as ids[row][...] for row in range(tall) instead of ids[brow + row][...]. A box that touches only the right or left side with its top frame row at or below row `tall` is therefore never put in `order`. Such placements are rare but reachable, needing brow > size + 2, for example size 4 with brow 7. When that happens:\n- the missed box is never drawn;\n- the last ordered box's output colour becomes colors[len(order)], a colour that appears nowhere in the input.\n\nThat output cannot be derived from the visible grid. The program instead rotates colours cyclically among the visible boxes, which is the intended rule.\n\nOther assumptions:\n- Frames are separated by at least one cell (the overlaps margin), so 4-connected frame components are individual boxes. Touching frames would merge and be mishandled.\n- The loop's corners are visible and the loop colour appears nowhere else.\n- There are at least 2 boxes, each with a non-empty one-colour shape.\n- If no loop colour is present, the program falls back to atan2 ordering about the mean box centre.",
+    "host_review": "Confirmed missing brow offset in both vertical perimeter scans. It could omit a low side object and introduce its unseen colour into output rotation. Add brow to both indexed rows; clockwise visible perimeter order and all supplied fixtures remain unchanged. A targeted off-origin perimeter test exercises both formerly missed side objects.",
+    "host_sampler_revision": "No sampler change. The audit completed1000fresh pairs/8000D4/16fixture variants with15recorded generator timeouts (5second per-call bound); no program mismatches. Keep these sampler failures explicit; this admission is not a claim of timeout-free generation.",
+    "repair_verification": {
+      "fresh_pairs_checked": 1000,
+      "augmented_pair_checks": 8000,
+      "fixture_variants_checked": 16,
+      "unique_base_inputs": 1000,
+      "constructor_sha256": "8d3946eef5760e47d7599979575a8a0724424cac496339bffacd6e64254e6026",
+      "factory_sha256": "aa2a2248e5d951969e8e7ee5e1a84d0e32a9d7d3f652fab2eb81b360a0a9f541",
+      "sampler_rejections": [
+        {
+          "seed": 104990719723000,
+          "error": "reference/generator deadline"
+        },
+        {
+          "seed": 194371690803982,
+          "error": "reference/generator deadline"
+        },
+        {
+          "seed": 128148530605576,
+          "error": "reference/generator deadline"
+        },
+        {
+          "seed": 185384469013178,
+          "error": "reference/generator deadline"
+        },
+        {
+          "seed": 67482775154661,
+          "error": "reference/generator deadline"
+        },
+        {
+          "seed": 28584785072260,
+          "error": "reference/generator deadline"
+        },
+        {
+          "seed": 175046021708701,
+          "error": "reference/generator deadline"
+        },
+        {
+          "seed": 145476845448734,
+          "error": "reference/generator deadline"
+        },
+        {
+          "seed": 153739166761118,
+          "error": "reference/generator deadline"
+        },
+        {
+          "seed": 213335528267128,
+          "error": "reference/generator deadline"
+        },
+        {
+          "seed": 275461329516500,
+          "error": "reference/generator deadline"
+        },
+        {
+          "seed": 88665497072683,
+          "error": "reference/generator deadline"
+        },
+        {
+          "seed": 125603864545869,
+          "error": "reference/generator deadline"
+        },
+        {
+          "seed": 260181994076664,
+          "error": "reference/generator deadline"
+        },
+        {
+          "seed": 53547345403551,
+          "error": "reference/generator deadline"
+        }
+      ]
+    },
+    "common_sha256": "879eb61e360e4a47ee1d569408e8c66114ac068794721fe1de1b59aaa476586a"
+  }
+}

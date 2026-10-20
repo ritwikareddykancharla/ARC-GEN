@@ -2493,4 +2493,31 @@ class GeneratorTests(unittest.TestCase):
             m.generate(glyphs=[[3,1,1,[[1,0,1],[0,True,0],[1,0,1]]]],
                        boxes=[[1,1,3,None]])
 
+    def test_odd_boxes_dense_feasible_requests_preserve_counts(self):
+        m=importlib.import_module('tasks.task_aee291af')
+        for kw in (dict(size=5,num_boxes=16),
+                   dict(size=4,num_boxes=16,width=19,height=19),
+                   dict(size=8,num_boxes=9,width=30,height=30)):
+            random.seed(92000)
+            p=m.generate(**kw)
+            self.assertEqual(len(p['output']),kw['size'])
+            k=kw['size'];g=p['input'];boxes=[]
+            for r in range(len(g)-k+1):
+                for c in range(len(g[0])-k+1):
+                    border=[g[r+i][c+j] for i in range(k) for j in range(k)
+                            if i in (0,k-1) or j in (0,k-1)]
+                    inner=[g[r+i][c+j] for i in range(1,k-1) for j in range(1,k-1)]
+                    if set(border)=={8} and set(inner)<={2,8} and 2 in inner:
+                        boxes.append((r,c))
+            self.assertEqual(len(boxes),kw['num_boxes'])
+            self.assertEqual(p['output'],grid(call(solver('aee291af'),g)))
+
+    def test_odd_boxes_rejects_geometry_and_nested_unique_decoys(self):
+        m=importlib.import_module('tasks.task_aee291af')
+        for kw in (dict(width=8,height=8),dict(size=8,num_boxes=16),
+                   dict(boxes=[1,2,3],size=4),dict(noise='####'),
+                   dict(pattern=['2222']*4,
+                        odd_pattern=['8888','8288','8888','2222'])):
+            with self.assertRaises(ValueError):m.generate(**kw)
+
 if __name__=='__main__':unittest.main()

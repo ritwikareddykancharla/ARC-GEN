@@ -35,7 +35,7 @@ recorded. Passing finite audits does not prove unrestricted generalization.
 
 - 213 native direct-coordinate certificates admitted after fresh audits and
   supplied-fixture checks.
-- 71 admitted factories. Each passed 1,000 fresh pairs, 8,000 augmented pair
+- 291 admitted factories. Each passed 1,000 fresh pairs, 8,000 augmented pair
   checks and 16 supplied-fixture variants. Their audit records retain draft
   limitations and source/constructor hashes. These checks are finite evidence,
   not proof of correctness on every generated input.
@@ -46,7 +46,7 @@ recorded. Passing finite audits does not prove unrestricted generalization.
   counts must be computed as a union, not added.
 - Local exporter test: 18 fresh base episodes, 144 augmented PNG/program/grid
   records. It requested 20 bases and reported a two-episode shortfall.
-- The union currently admits 290 of 1,120 families; 830 still need direct
+- The union currently admits 510 of 1,120 families; 610 still need direct
   augmented program admission. Constructor coverage and program coverage are
   different gates.
 - Synthetic labels for `00d62c1b` now fill every enclosed background component,
@@ -82,3 +82,27 @@ but are excluded from the default viewer.
 The `0d87d2a6` sampler now places rectangles incrementally rather than rejecting
 whole crowded layouts. Its refreshed audit passed 1,000 fresh pairs and 8,000
 augmented checks in 17 seconds without sampler rejections; fixtures are unchanged.
+
+## Resumed solver audit and synthetic sampling repairs
+
+Constructor source coverage is still 1,120/1,120. Work here builds and validates
+the separate direct-coordinate program targets. Original benchmark fixtures
+remain unchanged. Each admitted target still requires per-episode verification.
+
+- `1c56ad9f`: resample infeasible copy-count/offset combinations before selecting
+  rectangle dimensions; no infinite size rejection on an impossible layout.
+- `1e5d6875`: place crowded boxes incrementally, preserving shape and count rules.
+- `2072aba6`: sample all nine motif cells rather than only five.
+- `1190e5a7`: retain random band thicknesses, conditioned on the 30-cell ARC limit.
+- `34cfa167`: vertical frame-bar bounds now use the row origin, fixing an
+  accidental dependence on horizontal placement. Both constructor and solver
+  were repaired; translation-invariance and original fixtures were checked.
+- `1d61978c`: prevent negative-index diagonal wrapping and sample the correct
+  starting-column interval. Its full fresh execution audit remains pending.
+
+The finite default domains of `17cae0c1`, `25ff71a9`, `28e73c20`, `332efdb3`,
+`3618c87e`, and `4522001f` were exhausted (60, 70, 16, 14, 11 and 4 inputs).
+These counts are recorded as limits, not inflated by repeated random draws.
+Ambiguous random-label cases and disputed fixture mechanisms stay outside
+admission until reviewed. Drafting workers cannot admit or publish their own
+programs. The regression suite passed 240 tests at this checkpoint.

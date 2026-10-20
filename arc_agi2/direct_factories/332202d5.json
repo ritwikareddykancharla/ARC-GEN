@@ -1,0 +1,21 @@
+{
+  "task_id": "332202d5",
+  "factory_sha256": "c99c0a9ea01140c97c75b5c8e82da9b3729b27a2f50d15e77398e5ff779fff14",
+  "constructor_sha256": "7c6401ef1f5d32096ba534cf69c6d8e849e5e99f743ff6db00d67bf7c81e1d0e",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 140048728474804,
+  "d4": 7,
+  "unique_base_inputs": 999,
+  "seconds": 4.845113500021398,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The scene has one long marker line in colour palette[8]. It is crossed by several full-length coloured lines, and each crossing cell is palette[1]. Reflections keep the marker line on the same axis, and an odd number of rotations swaps the axis. So the factory checks d4 parity: an even value gives a vertical marker column, an odd value gives a horizontal marker row. It then emits a program written directly for that orientation.\n\nThe emitted program works like this:\n- It finds the marker as the column (or row) with the most palette[8] cells.\n- The crossing lines are the perpendicular rows (or columns) whose cell on the marker is palette[1]. A line's colour is the most common value in that line other than palette[1].\n- Every row (or column) is filled with the colour of its nearest crossing line. An exact distance tie between two different colours gives a full line of palette[1]. A tie between lines of the same colour keeps that colour.\n- The marker becomes palette[1].\n- Each crossing line becomes palette[1] everywhere, except the cell on the marker, which becomes palette[8].\n\nThis reproduces the generator's banding: its offset of 2 for different colours leaves the integer midpoint as 1, and its offset of 0 for equal colours fills the midpoint. Distance is symmetric, so reflections need no direction change. Colour roles are palette constants, and line colours are read from the pixels.",
+    "limitations": "No tests were run. If there are no crossing lines, the output is all palette[1] apart from the marker. That case is outside the generator's domain, which always has 2 to 4 lines. The program assumes, as the generator guarantees, that the marker line is the unique longest run of palette[8] and that palette[1] never appears as a line colour. No fixture contradicts the uniform rule."
+  }
+}

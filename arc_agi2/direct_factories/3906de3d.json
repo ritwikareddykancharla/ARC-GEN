@@ -1,0 +1,21 @@
+{
+  "task_id": "3906de3d",
+  "factory_sha256": "92a5254f5b388fdd528c41e063804164ec92267886c04e237d095a4f9abe95da",
+  "constructor_sha256": "7bb33829a4229680f19e5a8680ada62a42ab56e3cc8235c5d1265978fed071f9",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 118360590726762,
+  "d4": 7,
+  "unique_base_inputs": 998,
+  "seconds": 3.2786883329972625,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "In the original task, a blue mass hangs from the top edge and red bars stand on the bottom edge. Each column is handled independently. The red cells in a column move toward the top edge until they meet the nearest non-background, non-red cell (the blue). They then stack contiguously against it and keep their count. If nothing blocks them, they stack against the edge.\n\nUnder D4 the original 'up' vector (-1,0) maps to a new direction after k = d4%4 clockwise rotations. A rotation maps (dr,dc) to (dc,-dr), so the direction becomes up, right, down or left. The preliminary row reversal used for d4>=4 does not affect a vertical vector.\n\nThe factory emits a program whose `_lines` function lists the grid lines along that visible direction. Each line starts at the cell on the target edge and moves outward. The solve function works directly on the visible grid:\n- It erases all red cells to background.\n- For each line, it finds the red cell nearest the target edge.\n- It scans further toward the edge for the first blocking cell.\n- It writes the line's red count immediately after that blocker.\n\nThe colour roles are constants: background is palette[0] and red is palette[2]. A blocker is any other colour (blue is palette[1]), which matches the archived solver.",
+    "limitations": "Background is fixed to palette[0] rather than inferred as the most common colour. This matches the constructor, where 0 is always the background. Lines with no red are left unchanged. The behaviour follows the archived solver exactly: the count of red cells in a line is preserved, and they pack against the nearest blocker on the edge side of the first red cell. I found no contradictions in the fixtures. No tests were run."
+  }
+}

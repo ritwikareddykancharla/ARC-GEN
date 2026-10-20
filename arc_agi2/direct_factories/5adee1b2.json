@@ -1,0 +1,21 @@
+{
+  "task_id": "5adee1b2",
+  "factory_sha256": "c8c50e7ce407216221da9804fd1dcae8679c179ea389f64bd031bfcfc21d01ac",
+  "constructor_sha256": "effdc40635fdc26ae726929b0600b4fe5da7bbf2f7a52b569e54d8d256abecd6",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 152905123341991,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 16.00024833297357,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The factory pushes the legend geometry through the D4 transform: the bottom-left corner, the upward stacking direction of the bars, and the shape-to-paint offset (originally one column right).\n\n- A row reversal flips the column flag of the corner and the column component of each vector.\n- Each clockwise turn maps a corner (ry, rx) to (rx, 1-ry) and a vector (dr, dc) to (dc, -dr).\n- Background is the constant palette[0].\n\nThe emitted program works directly in the visible grid:\n\n1. **Read the legend.** Start at the transformed corner and walk along the transformed stacking direction in steps of 3. At each step, read a 2-cell bar of shape colour a and the parallel bar of paint colour b, offset by the side vector.\n2. **Validate each entry.** Bars must be uniform and non-background, with a != b, and the colour must not already be in the legend. From the second entry on, the separator row must be background.\n3. **Paint the frames.** Find each 4-connected component whose colour is a legend shape colour, skipping the legend bars themselves. Grow its bounding box by 1 and clip it at the grid edge. Flood-fill background 4-connected from the box border while staying inside the box, and paint the reached cells b. Enclosed holes stay background.\n\nThe legend is left untouched, and the demonstrations are not needed. The fixtures agree with this uniform rule.",
+    "limitations": "- The legend must sit at the visible corner that the original bottom-left maps to. Its entries must follow the generator's layout: 2-cell bars, a 1-cell gap between entries, stacking from the corner.\n- Background is taken as palette[0], not inferred.\n- Shapes whose colour is missing from the legend are left unchanged.\n- If grown boxes overlapped (the generator excludes this), each frame would be computed from the input grid independently, with later paints overwriting earlier ones.\n- I have not run any tests."
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "task_id": "332f06d7",
+  "factory_sha256": "087971dce692e2eb772ccfb5c8f2668573f3ca867d959a2379b05e99fb144b14",
+  "constructor_sha256": "fad73894466db5cbdfb07d103b0372b287834b21ef6ca9164e8a9ec24d38bb29",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 244997914093191,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 10.080698832985945,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The emitted program uses the visible colours directly: wall = palette[3], corridor = palette[1], mover = palette[0], goal = palette[2]. It works in visible grid coordinates. It reads the mover's side length s and top-left corner from the bounding box of the mover cells, and the goal's top-left corner from the minimum row and column of the goal cells. A square block is still a square block after any D4 transform, so this stays correct. It then runs a breadth-first search over block top-left positions. A position is accepted only if the s x s square there lies inside the grid and contains no wall-coloured cell. Mover and goal cells count as open, as in the original. If the goal corner is reachable, the mover goes there and overwrites the goal. Otherwise it goes to the farthest reachable position, choosing the first one in BFS discovery order. In both cases the cells it left behind are painted corridor colour. BFS distances do not depend on orientation, and the generator guarantees a unique farthest position, so the result matches. To keep even the tie-break order identical, the factory maps the original direction order (down, up, right, left) through the D4 transform: a row reversal negates dx, and each clockwise turn maps (dy,dx) to (dx,-dy). The BFS then visits neighbours in the same order as the native search would on the transformed grid.",
+    "limitations": "Demonstrations are ignored, because the colour roles are fixed by the palette constants. It assumes exactly one mover block and one goal block, both s x s squares, as the constructor produces. If the farthest reachable position were ever tied, the tie-break follows the transformed BFS order. That reproduces the native choice, but the generator rejects tied scenes anyway. I found no contradiction between the fixtures and the uniform rule. I have not run any tests."
+  }
+}

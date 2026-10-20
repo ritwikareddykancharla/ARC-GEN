@@ -1,0 +1,21 @@
+{
+  "task_id": "4258a5f9",
+  "factory_sha256": "da06129d6aeb4ac43684f7e20a631009cd901961dce7dcd57e6aec1a3547ec02",
+  "constructor_sha256": "68e99dcf5b2cc201ce750a8237555b190ca909f89088fbdc8909d2dec85c5e94",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 125082050754512,
+  "d4": 7,
+  "unique_base_inputs": 973,
+  "seconds": 2.7581265419721603,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The rule draws an 8-cell ring around every isolated seed pixel. The ring is the 3x3 Moore neighbourhood minus its centre, clipped to the grid. That neighbourhood is symmetric under all eight D4 transforms, so no axis or direction needs specializing. Only the colour roles change. Background is palette[0] and the ring colour is palette[1]. The seed (originally grey 5) becomes palette[5]. Any non-background cell is treated as a seed, matching the archived solver. Only background cells are painted, so seeds are never overwritten. Overlapping or touching rings simply paint the same colour twice. The program works directly on the visible grid of any rectangular shape. Clipping at the borders keeps boundary seeds safe.",
+    "limitations": "The background is fixed to palette[0] rather than inferred. Under this family's construction that is correct, since the seeds are sparse and the background always maps to palette[0]. Seeds are any non-background cells, so stray extra colours would also get rings. That case never occurs in this generator's domain. I have not run any tests. The fixtures are consistent with a single uniform rule, with no contradictions."
+  }
+}

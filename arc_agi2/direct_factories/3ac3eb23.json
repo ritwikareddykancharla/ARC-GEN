@@ -1,0 +1,21 @@
+{
+  "task_id": "3ac3eb23",
+  "factory_sha256": "03aaaeab3ce775cc2384822191f1b682fee3ae2f1e58217ca26ac5bc6d88642e",
+  "constructor_sha256": "da779cb6ff101138906691484233396c15d849c31bfab76eca2df85bd029466c",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 78821603596116,
+  "d4": 7,
+  "unique_base_inputs": 814,
+  "seconds": 2.5688714999705553,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The factory works out where the original downward growth vector (1,0) points after the D4 transform. Flipping each row leaves a vertical vector unchanged. Each clockwise rotation maps a vector (dr,dc) to (dc,-dr). The axis perpendicular to that vector is the 'across' axis.\n\nThe background constant is palette[0].\n\nThe emitted program works directly in the visible grid coordinates:\n1. Every non-background cell is a seed. Seeds sit on the edge that was the original top row.\n2. From each seed it steps along the growth vector t = 0, 1, 2, ... until it leaves the grid.\n3. On even steps it paints the cell on the seed's line.\n4. On odd steps it paints the two neighbours on either side, along the across axis, clipping any that fall outside the grid.\n\nThis gives the generator's chain of diamonds in the seed's own colour. All other cells are copied unchanged. In the generator's domain, cells left black are already background, so nothing extra needs clearing.",
+    "limitations": "No tests have been run; correctness is reasoned from the generator and is unverified. The program assumes that seeds are exactly the non-palette[0] cells and that seed colours are never black, which is what the generator does. If two seeds' patterns overlapped, the seed drawn last would win; the generator's spacing of 3-4 means this never happens. The fixtures follow the uniform rule; I found no contradictions."
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "task_id": "351d6448",
+  "factory_sha256": "fff5f22a67f33c2ed665a6d8c5328e9e09a1cc20e3a8025ca3a96e95406752e8",
+  "constructor_sha256": "20b6ba1f6a22921b6b2f4b1d72b74945b54c296c5bf318b5562bfe68d5dcdd8c",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 36908068292171,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 6.19891891698353,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The emitted program detects full separator lines of colour palette[5] directly in the visible grid. For even rotation counts these lines are rows; for odd counts they are columns. It slices out the panels and orders them in the original reading sequence: reversed for k=1 (right-to-left) and k=2 (bottom-to-top). The motion axis is the visible column axis when separators are rows and the visible row axis when separators are columns. The program accesses cells directly along that axis, without transposing or rotating the grid. It follows the archived mechanism: for each consecutive panel pair it finds the set of changed motion-axis indices, then infers the constant signed shift d that maps each changed set onto the next. The candidate scan order is reversed when the motion axis is visibly reversed, so tie-breaking matches the original. It then learns a lookup from (old value, value d steps back along the motion axis, or -1 if outside) to the new value. Finally it rewrites the last changed band shifted by d in a copy of the last panel. Keys never seen leave the cell unchanged. Colours other than the separator are handled by value, so palette permutation needs no remapping. Mirroring is absorbed by the sign of the inferred d.",
+    "limitations": "Like the archived solver, it assumes at least two transitions with non-empty changed sets and no clipping at the panel edge; the generator guarantees both. Separators are identified only as full lines of palette[5]; the generator never puts colour 5 inside a panel, so this matches the archived background-based detection on the constructor's domain. Demonstrations are not used, as in the archived solver. No fixture contradictions were found: the three fixtures are consistent with the rule. Nothing was executed or tested by me."
+  }
+}

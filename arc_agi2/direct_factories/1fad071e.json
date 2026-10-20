@@ -1,0 +1,21 @@
+{
+  "task_id": "1fad071e",
+  "factory_sha256": "6670ddad5a2a309945a21d435138224c805a12878ede040f0a05371271037ed9",
+  "constructor_sha256": "5519f688441f95f7c08d575039b528fc7f5f2a102d904b88d5ca2af663bfb934",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 84239148922389,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 22.550145625020377,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The rule is to count the solid 2x2 squares of the original colour 1 and draw that many tally marks in a 5-cell bar.\n\nThe emitted program finds the squares directly in the visible grid. It does a 4-connected flood fill over cells of colour palette[1] and counts components that have exactly 4 cells and a 2x2 bounding box. Squares are unchanged by any D4 transform, so this count works the same in every orientation. Singletons of colour palette[1] and all squares of palette[2] are ignored.\n\nThe output bar is built directly in the visible coordinates. The factory takes the original 1x5 cell order (left to right) and maps each cell's coordinates through the D4 transform: first a horizontal flip if d4>=4, then clockwise rotations. This gives the visible output shape (1x5 or 5x1) and the order in which marks are drawn. For example, rotating once fills a 5x1 column top-down, and rotating twice fills a 1x5 row right-to-left.\n\nThe first n cells in that order are set to palette[1] and the rest to palette[0], with n capped at 5.",
+    "limitations": "The generator separates big squares by a gap, and singletons never touch a same-coloured cell in their 8-neighbourhood. So same-coloured squares never merge into larger components, and the flood-fill count is exact for this generator. The demonstrations are not needed and are ignored. The colour roles come straight from the palette constants. The fixtures are consistent with the rule; no contradictions were found. I have not run any tests."
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "task_id": "305b1341",
+  "factory_sha256": "c6b68114252fa7fd81e0f52dd7214ea1d2a16691fdd925e7c0ccc921545de7f2",
+  "constructor_sha256": "68977ccbe06fbd57b02119ef3f6c082e3608fffbd91baa560833b61f728fcf50",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 75887064311763,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 6.893319542054087,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The original rule: a 2-cell-wide legend sits at the top-left corner. Each legend row lists a dot colour followed by a backing colour, and the rows run downward. The legend is erased. For each legend entry, the program takes the bounding box of that colour's dots, grows it by one cell and clips it to the grid, then fills it with the backing colour. Entries are painted from the last legend row to the first, so the first row ends up on top. All dots are then restored. The factory pushes the original cells (0,0), (1,0) and (0,1) through the D4 transform (reverse rows if d4>=4, then rotate clockwise d4%4 times) on a non-square probe grid. From that it finds three things: which visible corner holds the legend, the unit step between legend entries, and the unit step from the dot cell to the backing cell. These are emitted as constants. The emitted solve() reads the legend directly in visible coordinates, using the corner plus i*DI + j*DJ, and stops at the first out-of-bounds or background cell. It then applies the bounding-box backing in visible coordinates, which is D4-symmetric, and keeps the same stacking order. The background is the constant palette[0]. Legend colours and dot colours are read from the pixels, so no colour remapping is needed. The fixtures are consistent with this uniform rule.",
+    "limitations": "The background is assumed to be palette[0], matching the generator, which always uses 0. The legend is assumed to start exactly at the transformed top-left corner, as the generator guarantees. Rectangular grids are supported: the corner is chosen from the visible grid's dimensions."
+  }
+}

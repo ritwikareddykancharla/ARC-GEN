@@ -1,0 +1,21 @@
+{
+  "task_id": "470c91de",
+  "factory_sha256": "fd2ac1180de11cf03ef363cef2b08de8c6c9b704a0dbdeffd71160d6af99c9f0",
+  "constructor_sha256": "949613b737123a9518a117f456aed50de0ebdbc21a6831d137503fddcded9378",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 83315275184745,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 4.2868276250083,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The input is a background of colour 7 with a few solid rectangles. Each rectangle has one corner cell replaced by the marker colour 8. In the output, every rectangle is filled solid and moved one cell diagonally toward its marked corner, onto a cleared background.\n\nThe emitted program works directly in the visible coordinates. It sets the background constant to palette[7] and the marker constant to palette[8]. For each remaining colour it takes the bounding box of that colour's cells. All widths and heights are at least 2, so removing the marked corner does not shrink the box. It then checks which of the four bbox corners holds the marker. The shift is dy = -1 for the top edge and +1 for the bottom edge, and dx = -1 for the left edge and +1 for the right edge.\n\nThe program first builds a clean background canvas. It then paints every shifted rectangle in full. No two rectangles overlap in the generator's outputs, so the painting order does not matter.\n\nThe rule 'move toward the marked corner' is defined by the bounding box in whatever orientation the grid is shown. It is therefore equivariant under all eight D4 transforms. A rotation or reflection simply relabels which corner is marked, and the emitted direction (dy, dx) is read straight from the visible corner position. Reflections and rotations are handled by the mechanism itself, with no wrappers or grid transforms. Only the colour roles need specialising through the palette.\n\nRectangular grids are handled, because the code uses H and W separately. Rectangles touching the border are also handled. The marker at a rectangle's corner is unambiguous, because that corner cell belongs only to its own rectangle.",
+    "limitations": "The program assumes palette[7] is the background and palette[8] is the marker. It assumes each box colour appears in exactly one rectangle, with distinct colours, as random_colors guarantees. If no marker is found at a bbox corner, which is outside the generator's domain, the rectangle is repainted solid without moving. Shifted cells that fall off the grid are clipped, matching the archived solver; the generator rejects such scenes anyway. The fixtures agree with this uniform rule, and no contradictions were found."
+  }
+}

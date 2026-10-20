@@ -1,0 +1,21 @@
+{
+  "task_id": "5521c0d9",
+  "factory_sha256": "e6c6857197b7bf0dfe8dcbf7e2f20c97714f6bfff2d861d86edda2471525cf45",
+  "constructor_sha256": "0316c2f5031be6cc46d5409bd8f35598b44ffb783098dce8869076d49ec9567c",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 240949518593505,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 9.613675875007175,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "In the canonical task, three solid single-colour rectangles sit on the bottom edge. Each one moves up by its own height, so it ends up directly on top of the area it used to fill. The background becomes palette[0] everywhere else.\n\nUnder D4, reversing each row leaves vertical motion unchanged. Each clockwise rotation turns the motion direction up -> right -> down -> left. The factory therefore fixes one unit direction (DY, DX) from d4 % 4.\n\nThe emitted program works directly in visible coordinates:\n- It finds 4-connected single-colour components that are not the background colour palette[0].\n- It measures each component's bounding-box extent along the motion axis: height for vertical motion, width for horizontal motion.\n- It translates every cell of the component by that extent in the fixed direction onto a fresh background canvas.\n- Cells that would land outside the grid are dropped, matching the archived solver.\n\nObject colours are copied from the pixels, so no colour roles need to be hardcoded. Rectangular grids work because the shapes are read from the actual grid.",
+    "limitations": "The background is taken to be palette[0], which is the constructor's background. Objects are treated as 4-connected single-colour components. That is correct here because the generator keeps boxes at least one cell apart. If generated objects ever overlapped after moving, the reading-order paint sequence decides which colour wins, as in the native solver. No fixture contradictions were found: all train and test pairs fit the rule 'shift by own extent away from the anchoring edge'. No tests have been run."
+  }
+}

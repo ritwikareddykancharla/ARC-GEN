@@ -1,0 +1,54 @@
+{
+  "task_id": "272f95fa",
+  "factory_sha256": "18896a602b8e888cbd09206e304183d424885c87e79438fa4480abe700dfe497",
+  "constructor_sha256": "a51db186c79069b74c953444bd66b6ff007aa64f574e8f422f27c687236078f4",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [
+    {
+      "seed": 80353165942654,
+      "error": "Invalid ARC grid"
+    },
+    {
+      "seed": 1235028675420,
+      "error": "Invalid ARC grid"
+    },
+    {
+      "seed": 179625654972048,
+      "error": "Invalid ARC grid"
+    },
+    {
+      "seed": 53171615848616,
+      "error": "Invalid ARC grid"
+    },
+    {
+      "seed": 126351025288421,
+      "error": "Invalid ARC grid"
+    },
+    {
+      "seed": 176327316619646,
+      "error": "Invalid ARC grid"
+    },
+    {
+      "seed": 277530959210528,
+      "error": "Invalid ARC grid"
+    },
+    {
+      "seed": 279307006005741,
+      "error": "Invalid ARC grid"
+    }
+  ],
+  "seed": 193205872018910,
+  "d4": 7,
+  "unique_base_inputs": 999,
+  "seconds": 8.841487125027925,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The rule is to find the two full-length divider rows and two full-length divider columns. These split the grid into a 3x3 arrangement of panels. The five panels that form the plus shape are then filled with fixed colours: top-middle gets 2, middle-left 4, centre 6, middle-right 3 and bottom-middle 1. The corner panels and the dividers are left unchanged.\n\nThe factory applies the D4 transform directly to the 3x3 panel index grid. For d4>=4 it first mirrors each row (ci -> 2-ci), then rotates clockwise d4%4 times using (r,c) -> (c, 2-r). This tells it which visible panel each legend colour belongs in, and the fill colours become palette[colour] constants.\n\nThe emitted program works in visible coordinates throughout. It detects divider lines as rows and columns made entirely of palette[8]. This avoids the archived solver's 'most common colour' background guess, which fails on tiny panels where the divider colour can outnumber the background. It builds row and column spans from the dividers and paints each cross panel with its remapped colour.",
+    "limitations": "The program assumes the constructor's domain: exactly two divider rows and two divider columns, every panel at least 1 cell wide, and an otherwise blank background. If palette[8] lines are not found exactly twice in each direction, it falls back to searching for any other single colour that forms exactly 2 full rows and 2 full columns. If that also fails, it returns the input unchanged. The demonstrations are not used, because the colour roles are fully determined by the palette and D4 constants. The fixtures are consistent with the uniform rule; no contradictions were found."
+  }
+}

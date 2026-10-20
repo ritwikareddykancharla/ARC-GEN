@@ -1,0 +1,21 @@
+{
+  "task_id": "36fdfd69",
+  "factory_sha256": "e1055bedb6f9f5fb2ab7a18948b5da8ce2c2edc3bfaf52a9033e4a99f46ebc96",
+  "constructor_sha256": "11db300f938cadb30ca8899c0cd235f719661e031adc846b754d089ed98fbebc",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 148201656544418,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 7.951002791989595,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The emitted program works directly on the grid as given. Each hidden rectangle is 2-7 cells wide and 2-3 tall. The generator rejects a rectangle unless every one of its rows and columns contains at least one background cell, and those background cells are what become red. So reds in adjacent columns of one rectangle are at most 2 rows apart, and the reds of a rectangle form a single cluster under Chebyshev distance 2. That cluster's bounding box is exactly the rectangle. Inside the rectangle, every non-red cell is static that the output reveals as yellow.\n\nThe program clusters red cells (palette[2]) with Chebyshev threshold 2 and takes each cluster's bounding box. It recolours every cell in the box that is neither red nor background (palette[0]) to palette[4].\n\nChebyshev distance, bounding boxes and rectangles are all unchanged by rotations and reflections. So d4 needs no specialisation, and only the colour constants are taken from the palette.\n\nOne safeguard goes beyond the archived solver. A true rectangle never contains background in the input. If a cluster's box does include background (two rectangles too close together), the cluster is split into 8-connected pieces. Pieces are merged again only while the merged box stays background-free. On well-separated scenes this matches the archived solver exactly, and the result does not depend on processing order because the boxes never overlap.",
+    "limitations": "This assumes the generator's two-cell buffer keeps reds from different rectangles more than 2 apart. If two rectangles are closer than that, the fallback split recovers them unless the gap between them happens to contain no background, in which case they may merge into one larger box. Colours are fixed constants from palette[0], palette[2] and palette[4] rather than inferred from the demonstrations. The fixtures agree with the uniform rule; no contradictions were found. No tests have been run."
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "task_id": "409aa875",
+  "factory_sha256": "e5febd82e2b7be9d69320c87d99d326accbb709a7180eeb20db2e8fad6b34260",
+  "constructor_sha256": "f9c6b9729eee8c74a96e3375d37ef18ff1aa3112ee70263c2ef87c092e7b8dc0",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 266829574999955,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 8.076353666023351,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The emitted program works directly in the visible grid coordinates. It finds the 8-connected non-background components. For each 3-cell shape, the tip is the cell with the smallest sum of squared distances to the other cells: the apex of a chevron or the corner of an L. The pointing direction is the negated sign of the summed offsets of the other cells from the tip. Squared distances and offset sums are preserved by every rotation and reflection, so the rotated or reflected direction falls out of the shape's own geometry. No inverse transform is applied and d4 needs no special case.\n\nThe target is tip + 5*direction; targets off the grid are skipped. A target on a shape cell recolours that whole shape palette[9]. Otherwise the target becomes palette[9], or palette[1] when two or more shapes share it.\n\nColour roles are fixed as constants: background palette[7], hit palette[9], duplicate palette[1]. This matches the constructor, where the background is always 7. Rule order does not matter: targets that land on shapes and targets that land on empty cells are disjoint, so processing order cannot change the result.",
+    "limitations": "Assumes the constructor's invariants: the background is the original colour 7, and shapes never touch, even diagonally, so each component is exactly one 3-cell chevron or L with a unique tip. Components with zero offset sum, which the generator never produces, are ignored. I have not run any tests on this code. The fixtures agree with the uniform rule; I found no contradictions."
+  }
+}

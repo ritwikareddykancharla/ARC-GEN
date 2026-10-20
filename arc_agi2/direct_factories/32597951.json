@@ -1,0 +1,21 @@
+{
+  "task_id": "32597951",
+  "factory_sha256": "da7e376c5b0c16713ffbef5785e56b30e3b9db8aec8580ae69c228759be24511",
+  "constructor_sha256": "04f14395db6161d51254854f66a5b5961293106c1e0091c5b659ae1c8c3e696c",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 92285374823129,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 4.915983958984725,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The generator tiles a 17x17 grid with a 0/1 pattern. It then overlays a rectangle in which every non-blue (1) cell becomes cyan (8). In the output, the blue cells inside that rectangle become green (3). Every row and every column of the rectangle is required to contain at least one cyan cell, so the bounding box of the 8-cells is exactly the rectangle. The emitted program finds the bounding box of palette[8] in the visible grid and recolours every palette[1] cell inside it to palette[3]. Everything else is copied unchanged. An axis-aligned bounding box maps to an axis-aligned bounding box under every D4 transform, so no direction-specific rewriting is needed. The d4 value is accepted but does not change the program. Colour roles are fixed as palette[8], palette[1] and palette[3]. The original background colour 0 never appears inside the box, and in any case it is left untouched.",
+    "limitations": "The program assumes the marker colour palette[8] appears only as the rectangle's cells, which the constructor guarantees. If a grid has no marker cells, it is returned unchanged. The demonstrations are not consulted because the colour roles are fully determined by the palette. The fixtures agree with this uniform rule, and no contradictions were found. I have not run any tests; the host's verification will be the first check."
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "task_id": "516b51b7",
+  "factory_sha256": "7e500e892612b4cf731b1799be23ab5d185fa0c23235cfc73376866833f3f1eb",
+  "constructor_sha256": "b5db054c78eca76c05b46545b4e4de4ae9b67b4e8dcd39ae1491d937dec1d8a1",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 218960105992536,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 7.076282666996121,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "Each input contains solid rectangles of colour palette[1] on a palette[0] background, separated by at least one background cell. The emitted program finds 4-connected components of non-background cells directly in the visible grid. For every cell in a component it computes depth = min(distance to top, bottom, left, right edge of the bounding box). Depth 0 keeps palette[1]. Odd depths become palette[2] and even positive depths become palette[3], matching the generator's alternating inward rings. Ring depth is a symmetric measure that every D4 transform preserves: rotations and reflections turn rectangles into rectangles and keep the same nested rings. So d4 needs no axis or direction changes, and only the palette constants are specialised. The program never infers the background from colour frequency, so the trap where colour 1 is the majority colour cannot affect it.",
+    "limitations": "This assumes the constructor's domain: solid axis-aligned rectangles that do not touch edge-to-edge (the generator enforces a 1-cell buffer). If two rectangles were 4-adjacent, they would merge into one component and get wrong rings. The background is taken to be palette[0] as a fixed constant, not inferred from the demos. Depths of 4 or more continue the alternation, as the generator does. No tests have been run."
+  }
+}

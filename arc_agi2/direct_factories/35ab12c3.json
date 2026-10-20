@@ -1,0 +1,21 @@
+{
+  "task_id": "35ab12c3",
+  "factory_sha256": "75426a77a62fd406498e7826fa765772ba1cec45d0b7081bac98cc7b50bd0705",
+  "constructor_sha256": "70ac0d3f19bd8dc3dae970293693c486dd362dc964b73bf6964f0d88490dffaf",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 151638206925662,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 10.373435875051655,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The emitted program works directly on the visible grid. It groups the non-background pixels by colour. For each colour with at least two pixels, it finds the shortest closed tour over those corners with a Held-Karp bitmask DP; two corners give a single segment. It then draws only the tour edges that are horizontal, vertical or exactly 45 degrees. A single-pixel colour that 8-touches a corner of a multi-pixel colour is a companion. It copies that colour's drawn edge cells, shifted by its own offset from the touched corner, and paints only background cells. Every part of this is invariant under D4: Euclidean tour length, the legality of an edge, and the 8-neighbour offsets all map consistently under rotation and reflection. So no axis or direction needs rewriting, and d4 needs no special constants. The palette sets two constants. BG is palette[0], the background. RANK maps each visible colour back to its original colour index. Outlines and then companions are painted in ascending original-colour order, as the generator does, so overlapping companion copies resolve the same way under any palette.",
+    "limitations": "Nothing has been run or tested. If a companion pixel touched corners of more than one figure, it would keep the last neighbour in row-major scan order, like the archived solver. The generator's construction rules this out, but that choice is not D4-equivariant. Tied shortest tours would be broken by sorted-coordinate order. The generator guarantees a unique shortest tour, with a 1e-9 margin, for colours with three or more corners. The program assumes the background is exactly palette[0]. I found no contradictions between the fixtures and the rule."
+  }
+}

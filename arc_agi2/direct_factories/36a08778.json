@@ -1,0 +1,21 @@
+{
+  "task_id": "36a08778",
+  "factory_sha256": "2fed1cb5f544216f3f7832a99fd1800e3369d09e7b982b3f6cf0571bfea5e974",
+  "constructor_sha256": "25797034fd0140f9da7afdf90ec39552d404d17e9ceb395e213a74907a4aa1cd",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 16129289885496,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 11.074818541994318,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The factory works out where the original 'down' flow direction ends up in visible coordinates. A horizontal row flip leaves (1,0) unchanged. Each clockwise rotation maps a vector (dr,dc) to (dc,-dr). The lateral axis, along which the bars run, is the perpendicular vector. Its sign does not matter because a wrap is symmetric.\n\nThe factory then emits a program that works directly on the visible grid. The colour constants are palette[7] for background, palette[2] for wall and palette[6] for flow. Sources are flow cells on the edge opposite the gravity direction. The emitted program uses an explicit list of edge cells for that edge.\n\nFrom each source the program follows the flow cells along gravity to find the stream's start. It then runs the generator's queue simulation in visible coordinates:\n- A stream falls along (GR,GC), painting background cells, until the next cell is a wall.\n- It finds the wall run through the hit cell along the lateral axis.\n- It paints the line just before the run, extended by one cell on each side and clipped to the grid.\n- It queues two new streams, one at each end of that painted line.\n- Start cells that have already been processed are skipped.\n\nPainting depends only on the walls, which never change, so the final grid does not depend on processing order. That makes the rule well defined under any reflection.",
+    "limitations": "This is untested; I have not run it on the fixtures or on fresh pairs.\n\nThe program assumes the episode's colour roles are fixed as palette[7], palette[2] and palette[6]. It does not infer them from the demonstrations.\n\nIt follows the generator and the archived solver exactly, including their quirks:\n- A branch start that lands on a wall cell, as with L-shaped legs, still falls from that cell.\n- A wrap uses only the wall run on the line where the stream hit.\n\nThe fixtures are consistent with this uniform rule, so I am not reporting any contradiction."
+  }
+}

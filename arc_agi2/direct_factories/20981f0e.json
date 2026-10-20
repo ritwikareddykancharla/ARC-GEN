@@ -1,0 +1,21 @@
+{
+  "task_id": "20981f0e",
+  "factory_sha256": "ad0a19b46a326d1bbe4a95d84ed83f7455f9a66691a22c0b3b55050c315cc4d2",
+  "constructor_sha256": "6d99d882b3a9da2a0c442dc2fb5c21f50d115f467c0e486758e7099c6d2b0e63",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 127543053675576,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 4.971396582899615,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The task re-centres each small shape (2x2 square or L-tromino, colour palette[1]) inside the lattice cell formed by single marker dots (colour palette[2]) that sit every 5 rows and 5 columns. Centring in a 4-wide gap with a 2-wide box is exact, so the rule looks the same under every D4 transform. The only thing to specialise is the colour constants. The emitted program works directly in visible coordinates. (1) It reads the lattice origin and period from the marker rows and the marker columns separately. (2) It assigns every shape cell to a lattice cell using floor division of (coordinate - origin) by the period. (3) It takes each group's bounding box. (4) It stamps the unchanged pattern at lo + 1 + (gap - extent)//2 on each axis. Markers are kept and the old shape cells are cleared to the background. The generator can push the last marker row or column off the grid (padding -1), and a reflection can move that missing line to the top or left. Extrapolating the lattice from its period handles this: floor division gives the correct cell even when one bounding marker line is missing. The archived solver instead leaves such shapes in place. That matches the fixtures only because the shapes there were already centred, and it would fail on fresh scenes where the generator still centres them.",
+    "limitations": "This assumes palette is a permutation, so background, shape and marker colours stay distinct, and that the lattice period is constant on each axis (always 5 in the generator). It needs at least two visible marker rows and two visible marker columns to measure the period; with fewer it falls back to 5. Centring extents that do not divide evenly would use floor bias toward the lower coordinate, but the constructor's domain (2-cell boxes in 4-cell gaps) never produces this. No fixture contradicts the uniform rule. The archived solver's no-move behaviour beside a missing boundary marker line is a solver defect, not a property of the fixtures. These points come from reading the generator and solver; I have not run the factory or the emitted program on any grids."
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "task_id": "5a719d11",
+  "factory_sha256": "986e5d0a47bea1c3f81fb97c2f9285233d5f81de3091cfd8ae86089c7f12d8ee",
+  "constructor_sha256": "cb94872038d70d56f5f16e0bef96a2a141483563d6a464ac7f625e0fa996e53e",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 225362012632554,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 10.26783962501213,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The generator splits the grid into panels using full lines of colour 0. In canonical orientation there are two equal-width panel columns. Within each panel row, the left and right panels swap shapes. Each shape keeps its offset from the panel's top-left corner and is painted in the background colour of the panel it came from. The panel's old shape is erased.\n\nThe two paired panels are congruent, so the swap is a pure translation between them. Any D4 transform keeps it a translation between congruent panels. That means 'same offset from the visible top-left corner' remains correct in visible coordinates.\n\nThe factory specialises two things:\n1. The divider colour is set to palette[0]. Divider rows and columns are those made entirely of that colour.\n2. The pairing axis is set from d4. For even d4 (identity, 180 degrees, and the matching reflections), the pair is horizontal: panels in the same row band swap left and right. For odd d4, a quarter turn makes the canonical left/right pair vertical, so panels in the same column band swap top and bottom.\n\nEach panel's background is its majority colour. Shapes cover strictly less than half a panel, so there is never a tie. The shape mask is every non-background cell. Pairs are matched i with n-1-i, which is simply a swap when there are two panels.\n\nWhen both backgrounds are equal, the incoming shapes are painted in that same colour and become invisible. This matches the fixtures.",
+    "limitations": "This assumes the generator's domain:\n- There are exactly two panels along the pairing axis, with no dividers on the grid border.\n- Panel interiors never contain the divider colour palette[0].\n- Each shape is smaller than half its panel, so the background is the strict majority colour.\n\nThe pairing axis comes only from d4. Demonstrations are not consulted.\n\nThe fixtures match the uniform rule; I found no contradictions. I have not run any tests."
+  }
+}

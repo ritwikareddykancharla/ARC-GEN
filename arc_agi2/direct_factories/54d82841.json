@@ -1,0 +1,21 @@
+{
+  "task_id": "54d82841",
+  "factory_sha256": "47125ae94f1bba3760997c3165019cc6a9471e83b617cf681cd99249c1a19adc",
+  "constructor_sha256": "36755074394ac7389790aa53a680ddf5f4a319cfcb4cb6020a0d6e9544fc7dfa",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 4858184852806,
+  "d4": 7,
+  "unique_base_inputs": 980,
+  "seconds": 3.3180189579725266,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The canonical rule finds each single-colour, 4-connected arch that is not background. It then puts a yellow (4) marker on the bottom row, in the arch's bbox centre column. That bottom row is where the arch's legs and gap point. Under the D4 map, a row reversal leaves 'down' unchanged. Each clockwise rotation turns that direction in sequence: down, left, up, right. So the factory picks the target edge from d4%4. For the bottom or top edge, the marker goes at the bbox's centre column. For the left or right edge, it goes at the bbox's centre row, using the far-end index for the bottom or right edge. Arches are always 3 cells wide across the gap, so the centre is exact under reflections and there is no tie to break. The background constant is palette[0] and the marker constant is palette[4]. The program works directly on visible coordinates and keeps the input otherwise unchanged. Same-coloured arches are always at least one cell apart in the generator. Different-coloured arches that touch are kept separate because components are single-colour.",
+    "limitations": "This assumes the constructor's domain: non-overlapping 3x2 arches, with the background and marker roles fixed by palette[0] and palette[4]. The edge row or column the marker lands on is always empty in generated inputs. Demonstrations are not used, because the orientation and colours are fully specified by d4 and palette. Inputs that contain extra non-arch objects would each get a marker as well, matching what the archived solver does. No fixture contradictions were found."
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "task_id": "25d8a9c8",
+  "factory_sha256": "6ea934d47559301563bb6dfb1587192934e2e4ca99ef84f39511f53f0882482d",
+  "constructor_sha256": "830b1fb2dc8ebad33007b840683b6aebe8168335a7d6f551d58e937f9310aa8d",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 77473962265138,
+  "d4": 7,
+  "unique_base_inputs": 988,
+  "seconds": 1.159931082976982,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The original rule judges each row of the grid separately. If every cell in the row has the same colour, the whole row becomes gray (5). Otherwise the whole row becomes black (0). Flipping each row horizontally leaves every row's set of cells unchanged. A 180-degree turn also keeps rows as rows. So for d4%4 in {0,2}, with or without the flip, the emitted program checks rows. A 90- or 270-degree turn makes the original rows into the visible columns. So for d4%4 in {1,3} the emitted program checks each visible column and fills that column. Colour roles become constants: a uniform line is filled with palette[5] and a mixed line with palette[0]. The actual input colours do not matter, so no colour remapping is needed. The program works on any rectangular grid size.",
+    "limitations": "Not tested. The generator only makes 3x3 grids, but the emitted code handles any rectangular shape along the correct axis. A line one cell long counts as uniform, the same as in the archived solver. The demonstrations are not used, because the axis and colours are fixed by d4 and palette. The fixtures agree with the uniform rule and do not contradict it."
+  }
+}

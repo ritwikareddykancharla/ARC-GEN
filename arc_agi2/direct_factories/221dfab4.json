@@ -1,0 +1,21 @@
+{
+  "task_id": "221dfab4",
+  "factory_sha256": "b6b6f42c53ff1341a283767382ce9259a98917baf7900b53ca6ea18a3dbce36e",
+  "constructor_sha256": "43d484cd31363571c1c227d6a31d800f2da96b2b77fb03459dd2b67ee167808a",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 51939690771522,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 9.375071207992733,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The emitted program works directly in the coordinates of the grid it is given. The ladder rule does not depend on orientation: everything is measured from the bar along lines parallel to it. So the program finds the bar's edge and direction from the pixels instead of rewriting a fixed direction from d4.\n\nThe factory fixes two colour constants: BAR = palette[4] and GREEN = palette[3]. The background is the most common colour once those two are excluded. The blob colour is never needed, because the green step recolours every non-background cell on its line.\n\nOrientation comes from the bar cells. If they share one row, the bar is horizontal and lines are rows. If they share one column, lines are columns. The step is +1 when the bar is on index 0 (top or left edge) and -1 when it is on the last index (bottom or right edge). Under any rotation or reflection, the bar's edge and the direction away from it change the same way, so this matches the transformed mechanism.\n\nThe bar's span is its range of cross positions (columns for a horizontal bar, rows for a vertical one). For each distance d from the bar, the program does the following until it reaches the opposite edge:\n- d % 6 in {0, 2}: paint the span BAR.\n- d % 6 in {1, 3, 5}: paint the span background, erasing blob cells there.\n- d % 6 == 4: recolour every non-background cell of the whole line GREEN, then paint the span GREEN.\n\nThe green test reads the original input, as the constructor does. This matches the constructor's _render and the archived solver line by line.\n\nI checked the approved fixtures by hand (no tests were run): both training pairs with a bottom bar, test 1 with a top bar, and test 2 with a left-column bar. I found no contradictions with this uniform rule.",
+    "limitations": "Assumes the constructor's domain:\n- Exactly one straight bar of palette[4], at least 2 cells long, lying on a grid edge.\n- The background is the majority colour.\n- Neither palette[3] nor palette[4] appears elsewhere in the input.\n\nFor a degenerate 1-cell bar, or a bar not on an edge, the program uses a heuristic fallback: it prefers a horizontal reading on a top or bottom edge, otherwise a vertical one, and steps away from the nearer edge. The constructor never produces these cases.\n\nDemonstrations are not consulted. Colour roles are fixed by the palette constants and the background is inferred from pixels."
+  }
+}

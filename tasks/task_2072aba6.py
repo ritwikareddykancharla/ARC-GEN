@@ -26,7 +26,8 @@ def generate(colors=None):
 
   if colors is None:
     while True:
-      colors = [common.randint(0, 1) for _ in range(5)]
+      # The input has nine cells; fixtures use the final four positions too.
+      colors = [common.randint(0, 1) for _ in range(9)]
       if sum(colors) >= 3 and sum(colors) <= 6: break
 
   grid, output = common.grid(3, 3), common.grid(6, 6)

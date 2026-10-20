@@ -1,0 +1,21 @@
+{
+  "task_id": "423a55dc",
+  "factory_sha256": "1a4985016b423d037a84df9af47a553f6870ca19da17c7ef95818150ecae42be",
+  "constructor_sha256": "4f236144ec0c775b202b24ab92c7b9bf536266ecedb8892155d2d045560ab925",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 8742288990912,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 4.171801167074591,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "In the original task the bottom-most shape row stays fixed. Every other shape cell moves left by its row distance from that bottom row. Cells that land off-grid are dropped.\n\nThe factory carries two unit direction vectors through the D4 transform. The anchor vector starts as down (1,0) and the shear vector starts as left (0,-1). For d4>=4 the reflection negates the column component of both. Each clockwise rotation then maps (dr,dc) to (dc,-dr).\n\nThe emitted program works directly in visible coordinates:\n- It finds non-background cells, using background = palette[0].\n- It projects each cell onto the anchor direction and takes the maximum, which is the fixed anchor line (row or column).\n- It moves each cell along the shear direction by (max projection - its projection).\n- It drops cells that leave the grid.\n\nFor example, under a single rotation the leftmost shape column stays fixed and the other columns slide upward. The shear keeps each line parallel to the anchor intact, so no two cells collide. Rectangular grids and boundary clipping are handled naturally.",
+    "limitations": "The program assumes the constructor's domain: a single shape on a background of palette[0], with any non-background colour treated as shape. Demonstrations are not consulted, because the mechanism and its orientation are fully determined by d4 and palette. The fixtures are consistent with the uniform rule; no contradictions were found. I have not run any tests on this factory."
+  }
+}

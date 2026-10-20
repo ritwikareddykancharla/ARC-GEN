@@ -1,0 +1,21 @@
+{
+  "task_id": "4e469f39",
+  "factory_sha256": "f0f20a621ccf05e62c677af897fc33b791b69dec84badb2b77c149bded2d5e6f",
+  "constructor_sha256": "790bf676268e5801af44e7d0853cc24109105b93d4f37be112eef25a1dadbc83",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 40490555029624,
+  "d4": 7,
+  "unique_base_inputs": 583,
+  "seconds": 6.547175499959849,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "Each cup is a 4-connected component of the wall colour, palette[5]. The factory takes the background as palette[0] and the fill colour as palette[2]. It uses d4 to work out which visible side holds the cup's opening. The opening is on top in the original. Clockwise rotations move it to right, bottom or left for d4%4 = 1, 2, 3. The horizontal pre-flip does not change which side holds the opening.\n\nFor each cup, the emitted program does three things:\n1. It finds the background cell (the gap) on the bounding-box edge that faces the opening side.\n2. It turns every background cell inside the bounding box into the fill colour. This covers the interior and the gap.\n3. It draws a fill line on the row or column just outside the opening side. The line starts beside the gap and runs to the grid border. It heads toward the far end of the edge, away from the nearer corner, which is the same rule as comparing the gap to the edge centre. The rule is purely geometric, so reflections reverse the direction automatically. Only background cells are painted, matching the archived solver.",
+    "limitations": "The program assumes the constructor's domain: cups are hollow rectangles with one missing cell on the opening side, the edge length is 4 so the gap is never at the centre, and separate cups are not 4-connected to each other. If a cup has no gap on the expected side, it is left unchanged. The demonstrations are not used, because all roles are fixed by d4 and palette. No fixture contradictions were found: the rule reproduces all train and test fixtures."
+  }
+}

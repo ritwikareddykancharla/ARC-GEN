@@ -1,0 +1,21 @@
+{
+  "task_id": "3aa6fb7a",
+  "factory_sha256": "083ca8e1222c656c544072d5f1ef0f0ffa4f9cd4e4014ac0e6034c5d915185d0",
+  "constructor_sha256": "ad5a88236e712b651e876bf69f8276d3ee5fc5d40b9f31b3a718acf9aeb5c9ef",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 213002012859018,
+  "d4": 7,
+  "unique_base_inputs": 900,
+  "seconds": 2.5801653750240803,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The rule is to complete each L-tromino to a full 2x2 square. Each L is a 4-connected component of the shape colour palette[8]. For each component, the program fills every background cell (palette[0]) inside its bounding box with palette[1]. Bounding boxes and the empty corner of an L are both D4-equivariant, so the same code works directly in visible coordinates under every rotation and reflection. Only the three colour roles need specializing through the palette. Because the generator's has_neighbor checks keep distinct L's from touching, even diagonally, each component is exactly one L. Its missing corner is always background, so it never belongs to another object.",
+    "limitations": "The colour roles are fixed as palette[0], palette[8] and palette[1], matching the constructor; they are not inferred from the demonstrations. The program assumes the constructor's domain, where objects are separated and single-coloured. If shapes touched orthogonally, they would merge into one component and the program would over-fill its bounding box. No tests have been run. The fixtures are consistent with the uniform rule."
+  }
+}

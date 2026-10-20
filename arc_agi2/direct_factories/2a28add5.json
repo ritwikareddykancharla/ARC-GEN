@@ -1,0 +1,21 @@
+{
+  "task_id": "2a28add5",
+  "factory_sha256": "af195e315024ee30ffcc278e990f71407489a47dae60bbbe11120e423a469a29",
+  "constructor_sha256": "76df60f513bf478a2cf14cae152c8f7635c92d8865acbd133932c248308b6015",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 125107596753421,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 3.051487375050783,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "Each line that holds an anchor colour (palette[6]) becomes one contiguous run of palette[8]. The run is anchored at the 6. It extends toward one end by the number of non-background cells (background is palette[7]) on that side of the anchor, and toward the other end by the count on the other side. In effect, the line's coloured cells collapse toward the anchor. Every other cell becomes background. In the original orientation the lines are rows. A D4 transform with an odd number of clockwise quarter turns turns rows into columns, so the emitted program then scans columns and stamps vertical runs. With an even number of turns it scans rows and stamps horizontal runs. Reflections and 180-degree turns only reverse direction along the line. The rule is symmetric under that reversal, because the counts on the two sides swap together with the sides themselves, so no extra direction handling is needed. Colour roles are baked in as palette constants, and the program works directly in visible coordinates on grids of any rectangular shape.",
+    "limitations": "Background is fixed to palette[7] rather than inferred from pixel frequency. This matches the constructor, which always uses 7 as background. In the original orientation the generator places at most one anchor per row; if a line had several anchors, their runs would be OR-stamped in loop order. This matches the generator's draw() and the archived solver. Clipping to the grid edges is kept for safety, but the counts always fit, so it never triggers under the constructor's domain. I found no contradictions between the fixtures and the rule."
+  }
+}

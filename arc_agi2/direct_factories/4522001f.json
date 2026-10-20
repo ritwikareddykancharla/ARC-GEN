@@ -1,0 +1,29 @@
+{
+  "task_id": "4522001f",
+  "factory_sha256": "e03178f015eb50d98bfc35bf684d57230f2947a636a3b8ade48410c1c48be019",
+  "constructor_sha256": "d422664dc7ca47d2f37d90c407b926652e09a24ceaa166a99a473104b2689212",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 204610009049563,
+  "d4": 7,
+  "unique_base_inputs": 4,
+  "seconds": 2.149976124987006,
+  "finite_default_domain": {
+    "exhaustive": true,
+    "cases_checked": 4,
+    "augmented_checks": 64,
+    "definition": "All four native quadrant settings on the 3x3 input: 4.",
+    "query_distinct_from_demos": true,
+    "scope": "Default native parameter distribution only; finite input count is not inflated by repeated sampling."
+  },
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "Generator: a 3x3 input holds a 2x2 block made of three fill cells (original colour 3) and one marker (original colour 2), with the marker at the grid centre. The output is 9x9 on the background (original colour 0). Two 4x4 fill squares touch corner to corner. Their union is an 8x8 region anchored at the block's top-left corner in visible coordinates.\n\nPlacement: if the marker sits on the block's main diagonal (offset (0,0) or (1,1)), the squares run top-left to bottom-right. If it sits on the anti-diagonal, they run top-right to bottom-left.\n\nThis rule is equivariant under every D4 transform, so it holds directly in visible coordinates. For a reflection, both the anchoring and the diagonal choice mirror consistently: a block start of x0 maps to 1-x0, and the 8x8 region start maps to the same value. Because of this, no axis specialization is needed.\n\nColour roles are specialized as constants: BG=palette[0], FILL=palette[3], MARKER=palette[2]. The program finds the bounding box of the fill and marker cells and takes side k (2), so the square side is s=2k. It reads the marker's offset within the block, chooses the diagonal, and stamps the two squares onto a 3H x 3W canvas filled with the background.\n\nI checked this by hand against all four generator quadrants and the three fixtures. No tests were run.",
+    "limitations": "The program assumes the constructor's domain: a 3x3 input with exactly one marker and a 2x2 L of fill cells around it. It relies on the palette mapping to identify roles rather than pixel counts. If the marker is somehow missing, it defaults to the main diagonal. Squares that would extend past the canvas are clipped by slicing, but this never happens in the generator's domain. The fixtures agree with the uniform rule, and I found no contradictions."
+  }
+}

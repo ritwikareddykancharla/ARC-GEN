@@ -1,0 +1,21 @@
+{
+  "task_id": "48131b3c",
+  "factory_sha256": "9e0bd6a4e255cfc427429ffa551530d67a61bb7f1359b6b571ec616dc88056b6",
+  "constructor_sha256": "d967761970b4ecc47bbdc83de7bb424df39518b89f657a0b9f72cb8a1e304157",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 47017744107585,
+  "d4": 7,
+  "unique_base_inputs": 701,
+  "seconds": 1.5749149590265006,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The original rule swaps background 0 with the single ink colour, then tiles the result 2x2. Under the palette, the background becomes the constant palette[0]. The ink is whichever other colour appears in the query, which matches the generator: each pair has its own hue, and the generator guarantees at least `size` cells of each colour. Tiling a grid 2x2 gives the same result whether a D4 transform is applied before or after it. So the emitted program does the colour swap and the 2x2 tiling directly on the visible grid, with no normalisation or rotation. It handles rectangular grids naturally.",
+    "limitations": "If the query held only the background colour, the ink colour would be unknown. In that case the program borrows the first non-background colour from the demonstrations, which is a heuristic. The generator never produces such inputs. The fixtures are consistent with the uniform rule."
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "task_id": "42a15761",
+  "factory_sha256": "266a6c96d0140ebf4f45ccd9543b731e8daa93d2e27c6c240d4ba57782747115",
+  "constructor_sha256": "535619d4060c49b8181309adadf44909da853182d529b614d6db488ac46e5244",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 149942776341163,
+  "d4": 7,
+  "unique_base_inputs": 697,
+  "seconds": 4.950031624990515,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "In the original task, full-height columns of colour 0 split a background-2 grid into equal 3-wide panels. Each panel has a different number of 0 holes, and the panels are reordered so that hole count increases from left to right.\n\nThe factory first works out where the original +x direction (left to right) ends up after the D4 transform. A horizontal flip reverses it. Each clockwise rotation then turns it one step: right, down, left, up. That gives:\n- d4 0 and 6: left to right\n- d4 1 and 7: top to bottom\n- d4 2 and 4: right to left\n- d4 3 and 5: bottom to top\n\nThe emitted program works directly in the visible grid. For a horizontal direction it finds full columns of palette[0] as dividers. For a vertical direction it finds full rows of palette[0]. It takes the panel spans between the dividers and lists them in the ascending direction, reversing the list for leftward or upward cases. It counts the cells in each panel that are not palette[2]. A stable sort by count then decides which panel goes into which slot, taken in that same direction order, and each panel is copied whole into its slot. Ties keep their original order along the direction, which matches the archived solver's stable sort.",
+    "limitations": "The program assumes the generator's domain: panels of equal width and divider lines made entirely of palette[0]. If panel sizes ever differed, a mismatched panel would be left in place. Ties never occur in the generator because the counts are always 1..size; if they did, the stable order is used. The fixtures are consistent with a single uniform rule."
+  }
+}

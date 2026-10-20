@@ -1,0 +1,21 @@
+{
+  "task_id": "40f6cd08",
+  "factory_sha256": "bc8a231f17e02ea60d8ace7a0bd18638a69055a59b8317d338152420be52d197",
+  "constructor_sha256": "16fe21634a55dcd828e75229cc8a2ca8766306656d055ca05fd8aca9ee5a350c",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 14247317634147,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 26.9658837079769,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The emitted program works directly on the visible grid. The background colour is the constant palette[0], because the generator's background is 0. The program finds 4-connected non-background components. The template is the multicolour component (the largest, if there are several). The base colour is the majority colour of the single-colour components. For every non-base colour in the template, it records the bounding box of that colour's cells as four edge offsets (top, left, bottom, right) from the template's bounding box. It then paints those inset rectangles into every plain base-colour box, largest area first, so inner layers end up on top. Under any D4 transform, the edge offsets are measured in visible coordinates, so rotations and reflections just relabel which sides carry which offset. No axis needs to be specialised. Colour roles come from palette[0] and from the pixels; there is no global unpermute. In the generator, each layer shrinks on at least one full axis or on two sides. So each layer's visible cells still span its full rectangle, and the bounding box recovers the exact offsets. Every layer has positive size in every box, and boxes are separated by background, so components never merge.",
+    "limitations": "This assumes a single background colour, palette[0], which matches the constructor. It assumes the template is the only multicolour component and that the stripe colours are distinct. Nested layer rectangles are recovered through colour bounding boxes. A hypothetical layer whose visible cells did not span its full rectangle would give wrong offsets, but the constructor's shrink constraints exclude that case. The demonstrations are not used, since the query alone determines the answer. I have not run any tests. I found no contradictions between the fixtures and the rule."
+  }
+}

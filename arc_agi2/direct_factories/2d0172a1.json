@@ -1,0 +1,21 @@
+{
+  "task_id": "2d0172a1",
+  "factory_sha256": "ad1c27d1d89e9ab8d992dfda6c0df219596a905539c5e66bb39c4e22cdf67bf9",
+  "constructor_sha256": "6a964c8d42282df91c2222d0713a3e1e8100dcad2f3132df540363920b488049",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 190864105335769,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 35.80549995903857,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The emitted program rebuilds the containment-tree schematic directly in visible coordinates.\n\n1. Colours are inferred from the query pixels: the most common colour is the background and the other colour is the foreground. No palette constants are needed.\n2. It splits the foreground into 4-connected components. For each component it flood-fills the background from the border and treats any unreached background as the area that component encloses.\n3. Each object's parent is the smallest loop that encloses it.\n4. Each level is laid out recursively, as in the reference:\n   - Row and column bands are the overlap clusters of the input bounding-box projections.\n   - A blob takes a 3x3 cell; a loop takes its children's layout plus padding and frame (h+4, w+4).\n   - Bands share their one-cell margin.\n   - A dot beside a framed sibling snaps to the unique nearest overlapping inner dot.\n   - The result is cropped to the top-level frame interiors and dot cells, then painted.\n\nWhy only one constant changes with d4:\n- Every step treats the row and column axes identically. So rotations and transposition change nothing beyond which visible axis plays which role.\n- Band partitions, band tiling, dot snapping, crop and frames are all mirror-symmetric.\n- The one direction-dependent step is centring a smaller block inside a larger band. The reference floors the half-slack to an even number, which biases toward the low end of the original axis.\n- The factory therefore computes, for each visible axis, whether it runs opposite to the original axis. It does this by applying 'reverse rows' for d4>=4 and then repeated clockwise turns, where (y,x) -> (x,H-1-y).\n- On a reversed axis the program puts the even-floored slack at the far end instead: offset = slack - evenfloor(slack/2).\n\nNo grids are rotated, no colours are permuted, and no native solver is wrapped.",
+    "limitations": "- I have not run any tests on this code.\n- The program assumes exactly two colours, with the background strictly more frequent than the foreground. The generator guarantees this because the foreground covers less than half the grid. In an exact count tie, np.unique/argmax would pick the lower colour value.\n- If the query contains only one colour, the input grid is returned unchanged.\n- The dot-snapping rule copies the reference exactly: it snaps only when exactly one equally-close anchor exists and the snapped cell fits inside the band. It is therefore as narrow as the reference rule.\n- Behaviour outside the generator's domain is untested. That includes components touching diagonally, objects that make the banding ambiguous, and loops whose enclosed areas are the same size.\n- The fixtures are produced by the same renderer, so I am not aware of any contradiction with a uniform rule."
+  }
+}

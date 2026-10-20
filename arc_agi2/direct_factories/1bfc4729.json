@@ -1,0 +1,21 @@
+{
+  "task_id": "1bfc4729",
+  "factory_sha256": "c313121c8e029bad5319ca5baad88433a413c263715a133788ffa0b278830f39",
+  "constructor_sha256": "1fc066b0e6c665fcea38a469e35a9c74e52927a706e9bada3516c74b47a8f0ca",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 238698048287120,
+  "d4": 7,
+  "unique_base_inputs": 854,
+  "seconds": 2.8952934589469805,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "Canonically the two pixels sit on rows 2 and size-3 of a square grid. The pixel in the top half owns rows 0..size//2-1 and the pixel in the bottom half owns the rest. Each owner paints its own band in its colour: the outer grid-edge line of the band in full, the two side-border cells on every line of the band, and the full line through the pixel. The output starts from the background, palette[0].\n\nThe factory fixes the split axis from d4 instead of guessing it from pixel positions. A guess would fail on ties: with columns 2 and 7 the row gap and column gap are both 5. Row reversal keeps rows as rows, and an odd number of clockwise quarter-turns turns rows into columns, so k%4 in {1,3} gives left/right column bands.\n\nThe emitted program works directly in visible coordinates. It finds the non-background pixels and assigns the lower-coordinate one to the low half and the higher-coordinate one to the high half. That makes reflections and 180-degree turns work without extra direction constants. It then paints the band edge line, the side borders and the pixel's line, all along the visible axis. Colours come straight from the pixels, so any palette works. Rectangular grids are handled by using H and W separately.",
+    "limitations": "Assumes the constructor's domain: exactly two single-pixel objects on a background of palette[0], one in each half along the split axis. The generator only produces 10x10 grids, but other sizes also work through n//2 splitting. If there were more than two pixels, only the extreme-coordinate ones would be used. With an odd size, the middle line is left unowned, matching the generator's band ranges. Nothing was executed or tested. The fixtures match the constructor and the archived solver, and no contradictions were found."
+  }
+}

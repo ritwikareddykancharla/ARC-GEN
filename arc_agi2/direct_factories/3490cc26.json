@@ -1,0 +1,21 @@
+{
+  "task_id": "3490cc26",
+  "factory_sha256": "cc9db45fbca21a46e7e3ff6a16efab89e010270f29f80075897f094d26a90248",
+  "constructor_sha256": "76dddef30d5a2d381e51668df743af23e241604cec4dbb7d96c11b259a738936",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 88621435350424,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 128.0822807920631,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The emitted program works directly on the visible grid. Colour roles are fixed as constants: background = palette[0], start block = palette[2], ordinary blocks = palette[8], bridge = palette[7]. It finds every 2x2 block as a connected single-colour component and records its bounding box. Starting at the start-coloured block, it looks east, west, south and north. In each direction it keeps only the nearest block that shares exactly the same two rows (for east/west) or the same two columns (for north/south). If that nearest block has already been visited, the direction is blocked. Among the remaining unvisited candidates it moves to the one with the smallest gap and fills the gap with the bridge colour, spanning both rows or both columns of the block. It stops when no unvisited aligned block is reachable. The rule depends only on distances, so it is unchanged by rotation or reflection, and the program uses no normalisation. d4 is therefore not needed to specialise anything. I checked this against the generator's own rule. The generator does not let visited blocks block a direction, and it forbids reversing direction only along its original horizontal axis (because of how it labels angles). On scenes it accepts, these differences have no effect. Reversing to a block beyond a visited one would draw a bridge over an earlier bridge or block, and the generator rejects such scenes. Any closer aligned block would be chosen first, and ties are also rejected. So on its valid domain, 'first aligned block per direction, visited blocks block' gives the same paths as the generator. Blocks touching the grid edge and rectangular grids are handled naturally.",
+    "limitations": "Nothing has been run or tested. The program assumes the generator's domain: separated 2x2 blocks, exactly one start-coloured block, and no ties for the nearest candidate (if a tie did occur, it is broken by smallest gap, then block index). If there is no start-coloured block, the input is returned unchanged. Bridge cells are overwritten without checking that they are background; in valid generated scenes they always are. The fixtures are consistent with this single uniform rule."
+  }
+}

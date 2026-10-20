@@ -1,0 +1,21 @@
+{
+  "task_id": "2ba387bc",
+  "factory_sha256": "05de65059451fe9c2cdccada015591c0a61d887dd00a39f0e5d3cdf76a6211a1",
+  "constructor_sha256": "3d29fac2c691c77e5a6eaf62957be2f57ae6e032140b94c95709e8b5a0d19287",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 151106167519585,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 9.873386583989486,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "In the canonical frame, hollow squares are stacked in the left 4-wide column and solid squares in the right column. Each column is ordered by top row, with ties broken by left column. The factory pushes the canonical 'down' vector (1,0) and 'right' vector (0,1) through the D4 transform: a flip negates dc, and each clockwise rotation maps (dr,dc) to (dc,-dr). The emitted program then works directly in visible coordinates. It finds 4-connected single-colour components that are not the background palette[0]. A component is hollow if its cell count is smaller than its bounding-box area. Squares are sorted by projecting their bounding-box centres onto the visible DOWN vector, then onto the visible RIGHT vector. All squares share one size, so centre order equals the canonical top-row/left-column order. The output is stacked along DOWN's axis, with slot 0 at the near end when DOWN is positive and at the far end otherwise. The hollow column sits on the side that RIGHT points away from, and the solid column sits on the other side. Each square's visible patch is stamped into its slot unchanged, because the patches are already in the transformed frame. Leftover slots stay background, so rotated tasks naturally give 8\u00d74n outputs.",
+    "limitations": "This assumes the generator's domain: equal-size squares in distinct colours that never touch, with a background of palette[0]. Tie-breaking follows the canonical (top, left) order via the transformed secondary axis, and the generator guarantees ties never occur within a group. If there are no objects, the output is a background block of 4\u00d78 slots, matching the archived behaviour. The fixtures are consistent with the uniform rule. No tests were run."
+  }
+}

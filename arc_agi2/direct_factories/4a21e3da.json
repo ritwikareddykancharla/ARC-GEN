@@ -1,0 +1,21 @@
+{
+  "task_id": "4a21e3da",
+  "factory_sha256": "6493d85d3539984c1a5ec8c8497e9df8a87d5866b4bbcb60719e62954f83f017",
+  "constructor_sha256": "433327262e0a4317a5def639a1292aa3d85ac9f4df6781e5adb99c772bcc8808",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 149203340131319,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 7.981479374924675,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The rule is symmetric under every D4 transform. A marker on a top or bottom border cell makes a column line. A marker on a left or right border cell makes a row line. Groups go to the corners of the grid in whatever orientation the grid is in. Because of this, the emitted program works directly in visible coordinates. It reads which edge each marker sits on from the query grid itself, so no d4-specific constant is needed. Marker cells are never grid corners, so the edge is always unambiguous. Colour roles become constants: background = palette[1], shape = palette[7], marker = palette[2]. The program then follows the mechanism step by step. (1) Clear the shape. (2) Draw each marker's perpendicular line in the marker colour, from the marker to the farthest shape cell on that line, keeping shape cells on the line. (3) Set the crossing cell to the marker colour. (4) Group the remaining shape cells by which side of each line they fall on. With one line, the missing side is the marker's own edge. (5) Translate each group rigidly so its bounding box touches the matching corner. (6) In the two-line case, drop the quadrant that touches neither marker edge. A reflection or rotation turns, for example, a top marker into a left or right marker. The program then treats it as a row line on that edge, which is the correctly transformed motion.",
+    "limitations": "Assumes the constructor's domain: exactly one shape colour (palette[7]), one or two single marker cells on non-corner border positions, and at most one marker per orientation. Every line must hit the shape; there is a fallback if it does not. The demonstrations are not used, because the colour roles are fixed by the palette. I found no fixture that contradicts the uniform rule. I have not run any tests."
+  }
+}

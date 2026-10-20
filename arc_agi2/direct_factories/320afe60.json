@@ -1,0 +1,21 @@
+{
+  "task_id": "320afe60",
+  "factory_sha256": "e1d7a93f03b5d0f68b023f5f33b025ded18db55c5fe1671ab9d2b139c31907bf",
+  "constructor_sha256": "2efeaf8f3200b922e5041a4ddec42415d362602a52b225436b046461d98213f3",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 219048825242608,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 13.496653207927011,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "First, the factory works out which way closed objects travel in the visible grid. In the original task that direction is the vector (0,-1), i.e. left. The factory applies the D4 map to this vector: a horizontal mirror negates dc, and each clockwise turn sends (dr,dc) to (dc,-dr). Open objects travel the opposite way. Colour roles are fixed constants: background palette[4], closed colour palette[2], open colour palette[3]; palette[1] is also emitted as FG.\n\nThe emitted program then works directly in visible coordinates:\n1. It finds the 4-connected components of non-background cells.\n2. For each object it builds the orthogonal-convex hull inside a padded bounding box, filling rows and columns repeatedly until nothing changes.\n3. It flood-fills the background from outside the box. An object is open exactly when some cell added by the hull is reachable from outside. This is the same test the generator uses.\n4. The object is recoloured and shifted rigidly until it touches the grid edge in its direction: closed objects go the CLOSED_DIR way, open objects go the opposite way.\n\nThe hull and flood-fill test does not change under rotation or reflection, so only the motion direction and the colours need specialising.",
+    "limitations": "The openness test runs on each object in isolation, as the generator does. The archived solver instead flood-fills the whole grid. The two agree because objects sit in separate bands divided by blank lines, but scenes outside that domain could differ. Every non-background cell is treated as foreground. Background is taken as the constant palette[4], not inferred from the pixels. No tests have been run, and I found no contradictions in the fixtures."
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "task_id": "4c4377d9",
+  "factory_sha256": "8837234dc70c1651cb135e8cdd7ee721a859a3260323097f685e842c4bae8ab5",
+  "constructor_sha256": "24bb7cb479d9b4713de738247df45cb00e9b0f06cedf04fe6629080b725a0596",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 72560922383679,
+  "d4": 7,
+  "unique_base_inputs": 996,
+  "seconds": 1.0699574999744073,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The native rule puts an upside-down copy of the input on top of the original, so the output has twice the height. I worked out what each D4 transform does to the layout [flipud(N); N].\n\n- The initial row reversal (d4>=4) does not change this vertical layout. Reversing every row of the stacked output just reverses every row of both halves, and a left-right flip commutes with an up-down flip.\n- So only the rotation count k = d4 % 4 matters:\n  - k=0: mirror above the original.\n  - k=1 (one clockwise turn): the stack becomes side by side, original on the left and its left-right mirror on the right.\n  - k=2: original on top, mirror below.\n  - k=3: mirror on the left, original on the right.\n\nThe emitted program builds the doubled canvas directly in visible coordinates. It copies the query into its half and writes a reversed copy of it into the adjacent half. No colour roles are involved, because every cell is copied, so the palette is not needed.",
+    "limitations": "None known within the constructor's domain. The program ignores the demonstrations, as the archived solver does. It works for any rectangular grid size. The background colour is never needed because every output cell comes from the input. The fixtures are consistent with the uniform rule."
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "task_id": "46c35fc7",
+  "factory_sha256": "780d16d16d0617e2d1a72f835345f6121b5f64a876ceff2645fbbb25fb6a277c",
+  "constructor_sha256": "8439661585cfcdfa21397d1ecc19b55c6cb008caf393719bed3c830fb7254b15",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 250805225202436,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 2.699686915962957,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "Each 3x3 box is a ring of 8 cells around a background centre. The rule moves the corner cells one step counter-clockwise and the edge-midpoint cells one step clockwise, as the generator and archived solver do.\n\nThe factory works out the visible-coordinate version of that ring permutation. It applies the D4 map to each local (destination, source) pair inside the 3x3 box: first an optional horizontal flip c->2-c, then clockwise rotation (r,c)->(c,2-r) repeated d4%4 times. So under rotations the corner and edge directions are kept, and under reflections both directions are reversed. The resulting mapping is baked into the emitted program as a literal table.\n\nThe background colour is the constant palette[7]. The emitted program finds non-background components with 4-connectivity, so blocks that only touch at a corner stay separate, as in train pair 3. It keeps only components whose bounding box is exactly 3x3 and rewrites each ring in place with the baked mapping. The grid is never rotated and colours are never permuted.",
+    "limitations": "The background is fixed to palette[7], which matches the generator: box colours never include 7. The program assumes the boxes are complete 3x3 rings and that separate boxes never share an edge; the generator's non-abutting constraint is relied on for this, and corner contact is handled. Any non-background component whose bounding box is not 3x3 is left unchanged. No fixture contradicts the uniform rule. I have not run any tests."
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "task_id": "2546ccf6",
+  "factory_sha256": "5fa7920de7bb9ef6b6a7150424633403cefb1f7a785da25e62b3205f741db387",
+  "constructor_sha256": "4a2e1412fd059d22c41ba9a5a6def921a1b014b5b9fd894c097c5ee37a0af076",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 171509278426257,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 16.54602224996779,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The emitted program works directly on the visible grid. The background colour is fixed to palette[0], with a most-common-colour fallback only if that colour is absent. The program finds divider lines as full rows or full columns of one uniform non-background colour; this test does not depend on orientation. Any divider position works, including a remainder divider on the first or last line after a reflection. The panels are the gaps between dividers, and gaps of width 0 are skipped. For every 2x2 block of panels, if exactly one panel is empty and the other three each hold the same single colour, the empty panel is filled. The fill is the left-right mirror of its neighbour in the same panel row; if the shapes do not match, it falls back to the up-down mirror of its neighbour in the same panel column. The constructor makes each box symmetric about both of its internal divider lines, so both choices agree. The mechanism is therefore unchanged under every D4 transform: a transposition simply turns the row-neighbour mirror into the column-neighbour mirror. Panel contents are read from the unmodified input. Blocks offset from a real box can hold at most two of that box's panels. Different boxes always have different colours. So no false block can qualify.",
+    "limitations": "No tests have been run. The program assumes the divider colour differs from the background and from the sprite colours, which the constructor guarantees when it excludes the divider colour from the sprite colours. It also assumes palette[0] is the empty-panel background. palette[0] is used instead of the archived most-common-colour heuristic because, in dense configurations (length 3, three boxes), divider cells can outnumber background cells. Demonstrations are not needed and are ignored. No conflict was found between the fixtures and the uniform rule."
+  }
+}

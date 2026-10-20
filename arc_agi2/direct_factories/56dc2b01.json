@@ -1,0 +1,21 @@
+{
+  "task_id": "56dc2b01",
+  "factory_sha256": "b81be0fa539c041c7e0325a8868ae60b587e5c2616a88b382598094661841f2b",
+  "constructor_sha256": "0fe6f38335c30b8a6b681e5cebea90a185ef9923077c3f910d3f49b3a1ad0c03",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 8176709790027,
+  "d4": 7,
+  "unique_base_inputs": 997,
+  "seconds": 5.059788832906634,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The emitted program uses the palette-mapped role colours as constants: background=palette[0], creature=palette[3], wall line=palette[2], marker line=palette[8]. It does not use d4. The generator already produces both orientations (flip and transpose), and D4 only permutes them, so the program reads the axis directly from the visible pixels. The wall is a full row or full column whose colour's total cell count equals that line's length. This also guards against degenerate cases. Row walls and column walls each have their own code path; nothing is transposed. The program erases the creature and translates it rigidly perpendicular to the wall toward it, so its bounding box ends up adjacent to the wall on the side where it started. It then paints a full marker line one cell beyond the creature's far edge, inside the grid bounds.",
+    "limitations": "This assumes a single wall line in the wall colour and a creature whose cells are all the creature colour, as the generator produces. If the creature were already overlapping the wall, or no full wall line existed, the input would be returned essentially unchanged; the generator never produces either case. The fixtures are consistent with the uniform rule. No tests have been run."
+  }
+}

@@ -38,13 +38,18 @@ def generate(width=None, height=None, brow=None, bcol=None, wide=None,
 
   if width is None:
     width, height = 14 + common.randint(-1, 1), 14 + common.randint(-1, 1)
-    hoffset, voffset = common.randint(0, 1), common.randint(0, 1)
-    hcopies, vcopies = common.randint(1, 3), common.randint(1, 3)
     while True:
-      wide, tall = common.randint(3, width - 2), common.randint(3, height - 2)
-      eff_width = hcopies * (wide + hoffset - 1) + 1
-      eff_height = vcopies * (tall + voffset - 1) + 1
-      if eff_width <= width - 4 and eff_height <= height - 2: break
+      hoffset, voffset = common.randint(0, 1), common.randint(0, 1)
+      hcopies, vcopies = common.randint(1, 3), common.randint(1, 3)
+      max_wide = (width - 5) // hcopies - hoffset + 1
+      max_tall = (height - 3) // vcopies - voffset + 1
+      # Some copy-count/offset choices cannot fit even a 3x3 box.
+      # Resample those choices instead of waiting forever for an impossible size.
+      if max_wide >= 3 and max_tall >= 3: break
+    wide = common.randint(3, min(width - 2, max_wide))
+    tall = common.randint(3, min(height - 2, max_tall))
+    eff_width = hcopies * (wide + hoffset - 1) + 1
+    eff_height = vcopies * (tall + voffset - 1) + 1
     brow = common.randint(1, height - eff_height - 1)
     bcol = common.randint(2, width - eff_width - 2)
     color = common.random_color()

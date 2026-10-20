@@ -1,0 +1,21 @@
+{
+  "task_id": "59341089",
+  "factory_sha256": "91f521c0af1c6119d27febf5cffde1c67bddf7af9ffb68178dd2358d6e12f5b7",
+  "constructor_sha256": "a6fb59d0ab29589114fbc5f1c3d42392061e081c79793493e32160a2b339cd5c",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 126172774039421,
+  "d4": 7,
+  "unique_base_inputs": 977,
+  "seconds": 1.2334632909623906,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "In the original task the output is four copies of the input placed side by side: [mirror, original, mirror, original], where mirror is a left-right flip. Under a D4 transform, the original horizontal axis becomes the visible concatenation axis. That axis is vertical when the rotation count d4%4 is odd. The left-right mirror always becomes a flip along that same visible axis. The block order is either kept or reversed, depending on whether the transform reverses the direction of the original horizontal axis. The reversal happens for rotations by 180 or 270 degrees without a reflection, and for rotations by 0 or 90 degrees with a reflection. Concretely:\n- d4=0 and d4=6: horizontal axis, order [M, G, M, G].\n- d4=2 and d4=4: horizontal axis, order [G, M, G, M].\n- d4=1 and d4=7: vertical axis, order [M, G, M, G].\n- d4=3 and d4=5: vertical axis, order [G, M, G, M].\nThe rule uses no colours, so the palette has no effect. Pixel values are copied unchanged, and the canvas is fully overwritten, so the fill value 0 never shows. The program works for any rectangular input size.",
+    "limitations": "The axis and block order are fixed from d4 rather than inferred from the demonstrations. This is correct for every episode produced by the stated generator and transform. The program assumes the episode follows this family's 4x tiling. No contradictions with the fixtures were found. This factory and the emitted program have not been run against the fixtures or fresh pairs, so correctness rests on the hand derivation above."
+  }
+}

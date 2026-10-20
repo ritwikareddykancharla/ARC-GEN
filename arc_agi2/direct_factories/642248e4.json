@@ -1,0 +1,21 @@
+{
+  "task_id": "642248e4",
+  "factory_sha256": "f6e302e0dc250b25bc4f85ee3fedca61e8c9d141286e38eada6daf6d5876445f",
+  "constructor_sha256": "b91b5377241d2d483b5e4686c67b81d4ab2df66ab2a449628f2217e664f2e988",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 100407926322035,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 5.976519708056003,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The generator draws two solid walls of distinct colours from {2,3,4,8} on opposite edges. It may also transpose the scene, so either orientation can appear in any episode. Single pixels of colour 1 sit strictly inside, and each gets one marker of the nearer wall's colour on the side facing that wall. Under D4 this rule maps to itself: a wall pair stays a wall pair on opposite edges, and 'nearest wall' and 'adjacent cell toward it' are preserved by rotations and reflections. The emitted program therefore works directly in visible coordinates. It finds the walls by checking whether the first and last rows are each a single colour that is neither background nor pixel colour. If they are, the walls are horizontal; otherwise it uses the first and last columns. It reads the wall colours from the visible corner cells. Each pixel's offset along the wall axis is compared with its distance to the far wall, and the marker goes one step toward the nearer wall, onto background only. Palette specialisation turns the colour roles into constants: background is palette[0] and pixel is palette[1]. The wall colours are read from the grid, so they follow the palette automatically. d4 needs no specialisation beyond this, because orientation is inferred per grid, which is required anyway since the generator's random transpose is independent of d4.",
+    "limitations": "Ties cannot occur in the generator's domain: the wall-to-wall extent is even, so the two distances always differ by an odd amount. If a tie did occur, the marker would go to the first wall, meaning the top or left in visible coordinates. Orientation detection assumes both wall lines are fully uniform and differ from the background and pixel colours, which the constructor guarantees. If neither the rows nor the columns qualify, the program defaults to vertical walls, matching the archived solver. The generator's non-adjacency constraint keeps marker cells on background; if a target cell were not background, the marker would be skipped. The approved fixtures match this uniform rule, and no contradictions were found. I have not run any tests on this factory."
+  }
+}

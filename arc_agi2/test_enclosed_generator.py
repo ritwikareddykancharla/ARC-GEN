@@ -6,6 +6,89 @@ from .runtime import reference, solver, grid
 
 
 class EnclosedGenerator(unittest.TestCase):
+    def test_band_sampler_keeps_arc_dimensions(self):
+        from tasks import task_1190e5a7
+        state = random.getstate()
+        try:
+            for seed in range(32):
+                random.seed(seed)
+                pair = task_1190e5a7.generate()
+                grid(pair["input"])
+                grid(pair["output"])
+                self.assertLessEqual(len(pair["input"]), 30)
+                self.assertLessEqual(len(pair["input"][0]), 30)
+        finally:
+            random.setstate(state)
+        original = reference("1190e5a7")["canonical"]
+        for split, pairs in task_1190e5a7.validate().items():
+            self.assertCountEqual(pairs, original[split])
+
+    def test_diagonal_does_not_wrap_via_negative_index(self):
+        from tasks import task_1d61978c
+        pair = task_1d61978c.generate(
+            rows=[0, 8], cols=[0, 3], lengths=[2, 3], angles=[-1, 1])
+        self.assertIsNone(pair["input"])
+        self.assertIsNone(pair["output"])
+        original = reference("1d61978c")["canonical"]
+        for split, pairs in task_1d61978c.validate().items():
+            self.assertCountEqual(pairs, original[split])
+
+    def test_frame_bars_do_not_depend_on_absolute_column(self):
+        from tasks import task_34cfa167
+        crops = []
+        for brow, bcol in ((1, 1), (1, 5), (5, 1)):
+            pair = task_34cfa167.generate(
+                width=30, height=30, wide=15, tall=15, length=2,
+                brow=brow, bcol=bcol, colors=[0, 2, 4, 8])
+            crops.append([row[bcol:bcol+15]
+                          for row in pair["output"][brow:brow+15]])
+            for r, row in enumerate(pair["output"]):
+                for c, value in enumerate(row):
+                    if not (brow <= r < brow+15 and bcol <= c < bcol+15):
+                        self.assertEqual(value, 0)
+        self.assertEqual(crops[0], crops[1])
+        self.assertEqual(crops[0], crops[2])
+        original = reference("34cfa167")["canonical"]
+        for split, pairs in task_34cfa167.validate().items():
+            self.assertCountEqual(pairs, original[split])
+
+    def test_feasible_box_samplers_preserve_original_fixtures(self):
+        from tasks import task_1c56ad9f, task_1e5d6875
+        from .runtime import call
+        state = random.getstate()
+        try:
+            for tid, module in (("1c56ad9f", task_1c56ad9f),
+                                ("1e5d6875", task_1e5d6875)):
+                for seed in range(32):
+                    random.seed(seed)
+                    pair = call(module.generate, seconds=5)
+                    grid(pair["input"])
+                    grid(pair["output"])
+                original = reference(tid)["canonical"]
+                for split, pairs in module.validate().items():
+                    self.assertCountEqual(pairs, original[split])
+        finally:
+            random.setstate(state)
+
+    def test_motif_sampler_uses_the_entire_nine_cell_input(self):
+        from tasks import task_2072aba6
+        state = random.getstate()
+        positions = set()
+        try:
+            for seed in range(32):
+                random.seed(seed)
+                pair = task_2072aba6.generate()
+                active = {(r, c) for r in range(3) for c in range(3)
+                          if pair["input"][r][c] == 5}
+                self.assertTrue(3 <= len(active) <= 6)
+                positions.update(active)
+        finally:
+            random.setstate(state)
+        self.assertEqual(positions, {(r, c) for r in range(3) for c in range(3)})
+        original = reference("2072aba6")["canonical"]
+        for split, pairs in task_2072aba6.validate().items():
+            self.assertCountEqual(pairs, original[split])
+
     def test_crowded_rectangles_finish_and_preserve_rule(self):
         import numpy as np
         from tasks import task_0d87d2a6

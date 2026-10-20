@@ -1,0 +1,21 @@
+{
+  "task_id": "53b68214",
+  "factory_sha256": "b1a43da8fb19bf543a80ab8c92ecb2232c700e3d3cba037e9e0eb5e8fac744f0",
+  "constructor_sha256": "e303c8141b506c4d1b513e17a32d80e8be2f51435397a2c46edd8d2f22c164ce",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 266376286893334,
+  "d4": 7,
+  "unique_base_inputs": 668,
+  "seconds": 5.0761093749897555,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The factory tracks two directions through the D4 transform. The first is the canonical extension direction, downward (+row). The second is the canonical drift direction, rightward (+col). A flip negates the column component. Each clockwise rotation maps a direction (dr, dc) to (dc, -dr).\n\nFrom these two directions the factory fixes three constants:\n- AXIS: whether the pattern grows along rows (vertical) or along columns (horizontal).\n- FWD: whether the input sits at the start or the end of that axis. When FWD is false, the input is anchored at the bottom or right edge and new lines are added toward the top or left.\n- SGN: which visible cross-axis direction corresponds to the canonical positive drift. It is used only to keep the archived tie-break order (|dx|, dx) when two shifts are equally small.\n\nThe emitted solve() works directly on visible rows or columns, counted from the anchored edge. It reads the background as the most common colour, as the archived solver does, so no palette constant is needed. It searches for the smallest period dy, then the smallest-magnitude shift d, such that every line equals the line dy earlier shifted by d, with cells that leave the grid dropped. It then allocates a canvas that is max(10, L) long along the growth axis and keeps the cross width. The input is copied in at the anchored edge and the remaining lines are generated in order, each as the line dy earlier shifted by d. If no period is found, it falls back to dy = L with no shift, as the archived solver does.",
+    "limitations": "The program uses the archived solver's assumptions: the background is the most common colour, and the target length along the growth axis is fixed at 10 (the constructor's width parameter). The demonstrations are ignored, as in the native solver. None of the fixtures contradict the uniform rule. I have not run any tests."
+  }
+}

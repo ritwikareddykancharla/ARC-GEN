@@ -1,0 +1,21 @@
+{
+  "task_id": "247ef758",
+  "factory_sha256": "2d6ceb7b2240ced289e8a7d41b5db727cfae5719a8b73edd90d857f54c006374",
+  "constructor_sha256": "8fcaa2090f88e8d8e537710cb1e15fd7522b4549cff09b0bd2cdfba8bb1816be",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 248415922722761,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 9.500235582934693,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The factory works out from d4 where the legend sits in the visible grid. In the original layout the legend is on the left, and the motif nearer the top wins any overlap. A horizontal flip moves the legend to the right. Each clockwise rotation moves both the legend side and the priority side one step around the cycle top -> right -> bottom -> left. The background constant is palette[0].\n\nThe emitted program works directly in visible coordinates:\n1. It scans inward from the legend side for the first full line (column or row) of one non-background colour. That line is the divider.\n2. The frame is the rectangle on the other side of the divider. Its border colour is the most common colour on the border.\n3. A non-border-colour marker on a vertical frame border marks its row. A marker on a horizontal border marks its column. Corners are excluded. This rule is the same under every rotation or reflection.\n4. Each legend motif is the set of cells of one colour in the legend region. A motif is stamped only if its colour has at least one marked row and at least one marked column. One copy is centred on every (row, column) crossing, then the motif is erased from the legend.\n5. The original floor-centre of the bounding box becomes a ceil-centre on any visible axis whose direction the D4 reverses.\n6. Paint order matches the original rule: motifs farther from the priority side are painted first, so the motif nearest that side ends up on top in any overlap. This reproduces the (5,9) cell in pair 1.",
+    "limitations": "Assumes each legend motif has a unique colour and that a scan from the legend side finds the divider. The constructor guarantees both. Ties in legend order (never produced by the generator) are broken by visible colour value, not by original colour. Even-sized bounding boxes are handled by the floor/ceil adjustment, but the generator only produces odd sizes. No fixture contradicts the uniform rule. Nothing has been run or tested."
+  }
+}

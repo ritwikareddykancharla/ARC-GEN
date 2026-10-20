@@ -1,0 +1,21 @@
+{
+  "task_id": "64a7c07e",
+  "factory_sha256": "f528a185f4925b5085bab9809085f7d4f08c914ec85249efba8fa22ec42bc246",
+  "constructor_sha256": "495a3c580cd6f1633190322b0063dd8569e093e8cc4a69e1d920fe9ad2f1eb7c",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 120736805446817,
+  "d4": 7,
+  "unique_base_inputs": 874,
+  "seconds": 22.28027754102368,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "In the original task, each shape is a group of diagonally connected cells (8-connectivity) that are not background. Every shape slides right by its own bounding-box width, so it lands right beside where it was. The factory works out where the original +x direction ends up in the visible grid. If the D4 index is 4 or more, rows are mirrored first, which turns +x into -x. Each clockwise turn then maps a direction (dy, dx) to (dx, -dy). The emitted program sets the background to the constant palette[0]. It finds 8-connected non-background components and erases all of them first. It then re-stamps each one, shifted along the visible direction by its own extent on that axis: height for vertical motion, width for horizontal. Cells keep their original colours. Grids may be rectangular, and anything pushed outside the grid is clipped, matching the archived solver.",
+    "limitations": "The program assumes separate shapes never touch, even diagonally. The generator's row-separation constraint makes this true. Clipping at the grid edge copies the archived solver; the generator never actually produces out-of-bounds shifts. Demonstrations are not used, because the direction and background come from d4 and palette. The fixtures are consistent with the uniform rule."
+  }
+}

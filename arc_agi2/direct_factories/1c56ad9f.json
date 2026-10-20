@@ -1,0 +1,21 @@
+{
+  "task_id": "1c56ad9f",
+  "factory_sha256": "889f8045d5e285451b160af365b356caf5d0824fd45ffcfd282f9b5d78da1876",
+  "constructor_sha256": "c2f553bb1ab8eadcaf0bda47aee0b78797d36b08171b3c989604e65746b9106e",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 107438559621031,
+  "d4": 7,
+  "unique_base_inputs": 994,
+  "seconds": 4.863065541954711,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "Canonical rule: starting from the bottom-most occupied row of the lattice (scanline 0), and moving upward, scanline k%4==1 shifts one cell left and k%4==3 shifts one cell right, with background fill. The factory maps the canonical 'down' vector (1,0) and 'right' vector (0,1) through the D4 transform: a reflection negates the column component, and each clockwise rotation maps (dr,dc)->(dc,-dr). The emitted program then works directly in visible coordinates. If the mapped 'down' vector is vertical, the scan lines are rows. If it is horizontal, they are columns. The anchor is the extreme occupied line in the 'down' direction, and k is the distance from it measured against 'down'. Line k%4==1 moves by -RIGHT and k%4==3 moves by +RIGHT along the line, filled with palette[0]. Under the palette, the background is the constant palette[0]. Lines beyond the anchor are never shifted. Empty lines above the object shift trivially, matching the generator's scanline behaviour.",
+    "limitations": "This assumes the background is palette[0], which matches the generator. Cells shifted past the grid edge are dropped, as in the generator, but the generator's margins mean this never happens. The demonstrations are not used, because the rule is fully determined by the visible geometry. I have not run any tests."
+  }
+}

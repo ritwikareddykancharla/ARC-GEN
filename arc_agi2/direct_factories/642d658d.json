@@ -1,0 +1,21 @@
+{
+  "task_id": "642d658d",
+  "factory_sha256": "58f2c44e473a6817908d993b89d6eb479140232fd4d14b63f2bad04fec6f498d",
+  "constructor_sha256": "5fb0c17bfb5b1546647395085d83c99efa74ca0df9cc9e296da3e07a937bf109",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 27520357968060,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 11.851101791020483,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The emitted program scans the visible grid for plus-shaped crosses: an interior cell whose colour is palette[4], the cross-centre colour, and whose four orthogonal neighbours all share one colour. It counts how many crosses use each arm colour and outputs the most frequent arm colour as a 1x1 grid. Cross detection and counting do not change under rotation or reflection, so d4 needs no direction-specific rewriting. Only the centre colour is specialised through palette. The generator always places crosses with centres in rows 1..H-2 and columns 1..W-2, so scanning only interior cells covers every cross. The answer colour is used for exactly two crosses and every other arm colour for one, so the winner is unique. If no cross is found, the program falls back to the most common grid colour, as the archived solver does.",
+    "limitations": "Ties between arm colours cannot occur in this generator's domain. If one did, the program would break it by choosing the smallest colour value, which is not guaranteed to match any other convention. The program assumes the centre colour palette[4] appears only as cross centres, which the generator guarantees because the background and noise colours exclude 4. The fixtures are consistent with this uniform rule. I have not run any tests."
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "task_id": "44d8ac46",
+  "factory_sha256": "1e7fb21e8dba1d57c1ddf1c79aab1c7e48e78007f6849f696d8811e92c5b8fbd",
+  "constructor_sha256": "ead173007c02e20b5ee5ae0ca53d7417ec07a9bb285fc04de4d6bd7b55985f17",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 235923318184118,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 5.336933584068902,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The emitted program finds the 4-connected components of the background colour, which is palette[0]. It skips any component that touches the grid border. Each remaining enclosed hole is filled with palette[2] when it exactly fills its bounding box and that box is square. This follows the archived solver and the generator: a red interior appears only for square boxes, including mini-square boxes inside square frames, while non-square boxes and junk-notched boxes stay black. Each D4 transform maps squares to squares and keeps rectangles solid. It also keeps border contact and 4-connectivity. So the same mechanism applies directly in visible coordinates for every d4, and only the colour constants are specialized by palette.",
+    "limitations": "The background is taken as palette[0] rather than inferred as the most common colour. In generator scenes these agree, because 0 dominates. Wall colour (palette[5]) is not checked: any non-background cell counts as a wall. The fixtures are consistent with the uniform rule, and no contradictions were found. No tests were run."
+  }
+}

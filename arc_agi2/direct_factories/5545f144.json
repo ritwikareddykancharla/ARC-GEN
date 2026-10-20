@@ -1,0 +1,21 @@
+{
+  "task_id": "5545f144",
+  "factory_sha256": "b6bfaeaa0157760cce88bd7a9377c04e3d4b8492ad55f82323f5fbe9fd73aff0",
+  "constructor_sha256": "f1e19c782f6dc7e81c10a888bdc1ec66cbf75f3d6b6c280ee52a2a17e72b2848",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 17796998877786,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 12.63574499997776,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The walk itself is D4-equivariant. Tip detection tries all four directions and needs a unique extreme cell plus mirror symmetry. Turns go perpendicular, to the nearest dot. Re-stamping uses (forward, sideways) local offsets. So the emitted program keeps that mechanism unchanged and runs it in visible coordinates.\n\nThe only orientation-dependent part is the panel layout. Originally the dividers are full-height columns and the start panel is the leftmost. The factory pushes the original 'left' vector (0,-1) through the transform: a horizontal flip for d4>=4, then (dy,dx)->(dx,-dy) for each clockwise turn. That tells it whether the visible dividers are full-height columns or full-width rows, and whether the first panel is at the start (left/top) or the end (right/bottom).\n\nThe program then:\n- takes the grid's most common colour as background,\n- finds uniform non-background divider lines along the chosen axis and crops the correct first panel (the whole grid if there are none),\n- splits the panel's non-background cells into 8-connected components; the largest is the shape and every other cell is a dot,\n- finds the symmetric tip, runs the eat/turn walk (nearest dot ahead, otherwise the nearer perpendicular dot), and stamps only the final shape on a background panel.\n\nColours are inferred from frequency and connectivity, so the palette needs no constants.",
+    "limitations": "- Assumes the constructor's guarantees: one multi-cell shape with exactly one symmetric tip, isolated dots never 8-adjacent to the shape or to each other, no left/right ties, and panel lines that can never be fully covered by shape or dot colour.\n- On an exact left/right distance tie (which the generator excludes), it prefers the perpendicular (d[1], -d[0]) first, as the archived solver does; that choice is not D4-symmetric.\n- Uneaten dots are cleared. The generator guarantees every dot is eaten, so this never matters within its domain.\n- No contradictions with a uniform rule were found in the fixtures.\n- Not executed by me; verification is left to the host."
+  }
+}

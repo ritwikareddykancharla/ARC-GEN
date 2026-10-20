@@ -1,0 +1,21 @@
+{
+  "task_id": "23b5c85d",
+  "factory_sha256": "328f9b1ee0f095a570251d83456fc58615b19f316a3463387fa5c11820c54168",
+  "constructor_sha256": "17d25738d4cabcd749e49fc838a74926583ca8c203e663702663a1708ce9fed1",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 185700070552499,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 4.4925250839442015,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The constructor draws 2 to 5 solid rectangles, each a different colour, on a background of colour 0. The last rectangle is drawn on top, so all of its cells stay visible. The constructor keeps resampling until that last rectangle's colour has strictly fewer cells than every other colour. The output is a solid crop of that rectangle at its width and height.\n\nThe emitted program works directly in the visible grid:\n1. It counts cells for each non-background colour. The background is the constant palette[0].\n2. It picks the rarest colour.\n3. It returns a solid block of that colour, sized to the visible bounding box of the colour.\n\nD4 needs no special handling. A rotation or reflection of the visible grid swaps or keeps the bounding box's height and width, and the output in the episode is transformed the same way. The output colour is read from the pixels, so random palettes are handled too.\n\nCounting by colour is used instead of the archived solver's smallest connected component. Later rectangles can split an earlier rectangle into small fragments, and such a fragment could be smaller than the top rectangle. The colour-count criterion is exactly what the constructor guarantees.",
+    "limitations": "This assumes the constructor's domain: distinct colours per rectangle, background equal to palette[0], and a top rectangle whose colour is strictly the rarest. If counts were ever tied, which the constructor rules out, the tie is broken by preferring a colour whose bounding box is fully solid, then the smaller bounding-box area, then the colour value. The demonstrations are not needed and are ignored. The fixtures agree with the uniform rule."
+  }
+}

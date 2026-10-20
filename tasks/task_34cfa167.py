@@ -70,7 +70,8 @@ def generate(width=None, height=None, wide=None, tall=None, length=None,
   for col in range(bcol + length + 1, bcol + wide - length, 4):
     for i in range(length):
       output[brow + tall - 2 - i][col] = output[brow + 1 + i][col] = colors[2]
-  for row in range(brow + length + 1, bcol + tall - length, 4):
+  # Vertical bars depend on the row origin, not the column origin.
+  for row in range(brow + length + 1, brow + tall - length, 4):
     for i in range(length):
       output[row][bcol + wide - 2 - i] = output[row][bcol + 1 + i] = colors[3]
   return {"input": grid, "output": output}

@@ -1,0 +1,21 @@
+{
+  "task_id": "2ccd9fef",
+  "factory_sha256": "607cae292cc84023a22263e231154f263cae6cf5f547520384dca3fed66ff262",
+  "constructor_sha256": "2974d2456439ed20b522c42d2e3f91009cce492b153bc34c1fe3dccd1a45ade3",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 254776768319636,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 14.703820750000887,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The factory works out where the original 'down' and 'right' directions point in the visible grid. It applies the row reversal for d4>=4, then rotates the vectors clockwise with (dy,dx)->(dx,-dy). From those two vectors it bakes these constants into the emitted program:\n- the strip-axis search order (the original row axis is tried first, then the column axis) and, for each axis, the direction the panels run. The bare template panel may therefore be the first visible panel rather than the last;\n- a reading-order key, which projects cells onto the original down/right vectors. It decides component order, object matching and tie-breaks for the background colour;\n- the scan direction of the insertion index when a grown object is extended along a visible axis;\n- which visible corner of a bounding box is the original top-left anchor. The next state is placed at anchor + (anchor_B - anchor_A).\n\nThe emitted solve() works on the visible grid. It takes the background as the most common colour and finds the panel period: the smallest p with at least 3 panels whose non-background template cells match the bare panel. It finds the sequence period q from the content colour sets. It then takes panels A and B, q and 2q steps before the bare panel, and pairs their content components by colour set in reading order. Each object grows by inserting the same rows or columns again, whichever visible dimension differs, and moves by its constant offset. The result is painted onto a copy of the bare panel. Colours are never remapped: background and roles are inferred from the pixels, so the palette argument is not needed.",
+    "limitations": "Not executed by me; correctness is argued from the generator and archived solver. Like the native solver, it assumes objects never shrink: if an object got smaller, it is copied unchanged with only its offset applied. If both dimensions changed, the B shape is also reused. The generator never produces either case. If no valid panel period exists, the input is returned unchanged. The fixtures are consistent with the uniform rule; no contradictions were found."
+  }
+}

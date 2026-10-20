@@ -1,0 +1,21 @@
+{
+  "task_id": "29c11459",
+  "factory_sha256": "37c8975bd3c5af5840d3a652a15ffeec94899abd1bf9b6f2ee434caa6a5dc135",
+  "constructor_sha256": "64f4ecde7586235a5ebf660b0c03b3cfb3288514e8f10576a96ae316ef575933",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 170111411267989,
+  "d4": 7,
+  "unique_base_inputs": 729,
+  "seconds": 2.072499749949202,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The original rule: for each row whose left and right edge cells are both non-background, the left seed colour fills the first W//2 cells, the right seed colour fills the cells after the centre, and the centre cell W//2 becomes grey (5). The factory tracks the original +x direction through the D4 transform (an optional row reversal, then k clockwise rotations). This tells it whether the active lines are visible rows or visible columns, and whether original index 0 sits at the start or the end of each visible line. The emitted program scans every visible line along that axis. For each line whose two ends are both non-background (palette[0]), it fills cells by their original-coordinate index: indices below the centre take the seed-A end colour, indices above take the seed-B end colour, and the centre cell becomes palette[5]. Because the centre is measured in original coordinates, it stays correct even for even line lengths under reflections.",
+    "limitations": "Background is fixed to palette[0] and grey to palette[5]; both follow the generator, which always uses 0 as background and gray (5) as the marker. A line is only filled when both of its end cells are non-background, matching the generator and the archived solver. The program does not infer anything from the demonstrations, since the D4 transform and palette fully determine the mechanism. No fixture contradictions were found."
+  }
+}

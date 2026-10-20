@@ -1,0 +1,21 @@
+{
+  "task_id": "2601afb7",
+  "factory_sha256": "6df5271b9cf53b67e0a1cefb12b33829c8527f40908777e7b6afc6fcde003418",
+  "constructor_sha256": "19a9d18fd107ef5962d9391508b11c8deb446ec0279371213178a7b528fd02c2",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 203456682490507,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 3.4073966660071164,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The canonical task has bars standing on the bottom edge, growing upward, ordered left to right. Output colours rotate one step forward along that order, and heights rotate one step backward. The factory pushes the growth vector (-1,0) and the ordering vector (0,1) through the D4 transform: a row reversal negates the column component, and each clockwise rotation maps (dr,dc) to (dc,-dr). The emitted program uses these as constants and works directly in visible coordinates. It groups the non-background cells (background = palette[7]) into lines perpendicular to the base side, using columns when growth is vertical and rows otherwise. It orders those lines by the transformed ordering direction. The base is taken as the extreme cell position opposite the growth direction, as the archived solver does with its 'bottom'. Each bar's height is measured from that base, and its colour is the line's majority colour. The program then erases all bars. It repaints bar i with the colour of bar i-1 and the height of bar i+1, cyclically, growing from the base along the transformed growth direction.",
+    "limitations": "Assumes the constructor's domain: one single-coloured, contiguous bar per line, all bars touching the same base edge, and a background equal to palette[7]. Bars sharing a line, or bars that do not reach the common base, are outside the generator's domain and are not handled specially. Demonstrations are not used, because the rule is fully determined by the D4/palette specialization. I have not run any tests on this factory. I did not find any fixture that contradicts the uniform rule."
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "task_id": "42f83767",
+  "factory_sha256": "f4b425e7a4939596576e3e27c0c93e5862adf2ce0df3c5820ece984d1ab8d3fb",
+  "constructor_sha256": "ea94f6bb1646315ade69cc9fc1f27395212e2d3cb8ed2ebfbdd6f869c6c3325d",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 46755542069079,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 8.258513542008586,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "In the canonical layout, the legend edge is row 0. Along it sit k swatches of size 2x2, one every 3 cells, followed by k grey L x L stencils separated by single gaps. The edge length is therefore N = (L+4)k - 1. The mosaic lies strictly beyond depth L from that edge. Applying D4 to the whole episode moves this legend edge to one visible side (top, right, bottom or left), and the legend order may run with or against the visible axis. The factory builds this table for all 8 D4 indices. It then emits code specialised to that side and direction: depth is measured from the visible side, and legend position becomes a visible row or column index, reversed where needed. The emitted program counts swatches by reading every third cell on the legend line. It derives L from N and k, and slices each stencil as a visible-oriented L x L block. Grey is palette[5]. The mosaic is the bounding box of non-background cells at depth >= L, taken in visible orientation. Each mosaic cell is then stamped as a block: the grey cells of the stencil chosen by that colour's swatch index are painted in the cell's colour, and holes are left as the background colour palette[0]. Because D4 maps the block layout and each block's contents consistently, stamping visible-oriented stencils over the visible mosaic directly yields the transformed output. There is no grid rotation or colour un-permutation.",
+    "limitations": "This relies on the constructor's structural invariants: swatches at a 3-cell pitch on the legend edge, stencils packed immediately after them with one-cell gaps, an edge length equal to (L+4)k-1, square stencils, and a mosaic beyond depth L. Swatches are read on the depth-0 legend line and assumed distinct and non-grey and non-background. Swatch counting stops at the first background, grey or repeated value. Mosaic cells whose colour is not a swatch are left as background. No fixture contradictions were found. The code has not been executed by me."
+  }
+}

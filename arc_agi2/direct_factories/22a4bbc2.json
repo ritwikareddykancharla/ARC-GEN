@@ -1,0 +1,21 @@
+{
+  "task_id": "22a4bbc2",
+  "factory_sha256": "19742d91dc0ab51defb7daf18a928d59f527f9b0a019d164bcd39a293712e555",
+  "constructor_sha256": "7c625d865e990d252620a12fbe9d2ff5080d41aa1ee37b86341679426a44495e",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 265572526248806,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 3.106889999937266,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "In the original task, every row holds one bar colour (1 or 8) on a background of 0. Consecutive rows with the same colour form one bar, and the bars alternate colours from top to bottom. Bars number 0, 3, 6, and so on, counted from the top, have their non-background cells recoloured to 2.\n\nWhere the original top edge goes under each D4 transform (the row flip for indices 4 and up does not move rows):\n- d4%4 == 0: stacking runs along rows, starting at the top.\n- d4%4 == 1: stacking runs along columns, starting at the right.\n- d4%4 == 2: stacking runs along rows, starting at the bottom.\n- d4%4 == 3: stacking runs along columns, starting at the left.\n\nThe emitted program works directly on the visible grid:\n1. For each line (row or column) along the stacking axis, it reads the line's non-background colour, taking it in order from the visible start edge.\n2. It groups maximal runs of equal colour into bars.\n3. It sets the non-background cells of every third bar, starting with the first, to palette[2].\n\nThe colour roles are constants: background is palette[0] and the recolour target is palette[2]. The bar colours are read from the pixels, so it does not matter which of the two colours comes first.",
+    "limitations": "- **Ties at bar boundaries:** the program assumes bar colours strictly alternate along the stacking axis, as the generator guarantees. Two adjacent bars of the same colour would be merged into one bar.\n- **Empty lines:** a line made entirely of background would count as its own bar. The generator never produces one.\n- **Demonstrations:** the program does not read the demonstrations; the orientation and colours are fixed by d4 and palette.\n- **Fixtures:** they agree with the uniform rule; no contradictions were found.\n- **Testing:** I have not run any tests."
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "task_id": "310f3251",
+  "factory_sha256": "e7d7d91d21c31a74271fc4595a070996942a790178c967953843651f0ef74201",
+  "constructor_sha256": "9350d038df2c11015c7e8ad6143007d984a360ecb321fb5f535806c780b54b35",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 8329821078460,
+  "d4": 7,
+  "unique_base_inputs": 519,
+  "seconds": 1.8943468340439722,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "In the original orientation each coloured pixel casts a shadow of colour 2 one step diagonally up-left. The shadow wraps around the motif's edges (toroidally) and is painted only on background cells, so pixels are never overwritten. The modified motif is then tiled 3x3. The factory rewrites the shadow offset (-1,-1) directly into visible coordinates. A row reversal (d4>=4) negates dx. Each clockwise rotation maps (dy,dx) to (dx,-dy). Wrapping stays modulo the visible height and width, because both reflection and rotation are bijections of the torus that preserve modular adjacency. The 3x3 tiling is invariant under D4. Colour roles are fixed as constants: background = palette[0] and shadow = palette[2]. Using a constant background instead of the most-common colour avoids tie problems, e.g. size-2 grids with two pixels where half the cells are coloured.",
+    "limitations": "Assumes the background colour is always the original colour 0 (palette[0]) and the shadow colour is original colour 2 (palette[2]), as in the constructor. The demonstrations are not consulted. Pixel colours are taken as whatever non-background colours appear. No fixture contradictions were observed: the generator's column-wrap and the 'pixels drawn after shadows' rule match the toroidal, background-only shadow rule. This factory has not been run or tested."
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "task_id": "363442ee",
+  "factory_sha256": "204befa4085f5731b71daeb75596c8d220284ed755ef6609ecbc3ca020a42167",
+  "constructor_sha256": "71b0fdce6231663e5ec45f0680d50e57e9adca2d677969fd5f1007c0f50f91cc",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 15371277536881,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 6.012819916009903,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The factory works out the visible layout from d4. It maps the original template corner (0,0) of the 9x13 canonical frame forward through the D4 transform: first reverse each row if d4>=4, then rotate clockwise d4%4 times. From that it derives three boolean constants. DIV_VERTICAL says whether the gray divider is a column (even rotation count) or a row (odd rotation count). TPL_LOW_SIDE says whether the template lies on the low-index side of the divider. TPL_FIRST_ALONG says whether the template sits at the low-index end of the template strip. The palette fixes the divider colour as palette[5] and the marker colour as palette[1].\n\nThe emitted program has separate explicit branches for vertical and horizontal dividers. In each branch it:\n- finds the full line of the divider colour, falling back to a position derived from the grid dimensions;\n- sets the template size s from the strip width between the divider and the edge;\n- crops the s x s template from the specified corner, as is, so template cells of any colour are kept, including background;\n- collects marker cells on the far side of the divider;\n- stamps the visible template centred on each marker, clipped to the far side.\n\nThe template is stamped exactly as it appears in the visible grid. Because D4 is linear, this matches the transformed output, and no grids are rotated or recoloured.",
+    "limitations": "- **Fixed template size.** The generator's domain assumes size=3 (9x13 canonical grid). The template corner is derived from that canonical frame, but the divider position and template size are re-inferred from the visible grid.\n- **Overlapping stamps.** If stamps overlapped, later markers in row-major order would overwrite earlier ones. This never happens in the generator, whose markers sit on a 3-cell lattice.\n- **No fixture contradictions.** The approved fixtures are consistent with the uniform rule.\n- **Untested.** No tests were run."
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "task_id": "256b0a75",
+  "factory_sha256": "df7d17a565e1cb4eaa242ff456cba14668b95449e477717c346b3d1e341f3e3b",
+  "constructor_sha256": "a24ba6f2045f870b2d17d0e20780907623007d01356aca11876149d10fc334af",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 241269928662928,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 17.91697208303958,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The rule: the input has four 3-cell L pieces at the outer corners of a rectangle. Three of them are the frame colour (palette[8]) and one is the fill colour. The repaired program finds the rectangle by structure instead of collecting every 3-cell 2x2 component. Each L component is classified by its missing cell: a top-left piece lacks its bottom-right cell, top-right lacks bottom-left, bottom-left lacks top-right, and bottom-right lacks top-left. These outward-pointing orientations stay the same under every D4 transform, so the classification works directly in visible coordinates. A rectangle candidate is a TL/BR pair with matching TR and BL pieces at the shared rows and columns, a span of at least 4, and exactly three pieces sharing one colour. Candidates whose shared colour equals palette[8] are preferred. Scattered pixels never use colour 8, so the real rectangle is the only frame-coloured candidate. Once the rectangle is found, the mechanism follows the generator and archived solver: (1) every background cell in the full row band and full column band becomes the fill colour; (2) a frame-coloured hollow rectangle is drawn; (3) each input pixel in a band but outside the rectangle sends a ray away from the rectangle (left/right in the row band, up/down in the column band) over background cells. The ray stops at the grid edge or the next non-background input cell. Pixels outside both bands are left unchanged. The generator processes pixels in reading order and later pixels overwrite earlier rays. This gives the same result as stop-at-pixel rays, so the labels match this rule. A fallback using the bounding box of frame-coloured cells is kept only for safety.",
+    "limitations": "Assumes the background is palette[0] and the frame is palette[8], as the constructor always produces. If several frame-coloured rectangle quadruples existed (impossible in the generator, since scattered pixels never use colour 8), the topmost-leftmost one is taken. Not tested by me; correctness rests on reading the generator and the counterexample.",
+    "diagnosis": "The failed factory treated every same-colour 3-cell component with a 2x2 bounding box as a corner piece. The generator's scattered-pixel placement only checks 4-neighbours against the grid containing the four corner pieces, not against other scattered pixels. As a result, adjacent same-colour scattered pixels can form L-shaped triples. In the counterexample (train pair 2, which is the false entry in [true,false,true,true]), the colour-4 pixels at (14,2), (15,1) and (15,2) form such an L. It was counted as a corner, which made X0=1 instead of 9 and corrupted the bands, frame and rays. The FRAME preference did not help because Y0/X0/Y1/X1 were still taken as min/max over all detected 'corners'. The fix chooses only the four L pieces that geometrically form a rectangle with the correct outward orientations, with three of them in the frame colour.",
+    "constructor_issue": "No label inconsistency found. Two generator quirks are worth noting, and both are handled by the uniform mechanism. First, scattered pixels may touch each other and form L-shaped decoys. Second, rays are computed against a grid containing only earlier pixels, but the later-overwrite order makes the final output identical to rays that stop at any non-background input cell."
+  }
+}

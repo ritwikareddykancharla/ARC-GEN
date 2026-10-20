@@ -1,0 +1,21 @@
+{
+  "task_id": "45a5af55",
+  "factory_sha256": "cd6247587aa27aa5940bbb44ca2cfe31155d9e74c9805a26cbe2245b31a8c66f",
+  "constructor_sha256": "107404d5aad4f107573132ecea490bb665028295eb2b046e1ef7cf3e7f04a640",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 4841046310664,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 4.595056791906245,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "Each input stripe is one solid colour. Read in the right order, the stripes give the ring colours from the outside in. The last stripe is a duplicate and is not used. In the original orientation the stripes are rows read top to bottom.\n\nThe horizontal flip (d4>=4) leaves solid rows unchanged, so only the clockwise rotation count matters:\n- k=0: rows, read top to bottom\n- k=1: columns, read right to left\n- k=2: rows, read bottom to top\n- k=3: columns, read left to right\n\nThe emitted program reads one stripe colour per line along that visible axis and direction. It builds an N x N canvas with N = 2*(L-1), filled with the outermost colour. It then paints each run of same-coloured rings inward as one stage, using Chebyshev depth to the border, as the archived solver does.\n\nThe concentric-ring output is invariant under every D4 transform, so no output rotation is needed. Colours are read straight from the pixels, so any palette works without remapping.",
+    "limitations": "The program assumes the constructor's domain: solid stripes, at least 3 of them, with the last stripe duplicating the one before it. It samples one pixel per stripe and does not check that stripes are uniform. Inputs with fewer than 2 stripes fall back to a trivial 1x1 output, which is outside the domain. The fixtures agree with this uniform rule. No tests were run."
+  }
+}

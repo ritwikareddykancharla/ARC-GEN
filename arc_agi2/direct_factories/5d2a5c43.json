@@ -1,0 +1,21 @@
+{
+  "task_id": "5d2a5c43",
+  "factory_sha256": "89f31e86c7bbaded5c2f184f0f95d77d9c880cda35ec7bc2342078c90293613f",
+  "constructor_sha256": "71ae2d5281951dbf4b0a3dec652b560098690ed7e4dc087ad45402df88df3f0b",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 276009801138303,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 2.80275991698727,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "In the original task, a full column of colour 1 splits the grid into two equal panels. Each output cell is 8 if either panel has a 4 at that position, and 0 otherwise. Under any D4 transform the two panels are still related by a pure translation of panel-width+1 cells, measured perpendicular to the divider. A flip swaps which panel sits on which side, but OR is symmetric, so the alignment does not change. The divider is a column when d4%4 is 0 or 2 and a row when d4%4 is 1 or 3. The factory therefore emits a program that works directly in visible coordinates. It searches the chosen axis for lines made entirely of the divider colour palette[1]. Because that colour appears nowhere else in the domain, an accidental all-background line can never be picked. If several lines qualify, it takes the one nearest the middle. It then slices the two panels on either side of the divider without rotating them, and ORs the marks (palette[4]) into palette[8] on a palette[0] background. The archived failure came from mistaking a uniform background column for the divider. Keying on the divider colour avoids that, and the fixtures are consistent with this single uniform rule.",
+    "limitations": "The program assumes the divider is a single complete line of palette[1] and that the panels have equal size, as the constructor always produces. If the panels were unequal, both would be cropped to the smaller size, aligned at the edge nearest the start of each slice. If no divider line exists, it falls back to the middle line. The demonstrations are not used, because the colour roles are fixed by the palette constants."
+  }
+}

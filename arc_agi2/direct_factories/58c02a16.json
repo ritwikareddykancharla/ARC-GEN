@@ -1,0 +1,21 @@
+{
+  "task_id": "58c02a16",
+  "factory_sha256": "2c6e3c084288096b3124998a7232187dc8ec58cacc9f5038468ba19f1e98ba3b",
+  "constructor_sha256": "781a90688b3d27343118209f3902749990a271598ebe87d83e217c51075b9a5a",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 202228193707588,
+  "d4": 7,
+  "unique_base_inputs": 981,
+  "seconds": 4.178372667054646,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The generator puts a motif in the top-left corner. An L-shaped frame closes it off: one row directly below the motif and one column directly to its right. The output tiles the grid with motif-sized blocks starting from that corner. Each block shows the motif's shape. It is coloured A (the motif colour) when the motif cell at (block_row mod h, block_col mod w) is filled, and the frame colour C otherwise. Partial blocks at the far edges are clipped.\n\nUnder D4 the rule's structure stays the same. Only the anchoring corner moves, and rows and columns may swap roles, which the symmetric per-axis rule absorbs.\n\nThe factory finds the visible corner as follows. Corners are numbered clockwise: TL=0, TR=1, BR=2, BL=3. Reversing the rows (d4>=4) moves TL to TR, and each clockwise rotation advances the corner by one. The emitted program then measures distances from that corner directly: y or H-1-y, and x or W-1-x.\n\nIt finds the frame as the smallest (r, c) offset where:\n- the row and column of the frame are one non-background colour C;\n- C is absent from the motif;\n- everything beyond the frame is background.\n\nThe last check rejects false L-shapes made of motif colour inside a 3x3 motif. The archived solver could be fooled by those. It falls back to the archived criterion if nothing matches. A is inferred from the motif pixels, and the background is the constant palette[7]. Output pixels are written at their visible coordinates, so tiling grows away from the visible corner and clips at the opposite edges.",
+    "limitations": "Assumes the background is the palette image of 7 and that the motif and frame sit exactly at the corner implied by d4, as in the constructor. If no frame is found, the program returns the input unchanged. The fixtures agree with the uniform rule; no contradictions were found. The factory was not executed by me."
+  }
+}

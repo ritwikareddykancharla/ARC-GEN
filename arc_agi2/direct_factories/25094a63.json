@@ -1,0 +1,23 @@
+{
+  "task_id": "25094a63",
+  "factory_sha256": "876c29ef27c51b2a7f92d99bf865fe923c2ad9ab5ba55f030019d468fd58af54",
+  "constructor_sha256": "300ba0a059c38ae1f16393c6eee3cc69f86ba37269de53a1207c1330198903d8",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 211097149135499,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 33.889526000013575,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The emitted program repeatedly finds the largest solid single-colour rectangle among unclaimed cells, with both sides at least 4. It claims that rectangle and paints it with palette[4]. It stops when no such rectangle remains. Each row is scanned with a column-height histogram, so the program works directly on the visible grid at any size, including rectangular grids and boxes touching the border. The mechanism is symmetric under D4: an axis-aligned rectangle stays an axis-aligned rectangle with its sides swapped. So no direction needs remapping. The only colour role is the fill colour, which becomes palette[4]. The box colours are discovered from the pixels.",
+    "limitations": "The minimum side of 4 comes from the constructor domain: wides and talls are drawn with randint(4,10). Pure-noise uniform 4x4 patches are possible but extremely unlikely, about 5^-15 per position. A box could in principle be outgrown by a larger rectangle that uses about 9 or more same-coloured noise cells next to it. The dust cells reduce this but do not remove it, and the probability is negligible. Ties between equal-area candidates are broken by scan order. That only matters for overlapping candidates, which the generator does not produce, since its boxes are separated and have distinct colours.",
+    "diagnosis": "The failure is on the query of a d4=0 episode, so orientation plays no part. The query input has a 3x3 patch of noise of the same colour (canonical colour 2, visible 7) at rows 3-5, cols 12-14. The generated label paints only the actual boxes: 1s at rows 15-19, cols 3-10, and 7s at rows 22-25, cols 17-23. The failed factory copied the archived threshold (both sides at least 3, area at least 9), so it also painted the 3x3 noise patch. With 5 hues, a uniform 3x3 noise patch occurs roughly once per few hundred grids, which explains failing after about 800 fresh pairs. The generator never makes boxes smaller than 4x4. Raising the minimum side to 4 matches the constructor's real domain and removes this false positive without special-casing the example. I also removed the orientation-dependent scan, which was unnecessary for this symmetric rule, and verified that the fix selects exactly the two labelled boxes in the counterexample query.",
+    "constructor_issue": "No label inconsistency. The constructor's labels follow its own mechanism: it paints exactly the placed boxes, each at least 4x4. The mismatch is in the archived solver and the prose rule, which use a 3x3 / area-9 threshold. That threshold fits the canonical fixtures but is too permissive for fresh generator noise."
+  }
+}

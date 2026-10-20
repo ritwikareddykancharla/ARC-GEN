@@ -38,6 +38,9 @@ def generate(rows=None, cols=None, lengths=None, angles=None):
     grid, output = common.grids(16, 16, 7)
     for row, col, length, angle in zip(rows, cols, lengths, angles):
       for i in range(length):
+        # Negative Python indices would wrap a diagonal onto the opposite edge.
+        if not (0 <= row + i < 16 and 0 <= col + i * angle < 16):
+          return None, None
         if grid[row + i][col + i * angle] != 7: return None, None
         grid[row + i][col + i * angle] = 5
         output[row + i][col + i * angle] = 8 if (pos < neg) == (angle < 0) else 2
@@ -58,7 +61,7 @@ def generate(rows=None, cols=None, lengths=None, angles=None):
       lengths = [common.randint(2, 10) for _ in range(num_lines)]
       angles = [2 * common.randint(0, 1) - 1 for _ in range(num_lines)]
       rows = [common.randint(0, 16 - length) for length in lengths]
-      cols = [common.randint(0 if angle == 1 else (16 - length),
+      cols = [common.randint(0 if angle == 1 else (length - 1),
                              (16 - length) if angle == 1 else 15) for length, angle in zip(lengths, angles)]
       grid, _ = draw()
       if grid: break

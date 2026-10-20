@@ -1,0 +1,21 @@
+{
+  "task_id": "21897d95",
+  "factory_sha256": "0991f4ab6d30797db15a2629912d1687cdc4e02d656463617c6ef813cac67262",
+  "constructor_sha256": "7f99ebe40e4bd3de98e1a0829243c8cfee9a4cef981803309428d7d43f1b534c",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 241474529851949,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 49.63219420798123,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The emitted program works directly on the visible grid. Marker colour MARK = palette[1] and L colour LCOL = palette[9] are baked in as constants.\n\nT markers: the program scans every cell and all four stem directions in visible coordinates. A T is a pair of MARK bar cells, a MARK stem, a non-MARK back cell and two non-MARK cells flanking the stem. That detection is symmetric under D4, so it stays native. The owner colour comes from the flanking cells. The paint colour is the centre colour if it is not MARK, otherwise the owner colour.\n\nRepainting: all T cells are erased to their owner. The 5-cell L (a 3x3 box with a full row and full column meeting at a corner; LCOL is checked first, other non-marker colours as fallback, like the archive) is erased to the majority colour of its 8-neighbourhood. Then each target region is flood-filled. The target is the cell two steps along the stem, and the 4-connected same-colour region is taken from the erased layout. Fills are written to a separate output grid, so repaints do not cascade.\n\nRotation: the L's corner is read in visible coordinates as the signs (dy, dx) from its box centre. The factory maps each canonical corner (TR->CCW, TL->CW; BL/BR follow the archived convention) through the D4 vector transform: a horizontal flip negates dx, and each clockwise turn sends (dy, dx) to (dx, -dy). For reflections it also inverts the rotation sense, because conjugating a rotation by a reflection gives its inverse. The repainted visible grid is then rotated with np.rot90 by that visible k. Without an L there is no rotation.\n\nThe demonstrations are not needed. I checked the rule by hand against the canonical fixtures and found no contradictions.",
+    "limitations": "Nothing has been run; this is reasoned from the constructor and the archived solver. The program assumes the constructor's domain: T markers are separated by clear margins, the target cell is in bounds, regions that share a colour never touch so a colour component equals a region, and there is at most one 5-cell L. If a scene contained an incidental 5-cell L of a non-marker colour, it would be treated as a rotation cue, as in the archived solver; the generator rejects such scenes. Ties in the L-erase majority vote follow Counter order, but in the domain the L sits strictly inside one region, so no tie arises."
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "task_id": "445eab21",
+  "factory_sha256": "bfe162d219d0000d089a04cc2ea3ddb741876787ecb7328695bb7da0eb1305b5",
+  "constructor_sha256": "6aa6cbe415e011e7feb9c5f8f02f1153b264009def195ebf2a25a3bbecbb33be",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 274295623370335,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 3.29774362500757,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The generator draws two hollow rectangular frames in distinct non-background colours. The output is a 2x2 block in the colour of the frame whose bounding-box area (wide*tall) is strictly larger. The generator guarantees that the two areas differ.\n\nThe emitted program:\n- treats palette[0] as the background;\n- finds the 4-connected single-colour components;\n- measures each component's bounding-box area;\n- returns a 2x2 grid filled with the colour of the largest one.\n\nWhy D4 needs no specialization: bounding-box area is invariant under every rotation and reflection, and a 2x2 output stays 2x2. The palette is handled because the background is the constant palette[0] and the winning colour is read directly from the pixels.\n\nThis follows the constructor's actual criterion (bbox area), not the archived solver's criterion (hole area first). The two can disagree on fresh scenes, for example a 3x10 frame against a 5x5 frame. Hole area and cell count are kept only as secondary tie-breaks, and ties never occur under the constructor's domain.",
+    "limitations": "The output size is fixed at 2x2, matching the constructor. It is not derived from the grid (the archived solver used size//5). The program assumes the two frames have distinct colours that differ from the background, as random_colors provides. If two same-coloured frames touched, they would merge into one component. The archived solver's hole-area key would contradict the generator on some fresh scenes, so it was not used as the primary key. The approved fixtures are consistent with the bbox-area rule."
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "task_id": "44f52bb0",
+  "factory_sha256": "6d81bb050d3b2e37e34a431b01b7279116564bc89330a8c094786b1409e16a58",
+  "constructor_sha256": "ac73b53e66bd2baf664ec87574236d27687dcbbbd5770e6c5a928e534023d959",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 176820272000917,
+  "d4": 7,
+  "unique_base_inputs": 174,
+  "seconds": 0.7792171658948064,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The original task outputs a 1x1 grid. The cell is blue (1) when the input equals its left-right mirror and orange (7) otherwise. Colour roles are rewritten as constants: palette[1] for symmetric and palette[7] for not symmetric. Background and pixel colours never need to be identified, because the test compares whole grids. For the geometry: reversing each row (d4>=4) leaves the left-right symmetry axis unchanged. Each clockwise rotation swaps the horizontal and vertical axes, so an odd d4%4 makes the emitted program compare the grid with its top-bottom mirror instead. The 1x1 output is unchanged by D4. The emitted program works directly on the visible grid and handles rectangular grids, since numpy flips work for any shape.",
+    "limitations": "The generator rejects any scene where left-right and top-bottom symmetry disagree, so in-domain both axes give the same answer. The axis choice by d4 parity follows the stated mechanism, but in this domain it cannot be distinguished from the other axis. The demonstrations are not used, because the colour roles follow fully from the palette. I have run no tests. The fixtures are consistent with the uniform rule."
+  }
+}

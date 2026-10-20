@@ -1,0 +1,21 @@
+{
+  "task_id": "271d71e2",
+  "factory_sha256": "7129f576d0e8bfa497ffe9494ad2d2810157e15ad7a3e9a424c39b0c49c3b930",
+  "constructor_sha256": "cc366290b662da8296aeb02f1b58455ed64e6529bce656ba1e9996910575b8c0",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 28194860236551,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 13.036690875072964,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The emitted program works directly on the visible grid. It never rotates the grid or remaps colours.\n\n1. **Colours.** The background, wall, 5 and 7 roles become the constants palette[6], palette[9], palette[5] and palette[7].\n2. **Finding boxes.** Each box is a 4-connected component of cells that are neither background nor wall. The constructor keeps footprints at least one background cell apart, so each component is one box.\n3. **Direction and distance.** For each of the four visible sides, the program checks whether the adjacent line spanning the box's extent is entirely wall. That side gives the motion direction. It then counts empty lines until the far wall and computes move = min(#5s, gap+1).\n4. **Which 5s turn into 7.** In the canonical task, the scan goes from the front column backwards. Within each column it sweeps along the motion vector rotated 90\u00b0 clockwise (right\u2192top-to-bottom, up\u2192left-to-right, left\u2192bottom-to-top, down\u2192right-to-left). Pure rotations keep this handedness. Reflections (d4 >= 4) reverse it, so the factory picks a clockwise or anticlockwise secondary sweep from d4. The interior cells are sorted by (front-ness descending, secondary coordinate ascending). The first `move` 5s in that order become 7.\n5. **Redrawing.** The box and its near wall are erased to background. The wall is redrawn just in front of the shifted box, and the recoloured box is stamped at its new position. When the box makes the full move, this wall lands on the far wall and the two merge.\n\nThe demonstrations are not needed.",
+    "limitations": "This has not been run or tested. The program assumes the constructor's domain: footprints are separated by background, and each box has exactly one adjacent full wall line spanning its frame side. Boxes with no wall on any side are left unchanged. Grids outside that domain, such as touching boxes or walls next to several sides, may give undefined results. The fixtures appear consistent with the uniform rule."
+  }
+}

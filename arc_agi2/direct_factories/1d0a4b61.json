@@ -1,0 +1,21 @@
+{
+  "task_id": "1d0a4b61",
+  "factory_sha256": "2cfdafd58fa6b426a378d6dc982e378920058efce0d1a2fc84cb9369fbddb822",
+  "constructor_sha256": "db55ee70a3d28d29db74a3523554c27be4c46cb439d8d0533243f0110c24a4aa",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 173651716794829,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 26.1705109589966,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The generator tiles a 25x25 canvas with a periodic wallpaper of period (height-1, width-1). It then blanks five rectangles with colour 0, and the output is the unblanked wallpaper. Under D4 the canvas stays doubly periodic in the visible rows and columns, possibly with the two axes swapped or reversed. The holes stay axis-aligned rectangles, so the mechanism transfers directly to visible coordinates. The only specialized constant is the hole colour, set to palette[0]. The emitted solve() treats hole cells as unknown and finds the smallest row period p. A row period p is accepted when, for every column, all known cells in the same residue class mod p agree. The column period is found the same way on the transpose. This all-members-agree test is a stricter form of the archived solver's shifted-pair test, and it is unaffected by reflection or rotation. Each periodic class (y mod py, x mod px) takes its value from its known members by majority vote, with the smallest colour winning a tie; ties do not occur when the period is correct. Every hole cell is then filled from its class. In the rare case that every member of a class is blanked, the program uses the motif's built-in mirror symmetry as a backup. The generator mirrors each tile, so the program looks for a reflection offset s per axis such that class r matches class (s-r) mod P. That offset is inferred from the data, so it adapts automatically to reversed axes under D4. Missing classes are then filled from their mirror classes. Nothing outside the holes changes. The demonstrations are not needed and are ignored.",
+    "limitations": "If every periodic partner of a hole cell is blanked and its mirror partners are blanked too, the cell is left at the hole colour, because the information is genuinely lost. The program assumes holes leave enough wallpaper visible to pin down the true period. In principle, holes could hide a contradiction and let a smaller wrong period pass the check; with five rectangles of at most 6x6 on a 25x25 canvas this is extremely unlikely. The fixtures are consistent with the uniform rule. The rule text's mention of emitting staged canvases per hole does not apply to these fixtures, which expect a single fully healed grid, so no contradiction was found."
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "task_id": "508bd3b6",
+  "factory_sha256": "b64879bfaef5e7b5527ee8b7970ae0494c02006b264a3633fdc00876156750d9",
+  "constructor_sha256": "0592ecbe71048e6e163059a88f9d293b74802e54c83211c6006a30461e515ae6",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 98509417737638,
+  "d4": 7,
+  "unique_base_inputs": 355,
+  "seconds": 5.399341332959011,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The emitted program works directly on the visible grid. Colour roles are fixed constants taken from the palette: background is palette[0], wall is palette[2], the new path colour is palette[3], and azure is palette[8]. Any cell that is neither background nor azure counts as wall.\n\nThe ray-and-bounce mechanism has no preferred orientation, so d4 needs no specialisation:\n\n1. Find the azure cells and their chain endpoints, meaning cells with exactly one diagonal azure neighbour.\n2. From each endpoint, step diagonally away from its neighbour.\n3. When the next diagonal cell is wall, bounce once. If the cell one vertical step away is wall, flip the row step; otherwise flip the column step. Because the wall is a full band along one edge, this gives the correct reflection whether the wall is horizontal or vertical in visible coordinates.\n4. The walk stops when it leaves the grid. It is invalid if it hits a second wall or a non-background cell.\n5. Candidates are ranked by: exits the grid cleanly, then exactly one bounce in total, then longest path. Ties keep the first candidate found.\n6. The winning path is painted in palette[3].\n\nThe walk also handles a generator edge case that the archived solver gets wrong. When depth=1, mid=1 and shown=3, the visible azure segment is already V-shaped and contains the bounce. The program detects that the azure cells are not collinear, counts that bounce in advance, and extends the far end straight off the grid. The other generator cases are handled naturally:\n- When the bounce vertex is itself the last azure cell, the very next step hits the wall and bounces immediately.\n- When the azure line is straight, one end reaches the wall and the other leaves the grid, so the bounce criterion picks the right end.",
+    "limitations": "I have not run any tests, so this is unverified until the host checks it.\n\n- Colour roles come from the palette constants, not from the demonstrations.\n- The wall is assumed to be a solid band along one edge, which is what the constructor produces. With odd wall shapes or corner contacts, the vertical-first bounce test may pick the wrong axis.\n- A lone azure cell, which the generator never produces, is handled by trying all four diagonal directions.\n- The fixtures agree with this uniform rule. However, the archived solver leaves the grid unchanged in the depth=1, mid=1, shown=3 case, whereas the generator's output continues the path straight. This program follows the generator."
+  }
+}

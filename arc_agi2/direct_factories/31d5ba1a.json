@@ -1,0 +1,21 @@
+{
+  "task_id": "31d5ba1a",
+  "factory_sha256": "c3092eb8fbb50337c108de38c0cdcd4c177326fd7bdc632acc5c685d0fb3bca3",
+  "constructor_sha256": "d33bd3dd36d31c328dd22e23963cfd0395b30f2bc0e753accc02fc5c9a9f09e2",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 255295559792879,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 1.3460880409693345,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The original rule stacks two equal panels vertically (top 3 rows coloured 9, bottom 3 rows coloured 4). The output is the cell-wise XOR of their occupancy, painted 6 on background 0. Every D4 transform maps the translation between the two panels to another translation. So the visible output is still the pointwise XOR of the first and second panel along the split axis. If d4 has an odd number of clockwise rotations, the split axis becomes columns: the left and right halves are compared, each w//2 wide. Otherwise the split stays on rows: the top and bottom halves, each h//2 tall. Reflections do not change which panel comes first in a way that matters, because XOR is symmetric. Colour roles are specialised directly: background is palette[0] and the result colour is palette[6]. Any non-background cell counts as filled, so the panel colours palette[9] and palette[4] need no explicit handling.",
+    "limitations": "This assumes the constructor's domain: two equal panels stacked along one axis, with an even total length along that axis. If the length were odd, the trailing extra line would be ignored, as in the archived solver. Demonstrations are not used, because the transform and palette fully determine the constants. Not tested here. The fixtures are consistent with the uniform XOR rule."
+  }
+}

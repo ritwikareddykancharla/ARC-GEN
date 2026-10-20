@@ -1,0 +1,21 @@
+{
+  "task_id": "2013d3e2",
+  "factory_sha256": "def9d6f61a3cbbeada19f747e8c27ff60ac6310c75e29e8ed05edfd40d301775",
+  "constructor_sha256": "aa26cf885c28a9641ff53fbfe473ed571c02f1c7e9ced345832a1bd09f8a249d",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 161256497446363,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 1.7120770830661058,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The generator draws a 4-fold rotationally symmetric 'pinwheel' in a 6x6 block. Its non-background bounding box is always exactly that 6x6 block, because each chosen corner pixel, (0,0), (0,2) or (2,0), together with its rotations reaches every edge of the block. The output is the generating 3x3 quadrant, which is the top-left of the bounding box. The emitted program finds the bounding box of all cells that are not the background colour, palette[0], directly in visible coordinates. It then crops the half-size quadrant at the corner where the original top-left corner lands under the D4 transform. For pure clockwise rotations k = 0, 1, 2, 3 that corner is TL, TR, BR, BL. When the row reversal comes first (d4 >= 4), it is TR, BR, BL, TL for k = 0, 1, 2, 3. Cropping that quadrant of the visible figure equals the transformed expected output, because the transform maps the original TL quadrant onto that quadrant of the transformed figure.",
+    "limitations": "Background is fixed as palette[0]. That matches the generator, whose canvas is colour 0 and whose figure colours come from random_colors, assumed to exclude the background. Quadrant size uses ceil halves of the bounding box, as the archived solver does. Under the generator the box is always 6x6, so this gives 3x3. The demonstrations are not used. The fixtures agree with the uniform rule, and no contradictions were found. I have not run any tests."
+  }
+}

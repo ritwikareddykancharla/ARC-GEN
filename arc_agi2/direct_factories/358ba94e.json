@@ -1,0 +1,21 @@
+{
+  "task_id": "358ba94e",
+  "factory_sha256": "35d11ee7234ef98ed3b8df7839b19439d7b0a0ed4cc45b32521bd5cdee3ab2e2",
+  "constructor_sha256": "f0e804f47ab0a794dcfc99a9a33f9a451ae146780606c354cc9b8c4a68fdabbe",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 35729179728860,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 14.894326749956235,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The rule is to find the 4-connected foreground objects, which are 5x5 squares with holes punched in them. Count the cell sizes and pick the object whose size occurs exactly once. Then crop its bounding box straight from the visible input grid. Nothing in this mechanism depends on orientation. Connected components, cell counts and bounding-box crops all work the same in any D4 frame. Cropping in visible coordinates automatically produces the correctly transformed square, holes included. The only role that depends on colour is the background, which is specialised to palette[0], the image of original black. If that colour is somehow absent, the program falls back to the most common colour. The foreground colour is not fixed: any cell that is not background counts as foreground. Holes always sit in the 3x3 interior and never touch each other, even diagonally, so each square remains one 4-connected component. Squares are separated by a gap of at least one cell, so different squares never merge. The constructor guarantees that the rare hole count differs from the common one, so exactly one square has a unique size.",
+    "limitations": "This assumes the constructor's domain: squares of a single foreground colour on a palette[0] background, with exactly one size that occurs once. If no unique size exists (outside the domain), the program falls back to the smallest object, chosen in top-left reading order of visible coordinates, as the archived solver does. It does not use demonstrations. The fixtures are consistent with the uniform rule. I have not run any tests."
+  }
+}

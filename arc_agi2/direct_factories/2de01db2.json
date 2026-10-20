@@ -1,0 +1,21 @@
+{
+  "task_id": "2de01db2",
+  "factory_sha256": "49a20f4d7307b968cd598008e11299f28a15c4bfa41614b2392df660c4847337",
+  "constructor_sha256": "b4bb08e93fe3ad290a6c3728adb851bfea8657d0f18a2a74f3d7ac775f6d3d3b",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 145532775689014,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 2.822398207965307,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "In the original task each row is processed on its own. The row's main colour is its most frequent non-background colour. The output line puts the main colour on every cell where the input did not hold it, and background on every cell where it did. Noise cells are dropped.\n\nThe D4 transform first reverses rows for indices >= 4, then rotates clockwise d4%4 times. Original rows therefore stay visible rows when d4%4 is 0 or 2, and become visible columns when it is 1 or 3. The factory sets COLUMNS from this. Direction along a line does not matter, because the complement operation is symmetric.\n\nPalette roles are written in as constants:\n- The background is palette[0].\n- Ties in frequency are broken the way the archived solver does it: np.unique followed by argmax picks the lowest original colour value. The emitted program uses a RANK table mapping each visible colour to its original value, so the tie-break is the same in visible coordinates.\n\nThe program works directly on the visible grid. It does not rotate, does not use a normalization wrapper, and does not remap colours.",
+    "limitations": "The factory assumes palette is a permutation indexable over 0..9. Frequency ties are rare: the generator never samples them, and only one canonical row (pair 2, row 1) has one. They are resolved by the lowest original colour value, which matches the archived reference. An all-background line stays all background. Nothing contradicted a uniform rule in the fixtures. No tests were run."
+  }
+}

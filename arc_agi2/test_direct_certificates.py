@@ -12,6 +12,13 @@ from .runtime import reference
 
 
 class Certificates(unittest.TestCase):
+    def test_spurious_symmetry_centre_does_not_win(self):
+        from .program_targets import compile_target
+        case = json.loads((cert.BASE / "reports/regression-cases/"
+                           "1b60fb0c-spurious-centre.json").read_text())
+        source, _ = compile_target("1b60fb0c", case["d4"], case["palette"])
+        self.assertTrue(verify(source, case["episode"])["all_exact"])
+
     def test_factories_produce_direct_programs_for_all_orientations(self):
         from .program_targets import compile_target, audit_target
         palette = [3, 9, 0, 7, 2, 8, 1, 6, 4, 5]

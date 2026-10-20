@@ -1,0 +1,21 @@
+{
+  "task_id": "6455b5f5",
+  "factory_sha256": "2437fd8fb89b7a9398624f60e22f1b9dc5faf7084a736b4025c6c9330591ebf7",
+  "constructor_sha256": "cce8e6051a72a85f551fd1966b9cc2301eec9cd5bfa18fce25e088c2d4d1e27a",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 165120273851930,
+  "d4": 7,
+  "unique_base_inputs": 992,
+  "seconds": 11.30568566697184,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The walls cut the background into separate pockets. The program finds each pocket as a 4-connected component of background cells, measuring it directly in the visible grid. Every pocket of maximal size is painted palette[1], and every pocket of minimal size is painted palette[8], so all tied pockets are painted. Walls and all other pockets stay unchanged. The rule is the same under every rotation and reflection, because pocket sizes and 4-connectivity do not change under D4, so no axis needs specialising. Only the colour roles are specialised: background is palette[0], the largest-pocket fill is palette[1] and the smallest-pocket fill is palette[8]. Background is taken as the fixed palette[0] constant rather than the most common colour. This avoids misidentifying the background in rare generated grids where walls outnumber black cells.",
+    "limitations": "The program assumes palette maps each colour to a distinct colour, so palette[0], palette[1] and palette[8] are different. The generator guarantees that the smallest pocket size is strictly less than the largest, so the two paint steps never touch the same pocket. If that were ever violated, the minimum colour would win, matching the archived solver's painting order. The fixtures agree with this uniform rule and show no contradictions. I have not run any tests on the factory or the emitted program."
+  }
+}

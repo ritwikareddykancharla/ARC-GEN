@@ -1,0 +1,21 @@
+{
+  "task_id": "20270e3b",
+  "factory_sha256": "e5425e73b062c0a704f51a2ff99a532fad381520f0f42fd36ab0e8d67be5baf7",
+  "constructor_sha256": "5672f210b25e9f03c64f4a2cb53745eb9be7489a88a2c4abd79317408ebdde1d",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 213466066429409,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 7.091371624963358,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The emitted program solves the task directly in the visible grid. It does not rotate the grid back to a canonical orientation.\n\nColour roles become constants: piece = palette[4] and marker = palette[7]. The filler is the most common remaining colour in the query. If the query has no such colour, the program looks in the demonstration outputs, and then falls back to palette[1].\n\nThe two marked pieces are the non-filler 8-connected components that contain marker cells. For each marker run, the program tests all four directions to find which side its piece lies on. It keeps the pair of opposite directions. It then translates piece B so that its marker's first cell (in reading order) lands one step into piece A from marker A's first cell: shift = a0 - b0 - dB. The output is the bounding box of the union of both pieces, drawn on the filler colour, with the markers removed.\n\nNo axis is specialized because the generator itself transposes scenes at random, so both join axes occur natively. All four directions are tested, so rotations and reflections map the vertical and horizontal joins onto each other.\n\nTaking the reading-order-minimum cell of each marker is safe under any D4 transform. The two marker runs are parallel and of equal length, so this choice always picks corresponding ends of the two runs. Which piece counts as A and which as B does not matter, because translating either piece and then cropping gives the same picture.",
+    "limitations": "No tests were run. The program assumes the constructor's domain:\n- exactly two pieces, not 8-adjacent to each other;\n- each piece is connected and carries one straight marker run;\n- both markers have the same length;\n- the grid uses exactly three colours.\n\nIf the markers allow no pair of opposite directions, the program falls back to the first candidate direction, matching the archived solver. The supplied fixtures are consistent with the uniform rule; I found no contradictions."
+  }
+}

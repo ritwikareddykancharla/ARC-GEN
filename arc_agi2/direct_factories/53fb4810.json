@@ -1,0 +1,21 @@
+{
+  "task_id": "53fb4810",
+  "factory_sha256": "3ea356ff9ce1655b65478777a172e9efe9b98b90c71c8807bd3f0edf57e61216",
+  "constructor_sha256": "ba77acb47cbd9a2af18dd5a72b7b3345c0234b5555336fdb7fcfc67d85c40a61",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 75175544838180,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 8.489666666951962,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The rule is already isotropic. Every colour-1 blob is scanned on all four sides: up, down, left and right. The program reads the stub from the input as the run of consecutive lines beyond the blob's outermost edge line in which every cell is neither background nor blob colour. If that run reaches the grid border, the strip counts as fired and is left alone. Otherwise the stub is repeated periodically outward to the border, written into a copy, and overwrites whatever is in the way. All sides are handled in visible coordinates, so a D4 transform only changes which side the stub sits on and which direction it extends. The program needs no axis specialisation. Values are copied position-for-position along each line, so reflections that reverse the perpendicular order are handled automatically. Only the colour roles are specialised: the blob colour becomes palette[1] and the background becomes palette[8], both baked in as constants. Strip colours are copied as read from the input, so they need no mapping.",
+    "limitations": "Background and blob colours are fixed constants from the palette rather than inferred from the grid. That matches the constructor, which fixes background 8 and blob colour 1. Blobs are 4-connected components of the blob colour. The generator guarantees that inputs are separated by a one-cell margin and that extensions avoid each other, blobs and live stubs, so the order in which blobs and sides are processed does not matter. If extensions ever overlapped (outside the constructor's domain), the later-processed one would win. The demo pairs are not used. No contradictions with the fixtures were found: the rule reproduces both train pairs and the test pair."
+  }
+}

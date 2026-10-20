@@ -1,0 +1,21 @@
+{
+  "task_id": "3b4c2228",
+  "factory_sha256": "b1320476e3d29378600144fb09921433443cac416a79961f7b74ae86cc51a4b4",
+  "constructor_sha256": "1faadaed99f16e672e8e152e9f6a118d0d79fbd27f17b9ef5591e86fe2cdd2bb",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 137783886192891,
+  "d4": 7,
+  "unique_base_inputs": 997,
+  "seconds": 5.193943582940847,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The emitted program finds the 4-connected components of the colour palette[3] (the original colour 3) in the grid it is given. It counts the ones that have exactly 4 cells and a 2x2 bounding box. Rotating or reflecting a solid 2x2 square leaves it a solid 2x2 square, so the count is the same in every orientation. The output is a 3x3 grid filled with palette[0]. One cell is set to palette[1] for each counted square, up to 3. In the original task these cells run down the main diagonal, filled from the top-left: (0,0), (1,1), (2,2). The factory works out where those three cells land under the given transform, using the same steps as the spec. For d4>=4 it first mirrors the column (c -> 2-c). It then rotates clockwise d4%4 times, each time mapping (r,c) -> (c, 2-r). It writes the resulting cells into the program as constants, in their original fill order. So, for example, a reflection produces an anti-diagonal filled from the top-right. Colour 2 squares and stray cells are ignored, as in the original rule. Demonstrations are not needed and are not used.",
+    "limitations": "Assumes the palette maps distinct colours to distinct colours, so that palette[3] identifies only the original colour-3 cells. This matches the generator's domain: colour-3 boxes never overlap or touch one another, and there are always 1 to 3 colour-3 2x2 squares. If more than 3 squares appear, the program caps the count at 3, as the archived solver does. The fixtures agree with this uniform rule. No tests were run."
+  }
+}

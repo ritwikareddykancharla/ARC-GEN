@@ -1,0 +1,21 @@
+{
+  "task_id": "23581191",
+  "factory_sha256": "1aa9beef32d7999298ac3fe69556be860c67e6bdf43f5fb99aa5a5364996806d",
+  "constructor_sha256": "7636421e632b0e8ccad8cbbc373145cbab2850fd0621c516cb3340ab298f76ab",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 232478374849985,
+  "d4": 7,
+  "unique_base_inputs": 603,
+  "seconds": 2.232556959032081,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "Each non-background seed pixel gets extended into a full horizontal and a full vertical line in its own colour. Any cell reached by the lines of two or more different seeds becomes the crossing colour, which is the original red 2 mapped through the palette. A seed's own row and column count as a single reach, so its own centre keeps its colour.\n\nThe mechanism looks the same in every D4 orientation. Rotation swaps rows and columns and reflection reverses them, but the set of row/column lines through each seed, and their intersections, map onto themselves. Because of that, the emitted program works directly in visible coordinates with no axis-specific rewriting.\n\nPalette roles are specialised as constants: the background is palette[0] and the crossing colour is palette[2]. The seed colours (palette[8] and palette[7]) are read from the pixels themselves. The program handles any rectangular H by W grid.",
+    "limitations": "The program assumes the background is exactly palette[0] and the crossing colour is palette[2], as in the constructor. It does not infer these from the demonstrations.\n\nThe constructor always places the two seeds in distinct rows and distinct columns. If two seeds ever shared a row or column, the shared line would count as reached twice and would become the crossing colour; that case is outside the generator's domain.\n\nThe fixtures are consistent with the uniform rule. This factory has not been tested."
+  }
+}

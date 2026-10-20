@@ -1,0 +1,21 @@
+{
+  "task_id": "28a6681f",
+  "factory_sha256": "e779f71ad59d3deb8ae5ce66cba7f2cc0e29395848b3835dbb1e8c6c7041121d",
+  "constructor_sha256": "97d0ceaefe66ceaef4990239f8ab4280b5dc242aa25138136241d7873bae1aee",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 140317858912290,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 10.65177799994126,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The factory works out where the native axes point in the visible grid. It maps the native gravity vector D=(1,0) and the native 'right' vector R=(0,1) through the D4 transform. A row reversal negates the column component. Each clockwise rotation maps (dy,dx) to (dx,-dy). The colour roles are fixed as constants: EMPTY=palette[0] and WATER=palette[1]; every other colour is solid.\n\nThe emitted program runs the generator's local-flow pour directly in visible coordinates:\n- It removes all water cells.\n- It picks the pour point as the water cell that minimises (p\u00b7D, p\u00b7R). This is the native topmost-then-leftmost order.\n- It pours N cells one at a time. Each cell falls along D while the next cell is in bounds and empty.\n- When blocked, it scans along -R first, then +R. Each scan stops at the grid edge or at a non-empty cell, and looks for the nearest cell that is open in the gravity direction.\n- The nearer side wins. On a tie the -R side (native left) wins because the comparison is strict.\n- If neither side has an open cell, the water cell rests where it is.\n\nGrid borders act as walls and the far edge acts as the floor. If the pour point is already occupied, pouring stops early, the same as in the archived solver.",
+    "limitations": "Assumes the native constructor's semantics: original colour 1 is water and original colour 0 is empty, so their visible colours are palette[1] and palette[0]. Colour roles are fixed by the palette rather than inferred from the demonstrations. The program does not read the demonstrations. No tests have been run. The fixtures agree with the uniform rule; no contradictions were found."
+  }
+}

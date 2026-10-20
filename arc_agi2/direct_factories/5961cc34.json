@@ -1,0 +1,21 @@
+{
+  "task_id": "5961cc34",
+  "factory_sha256": "a69831b3cf9e12dff7e9aafb1bf368a6316e171246d6893fdcf2906107ab9d38",
+  "constructor_sha256": "3c8614c0b5f2ea0bad559711b4da7452c5781bed5e8fa1c9a24602c4a6234ed9",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 240752256570447,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 24.196359417052008,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The emitted program runs the beam-relay mechanism directly in the visible grid. Colour roles are fixed constants: background=palette[8], blob=palette[1], marker=palette[3], launcher=palette[4], beam=palette[2].\n\n1. **Launcher.** The program finds the launcher cell and reads the beam direction as pointing away from the adjacent tail cell. If no tail is found, it falls back to the original 'up' mapped through d4. The mapping first negates the column component when d4>=4, then rotates (dr,dc)->(dc,-dr) once per clockwise turn.\n2. **Objects.** Blobs and markers are 4-connected components of their colours.\n3. **Beam advance.** The beam front moves one step at a time and paints beam colour. It stops at the grid edge or when any lane enters a blob cell.\n4. **Hit.** The hit blob is recoloured. Its marker is the first marker component that is 8-adjacent to the blob, and it is recoloured too. The marker cells become the new front, so the beam is as wide as the marker.\n5. **Exit direction.** This is the side of the blob's bounding box that wholly contains the marker. For a marker inside the box (the notched case), the exit is the single open side: the direction in which no marker cell has a blob neighbour. If that is ambiguous, the program uses the d4 image of the original 'right' fallback.\n6. **Stop and clean-up.** A blob that has already been hit stops the beam. Finally, every non-beam cell becomes background.\n\nApart from the exit-side rule in step 5, this matches the archived solver's semantics. That rule differs on purpose: the archived solver's 'else: right' fallback depends on orientation, so it is replaced with geometric open-side detection.",
+    "limitations": "Nothing has been run or tested. The output is only the final grid; the intermediate teaching stages are not emitted. It assumes the palette is a permutation, so colour roles stay distinct. For marker or blob arrangements outside the constructor's domain (corner markers, markers with no blob, several touching markers), it uses heuristic fallbacks: the centroid side, or the mapped 'right'. These may differ from the archived solver's order-dependent fallback in those cases. The fixtures appear consistent with the uniform rule."
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "task_id": "662c240a",
+  "factory_sha256": "d9a32afc26708e06ec6399ac5ea766f8e3ccd0ad65b64678d52e34b29eed4a6d",
+  "constructor_sha256": "3bf6ce3cffb169e88830c80cb7a58863797d83be0103903907d530fe88568ec7",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 165951754579454,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 2.0885629589902237,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The input is a strip of three square blocks laid along its long axis. In the original orientation the strip is 9x3. After an odd number of quarter turns it is 3x9. The emitted program splits the strip into square blocks along its longer side, in visible coordinates. Two of the blocks are mirror-symmetric about a diagonal, and the output is the one block that is not. In the original frame that diagonal is the main diagonal (b == b.T). Reversing the rows swaps the main and anti-diagonals, and so does each clockwise quarter turn. So the factory picks the main diagonal for d4 in {0,2,5,7} and the anti-diagonal (b == b[::-1,::-1].T) for d4 in {1,3,4,6}. The program then returns the first block that fails the symmetry test for that axis. The test only compares cells with each other, so the palette has no effect on it.",
+    "limitations": "This assumes the constructor's domain: exactly three square blocks, of which exactly one is asymmetric about the transformed diagonal. If no block is asymmetric, the program falls back to the first block. If more than one is, it takes the first asymmetric block in visible order. Neither case occurs in generated data. The demonstrations are not used, because the diagonal axis is fixed from d4. I have not run any tests on this code."
+  }
+}

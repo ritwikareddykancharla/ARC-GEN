@@ -1,0 +1,21 @@
+{
+  "task_id": "456873bc",
+  "factory_sha256": "48584eba6fc9bd4e0f51de9b2016765174230acebd73057492aa9b37dfc7720c",
+  "constructor_sha256": "94d1a6fad66c66f0686fcacc88bdf35747e78e3c7f361425f7ccaa29f99e313b",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 259392411719912,
+  "d4": 7,
+  "unique_base_inputs": 857,
+  "seconds": 5.324288750067353,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The grid is square with side N = k(k+1)-1. It holds a k x k lattice of k x k tile slots at a stride of k+1. Slot (R,C) holds a copy of the motif exactly when motif cell (R,C) is set. Inside that tile, the cell at local (R,C) becomes the marker colour. A solid band covers one row (or column) of slots and must be removed.\n\nThe slot lattice is symmetric under every D4 transform, because the visible position N-1-(r(k+1)+a) equals (k-1-r)(k+1)+(k-1-a). Each transform therefore sends slots to slots and local cells to local cells consistently. It also maps the motif to the transformed motif in both the meta layout and the local layout. As a result, the self-similar rule 'slot (R,C) is occupied iff motif(R,C)' and the rule 'marker at local (R,C) in slot (R,C)' hold unchanged in visible coordinates for every d4. The band can be horizontal or vertical. It is removed by colour wherever it lies, so no axis choice is needed.\n\nThe palette only specialises the colour roles as constants: background=palette[0], tile=palette[2], band=palette[3], marker=palette[8].\n\nThe emitted solver works as follows:\n1. Compute k from the grid size.\n2. Read the motif from the first slot that contains tile colour and no band colour.\n3. Clear the band to background.\n4. Stamp the motif into every slot (R,C) whose motif cell is set.\n5. Paint the marker at local (R,C) of each of those tiles.",
+    "limitations": "- The solver assumes the constructor's domain: a square grid of side k(k+1)-1 and a band that covers one full meta-row or meta-column. Under that domain at least one fully clean, non-empty slot always exists, because the motif spans all rows and columns.\n- A fallback reconstructs the motif from partial tile evidence and the occupied-slot layout. It is heuristic and only matters outside the generator's domain.\n- For non-square grids the solver uses the larger dimension and clips at the edges. The generator never produces such grids.\n- The fixtures are consistent with the uniform rule; I found no contradictions.\n- None of this has been run or tested."
+  }
+}

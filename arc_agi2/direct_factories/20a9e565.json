@@ -1,0 +1,21 @@
+{
+  "task_id": "20a9e565",
+  "factory_sha256": "8a2ebfce06feda07a281673c9382acc5d1b9a6c4cf14d402dc8a738b0cf0cd12",
+  "constructor_sha256": "4acf23391ca708e841bca3902b3de77b981ab8f33b23e47683ef5381cf1471e4",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 12854835381065,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 19.7244480419904,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The emitted program works directly on the visible grid. Background and marker are the constants palette[0] and palette[5]. Markers are cleared, and their bounding box is the window.\n\nThe group axis is not fixed. It is inferred from the pixels: whichever visible axis shows more occupied runs (rows or columns), as the original solver does. The factory only uses d4 for the original solver's orientation-dependent tie-breaks and asymmetries. It computes where the canonical row axis lands and which visible sign the canonical increasing direction has on each axis.\n\nThese uses of d4 are:\n- breaking a tie between the axis run counts;\n- testing 'window before the first group' in the original index order;\n- ordering the colour-step Counter, so most_common ties break the same way;\n- choosing which end of a line is extended first by the period-with-permutation continuation, and which end is the placement anchor.\n\nThe progression direction D (+1 or -1 along the visible group axis) comes from where the window lies. Groups are listed in progression order, with each group's lines ordered along D. New groups are placed at visible positions start + D*k, using the observed gap.\n\nThe full mechanism is kept and rewritten in visible coordinates:\n- the step-map colour cycle;\n- per-line extent extrapolation (the next difference equals the one two steps back);\n- periodic continuation, including colour-permuting periods, at both ends;\n- learned rules for brand-new lines (offset q, symmetric outward shift s, optional colour step);\n- repetition until the window's far edge is covered.\n\nThe window is then read straight from the visible grid, overlaid with the predicted lines. There is no grid rotation and no colour permutation.",
+    "limitations": "No tests have been run. Behaviour matches the archived solver, including its quirks, as far as the orientation analysis goes. Exotic edge cases (all-empty lines, extents truncated beyond the segment length) mirror the original only approximately. The solver would fail on inputs without marker cells, which the generator never produces. Fixture-specific behaviour (for example, whether the archived heuristic reproduces every train pair) is inherited from the archived solver. I have not independently confirmed it, and I did not detect any contradiction in the fixtures."
+  }
+}

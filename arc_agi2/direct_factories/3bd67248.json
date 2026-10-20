@@ -1,0 +1,21 @@
+{
+  "task_id": "3bd67248",
+  "factory_sha256": "a9b86f88c5fc46673994a46654cac65fa1f9e9bdc3644ae83984d661e702dc8b",
+  "constructor_sha256": "e57a2183ef66c7b5084f84337ae4d3fb203251b798a05c5de72de0777b5dac57",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 164208484027118,
+  "d4": 7,
+  "unique_base_inputs": 171,
+  "seconds": 5.642469207989052,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "In the original orientation, the generator draws an N\u00d7N square with a full line of an arbitrary colour in column 0. The output keeps that line. It fills the rest of the bottom row (columns 1..N-1) with yellow (4). It then draws red (2) on the anti-diagonal cells (N-1-c, c) for c = 1..N-1.\n\nThe factory composes the D4 action symbolically on coordinate expressions. Reversing each row mirrors the column. A clockwise turn sends (r, c) to (c, n-1-r). The result is one explicit visible-coordinate formula, for example `(c, n - 1 - r)`.\n\nThe emitted program paints the base edge and the diagonal directly in visible grid coordinates. It uses the constants palette[4] and palette[2]. It never rotates or recolours the grid, and the input line is left untouched.\n\nThe base and the diagonal never overlap: the diagonal stops one cell short of the base and of the line. So painting order does not create tie issues. Any colour clash between the line colour and the mapped 2 or 4 does not matter, because those cells are never rewritten.",
+    "limitations": "The program assumes the constructor's domain: square grids of size 3\u201321 with the line along one full edge, as fixed by d4. It does not try to detect the line's position from pixels, because d4 determines it. Non-square inputs fall outside the generator's domain, so the behaviour there is unspecified. The approved fixtures agree with a uniform rule, and I found no contradictions. I have not run any tests."
+  }
+}

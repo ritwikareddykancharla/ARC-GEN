@@ -1,0 +1,21 @@
+{
+  "task_id": "3ad05f52",
+  "factory_sha256": "08a678b8b26d449ec534d1b81b3ad5bdfc9332a41d32265c5e9ea74cc3169e48",
+  "constructor_sha256": "8659230d437752fea99d6f24c6d4e741b2240e1ce7e192f99c1cd848c3da18a1",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 224492709361550,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 24.720488582970574,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The emitted program works directly on the visible grid. Wall and background colours are the constants palette[8] and palette[0]. The fill colour is inferred as the remaining non-wall, non-background colour in the query.\n\n1. **Doors.** A door is a non-wall cell with wall on both opposite sides. The program checks both orientations. The precedence between them follows the canonical left/right-first rule, swapped when d4 is odd because the axes are transposed.\n2. **Rooms.** Rooms are the 4-connected non-wall, non-door regions.\n3. **Wall structures.** Wall structures are 8-connected wall components, each reduced to its bounding box.\n4. **Path.** Doors link rooms into a graph. A breadth-first search finds the chain between the two prefilled rooms.\n5. **Painting.**\n   - The two coloured endpoint rooms are filled completely.\n   - A room whose cells all lie inside one wall-structure bounding box is enclosed, including rooms clipped by the grid border, and is also filled completely.\n   - Any other room on the chain is the open background area. Only the cells inside the bounding box of its entry and exit cells are painted.\n   - Every door used by the chain is painted.\n\nAll of these geometric notions are invariant or equivariant under D4: door tests in both orientations, connectivity, bounding boxes and breadth-first search. So the mechanism needs no direction rewriting beyond the precedence constant. This matches the generator: its flood-fill stripe between the outside cells e1 and e2 equals the open room's cells inside the entry/exit bounding box. Its validity check also guarantees that the open component is not inside any wall bounding box, while every path room is.",
+    "limitations": "Not tested by me. Several things are assumed:\n- Exactly one non-wall, non-background colour appears in the query, as the generator guarantees.\n- The connecting path is unique, as the generator guarantees. If several shortest paths existed, the search would tie-break by room index and door scan order.\n- There is at most one open-area crossing, which is the generator's scope. If several coloured rooms existed, the lowest-indexed and highest-indexed would be used.\n- If the goal is unreachable, the input is returned unchanged.\n\nThe approved fixtures, including pair 1's room cut off by the border inside a structure's bounding box, appear consistent with the bounding-box enclosure rule. I found no contradiction with a uniform rule.\n\nThe archived solver had one behaviour difference: when the goal was unreachable it would repaint the goal room. That case cannot occur under the generator."
+  }
+}

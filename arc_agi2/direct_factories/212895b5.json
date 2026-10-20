@@ -1,0 +1,21 @@
+{
+  "task_id": "212895b5",
+  "factory_sha256": "e5b44fda6625aafa9600576a287777c4025ac34b56c304e0a6556d32305879ea",
+  "constructor_sha256": "06a0bc8cee6da8db3f4f0612a28396332e355291da7f33bbbdee3ef4f3244669",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 190876916626578,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 8.516606874996796,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The emitted program works in the visible coordinates and follows the generator's mechanism. It looks up the source colour palette[8], takes the centre of that 3x3 block's bounding box, and treats palette[5] as the obstacle colour.\n\nDiagonal rays (palette[2]): each ray starts at a corner cell of the block. Before every diagonal step it does the generator's pinch test: if both orthogonal neighbours toward the next diagonal cell are obstacles, the ray stops. This test is also applied at the corner itself, which the archived solver skipped. The ray then steps, stops on the grid edge or an obstacle, and paints the cell. The pinch test and the diagonals are symmetric under every D4 transform, so no change is needed for orientation.\n\nStaircases (palette[4]): from the middle of each side, the path takes two steps outward, then alternates two steps sideways and two steps outward. It stops at the grid edge or an obstacle, and a staircase whose first cell is blocked draws nothing. The sideways direction is the outward direction turned clockwise for pure rotations (d4 < 4) and counter-clockwise for reflected transforms (d4 >= 4), because a reflection reverses the turning direction.\n\nAs in the generator, rays are drawn first and staircases may overwrite them. All obstacle checks read the input grid, which matches the generator because its checks only ever look at the obstacle colour.",
+    "limitations": "This was not executed. It assumes exactly one 3x3 source block, which the generator guarantees, and that out-of-bounds cells never count as obstacles in the pinch test (common.get_pixel is assumed to return a non-obstacle value outside the grid). The archived solver does not apply the pinch test at the block corner; this factory follows the generator instead. That only matters when both cells next to a block corner are obstacles. I found no contradiction between the fixtures and a single uniform rule."
+  }
+}

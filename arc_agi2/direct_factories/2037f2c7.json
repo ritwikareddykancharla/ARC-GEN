@@ -1,0 +1,21 @@
+{
+  "task_id": "2037f2c7",
+  "factory_sha256": "8aaf489923bf0769569e1045ea0c2fded0379dbe42096e5a9c14e1ce5382c124",
+  "constructor_sha256": "7ddd0e82dc55a09529dfd1a9348a7df217dea47817b92dba8e7aa9457dd130d3",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 175103863954963,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 9.421756249968894,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The emitted program works directly in the grid as it is given. The background is the constant palette[0] and the mark colour is palette[8]. It splits the grid into 8-connected multicolour components and takes the largest one as the intact template. Every other non-background cell belongs to the damaged copy. The program tries every translation that keeps the damaged copy's bounding box inside the template window and keeps a translation where every damaged cell matches the template colour; the generator guarantees there is only one. It then builds the mask of cells that are present in the template but missing from the aligned copy. The original task crops the output to the band of figure rows that contain damage, keeping the full figure width. Under D4, those original rows stay visible rows when d4%4 is even and become visible columns when it is odd; reflection does not change the axis. So the factory picks the crop axis from d4: either the band of rows at full template width, or the band of columns at full template height. Cropping a band is symmetric, so no direction constants are needed. Marked cells get palette[8] and the rest get palette[0].",
+    "limitations": "This relies on the generator's guarantees: the intact copy is the unique largest 8-connected object, the alignment is unique, and the background is palette[0]. If several translations fit, it keeps the last one in scan order, as the archived solver does. If there is no damage, it returns the full template-sized background grid, but the generator never produces that case. The fixtures fit a single uniform rule with no contradictions. I have not run any tests."
+  }
+}

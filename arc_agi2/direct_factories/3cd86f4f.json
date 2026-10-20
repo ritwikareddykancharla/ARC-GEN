@@ -1,0 +1,21 @@
+{
+  "task_id": "3cd86f4f",
+  "factory_sha256": "a5b90ef041a97326f40b68f4658f5851f163b394f838fffabe7f65f4963ba4d5",
+  "constructor_sha256": "d6eb1616f7525de1fa9bb0f681f999fe38a5917ad7398bf47a499c9a629bd572",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 229751247172266,
+  "d4": 7,
+  "unique_base_inputs": 983,
+  "seconds": 2.1982403330039233,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The original rule shears the grid. Input row r is placed at column offset H-1-r on an H x (W+H-1) canvas, and every uncovered cell is filled with colour 0. This leaves zero wedges in the top-left and bottom-right corners.\n\nThe factory works out where the shear goes under each D4 transform:\n- d4 0 and 2: rows slide right, and row y is offset by h-1-y. A 180-degree turn leaves this shape unchanged.\n- d4 4 and 6 (mirrored): rows slide right, and row y is offset by y. The wedges move to the top-right and bottom-left.\n- d4 1 and 3: columns slide downward, and column x is offset by x. The canvas is (h+w-1) x w.\n- d4 5 and 7: columns slide downward, and column x is offset by w-1-x.\n\nThe background fill is the constant palette[0]. Input colours are copied cell by cell without remapping. The emitted program builds the sheared canvas directly in the visible coordinates. It does not undo the rotation or remap colours.",
+    "limitations": "The emitted program ignores the demonstrations, because the mechanism is fully determined by the given d4 and palette. The fill colour is assumed to be palette[0], matching the generator's zero background. I have not run any tests. The fixtures agree with a single uniform rule, so I found no contradictions."
+  }
+}

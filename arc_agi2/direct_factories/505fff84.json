@@ -1,0 +1,21 @@
+{
+  "task_id": "505fff84",
+  "factory_sha256": "96c7a99c7d43fe05ae85de11276cc0bf1c9b263a94671f6677ea6ad96a32a808",
+  "constructor_sha256": "295bd41ad7abb9280adeeceed8b0d39e51a208f96467aec469cd82ecd2214c30",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 210126576426931,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 4.35762058396358,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "In the original task, each colour-1 cell has the nearest colour-8 cell to its right on the same row. The cells strictly between them are copied, and these segments are stacked as output rows in top-to-bottom order. The factory works out the visible 1->8 direction by applying the D4 operations to the direction vector (0,+1): a reflection negates the column component, and each clockwise rotation maps (dr,dc) to (dc,-dr).\n\nUnder any D4 transform, the output is the D4 transform of the stacked segments. This means that in visible coordinates every segment keeps the orientation and cell order it has in the input. The segments are ordered by ascending perpendicular coordinate, and each segment is read in ascending visible coordinate.\n\nThe emitted program therefore does one of two things:\n- **Horizontal axis:** it scans the rows top to bottom. For each palette[1] cell, it searches left or right (the specialised STEP) for the nearest palette[8] cell. It takes the cells between them in left-to-right order and stacks them as output rows.\n- **Vertical axis:** it scans the columns left to right. It searches up or down, takes the cells in top-to-bottom order and places them as output columns.\n\nColours are palette[1] and palette[8] constants. Noise cells are copied unchanged. If segment lengths ever differed, the program would pad with palette[0] on the side toward the 8, mirroring the archived solver's end-padding.",
+    "limitations": "The program assumes the constructor's domain:\n- At most one marker pair per row (in original coordinates).\n- All gaps are equal and at least 1.\n- No stray 1 or 8 cells, since the noise is only 0 and 2.\n\nIf a scene had several 1s on one line, the program processes them in the scan order nearest the 1 side. This matches the archived solver only in the untransformed sense, and the generator never produces this case.\n\nIf no pair is found, the program returns a 1x1 grid filled with palette[0]. The generator never produces this case either.\n\nThe demonstrations are not used, because the roles are fully determined by d4 and palette. The fixtures are consistent with the uniform rule, and no contradictions were found. I have not run any tests."
+  }
+}

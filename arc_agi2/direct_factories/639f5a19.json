@@ -1,0 +1,21 @@
+{
+  "task_id": "639f5a19",
+  "factory_sha256": "97cd652416b5ac192bdb139bb1c5e93668517dc3c32534fec86f71d5eadadc6e",
+  "constructor_sha256": "c838ed128b8c2807a62ccc3b5a7baf5fb0c461515c4ed0d4b15cdcdea2efd423",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 210953593087501,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 25.269415457965806,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "Each rectangle of the (palette-mapped) rectangle colour palette[8] is found as a 4-connected component, and its bounding box is taken. The box is split into four equal quadrants at its row and column midpoints. Each quadrant is painted with a quadrant colour. Then a block of palette[4] is painted over the quadrants, inset 2 cells from every edge.\n\nThe quadrant colours come from the original layout [[6,1],[2,3]] (TL, TR / BL, BR). The factory applies the D4 transform to this 2x2 layout: for d4>=4 it mirrors each row, then rotates it clockwise d4%4 times. It then maps each entry through the palette. The result says which colour goes in which visible corner.\n\nThe midpoint split and the 2-cell inset are symmetric, so they work unchanged in visible coordinates. Everything outside the rectangles is copied as-is. Demonstrations are not needed because all roles are fixed constants derived from d4 and palette.",
+    "limitations": "No tests have been run on this factory. It assumes the generator's domain: rectangles have even width and height of at least 6, and rectangles are separated by at least one cell so each is its own connected component. Touching rectangles would merge into one component, and odd dimensions would give unequal halves; the original native solver has the same behaviour in both cases. No contradictions between the fixtures and the uniform rule were found."
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "task_id": "58743b76",
+  "factory_sha256": "b048f64da38d1deaf710bd7acba8276da387bf24d9fa747a624033e645572b9c",
+  "constructor_sha256": "a30f5494d4aab71f65b9a7427701d27fc7db888620440664a4045efd6a32bce0",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 145550520944742,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 4.250878541963175,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The emitted program works directly in visible coordinates. The bars are made of palette[8]. Canvas and key cells never use the bar colour, so the program finds the bars by counting. Bar rows are the rows that are more than half bar colour, and bar columns are found the same way. The 2x2 key is where the bar rows cross the bar columns. The canvas is where the non-bar rows cross the non-bar columns.\n\nThe key is a miniature map of the canvas. Any rotation or reflection moves the key and the canvas together, so the visible key cell at (i,j) always matches the visible canvas quarter (i,j); no direction needs specializing. The program splits the canvas at half its height and half its width. It then recolours every non-background (non-palette[0]) mark with the key colour of that mark's quarter. If the bar detection fails, it falls back to the archived method: the canvas is the bounding box of background cells, and the key is the bounding box of the remaining non-bar cells.",
+    "limitations": "This assumes the generator's domain: square grids of side 8 to 14, two-wide bars, and a 2x2 key in one corner. It also assumes the bar colour palette[8] never appears in the canvas or the key. The canvas side is always even, so the quarter split is symmetric under every D4 transform. Odd-sized canvases are outside this domain and would put the extra middle row or column in the second half. The fixtures agree with a uniform rule. I have not run any tests."
+  }
+}

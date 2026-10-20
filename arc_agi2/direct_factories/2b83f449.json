@@ -1,0 +1,21 @@
+{
+  "task_id": "2b83f449",
+  "factory_sha256": "7a029d412814eb883df986927be4528394509ddd614c0a48c464d909f9fc7209",
+  "constructor_sha256": "08d5cffd7e5abec7dce31f9b6ab1f1267fde14088927a8a1dbd7b873f9013eb3",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 239043490607313,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 27.35084204201121,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "This rewrites the archived amidakuji solver in visible coordinates. The D4 transform affects only two things. (1) Track axis: for even rotation counts the tracks stay visible rows. For odd counts they become visible columns. Rungs then become runs of 7 along the track axis on the lines between tracks, and the 6 connector runs perpendicular to them. (2) Which track counts as 'lower': the original larger row index. Under rotation (r,c) -> (c, H-1-r) the original row maps to visible index R (k=0), to H-1-r as a column (k=1, so lower means smaller column), to H-1-r as a row (k=2, smaller row), and to r as a column (k=3, larger column). The row reflection applied for d4>=4 only reverses the along-track direction, so it does not change the track order. The emitted program uses an index helper ix(t,p) that addresses visible cells (t,p) or (p,t) and writes straight into the visible output. It never transposes, rotates or recolours whole grids. All colour roles are palette constants: background palette[0], track palette[8], marker palette[3], rung palette[7], connector palette[6]. Several parts of the mechanism are symmetric along the track, so no along-track sign is needed: the ladder walk itself, the inward direction found from segment bounds, the inward stacking from the lower endpoint, and the deduplication of paths. Because the walk is reversible, paths are disjoint. Every marker write uses the same colour, so the order in which paths are processed cannot change the result.",
+    "limitations": "The program assumes the constructor's domain: tracks on every other line, rungs exactly 3 long with unique middle columns, at least 3 cells between rungs and gaps, segments at least 3 long, and track lines holding a majority of track colour. Behaviour on inputs outside this domain follows the archived solver's heuristics. The program does not infer roles from the demonstrations; it relies on d4 and palette. I have not run anything. The approved fixtures appear consistent with the constructor's uniform rule, and I found no contradictions."
+  }
+}

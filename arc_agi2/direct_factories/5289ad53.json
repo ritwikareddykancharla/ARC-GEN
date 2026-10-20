@@ -1,0 +1,21 @@
+{
+  "task_id": "5289ad53",
+  "factory_sha256": "75bf262eb68015d71c9ccee57432129fe62e8054d00ba81e1c399e316f91fecb",
+  "constructor_sha256": "95a3edeb070c2c8392a69f229ce11ecbf061f7404934229ba1a7985b06979c15",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 256689790166430,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 7.729555999976583,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The rule is a tally. Count the green bars and the red bars as 4-connected components; this count does not change under any D4 transform. Then fill a six-slot canvas: first one green per green bar, then one red per red bar, and the empty colour everywhere else. In native coordinates the canvas is 2x3 and filled in reading order. The factory applies the specified D4 transform to an index map [[0,1,2],[3,4,5]]. From that it gets the visible output shape (2x3 or 3x2) and the visible coordinates of each slot. It emits this slot order as a literal constant list, so the program writes cells directly in visible coordinates. Colour roles are fixed constants: green = palette[3], red = palette[2], empty = palette[0]. The emitted program never rotates or recolours any grid. As in the archived solver, it skips counting a colour if that colour is the majority background, which cannot happen in this domain.",
+    "limitations": "This assumes the constructor's domain: bars of the same colour never touch, so each bar is exactly one 4-connected component, and there are at most 6 bars in total. Any extra bars beyond 6 slots are silently dropped. The output empty colour is always palette[0], even when the input background is a different colour, which matches the generator. All fixtures fit the uniform rule; I found no contradictions. No tests were run."
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "task_id": "41ace6b5",
+  "factory_sha256": "4e1612cfd4c69aaf5458fdd731d4256fcbb27eebf265843d32e9464d771a2156",
+  "constructor_sha256": "889239421a96b30a5731dba9599ee0dd6558110757219ebe5d68717077159a5c",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 180463873705815,
+  "d4": 7,
+  "unique_base_inputs": 874,
+  "seconds": 6.015667709056288,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "In the canonical frame, each pillar line holds 1s at the bottom with 8s stacked above them. A horizon of 2 cells is followed directly by 5 cells. In the output, every pillar gets the global cyan height of 8s ending on the 2-line, then its own count of 1s starting on the 5-line, then 9s out to the far edge.\n\nThe canonical down direction (dr, dc) = (1, 0) is unchanged by the row reversal. Each clockwise turn maps it as (dr, dc) -> (dc, -dr). So k = d4 % 4 gives down, left, up, right for k = 0..3.\n\nThe emitted program uses two constants: AXIS (pillars are visible columns when k is even, visible rows when k is odd) and DOWN (+1 or -1 along that axis). It walks each pillar line directly in visible coordinates using a depth index t mapped to the visible position.\n\nThe horizon depth is the smallest depth whose cross-line contains palette[2]. The cyan height is the largest per-line count of palette[8], which handles the fixture where one 8 was erased. The 1-count is taken per line. All colours are palette constants, with palette[7] as the background. Mirroring only reverses the order of pillars across the grid, and pillars are processed independently, so it needs no special handling.",
+    "limitations": "This assumes the constructor's domain: a single horizon of 2 cells followed by 5 cells, a background of palette[7], and pillars whose 8 and 1 counts are meaningful. Lines that contain neither 8 nor 1 are left unchanged. If no palette[2] cell exists, the input is returned unchanged.\n\nThe fixtures do not contradict a uniform rule. Pair 3's erased 8 is handled by using the maximum 8 height. No tests have been run."
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "task_id": "5751f35e",
+  "factory_sha256": "9bfdb2beeae0d47870159719288441dea6e4b6c1a976bb3d7774e90853805bb9",
+  "constructor_sha256": "54dff32cf9c714b96a8edf5e5be2027dd1b7c4b822615bceec45bc86b89cf1a4",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 44170136525720,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 3.2172567499801517,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The generator builds a square, even-sized grid of concentric square rings. Each ring has a single colour. It then punches random holes of colour 0 into the grid. The output gives every ring its own colour back. The draw() check guarantees that every ring whose colour is non-zero keeps at least one visible pixel. A ring with no non-zero pixels must therefore belong to a 0-coloured layer, which can happen because the sampled layer colours may include 0. The emitted program works directly in visible coordinates and uses one ring at a time, at depth min(y, x, h-1-y, w-1-x). It sets the ring's colour to the non-background colour found in that ring, or to background palette[0] if the ring is empty. Rings stay rings under D4, so no change of direction is needed. The palette only enters through the hole/background constant palette[0]. This also corrects a weakness in the archived solver. The archived solver treats the most common colour as background, which fails when a large layer outnumbers the 0-holes. It also paints each colour from its minimum depth all the way inwards, which is wrong when a 0-coloured layer sits between two coloured layers. The per-ring rule matches every approved fixture and the depth explanation in the stated rule.",
+    "limitations": "This assumes that palette[0] is the hole/background colour, as the generator constructs it. Inside the generator's domain, each ring holds at most one non-background colour. If a ring ever held several (out of domain), the program picks the most frequent one, and on a tie the one that appears last in scan order. Rectangular or odd-sized grids are handled with the same depth formula, although the generator only produces even squares. The fixtures contain no contradictions."
+  }
+}

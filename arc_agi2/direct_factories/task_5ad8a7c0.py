@@ -1,0 +1,40 @@
+def build_program(d4, palette):
+    bg = int(palette[0])
+    fg = int(palette[2])
+    k = int(d4) % 4
+    # Original mechanism works along rows (horizontal lines). A reflection (d4>=4)
+    # only reverses each row; the pairs are symmetric, so it changes nothing here.
+    # Odd clockwise rotations turn rows into columns.
+    axis = 0 if k in (0, 2) else 1
+    lines = []
+    lines.append('import numpy as np')
+    lines.append('')
+    lines.append('BG = %d' % bg)
+    lines.append('FG = %d' % fg)
+    lines.append('AXIS = %d  # 0: pairs lie in rows, fill horizontally; 1: pairs lie in columns, fill vertically' % axis)
+    lines.append('')
+    lines.append('def solve(demonstrations, grid):')
+    lines.append('    g = np.array(grid, dtype=int).copy()')
+    lines.append('    H, W = g.shape')
+    lines.append('    spans = []')
+    lines.append('    if AXIS == 0:')
+    lines.append('        for y in range(H):')
+    lines.append('            xs = [x for x in range(W) if g[y, x] != BG]')
+    lines.append('            if len(xs) >= 2:')
+    lines.append('                spans.append((y, min(xs), max(xs)))')
+    lines.append('    else:')
+    lines.append('        for x in range(W):')
+    lines.append('            ys = [y for y in range(H) if g[y, x] != BG]')
+    lines.append('            if len(ys) >= 2:')
+    lines.append('                spans.append((x, min(ys), max(ys)))')
+    lines.append('    if not spans:')
+    lines.append('        return g.tolist()')
+    lines.append('    m = min(hi - lo for _, lo, hi in spans)')
+    lines.append('    for idx, lo, hi in spans:')
+    lines.append('        if hi - lo == m:')
+    lines.append('            if AXIS == 0:')
+    lines.append('                g[idx, lo:hi + 1] = FG')
+    lines.append('            else:')
+    lines.append('                g[lo:hi + 1, idx] = FG')
+    lines.append('    return g.tolist()')
+    return '\n'.join(lines) + '\n'

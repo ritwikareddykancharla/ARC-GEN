@@ -1,0 +1,29 @@
+{
+  "task_id": "28e73c20",
+  "factory_sha256": "92861e28aeb0aeed2cde3db89709845545bc7701d50c7c3159a656cca0aa4781",
+  "constructor_sha256": "08a8cb67f978dc93d95f213a58ad2f3c59fe31e6bce9614a41172a51e8687677",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 30528500591196,
+  "d4": 7,
+  "unique_base_inputs": 16,
+  "seconds": 4.114189082989469,
+  "finite_default_domain": {
+    "exhaustive": true,
+    "cases_checked": 16,
+    "augmented_checks": 256,
+    "definition": "Blank square inputs of each native size 5 through 20 inclusive: 16.",
+    "query_distinct_from_demos": true,
+    "scope": "Default native parameter distribution only; finite input count is not inflated by repeated sampling."
+  },
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The original program starts a walker at the top-left corner facing right. It turns clockwise in the order right, down, left, up. It steps only when the next cell is in bounds and unpainted and the cell two ahead is also unpainted or off-grid. This leaves a one-cell corridor between arms. When the walker cannot step even after a turn, it stops.\n\nThe factory pushes the start corner and the four direction vectors through the D4 map using a 2x2 corner frame. A row flip sends (r,c) to (r,w-1-c) and (dr,dc) to (dr,-dc). Each clockwise rotation sends (r,c) to (c,h-1-r) and (dr,dc) to (dc,-dr). The results are baked in as constants:\n- the visible start corner, chosen from the four grid corners;\n- the visible direction cycle. Under reflections the cycle becomes counter-clockwise automatically, because the mapped vectors are kept in their original order.\n\nThe can-move test only checks bounds and painted cells, so it is D4-invariant. That lets the emitted walker run directly in visible coordinates. The background stays as the input (palette[0]), and the spiral colour is palette[3].",
+    "limitations": "Assumes the constructor's domain: blank grids (square, sizes 5-20) with the spiral colour equal to palette[3]. The walker is generic, so it also works on rectangular grids. The demonstrations are not used, because the rule has no free parameters. I did not run any tests, and I found no contradictions in the fixtures."
+  }
+}

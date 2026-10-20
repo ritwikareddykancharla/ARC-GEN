@@ -1,0 +1,21 @@
+{
+  "task_id": "5833af48",
+  "factory_sha256": "ef9ae674e3517e800077f7089bfbe435cd0d83d28c7382d18549427cd35f09d2",
+  "constructor_sha256": "c2a891fdba4111abff6197ed057b608432779f505a17f5812b0d8270e06ed4a6",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 136677552444704,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 11.229713291977532,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The mechanism has the same form under every D4 transform. Under rotation or reflection, the square motif stays a square, and the big rectangle and the pattern are transposed or reflected together. Because of this, the emitted program works in visible coordinates and changes nothing else. It finds 4-connected non-background components, where the background is the constant palette[0]. The largest component is the C rectangle; it has at least 4m^2 cells, so it always beats the motif and the pattern. The component holding palette[2] is the motif, and the remaining one is the pattern. The block count along each visible axis is the rectangle side divided by the motif side. The pattern scale along each axis is the pattern side divided by the block count. The program reads the pattern at block scale by sampling one cell from each f x f square. Each f x f square is uniform, so this sampling works under any reflection. Wherever the shrunk pattern equals palette[8], the program stamps the motif exactly as it appears in the visible grid, with palette[2] cells replaced by C. All other blocks are left plain C. The motif and the rectangle are already in visible orientation, so the output is correct without any inverse transform. Colour roles are fixed constants taken from the palette.",
+    "limitations": "Assumes the generator's domain. That means three solid pieces separated by at least one background cell (diagonals included), a palette that is a permutation, and C distinct from palette[0], palette[2] and palette[8]. d4 is not needed, because the visible-coordinate mechanism has the same form under all transforms. The fixtures appear consistent with this uniform rule. This factory has not been executed or tested by me."
+  }
+}

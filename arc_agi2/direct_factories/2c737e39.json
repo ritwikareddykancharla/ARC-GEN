@@ -1,0 +1,21 @@
+{
+  "task_id": "2c737e39",
+  "factory_sha256": "42d40636e463ffabb706c9246b2fb1bc72f1eca55602611a31423449e94d8981",
+  "constructor_sha256": "2d51b5648662fb9f8863e72b16d08a27cf1915cdeba9512058a7ed042df8225c",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 125153980782869,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 3.877718042000197,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The task copies the multicolour pattern by translation so that its embedded marker (original colour 5) lands on a lone marker cell elsewhere; the lone marker is erased and the copy's own marker cell stays background. Translation by a displacement vector is equivariant under every D4 transform (the visible displacement is just the transformed vector, computed directly from visible anchor/target positions), so the emitted program works natively in visible coordinates with no rotation. Colour roles are specialised: background = palette[0], marker = palette[5]. Objects are 8-connected multicolour components of non-background cells (needed because pattern parts may touch only diagonally); the size-1 marker component is the target, the largest component is the pattern, and its marker cell is the anchor. Generator guarantees shapes never touch (even diagonally) and bounding boxes don't overlap, so the copy lies fully in-grid and never collides with the original.",
+    "limitations": "Assumes the generator's domain: exactly one marker cell inside a connected pattern of size >= 6 and exactly one isolated marker cell, background is palette[0]. If no isolated marker or no anchor is found, the input is returned unchanged (as in the archived solver). Out-of-bounds copy cells are clipped, which never occurs within the constructor's domain. Fixtures are consistent with the uniform rule."
+  }
+}

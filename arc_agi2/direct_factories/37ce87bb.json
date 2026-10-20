@@ -1,0 +1,21 @@
+{
+  "task_id": "37ce87bb",
+  "factory_sha256": "d7bcfa28f6438fda5f561d40200d3b0796fa29c04bc728cb0bccfc9ba1271907",
+  "constructor_sha256": "ddb4e3b2d5969ba92ef35d9f222774ce215e3c249d27d6612fba43503b44d2ca",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 269594471910363,
+  "d4": 7,
+  "unique_base_inputs": 893,
+  "seconds": 4.1009430000558496,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "In canonical form, bars stand on the bottom edge in the odd columns and are read left to right. Each palette[8] cell counts +1 and each palette[2] cell counts -1, so the sum equals the signed sum of bar lengths. A new palette[5] bar of that height is painted two lines past the last bar, standing on the same base edge.\n\nThe factory pushes two canonical direction vectors through the D4 transform:\n- the growth vector, up = (-1,0);\n- the reading vector, right = (0,1).\n\nThe transform is applied in the stated order. For d4>=4, row reversal negates the column component first. Then each clockwise rotation maps (dr,dc) to (dc,-dr). From the resulting vectors the factory decides three things:\n1. Whether bars are columns or rows in the visible grid.\n2. Which edge is the base: high index or low index.\n3. Whether reading runs toward increasing or decreasing index.\n\nThe emitted program works directly in visible coordinates using two loop structures, one for column bars and one for row bars. It measures every line and accumulates the signed count using the palette-mapped constants. It locates the extreme bar in the reading direction and steps two lines further (+2 or -2). It then paints the result bar from the correct base edge. There is no rotation, transposition or colour remapping of the grid. The sum does not depend on order, so only the placement uses the reading direction.",
+    "limitations": "The background is fixed as palette[7], and the bar colours as palette[8] (+) and palette[2] (-), all taken from the constructor. If the computed position falls outside the grid, or the total is not positive, the input is returned unchanged; the generator never produces either case. The program assumes the generator's layout: bars are contiguous runs on the base edge, and the slot two past the last bar is empty. The fixtures agree with the uniform rule, and no contradictions were found. This factory has not been run or tested by me."
+  }
+}

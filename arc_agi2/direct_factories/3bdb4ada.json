@@ -1,0 +1,21 @@
+{
+  "task_id": "3bdb4ada",
+  "factory_sha256": "abd1a1052f0c54389328b6054752cd3a5d2aa4a4d398a3e1c290a0b762556f1c",
+  "constructor_sha256": "e415a2bde4771fe4c23eec79fb2a6a357c2247aece7449268324206751c4b206",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 153759222771579,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 8.208105166908354,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "Each scene contains solid 3-thick 'punchcard' rectangles (odd length along the long axis) on a background of original colour 0. The output keeps both outer strips of each card and, in the middle strip, clears every cell at an odd offset from the card's starting edge. Visible coordinates: the factory sets the background constant to palette[0], so the background is never guessed from colour frequency. Under d4 with an odd number of clockwise rotations, the cards stand vertically. In that case the program cuts the interior columns, stepping along y, instead of the interior rows. The factory also tracks where the original left edge ends up: top, right or bottom, flipped first if the transform includes a reflection. Offsets are then measured from that visible edge. Odd card lengths make both directions give the same cells, but the bookkeeping stays faithful to the original mechanism. Cards are found as 4-connected single-colour components, so cards of different colours that touch (the generator spaces rows 3 apart) stay separate. The program works directly on the input grid, with no normalization or rotation wrappers.",
+    "limitations": "Assumes the generator's domain: every card has a distinct colour, and no card uses the background colour palette[0]. If two cards of the same colour touched, they would merge into one component, and the program would cut all rows strictly inside the merged bounding box. The demonstrations are not consulted, because the rule is fully determined by d4 and the palette. No contradictions were found between the fixtures and the uniform rule. Not executed or tested by me."
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "task_id": "4364c1c4",
+  "factory_sha256": "af44472768129406fc18d2f2b10900b2761cc3b6dca110672cf0c6eaa813e03e",
+  "constructor_sha256": "a8a8da4b13415770f2db25d0c51a0d72255aa575f185d204c2990cbd1380ea02",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 241279497899270,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 5.79857887502294,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The original rule finds each 4-connected group of non-background cells; background is the most common colour. Inside a group, the colour whose cells reach highest (smallest row) moves one step left, and every other colour moves one step right. The group is erased and its pieces are stamped at the new positions.\n\nThe factory maps two original unit vectors into visible coordinates using the D4 operation: 'down' (1,0) and 'right' (0,1). A horizontal flip negates dc. Each clockwise rotation maps (dr,dc) to (dc,-dr).\n\nIn the emitted program, the leading piece is the colour with the smallest projection onto the visible 'down' vector, i.e. the visible equivalent of 'topmost'. That piece moves by minus the visible 'right' vector, and the other colours move by plus it. So vertical stacking with horizontal shear becomes horizontal stacking with vertical shear, with direction signs that account for reflections.\n\nColour roles are inferred from pixels: background by frequency, top and bottom by position. The palette therefore needs no constants. Cutout holes move with their blocks because only coloured cells are moved and the rest is background. Cells shifted off-grid are dropped, matching the archived solver, though the generator keeps 1-cell margins so this does not occur in its domain.",
+    "limitations": "Assumes the background is the strict majority colour and that assemblies are separated so each 4-connected group is exactly one top/bottom pair. Both hold in the generator because of its padded non-overlap check. Under the constructor's cutout limits (e <= half-1, f <= tall-half-1), the top colour always strictly leads in the stacking direction, so ties cannot occur; if one did, the sort falls back to visible reading order. The fixtures are consistent with the uniform rule; no contradictions were found. Nothing was executed or tested."
+  }
+}

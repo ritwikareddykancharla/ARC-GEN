@@ -1,0 +1,21 @@
+{
+  "task_id": "66f2d22f",
+  "factory_sha256": "6a1319b6b11b19da41db0674d7740edc826bf433896929bc180e167fafe93278",
+  "constructor_sha256": "94a5010029fba043bfbcba7b9531d3f8f3584bf9057d05a08410dec6823a7b24",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 63859399463993,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 2.2389347499702126,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The original task splits a 4x14 grid into a left and a right 4x7 panel. The output is the NOR of the two non-background masks: a cell is painted 5 where both panels are background 0, and stays 0 elsewhere. Reflection only reverses each row. That swaps the two panels and mirrors each one, and since NOR is symmetric and cellwise, the rule is unchanged. An odd number of clockwise rotations turns the side-by-side panels into stacked panels: rot(L) on top and rot(R) below. The output is rotated the same way, so the cellwise NOR still holds. So the emitted program splits along columns when d4 is even (d4%4 in {0,2}) and along rows when it is odd. It then fills palette[5] wherever both halves equal palette[0], on a canvas of palette[0]. The half size comes from the visible grid dimensions, so any rectangular panel size the generator produces is handled. The panel colours 3 and 2 never need to be identified, because only the background matters.",
+    "limitations": "This assumes the background is palette[0] and the fill colour is palette[5], as the constructor fixes them. If the doubled dimension were odd, the middle row or column would be ignored, but the generator always produces an even doubled dimension. No contradictions with the fixtures were found. None of this has been executed by me."
+  }
+}

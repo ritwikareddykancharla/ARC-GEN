@@ -28,10 +28,14 @@ def generate(rows=None, cols=None, colors=None):
   if rows is None:
     # We want to favor smaller values, so we'll use a large range and invert
     # the square roots.
-    rows = [common.randint(1, 255) for _ in range(common.randint(2, 7))]
-    cols = [common.randint(1, 255) for _ in range(common.randint(2, 7))]
-    rows = [16 - int(common.sqrt(r)) for r in rows]
-    cols = [16 - int(common.sqrt(c)) for c in cols]
+    def thicknesses():
+      while True:
+        values = [16 - int(common.sqrt(common.randint(1, 255)))
+                  for _ in range(common.randint(2, 7))]
+        # Keep the original thickness distribution, conditioned on ARC's
+        # maximum dimension. Explicit fixture parameters are unchanged.
+        if sum(values) + len(values) - 1 <= 30: return values
+    rows, cols = thicknesses(), thicknesses()
     colors = common.random_colors(2)
 
   width = sum(cols) + len(cols) - 1

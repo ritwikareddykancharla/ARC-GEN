@@ -1,0 +1,23 @@
+{
+  "task_id": "1efba499",
+  "factory_sha256": "8291003dad2ee3a06389050bae3fcc9dc5d57dd843098ae267472a7177fb3bd7",
+  "constructor_sha256": "a36d952d5033dcbb3db34d190a5b471ef9773643c5e591410b68e51d27a0d53b",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 50615115481207,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 9.34099645796232,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "Mechanism: a wall (bar) runs across the grid. For each line perpendicular to the bar, if there is exactly one non-background cell on each side, both are erased and their colours are swapped across the bar, each placed flush against the bar's extent in that line. Otherwise the line is unchanged. This matches the generator's '>=3 distinct colours in the strip' test, because inside the generator's domain only the 'one of each' branch produces 3 distinct colours. Background is the constant palette[0]. The bar is identified from the visible pixels using the constructor's structural invariants, in either orientation, so no rotation is involved. The bar colour must: (a) appear in at least all-but-one of the lines along its length, and those lines must form a contiguous interval; (b) form a single contiguous run in each such line; (c) stay inside a band at most 3 cells thick, since top and bot are clamped to mid-1..mid+1; (d) be 8-connected between adjacent lines. Ties are broken by coverage and then cell count. The archived 'most frequent colour' rule is kept only as a fallback.",
+    "limitations": "A loose colour could in principle also satisfy every bar invariant: present in nearly every line, inside a band of 3 or fewer rows, one run per line, and 8-connected. This is astronomically unlikely under the generator, and even then the coverage/count tie-break almost always favours the true bar. The orientation is inferred from the pixels, so d4 is not needed beyond the background constant.",
+    "diagnosis": "The failed factory selected the bar as the most frequent non-background colour, with span as a tie-break. In the counterexample test input (d4=0, palette maps 0->4), the bar is colour 1 with 15 cells: row 7 cols 0-6 and row 8 cols 6-13. The bottom loose colour 7 has 17 cells, because many columns used the 'draw bottom twice' branch. The program therefore treated colour 7 as the wall and produced the wrong output. The generator never guarantees that the bar is the most frequent colour, since each column can hold up to two loose cells of one side colour while the bar may be only one cell thick. The fix identifies the bar by its structural invariants (full-length coverage, contiguous per-line runs, band of 3 or fewer, connectivity) rather than by frequency. The swap logic itself was already correct.",
+    "constructor_issue": "None. The counterexample label is consistent with the generator's mechanism: each column holding top, bar and bottom colours gets bottom->above-bar and top->below-bar, and all other columns are kept. The archived solver shares the same frequency-based bar heuristic and would also fail on such scenes. That is a solver weakness, not a labelling inconsistency."
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "task_id": "2f0c5170",
+  "factory_sha256": "46e8a2355d9fb70aa4722796216285385555b2744cbc69752c7e4e9003cdfe41",
+  "constructor_sha256": "c9cb4bb6a4c89a8c71dafc280fdfa6f947d2aa39f5d91ebbe1183d4ffe42360e",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 169152927217201,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 17.860487875062972,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The mechanism finds two rectangles and translates the template sprite so that its marker cell lands on the target's marker. Translation commutes with every D4 transform, so no axis or direction needs specializing. The program works directly in visible coordinates.\n\nColour roles become constants: background is palette[8], the box fill is palette[0] and the sprite body is palette[4]. The marker colour is read from the target rectangle's single non-box cell.\n\nSteps:\n1. Find the components of non-background cells (4-connectivity, all colours together).\n2. Choose the template as the component with the most sprite-colour cells (then most non-box cells). The other component is the target.\n3. Crop the target's bounding box.\n4. Find the marker in the crop and the same-coloured cell in the template.\n5. Stamp every non-box template cell at its offset from the marker, clipped to the crop.\n\nThe crop dimensions follow the visible orientation of the target box. This matches the generator under rotation and reflection.",
+    "limitations": "No tests have been run by me. I found no contradiction between the fixtures and a uniform rule.\n\nIf the sprite were a single marker pixel with no 4s, the two rectangles could not be told apart. The program would then fall back to ordering by component scan. The generator's connected_sprite on boxes of at least 3x3 should make this case essentially impossible.\n\nThe program assumes the palette is a permutation, so the background, box, sprite and marker colours are all distinct. It also relies on the constructor's separation margin of 1 so that the two rectangles are never connected."
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "task_id": "5ad8a7c0",
+  "factory_sha256": "fa694cc6d3984830a3600e6e563f26907ce87e336d6bdaf870e3ef3a7dd63fe1",
+  "constructor_sha256": "7d15a8e18a54ce67e4f0e4406bfcc21bf98ba4d48407edecd253bcfba46efe92",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 162405065343839,
+  "d4": 7,
+  "unique_base_inputs": 254,
+  "seconds": 1.7660432909615338,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "In the generator, each of the 4 rows of a 4x6 grid has either no red or a symmetric red pair at columns c and 5-c, with c in 0..2. Every row whose c equals the largest c is filled between its pair. That is the same as filling every row that has the smallest span. The archived solver does exactly this. The emitted program finds the lines that run parallel to the visible pair direction. These are rows when d4%4 is 0 or 2, and columns when it is 1 or 3. In each such line it takes the extent of the non-background cells, using background palette[0]. It finds the minimum span over the lines with at least two such cells. It then fills every line with that minimal span from its first marked cell to its last with palette[2]. A row reversal (d4>=4) needs no special handling, because the pairs are mirror-symmetric and the fill is undirected. Ties are covered because every line with the minimal span is filled. Adjacent pairs (span 1) give an unchanged grid.",
+    "limitations": "The program assumes the constructor's domain: one background colour palette[0], foreground palette[2], and at most one symmetric pair per line along the visible pair axis. Lines with a single marked cell are ignored, as in the archived solver; they cannot occur in the generator. The fixtures agree with the uniform rule, and no contradictions were found."
+  }
+}

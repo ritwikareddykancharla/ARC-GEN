@@ -1,0 +1,21 @@
+{
+  "task_id": "4df5b0ae",
+  "factory_sha256": "aabc592a814d314b46a2491ceecd46a783dfdce0ad5d70738c5ed88aa8acfdd3",
+  "constructor_sha256": "51501ff92341a70cba2aa195a69cf3533b9ec0254372ccc186591c9d2e04a403",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 240159606746347,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 6.74886883306317,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The original rule finds single-colour 4-connected objects on a background of colour 7. It drops any component whose bounding box covers the whole grid, which is the frame. It sorts the rest by cell count, smallest first. It then stamps each object unchanged onto a fresh background canvas. Each object rests against the bottom edge, and the objects are packed left to right from column 0. Each one starts right after the previous object's bounding box.\n\nThe factory carries two direction vectors through the D4 transform: gravity, originally down (1,0), and packing, originally right (0,1). A row reversal negates the horizontal components. Each clockwise rotation maps (dy,dx) to (dx,-dy).\n\nThe emitted program uses these vectors directly in visible coordinates:\n- **Vertical gravity:** each object is aligned to the last or first row. The objects are packed along columns from the left or right edge, and the cursor advances by bounding-box width.\n- **Horizontal gravity:** each object is aligned to the last or first column. The objects are packed along rows from the top or bottom edge, and the cursor advances by bounding-box height.\n\nThe background colour is the constant palette[7]. Object colours are copied from the pixels, so no other colour roles are needed. Objects keep their shape and orientation, with no rotation, just as in the original.",
+    "limitations": "The program assumes the constructor's domain:\n- Object sizes are distinct, so ties never matter. If a tie did occur, it would be broken by the top-left position of the bounding box in visible coordinates. That can differ from the original's ordering under rotation.\n- Every object is a single colour and is separated from the others, so each object is exactly one 4-connected component.\n- The background is always palette[7].\n- The objects' combined extent along the packing direction fits inside the grid. Any cells that would fall outside are clipped defensively.\n\nThe demonstrations are not used, because the rule is fully determined. No contradictions with the fixtures were found: all three training pairs and the test pair match the uniform rule. I have not run any tests on this factory."
+  }
+}

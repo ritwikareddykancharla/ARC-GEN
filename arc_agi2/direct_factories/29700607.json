@@ -1,0 +1,21 @@
+{
+  "task_id": "29700607",
+  "factory_sha256": "cd16f71e748528760848430145254405c2f96569c3878afa83cb6b7b6d127264",
+  "constructor_sha256": "7c35b7411e6998256641106c8183dea7829873466f8b56a0d5f5df4ea3384181",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 276315475728969,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 3.0304274579975754,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "In the original task, seed cells sit on the top row. Each seed is matched to a marker of the same colour on the left or right column. The seed draws a line perpendicular to its edge, down to the marker's row. A leg then runs along that row from the seed's column to the marker's edge. A seed with no marker draws a line across the full grid. Under the D4 convention (optional row reversal, then k = d4 % 4 clockwise rotations), the original top edge maps to a visible edge as follows: k=0 top, k=1 right, k=2 bottom, k=3 left. The row reversal only swaps the two marker edges. The mechanism is symmetric in those two edges, so only k matters. For each case the factory emits code written directly in visible coordinates: it scans that edge for seeds and searches the two perpendicular edges for markers, moving away from the seed edge. It then draws the perpendicular line and the leg to the marker edge, or a full line when no marker exists. The background colour is specialised to the constant palette[0]. No grids are rotated or re-coloured.",
+    "limitations": "This has not been tested; the code has not been run. The background is assumed to be palette[0], which matches the generator, since its colours are drawn as non-zero. If a colour had markers on both perpendicular edges, the program takes the marker nearest the seed edge. If both appear at the same distance, it chooses a fixed side. That choice may differ from the archived solver under reflections. The generator never produces this case. Draw order follows increasing visible index along the seed edge, but the generator guarantees the lines do not overlap. Rectangular grids are handled, although the generator only makes square ones."
+  }
+}

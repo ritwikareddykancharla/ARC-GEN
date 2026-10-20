@@ -1,0 +1,21 @@
+{
+  "task_id": "54d9e175",
+  "factory_sha256": "072eba25537f8796ab8a98e815ebb11cca7a32b480cad7d887745491e85fa049",
+  "constructor_sha256": "f2a275e8e01702f1ac337006a8a39a570b2b5929483ee00e16ff44cc43154bb2",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 70179111555533,
+  "d4": 7,
+  "unique_base_inputs": 547,
+  "seconds": 8.407420875038952,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The original mechanism works like this. Full lines of colour 5 split the grid into 3x3 panels, and each panel holds one seed of colour c in 1..4. Each panel is filled solid with c+5, and the dividers are kept.\n\nThe emitted program follows the same mechanism directly in visible coordinates:\n- It scans for rows and for columns that consist entirely of palette[5]. Because both axes are scanned, the rotations and reflections in D4 need no axis-specific rewrite. A one-row strip of panels that was rotated, for example, simply shows up as horizontal dividers.\n- It takes each maximal non-divider span pair as a panel.\n- In each panel it finds the single cell that is neither palette[0] (background) nor palette[5] (divider). That cell is the seed.\n- It fills the panel with the specialised constant palette[c+5], keyed on the seed's visible colour palette[c].\n\nAs a secondary source, the program also reads seed-to-fill pairs from the demonstrations, but only for seed colours missing from the constant table. Panels with no seed are left unchanged.\n\nThe four approved train fixtures are consistent with the uniform rule.",
+    "limitations": "- The program assumes the palette is injective, so the background, divider and seed colours stay distinct after mapping, as in any colour permutation.\n- It relies on divider lines spanning the full grid in the visible orientation, which holds under the constructor (width 11, heights 3 or 7) and all D4 transforms.\n- A seed colour outside palette[1..4] can only be mapped if a demonstration shows it. Otherwise that panel is left unchanged.\n- No tests have been run."
+  }
+}

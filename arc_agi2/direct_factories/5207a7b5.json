@@ -1,0 +1,21 @@
+{
+  "task_id": "5207a7b5",
+  "factory_sha256": "48145271dac85e59ec9b1c19493c60d6b8ee959554d253548f7185fad1e87650",
+  "constructor_sha256": "bbf0f993678ccd645a5a165c4fc352c68af16efb5fd557a65332e971bdc87970",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 135483787190240,
+  "d4": 7,
+  "unique_base_inputs": 561,
+  "seconds": 5.39606062497478,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "In canonical form, a bar of colour 5 hangs from the top edge at column c with length L. A column at signed lateral offset k from the bar (k = d on the left, k = -d on the right) is filled from the anchoring edge for L + 2k cells. The fill is colour 8 when k > 0 and colour 6 when k < 0, and it is clipped by the grid boundary. The factory maps the canonical DOWN direction (0 along the bar, away from the anchor edge) and LEFT direction (0 toward the 8 side) through the D4 transform: a row reversal negates the column component, and each clockwise rotation maps (dr, dc) to (dc, -dr). The emitted program works in visible coordinates. It finds the bar using palette[5], with a fallback to any non-background cell. For each cell it measures distance along DOWN from the anchor edge, offset by the bar's start (always 0 in the generator). It computes the lateral offset k as a dot product with LEFT, then fills palette[8] or palette[6] when the along-distance is less than L + 2k. Clipping at the grid edge is implicit, and columns whose length is zero or negative stay empty, matching the generator's min(height, length + 2*(col - c)).",
+    "limitations": "The program assumes a single straight bar in palette[5] anchored at the edge implied by d4, as the generator guarantees. The demonstrations are not used, because d4 and palette fully determine the roles. If a bar were not anchored at the edge, the fill would start at the bar's start rather than at the edge; this matches the archived solver, but the generator never produces that case. I have not run any tests; the fixtures are consistent with the uniform rule."
+  }
+}

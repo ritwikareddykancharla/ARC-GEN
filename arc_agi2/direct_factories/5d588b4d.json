@@ -1,0 +1,21 @@
+{
+  "task_id": "5d588b4d",
+  "factory_sha256": "e9b8d8f47989e81e55c0b9c6677901897e38496ca3446668cf050adf90131966",
+  "constructor_sha256": "15fecae81fb74010849ba6f14745c2fa0ac49bfc9630d64c10f7e2e22f30134a",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 191724633335808,
+  "d4": 7,
+  "unique_base_inputs": 968,
+  "seconds": 3.2712664590217173,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The input bar has n cells, so the output is a run sequence 1..n..1 with one background cell after each run. That sequence is n^2+2n-1 cells long. It is written in raster order along strips whose length equals the bar-axis extent of the input grid. The strip count NL is the ceiling of total / W, and the background is palette[0].\n\nThe factory works out where canonical raster (line, off) lands in visible coordinates for the given D4 transform. It specialises four things:\n- which visible axis the strips follow, either horizontal rows or vertical columns;\n- the direction along a strip;\n- the order in which strips advance;\n- the output shape, either NL x W or W x NL.\n\nFor example, under one clockwise rotation the strips become columns filled top to bottom, and new strips are added to the left. The bar colour is taken as the most common non-background colour, and n is the count of non-background cells.",
+    "limitations": "The program assumes the constructor's domain: a single bar of one colour on a background equal to palette[0], with the strip length taken from the full input extent along the bar axis. The generator rejects cases where the sequence would end with a lone wrapped cell, but the program would still render those consistently. No contradictions with the fixtures were found. None of this has been tested."
+  }
+}

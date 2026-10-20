@@ -1,0 +1,110 @@
+{
+  "task_id": "32e9702f",
+  "factory_sha256": "2e73ac000fcc2af122454cf67e38ffa15b521d7aa7027a85a2a543ba177c875b",
+  "constructor_sha256": "5034184f4cd4704fdf3040c798d2cda8436079255cf679afead7acd46e9b9747",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [
+    {
+      "seed": 168322592065275,
+      "error": "Sample larger than population or is negative"
+    },
+    {
+      "seed": 31842503710005,
+      "error": "Sample larger than population or is negative"
+    },
+    {
+      "seed": 163866042173154,
+      "error": "Sample larger than population or is negative"
+    },
+    {
+      "seed": 237683168876346,
+      "error": "Sample larger than population or is negative"
+    },
+    {
+      "seed": 147662670771061,
+      "error": "Sample larger than population or is negative"
+    },
+    {
+      "seed": 99277822892458,
+      "error": "Sample larger than population or is negative"
+    },
+    {
+      "seed": 129292430415121,
+      "error": "Sample larger than population or is negative"
+    },
+    {
+      "seed": 212359818891275,
+      "error": "Sample larger than population or is negative"
+    },
+    {
+      "seed": 188891206035979,
+      "error": "Sample larger than population or is negative"
+    },
+    {
+      "seed": 202386503705286,
+      "error": "Sample larger than population or is negative"
+    },
+    {
+      "seed": 19667013401537,
+      "error": "Sample larger than population or is negative"
+    },
+    {
+      "seed": 70246623346466,
+      "error": "Sample larger than population or is negative"
+    },
+    {
+      "seed": 209041196595621,
+      "error": "Sample larger than population or is negative"
+    },
+    {
+      "seed": 116614557162382,
+      "error": "Sample larger than population or is negative"
+    },
+    {
+      "seed": 276383885055527,
+      "error": "Sample larger than population or is negative"
+    },
+    {
+      "seed": 179913189414827,
+      "error": "Sample larger than population or is negative"
+    },
+    {
+      "seed": 140894744905883,
+      "error": "Sample larger than population or is negative"
+    },
+    {
+      "seed": 217895279694000,
+      "error": "Sample larger than population or is negative"
+    },
+    {
+      "seed": 171029113018540,
+      "error": "Sample larger than population or is negative"
+    },
+    {
+      "seed": 165096641323375,
+      "error": "Sample larger than population or is negative"
+    },
+    {
+      "seed": 257587729281917,
+      "error": "Sample larger than population or is negative"
+    },
+    {
+      "seed": 281164405934355,
+      "error": "Sample larger than population or is negative"
+    }
+  ],
+  "seed": 157538520926648,
+  "d4": 7,
+  "unique_base_inputs": 895,
+  "seconds": 1.7625862079439685,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "In the original family, the background is 0. Each line is one colour other than 0 or 5. The output starts as a canvas filled with 5, and every coloured cell is shifted one column left. Cells pushed past the edge are dropped, which clips segments touching the left border.\n\nThe factory works out the visible shift vector from d4. The original vector (dy, dx) = (0, -1) means 'left'. For d4 >= 4 the factory first mirrors it horizontally, giving 'right'. It then rotates the vector clockwise d4 % 4 times using (dy, dx) -> (dx, -dy). The resulting direction is left, up, right or down.\n\nColour roles become constants:\n- The input background is palette[0].\n- The output fill is palette[5].\n- Each moved cell keeps its own visible colour.\n\nThe emitted program works directly on the visible grid. It marks every non-background cell, translates it by (DY, DX), clips it to the bounds of the rectangular grid, and stamps it onto the filled canvas.",
+    "limitations": "- The emitted program assumes the input background is exactly palette[0], as in the constructor, where line colours are never 0 or 5. It does not infer this colour from the demonstrations.\n- Cells are shifted one by one rather than as connected objects. This gives the same result as the archived per-object solver because every cell in an object moves by the same offset.\n- I found no contradictions between the fixtures and the uniform rule.\n- I have not run any tests."
+  }
+}

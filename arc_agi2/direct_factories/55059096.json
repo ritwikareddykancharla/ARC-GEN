@@ -1,0 +1,21 @@
+{
+  "task_id": "55059096",
+  "factory_sha256": "404f466b7782c5a3632edf9e6a088cbf43fd3deab9a90fabbee2ed1727ee9a29",
+  "constructor_sha256": "60edd0b1293dbe423f5fa5ac77d199cd4775cedbecd640dfabc5732bf9400eef",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 166902953658315,
+  "d4": 7,
+  "unique_base_inputs": 997,
+  "seconds": 7.5597114589763805,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The emitted program uses three constants: background = palette[0], plus-sign colour = palette[3] and line colour = palette[2]. It finds the 4-connected components of plus-coloured cells and takes the centre of each component's bounding box. For every pair of centres with |dy| == |dx| != 0, it walks the diagonal between them and paints each background cell in the line colour. Plus cells keep their colour. The program works directly in visible coordinates. Every D4 transform maps diagonals to diagonals, and the plus shape and its centre stay the same under rotation and reflection. So the same equal-offset diagonal test is correct for all eight orientations, and d4 does not need to change any direction. Horizontal and vertical alignments are skipped, which matches the demonstrations.",
+    "limitations": "I have not run any tests. The program assumes the constructor's setting: whole 3x3 plus signs that never touch each other, a single plus colour, and connecting lines that never cross. If the plus colour is missing, it falls back to treating every non-background cell as part of a plus. The demonstration pairs are not used. The approved fixtures are consistent with this one uniform rule, and I found no contradictions."
+  }
+}

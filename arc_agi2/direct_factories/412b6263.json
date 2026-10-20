@@ -1,0 +1,21 @@
+{
+  "task_id": "412b6263",
+  "factory_sha256": "1ff639ef7e89da1140470a09ed6864725e99350e2801c89b7c2e7968b2e17ec5",
+  "constructor_sha256": "16e618fbe92bcb1e05ac514a7287dc94d2c06029cdc3bbc3fe777849158cb1e7",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 90511479046169,
+  "d4": 7,
+  "unique_base_inputs": 818,
+  "seconds": 3.334527958999388,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "In the original task, each output is two copies of the input rotated 90 degrees counter-clockwise. The copies are stacked vertically. Every copy is framed by lines of colour 1, and the cells where frame lines cross are colour 7.\n\nI conjugated this rule through the D4 transform T:\n- **Pure rotations (d4 < 4):** rotations commute, so the visible tile is still the visible input rotated counter-clockwise.\n- **Reflections (d4 >= 4):** these turn the counter-clockwise rotation into a clockwise one (F R_ccw F = R_cw). So the visible tile is the visible input rotated clockwise.\n- **Stacking direction:** each clockwise quarter turn swaps vertical and horizontal stacking. The copies stack vertically when d4%4 is 0 or 2, and horizontally when it is 1 or 3. The reflection does not change the stacking direction.\n\nThe frame layout is symmetric under D4, so it is built directly in visible coordinates:\n- **Vertical stacking:** the output is (2h+3)x(w+2). Lines run along rows 0, h+1 and 2h+2, and along columns 0 and w+1.\n- **Horizontal stacking:** the output is (h+2)x(2w+3). Lines run along columns 0, w+1 and 2w+2, and along rows 0 and h+1.\n\nFrame lines use palette[1]. Line crossings, including the four outer corners, keep palette[7]. Here h and w are the dimensions of the visible tile. Both copies are identical, so their order does not matter.",
+    "limitations": "The frame colour (palette[1]) and the crossing colour (palette[7]) are fixed constants from the factory. They are not inferred from the demonstrations, which matches the constructor, where both colours are always constant. The demonstrations are ignored. The program handles any rectangular input, including grids larger than the generator's range, as long as the output fits ARC's 30x30 limit. The fixtures are consistent with the uniform rule, and no contradictions were found. I have not run any tests."
+  }
+}

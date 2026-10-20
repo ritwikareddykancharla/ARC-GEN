@@ -1,0 +1,21 @@
+{
+  "task_id": "5ad4f10b",
+  "factory_sha256": "03404e761c9631299f4d626f268866b9700838bf239811dc09733e4570f61fe3",
+  "constructor_sha256": "19d14cc1a4156c1ba6e741645c461813d483f2f0c774fda77ce0635ed35f2833",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 33752073973504,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 8.12342329195235,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The block-sampling rule is D4-equivariant, and the 3x3 output is transformed the same way as the input. So the emitted solver works directly in visible coordinates and needs no orientation rewriting. The background is specialised to palette[0]; at 5% noise density it is always the dominant colour.\n\nThe shape and noise colours are randomised in the generator, so they are inferred from pixels. Mega-sprite cells are drawn last and are never overwritten. As a result, the shape colour is the one whose cells exactly form a magnified 3x3 sprite: its bounding box is square, its side is divisible by 3 with magnifier at least 2, and every block is entirely filled or entirely empty. If several colours qualify, the one with the most cells wins.\n\nThe noise colour is the remaining non-background colour (most cells if there are several). The output places the noise colour in filled blocks and the background in empty ones.\n\nIf no colour passes the exact-block test, the solver falls back to the archived approach. That approach takes the colour of the largest 4-connected component and samples each block's centre cell.",
+    "limitations": "Nothing has been run or tested. The solver assumes the Conway sprite occupies all three block rows and all three block columns, so its bounding box is exactly 3x3 blocks. This matches every fixture and the generator's offset logic. If a sprite left a block row or column empty, the bounding-box division would be wrong; the solver does not infer the magnifier from the demonstrations. If the noise colour were entirely covered by the sprite, the output would use the shape colour instead. That case is practically impossible in the generator's domain. No contradictions with a uniform rule were found in the fixtures."
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "task_id": "321b1fc6",
+  "factory_sha256": "c9d9cd0f6faee0f660e2b274cd19578a850949812f0a9b0a32f21d492a70a25b",
+  "constructor_sha256": "b8876ce3726fb2133f99752205c271f1e64e24da0345a7a03cb85883d517f745",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 230287580920441,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 5.295031292014755,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The rule: several copies of one shape are drawn in the marker colour, palette[8]. One more copy carries a colour pattern. Each marker copy is repainted cell by cell with that pattern, aligned at bounding-box origins, and then the pattern is erased to background, palette[0].\n\nA D4 transform moves every copy, including the template, in the same way. So bounding-box alignment and the relative offsets of cells stay valid directly in visible coordinates, and no axis or direction needs specialising. Only the colour roles are specialised: background becomes palette[0] and marker becomes palette[8].\n\nThe emitted program works as follows:\n- It finds the 4-connected marker components and takes the shape outline from one of them.\n- It locates the template's origin. By default this is the bounding box of the cells that are neither background nor marker. If template cells could ever have the background colour, it falls back to searching for a placement of the shape that covers all template cells.\n- It copies the template value at each relative offset into each marker cell.\n- It clears the template placement to background.",
+    "limitations": "- Relies on the generator's guarantee that the marker copies are 4-connected and separated from each other, so each connected component is exactly one shape copy.\n- Background and marker are fixed constants, palette[0] and palette[8]; they are not inferred from the demonstrations.\n- If the template contains the background colour on the shape's outer boundary, its bounding box may be ambiguous. The program then uses the first placement that covers all template cells, scanning shape cells in sorted order. The generator appears to exclude black from template colours, so this case should not arise.\n- No fixture contradicts the uniform rule.\n- I have not run any tests."
+  }
+}

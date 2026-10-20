@@ -1,0 +1,21 @@
+{
+  "task_id": "58490d8a",
+  "factory_sha256": "59118c049279ee8048e1d26a989ec5acf6bf9f472a27a4839c4db1ad4790e9a0",
+  "constructor_sha256": "f0621f2e1077c999df6f221e709a02896a8723d042745b1314a36147c07eac2b",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 171036435223348,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 10.084741875063628,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The canonical rule crops the bounding box of colour 0 (the panel). Its column 1 holds a legend of colours at odd rows. For each legend colour c, the program counts the 8-connected components of c outside the panel; call that n. It then writes c at panel columns 1, 3, ..., 2n-1 of that legend row. In visible coordinates, the panel colour is the constant palette[0]. The background is found as the most frequent colour, and all other colours are read directly from the pixels.\n\nThe factory works out which visible panel edge the canonical left edge maps to:\n- A row reversal sends left to right.\n- Each clockwise quarter turn advances the edge one position clockwise (left->top->right->bottom).\n\nThe emitted program then reads the legend line one cell inside that edge (column 1, column W-2, row 1 or row H-2). It stamps n dots with a stride of 2, moving away from that edge: rightward, leftward, downward or upward. So horizontal stamping becomes vertical stamping under 90-degree rotations, and its direction reverses under reflections.\n\nThe legend positions along the line need no special handling. The panel extent along the legend axis is 2k+1, which is odd, so the odd offsets are the same counted from either end. The program simply scans the line for cells that are not the panel colour. Component counting matches the archived solver: 8-connected, with the panel region masked out using the background colour. Nothing is rotated or re-permuted.",
+    "limitations": "These follow from the constructor's domain. The program assumes palette[0] appears only in the panel, and that the panel's bounding box is exactly the solid rectangle. It assumes the background is the most frequent colour, which the generator enforces. It assumes same-coloured shapes never touch, so the 8-connected count equals the shape count. Dots that would overflow the panel are clipped rather than wrapped, but the generator never produces overflow. Demonstrations are not consulted, because the orientation and panel colour are specialised from d4 and palette. I found no fixture contradictions with the uniform rule. This code has not been run."
+  }
+}

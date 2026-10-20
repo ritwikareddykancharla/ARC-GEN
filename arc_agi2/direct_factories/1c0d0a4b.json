@@ -1,0 +1,21 @@
+{
+  "task_id": "1c0d0a4b",
+  "factory_sha256": "bbb9650f8c4a68d8cce9bff2b39d3926fb5e04d7900e0eb8e238537298ee0c6c",
+  "constructor_sha256": "dcb06b09c1af1e474bd3cb1c85ddb96d3044ef2c798819d6eb26cbd6c189f80e",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 3182988277556,
+  "d4": 7,
+  "unique_base_inputs": 985,
+  "seconds": 2.212865374982357,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The input is a lattice of 3x3 tiles. Separator rows and columns sit at indices that are multiples of 4, and the grid size is (4h+1)x(4w+1). Every D4 transform maps an index i to either i or (4k - i). So separator rows and columns stay at multiples of 4, and tile cells stay at offsets 1-3 mod 4 on both axes. This holds even when a rotation swaps the height and width of a rectangular grid. The emitted program therefore walks the 3x3 windows starting at rows/columns 1, 5, 9, ... in visible coordinates. Inside each window it inverts the tile: a foreground cell (palette[8]) becomes background (palette[0]), and every other cell (the background) becomes the new colour (palette[2]). Separator cells keep their background colour. The colour roles are fixed constants taken from the palette.",
+    "limitations": "Colour roles are set from the palette constants, not inferred from the demos. This assumes the generator's domain: tile cells are only background or foreground, and the grid dimensions are 4k+1. Inside a tile, any cell that is not the foreground colour is turned into the new colour, which matches the archived solver. No contradictions with the fixtures were noticed. Nothing has been tested; I did not run anything."
+  }
+}

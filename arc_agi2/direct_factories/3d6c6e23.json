@@ -1,0 +1,21 @@
+{
+  "task_id": "3d6c6e23",
+  "factory_sha256": "d8ed3f370094172e4f40c1645f3116e9c1c04e090045407e4d68212766e74963",
+  "constructor_sha256": "2009f9ec772950eb248d0113fe0242f1c23843bd9238460d2c69bc51618664b3",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 147094629019802,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 13.631421791971661,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The original rule finds each vertical line of non-background cells. It reads the line's colours top to bottom, splits them into chunks of 1, 3, 5, ... cells, and erases the line. It then stacks the chunks as centred rows, with the widest row on the bottom edge. Within each row, colours are written left to right. The factory maps the original 'down' vector (1,0) and 'right' vector (0,1) through the D4 transform. A row flip negates the column component, and each clockwise turn maps (dr,dc) to (dc,-dr). The resulting constants are written into the emitted program, which works directly in visible coordinates. If the down image is vertical, lines are columns. They are read in the DR direction, and the base sits on the bottom edge (DR=+1) or the top edge (DR=-1). If it is horizontal, lines are rows, read in the DC direction, with the base on the right or left edge. Within each pyramid row, the colours are laid out along the transformed 'right' vector starting at offset -k. This preserves the left-to-right fill order under reflections. Background is palette[0]. All lines are erased before any pyramid is drawn, and cells outside the grid are clipped, matching the archived solver.",
+    "limitations": "Background is fixed to palette[0], which is always the background in this generator. The archived solver instead used the most common colour; these agree on all generated scenes. A line is assumed to be any column (or row, under rotation) containing non-background cells, as in the generator. No inconsistency was found between the fixtures and the uniform rule. I have not run any tests."
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "task_id": "239be575",
+  "factory_sha256": "c5ef1c3fb6001d6470d283990f29465ed6c3e2dd61cc98af5599f571a94486b5",
+  "constructor_sha256": "eeb2ea1c7fbee4fd6438cd54f275ba7271da411ca7d463b0c2b98e8ba15370a5",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 100353230618049,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 1.8983863750472665,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "Every input contains two 2x2 squares of colour palette[2] and scattered palette[8] cells on a palette[0] background. The answer is a 1x1 grid: palette[8] if the two squares are joined by a 4-connected chain of red/azure cells, otherwise palette[0]. 4-connected reachability is unchanged by any rotation or reflection, so the emitted program works directly in visible coordinates and needs no direction-specific changes. Only the colour roles are specialised, using palette constants. The program flood-fills from the first red cell in reading order through red and azure cells. It answers palette[8] exactly when every red cell, and so the other square, is reached. This matches the generator's path_exists, which starts from box 0 and reports success when it newly reaches a red cell, which can only belong to the other box.",
+    "limitations": "This assumes the generator's domain: exactly two 2x2 red boxes and only the three colours present. The generator spaces the boxes apart; if two boxes were directly adjacent, they would count as connected, which also agrees with the generator. If no red cells are present, the program returns the background colour. Nothing has been tested yet."
+  }
+}

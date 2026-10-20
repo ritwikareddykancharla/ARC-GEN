@@ -1,0 +1,25 @@
+{
+  "task_id": "34cfa167",
+  "factory_sha256": "bd3f6943ce5028d43bac5cf865c4bbdd16f83d7217f5b863d6d3ccaa15f8743b",
+  "constructor_sha256": "ef9647b6382bcf88ed78b8879de1223831880f4791b1d67ad2f0e2d2747a8e37",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 34732074219235,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 10.664576833019964,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The factory turns d4 into two visible unit vectors. UX is the visible direction of the original +column axis, which carries the horizontal legend. UY is the visible direction of the original +row axis, which carries the vertical legend. The square colour becomes the constant palette[1].\n\nThe emitted program works directly in visible coordinates:\n1. Among the square-colour cells, the one with the smallest projection on UX+UY is the legend square's leading corner O. The cell with the largest projection is the far corner of the opposite square.\n2. L is the run length of square cells from O along UX. The far square's leading corner then gives the rectangle extents T (along UY) and WD (along UX).\n3. Colours are read from the cells next to the legend square: frame at (0,L), background at (0,L+1), stripe at (0,L+2) and vertical frame at (L,0).\n4. A fresh background grid is drawn in the constructor's exact order, using offsets (a along UY, b along UX) from O:\n   - the four corner squares;\n   - period-4 stripe-colour bars in both bands;\n   - solid outer frame lines;\n   - period-4 frame bars.\n5. The constructor's vertical-frame loop contains a typo: its end is `bcol + tall - length` instead of `brow + tall - length`. The program reproduces this. It measures the margins mh and mv, the number of cells between O and the grid edge behind it along -UX and -UY. These equal bcol+1 and brow+1. The vertical frame bars are then drawn for a in range(L, (mh-mv)+T-L-1, 4), with out-of-grid writes skipped.\n\nWhen the typo has no effect, the result is identical to the archived solver.",
+    "limitations": "Native fixture and fresh-pair audits apply to the corrected constructor SHA. Original CLI draft deliberately reproduced a constructor indexing bug; host removed it before admission. No benchmark labels changed.",
+    "host_review": {
+      "constructor_fix": "Corrected vertical bar upper bound from bcol+tall-length to brow+tall-length. Original fixture labels unchanged; tested translation invariance.",
+      "factory_fix": "Removed absolute column-row shift that reproduced the constructor typo; bar placement now depends only on rectangle-relative row."
+    }
+  }
+}

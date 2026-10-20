@@ -1,0 +1,21 @@
+{
+  "task_id": "1be83260",
+  "factory_sha256": "701a74483872b24e2a9e53e68609400a1356ca9699e3326c76ae97c075676104",
+  "constructor_sha256": "1a343ef14545ea26732a9c17c9ed4a4b9616bf9ba03980278901f11a763d5195",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 66417319371800,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 11.925976667087525,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The input background is the constant palette[0]. The tile colour is the most common non-background colour. The emitted program finds tiles as 4-connected components of non-background cells. Each tile's border is solid, so its bounding box is the whole tile. The marked tile is the component whose box holds colours other than the background and the tile colour.\n\nIn the generator, hole slots sit at odd offsets inside an odd-sized tile. That gives a lattice of ((h-1)/2) by ((w-1)/2) slots in visible coordinates, and this property holds under every D4 transform. The output has that many blocks, each h by w, separated by 1-cell lines of the tile colour.\n\nFor each lattice slot of the marked tile:\n- If the slot holds a colour v other than the tile colour, block (i,j) is filled with v. The tile's hole pattern (cells of the marked tile not equal to the tile colour) is then reset to the tile colour.\n- If the slot holds the tile colour, it had no hole, and the block stays plain tile colour.\n\nThe whole mechanism works in visible coordinates and is equivariant under D4. Block placement follows the visible hole lattice, and stamped shapes copy the visible tile orientation, so no axis needs specialising. Colour roles are inferred from pixels, with only the background tied to palette[0].\n\nThe lattice size comes from the tile dimensions, not from the occupied hole rows and columns. This handles lattice rows or columns with no holes at all, which the archived solver would wrongly shrink. Any non-tile-colour value in a hole counts as a mark, so a mark that equals the background colour still paints its block.",
+    "limitations": "Assumes the constructor's domain: tiles never touch each other or the grid edge (brow, bcol >= 1 with 1-cell gaps), the tile colour is the strict most frequent non-background colour, and exactly one tile carries marks. If two components both had marks, the one with more marked cells would be chosen. No fixture contradictions were found: both train pairs and both test pairs agree with this rule. No tests were executed by me."
+  }
+}

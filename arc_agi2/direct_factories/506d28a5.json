@@ -1,0 +1,21 @@
+{
+  "task_id": "506d28a5",
+  "factory_sha256": "1fdbe214041d9162cd749607a808b279f4422e38ee581409549d53cf5b36f1fb",
+  "constructor_sha256": "ad6773c2eaba5a4efb97274f67749c7e06e927e8fa9718fb2e413d7ddacc8e90",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 202130205446079,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 2.9169880830449983,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The original task stacks two equal panels along the vertical axis with a full line of colour 4 between them. One panel uses colours {0,2} and the other uses {0,1}. The output is the panel-sized OR: a cell gets 3 where either panel is non-background, and 0 elsewhere.\n\nA horizontal flip (d4>=4) keeps the divider as a row. Each clockwise quarter-turn swaps rows and columns. So the divider is a visible row when d4%4 is even and a visible column when it is odd. The emitted program splits the visible grid directly along that axis.\n\nThe divider is found as a full line of palette[4]. Panels never contain colour 4, so a panel row of all 2s cannot be mistaken for it. If several lines qualify, the one closest to the centre wins. If none is found, the grid is cut in half.\n\nAny rotation or flip is an affine map, so the two visible panels stay aligned cell by cell with the visible output. That means the OR can be applied position by position in visible coordinates with no remapping. Background, fill and divider colours are written in as palette[0], palette[3] and palette[4].",
+    "limitations": "If the two panels came out with different sizes, both are truncated to the smaller one from the start of the split axis. The generator always makes equal panels, so this should not occur in the constructor's domain. I found no contradictions between the fixtures and the uniform OR rule. I have not run any tests."
+  }
+}

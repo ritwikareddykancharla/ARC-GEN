@@ -32,10 +32,18 @@ def generate(size=None, brows=None, bcols=None, angles=None, colors=None):
     size = 4 * common.randint(2, 4)
     num_boxes = size * size // 16 - common.randint(0, 1)
     while True:
-      brows = [common.randint(0, size - 2) for _ in range(num_boxes)]
-      bcols = [common.randint(0, size - 2) for _ in range(num_boxes)]
-      if not common.overlaps(brows, bcols, [2] * num_boxes, [2] * num_boxes, 1):
-        break
+      brows, bcols = [], []
+      positions = [(r, c) for r in range(size - 1) for c in range(size - 1)]
+      # Place non-overlapping boxes incrementally rather than resampling
+      # all 15-16 positions together on a crowded 16x16 canvas.
+      for row, col in common.sample(positions, len(positions)):
+        count = len(brows) + 1
+        if common.overlaps(brows + [row], bcols + [col], [2] * count, [2] * count, 1):
+          continue
+        brows.append(row)
+        bcols.append(col)
+        if len(brows) == num_boxes: break
+      if len(brows) == num_boxes: break
     angles = [common.randint(0, 3) for _ in range(num_boxes)]
     colors = [2 if common.randint(0, 1) else 5 for _ in range(num_boxes)]
 

@@ -1,0 +1,21 @@
+{
+  "task_id": "2c608aff",
+  "factory_sha256": "73d7f58b6af0b855370a418f6d451d6b54df8782b2f8acf82d9b095149c22dfc",
+  "constructor_sha256": "665c805d5ed714c4f9f2541e5fcb055af8a51ba2d3bb08cf9061dac2410b4eed",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 33902798302257,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 4.736006333027035,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The emitted program reads every role from the pixels of the visible grid. The background is the most common colour. The box colour is the non-background colour whose cells exactly fill their bounding box; if several colours qualify, it takes the one with the most cells. This is more robust than taking the largest component, because the dots can together outnumber a small box. Every remaining non-background cell is treated as a dot. If a dot lies within the box's column span above or below the box, the program fills the cells strictly between the dot and the box with the dot's colour. It does the same for a dot within the box's row span to the left or right. This is the same as the generator's rule of walking toward the box until it reaches box colour. The rule treats all four directions the same way, so it is unchanged by D4 transforms. Colour roles are inferred rather than hard-coded, so any palette works. No normalization or rotation wrappers are used.",
+    "limitations": "If no dots exist, the program returns the input unchanged, which matches the generator. Adjacent dots are each handled as individual cells, which matches the generator's per-pixel loop; the archived solver skips multi-cell dot clusters instead. Box detection could fail only if a dot cluster happened to form a filled rectangle with at least as many cells as the box. That cannot happen in this domain: the box is at least 3x3, and dots are sparse and kept away from the box. No tests have been run."
+  }
+}

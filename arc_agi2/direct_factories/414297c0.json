@@ -1,0 +1,21 @@
+{
+  "task_id": "414297c0",
+  "factory_sha256": "413c8eb0b538cc3d44185667e067e90459f5d44ba931bed65c81abb0581c83a4",
+  "constructor_sha256": "60164091af45dd98eaa1f619d5b6c62dc5615db819318cb7340197c3accbd214",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 222517042205817,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 119.5239037910942,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The mechanism looks the same under every D4 transform. Each stamp's 2-cells are copied by their offsets from the stamp centre, and the canvas is an axis-aligned crop. Both of these work directly in visible coordinates, so the transform needs no rewrite. The palette is specialised as constants: background = palette[0] and stamp-cell colour = palette[2]. The rectangle colour is taken from the pixels: it is the most frequent colour other than the background and the stamp colour. Each hue appears at most twice (centre plus marker), while the rectangle has at least about 20 cells. The canvas is that colour's bounding box, cropped. A stamp centre is any cell outside the box that is not the background, stamp, or rectangle colour. Every marker inside the crop whose colour matches a stamp centre gets that stamp's 2-cells written around it. Writes are clipped to the canvas. A stamp centre with no matching marker is ignored.",
+    "limitations": "Relies on these generator guarantees: rectangle colour and hues differ from the stamp colour and from each other; each hue appears once outside the rectangle; stamps' 3x3 neighbourhoods are separated from each other and from the rectangle. Ties in colour frequency are broken by the smallest colour, but they should not occur within the constructor's domain. The fixtures are consistent with this uniform rule. No tests have been run."
+  }
+}

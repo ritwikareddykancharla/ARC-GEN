@@ -1,0 +1,21 @@
+{
+  "task_id": "31aa019c",
+  "factory_sha256": "7204f5132c02b461dea5ba688201bcc86a6632073e924706002e6aba49281e62",
+  "constructor_sha256": "64bbc1aae7e2ed792d833a709a2c3b42f930616eee3219f5173765f0fd32403e",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 242884044793927,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 2.6720589579781517,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The generator places one colour exactly once and every other colour 2 to 7 times on a background of colour 0. The output keeps only the cells of the least-frequent non-background colour. It surrounds each such cell with a 3x3 ring of red (colour 2), and the cell itself keeps its own colour. Everything else becomes background. The emitted program specializes the background to palette[0] and the ring colour to palette[2]. It counts the non-background colours in the visible grid and picks the minimum-count colour, which the generator guarantees is unique with count 1. It then draws the 8-neighbour ring directly in visible coordinates, clipped at the borders, and re-stamps the centre colour. The 3x3 Moore neighbourhood is invariant under every D4 transform, so no axis or direction needs rewriting; d4 only changes where the cell sits, and the program finds it directly. Rectangular grids are handled because H and W are read from the grid.",
+    "limitations": "If several colours share the minimum count, which the generator never produces, the program chooses the one that appears first in row-major order in the visible grid. If the minimum count is greater than 1 (also impossible under the generator), it rings every cell of that colour, which mirrors the generator's min_color loop. The background is assumed to be palette[0], as the constructor's blank grids are colour 0. The fixtures are consistent with this uniform rule; no contradictions were found."
+  }
+}

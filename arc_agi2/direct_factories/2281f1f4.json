@@ -1,0 +1,21 @@
+{
+  "task_id": "2281f1f4",
+  "factory_sha256": "15489b571cbb565eff2803815fee2bee222f33acc66093fedd29bb45d55cb115",
+  "constructor_sha256": "fa2d6662a16026d1611c62a3a42aa131aaacd46f432b9b3bc8c40a85554fb5d4",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 224296161293039,
+  "d4": 7,
+  "unique_base_inputs": 998,
+  "seconds": 3.145234207971953,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The original rule puts markers on two perpendicular edges. The top row marks columns and the right column marks rows. Every intersection of a marked row and a marked column becomes red (2), and the markers themselves are kept. The factory pushes the cells of the original top row and right column through the D4 map (reverse rows if d4>=4, then rotate clockwise d4%4 times) on an abstract 10x10 grid. This tells it which visible edges they land on. It then emits code that works directly in visible coordinates. If the column-marker edge lands horizontal, it reads columns from that row and rows from the perpendicular edge column. If it lands vertical, the roles swap: that column marks rows and the other edge's row marks columns. In both cases the shared corner cell is excluded, as in the original. Each background cell at an intersection is filled with palette[2]. A marker is any cell that differs from the background palette[0].",
+    "limitations": "Assumes the background is palette[0] and that every non-background cell on the two marker edges is a marker, which matches the generator. Real grids are square, but the code uses the actual h and w, so rectangular grids would also be handled. The shared corner is never treated as a marker. The fixtures are consistent with the uniform rule. Not executed or tested by me."
+  }
+}

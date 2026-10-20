@@ -1,0 +1,21 @@
+{
+  "task_id": "3bd292e8",
+  "factory_sha256": "a507eeac9269f27263c6c69ae044d67e579dcf6ecc23a29ecd8bb6ed8bd5ca9b",
+  "constructor_sha256": "17ce425a57e5cb3b275572b4771f6c8ce38eea0d797ee3b449334167d5ae939a",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 118080346779503,
+  "d4": 7,
+  "unique_base_inputs": 995,
+  "seconds": 5.557509792037308,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The generator's colouring is a boundary walk. It starts at the original bottom-left corner, goes up the left edge (excluding the top-left cell), then runs along the top edge from the top-left to the top-right corner. Each time the walk meets a background cell that has not been coloured yet, it 4-connected flood-fills that region. The fill colour alternates, starting with 5 and then 3. The red staircase lines stay unchanged.\n\nThe factory maps the three corners of this walk (bottom-left, top-left, top-right) through the D4 transform to visible corners. It does this symbolically: a row flip for indices >= 4 sends rx to 1-rx, and each clockwise rotation sends (ry, rx) to (rx, 1-ry). The emitted program then builds the two edge segments in visible coordinates for any H x W grid and repeats the same walk, flood fill and alternation there.\n\nColour roles are constants: background is palette[7], the first fill is palette[5] and the second fill is palette[3]. Line cells are any non-background cells, and they are copied unchanged. On the canonical fixtures this matches the alternating-by-line behaviour described in the rule; I traced the train pairs and test pair by hand.",
+    "limitations": "No tests have been run. The program mirrors the generator's walk order instead of the archived solver's BFS over line adjacency. The two agree on generator scenes, including regions that are met twice on the boundary, which are skipped without toggling.\n\nAny background region that touches neither walked edge is left as background colour, matching what the generator produces. I assume common.fill is 4-connected, which is consistent with the archived solver and with pair 1.\n\nThe colour roles are fixed palette constants and are not inferred from the demonstrations."
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "task_id": "253bf280",
+  "factory_sha256": "9eb7c30dda2106e49432f0a1f81e4b1992491085abd510978398e935e4951a19",
+  "constructor_sha256": "36bc045d15189b4eeb8597e5d9607a0dd388b4d3ad0880af2abeaf0cc5852a86",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 18383117434549,
+  "d4": 7,
+  "unique_base_inputs": 998,
+  "seconds": 2.3925864580087364,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The mechanism looks the same under every D4 transform. Any two marker cells that share a row or a column get the cells strictly between them painted with the fill colour. Rotations and reflections only map rows to rows or columns, and columns to columns or rows. Reversing a row or column leaves the set of cells between two endpoints unchanged. So the emitted program checks both rows and columns directly in the visible coordinates and needs no direction specialisation. Colour roles become constants: background = palette[0], marker = palette[8], fill = palette[3]. As in the constructor, every aligned pair is bridged, not just consecutive neighbours. The constructor never puts more than two markers in one row or column, so both readings give the same result. Its non-crossing checks mean bridges only cover background cells. Grids with no aligned pairs, or no markers at all, are returned unchanged.",
+    "limitations": "The program relies on the palette mapping for colour roles and does not infer them from the demonstrations. If a row or column ever held three or more markers, the all-pairs bridging would match the constructor's own output rule. No contradictions with the fixtures were found. None of this has been executed here."
+  }
+}

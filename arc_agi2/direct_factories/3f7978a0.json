@@ -1,0 +1,21 @@
+{
+  "task_id": "3f7978a0",
+  "factory_sha256": "c79ff6c05a17c86dba80f303c85c815b30753b24bdd4c8198a677fc8cf29139a",
+  "constructor_sha256": "8860f2add1678bc33eff36e9df1ef095991a96e10fababc00ded5f9f8750c4dc",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 152105947744941,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 2.844176874961704,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The input contains two parallel grey (original colour 5) bars. Each bar has a cyan cap at each end. Together they mark the frame to crop. In canonical orientation the bars are vertical, so the crop is the bounding box of all grey cells extended by one row up and one row down. Horizontal flips (d4>=4) keep the bars vertical. An odd number of clockwise rotations makes them horizontal. So for d4 % 2 == 1 the emitted program extends the grey bounding box by one column left and right instead. The grey colour is specialised to palette[5]. Everything else, including noise cells inside the frame, is copied as-is from the visible input. The crop works directly in visible coordinates, with no rotation or recolouring of grids.",
+    "limitations": "This factory has not been tested; the host's verification run is still pending. The generator places grey only on the bars, since grey is written last and overwrites noise, so the grey bounding box always spans exactly the two bars. The one-cell extension is clamped to the grid, but under the generator's domain it always stays inbounds. If an input had no grey cells, the program would return the input unchanged; this cannot occur in the generator's domain. The fixtures are consistent with the uniform rule; no contradictions were found."
+  }
+}

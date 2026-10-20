@@ -1,0 +1,21 @@
+{
+  "task_id": "5b526a93",
+  "factory_sha256": "520a2738714064ae6ad519a53eaa2c87628055cb7874544532cd680122ba6605",
+  "constructor_sha256": "e01a153f3a5f70007708e1a0821d6508534612b0801daf3d0d1e4d863ec71f52",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 163038787338741,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 11.033895750064403,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The emitted program works directly on the visible grid. It finds the hollow 3x3 squares as 8-connected components of colour palette[1], and uses the first one in reading order as the stamping template. It then collects the set of top rows and the set of left columns used by all the squares. At every (top, left) crossing that does not already hold a square, it stamps the template in palette[8], writing only onto background cells (palette[0]).\n\nThe generator draws a lattice whose first row and first column of squares are given. Its flip, and any D4 transform applied afterwards, only change which corner the L-shape sits at. The hollow 3x3 square looks the same under every D4 transform. The crossing set is also built symmetrically from rows and columns. So the same direct rule holds under every D4 transform, and no axis needs to be specialised; d4 is accepted but not needed. Palette roles are fixed constants: background palette[0], square colour palette[1], fill palette[8].",
+    "limitations": "This assumes the constructor's domain: identical hollow 3x3 squares with gaps of at least one cell between them (centre spacing is 4 to 6), and every square fully inside the grid. Squares are found using the colour constant palette[1], not inferred from the demos. If squares ever touched each other, the component segmentation would merge them. Under that domain I found no contradiction between the fixtures and the uniform rule. As stated, no tests were run."
+  }
+}

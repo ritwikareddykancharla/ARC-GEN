@@ -1,0 +1,26 @@
+def build_program(d4, palette):
+    bg = int(palette[0])
+    fill = int(palette[5])
+    axis = 1 if (int(d4) % 4) % 2 == 0 else 0
+    lines = []
+    lines.append('import numpy as np')
+    lines.append('')
+    lines.append('BG = %d' % bg)
+    lines.append('FILL = %d' % fill)
+    lines.append('AXIS = %d' % axis)
+    lines.append('')
+    lines.append('def solve(demonstrations, grid):')
+    lines.append('    g = np.array(grid, dtype=int)')
+    lines.append('    h, w = g.shape')
+    lines.append('    if AXIS == 1:')
+    lines.append('        half = w // 2')
+    lines.append('        a = g[:, :half]')
+    lines.append('        b = g[:, half:half * 2]')
+    lines.append('    else:')
+    lines.append('        half = h // 2')
+    lines.append('        a = g[:half, :]')
+    lines.append('        b = g[half:half * 2, :]')
+    lines.append('    out = np.full(a.shape, BG, dtype=int)')
+    lines.append('    out[(a == BG) & (b == BG)] = FILL')
+    lines.append('    return out.tolist()')
+    return '\n'.join(lines) + '\n'

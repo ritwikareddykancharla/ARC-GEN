@@ -1,0 +1,21 @@
+{
+  "task_id": "3e6067c3",
+  "factory_sha256": "376bb154197cc4567a0fa4c693bdd388a63d3b6179801cb0b5b565d4fa4ba388",
+  "constructor_sha256": "d936f4a92da2e9fe5191062c6c8510357944a29d2d025eae321d52d0126d080b",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 175543296521966,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 12.788999916985631,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The emitted program reimplements the archived mechanism directly on the visible grid. The background is the most common colour. Non-background 4-connected components are split into multi-cell boxes and single-cell legend markers. The frame colour is the most common colour inside boxes, and each box's core bbox and label come from its non-frame cells. Box adjacency (same row or column band, no other box in between) and bridge filling (whole gap between frames, spanning A's core extent across the gap, coloured A) are D4-symmetric, so they are written without any orientation constant. Colour roles are inferred from pixel statistics, so no palette constant is needed. The only orientation-dependent element is the legend reading order. Originally it runs along +x. The factory pushes that direction vector through the D4 transform (an optional row reversal, then clockwise rotations mapping (dy,dx)->(dx,-dy)). It bakes the result into VY and VX, and markers are sorted by their projection p.y*VY + p.x*VX. This lets the legend sit as a bottom, top, left or right line read in either direction. A depth-first search with nearest-first candidate ordering and backtracking finds the path of unused, linked boxes spelling the legend. The generator guarantees this path is unique. One bridge is drawn per consecutive pair.",
+    "limitations": "This has not been executed by me. Correctness relies on the constructor's guarantees: background strictly most frequent, frame outnumbering any core colour, legend cells isolated from boxes and from each other, collinear legend markers, and a unique legend path. If a core colour equalled the frame colour, or boxes touched each other, component and role inference would fail, but the generator excludes both cases. DFS is exponential in the worst case, but box counts are at most 16 and the path is unique, so this should be fast in practice. The fixtures appear consistent with the uniform rule."
+  }
+}

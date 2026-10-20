@@ -1,0 +1,21 @@
+{
+  "task_id": "48d8fb45",
+  "factory_sha256": "cd72fd312a9355f407431877376054ce9a8b4ef4d3b9708c7c79a3d654c80b01",
+  "constructor_sha256": "b53df7feda45d89096b4c17a6b1721f8a5b3b56fe624baf2aadd39b28214ff2d",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 189061947372366,
+  "d4": 7,
+  "unique_base_inputs": 991,
+  "seconds": 1.8337006670190021,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "In the original task, the single grey marker (colour 5) sits one cell above the middle column of the target sprite's 3x3 window. That means the window's centre is two cells from the marker in the 'down' direction. A 3x3 window centred on a point is symmetric under every D4 transform, so only that marker-to-centre direction has to be transformed. A horizontal flip (d4>=4) leaves 'down' unchanged. Each clockwise rotation maps a direction (dr,dc) to (dc,-dr), so 'down' becomes left, then up, then right. The factory bakes in the marker colour palette[5] and this direction vector. The emitted program finds the marker in the visible grid, steps two cells in that direction to get the window centre, and returns the 3x3 crop around it. Because the output grids are transformed in the same way as the inputs, this crop is already in the correct orientation and colours.",
+    "limitations": "This assumes palette is a permutation, so palette[5] appears only as the marker; the generator never draws sprite colour over grey, so the marker always survives. If the marker colour is missing, the program falls back to the first colour that occurs exactly once. Cells of the window that fall outside the grid are filled with 0, which never happens in the generator's domain. The demonstrations are not used. I have not run any tests on this factory."
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "task_id": "4cd1b7b2",
+  "factory_sha256": "cf5a91352896e1750403ab867f45fd1c9fa3f33fdb482ad760382d7e853dae91",
+  "constructor_sha256": "30bf33e553a02c15ef38065146c5f8688946a435e58b63760246d5cdad5a6c2c",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 228311060993405,
+  "d4": 7,
+  "unique_base_inputs": 999,
+  "seconds": 3.357619291986339,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The task is Latin-square completion: holes (original colour 0, here palette[0]) are filled so each row and column contains each of the four colours (palette[1..4]) exactly once. The constraint is symmetric under all D4 transforms (rows<->columns, reversals preserve the row/column sets), so the emitted program works directly on the visible grid with no coordinate change; only colour roles are specialised via palette constants. It mirrors the generator's mechanism (repeatedly fill any row/column with a single hole by its missing colour), adds single-candidate cell deduction as in the archived solver, and falls back to backtracking. Under the generator, every hole was carved from a then-complete line, so the deduction always completes uniquely.",
+    "limitations": "Assumes the hole colour is palette[0] and fill colours are palette[1..4] (true for all generated 4x4 scenes). For non-4x4 grids it infers the colour set from the query and demonstration outputs, which is outside the constructor's domain. If a puzzle were unsolvable the partially deduced grid is returned."
+  }
+}

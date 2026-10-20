@@ -1,0 +1,21 @@
+{
+  "task_id": "444801d8",
+  "factory_sha256": "0f7d3aafc3b1b5b146ea6e457a01d6077b6ffd7fa076dd3127b2aeebebadae59",
+  "constructor_sha256": "a09a746f79b655715faa56209ac19d70745f83079e2c3456ce1f5a11fc100685",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 10838558881949,
+  "d4": 7,
+  "unique_base_inputs": 371,
+  "seconds": 4.428063250030391,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "Each cup is a 4-connected component of the rim colour (palette[1]). The program takes its bounding box and finds the seed: the first cell in the box that is neither background (palette[0]) nor rim colour. It paints every background cell inside the box with the seed colour, which covers the interior and the gap in the rim. It then paints the full line just outside the open side of the box, across the box's whole extent. In the canonical task the opening is always on top. Under D4, a horizontal row reversal leaves 'up' unchanged, and each clockwise rotation turns up -> right -> down -> left. So the factory fixes the overflow direction from d4 % 4 and emits code that writes the lid row or column directly in visible coordinates. Colour roles are specialised as constants from the palette. No grid rotation or recolouring wrapper is used.",
+    "limitations": "Assumes the constructor's domain: rim colour is palette[1], background is palette[0], each cup contains exactly one seed, and the opening always lies in the canonical 'up' direction. That direction is fixed from d4 rather than detected per cup. Lid cells falling outside the grid are skipped, although the generator never produces this case. The fixtures are consistent with the uniform rule. This factory has not been executed or tested by me."
+  }
+}

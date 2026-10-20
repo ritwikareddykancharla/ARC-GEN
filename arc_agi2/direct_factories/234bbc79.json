@@ -1,0 +1,21 @@
+{
+  "task_id": "234bbc79",
+  "factory_sha256": "2bf56e64da0374327a1368b436650a0fee9139d3cee20b9faa34bb1a445d7a8d",
+  "constructor_sha256": "5df8bc7bb8d606cd3f39b7e7c00730e7f653559c3ec812e8a81f4542ecb75eb8",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 27110361339446,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 3.8280001670354977,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "Mechanism: the input has a short strip (3 cells across the chain axis). Along that strip sit several pieces. Each piece is a 4-connected component of non-background cells: one coloured segment plus gray 'hook' cells at its two ends. The pieces form a chain. The output length along the chain axis is the sum of the piece extents. The first piece is anchored at the start edge with its cross coordinate unchanged. Each later piece is moved rigidly so that its leading hook lands one step past the previous piece's trailing hook. All hooks are recoloured with their piece's colour. The factory works out the visible direction of the original +column axis as a unit vector (AR, AC). It does this by applying the flip (dc -> -dc) and then clockwise rotations ((dr, dc) -> (dc, -dr)). It bakes that vector, the background (palette[0]) and gray (palette[5]) into the emitted program as constants. The emitted program works directly in visible coordinates. It orders pieces and hooks by the along-axis projection y*AR + x*AC. It sizes the output along whichever visible axis is the chain axis and keeps the full input size on the cross axis. It anchors the first piece at the visible start edge: index 0 when the direction is positive, and the far edge when it is negative. It places each later piece by matching hooks with a +(AR, AC) step. There is no rotation or recolouring wrapper.",
+    "limitations": "Assumes the constructor's domain: background is original colour 0 and hooks are original colour 5, both taken from the palette as constants. Pieces are separated by at least one background cell, so each 4-connected component is exactly one piece. Each piece's leading and trailing hooks have distinct along-axis positions, which the generator guarantees because every segment is at least 2 wide. Demonstrations are not used. There are degenerate fallbacks that never occur in the generator: a piece with no hooks is placed directly after the previous one, and cells that fall out of bounds are clipped. No contradictions with the fixtures were found. The rule matches the archived solver, which reproduces all approved train and test fixtures under the identity transform. I have not run any tests."
+  }
+}

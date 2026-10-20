@@ -1,0 +1,21 @@
+{
+  "task_id": "50a16a69",
+  "factory_sha256": "fcc7a0baa7daee898c4234c1a09454418a213d55e1c7cf70acbf1e51fb9127e4",
+  "constructor_sha256": "73e282a8ffe6f8c7a3f644dc6c81d994e43d3778dabedeee750b2d042d4506cf",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 175640395525146,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 5.630150874960236,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "Original mechanism: a top-left block holds a periodic tiling (period 2 down the rows, period n across the columns, with odd rows shifted by n//2). Filler covers the bottom and right strips, and the bottom-right corner always holds filler. The output extends the tiling over the whole grid and samples it one column further right: out[r][c] = tile[r][c+1].\n\nThe factory pushes two things through the D4 transform: the unit vector (0,+1) and the location of the filler corner. Flip negates the column component and swaps left/right. Each clockwise rotation maps (dr,dc) to (dc,-dr) and maps the corner flags to (bottom'=right, right'=not bottom).\n\nThe emitted program works entirely in visible coordinates:\n1. It reads the filler from the transformed corner.\n2. It takes the bounding box of non-filler cells as the block, which may be anchored at any corner.\n3. It finds the minimal row period and the minimal column period of the block. The lattice stays axis-aligned under D4, so these are either 2 and n or n and 2.\n4. It writes out[y][x] = block[(y+DR-r0) mod py][(x+DC-c0) mod px], which extends the tiling over the grid and shifts it in the visible direction.\n\nColours are never remapped. All roles are inferred from pixels, so the palette needs no constants.",
+    "limitations": "Correctness relies on the constructor's guarantees, which are reasoned here and not tested.\n- The block must be at least n cells wide along the original column axis. This holds because num_colors <= size//2 <= size-length.\n- The block must be at least 2 cells tall along the original row axis.\n- The pattern colours must be distinct and exclude the filler. That makes the minimal periods equal the true periods 2 and n, since n//2 is never 0 mod n.\n- If a grid broke these assumptions, for example a block narrower than one period, the detected period would be wrong, just as in the archived solver.\n\nThe palette argument is unused because colour roles are read from the pixels. The fixtures are consistent with the uniform rule."
+  }
+}

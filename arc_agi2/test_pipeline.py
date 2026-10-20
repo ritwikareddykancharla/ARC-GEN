@@ -2175,4 +2175,31 @@ class GeneratorTests(unittest.TestCase):
                    {'decoy':'none','colors':[0,1,2,3]}):
             with self.assertRaises(ValueError):m.generate(**kw)
 
+    def test_corridor_high_counts_and_forced_zigzag(self):
+        m=importlib.import_module('tasks.task_9bbf930d')
+        for count in (1,3,6,7):
+            for width in (10,30):
+                for zigzag in (False,True):
+                    random.seed(82000)
+                    p=m.generate(width=width,height=max(11,4*count-1),
+                                 num_corridors=count,zigzag=zigzag)
+                    self.assertEqual(sum(row[0]==7 for row in p['output']),count)
+                    self.assertEqual(sum(row.count(6) for row in p['input']),
+                                     sum(row.count(6) for row in p['output']))
+                    self.assertEqual(p['output'],grid(call(solver('9bbf930d'),p['input'])))
+        for kw in ({'num_corridors':8},{'height':11,'num_corridors':4},
+                   {'num_corridors':True},{'height':12},{'zigzag':1}):
+            with self.assertRaises(ValueError):m.generate(**kw)
+
+    def test_corridor_same_colour_stubs_require_matching_start_coordinate(self):
+        m=importlib.import_module('tasks.task_9bbf930d')
+        p=m.generate(width=14,height=11,segments=[(1,0,2,0,7),(1,2,2,2,7),
+            (2,4,2,4,8),(3,6,2,6,8),(4,8,2,8,8),(5,10,2,10,8),
+            (2,3,10,3,10),(2,5,5,5,5)])
+        self.assertEqual(p['input'][3][10],p['input'][5][5])
+        self.assertEqual(p['input'][4][10],7)
+        self.assertEqual(p['output'][4][0],6)
+        self.assertEqual(p['output'][1][0],7)
+        self.assertEqual(p['output'],grid(call(solver('9bbf930d'),p['input'])))
+
 if __name__=='__main__':unittest.main()

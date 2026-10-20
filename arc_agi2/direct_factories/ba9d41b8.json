@@ -1,0 +1,37 @@
+{
+  "task_id": "ba9d41b8",
+  "factory_sha256": "19812e7368f1015575dac6ae1bcf714cc98ee06eb139d4de74bcd5e3456a453c",
+  "constructor_sha256": "640034df9535267ab7de9194cfff4fe2331d9ad537d11f5433d0a11e0f0f90e2",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 134654304249267,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 7.420490292017348,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "Each solid single-colour rectangle keeps its outer ring. Its interior cells become a checkerboard: a cell is cleared to background when it has the same parity as the rectangle's original top-left corner. The original rule clears (r+c) even, measured from the top-left corner.\n\nThe corner that anchors the parity matters. When a box has H+W odd, opposite corners have different parity, so the factory tracks where the original top-left corner lands in visible coordinates:\n- Corners are taken in clockwise order TL, TR, BR, BL.\n- A row reversal (d4>=4) sends TL to TR.\n- Each clockwise rotation advances the corner one step.\n- The anchor is therefore corner index (flip + d4%4) mod 4.\n\nThe emitted program works directly on the visible grid:\n1. It finds 4-connected single-colour components that are not the background palette[0].\n2. It takes each component's bounding box.\n3. It picks the anchor corner as the box's top or bottom row and left or right column, using the specialised constants.\n4. It clears every strictly interior cell of that colour where (y-ay + x-ax) is even.\n\nThe background is the constant palette[0]. Rectangle colours are not hard-coded, so any palette permutation works.",
+    "limitations": "- The program assumes the constructor's domain: rectangles are separated by at least one background cell, have distinct non-background colours, and are at least 5x5. Rectangles touching the grid boundary are handled, because only bounding boxes are used.\n- If two same-coloured rectangles touched, they would merge into one component. The constructor's separation check prevents this.\n- No fixture contradictions or constructor defects were found. The parity rule is uniform and anchored at each rectangle's own corner.\n- I have not run any tests.",
+    "host_review": "Visible component bounding boxes determine interiors. The D4-specialized anchor corner correctly sets checkerboard phase; no inverse coordinate wrappers. A new input/demo-only evidence gate checks all four anchor-corner rules and rejects ambiguous query predictions. This is essential when odd-sized demonstration boxes fail to distinguish corner conventions. Original supplied fixtures unchanged.",
+    "host_sampler_revision": "Bounded packing with fixed requested 1..4 rectangles and their distinct colours. Resample canvas/dimensions within original ranges when packing is impossible, including the 12x10 four-box case. Packer rejects dimensions exceeding the canvas rather than drawing negative-coordinate ranges. Retain 5..12 box dimensions, 12..20 widths and height offset -2..2; finite exhaustion raises. Layout distribution changes, not claimed uniform.",
+    "repair_verification": {
+      "task_id": "ba9d41b8",
+      "factory_sha256": "19812e7368f1015575dac6ae1bcf714cc98ee06eb139d4de74bcd5e3456a453c",
+      "constructor_sha256": "640034df9535267ab7de9194cfff4fe2331d9ad537d11f5433d0a11e0f0f90e2",
+      "passed": true,
+      "fresh_pairs_checked": 1000,
+      "augmented_pair_checks": 8000,
+      "fixture_variants_checked": 16,
+      "sampler_rejections": [],
+      "seed": 134654304249267,
+      "d4": 7,
+      "unique_base_inputs": 1000,
+      "seconds": 7.420490292017348
+    }
+  }
+}

@@ -35,12 +35,20 @@ def generate(width=None, height=None, wides=None, talls=None, rows=None, cols=No
     height = width + common.randint(0, 4) - 2
     num_boxes = common.randint(1, 4)
     colors = common.random_colors(num_boxes)
-    while True:
+    for attempt in range(2000):
+      # Some sampled canvases cannot hold the requested count even at the
+      # smallest legal dimensions. Resample the canvas, never the box count.
+      if attempt:
+        width = common.randint(12, 20)
+        height = width + common.randint(0, 4) - 2
       wides = [common.randint(5, 12) for _ in range(num_boxes)]
       talls = [common.randint(5, 12) for _ in range(num_boxes)]
-      rows = [common.randint(0, height - t) for t in talls]
-      cols = [common.randint(0, width - w) for w in wides]
-      if not common.overlaps(rows, cols, wides, talls, 1): break
+      placement = common.place_rectangles(width, height, wides, talls, spacing=1)
+      if placement is not None:
+        rows, cols = placement
+        break
+    else:
+      raise RuntimeError("bounded sampler failed to place all checkerboard boxes")
 
   grid, output = common.grids(width, height)
   for wide, tall, row, col, color in zip(wides, talls, rows, cols, colors):

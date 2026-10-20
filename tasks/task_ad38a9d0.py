@@ -17,6 +17,50 @@
 import common
 
 
+def _sample_positions(colors, max_nodes=4096):
+  """Pack exact silhouettes with edge clearance; diagonal contact is allowed."""
+  shapes = {
+      2: [(0, 0), (1, 0), (2, 0)],
+      3: [(0, 1), (1, 0), (1, 1), (1, 2), (2, 1)],
+      4: [(0, 0), (0, 1), (1, 1)],
+      5: [(0, 0), (0, 1), (0, 2), (1, 0), (1, 1), (1, 2)],
+      8: [(0, 0), (0, 1), (1, 1), (1, 2)],
+      9: [(0, 0), (1, 0)],
+  }
+  options = []
+  for color in colors:
+    shape = shapes[color]
+    choices = []
+    for r in range(9 - max(y for y, x in shape)):
+      for c in range(9 - max(x for y, x in shape)):
+        cells = {(r+y, c+x) for y, x in shape}
+        margin = {(y+dy, x+dx) for y, x in cells
+                  for dy, dx in ((0, 0), (0, 1), (0, -1), (1, 0), (-1, 0))}
+        mask = sum(1 << (y*9+x) for y, x in cells)
+        blocked = sum(1 << (y*9+x) for y, x in margin
+                      if 0 <= y < 9 and 0 <= x < 9)
+        choices.append((r, c, mask, blocked))
+    options.append(common.shuffle(choices))
+  order = sorted(range(len(colors)), key=lambda i: -len(shapes[colors[i]]))
+  positions, nodes = [None] * len(colors), 0
+
+  def search(depth, blocked):
+    nonlocal nodes
+    if nodes >= max_nodes: return False
+    nodes += 1
+    if depth == len(order): return True
+    i = order[depth]
+    for r, c, cells, margin in options[i]:
+      if cells & blocked: continue
+      positions[i] = r, c
+      if search(depth + 1, blocked | margin): return True
+      if nodes >= max_nodes: break
+    return False
+
+  if not search(0, 0): return None
+  return [p[0] for p in positions], [p[1] for p in positions]
+
+
 def generate(rows=None, cols=None, colors=None):
   """Returns input and output grids according to the given parameters.
 
@@ -82,18 +126,17 @@ def generate(rows=None, cols=None, colors=None):
 
   if rows is None:
     extra = common.randint(0, 2)
-    while True:
-      wides = [0, 0, 1, 3, 2, 3, 0, 0, 3, 1]
-      talls = [0, 0, 3, 3, 2, 2, 0, 0, 2, 2]
+    for _ in range(256):
       colors = [2, 3, 4, 5, 8, 9]
       colors += common.sample(colors, extra)
       colors = common.shuffle(colors)
-      wides = [wides[color] for color in colors]
-      talls = [talls[color] for color in colors]
-      rows = [common.randint(0, 9 - tall) for tall in talls]
-      cols = [common.randint(0, 9 - wide) for wide in wides]
+      placement = _sample_positions(colors)
+      if placement is None: continue
+      rows, cols = placement
       grid, _ = draw()
       if grid: break
+    else:
+      raise RuntimeError("bounded sampler failed to place all shapes")
 
   grid, output = draw()
   return {"input": grid, "output": output}

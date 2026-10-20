@@ -17,6 +17,55 @@
 import common
 
 
+def _sample_obstacles(size, expected_bounces, max_nodes=4096):
+  """Construct constraints for a valid ray, then add unconstrained noise.
+
+  Preserve the requested turn count. A bounded search returns None on
+  exhaustion, never a simpler path. This is not uniform sampling of fields
+  conditioned on the requested number of turns.
+  """
+  nodes = 0
+
+  def inside(p):
+    return 0 <= p[0] < size and 0 <= p[1] < size
+
+  def constrain(known, assignments):
+    result = known.copy()
+    for cell, obstacle in assignments:
+      if not inside(cell):
+        if obstacle: return None
+        continue
+      if cell in result and result[cell] != obstacle: return None
+      result[cell] = obstacle
+    return result
+
+  def search(row, col, dr, dc, turns, known):
+    nonlocal nodes
+    if nodes >= max_nodes: return None
+    nodes += 1
+    if not inside((row, col)):
+      return known if turns == expected_bounces else None
+    # Every incoming step has already been constrained to be unobstructed.
+    ahead = row + dr, col + dc
+    choices = [(dr, dc, turns, [(ahead, 0)])]
+    if turns < expected_bounces:
+      for nr, nc in ((dc, -dr), (-dc, dr)):
+        choices.append((nr, nc, turns + 1, [
+            (ahead, 1), ((row - nr, col - nc), 1),
+            ((row + nr, col + nc), 0)]))
+    for nr, nc, count, assignments in common.shuffle(choices):
+      extended = constrain(known, assignments)
+      if extended is None: continue
+      result = search(row + nr, col + nc, nr, nc, count, extended)
+      if result is not None: return result
+    return None
+
+  known = search(1, 2, 0, 1, 0, {(1, 0): 0, (1, 1): 0, (1, 2): 0})
+  if known is None: return None
+  return [known[(r, c)] if (r, c) in known else int(common.randint(0, 4) == 0)
+          for r in range(size) for c in range(size)]
+
+
 def generate(size=None, flip=None, flop=None, xpose=None, colors=None):
   """Returns input and output grids according to the given parameters.
 
@@ -59,12 +108,14 @@ def generate(size=None, flip=None, flop=None, xpose=None, colors=None):
     flip, flop = common.randint(0, 1), common.randint(0, 1)
     xpose = common.randint(0, 1)
     expected_bounces = common.randint(3, 6)
-    while True:
+    for _ in range(256):
       size = common.randint(5, 10)
-      colors = [0 if common.randint(0, 4) else 1 for _ in range(size * size)]
-      colors[size] = colors[size + 1] = colors[size + 2] = 0
+      colors = _sample_obstacles(size, expected_bounces)
+      if colors is None: continue
       grid, _, bounces = draw()
       if grid is not None and bounces == expected_bounces: break
+    else:
+      raise RuntimeError("bounded ray construction exhausted")
 
   grid, output, _ = draw()
   return {"input": grid, "output": output}

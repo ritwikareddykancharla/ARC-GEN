@@ -1,0 +1,37 @@
+{
+  "task_id": "f0f8a26d",
+  "factory_sha256": "e754e100a8c112479dde3973ee52e0750b70dac17476cb96b1cfda56e78a100c",
+  "constructor_sha256": "785d413434786d6ace1f0ad6cdf90331e37d29f575c52d3f97a49797e17b0a7b",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 198818325959340,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 2.2464126659324393,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "Each input contains straight single-colour line segments of odd length on a background. The output starts as a blank background canvas. Each segment is then stamped back rotated 90 degrees about its middle cell, keeping the same length, and any part outside the grid is clipped. A single cell stays where it is. Rotating a segment about its own centre looks the same in every orientation, so the emitted program works directly in visible coordinates. It finds each 4-connected same-colour component and takes its bounding-box centre. A segment taller than it is wide becomes horizontal, and otherwise it becomes vertical. No direction constants need to change for any D4 transform. The background is the constant palette[7]. If that colour is absent, the program falls back to the most common colour. Segment colours are read from the pixels.",
+    "limitations": "No tests have been run. The program assumes that segments never touch orthogonally. The generator's spacing check guarantees this: it checks the side neighbours and the cells just beyond each end. Segments may touch diagonally, which is why 4-connectivity is used. The generator rejects scenes whose rotated outputs overlap, so overlap and clipping never actually occur in this domain. The program still handles both, as a union of stamps and as clipping. For a hypothetical even-length segment, the centre would be chosen by floor division, but the generator never produces even lengths. No constructor defects or fixture contradictions were found.",
+    "host_review": "Input segments are orthogonally separated, odd length and monochrome. Their visible connected components determine midpoint, orientation and extent. Solver rotates each by 90 degrees about its midpoint. D4 invariance holds for undirected lines. Original generator rejects output intersections; bounded construction retains this. Fixtures unchanged; no hidden order/tie.",
+    "host_sampler_revision": "Construct all requested size-4 lines sequentially with input Manhattan clearance and output non-overlap, retaining odd canvas sizes 7/9/11/13, half-length range 0..size//2-1, both orientations and at most one singleton. On placement failure restart the whole scene within bounded attempts, never lower the object count. Distribution changes from joint-uniform rejection; no uniformity claim.",
+    "repair_verification": {
+      "task_id": "f0f8a26d",
+      "factory_sha256": "e754e100a8c112479dde3973ee52e0750b70dac17476cb96b1cfda56e78a100c",
+      "constructor_sha256": "785d413434786d6ace1f0ad6cdf90331e37d29f575c52d3f97a49797e17b0a7b",
+      "passed": true,
+      "fresh_pairs_checked": 1000,
+      "augmented_pair_checks": 8000,
+      "fixture_variants_checked": 16,
+      "sampler_rejections": [],
+      "seed": 198818325959340,
+      "d4": 7,
+      "unique_base_inputs": 1000,
+      "seconds": 2.2464126659324393
+    }
+  }
+}

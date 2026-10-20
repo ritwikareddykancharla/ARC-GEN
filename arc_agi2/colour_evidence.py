@@ -74,13 +74,34 @@ def require_colour_evidence(task_id, demonstrations, queries, palette=None, d4=0
                        'dbc1a6ce', 'dc1df850', 'dd6b8c4b', 'dce56571',
                        'e45ef808', 'e345f17b', 'e3497940',
                        'e760a62e', 'e8593010', 'e99362f0', 'e6de6e8f',
-                       '37d3e8b2'):
+                       '37d3e8b2', 'ba9d41b8'):
         return
     palette = list(range(10)) if palette is None else palette
     bg = palette[0]
     colours = lambda g: {c for row in g for c in row} - {bg}
     required, seen = set(), set()
-    if task_id == '37d3e8b2':
+    if task_id == 'ba9d41b8':
+        def variants(g):
+            boxes = []
+            for colour in {v for row in g for v in row} - {bg}:
+                for cells in _colour_components(g, colour):
+                    boxes.append((min(r for r, c in cells), max(r for r, c in cells),
+                                  min(c for r, c in cells), max(c for r, c in cells)))
+            outputs = []
+            for bottom, right in ((False, False), (False, True),
+                                  (True, True), (True, False)):
+                out = [row[:] for row in g]
+                for y0, y1, x0, x1 in boxes:
+                    ay, ax = (y1 if bottom else y0), (x1 if right else x0)
+                    for y in range(y0+1, y1):
+                        for x in range(x0+1, x1):
+                            if (y-ay+x-ax) % 2 == 0:
+                                out[y][x] = bg
+                outputs.append(out)
+            return outputs
+        _require_rule_agreement(task_id, demonstrations, queries, variants)
+        return
+    elif task_id == '37d3e8b2':
         mapping = {1: palette[1], 2: palette[2], 3: palette[3], 4: palette[7]}
         for demo in demonstrations:
             for cells in _colour_components(demo['input'], palette[8]):

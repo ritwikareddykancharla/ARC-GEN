@@ -35,7 +35,7 @@ recorded. Passing finite audits does not prove unrestricted generalization.
 
 - 213 native direct-coordinate certificates admitted after fresh audits and
   supplied-fixture checks.
-- 719 admitted factories. Each passed 1,000 fresh pairs, 8,000 augmented pair
+- 724 admitted factories. Each passed 1,000 fresh pairs, 8,000 augmented pair
   checks and 16 supplied-fixture variants. Their audit records retain draft
   limitations and source/constructor hashes. These checks are finite evidence,
   not proof of correctness on every generated input.
@@ -46,7 +46,7 @@ recorded. Passing finite audits does not prove unrestricted generalization.
   counts must be computed as a union, not added.
 - Local exporter test: 18 fresh base episodes, 144 augmented PNG/program/grid
   records. It requested 20 bases and reported a two-episode shortfall.
-- The union currently admits 938 of 1,120 families; 182 still need direct
+- The union currently admits 943 of 1,120 families; 177 still need direct
   augmented program admission. Constructor coverage and program coverage are
   different gates.
 - Synthetic labels for `00d62c1b` now fill every enclosed background component,
@@ -414,3 +414,48 @@ Coverage is 938/1,120, leaving 182 families. Bulk generation remains gated.
 The requested quota remains **1,000 fresh episodes per family**, with program
 and grid together, followed by augmentation; the audits above are not the
 expanded training corpus.
+
+## Bounded-scene checkpoint: 943 verified program families
+
+Five additional direct program factories are admitted: `6bcdb01e`, `e57337a4`,
+`f0f8a26d`, `ba9d41b8`, and `ad38a9d0`. Coverage is **943/1,120**, with **177
+remaining** and 724 factory certificates.
+
+- `6bcdb01e`: construct obstacle constraints for a ray with the requested 3..6
+  turns, then add 20% noise in unconstrained cells. Preserve the 5..10 canvas
+  range and check the result using the original simulator. Bounded exhaustion
+  raises instead of reducing turn count. A feasibility claim is not made for
+  every size/turn-count combination.
+- `e57337a4`: clear rejected pixel lists before retrying. Previously, a draw
+  above three markers accumulated indefinitely and could never be accepted.
+  Preserve the 15x15-to-3x3 reduction, per-block marker probability and offsets.
+- `f0f8a26d`: place every requested odd-length line while checking input edge
+  clearance and rotated-output nonoverlap. Preserve size-4 lines, the original
+  length range, both orientations, and at most one singleton.
+- `ba9d41b8`: pack all requested checkerboard rectangles and resample an
+  impossible canvas without dropping boxes. Preserve the original dimension
+  ranges. The episode evidence gate now checks all four anchor-corner rules;
+  demonstrations must disambiguate any different query predictions.
+- `ad38a9d0`: pack exact silhouettes with four-neighbour clearance, allowing
+  diagonal contact. Retain all six shapes plus 0..2 extras on the 9x9 canvas.
+  Every fresh demonstration includes all six shape-to-colour associations.
+
+These are bounded, randomized constructors, not uniform samplers over all valid
+scenes. Original supplied fixtures are unchanged. Every factory passed 1,000
+fresh pair draws, 8,000 D4/palette checks and 16 fixture variants without sampler
+rejections. Unique input counts were respectively 991, 979, 1,000, 1,000 and
+1,000; repeated draws are not counted as extra unique inputs.
+
+Complete-episode validation accepted 100 base episodes and verified all 800
+augmented records. Evidence: `reports/episode-evidence-943-audit.json`.
+**340 regression tests passed**, including input-only checkerboard ambiguity,
+crowded object counts, ray turn counts, and unchanged fixture hashes.
+
+A separate investigation confirmed an eight-cell disagreement for `985ae207`:
+the constructor stamps a tile when its centre reaches a thin bar even when its
+frame extends beyond it, whereas the archived solver omits that last stamp.
+`reports/985ae207-bar-overshoot-investigation.json` contains a legal-parameter
+counterexample. It remains on semantic hold; no labels were changed.
+
+Bulk generation has not launched. The production target remains 1,000 fresh
+episodes per family, with program and grid together, then D4 augmentation.

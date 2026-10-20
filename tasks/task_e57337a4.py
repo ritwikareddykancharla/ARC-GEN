@@ -27,14 +27,18 @@ def generate(rows=None, cols=None, color=None):
   """
 
   if rows is None:
-    rows, cols = [], []
-    while True:
+    for _ in range(256):
+      # Rejected scenes must not accumulate pixels: once the old list grew
+      # past three, its acceptance condition could never become true.
+      rows, cols = [], []
       for r in range(3):
         for c in range(3):
           if common.randint(0, 3): continue
           rows.append(5 * r + common.randint(0, 4))
           cols.append(5 * c + common.randint(0, 4))
       if len(rows) in [1, 2, 3]: break
+    else:
+      raise RuntimeError("bounded sampler failed to select one to three cells")
     color = common.random_color()
 
   grid, output = common.grid(15, 15, color), common.grid(3, 3, color)

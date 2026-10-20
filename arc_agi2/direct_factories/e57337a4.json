@@ -1,0 +1,37 @@
+{
+  "task_id": "e57337a4",
+  "factory_sha256": "128194248b6b9f968449fa6f289b1600ea6a8dd5d04357f47ec4eb56655ccbef",
+  "constructor_sha256": "7b31aa8179bd0d80636080a650648a839a4416c4cb573602b919f5ce0e3296c0",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 249136452148740,
+  "d4": 7,
+  "unique_base_inputs": 979,
+  "seconds": 1.725278125028126,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The input is split into a 3x3 arrangement of equal blocks (5x5 for the 15x15 domain). Each output cell copies the block's content: it becomes the marker colour if its block contains any non-background cell, and the background colour otherwise. The background is the most common colour, since there are at most 3 markers among 225 cells. The marker is the original colour 0, so the factory specializes it to the constant palette[0]. Every D4 transform maps the 3x3 block partition of a square grid onto itself, with output cell (i,j) corresponding to block (i,j) in visible coordinates. So the emitted program can work directly on the visible grid and needs no axis or direction change. If a block somehow held other non-background colours without the marker, the program falls back to the most frequent non-background colour, as the archived solver does.",
+    "limitations": "Under the constructor the input is always 15x15. Other rectangular sizes are handled with floor-sized blocks (H//3, W//3), and any leftover rows or columns are ignored. The constructor draws the background with common.random_color(). If that could ever return 0, the background would equal the marker colour, the markers would be invisible, and the generated output would be ambiguous. The fixtures suggest 0 is excluded, but this should be confirmed in host review as a possible constructor defect. Blocks with no markers are skipped in the generator's sampling loop, and a block can receive several markers only in the explicit-parameter path, which does not change the answer. No hidden tie-breaks affect the result.",
+    "host_review": "The 15x15 grid has at most three markers, so majority background is unambiguous. common.random_color excludes zero. Solver reduces each 5x5 block to marker presence directly in augmented coordinates; original fixtures unchanged. No arbitrary colour mapping beyond visible shared roles.",
+    "host_sampler_revision": "Reset pixel lists on every rejected scene. Previously exceeding three pixels made acceptance impossible because subsequent attempts appended forever. Preserve original 1/4 block selection, one marker per selected block, 1..3 selected blocks, random in-block offsets, and nonzero background. Add finite retry exhaustion.",
+    "repair_verification": {
+      "task_id": "e57337a4",
+      "factory_sha256": "128194248b6b9f968449fa6f289b1600ea6a8dd5d04357f47ec4eb56655ccbef",
+      "constructor_sha256": "7b31aa8179bd0d80636080a650648a839a4416c4cb573602b919f5ce0e3296c0",
+      "passed": true,
+      "fresh_pairs_checked": 1000,
+      "augmented_pair_checks": 8000,
+      "fixture_variants_checked": 16,
+      "sampler_rejections": [],
+      "seed": 249136452148740,
+      "d4": 7,
+      "unique_base_inputs": 979,
+      "seconds": 1.725278125028126
+    }
+  }
+}

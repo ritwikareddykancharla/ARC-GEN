@@ -1,0 +1,37 @@
+{
+  "task_id": "ad38a9d0",
+  "factory_sha256": "93ad55a5367235fe7ef8d3f51c825558fc4018fef799dd0c5cc7005bb47af4ca",
+  "constructor_sha256": "9e4b93731076907d075a318f8b445a2152e8e55d866afe7e7ab79e7d92856e88",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 164337031928010,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 6.004220041912049,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "This is a legend task. Each grey (original 6) shape gets a colour according to its exact cropped binary form. The six template shapes are: 2x3 rectangle ->5, plus ->3, Z zig-zag ->8, vertical 3-bar ->2, L-corner XX/.X ->4, vertical 2-bar ->9. The factory applies the episode's D4 transform to each template in the order the spec gives: reverse rows when d4>=4, then rotate clockwise d4%4 times. This yields each shape's visible orientation. The output colours become palette[c], and the shape colour becomes palette[6]. All shapes stay distinct under every D4 element, so the table stays injective. The emitted program works in visible coordinates. It finds 4-connected components of the shape colour, crops each one to a binary mask, looks the mask up in the transformed table, and repaints the component. The generator rejects scenes where different shapes share an edge, so each 4-component is exactly one placed shape. Diagonal contact is allowed, and 4-connectivity handles it. A size-based fallback mirrors the archived solver. Size does not change under D4, so the fallback stays valid. It is never needed inside the generator's domain.",
+    "limitations": "The program uses fixed shape-to-colour constants derived from the constructor and does not learn the legend from demonstrations. That is valid because the mapping is a fixed constant of the family. A shape outside the six templates falls back to size-based colouring, as the archived solver does, and is left unchanged if its size is unknown. The fixtures agree with the uniform rule, and I found no constructor defects. The template shapes never overlap, and the edge-adjacency rejection guarantees one component per shape. Fresh scenes always use 9x9 grids. The emitted program also handles rectangular grids of any size. I have not run any tests.",
+    "host_review": "All six silhouettes always appear in every fresh demonstration, so the arbitrary shape-to-colour table is evidenced for every query shape. Exact visible shape masks remain distinct under D4; factory specializes their local orientations and palette labels, not query content. Input 4-components remain separated; diagonal contact is allowed. Supplied fixtures unchanged.",
+    "host_sampler_revision": "Bounded randomized backtracking places exact silhouette cells and their four-neighbour clearance, not larger bounding-box margins. Retain all six types plus 0..2 distinct duplicates on 9x9, including eight-object scenes; no count reduction or simpler replacement shapes. Distribution changes versus joint rejection; exhausted attempts raise.",
+    "repair_verification": {
+      "task_id": "ad38a9d0",
+      "factory_sha256": "93ad55a5367235fe7ef8d3f51c825558fc4018fef799dd0c5cc7005bb47af4ca",
+      "constructor_sha256": "9e4b93731076907d075a318f8b445a2152e8e55d866afe7e7ab79e7d92856e88",
+      "passed": true,
+      "fresh_pairs_checked": 1000,
+      "augmented_pair_checks": 8000,
+      "fixture_variants_checked": 16,
+      "sampler_rejections": [],
+      "seed": 164337031928010,
+      "d4": 7,
+      "unique_base_inputs": 1000,
+      "seconds": 6.004220041912049
+    }
+  }
+}

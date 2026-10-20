@@ -17,6 +17,38 @@
 import common
 
 
+def _sample_lines(size, num_lines):
+  """Place every line with input clearance and nonoverlapping rotated outputs."""
+  for _ in range(256):
+    rows, cols, lengths, cdirs = [], [], [], []
+    blocked, output_cells = set(), set()
+    for _ in range(num_lines):
+      for _ in range(512):
+        length = common.randint(0, size // 2 - 1)
+        if length == 0 and 0 in lengths: continue
+        cdir = common.randint(0, 1)
+        row = common.randint(length, size - 1 - length)
+        col = common.randint(length, size - 1 - length)
+        before = {(row + i, col) if cdir else (row, col + i)
+                  for i in range(-length, length + 1)}
+        after = {(row, col + i) if cdir else (row + i, col)
+                 for i in range(-length, length + 1)}
+        if before & blocked or after & output_cells: continue
+        rows.append(row)
+        cols.append(col)
+        lengths.append(length)
+        cdirs.append(cdir)
+        blocked.update((r + dr, c + dc) for r, c in before
+                       for dr, dc in ((0, 0), (1, 0), (-1, 0), (0, 1), (0, -1)))
+        output_cells.update(after)
+        break
+      else:
+        break
+    if len(rows) == num_lines:
+      return rows, cols, lengths, cdirs
+  raise RuntimeError("bounded sampler failed to place all rotating lines")
+
+
 def generate(size=None, color=None, rows=None, cols=None, lengths=None,
              cdirs=None):
   """Returns input and output grids according to the given parameters.
@@ -62,13 +94,9 @@ def generate(size=None, color=None, rows=None, cols=None, lengths=None,
     size = 2 * common.randint(3, 6) + 1
     color = common.random_color(exclude=[7])
     num_lines = size - 4
-    while True:
-      lengths = [common.randint(0, size // 2 - 1) for _ in range(num_lines)]
-      cdirs = [common.randint(0, 1) for _ in range(num_lines)]
-      rows = [common.randint(length, size - 1 - length) for length in lengths]
-      cols = [common.randint(length, size - 1 - length) for length in lengths]
-      grid, _ = draw()
-      if grid: break
+    # Preserve the count and allowable lengths. Sequential construction
+    # changes the layout distribution; it is not uniform rejection sampling.
+    rows, cols, lengths, cdirs = _sample_lines(size, num_lines)
 
   grid, output = draw()
   return {"input": grid, "output": output}

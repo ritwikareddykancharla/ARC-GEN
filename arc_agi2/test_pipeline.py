@@ -2760,4 +2760,29 @@ class GeneratorTests(unittest.TestCase):
             m.generate(height=3,width=3)
         with self.assertRaises(ValueError):m.generate(height=9,width=9,objects=5)
 
+    def test_crack_pocket_threshold_ten_fills_eleven_stays(self):
+        m=importlib.import_module('tasks.task_c3fa4749')
+        for width,trim,expected_size in ((5,False,10),(6,True,11)):
+            pocket={(y,x) for y in (4,5) for x in range(4,4+width)}
+            if trim:pocket.remove((5,3+width))
+            cells={(y,x) for y in range(3,7) for x in range(3,5+width)}-pocket
+            cells|={(y,3) for y in range(3)}
+            inp=[[5]*20 for _ in range(20)]
+            for y,x in cells:inp[y][x]=1
+            inp[0][3]=9
+            supplied=sorted(pocket) if expected_size<=10 else []
+            out=m.generate(base=inp,cracks=[(sorted(cells),supplied)])['output']
+            self.assertEqual(len(pocket),expected_size)
+            for y,x in pocket:self.assertEqual(out[y][x],9 if expected_size<=10 else 5)
+            self.assertEqual(out,grid(call(solver('c3fa4749'),inp)))
+
+    def test_oversized_crack_cannot_be_supplied_as_positive(self):
+        m=importlib.import_module('tasks.task_c3fa4749')
+        cells={(y,x) for y in range(3,9) for x in range(3,10)}|{(y,3) for y in range(3)}
+        inp=[[5]*20 for _ in range(20)]
+        for y,x in cells:inp[y][x]=1
+        inp[0][3]=9
+        self.assertGreater(len(cells),40)
+        with self.assertRaises(ValueError):m.generate(base=inp,cracks=[(sorted(cells),[])])
+
 if __name__=='__main__':unittest.main()

@@ -850,7 +850,7 @@ c1d99e64,training,False,True,upstream_fixture_verified,tasks/task_c1d99e64.py,pa
 c3202e5a,training,False,True,upstream_fixture_verified,tasks/task_c3202e5a.py,panels;selection;dynamics;count;boolean;crop,references/c3202e5a.json,29x29->5x5,Expand semantic and boundary-case tests
 c35c1b4c,training,False,True,upstream_fixture_verified,tasks/task_c35c1b4c.py,objects;selection;recolour;rigid,references/c35c1b4c.json,10x10->10x10,Expand semantic and boundary-case tests
 c3e719e8,training,False,True,upstream_fixture_verified,tasks/task_c3e719e8.py,selection;repeat;template;order;crop,references/c3e719e8.json,3x3->9x9,Expand semantic and boundary-case tests
-c3fa4749,training,False,True,generator_missing,,topology,references/c3fa4749.json,30x30->30x30;30x30->30x30,"Construct, validate and review standalone generator"
+c3fa4749,training,False,True,extension_validated,tasks/task_c3fa4749.py,topology,references/c3fa4749.json,30x30->30x30;30x30->30x30,Expand semantic and boundary-case tests
 c444b776,training,False,True,upstream_fixture_verified,tasks/task_c444b776.py,panels;recolour;rigid;movement;boolean,references/c444b776.json,19x29->19x29,Expand semantic and boundary-case tests
 c48954c1,training,False,True,upstream_fixture_verified,tasks/task_c48954c1.py,rigid;repeat;template;order;crop;assembly,references/c48954c1.json,3x3->9x9,Expand semantic and boundary-case tests
 c4d067a0,evaluation,True,True,extension_validated,tasks/task_c4d067a0.py,legend;movement;template;dynamics;scale,references/c4d067a0.json,27x27->27x27,Expand semantic and boundary-case tests

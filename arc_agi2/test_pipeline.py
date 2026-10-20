@@ -2655,4 +2655,19 @@ class GeneratorTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError,'distinct'):
             m.generate(legend=[7,7])
 
+    def test_corner_copy_preserves_uncovered_destination_corner(self):
+        m=importlib.import_module('tasks.task_bc93ec48')
+        p=m.generate(width=6,height=4,corners=[[2,['#.','##']],[3,['#']],None,None])
+        self.assertEqual((len(p['input']),len(p['input'][0])),(4,6))
+        self.assertEqual(p['output'][0][4:6],[2,3])
+        self.assertEqual(p['output'][1][4:6],[2,2])
+        self.assertEqual(p['output'][3][5],3)
+        self.assertEqual(p['output'][0][0],2)
+        self.assertEqual(p['output'],grid(call(solver('bc93ec48'),p['input'])))
+
+    def test_corner_copy_rejects_one_component_at_two_corners(self):
+        m=importlib.import_module('tasks.task_bc93ec48')
+        with self.assertRaisesRegex(ValueError,'several grid corners'):
+            m.generate(width=4,height=5,corners=[[3,['####']],[3,['####']],None,None])
+
 if __name__=='__main__':unittest.main()

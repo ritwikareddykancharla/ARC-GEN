@@ -334,6 +334,41 @@ class GeneratorTests(unittest.TestCase):
             jigsaw.generate(width=30,height=30,wall_color=8,wall_top=14,wall_thickness=5,
                             top_notches={5:1},chains=[('top',4,[[2,2,2]],[2])],positions=[])
 
+    def test_sequence_windows_ladder_markers_and_hub_docking(self):
+        sequence=importlib.import_module('tasks.task_20a9e565')
+        ladder=importlib.import_module('tasks.task_2b83f449')
+        hub=importlib.import_module('tasks.task_2c181942')
+        for family in ('comb','ladder','mirror','stair'):
+            random.seed(30000)
+            p=call(lambda:sequence.generate(family=family,width=30,height=30),seconds=3)
+            self.assertEqual((len(p['input']),len(p['input'][0])),(30,30))
+            marks=[(r,c) for r,row in enumerate(p['input']) for c,v in enumerate(row) if v==5]
+            self.assertEqual((len(p['output']),len(p['output'][0])),
+                             (max(r for r,c in marks)-min(r for r,c in marks)+1,
+                              max(c for r,c in marks)-min(c for r,c in marks)+1))
+            self.assertEqual(p['output'],grid(call(solver('20a9e565'),p['input'])))
+        for seed in range(5):
+            random.seed(seed)
+            p=ladder.generate(width=30,tracks=15)
+            self.assertEqual(sum(v==3 for row in p['input'] for v in row),28)
+            self.assertEqual(sum(v==3 for row in p['output'] for v in row),28)
+            self.assertEqual(p['output'],grid(call(solver('2b83f449'),p['input'])))
+        # One asymmetric matching piece per side, plus an erased distractor.
+        mask=['1111','1.11','.11.']
+        for i,side in enumerate(hub.SIDES):
+            p=hub.generate(width=30,height=30,hub_row=14,hub_col=14,colors=[1,2,3,4],
+                           shapes=[(i+1,mask,1,1,1),(9,['11','11'],0,24,24)])
+            self.assertNotIn(9,{v for row in p['output'] for v in row})
+            self.assertEqual(p['output'],grid(call(solver('2c181942'),p['input'])))
+        with self.assertRaisesRegex(ValueError,'explicit gaps'):
+            ladder.generate(rungs=[[]]*3,tracks=4)
+        with self.assertRaisesRegex(ValueError,'distinct hub colours'):
+            hub.generate(colors=[1,1,2,3])
+        with self.assertRaisesRegex(ValueError,'explicit shapes'):
+            hub.generate(hub_row=10)
+        with self.assertRaisesRegex(ValueError,'match family'):
+            sequence.generate(family='mirror',params=sequence._FIXTURES['train'][0])
+
     def test_colour_cycles_are_simultaneous_and_episode_wide(self):
         palette=[1,2,0,3,4,5,6,7,8,9]
         self.assertEqual(b.transformed([[0,1,2]],0,palette),[[1,2,0]])

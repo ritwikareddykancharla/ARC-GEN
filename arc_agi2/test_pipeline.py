@@ -11,6 +11,53 @@ from .fixture_policy import fixture_basis
 from .augmentation import apply_episode,settings,exhaustive_variants
 
 class GeneratorTests(unittest.TestCase):
+    def test_comb_slot_full_depth_and_near_miss_rejections(self):
+        m=importlib.import_module('tasks.task_8b9c3697')
+        base=dict(width=20,height=20,background=3,ink=4,
+                  combs=[(2,5,'down',1,2,1,3)])
+        p=m.generate(**base,pieces=[(9,8,2,2)],targets=[0])
+        self.assertEqual(p['output'],grid(call(solver('8b9c3697'),p['input'])))
+        self.assertEqual(sum(row.count(2) for row in p['output']),4)
+        self.assertEqual(sum(row.count(0) for row in p['output']),10)
+        for piece in [(9,8,3,2),(2,0,1,1),(9,8,1,1),(9,7,1,3)]:
+            p=m.generate(**base,pieces=[piece])
+            self.assertFalse(any(2 in row or 0 in row for row in p['output']))
+            self.assertEqual(p['output'],grid(call(solver('8b9c3697'),p['input'])))
+
+    def test_comb_distractor_in_path_becomes_trail(self):
+        m=importlib.import_module('tasks.task_8b9c3697')
+        base=dict(width=20,height=20,background=3,ink=4,
+                  combs=[(2,5,'down',1,2,1,3)])
+        p=m.generate(**base,pieces=[(10,8,1,2),(7,8,1,1)],targets=[0,None])
+        self.assertEqual(p['output'][7][8],0)
+        self.assertEqual(p['output'],grid(call(solver('8b9c3697'),p['input'])))
+        p=m.generate(**base,pieces=[])
+        self.assertEqual(p['input'],p['output'])
+
+    def test_tally_control_containers_and_maximum_frames(self):
+        m=importlib.import_module('tasks.task_8f215267')
+        for kw in [dict(frame_colors=3),dict(frame_colors=[[1]]),
+                   dict(frame_colors={1,2}),dict(counts=2),dict(counts={1,2}),
+                   dict(distractor_colors=4),dict(distractor_colors={3,4}),
+                   dict(num_frames=8,frame_height=3),dict(num_frames=6)]:
+            with self.subTest(kw=kw),self.assertRaises(ValueError):m.generate(**kw)
+        random.seed(41000)
+        p=m.generate(num_frames=7,frame_height=3,frame_width=7)
+        self.assertEqual(p['output'],grid(call(solver('8f215267'),p['input'])))
+
+    def test_tally_dense_valid_counts_and_nonhollow_border_shape(self):
+        m=importlib.import_module('tasks.task_8f215267')
+        random.seed(0)
+        p=m.generate(frame_width=27,frame_height=9,num_frames=2,counts=[12,12])
+        self.assertEqual(p['output'],grid(call(solver('8f215267'),p['input'])))
+        with self.assertRaisesRegex(ValueError,'capacity'):
+            m.generate(frame_width=27,frame_height=9,num_frames=2,counts=[13,12])
+        p=m.generate(width=24,height=20,background=0,left=1,top=1,
+                     frame_colors=[2],shapes=[(2,8,15,['#####','##..#','#...#','#####'])])
+        self.assertEqual(p['output'],grid(call(solver('8f215267'),p['input'])))
+        self.assertEqual(p['output'][3][9],2)
+        self.assertEqual(sum(p['output'][3][2:11]),2)
+
     def test_vertical_symmetry_canonical_latents_need_no_replay(self):
         m=importlib.import_module('tasks.task_8e5c0c38')
         with patch.object(m,'_replay',side_effect=AssertionError('replay used')):

@@ -1,0 +1,23 @@
+{
+  "task_id": "c87289bb",
+  "factory_sha256": "3a0c15cd27d71263b11684695f21ceb9a40585bee52f594d8042aa4919e0cbf4",
+  "constructor_sha256": "093df26af05a9ce5575be74e0e1b4334e374c5c2bd766565357784631d1f404b",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 208184509498993,
+  "d4": 7,
+  "unique_base_inputs": 958,
+  "seconds": 9.236229458008893,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The factory maps two canonical direction vectors through the D4 transform to visible coordinates. The first is the fall direction 'down' (1,0). The second is the tie-break direction 'right' (0,1). For d4>=4 it first negates the column component (row reversal). It then applies the clockwise rotation (dr,dc)->(dc,-dr) d4%4 times. Colour roles become constants: palette[8] for lines, palette[2] for bars and palette[0] for background. The emitted program works directly in the visible grid. A line is a run of line-colour cells that starts on the source edge (the edge a cell leaves when stepping against DOWN). The program walks each run to its far end. From there it mirrors the generator's simulation step by step. If the next cell along DOWN is a bar cell, it probes outward along the bar's row at increasing distances on both sides of the TIE axis. Out-of-bounds counts as 'not bar'. The first free side wins, and if both sides are free at the same distance, the TIE side wins, matching the generator, where the +1 check overrides the -1 check. The line moves one cell sideways and repeats the check; otherwise it moves one cell along DOWN. Each visited cell is painted only if it is background, so bars and existing lines stay intact. This follows the generator's stepwise detour rather than the archived solver's jump-to-end. The two are equivalent, because a contiguous bar keeps the nearer end nearer after each step.",
+    "limitations": "Not executed by me. Assumes the constructor's domain: one bar row, lines hanging from a single source edge, and disjoint paths (the generator rejects overlapping paths). Bars never touch the side edges in that domain, so detours never leave the grid; if one did, the program stops that line at the edge instead of reproducing the generator's off-grid behaviour. No fixture contradicts the uniform rule. The 'teaching checkpoints' in the rule text (intermediate canvases) are not emitted; only the final grid is returned. Demonstrations are not used; colour roles come from palette constants.",
+    "host_review": "Keep native constructor and hash-audited direct program unchanged. An independent visible-grid simulator compares both nearest-edge detour tie conventions. Fit on all demonstration answers and require agreement of surviving conventions on each query input. Untied queries need no symmetric-detour demo. Hard symmetric detours remain supported when evidence is supplied; no narrowing of pair generation or label changes.",
+    "semantic_draft_review": "Reviewed semantic-repairs-v2 proposal; implemented episode-level evidence gate instead of proposed constructor restriction/control. Existing complete 1000-pair / 8000-augmentation / 16-fixture audit is reused after exact source hash verification. New episode audit follows admission."
+  }
+}

@@ -1071,3 +1071,32 @@ Remaining: 54 semantic/context holds, 9 execution failures, 3 missing factories.
 Bulk generation and model training have not launched.
 
 All 495 regression tests passed for this checkpoint.
+
+## 1056-family checkpoint
+
+- `c87289bb`: independently simulate both nearest-edge detour tie conventions
+  in visible coordinates. Fit them to all demonstrations and compare surviving
+  predictions on each query input. Untied queries need no symmetric-detour
+  demonstration; hard tied queries remain supported with teaching evidence.
+- `cc9053aa`: independently build a shortest-path DAG from the visible lattice
+  and compute minimum/maximum turn counts, including endpoint legs. A query
+  whose shortest paths differ in turns needs a demonstration showing that
+  choice. Equal minimum-cost routes are rejected rather than resolved by
+  search order. The original three demos have unique shortest routes, whereas
+  the original test has 20-step routes with two and six turns. This limited
+  tie-break ambiguity is documented in `cc9053aa-canonical-turn-evidence.json`;
+  original labels remain unchanged, with no training-export exemption. A
+  synthetic distinguishing demonstration restores admission of the hard query.
+
+No constructor or program-factory source changed. Existing certificates were
+reused after matching both source hashes: each covers 1,000 fresh pairs, 8,000
+D4 pair checks and 16 fixture variants. New complete-episode auditing accepted
+38 of 40 bases, excluded two missing-evidence assemblies, and verified 304
+augmented records with no sampler rejections or execution errors. Gates never
+read query labels. The independent path search also matched 100 freshly sampled
+native shortest-route solutions in regression tests.
+
+All 501 regression tests passed. Remaining: 52 semantic/context holds,
+9 execution failures and 3 missing factories. Bulk generation and model
+training have not launched; production remains 1,000 fresh bases per family
+plus consistent D4 augmentation, with program and grid together.

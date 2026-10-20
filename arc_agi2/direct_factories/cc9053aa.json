@@ -1,0 +1,23 @@
+{
+  "task_id": "cc9053aa",
+  "factory_sha256": "3a09c4fd968f96d243ee975df28300f0e1ee1e793d4ce39f0beff84638a38897",
+  "constructor_sha256": "fdbf39ccbae220be231f92d2da650302a24a37afee97b120ab1f7c1adf719642",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 221151489182614,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 26.57555070903618,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The emitted program works directly on the visible grid. Colour roles are fixed as constants: wall = palette[8] (cyan), endpoint and paint = palette[9] (maroon), blocker = palette[7] (orange).\n\nIt finds the two endpoint cells. A cell is walkable if it is a wall cell with no 4-neighbour of the blocker colour; the two endpoints are also walkable. It then runs Dijkstra over (row, col, incoming direction) states. The cost is the lexicographic pair (steps, direction changes), and the first move is not counted as a turn. Every cell of the optimal route is painted with the endpoint colour. This is the same mechanism and cost model as the constructor and the archived solver.\n\nThe d4 argument is intentionally unused. Step counts, turn counts and 4-adjacency are all unchanged by every rotation and reflection, so a route that is uniquely optimal in the original frame stays uniquely optimal in the visible frame. The search therefore needs no axis or direction specialization and no coordinate transform. Reversing the route also leaves its steps and turns unchanged, so the order in which the endpoints are scanned does not matter.",
+    "limitations": "1. The constructor guarantees a unique (steps, turns) optimum, so the direction order inside the heap never decides the answer. If a scene had a tie on both steps and turns, the result would depend on the search's internal order. That would be a scene defect, and the program does not try to resolve it as a rule.\n2. If the grid does not contain exactly two endpoint-coloured cells, or no legal route exists, the program returns the input unchanged. Both cases are outside the generator's domain.\n3. The demonstrations are not used. Colour roles come from the palette constants.\n4. The fixtures agree with the uniform rule. The test fixture's answer depends on the fewest-turns tie-break, which the constructor states as part of the rule. No fixture contradiction was found. This is from analysis only: no tests have been run.",
+    "host_review": "Keep native constructor and hash-audited direct program unchanged. Independent BFS shortest-path DAG with incoming-direction DP computes minimum and maximum turns and unique minimum-turn route. Require correct unique-optimum demo labels; when query shortest paths differ in turns, require a demo whose shortest paths differ in turns. Reject ambiguous equal-optimum queries. Original fixture demos have unique shortest routes but test has 20-step routes of 2 and 6 turns: document without changing labels or exempting training episodes. The gate tests this stated tie-break evidence, not identification against all conceivable rules.",
+    "semantic_draft_review": "Reviewed semantic-repairs-v2 proposal; implemented episode-level evidence gate instead of proposed constructor restriction/control. Existing complete 1000-pair / 8000-augmentation / 16-fixture audit is reused after exact source hash verification. New episode audit follows admission."
+  }
+}

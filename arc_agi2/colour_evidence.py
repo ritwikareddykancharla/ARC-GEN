@@ -63,6 +63,11 @@ def _hole_count(cells):
 
 
 def require_colour_evidence(task_id, demonstrations, queries, palette=None, d4=0):
+    if task_id in ('c87289bb', 'cc9053aa'):
+        from .path_evidence import require_path_evidence
+        require_path_evidence(task_id, demonstrations, queries,
+                              list(range(10)) if palette is None else palette, d4)
+        return
     if task_id in ('d56f2372', 'caa06a1f', 'cad67732'):
         from .pattern_evidence import require_pattern_evidence
         require_pattern_evidence(task_id, demonstrations, queries,

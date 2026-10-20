@@ -216,6 +216,7 @@ def make_episodes(arg):
         for p in rows:bins[p['stratum']].append(p)
         canonical_total=len({p['canonical_input_hash'] for p in rows})
         rng=random.Random(seed(tid,split,'episodes'));query_uses=Counter();pair_uses=Counter();failures=Counter()
+        query_context_shortfalls=[]
         hist={which:{axis:Counter() for axis in ['height','width','longest','shapes']} for which in ['input','output']};relations=Counter()
         path=OUT/'data'/split/f'{tid}.parquet';path.parent.mkdir(parents=True,exist_ok=True)
         temporary=path.with_suffix('.parquet.tmp');writer=None;buffer=[]
@@ -238,9 +239,17 @@ def make_episodes(arg):
                     failures['insufficient_distinct_inputs']+=n;continue
                 for j in range(n):
                     accepted=False
-                    for retry in range(50):
-                        q=candidates[(j+retry)%len(candidates)]
-                        if query_uses[q['input_hash']]>=4:continue
+                    # Fix the query BEFORE searching for teaching context.
+                    # Switching queries after an evidence rejection would
+                    # silently bias the dataset toward easier query cases.
+                    q=next((candidates[(j+offset)%len(candidates)]
+                            for offset in range(len(candidates))
+                            if query_uses[candidates[(j+offset)%len(candidates)]['input_hash']]<4),None)
+                    if q is None:
+                        failures['query_reuse_exhausted']+=1
+                        continue
+                    context_attempts=1 if tid in CONTEXTUAL_TASK_IDS else 50
+                    for retry in range(context_attempts):
                         if tid in CONTEXTUAL_TASK_IDS:
                             demos=q['context_pairs']
                             if len(demos)!=3 or any(p['split']!=split for p in demos):
@@ -336,7 +345,10 @@ def make_episodes(arg):
                         all_hashes.add(basehash);query_uses[q['input_hash']]+=1
                         for p in four:pair_uses[p['input_hash']]+=1
                         accepted=True;break
-                    if not accepted:failures['episode_constraints_exhausted']+=1
+                    if not accepted:
+                        failures['episode_constraints_exhausted']+=1
+                        query_context_shortfalls.append({'query_input_hash':q['input_hash'],
+                            'stratum':k,'context_attempts':retry+1})
             flush()
         except BaseException:
             if OUTPUT_FORMAT == 'program-grid-png':writer.abort()
@@ -354,6 +366,7 @@ def make_episodes(arg):
             'requested_fresh_episodes':sum(quota.values()),'spatial_variant_upper_bound':8*fresh_count,
             'symmetric_variants_removed':symmetric_duplicates,'variants_per_fresh_episode':dict(variant_counts),
             'query_histograms':hist,'relations':dict(relations),'failures':dict(failures),
+            'query_context_shortfalls':query_context_shortfalls,
             'max_query_reuse_in_fresh_episodes':max(query_uses.values(),default=0),
             'max_pair_reuse_in_fresh_episodes':max(pair_uses.values(),default=0),'distinct_inputs_used':len(pair_uses)}
     report={'task_id':tid,'splits':result};dump(OUT/'episode_reports'/f'{tid}.json',report);return report

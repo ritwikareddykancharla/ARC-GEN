@@ -1,0 +1,23 @@
+{
+  "task_id": "bd283c4a",
+  "factory_sha256": "df49c1c27924f15c6a20efbddfbe7fbeb033316d23f4fc58fb1ab461160a2e09",
+  "constructor_sha256": "303c437d80f5943358019377cffd5b3c16fbca2b88ffed4a29c9bfe3ea6d4a93",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 136464291472405,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 4.731800084002316,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "This task rearranges the cells. It never creates or deletes them. The generator counts each colour, sorts the colours by count from most to fewest, and lays them along one fixed path through the grid. Index i goes to output[9 - i%10][i//10]: up column 0 from the bottom-left, then up column 1, and so on. So the rarest colour ends at the top-right corner, matching the stated rule.\n\nThe factory maps the path's two step directions through the D4 transform: inner step (-1,0) is up and outer step (0,1) is right. A reflection negates the column component. Each clockwise turn maps (dr,dc) to (dc,-dr). From the mapped directions it writes explicit row and column loops in visible coordinates. For example, the path becomes column-wise or row-wise and its start corner moves. The emitted program counts colours directly from the query. It needs no colour constants, so the palette has nothing to specialise.\n\nTies follow the generator's real behaviour. It sorts a dict whose keys are in order of first appearance in a row-major scan, using a stable sort with reverse=True. So among equal counts, the colour seen first comes first on the fill path. The emitted program reproduces this with the visible image of that row-major scan, also derived from D4. The loops work for any rectangular H x W shape.",
+    "limitations": "1. **Tie-break note for host review:** colours with equal counts are ordered by first appearance in the input's raster scan. This is a side effect of dict insertion order plus a stable reverse sort in the generator, not a visible rule. I replicate it (in transformed scan order) because it decides labels on fresh scenes. The archived solver instead breaks ties by colour value. That is not invariant under the palette map and disagrees with the generator on ties.\n2. **Fixtures:** the approved fixtures contain no ties, and no contradictions were found.\n3. **Fewer colours:** grids with fewer than four colours (possible when the rarest colour is never sampled) are handled naturally.\n4. **Untested:** I have not run any tests on this factory.",
+    "host_review": "Retain original random colour scatter, including equal counts. Independent count-sort gate compares 8 visible fill paths x 8 first-appearance raster tie scans, fitting demonstration outputs and requiring query agreement. Untied queries need no tie demo; tied queries can be restored with an equal-count demonstration. Uniform demos cannot silently teach fill direction. Hypothesis sets are D4/palette invariant. This checks the stated spatial conventions, not all imaginable colour-specific priorities. No proposed tie-free constructor narrowing applied.",
+    "semantic_draft_review": "Reviewed CLI semantic proposal; preserve native generator distribution and direct factory. Use episode-evidence hypothesis comparison instead of narrowing pair vocabulary. Exact source hashes match previous 1000-pair/8000-D4/16-fixture certificates; fresh complete-episode audit follows."
+  }
+}

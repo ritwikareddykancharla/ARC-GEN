@@ -1130,3 +1130,42 @@ sampler rejections or execution errors. All 507 regression tests passed.
 
 Remaining: 50 semantic/context holds, 9 execution failures and 3 missing
 factories. Bulk generation and training remain pending complete coverage.
+
+## 1060-family checkpoint
+
+- `9385bd28`: retain deeply nested reservations, including reserve rows with
+  no remaining free cell. Independently parse visible legend rows and key
+  rectangles; compare 48 hypotheses spanning early/inline/no erasure,
+  ordinary filling, reservation, ignored rows, and legend/reverse/area order.
+  Require surviving predictions to agree on each query. The canonical first
+  query exposes an area-order ambiguity not excluded by its original demos.
+  The original labels remain unchanged, without a training-export exemption.
+  `9385bd28-erase-reserve-order-evidence.json` records this and a concrete nested
+  reserve witness. Adding that witness as a demonstration distinguishes the
+  native rule and recovers the hard query. No blanket nested-case rejection.
+- `bd283c4a`: retain equal-count scatter cases. Compare eight fill paths and
+  eight first-appearance tie scans, fitting demonstration outputs. Tied queries
+  need evidence when their predictions differ; untied queries need no tie
+  demonstration. Uniform demos cannot silently teach a fill direction. This
+  is a finite comparison of spatial conventions, not all arbitrary colour
+  priority rules. No tie-free generator narrowing was applied.
+
+Original constructor and direct-factory sources are unchanged and their hashes
+match existing 1,000-pair, 8,000-D4-check, 16-fixture certificates. New complete-
+episode auditing accepted 32 of 40 independent base assemblies, excluded eight
+paint-order assemblies missing teaching evidence and verified 256 augmented
+records, without sampler rejections or execution errors.
+
+The production assembler now fixes each query before retrying demonstration
+selection, rather than silently switching to an easier query on rejection.
+It tries up to 50 contexts and records an explicit `query_context_shortfalls`
+entry on failure. Shared-picture contexts are indivisible and receive one
+attempt. Existing reuse limits remain. A local audit with 64 fresh 20x20
+paint-family pairs completed all 20 requested bases, resolved 11 evidence
+retries and verified all 160 augmented program/grid records. Its report is
+`query-preserving-assembly-1060-audit.json`; those are audit records, not a
+production dataset launch.
+
+All 518 regression tests passed. Remaining: 48 semantic/context holds,
+9 execution failures, 3 missing factories. Bulk generation and training
+have not launched.

@@ -1,0 +1,381 @@
+{
+  "task_id": "9385bd28",
+  "scope": "Finite evidence check among 48 erase/reserve/order hypotheses. Not a claim of universal identifiability.",
+  "fixture_labels_changed": false,
+  "constructor_distribution_changed": false,
+  "training_gate_exemption": false,
+  "fixture_sha256": "c263d05e2146f6bc7d22ba65e9d9c76344a5f9f594b489287164a773fd1c000e",
+  "surviving_canonical_demos": {
+    "0": {
+      "erase": "early",
+      "reserve": "reserve",
+      "order": "legend"
+    },
+    "2": {
+      "erase": "early",
+      "reserve": "reserve",
+      "order": "small"
+    },
+    "4": {
+      "erase": "early",
+      "reserve": "fill",
+      "order": "legend"
+    },
+    "6": {
+      "erase": "early",
+      "reserve": "fill",
+      "order": "small"
+    },
+    "14": {
+      "erase": "inline",
+      "reserve": "reserve",
+      "order": "small"
+    },
+    "18": {
+      "erase": "inline",
+      "reserve": "fill",
+      "order": "small"
+    }
+  },
+  "canonical_queries": [
+    {
+      "distinct_outputs": 2,
+      "matching_original": [
+        0,
+        4
+      ],
+      "differences": [
+        {
+          "row": 3,
+          "col": 7,
+          "original": 2,
+          "candidates": [
+            2,
+            4
+          ]
+        },
+        {
+          "row": 3,
+          "col": 8,
+          "original": 2,
+          "candidates": [
+            2,
+            4
+          ]
+        },
+        {
+          "row": 4,
+          "col": 7,
+          "original": 2,
+          "candidates": [
+            2,
+            4
+          ]
+        },
+        {
+          "row": 4,
+          "col": 8,
+          "original": 2,
+          "candidates": [
+            2,
+            4
+          ]
+        },
+        {
+          "row": 6,
+          "col": 7,
+          "original": 2,
+          "candidates": [
+            2,
+            9
+          ]
+        },
+        {
+          "row": 6,
+          "col": 8,
+          "original": 2,
+          "candidates": [
+            2,
+            9
+          ]
+        },
+        {
+          "row": 7,
+          "col": 7,
+          "original": 2,
+          "candidates": [
+            2,
+            9
+          ]
+        },
+        {
+          "row": 7,
+          "col": 8,
+          "original": 2,
+          "candidates": [
+            2,
+            9
+          ]
+        },
+        {
+          "row": 9,
+          "col": 7,
+          "original": 2,
+          "candidates": [
+            2,
+            9
+          ]
+        },
+        {
+          "row": 9,
+          "col": 8,
+          "original": 2,
+          "candidates": [
+            2,
+            9
+          ]
+        },
+        {
+          "row": 10,
+          "col": 7,
+          "original": 2,
+          "candidates": [
+            2,
+            9
+          ]
+        },
+        {
+          "row": 10,
+          "col": 8,
+          "original": 2,
+          "candidates": [
+            2,
+            9
+          ]
+        }
+      ]
+    },
+    {
+      "distinct_outputs": 1,
+      "matching_original": [
+        0,
+        2,
+        4,
+        6,
+        14,
+        18
+      ],
+      "differences": []
+    }
+  ],
+  "nested_reserve_witness": {
+    "parameters": {
+      "width": 16,
+      "height": 16,
+      "bg": 0,
+      "legend": [
+        [
+          1,
+          3
+        ],
+        [
+          2,
+          0
+        ]
+      ],
+      "legend_pos": [
+        12,
+        0
+      ],
+      "objects": [
+        [
+          "pair",
+          1,
+          0,
+          0,
+          7,
+          7,
+          "main"
+        ],
+        [
+          "pair",
+          2,
+          2,
+          2,
+          5,
+          5,
+          "main"
+        ]
+      ]
+    },
+    "evidence": {
+      "distinct_outputs": 3,
+      "matching_original": [
+        0
+      ],
+      "differences": [
+        {
+          "row": 2,
+          "col": 2,
+          "original": 2,
+          "candidates": [
+            2,
+            2,
+            0
+          ]
+        },
+        {
+          "row": 2,
+          "col": 3,
+          "original": 2,
+          "candidates": [
+            2,
+            2,
+            0
+          ]
+        },
+        {
+          "row": 2,
+          "col": 4,
+          "original": 3,
+          "candidates": [
+            3,
+            0,
+            3
+          ]
+        },
+        {
+          "row": 2,
+          "col": 5,
+          "original": 3,
+          "candidates": [
+            3,
+            0,
+            3
+          ]
+        },
+        {
+          "row": 3,
+          "col": 2,
+          "original": 2,
+          "candidates": [
+            2,
+            2,
+            0
+          ]
+        },
+        {
+          "row": 3,
+          "col": 3,
+          "original": 3,
+          "candidates": [
+            3,
+            0,
+            3
+          ]
+        },
+        {
+          "row": 3,
+          "col": 4,
+          "original": 3,
+          "candidates": [
+            3,
+            0,
+            3
+          ]
+        },
+        {
+          "row": 3,
+          "col": 5,
+          "original": 3,
+          "candidates": [
+            3,
+            0,
+            3
+          ]
+        },
+        {
+          "row": 4,
+          "col": 2,
+          "original": 3,
+          "candidates": [
+            3,
+            0,
+            3
+          ]
+        },
+        {
+          "row": 4,
+          "col": 3,
+          "original": 3,
+          "candidates": [
+            3,
+            0,
+            3
+          ]
+        },
+        {
+          "row": 4,
+          "col": 4,
+          "original": 3,
+          "candidates": [
+            3,
+            0,
+            3
+          ]
+        },
+        {
+          "row": 4,
+          "col": 5,
+          "original": 2,
+          "candidates": [
+            2,
+            2,
+            0
+          ]
+        },
+        {
+          "row": 5,
+          "col": 2,
+          "original": 3,
+          "candidates": [
+            3,
+            0,
+            3
+          ]
+        },
+        {
+          "row": 5,
+          "col": 3,
+          "original": 3,
+          "candidates": [
+            3,
+            0,
+            3
+          ]
+        },
+        {
+          "row": 5,
+          "col": 4,
+          "original": 2,
+          "candidates": [
+            2,
+            2,
+            0
+          ]
+        },
+        {
+          "row": 5,
+          "col": 5,
+          "original": 2,
+          "candidates": [
+            2,
+            2,
+            0
+          ]
+        }
+      ]
+    },
+    "resolution": "Adding this complete demo identifies the native rule among surviving candidates and restores both canonical queries, plus a translated nested reserve query. Original generator and labels stay unchanged."
+  }
+}

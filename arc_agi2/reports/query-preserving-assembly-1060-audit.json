@@ -1,0 +1,58 @@
+{
+  "task_id": "9385bd28",
+  "scope": "Local assembly audit only; 64 fresh pairs, 20 requested base episodes. No public dataset or model training launched.",
+  "source_hash": "fadef6f85617615587d460de2d50544a78d3b5a931a26b02ff4311ef494e910d",
+  "metrics": {
+    "shards": [],
+    "episodes": 160,
+    "fresh_episodes": 20,
+    "requested_fresh_episodes": 20,
+    "spatial_variant_upper_bound": 160,
+    "symmetric_variants_removed": 0,
+    "variants_per_fresh_episode": {
+      "8": 20
+    },
+    "query_histograms": {
+      "input": {
+        "height": {
+          "20": 160
+        },
+        "width": {
+          "20": 160
+        },
+        "longest": {
+          "20": 160
+        },
+        "shapes": {
+          "20x20": 160
+        }
+      },
+      "output": {
+        "height": {
+          "20": 160
+        },
+        "width": {
+          "20": 160
+        },
+        "longest": {
+          "20": 160
+        },
+        "shapes": {
+          "20x20": 160
+        }
+      }
+    },
+    "relations": {
+      "same_shape": 160
+    },
+    "failures": {
+      "missing_colour_evidence_attempts": 11
+    },
+    "query_context_shortfalls": [],
+    "max_query_reuse_in_fresh_episodes": 1,
+    "max_pair_reuse_in_fresh_episodes": 5,
+    "distinct_inputs_used": 45
+  },
+  "verified_program_grid_records": 160,
+  "seconds": 1.0621241249609739
+}

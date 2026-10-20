@@ -11,6 +11,44 @@ from .fixture_policy import fixture_basis
 from .augmentation import apply_episode,settings,exhaustive_variants
 
 class GeneratorTests(unittest.TestCase):
+    def test_vertical_symmetry_canonical_latents_need_no_replay(self):
+        m=importlib.import_module('tasks.task_8e5c0c38')
+        with patch.object(m,'_replay',side_effect=AssertionError('replay used')):
+            result=m.validate()
+        self.assertEqual(result,reference('8e5c0c38')['canonical'])
+
+    def test_vertical_symmetry_uses_leftmost_tied_axis(self):
+        m=importlib.import_module('tasks.task_8e5c0c38')
+        shape=dict(colour=2,top=2,left=2,w=3,
+                   core=[(0,0),(0,2),(1,0),(1,2)],extras=[(0,3),(1,3)])
+        p=m.generate(width=8,height=8,background=0,shapes=[shape])
+        self.assertEqual(p['output'],grid(call(solver('8e5c0c38'),p['input'])))
+        self.assertEqual(p['output'][2][2:6],[2,0,2,0])
+        # The same input also has a tied axis at local s=3, but it is later.
+        wrong={**shape,'w':4,'core':[(0,0),(0,3),(1,0),(1,3)],
+               'extras':[(0,2),(1,2)]}
+        with self.assertRaisesRegex(ValueError,'leftmost best'):
+            m.generate(width=8,height=8,background=0,shapes=[wrong])
+        for kw in [dict(width=8,height=8,num_shapes=1,tie_rate=1),
+                   dict(width=30,height=30,num_shapes=4,tie_rate=1),
+                   dict(tie_rate=0)]:
+            random.seed(41000);p=m.generate(**kw)
+            self.assertEqual(p['output'],grid(call(solver('8e5c0c38'),p['input'])))
+
+    def test_vertical_symmetry_explicit_types_and_json_axis_keys(self):
+        m=importlib.import_module('tasks.task_8e5c0c38')
+        p=m.generate(input_rows=['000','010','011'],background=0,axes={'1':2})
+        self.assertEqual(p['output'],[[0,0,0],[0,1,0],[0,1,0]])
+        for kw in [dict(colours=5),dict(shapes=[1]),dict(shapes=5),
+                   dict(tie_rate=True),dict(tie_rate=-0.1),dict(tie_rate=float('nan')),
+                   dict(input_rows=['000','010','011'],background=0,axes={'1':2,1:2}),
+                   dict(input_rows=[123],background=0,axes={1:2}),
+                   dict(input_rows=['000','010','011'],background=0,axes=5),
+                   dict(width=10,height=10,background=0,shapes=[dict(colour=2,
+                        top=1,left=1,w=3,core=[5],extras=[])]),
+                   dict(width=10,height=10,shapes=[dict(colour=[2])])]:
+            with self.subTest(kw=kw),self.assertRaises(ValueError):m.generate(**kw)
+
     def test_scaled_assembly_retains_scale_after_rejected_render(self):
         m=importlib.import_module('tasks.task_898e7135');original=m._zero_majority
         for seed in range(41000,41008):

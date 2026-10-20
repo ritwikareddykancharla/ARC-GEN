@@ -6,7 +6,8 @@
   "require_complete_coverage_before_bulk_generation": true,
   "augmentation": {
     "native_fraction": 0.25,
-    "spatial": "uniform_nonidentity_D4",
+    "spatial": "exhaustive_D4",
+    "native_fraction_scope": "Legacy sampled-augmentation helper only; exhaustive builder emits all eight transforms",
     "colour_permutation_default": false,
     "colour_permutation_task_ids": [],
     "shuffle_demonstrations": true,
@@ -21,6 +22,6 @@
     "augmented_episode_upper_bound": 8960000,
     "adaptive_fewer_for_limited_diversity": true,
     "deduplicate_symmetric_episode_variants": true,
-    "bulk_builder_expansion_pending": true
+    "bulk_builder_expansion_pending": false
   }
 }

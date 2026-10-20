@@ -4,6 +4,8 @@ An episode transformation T produces the conjugated rule T f T^-1. It need
 not preserve the native rule (e.g. move-left becomes move-up after rotation).
 Validate in native coordinates; never reject using f(T(x)) != T(f(x)).
 """
+import json
+
 def transformed(g, d4, palette):
     if d4 not in range(8) or sorted(palette) != list(range(10)):
         raise ValueError('Expected D4 index and bijective ten-colour mapping')
@@ -27,3 +29,28 @@ def settings(rng, task_id, policy):
 
 def apply_episode(pairs, d4, palette):
     return [{k: transformed(p[k], d4, palette) for k in ('input', 'output')} for p in pairs]
+
+def exhaustive_variants(pairs, palette=None):
+    """All D4 variants of demonstrations followed by one query.
+
+    Equality includes the query answer and the unordered set of complete demo
+    pairs. Thus a symmetry that just permutes demonstrations does not create an
+    additional puzzle. ``equivalent_d4`` records every represented transform.
+    Colour mapping is simultaneous and shared, never independently sampled.
+    """
+    if len(pairs) < 2:
+        raise ValueError('Expected demonstrations followed by a query')
+    palette = list(range(10)) if palette is None else list(palette)
+    variants = {}
+    for d4 in range(8):
+        result = apply_episode(pairs, d4, palette)
+        encode = lambda x: json.dumps(x, sort_keys=True, separators=(',', ':'))
+        signature = encode([sorted(encode(p) for p in result[:-1]), result[-1]])
+        if signature in variants:
+            variants[signature]['equivalent_d4'].append(d4)
+        else:
+            variants[signature] = {
+                'pairs': result, 'd4_transform': d4, 'equivalent_d4': [d4],
+                'color_permutation': palette[:],
+            }
+    return list(variants.values())

@@ -5,7 +5,8 @@
 """Two-stage adaptive episode builder. Run as python -m arc_agi2.build_million.
 
 No language-model calls. Persist pools and reports as workers complete, then
-allocate one million training episodes by query size and output-shape relation.
+allocate fresh training episodes by query size and output-shape relation,
+then expand every fresh episode into all eight D4 transforms.
 Shortfalls are reported explicitly, never padded with duplicate episodes.
 """
 import argparse,concurrent.futures as cf,hashlib,importlib,json,math,os,random,time
@@ -19,7 +20,7 @@ from .runtime import BASE,reference,solver,call,grid
 from .generators.registry import GENERATORS,generate
 from .task_registry import NEW_TASK_IDS
 from .audit import relation,UPSTREAM_IDS
-from .augmentation import transformed, settings as augmentation_settings, apply_episode
+from .augmentation import transformed, exhaustive_variants
 
 POLICY=json.loads((BASE/'training_policy.json').read_text())
 
@@ -29,7 +30,7 @@ OUT=Path(os.environ.get('ARCGEN_BUILD_ROOT','/tmp/arcgen-million'))
 WORKERS=int(os.environ.get('ARCGEN_WORKERS','32'))
 POOL_SIZE=int(os.environ.get('ARCGEN_POOL_SIZE','1200'))
 FAMILY_SECONDS=int(os.environ.get('ARCGEN_FAMILY_SECONDS','900'))
-TARGET=int(os.environ.get('ARCGEN_TARGET_EPISODES','1000000'))
+TARGET=int(os.environ.get('ARCGEN_TARGET_EPISODES',str(POLICY['planned_dataset']['fresh_episode_target'])))
 VAL_TARGET=int(os.environ.get('ARCGEN_VALIDATION_EPISODES','20000'))
 
 def compact(x):return json.dumps(x,separators=(',',':'),sort_keys=True)
@@ -115,8 +116,9 @@ def make_pool(tid):
     dump(report_path,report);return report
 
 def allocate(reports,split,target,desired):
-    # Max 2 episodes per genuinely distinct canonical input; no blind 2,000/family quota.
-    capacity={r['task_id']:min(5000,2*r[split+'_canonical']) for r in reports if r[split+'_canonical']>=4}
+    # Fresh episode quotas, before augmentation. Small pools get fewer examples.
+    ceiling=POLICY['planned_dataset']['fresh_episodes_per_family']
+    capacity={r['task_id']:min(ceiling,2*r[split+'_canonical']) for r in reports if r[split+'_canonical']>=4}
     support={r['task_id']:r[split+'_strata'] for r in reports if r['task_id'] in capacity}
     budgets={};keys=sorted(desired);total=sum(desired.values())
     for k in keys:budgets[k]=int(target*desired[k]/total)
@@ -143,59 +145,85 @@ def make_episodes(arg):
         rows=[r for r in pool if r['split']==split];bins=defaultdict(list)
         for p in rows:bins[p['stratum']].append(p)
         canonical_total=len({p['canonical_input_hash'] for p in rows})
-        if len(rows)<4 or canonical_total<4:continue
-        rng=random.Random(seed(tid,split,'episodes'));out=[];query_uses=Counter();pair_uses=Counter();failures=Counter()
+        rng=random.Random(seed(tid,split,'episodes'));query_uses=Counter();pair_uses=Counter();failures=Counter()
         hist={which:{axis:Counter() for axis in ['height','width','longest','shapes']} for which in ['input','output']};relations=Counter()
-        for k,n in quota.items():
-            candidates=bins[k][:];rng.shuffle(candidates)
-            for j in range(n):
-                accepted=False
-                for retry in range(50):
-                    q=candidates[(j+retry)%len(candidates)]
-                    if query_uses[q['input_hash']]>=4:continue
-                    ds=[p for p in rows if p['input_hash']!=q['input_hash'] and pair_uses[p['input_hash']]<32]
-                    if len(ds)<3:break
-                    demos=rng.sample(ds,3);four=demos+[q]
-                    if len({p['canonical_input_hash'] for p in four})<4:continue
-                    if all(p['input']==p['output'] for p in four):continue
-                    # Identical full episode hash ignores demo order and augmentation.
-                    basehash=digest([sorted(p['input_hash'] for p in demos),q['input_hash']])
-                    if basehash in all_hashes:continue
-                    d4,palette=augmentation_settings(rng,tid,POLICY)
-                    transformed_pairs=apply_episode(four,d4,palette)
-                    train=transformed_pairs[:3];query=transformed_pairs[-1]
-                    challenge={'train':train,'test':[{'input':query['input']}]}
-                    prompt='Infer the shared transformation from the demonstrations. Return only JSON with key outputs and one grid per test input.\n'+compact(challenge)
-                    row={'episode_id':f'arcgen-1m-{tid}-{split}-{len(out):05d}','task_id':tid,'split':split,
-                      'variant':'native' if d4==0 and palette==list(range(10)) else 'augmented',
-                      'train':train,'test':challenge['test'],'solutions':[query['output']],
-                      'prompt':prompt,'completion':compact({'outputs':[query['output']]}),
-                      'pair_seeds':[p['seed'] for p in four],'pair_parameters':[p['parameters'] for p in four],
-                      'pair_generator_modes':[p['generator_mode'] for p in four],
-                      'base_input_hashes':[p['input_hash'] for p in four],
-                      'canonical_input_hashes':[p['canonical_input_hash'] for p in four],
-                      'base_episode_sha256':basehash,'d4_transform':d4,'color_permutation':palette,
-                      'query_input_height':len(query['input']),'query_input_width':len(query['input'][0]),
-                      'query_output_height':len(query['output']),'query_output_width':len(query['output'][0]),
-                      'query_relation':relation(query),'source_commit':os.environ.get('ARCGEN_SOURCE_COMMIT','local')}
-                    assert json.loads(row['completion'])=={'outputs':row['solutions']}
-                    out.append(row);all_hashes.add(basehash);query_uses[q['input_hash']]+=1
-                    for p in four:pair_uses[p['input_hash']]+=1
-                    for which in hist:
-                        a=query[which];h,w=len(a),len(a[0]);hist[which]['height'][h]+=1;hist[which]['width'][w]+=1;hist[which]['longest'][max(h,w)]+=1;hist[which]['shapes'][f'{h}x{w}']+=1
-                    relations[relation(query)]+=1;accepted=True;break
-                if not accepted:failures['episode_constraints_exhausted']+=1
         path=OUT/'data'/split/f'{tid}.parquet';path.parent.mkdir(parents=True,exist_ok=True)
-        if out:
-            pq.write_table(pa.Table.from_pylist(out),path,compression='zstd')
-            assert pq.read_metadata(path).num_rows==len(out)
-        result[split]={'episodes':len(out),'requested':sum(quota.values()),'query_histograms':hist,
-            'relations':dict(relations),'failures':dict(failures),'max_query_reuse':max(query_uses.values(),default=0),
-            'max_pair_reuse':max(pair_uses.values(),default=0),'distinct_inputs_used':len(pair_uses)}
+        temporary=path.with_suffix('.parquet.tmp');writer=None;buffer=[]
+        fresh_count=0;variant_count=0;symmetric_duplicates=0;variant_counts=Counter()
+        def flush():
+            nonlocal writer
+            if not buffer:return
+            table=pa.Table.from_pylist(buffer)
+            if writer is None:writer=pq.ParquetWriter(temporary,table.schema,compression='zstd')
+            writer.write_table(table);buffer.clear()
+        try:
+            for k,n in quota.items():
+                candidates=bins[k][:];rng.shuffle(candidates)
+                if len(rows)<4 or canonical_total<4 or not candidates:
+                    failures['insufficient_distinct_inputs']+=n;continue
+                for j in range(n):
+                    accepted=False
+                    for retry in range(50):
+                        q=candidates[(j+retry)%len(candidates)]
+                        if query_uses[q['input_hash']]>=4:continue
+                        ds=[p for p in rows if p['input_hash']!=q['input_hash'] and pair_uses[p['input_hash']]<32]
+                        if len(ds)<3:break
+                        demos=rng.sample(ds,3);four=demos+[q]
+                        if len({p['canonical_input_hash'] for p in four})<4:continue
+                        if all(p['input']==p['output'] for p in four):continue
+                        basehash=digest([sorted(p['input_hash'] for p in demos),q['input_hash']])
+                        if basehash in all_hashes:continue
+                        palette=list(range(10));cfg=POLICY['augmentation']
+                        if cfg['colour_permutation_default'] or tid in cfg['colour_permutation_task_ids']:rng.shuffle(palette)
+                        variants=exhaustive_variants(four,palette)
+                        base_id=f'arcgen-{tid}-{split}-base-{fresh_count:05d}'
+                        for variant in variants:
+                            d4=variant['d4_transform'];transformed_pairs=variant['pairs']
+                            train=transformed_pairs[:3];query=transformed_pairs[-1]
+                            challenge={'train':train,'test':[{'input':query['input']}]}
+                            prompt='Infer the shared transformation from the demonstrations. Return only JSON with key outputs and one grid per test input.\n'+compact(challenge)
+                            row={'episode_id':f'{base_id}-d4-{d4}','base_episode_id':base_id,'task_id':tid,'split':split,
+                              'variant':'native' if d4==0 and palette==list(range(10)) else 'augmented',
+                              'train':train,'test':challenge['test'],'solutions':[query['output']],
+                              'prompt':prompt,'completion':compact({'outputs':[query['output']]}),
+                              'pair_seeds':[p['seed'] for p in four],'pair_parameters':[p['parameters'] for p in four],
+                              'pair_generator_modes':[p['generator_mode'] for p in four],
+                              'base_input_hashes':[p['input_hash'] for p in four],
+                              'canonical_input_hashes':[p['canonical_input_hash'] for p in four],
+                              'base_episode_sha256':basehash,'d4_transform':d4,'color_permutation':palette,
+                              'equivalent_d4':variant['equivalent_d4'],'distinct_spatial_variants':len(variants),
+                              'query_input_height':len(query['input']),'query_input_width':len(query['input'][0]),
+                              'query_output_height':len(query['output']),'query_output_width':len(query['output'][0]),
+                              'query_relation':relation(query),'source_commit':os.environ.get('ARCGEN_SOURCE_COMMIT','local')}
+                            assert json.loads(row['completion'])=={'outputs':row['solutions']}
+                            buffer.append(row);variant_count+=1
+                            if len(buffer)>=64:flush()
+                            for which in hist:
+                                a=query[which];h,w=len(a),len(a[0]);hist[which]['height'][h]+=1;hist[which]['width'][w]+=1;hist[which]['longest'][max(h,w)]+=1;hist[which]['shapes'][f'{h}x{w}']+=1
+                            relations[relation(query)]+=1
+                        fresh_count+=1;variant_counts[len(variants)]+=1;symmetric_duplicates+=8-len(variants)
+                        all_hashes.add(basehash);query_uses[q['input_hash']]+=1
+                        for p in four:pair_uses[p['input_hash']]+=1
+                        accepted=True;break
+                    if not accepted:failures['episode_constraints_exhausted']+=1
+            flush()
+        finally:
+            if writer is not None:writer.close()
+        if variant_count:
+            assert pq.read_metadata(temporary).num_rows==variant_count
+            temporary.replace(path)
+        elif path.exists():path.unlink()  # Never republish a stale nonempty shard.
+        result[split]={'episodes':variant_count,'fresh_episodes':fresh_count,
+            'requested_fresh_episodes':sum(quota.values()),'spatial_variant_upper_bound':8*fresh_count,
+            'symmetric_variants_removed':symmetric_duplicates,'variants_per_fresh_episode':dict(variant_counts),
+            'query_histograms':hist,'relations':dict(relations),'failures':dict(failures),
+            'max_query_reuse_in_fresh_episodes':max(query_uses.values(),default=0),
+            'max_pair_reuse_in_fresh_episodes':max(pair_uses.values(),default=0),'distinct_inputs_used':len(pair_uses)}
     report={'task_id':tid,'splits':result};dump(OUT/'episode_reports'/f'{tid}.json',report);return report
 
 def card(m):
     n=m.get('train_episodes',0);v=m.get('validation_episodes',0)
+    fresh=m.get('train_fresh_episodes',0)
     return f'''---
 license: apache-2.0
 task_categories:
@@ -210,21 +238,21 @@ configs:
   - split: validation
     path: data/validation/*.parquet
 ---
-# ARC-AGI-2 · Adaptive one-million-episode target
+# ARC-AGI-2 · Fresh procedural episodes and exhaustive D4 augmentation
 
-**Status: {m['status']} · {n:,} training episodes · {v:,} validation episodes published.**
+**Status: {m['status']} · {fresh:,} fresh training episodes · {n:,} training examples after augmentation · {v:,} validation examples published.**
 
-Three demonstration pairs and one query per episode, with generator-produced output targets. No reasoning or Python code in the SFT targets. This is a one-million target, not a claim that one million valid episodes already exist.
+Three demonstration pairs and one query per episode, with generator-produced output targets. No reasoning or Python code in the SFT targets. The configured target is {TARGET:,} fresh training episodes and up to {8*TARGET:,} spatial variants. Counts above describe saved examples, not promised final totals.
 
 [Visual size and coverage audit](https://ritwika96-arc-episode-gallery.static.hf.space/coverage/index.html) · [Generator fork](https://github.com/ritwikareddykancharla/ARC-GEN/tree/arc2-diversity-and-reference-generators/arc_agi2) · [Original 100K baseline](https://huggingface.co/datasets/ritwika96/arc-agi2-arcgen-100k-episodes)
 
 ## What changes
 
 - All fixture-verified ARC-GEN generators whose task IDs occur in ARC-AGI-2, plus independently constructed, tested extensions.
-- Adaptive quotas: at most two episodes per unique canonical input in the pair pool, with a 5,000-episode family ceiling. Families with little variation receive fewer examples.
+- Adaptive fresh quotas: at most two episodes per unique canonical input in the pair pool, with a {POLICY['planned_dataset']['fresh_episodes_per_family']:,}-episode family ceiling before augmentation. Families with little variation receive fewer examples.
 - Target query longest-side distribution at each integer size 1–30 jointly with output expansion/shrinkage/same-shape, measured on all 1,120 public tasks. Exact height, width and rectangular-shape histograms are reported separately. Unsupported targets become explicit shortfalls; difficulty is not proven equal by dimensions.
 - Size overrides require original replay and differential seed checks. Every overridden/extended pair is checked against its saved teacher solver. Default upstream generators have fixture checks, not full semantic proofs.
-- Fresh input pool, no duplicated full native episodes, no identical inputs inside an episode. 25% native orientation, 75% sampled nonidentity D4. Colours are generated natively; extra palette permutation is opt-in per family. All augmentation is shared across each episode and stored.
+- Fresh input pool, no duplicated full native episodes, no equivalent inputs inside an episode. Every fresh episode expands into all eight D4 transforms. Symmetric identical episodes are stored once, with every represented transform recorded in `equivalent_d4`; fresh and augmented counts remain separate. Colours are generated natively; extra palette permutation is opt-in per family. One transformation applies consistently to all demonstration inputs/outputs and the query input/output.
 - Input equivalence classes under palette renaming and D4 are assigned to one split before episode construction, including across families. All 1,120 public task families, including the former 20 holdouts, are training-eligible after generator validation. Synthetic validation measures new-input generalization within known families.
 
 ## Generator examples
@@ -285,11 +313,15 @@ def main():
         assert api.whoami()['name']=='ritwika96'
         if args.resume:
             snapshot_download(REPO,repo_type='dataset',local_dir=OUT,allow_patterns=['pools/*.parquet','pool_reports/*.json'])
-    m={'status':'generating_pair_pools','target_train_episodes':TARGET,'target_validation_episodes':VAL_TARGET,
+    m={'status':'generating_pair_pools','target_train_fresh_episodes':TARGET,'target_validation_fresh_episodes':VAL_TARGET,
+       'train_spatial_variant_upper_bound':8*TARGET,'validation_spatial_variant_upper_bound':8*VAL_TARGET,
        'source_commit':os.environ.get('ARCGEN_SOURCE_COMMIT','local'),'seed':SEED,'workers':WORKERS,
        'task_ids':eligible,'excluded_task_ids':POLICY['excluded_task_ids'],
        'former_holdout_ids':inv['summary']['holdouts'],'training_policy':POLICY,
-       'completed_pools':0,'train_episodes':0,'validation_episodes':0,'errors':[],'model_training_launched':False}
+       'completed_pools':0,'train_episodes':0,'validation_episodes':0,
+       'train_fresh_episodes':0,'validation_fresh_episodes':0,
+       'train_symmetric_variants_removed':0,'validation_symmetric_variants_removed':0,
+       'errors':[],'model_training_launched':False}
     assert not set(eligible)&set(m['excluded_task_ids'])
     def publish(files=()):
         dump(OUT/'manifest.json',m);(OUT/'README.md').write_text(card(m))
@@ -320,6 +352,7 @@ def main():
     alloc_train,stats_train=allocate(reports,'train',TARGET,desired)
     alloc_val,stats_val=allocate(reports,'validation',VAL_TARGET,desired)
     dump(OUT/'allocation.json',{'train':stats_train,'validation':stats_val,'train_by_family':alloc_train,'validation_by_family':alloc_val,
+        'allocation_unit':'fresh episodes before exhaustive D4 expansion',
         'target_scope':'All 1,120 public canonical tasks, query-input longest side jointly with output-shape relation.'})
     m['status']='constructing_episodes';publish(['allocation.json']);files=[];last=time.monotonic()
     combined={tid:{s:a[tid] for s,a in [('train',alloc_train),('validation',alloc_val)] if tid in a} for tid in sorted(set(alloc_train)|set(alloc_val))}
@@ -332,6 +365,8 @@ def main():
                 r=f.result();episode_reports.append(r);files.append(f'episode_reports/{tid}.json')
                 for split,x in r['splits'].items():
                     m[split+'_episodes']+=x['episodes']
+                    m[split+'_fresh_episodes']+=x['fresh_episodes']
+                    m[split+'_symmetric_variants_removed']+=x['symmetric_variants_removed']
                     if x['episodes']:files.append(f'data/{split}/{tid}.parquet')
             except Exception as e:m['errors'].append({'task_id':tid,'stage':'episodes','error':repr(e)})
             print(compact({'stage':'episodes','task_id':tid,'train':m['train_episodes'],'validation':m['validation_episodes']}),flush=True)
@@ -347,8 +382,8 @@ def main():
                 for axis in hist[g]:hist[g][axis].update(x['query_histograms'][g][axis])
         audit[split]={'pairs':m[split+'_episodes'],'input':hist['input'],'output':hist['output'],'relations':dict(rel)}
     dump(OUT/'size-audit.json',audit);files.append('size-audit.json')
-    m.update(status='complete' if m['train_episodes']==TARGET and not m['errors'] else 'complete_with_shortfall',
-       train_shortfall=TARGET-m['train_episodes'],validation_shortfall=VAL_TARGET-m['validation_episodes'],
+    m.update(status='complete' if m['train_fresh_episodes']==TARGET and m['validation_fresh_episodes']==VAL_TARGET and not m['errors'] else 'complete_with_shortfall',
+       train_fresh_shortfall=TARGET-m['train_fresh_episodes'],validation_fresh_shortfall=VAL_TARGET-m['validation_fresh_episodes'],
        represented_train_families=sum(r['splits'].get('train',{}).get('episodes',0)>0 for r in episode_reports))
     publish(files);print(compact(m),flush=True)
 if __name__=='__main__':main()

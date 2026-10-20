@@ -1,5 +1,5 @@
 import hashlib,importlib,json,random,tempfile,unittest
-from collections import Counter
+from collections import Counter,defaultdict
 from pathlib import Path
 from unittest.mock import patch
 import pyarrow.parquet as pq
@@ -7,7 +7,7 @@ from . import build_million as b
 from .generators.registry import GENERATORS,generate
 from .runtime import BASE,reference,solver,call,grid,check_reference
 from .task_registry import NEW_TASK_IDS
-from .augmentation import apply_episode,settings
+from .augmentation import apply_episode,settings,exhaustive_variants
 
 class GeneratorTests(unittest.TestCase):
     def test_template_controls_dead_end_rooms_nearest_key_and_arch_cups(self):
@@ -571,11 +571,32 @@ class GeneratorTests(unittest.TestCase):
             b.require_complete_coverage(inv)
         all_ready={'tasks':[{'task_id':str(i),'held_out':True,'status':'extension_validated'} for i in range(1120)]}
         b.require_complete_coverage(all_ready)
-        with self.assertRaisesRegex(RuntimeError,'eight-variant'):
-            b.require_build_ready(all_ready)
-        with patch.dict(b.POLICY['planned_dataset'],bulk_builder_expansion_pending=False):
-            with self.assertRaisesRegex(RuntimeError,'reviewed standalone'):
+        with patch.dict(b.POLICY['planned_dataset'],bulk_builder_expansion_pending=True):
+            with self.assertRaisesRegex(RuntimeError,'eight-variant'):
                 b.require_build_ready(all_ready)
+        with self.assertRaisesRegex(RuntimeError,'reviewed standalone'):
+            b.require_build_ready(all_ready)
+    def test_exhaustive_symmetry_deduplication_includes_answers(self):
+        # Symmetric inputs do not imply symmetric outputs.
+        pairs=[{'input':[[0]],'output':[[1,2],[3,4]]},
+               {'input':[[5]],'output':[[0,6],[7,8]]}]
+        variants=exhaustive_variants(pairs)
+        self.assertEqual(len(variants),8)
+        self.assertEqual({v['d4_transform'] for v in variants},set(range(8)))
+        self.assertEqual(variants[1]['pairs'][-1]['output'],[[7,0],[8,6]])
+        for v in variants:
+            self.assertEqual(v['pairs'],apply_episode(pairs,v['d4_transform'],list(range(10))))
+        # Here all eight really are identical; retain one with full provenance.
+        symmetric=[{'input':[[0]],'output':[[1]]},
+                   {'input':[[2,2],[2,2]],'output':[[3]]}]
+        unique=exhaustive_variants(symmetric)
+        self.assertEqual(len(unique),1)
+        self.assertEqual(unique[0]['equivalent_d4'],list(range(8)))
+        # A reflection permuting demonstrations is also the same puzzle.
+        swap=[{'input':[[1,2]],'output':[[3,4]]},
+              {'input':[[2,1]],'output':[[4,3]]},
+              {'input':[[5]],'output':[[6]]}]
+        self.assertEqual(len(exhaustive_variants(swap)),2)
     def test_default_augmentation_preserves_native_colours(self):
         rng=random.Random(42);seen=set()
         for _ in range(1000):
@@ -599,6 +620,10 @@ class GeneratorTests(unittest.TestCase):
         alloc,stats=b.allocate(rs,'train',100,{'15|same_shape':1,'30|same_shape':1})
         self.assertEqual(sum(alloc['a'].values()),10)
         self.assertEqual(stats['shortfall_by_stratum']['30|same_shape'],50)
+        rs=[{'task_id':'rich','train_canonical':2000,'train_strata':{'15|same_shape':2000}}]
+        alloc,stats=b.allocate(rs,'train',2000,{'15|same_shape':1})
+        self.assertEqual(sum(alloc['rich'].values()),1000)
+        self.assertEqual(stats['allocated'],1000)
     def test_reviewed_constructors_replace_drafts_and_invalidate_old_pools(self):
         with tempfile.TemporaryDirectory() as directory:
             root=Path(directory);(root/'pools').mkdir();(root/'pool_reports').mkdir()
@@ -637,6 +662,7 @@ class GeneratorTests(unittest.TestCase):
                 for split in ['train','validation']:
                     self.assertGreater(report['splits'][split]['episodes'],0)
                     saved=pq.read_table(b.OUT/'data'/split/f'{tid}.parquet').to_pylist();used[split]=set()
+                    families=defaultdict(list)
                     for r in saved:
                         self.assertEqual(len(r['train']),3);self.assertEqual(len(r['test']),1)
                         self.assertEqual(set(r['test'][0]),{'input'})
@@ -644,6 +670,23 @@ class GeneratorTests(unittest.TestCase):
                         self.assertEqual(json.loads(r['prompt'].split('\n',1)[1]),{'train':r['train'],'test':r['test']})
                         self.assertEqual(len(set(r['canonical_input_hashes'])),4)
                         used[split].update(r['canonical_input_hashes'])
+                        families[r['base_episode_id']].append(r)
+                    stats=report['splits'][split]
+                    self.assertEqual(stats['fresh_episodes'],len(families))
+                    self.assertEqual(stats['episodes'],len(saved))
+                    self.assertEqual(stats['symmetric_variants_removed'],8*len(families)-len(saved))
+                    originals={r['input_hash']:r for r in rows}
+                    for group in families.values():
+                        covered=[d for row in group for d in row['equivalent_d4']]
+                        self.assertEqual(sorted(covered),list(range(8)))
+                        for row in group:
+                            base=[originals[h] for h in row['base_input_hashes']]
+                            wanted=apply_episode(base,row['d4_transform'],row['color_permutation'])
+                            self.assertEqual(row['train'],wanted[:3])
+                            self.assertEqual(row['test'],[{'input':wanted[-1]['input']}])
+                            self.assertEqual(row['solutions'],[wanted[-1]['output']])
+                    self.assertLessEqual(stats['max_query_reuse_in_fresh_episodes'],4)
+                    self.assertLessEqual(stats['max_pair_reuse_in_fresh_episodes'],32)
                 self.assertFalse(used['train'] & used['validation'])
             finally:b.OUT=previous
 if __name__=='__main__':unittest.main()

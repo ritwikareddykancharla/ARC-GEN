@@ -1,0 +1,21 @@
+{
+  "task_id": "10fcaaa3",
+  "factory_sha256": "3678599c311b56499b1c6612aad19b804de892a140deaf844ee1ab1afd7f2efc",
+  "constructor_sha256": "81cda47c4aaf29a9caee5ce3f2e9829f299254c93e346edb329f2317a4fb8fb3",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 32734827161307,
+  "d4": 7,
+  "unique_base_inputs": 869,
+  "seconds": 2.0822023330256343,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft; host source restrictions and execution verification",
+  "draft_notes": {
+    "explanation": "The emitted program tiles the visible input 2x2, giving an output twice as tall and twice as wide. It then finds every cell whose colour is not the background, palette[0]. Each background cell that is diagonally adjacent to such a cell becomes the halo colour, palette[8]. Diagonals that fall outside the grid are clipped at the output border. Coloured cells are never overwritten, which matches the generator: it draws the halo first and then puts the coloured pixels back on top. The generator places halos around the original positions plus offsets of (0,0), (H,0), (0,W) and (H,W), clipped to the output size. That gives exactly the diagonal neighbours of the tiled copies, so the two descriptions agree. Tiling a grid 2x2 and marking its diagonal neighbours are both unchanged by any rotation or reflection. So in visible coordinates, the D4 transform needs no axis or direction changes. The palette only changes two constants: the background, palette[0], and the halo colour, palette[8]. The object colour is picked up from the pixels, since it is any non-background cell. The generator never uses colour 8 for objects, so after the palette mapping objects never use palette[8]. The four training fixtures agree with this rule. The test fixture also agrees: for example, rows 5 and 6 of its output each hold a 3 at the same columns, and they halo each other.",
+    "limitations": "The background is fixed as palette[0] and is not inferred from the demonstrations. That matches the constructor, where 0 is always the background. The d4 argument is deliberately unused because the mechanism is D4-invariant. The program assumes the input contains only background and object colours. Any other non-background colour would also be treated as an object and given a halo."
+  }
+}

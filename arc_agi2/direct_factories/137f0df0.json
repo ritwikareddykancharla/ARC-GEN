@@ -1,0 +1,21 @@
+{
+  "task_id": "137f0df0",
+  "factory_sha256": "f589793a318a1384565b068980c5c93b7349c09e8d1f826117d32a34bbce7ed5",
+  "constructor_sha256": "0c4c37706955e54eca8909dca362bf3dfb62970e82bba7d38f00f46ebed6acd9",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 81007782048835,
+  "d4": 7,
+  "unique_base_inputs": 120,
+  "seconds": 2.814657000009902,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft; host source restrictions and execution verification",
+  "draft_notes": {
+    "explanation": "The rule is the same under every D4 transform. The program finds the bounding box of all non-background cells, which are the 2x2 blocks. It then finds the gap rows and gap columns inside that box, meaning lines with no block cells. It paints those gaps red inside the box, and paints blue where they continue outside the box out to the grid border. Rotating or reflecting the grid only turns rows into columns or reverses directions, and the program already handles both axes and both directions. So d4 changes nothing in the emitted code. Colour roles are fixed as constants from the palette: background = palette[0], red = palette[2], blue = palette[1]. Block cells are any non-background colour, so the grey colour palette[5] never has to be named. The code reads the actual grid shape, so rectangular grids and lattices touching the border work: an extension segment that runs past the border is simply empty.",
+    "limitations": "Assumes the background is palette[0] and that the only other colour in the input is the block colour, as the generator guarantees. The demonstrations are not used. Nothing has been tested. The fixtures and the archived solver agree with a single uniform rule; no contradictions were found."
+  }
+}

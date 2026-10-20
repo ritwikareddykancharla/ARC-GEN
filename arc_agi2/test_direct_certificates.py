@@ -15,7 +15,8 @@ class Certificates(unittest.TestCase):
     def test_factories_produce_direct_programs_for_all_orientations(self):
         from .program_targets import compile_target, audit_target
         palette = [3, 9, 0, 7, 2, 8, 1, 6, 4, 5]
-        for tid in ("62593bfd", "e4888269", "fc7cae8d", "65b59efc", "142ca369", "f931b4a8"):
+        for path in sorted((cert.BASE / "direct_factories").glob("????????.json")):
+            tid = path.stem
             task = reference(tid)["canonical"]
             for d4 in range(8):
                 source, _ = compile_target(tid, d4, palette)

@@ -1,0 +1,16 @@
+{
+  "task_id": "05a7bcf2",
+  "factory_sha256": "0c969d90440f24b6a77d9ff401dac089e4b51a2f5395e4bcba87a1f4448e355b",
+  "constructor_sha256": "1ece148e2f4a6ca42fa26ee69f7bd66667d27619b2eee931afab27509c400a40",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 145870057103105,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 14.30590108409524,
+  "provenance": "Opus 5.5 subscription CLI draft; host source review and execution audit",
+  "limitations": "This assumes the generator's domain:\n- Exactly one full divider line of the divider colour.\n- Shape cells only on one side of it, and wall cells only on the far side.\n\nIf no divider or no shape cells are found, the input is returned unchanged. The wall's own full base line has the wall colour, not the divider colour, so it is never mistaken for the divider. The approved fixtures look consistent with this uniform rule. No tests were run."
+}

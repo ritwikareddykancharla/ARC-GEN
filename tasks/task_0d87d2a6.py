@@ -64,11 +64,25 @@ def generate(width=None, height=None, wides=None, talls=None, brows=None,
     width, height = common.randint(10, 25), common.randint(10, 25)
     while True:
       boxes = common.randint(5, 10)
-      wides = [common.randint(2, 9) for _ in range(boxes)]
-      talls = [common.randint(2, 9) for _ in range(boxes)]
-      brows = [common.randint(0, height - tall) for tall in talls]
-      bcols = [common.randint(0, width - wide) for wide in wides]
-      if common.overlaps(brows, bcols, wides, talls, 1): continue
+      # Place rectangles incrementally. Resampling an entire crowded layout
+      # until all 5-10 rectangles happen not to overlap can take minutes on
+      # small canvases. Keep the same size bounds and one-cell separation.
+      wides, talls, brows, bcols = [], [], [], []
+      for _ in range(boxes):
+        for _ in range(200):
+          wide, tall = common.randint(2, 9), common.randint(2, 9)
+          brow, bcol = common.randint(0, height - tall), common.randint(0, width - wide)
+          if common.overlaps(brows + [brow], bcols + [bcol],
+                             wides + [wide], talls + [tall], 1):
+            continue
+          wides.append(wide)
+          talls.append(tall)
+          brows.append(brow)
+          bcols.append(bcol)
+          break
+        else:
+          break
+      if len(wides) != boxes: continue
       urows = []
       urow = common.randint(2, 12)
       while urow + 1 < height:

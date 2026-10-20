@@ -1,0 +1,21 @@
+{
+  "task_id": "137eaa0f",
+  "factory_sha256": "e4edf1b4f4816fa34d01c0c0f2d4203bb0dfc2ebc47f2e5e784a794a47021db7",
+  "constructor_sha256": "e34f70989cdad5c3838c3f3ba68608195f0121670de59bf2e0efe98efcdc1a82",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 127855174840558,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 2.114356082980521,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft; host source restrictions and execution verification",
+  "draft_notes": {
+    "explanation": "The generator places up to four fragments. Each fragment has a gray registration cell (original colour 5) and other cells, all in one colour, inside the 3x3 window centred on that gray cell. The output is a 3x3 grid with gray in the centre. Each fragment's cells are copied to the output at their offsets from their own gray cell. Every D4 transform maps the 3x3 neighbourhood offsets around a cell exactly the same way it maps the 3x3 output around its centre. So the program works directly in visible coordinates and needs no change of axis or direction. It scans for every cell of colour palette[5], reads its visible 3x3 neighbourhood, and stamps each cell that is neither background (palette[0]) nor gray at the matching offset in the visible 3x3 output. Output cells that no fragment covers keep the background colour palette[0], and the centre is set to palette[5]. Fragments never collide. The generator keeps fragment centres at least 4 apart in some axis, so the 3x3 windows are disjoint. A window never contains cells from another fragment, so the order of stamping does not matter. Fragment centres lie in 1..size-2, so windows never cross the grid edge. A bounds check is still kept for safety.",
+    "limitations": "The background is fixed to palette[0] and the registration colour to palette[5] rather than inferred from the demonstrations. This matches the constructor, where 0 is always the background. If a random fragment colour came out as 5, the generator replaces it with 0. That fragment then has no gray centre and no visible cells, and the output keeps background there, which the program reproduces. The program assumes the 3x3 output size and the uniform rule; the fixtures follow that rule with no contradictions. No tests were run."
+  }
+}

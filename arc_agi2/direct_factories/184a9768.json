@@ -1,0 +1,21 @@
+{
+  "task_id": "184a9768",
+  "factory_sha256": "8a6fcf17c59ddf48ea35063495a6b350a41811f833fcaec0c7a7f513b0b76302",
+  "constructor_sha256": "70f7542162962b90b85481fb2c35d13b609dc11585d7e1f8e8db6c240f81474d",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 66726492471339,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 24.132296208059415,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft; host source restrictions and execution verification",
+  "draft_notes": {
+    "explanation": "The emitted program solves the jigsaw directly in the visible grid. It does not normalise, rotate or remap the grid.\n\nColour roles:\n- Background is palette[0].\n- Grey noise is palette[5].\n\nSteps:\n1. Find holes: 4-connected background components that never touch the visible border.\n2. Find pieces: single-colour, non-noise 4-components that are not edge-adjacent to any hole. Frames are excluded because they border their holes.\n3. Describe each piece by its colour and its cell offsets from its first cell in reading order. For a solid rectangle, the first cell is its visible top-left corner.\n4. Run an exact-cover backtrack. At each step it takes the first uncovered hole cell in reading order and tries each available piece type anchored there. Identical pieces are grouped with counts, and failed (uncovered set, counts) states are memoised. This keeps the search small even when duplicate pieces exist.\n5. Erase all noise, erase the moved pieces from their sources, and paint them into the holes.\n\nWhy no orientation-specific code is needed: D4 maps solid rectangles to solid rectangles and enclosed holes to enclosed holes. Any exact rectangle tiling of a hole can be found by top-left anchoring in whatever reading order is visible. The generator rejects scenes where different tilings give different coloured outputs. So the tiling found in visible coordinates gives exactly the transformed expected output.\n\nd4 changes nothing in the emitted code because the mechanism is isotropic. Pieces only translate and are never rotated, so a rotated piece fits the correspondingly rotated hole. The palette specialises the background and noise roles. Frame and piece colours are inferred from pixels.",
+    "limitations": "- If no exact cover exists, the program returns the input with noise erased. This matches the archived solver; it should never happen in the generator's domain.\n- The program assumes the background is palette[0] and noise is palette[5], as fixed by the constructor. It does not re-infer the background from colour frequency.\n- It relies on the generator's guarantee that the coloured output is unique. If that guarantee failed, the tiling picked by the visible reading order could differ from the expected one.\n- Pieces that are unused (impossible in the domain) are left in place.\n- I have not run any tests; this is untested code.\n- No fixture contradictions were observed."
+  }
+}

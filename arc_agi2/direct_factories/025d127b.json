@@ -1,0 +1,16 @@
+{
+  "task_id": "025d127b",
+  "factory_sha256": "4b2473e1f805cccb18e686af6307d865b34092ec39da642914f3f92370c5ea38",
+  "constructor_sha256": "f584e3cea26b01f7c968d2718159a2f86672ef022420d69d9b4a5c84a439805f",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 40255884357509,
+  "d4": 7,
+  "unique_base_inputs": 986,
+  "seconds": 4.253727333038114,
+  "provenance": "Opus 5.5 subscription CLI draft; host source review and execution audit",
+  "limitations": "Assumes the generator's domain. Shapes are separated by at least one blank line, so 8-connected components never merge. Background is palette[0], and shape colours differ from the background. The demonstrations are not consulted because the mechanism is fully determined by d4. The clamp never triggers for valid shapes, since non-wall cells are strictly before the wall; it is kept for fidelity to the archived solver. The fixtures are consistent with the uniform rule. This factory has not been executed or tested."
+}

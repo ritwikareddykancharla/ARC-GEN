@@ -38,7 +38,8 @@ def generate(width=None, height=None, rows=None, cols=None, groups=None,
 
   if width is None:
     width, height = common.randint(12, 16), common.randint(12, 16)
-    trow, tcol = common.randint(3, height - 3), common.randint(3, width - 3)
+    # Leave three full cells beyond the divider for each 3x3 quadrant sprite.
+    trow, tcol = common.randint(3, height - 4), common.randint(3, width - 4)
     gcolors = common.random_colors(5)
     tcolor = gcolors.pop()
     rows, cols, groups, grows, gcols = [], [], [], [], []

@@ -1,0 +1,16 @@
+{
+  "task_id": "05f2a901",
+  "factory_sha256": "365fe86753b3bd1a8f9b583a363f5892d817f7e24ddf94ae6ebd283a7aaa7944",
+  "constructor_sha256": "1cc6165c9eba7aed2a60d2c5a0e13ba108a6426b544efa49411a93d6436302b3",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 226639442604223,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 3.618117583100684,
+  "provenance": "Opus 5.5 subscription CLI draft; host source review and execution audit",
+  "limitations": "Colour roles are fixed from the palette (0, 2, 8 mapped) rather than inferred from the demonstrations. If the moving colour or the anchor is missing, the input is returned unchanged.\n\nIf the two bboxes overlap on neither axis, the program falls back to vertical motion, as the archived solver does. The generator always guarantees overlap on one axis and a gap on the other, so this case lies outside the domain.\n\nNo fixture contradictions were observed. Nothing has been executed or tested by me."
+}

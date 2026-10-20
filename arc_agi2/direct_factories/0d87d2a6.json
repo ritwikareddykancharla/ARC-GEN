@@ -1,0 +1,21 @@
+{
+  "task_id": "0d87d2a6",
+  "factory_sha256": "06753a48fbf727386f35fd4baa790023004e46787259936dd1faa67d7300d001",
+  "constructor_sha256": "e89edf7839ba84222fac5f12e69dd72de4570e6972a4753ba3df698ae86aac94",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 35684529960641,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 17.132797666010447,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft; host source and execution checks",
+  "draft_notes": {
+    "explanation": "Generator rule: blue (palette[1]) marker pairs sit on opposite borders (row r at both left/right edges, or column c at both top/bottom edges). Each pair becomes a full-span line in the output. Every red (palette[2]) rectangle whose extent satisfies line in [start-1, end] (i.e. the line crosses it or runs immediately adjacent to it) is recoloured entirely blue; others stay red. The emitted program detects both row-lines and column-lines directly in visible coordinates (the rule is symmetric under the D4 group, since both orientations are always handled and adjacency is 4-neighbour), finds red 4-connected components, recolours any component that contains or is 4-adjacent to a line cell, then draws the lines. Colour roles are palette constants. The fixtures are consistent with the generator's crossing-or-adjacent rule (the test's box at rows 0-3, cols 9-11 directly above row 4 turns blue).",
+    "limitations": "Assumes boxes are separated (generator's overlaps check with margin 1), so each red component equals one generator box; if two boxes touched, they would be merged and activated together. Assumes the only line-coloured input cells are the border markers, as in the generator. Demonstrations are not used since the rule is fully specified."
+  }
+}

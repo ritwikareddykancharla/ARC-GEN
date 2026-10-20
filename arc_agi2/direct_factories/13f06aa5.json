@@ -1,0 +1,50 @@
+{
+  "task_id": "13f06aa5",
+  "factory_sha256": "fa43d1de82f98f1c42f4663d987dd69509a8ff9d73325e5297ac1f2c6394142d",
+  "constructor_sha256": "0f0860d09f4d5a5f11adfea23fcce3fd4f899c371535c1ac563db8a1f22e881c",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [
+    {
+      "seed": 156030704697182,
+      "error": "reference/generator deadline"
+    },
+    {
+      "seed": 10363802654494,
+      "error": "reference/generator deadline"
+    },
+    {
+      "seed": 261264102478124,
+      "error": "reference/generator deadline"
+    },
+    {
+      "seed": 274658115224722,
+      "error": "reference/generator deadline"
+    },
+    {
+      "seed": 249725777413225,
+      "error": "reference/generator deadline"
+    },
+    {
+      "seed": 64709194414913,
+      "error": "reference/generator deadline"
+    },
+    {
+      "seed": 168602659114189,
+      "error": "reference/generator deadline"
+    }
+  ],
+  "seed": 264142555985164,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 41.0223881250713,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft; host source restrictions and execution verification",
+  "draft_notes": {
+    "explanation": "The rule already works the same way in every orientation, so the emitted program finds each direction from the pixels in the visible grid. It never rotates or recolours the grid.\n\n1. **Background:** the most common colour.\n2. **Arrows:** 4-connected groups of non-background cells. Groups with fewer than 4 cells or only one colour are skipped.\n3. **Special colour:** the colour that appears least in the group (the single odd cell).\n4. **Firing direction:** take the special cell's position minus the average position of the other body cells, using exact integer arithmetic. This points from the narrow 3-cell line toward the wide 5-cell line. The larger component of that vector picks the axis and its sign picks the way.\n5. **Ray and border:** paint every second cell starting 2 steps from the special cell until leaving the grid. Then paint the whole border row or column the ray hits in the special colour.\n6. **Corners:** where a painted border row meets a painted border column, the cell becomes palette[0]. This matches the generator: when a second line crosses a different-coloured line, that cell becomes 0, and colour 0 is remapped by the palette.\n\nThe factory only plugs the constant palette[0] into the program. D4 does not need to be specialised because the direction comes from the arrow's own geometry.",
+    "limitations": "- **Generator assumptions:** the program relies on what the generator guarantees. Arrows are separated, so their groups never touch. Beams never cross bodies or other beams, and directions are distinct. Under those conditions border lines only meet at corners, so the corner cell is palette[0] regardless of the order lines were painted.\n- **Unused demonstrations:** the demonstrations are not used. The corner colour is taken from the palette constant rather than inferred from the examples.\n- **Inputs outside the generator's domain:** other inputs, such as touching arrows or crossing beams, may differ from the generator's rejection behaviour.\n- **Fixtures:** the fixtures are consistent with this uniform rule. I have not run any tests."
+  }
+}

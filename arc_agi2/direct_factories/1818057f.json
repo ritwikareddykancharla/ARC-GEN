@@ -1,0 +1,21 @@
+{
+  "task_id": "1818057f",
+  "factory_sha256": "804b009a46b84a5a4c2e3b34d3d0251e79efb0bf2aa2a3fe9304d82f246f4948",
+  "constructor_sha256": "a345ad2a193f9ebd96c96a9f502844f84880ef14a5a99a9bd9a28cfeb6f1e08f",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 44451965703109,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 7.186472833971493,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft; host source restrictions and execution verification",
+  "draft_notes": {
+    "explanation": "The mechanism is a purely local 3x3 test: every ink cell (original colour 4) whose four orthogonal neighbours are all ink is a plus centre; the centre and its four arms are recoloured to the highlight colour (original 8). All centres are detected on the unmodified input before painting, so painting order and overlaps cannot cascade. The plus stencil is invariant under all eight D4 transforms, so no axis or direction needs to be rewritten; only the colour roles are specialised to palette[4] (ink), palette[2] (background, kept for reference) and palette[8] (highlight). Centres are only considered in the interior (1..H-2, 1..W-2), exactly as in the constructor, which handles boundary objects and rectangular grids directly in visible coordinates.",
+    "limitations": "Colour roles are fixed from the palette rather than inferred from the demonstrations. This is valid because the constructor always uses colours 2/4/8. The emitted program does not use the demonstrations. No fixture contradictions were found: the rule reproduces all three train pairs and the test pair. The factory has not been executed or tested."
+  }
+}

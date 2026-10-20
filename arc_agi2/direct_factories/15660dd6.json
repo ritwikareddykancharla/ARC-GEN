@@ -1,0 +1,21 @@
+{
+  "task_id": "15660dd6",
+  "factory_sha256": "be18d045c2a694bf604c38360a6af78ca6eb3443823543e28babbcc763769613",
+  "constructor_sha256": "cc1bcb9b97fd59fa7934c883c55bc4724240a0624fbc34d12a9ffc91bacfd44e",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 121392971237342,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 10.565672499942593,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft; host source restrictions and execution verification",
+  "draft_notes": {
+    "explanation": "The input is a lattice of boxes with three box rows and n box columns. Each box has a frame in palette[1] on a palette[8] background. A legend stripe at one grid edge marks each box row: palette[5], palette[9] or palette[0]. In each box column, exactly one box is solid and the others hold the same pattern. The output is a strip with one box per column. Each output frame takes the marker colour of the row where the solid box sits, and its interior is the column's pattern recoloured to the solid colour.\n\nThe factory sets four constants in visible coordinates:\n- **Background and frame colours** come from the palette.\n- **Strip direction:** the column axis is horizontal when d4%4 is even and vertical when it is odd.\n- **Legend edge:** it starts at the left. It moves to the right for indices of 4 or more (row reversal), then rotates clockwise k times (L->T->R->B->L).\n\nThe emitted program works the same way in every orientation:\n- It finds the frame components of the frame colour and takes their bounding boxes.\n- It groups the boxes by their coordinate along the column axis (x if horizontal, y if vertical) and orders the groups by that coordinate. Input and output are flipped or rotated together, so the visible order of the input columns equals the visible order of the output boxes.\n- In each group, the box whose interior is a single non-background colour gives the fill colour. That box's marker is read from the legend edge at the box's starting row (L/R) or starting column (T/B). Any other box gives the pattern mask (interior != background).\n- It builds the strip with no outer margin and a one-cell background gap between boxes, laid horizontally or vertically. Each box gets a marker-coloured frame and the masked interior painted in the solid colour.\n- The pattern interior is copied cell for cell in visible orientation. This is correct because the same rigid transform is applied to both the input and output grids.",
+    "limitations": "- Assumes the palette is a bijection, as stated, so the frame, background, pattern, solid and marker colours stay distinct.\n- Assumes the generator's domain: square boxes of size 4-7, exactly one solid box per column, and patterns that are neither empty nor full.\n- The demonstrations are not used; the roles come from d4, the palette and the pixels.\n- The fixtures matched the uniform rule; I found no contradictions.\n- I have not run any tests."
+  }
+}

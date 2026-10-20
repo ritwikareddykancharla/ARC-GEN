@@ -1,0 +1,21 @@
+{
+  "task_id": "18419cfa",
+  "factory_sha256": "9f73a499814f774692f85fa1c85c4390e356fb9b99609545864fa5bd6237ce9a",
+  "constructor_sha256": "08249dcb9eef6634cb158a96acc047b7e27e2990d80f31d4ea52660b02e270de",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 127406940030846,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 11.082972207921557,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft; host source restrictions and execution verification",
+  "draft_notes": {
+    "explanation": "The mechanism has no built-in direction, so it already works in whatever coordinates are visible. For each frame-coloured component (frame colour = palette[8]), the program takes the component's bounding box. It flood-fills the non-frame cells reachable from the box border without crossing the frame. Every other non-frame cell in the box is the interior, which includes the one-cell wall gaps behind the bumps.\n\nThe bump axis is the axis with fewer maximal lines. With side bumps, only the bump row is the widest interior row, while almost every column reaches the maximal height. With top/bottom bumps it is the other way round. The gap cells sit on the centre line, so the interior bounding box is symmetric about the true mirror centre.\n\nEvery interior cell that is neither background (palette[0]) nor frame colour is copied to its mirror position across that box: ix0+ix1-x for horizontal bumps, iy0+iy1-y for vertical bumps. The originals are kept.\n\nUnder D4, rotations and reflections only swap or reverse rows and columns. Both the axis test and the mirror formula treat rows and columns symmetrically, so no d4-specific constant is needed. Palette handling is just the two colour constants; the motif colour is copied rather than hard-coded.",
+    "limitations": "The program assumes the constructor's domain: frames are separated by at least one cell (the constructor's placement keeps them at least one cell apart), the frame colour is distinct from the background, and the motif lies strictly inside its frame. When the row and column maximal-line counts are equal, it falls back to vertical mirroring, as the archived solver does. That tie cannot occur in the generated domain, because the mirror-axis length is at least 6 while the bump creates exactly one maximal line. I found no contradiction between the fixtures and the uniform rule. The rule text's aside about the test's top-right frame (\"wait... maps y=7..9 to y=6..4\") is consistent with the fixture output and with the formula iy0+iy1-y. No tests were run."
+  }
+}

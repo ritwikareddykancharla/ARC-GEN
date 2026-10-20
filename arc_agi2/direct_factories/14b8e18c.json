@@ -1,0 +1,21 @@
+{
+  "task_id": "14b8e18c",
+  "factory_sha256": "cd3bf23e37df17cd1601de1dc36e80d723fa31725cc7149aa21ef323083c15c2",
+  "constructor_sha256": "bd5ad202edd6904337b4999fb1064e8f9e24ed9768d89b9a0022305c0433ab1c",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 104175192919720,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 91.68537424993701,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft; host source restrictions and execution verification",
+  "draft_notes": {
+    "explanation": "The rule is symmetric under every D4 transform: an object qualifies when its 4-connected single-colour component has a square bounding box of side at least 2. Each of the four bounding-box corners then gets its two orthogonal outside neighbours painted. Rotating or reflecting a square bounding box gives another square bounding box, and the set of corner shoulders maps onto itself. So the emitted program works directly in visible coordinates with no direction to choose. Only the colour roles are specialised: background becomes palette[7] and the mark colour becomes palette[2]. The object colour is not fixed; every colour present other than the background is scanned. Marks are only placed on in-grid background cells, matching the archived solver. Diagonal styles from the generator split into isolated single pixels under 4-connectivity, so they are correctly left unmarked. Solid squares such as the 2x2 block qualify because hollow versus solid does not matter.",
+    "limitations": "The program mirrors the archived solver, which works on connected components. It could therefore differ from the generator in degenerate overlapping-box scenes, for example a diagonal drawn exactly inside a same-sized hollow square, though in that case both give the same result. It assumes the background is exactly palette[7], which is constant in this generator. No tests have been run."
+  }
+}

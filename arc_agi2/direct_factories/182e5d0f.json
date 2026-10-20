@@ -1,0 +1,21 @@
+{
+  "task_id": "182e5d0f",
+  "factory_sha256": "aeffb8a4a1949980bbcd0d559672693f72dbba9b31844e40fb6a6cc20390d3f0",
+  "constructor_sha256": "d057825460db5ad46826c1b8bc5b66af4d1311ba3bc81dba95f3e02acf2574e5",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 24502154830406,
+  "d4": 7,
+  "unique_base_inputs": 959,
+  "seconds": 5.952189874951728,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft; host source restrictions and execution verification",
+  "draft_notes": {
+    "explanation": "Mechanism, in visible coordinates.\n\n1. Find heads. A head is a border cell of snake colour palette[3] with a marker cell palette[0] on each side along the border. The inward direction is perpendicular to that border. Every rule depends only on the border, so it works the same under all D4 transforms and d4 is not needed.\n\n2. Trace each snake. Start at the head's inward neighbour and follow 4-connected snake cells. If the path branches, prefer continuing straight. Never step onto another snake's head.\n\n3. Decide whether the snake retracts. In the generator, dist=0 snakes run all the way to a border line, and the grey palette[5] tail marker sits next to the tip. A snake with dist>0 is truncated: its final dist cells are drawn as blue and then blanked. Its tip is therefore never on the border, and it stays the same in the output. So a snake retracts only if its terminal cell is on the border and has a 4-adjacent grey cell.\n\n4. Retract. Every traced body cell and the adjacent grey cell(s) become palette[7]. Grey is then written into the first body cell next to the head. The head and its markers stay. All decisions are made on the input before any edits are written.\n\nThis is the archived solver's mechanism made stricter. It inspects the snake's tip instead of any grey touching the whole component, so a stray grey cell beside a truncated snake's body or tip does not trigger a false retraction. It reproduces all three train pairs and the test pair.",
+    "limitations": "Colour roles are fixed by the palette constants and are not inferred from the demos. If two snakes were ever 4-adjacent, the straight-first tracing could follow the wrong snake. I believe the generator's collision and spacing checks make this essentially impossible. If two grey cells touch a retracting tip, both are removed, which matches the archived behaviour. I have not run any tests. I found no contradiction between the fixtures and the rule."
+  }
+}

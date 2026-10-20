@@ -1,0 +1,21 @@
+{
+  "task_id": "178fcbfb",
+  "factory_sha256": "bfe36ad36a15a07255c89e6c4dcb945d187f720543ba52578edb0516c60aa27e",
+  "constructor_sha256": "3894e445c73d617be02d71369cc1939746636fa80d6e34bd7eadf2477f722991",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 74791821643486,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 2.502512541017495,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft; host source restrictions and execution verification",
+  "draft_notes": {
+    "explanation": "In the original task, each colour-2 pixel extends into a full line along its column. Each colour-1 or colour-3 pixel extends into a full line along its row. Those row lines are painted over the column lines at crossings.\n\nA D4 transform with an odd number of clockwise quarter-turns swaps rows and columns. The row-reversal flip (indices >= 4) does not change which axis a full line runs along. So the factory only needs to check whether (d4 % 4) is odd:\n- If it is not odd, the emitted program paints palette[2] pixels as full columns, then palette[1] and palette[3] pixels as full rows.\n- If it is odd, palette[2] pixels become full rows first, then palette[1] and palette[3] pixels become full columns on top.\n\nFlips do not affect the result because every line spans the whole grid. Colour roles are fixed constants taken from the palette. The program reads the visible grid directly and returns lists of the same shape.",
+    "limitations": "The program relies on the constructor's domain. The colour-1 and colour-3 pixels never share a row, because the generator samples distinct rows for all pixels. So the relative painting order of colours 1 and 3 never matters; if it did, the order chosen here would be arbitrary. Background cells are left unchanged by copying the input; the program assumes the background is palette[0] and never equals a line colour. Demonstrations are not used, since the colour roles are fully determined by the palette. The fixtures are consistent with the uniform rule. No tests have been run."
+  }
+}

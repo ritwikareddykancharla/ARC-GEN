@@ -1,0 +1,21 @@
+{
+  "task_id": "0d3d703e",
+  "factory_sha256": "89d49cb35125b57ad7a009ba630b3d0962ff17e791aea1a2efcc22ba12161a73",
+  "constructor_sha256": "415c3ef4385b4d64d93dec67f339de4d12eeeae09a4f4593ec30d5ad7a52e431",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 139772382954170,
+  "d4": 7,
+  "unique_base_inputs": 320,
+  "seconds": 1.3465406249742955,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft; host source restrictions and execution verification",
+  "draft_notes": {
+    "explanation": "The generator builds a 3x3 grid of stripes in three distinct colours (orange excluded) and recolours each cell with a fixed involutive table: 1<->5, 2<->6, 3<->4, 8<->9. Under that table 0 and 7 map to themselves. The rule is a pure per-cell colour substitution, so position plays no role. The D4 transform changes where the stripes lie: vertical stripes become horizontal under odd rotations. It never changes which colour goes to which, so the emitted program works in the visible coordinates with no orientation handling. The palette is applied as constant role substitution. Each visible colour palette[c] maps to palette[colormap[c]]. The table is built directly in the visible palette, and every cell of the query is looked up in it. Fixed points (palette[0] and palette[7]) and any unexpected colours pass through unchanged. The archived solver behaves the same way for colours outside the table. Rectangular grids of any shape work because the mapping acts cell by cell. The fixtures agree with this single uniform rule, and no contradictions were found.",
+    "limitations": "The program relies on the generator's fixed colormap, specialized through the palette. It does not re-derive the mapping from the demonstrations, so it would not generalize to a variant generator that draws a different colormap per episode. Colours not in the table (the palette images of 0 and 7, or anything unexpected) are left unchanged. I have not run any tests."
+  }
+}

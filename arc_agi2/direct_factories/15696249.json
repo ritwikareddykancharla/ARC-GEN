@@ -1,0 +1,21 @@
+{
+  "task_id": "15696249",
+  "factory_sha256": "6c491b1d0dd9a0fb5350922177d8b83ae9bc8cf2b39d32fa3c287366f771c636",
+  "constructor_sha256": "f6c5c2a9a91ad616e05b1ec231d6f72f90fbce43a5693336a961e14b70f0ed68",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 83580024534556,
+  "d4": 7,
+  "unique_base_inputs": 991,
+  "seconds": 1.6246182919712737,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft; host source restrictions and execution verification",
+  "draft_notes": {
+    "explanation": "The input is a 3x3 patch with exactly one solid (single-colour) line. The output is a 3x3 grid of input-sized blocks. Every block whose block-row index is the index of a solid row, or whose block-column index is the index of a solid column, gets a copy of the input. All other blocks are the background colour. This is exactly the constructor's draw() loop. It makes no assumption about whether the line is horizontal or vertical: it checks rows and columns in the visible coordinates. So under any D4 transform, a solid row that becomes a column naturally produces vertical tiling in the corresponding band. Reflections automatically reverse the band index because the line's visible index changes. The only colour role is the background, 0 in the original task, which is specialised to the constant palette[0]. Tile colours are copied directly from the input. Rectangular inputs are handled as a 3h x 3w canvas, and the band loop is limited to valid line indices.",
+    "limitations": "Assumes the constructor's domain: the line index is below 3, as with 3x3 inputs, and at least one solid line exists. If no solid line exists, the output is all background. The archived solver instead defaults to column 0 in that case, but the generator never produces it. The background colour is taken from palette[0] rather than inferred from the demonstrations. No tests were run."
+  }
+}

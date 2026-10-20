@@ -1,0 +1,21 @@
+{
+  "task_id": "17b866bd",
+  "factory_sha256": "e8751e15141aca0c75d8702d707ca726350c05dec8bdf4b49882bdfbc712adb5",
+  "constructor_sha256": "e1adca8d9dc528b08024624d5a09116a7a49315d91af93d5f2ea60e77f24bd56",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 109617882587506,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 5.016514583025128,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft; host source restrictions and execution verification",
+  "draft_notes": {
+    "explanation": "The input is a lattice of lines spaced 5 apart. Both grid dimensions are 5k+1, so after any D4 transform the lattice points still sit at rows and columns that are multiples of 5. Each 4x4 cell between the lines holds a rounded square of 12 zero-coloured cells; its four corner cells are background.\n\nIn the original orientation, each cell's marker is the lattice point diagonally up-left of the cell. If that marker is not colour 0, the cell's 12 interior non-corner cells take the marker colour, and the marker is reset to colour 0. A marker equal to the background colour (8) therefore erases the square, and this is handled uniformly.\n\nThe factory pushes a 3x3 probe through the given D4 transform to find which corner of each cell holds the marker in visible coordinates (up/down, left/right). It also bakes in Z = palette[0]. The emitted program walks the cell grid directly in visible coordinates, reads each cell's marker corner, fills the 12-cell rounded square, and resets the marker to Z.",
+    "limitations": "The emitted program assumes the constructor's domain: lattice period 5, grid dimensions of the form 5k+1, and every cell interior being an intact rounded square. It fills the fixed 12 positions without checking what is there. Lattice points along the far edges never serve as markers in the original orientation, so they are always 0 and are left alone. I have not run any tests. The fixtures agree with the uniform rule (including the marker colour 7, which lies outside the generator's random colour set), and I found no contradictions."
+  }
+}

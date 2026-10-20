@@ -1,0 +1,21 @@
+{
+  "task_id": "19bb5feb",
+  "factory_sha256": "059080286b42acfbfa9238dc5d04cce93d22fd3dce1ba929e5f1387de32ac583",
+  "constructor_sha256": "d757190df94e3060fd263c95f49b1c3e44c039947b0638781cb1017741eeae9d",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 122172793917268,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 3.818281083018519,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft; host source restrictions and execution verification",
+  "draft_notes": {
+    "explanation": "The output is a miniature of the block lattice: one cell per lattice position, in visible row and column order. Each cell holds the block's colour, or the background colour where no block sits. D4 transforms the input lattice and the 2x2 output identically. So sorting the distinct top-left rows and columns of the blocks in visible coordinates directly gives the transformed answer, and no axis or direction specialization is needed. Colour roles are fixed as constants: BG = palette[0] and RECT = palette[8]. The emitted program first takes the bounding box of the RECT cells, which is the large rectangle; the generator always places the blocks strictly inside it. Every non-RECT cell inside that box is treated as part of a block. This still works if a block happens to have the background colour, because the cell is then written as BG, which matches the expected output. Blocks are 4-connected components. Each one's top-left corner (min row, min col) and colour are collected, the distinct corner rows and columns are sorted, and the colours are stamped into a len(rows) x len(cols) grid that starts filled with BG. The generator guarantees every lattice row and column has at least one block, so the output is always 2x2.",
+    "limitations": "This assumes the palette is a bijection, so RECT differs from BG and from the block colours, and that the scene follows the generator's domain: one large rectangle with blocks strictly inside it, at least one cell apart. If a block had the background colour and its lattice row or column contained no other block, the size would still be recovered, because such cells are detected as non-RECT cells inside the rectangle. The fixtures are consistent with a single uniform rule. No tests have been run."
+  }
+}

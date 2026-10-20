@@ -1,0 +1,21 @@
+{
+  "task_id": "12422b43",
+  "factory_sha256": "831c0dd7540b428e1f552d0205d70e64cbc3472a1481d2a8dd751885ee330bdf",
+  "constructor_sha256": "890da1c0088674665ed2b3d1f2112744385f35158f68c7584bcbdb3091f44d27",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 43874370727229,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 2.5993229580344632,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft; host source restrictions and execution verification",
+  "draft_notes": {
+    "explanation": "In the original task, the marker bar (colour 5) sits in column 0. The picture starts at the top of the grid. The rows below the picture are filled by repeating the motif downward. The motif is the first h picture rows, taken without the bar column, where h is the bar's length.\n\nThe factory works out where the original stamping axis (rows, going downward) and the bar side (column 0) land after the D4 transform. A row flip moves the bar to the far end. Each clockwise rotation sends a forward row axis to a reversed column axis, and sends a column axis to the row axis with the same direction.\n\nIt then emits one of two direct templates. In the vertical template, picture lines are visible rows, which can be walked top-down or bottom-up, and the bar is in column 0 or W-1. In the horizontal template, picture lines are visible columns, walked left-to-right or right-to-left, and the bar is in row 0 or H-1.\n\nThe emitted program works directly on the visible grid:\n- It measures h as the run of palette[5] cells along the bar line, starting from the picture end.\n- It finds the last line that has any non-palette[0] cell off the bar.\n- From the next line to the far edge, it copies the motif lines cyclically. The copy is clipped at the border and leaves the bar cell as background.\n\nThe colour roles are fixed constants: background is palette[0] and the marker is palette[5]. The program never rotates the grid or remaps colours.",
+    "limitations": "The program assumes that every picture row has at least one non-background cell, so the last content line equals the generator's depth. This holds as long as common.random_color never returns 0, which the generator relies on. If a picture row could be entirely background, the stamping start would be ambiguous from the pixels alone.\n\nIf no marker cell is found at the picture end of the bar line, the input is returned unchanged.\n\nThe fixtures match the uniform rule, and I found no contradictions. I have not run any tests."
+  }
+}

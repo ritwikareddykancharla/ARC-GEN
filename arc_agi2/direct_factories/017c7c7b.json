@@ -1,0 +1,16 @@
+{
+  "task_id": "017c7c7b",
+  "factory_sha256": "8ce0027a273ccb1045d2b0feafe7d040bb04738a196d7686f9b04a7b3569b13d",
+  "constructor_sha256": "c37b063a8063fdd043cfc48bb789417526f37cb46f231ef10a60575c638476df",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 25679887349859,
+  "d4": 7,
+  "unique_base_inputs": 257,
+  "seconds": 1.6387367909774184,
+  "provenance": "Opus 5.5 subscription CLI draft; host source review and execution audit",
+  "limitations": "- Colour roles are fixed constants (palette[1] is recoloured to palette[2]) rather than inferred from the demonstrations. This matches the constructor, which only uses background, blue and red.\n- The output length is floor(1.5 * n) along the pattern axis, as in the archived solver. That equals 9 for the constructor's input length of 6.\n- The extension direction comes from d4 alone and is not inferred from the demonstrations.\n- I have not run any tests."
+}

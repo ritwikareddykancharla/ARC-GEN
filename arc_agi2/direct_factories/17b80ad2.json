@@ -1,0 +1,21 @@
+{
+  "task_id": "17b80ad2",
+  "factory_sha256": "590eae824724e6ca351fc4081ce7d64ac0fa15fc526cc5c628d367410438de69",
+  "constructor_sha256": "a5e45378d61cc57c180c7dbe1acbcaa914c8d8794b912b8aca767210ed2f327d",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 84447678223427,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 3.164674042025581,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft; host source restrictions and execution verification",
+  "draft_notes": {
+    "explanation": "In the original task, the marker cells are 5s on the bottom row. In each column that has a marker, the program scans from the bottom edge upward. Every background cell takes the colour of the nearest non-background seed below it, and seeds keep their own colour.\n\nUnder the D4 transform, the row reversal (applied when d4>=4) maps the bottom row onto itself, so only the number of clockwise rotations (d4%4) changes where the marker edge ends up. One clockwise rotation sends cell (r,c) to (c, h-1-r). That puts the bottom row in the left column, with 'upward' becoming 'rightward'. Two rotations give the top row with downward flooding. Three rotations give the right column with leftward flooding.\n\nThe factory emits one direct loop for the chosen edge and scan direction. The background constant is palette[0] and the marker constant is palette[5]. It works on rectangular grids because h and w are read separately. There is no normalization wrapper and no recolouring.",
+    "limitations": "Background is assumed to be palette[0], matching the constructor, which always uses colour 0 as background. Lines with a marker on the marker edge are always processed, even if the scan never finds a fill colour. In the generator's domain, the marker itself is the first seed, so every non-seed cell gets filled. The fixtures are consistent with this uniform rule. I have not run any tests."
+  }
+}

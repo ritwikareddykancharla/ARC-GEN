@@ -1,0 +1,46 @@
+{
+  "task_id": "15663ba9",
+  "factory_sha256": "866dc5b78cfcfb815ccf0375696c06159005f514f4abe53c4657589189b60fc9",
+  "constructor_sha256": "055c8603ce7605735caca70013d8e11aae40aa06b221ee35e4242ca63b105443",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [
+    {
+      "seed": 160375829436685,
+      "error": "reference/generator deadline"
+    },
+    {
+      "seed": 276159292890021,
+      "error": "reference/generator deadline"
+    },
+    {
+      "seed": 853513164082,
+      "error": "reference/generator deadline"
+    },
+    {
+      "seed": 176459457545866,
+      "error": "reference/generator deadline"
+    },
+    {
+      "seed": 161544958188143,
+      "error": "reference/generator deadline"
+    },
+    {
+      "seed": 150957136099696,
+      "error": "reference/generator deadline"
+    }
+  ],
+  "seed": 51812098616667,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 235.36548112495802,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft; host source and execution checks",
+  "draft_notes": {
+    "explanation": "Each scene contains one-cell-thick closed rectilinear outlines drawn on the background. In the output, every corner of an outline is recoloured. A corner is a cell with exactly two perpendicular outline neighbours. Take the cell diagonal to the corner, inside the bend (the sum of the two neighbour offsets). If that cell lies in the region the outline encloses, the corner is convex (a right turn) and becomes original colour 4. Otherwise it is concave (a left turn, a notch) and becomes original colour 2. Straight cells are left unchanged.\n\nConvex versus concave is a geometric property that every rotation and reflection preserves. Because of that, the emitted program runs directly in visible coordinates, and d4 needs no axis specialisation. Colour roles are baked in as constants: background = palette[0], convex = palette[4], concave = palette[2]. The line colour is simply any non-background cell.\n\nThe enclosed region is computed separately for each outline. A flood fill starts at the border and treats only that outline's cells as walls. This matches the archived solver's global enclosed-background test in normal scenes. It also stays correct when outward notches of different loops trap a background pocket between them, and when an outline touches the grid border.",
+    "limitations": "This rests on the constructor's guarantees: every outline cell has exactly two orthogonal outline neighbours, and outlines never touch each other orthogonally. Given those, the diagonal cell inside each bend is always background. The background is assumed to be the constant palette[0], not inferred from the grid. Demonstrations are not consulted, since the colour roles are fixed by the palette. The per-loop enclosure test differs from the archived solver only in degenerate scenes, where background is trapped between loops. There, the per-loop test follows the generator's turn-direction labels. I did not find any contradiction between the approved fixtures and the rule. No tests have been run."
+  }
+}

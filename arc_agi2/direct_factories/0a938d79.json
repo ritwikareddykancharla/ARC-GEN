@@ -1,0 +1,16 @@
+{
+  "task_id": "0a938d79",
+  "factory_sha256": "591e6725236b3b7ffb1f05408ebca4c8c41f1dc1ccb72cd82fd2a0bd0c65281a",
+  "constructor_sha256": "e96489d08c4bf8878597d6ba3fe10bdf77de4f7233c4df23bd2fdd94ff33a6d1",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 207350274143597,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 4.5897886250168085,
+  "provenance": "Opus 5.5 subscription CLI draft; host source review and execution audit",
+  "limitations": "Assumes exactly the generator's domain: two seeds, not in corners (guaranteed since start>=1 and start+sep+1 < width-1), background palette[0]. If a grid had tb == lr, columns are preferred as in the archived solver. Demonstrations are not used; direction comes from d4. No fixture contradictions found."
+}

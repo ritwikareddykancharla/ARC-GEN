@@ -1,0 +1,21 @@
+{
+  "task_id": "17829a00",
+  "factory_sha256": "934a8fe3358a8c0ca3092606384a89de3b180df21d5b4e1871465c89e4296e84",
+  "constructor_sha256": "ee92d5a0bb157e462924e1a311864e4c6f9071e78f0f4250b80fd7555227c9b8",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 40913671685781,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 8.691223041038029,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft; host source restrictions and execution verification",
+  "draft_notes": {
+    "explanation": "The original rule has a full border line on the top and one on the bottom, each in its own colour. Interior 8-connected objects of each border colour slide toward the matching border until they are adjacent to it. The wall exception covers an object that touches a side wall (a line perpendicular to the borders) when its shifted copy overlaps its original footprint. Such an object keeps the union of both footprints, so it stretches toward the border.\n\nUnder the D4 transform, the original top border lands on the visible top, right, bottom or left side for d4%4 = 0, 1, 2, 3. A horizontal pre-flip leaves the top row in place and only swaps the two walls. The rule treats those walls symmetrically, so the flip changes nothing here.\n\nThe factory emits one of two direct-coordinate programs:\n- **Vertical case:** the border lines are rows 0 and H-1, objects shift along rows, and the walls are columns 0 and W-1.\n- **Horizontal case:** the border lines are columns 0 and W-1, objects shift along columns, and the walls are rows 0 and H-1.\n\nThe program reads each border colour from its own border line (the most common value along that line). Low-side objects move so that their minimum coordinate becomes 1. High-side objects move so that their maximum coordinate becomes L-2. The wall-overlap union exception is applied exactly as in the generator.\n\nThe background constant is palette[7]. The generator paints the original top-colour objects first and the bottom-colour objects second. The emitted program keeps that order through a LOW_FIRST flag chosen from d4. The fixtures agree with this single uniform rule, including the stretched 8 bar in train pair 1, so there is no contradiction to report.",
+    "limitations": "- The background is assumed to be palette[7], meaning the palette is assumed to be a bijection. The border colours are inferred from the visible border lines, not taken from the palette.\n- Only the generator's domain is handled: two full border lines on opposite sides, interior objects drawn only in those two colours, and no stacking or collisions between final footprints. Collisions are rejected by the generator; if one did occur, the paint order follows the original generator (top-role colour first).\n- Demonstrations are not used, because the rule is fully determined by the query grid together with the d4 orientation.\n- No tests have been run."
+  }
+}

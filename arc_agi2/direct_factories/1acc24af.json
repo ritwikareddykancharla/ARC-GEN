@@ -1,0 +1,21 @@
+{
+  "task_id": "1acc24af",
+  "factory_sha256": "1a6fba1167f88768cc2b0a4ef0005714d8169f8e35f3e240ab5db6a31df3b99b",
+  "constructor_sha256": "d410835eb8ea74fa00c2dcf0d08234414a3b334cc73e8785eb14a41154061069",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 83647139548533,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 20.70052937499713,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft; host source restrictions and execution verification",
+  "draft_notes": {
+    "explanation": "The mechanism is the archived one, rewritten directly in visible coordinates. Colour roles are constants: wall = palette[1], pieces = palette[5], mark = palette[2].\n\nThe only direction-dependent part is the axis pointing from the wall toward the pieces. This is original 'down'. A row reversal leaves it unchanged, and each clockwise rotation maps (dr,dc) to (dc,-dr). So down becomes left, up or right for d4%4 = 1, 2 or 3.\n\nSteps in the emitted program:\n1. The baseline is the extreme wall cell along that axis, measured by the projection y*DR + x*DC.\n2. The 'below' region is every 4-connected non-wall component that touches the grid edge on the piece side.\n3. Recess cells are the below cells whose projection is at or before the baseline. Recesses are the 4-connected components of those cells.\n4. Each 4-connected piece is tried in all four 90-degree rotations, at every offset that maps some piece cell onto the recess anchor cell.\n5. A piece turns red if some placement covers a whole recess, stays inside the grid and touches no wall cell.\n\nWhy this survives the D4 transform:\n- The set of four rotations is closed under conjugation by any D4 element, reflections included. So 'fits by some rotation, without mirroring' gives the same answer in visible coordinates, and chirality is handled correctly.\n- Any covering placement must put some piece cell on the anchor cell. So the choice of anchor does not matter.",
+    "limitations": "- The wall-to-piece axis comes from d4; it is not inferred from the grid. This matches the stated contract that every grid in the episode is transformed the same way.\n- If a grid has no wall cells, it is returned unchanged.\n- I have not run any tests. I found no contradictions between the fixtures and the rule; the archived logic reproduces the canonical fixtures by construction."
+  }
+}

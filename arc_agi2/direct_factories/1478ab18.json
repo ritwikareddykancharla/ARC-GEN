@@ -1,0 +1,21 @@
+{
+  "task_id": "1478ab18",
+  "factory_sha256": "19de17473bdf7fe73ccafc582c417a814c4cb4ce7b37b0c31b1e4490ef5fb7e7",
+  "constructor_sha256": "a28f2f64c8334612f5e8300bbe07076d9e0af0b57bb1b9c24b4742d834b19059",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 278436348303951,
+  "d4": 7,
+  "unique_base_inputs": 202,
+  "seconds": 2.8240030420711264,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft; host source restrictions and execution verification",
+  "draft_notes": {
+    "explanation": "The emitted program uses the palette directly. The background is palette[7], the drawing colour is palette[8], and the markers are palette[5]; any non-background cell counts as a marker. It works in the visible grid coordinates. It takes the bounding box of the marker cells and finds the one box corner with no marker on it, which is the right-angle corner. It then draws three straight lines in the ink colour, changing only background cells: two legs along the box edges from the empty corner to the two neighbouring corners, and the diagonal hypotenuse between those two corners. Rotations and reflections map the square box, its corners and its diagonals onto each other, so the same mechanism applies under every D4 transform without an explicit axis choice. The d4 argument is therefore not needed. The marker cells, including the inner dog-ear marker, are never overwritten, which matches the generator. There, 5s are written after the 8s, and the dog-ear cell never lies on a leg or the hypotenuse when the box size is at least 4.",
+    "limitations": "This assumes the generator's domain: exactly four marker cells on a uniform background, three on corners of a square bounding box and one just inside it, so exactly one corner is empty. If no corner were empty, the grid is returned unchanged. If several were empty, the first in scan order would be used. The four approved fixtures are consistent with this uniform rule. I have not run any tests."
+  }
+}

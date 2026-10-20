@@ -1,0 +1,16 @@
+{
+  "task_id": "007bbfb7",
+  "factory_sha256": "314b1fa68739908d1a455d88cd1483990d3a1a3d601a4ddbf597cb878f4c6ec2",
+  "constructor_sha256": "1853f2e80bc3ca71aaf44804bad93592eaf693368ec927614e00a0d8cd41a412",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 269008366175984,
+  "d4": 7,
+  "unique_base_inputs": 832,
+  "seconds": 1.3957685419591144,
+  "provenance": "Opus 5.5 subscription CLI draft; host source review and execution audit",
+  "limitations": "The generator only produces square 3x3 inputs with a single foreground colour and 2-8 pixels. Behaviour on rectangular grids is a principled generalisation (h*h by w*w output) but is not exercised by the constructor. The program assumes the off colour is exactly palette[0] and does not infer it from the demonstrations. The fixtures agree with the uniform rule, and no contradictions were found."
+}

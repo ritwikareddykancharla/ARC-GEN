@@ -1,0 +1,22 @@
+def build_program(d4, palette):
+    bg = int(palette[0])
+    lines = []
+    lines.append('import numpy as np')
+    lines.append('')
+    lines.append('BG = %d  # visible colour of the original background 0 (the "off" colour)' % bg)
+    lines.append('')
+    lines.append('def solve(demonstrations, grid):')
+    lines.append('    g = np.array(grid, dtype=int)')
+    lines.append('    h, w = g.shape')
+    lines.append('    # One-level fractal: the output is an h x w arrangement of h x w blocks.')
+    lines.append('    # Block (by, bx) is a copy of the input when input[by][bx] is not the')
+    lines.append('    # background colour. Otherwise it is left as background.')
+    lines.append('    # Self-similar tiling commutes with every rotation and reflection, so it')
+    lines.append('    # is applied directly in the visible coordinates.')
+    lines.append('    out = np.full((h * h, w * w), BG, dtype=int)')
+    lines.append('    for by in range(h):')
+    lines.append('        for bx in range(w):')
+    lines.append('            if g[by, bx] != BG:')
+    lines.append('                out[by * h:(by + 1) * h, bx * w:(bx + 1) * w] = g')
+    lines.append('    return out.tolist()')
+    return '\n'.join(lines) + '\n'

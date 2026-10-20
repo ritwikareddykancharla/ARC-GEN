@@ -1,0 +1,21 @@
+{
+  "task_id": "15113be4",
+  "factory_sha256": "92f2b84a98c742a94c058a90eca4c594eb3e57f94038202f86c97f4ce7a6545f",
+  "constructor_sha256": "01e767f1fe9fa78344b88cb14b82d4e7d72904f4d728d5254b6659ef6139a740",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 62941986280583,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 16.21202545799315,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft; host source restrictions and execution verification",
+  "draft_notes": {
+    "explanation": "The emitted program works directly on the visible grid. Colour roles are fixed constants taken from the palette: the frame/divider colour is palette[4], the panel 'on' colour is palette[1] and the empty colour is palette[0].\n\nSteps:\n1. Find 4-connected components of non-frame cells. Panels and the legend interior are fully walled off by frame lines.\n2. The legend is the component with a 6x6 bounding box and 36 cells. Candidate panels are components with a 3x3 bounding box and 9 cells.\n3. The special colour is the legend colour that is neither the empty colour nor the frame colour. It can never be the empty colour, because an all-zero motif is rejected by the generator.\n4. Downsample the legend by taking every second cell ([::2, ::2]) to get a 3x3 boolean motif.\n5. For each panel whose cells at the motif positions are all palette[1], recolour exactly those cells to the special colour.\n\nWhy this holds under D4: a flip or rotation maps the legend's 2x2 blocks onto the 3x3 block partition of its own 6x6 box. It also maps each panel onto a 3x3 panel in the same relative way. So downsampling and matching in visible coordinates reproduce the transformed motif and the transformed matches without any normalisation step. Panels that overlap the legend frame contain only frame, empty or special cells and never palette[1], so they can never match; the component search simply never treats them as panels.",
+    "limitations": "Assumes the constructor's domain:\n- One 6x6 legend surrounded by frame colour.\n- 3x3 panels separated by frame lines.\n- The motif colour is distinct from palette[0], palette[1] and palette[4].\n\nIf no legend is found, the input is returned unchanged. No fixture contradictions were observed: the rule matches all three train pairs and the test pair as described. None of this has been executed; it relies on the host's verification."
+  }
+}

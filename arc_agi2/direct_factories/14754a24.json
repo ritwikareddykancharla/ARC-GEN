@@ -1,0 +1,21 @@
+{
+  "task_id": "14754a24",
+  "factory_sha256": "9757e3c35f5185d1ef46e4dc757d9eb0abc2805c84f724dbfbf3882c54a0b07d",
+  "constructor_sha256": "474ab36ddf508b83cd41dcd17d3da2d15e50294596189d629ac1aeee5771b66b",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 163679511953668,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 10.525818207999691,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft; host source restrictions and execution verification",
+  "draft_notes": {
+    "explanation": "Mechanism: find the 8-connected yellow fragments. For each fragment, list the candidate plus centres: any centre within one orthogonal step (or zero steps) of a fragment cell. Keep a candidate only if its in-grid plus cells contain the whole fragment and none of those cells is black. Every grey cell of a kept plus is painted red. Pluses clipped by the grid edge are allowed.\n\nWhy d4 is not used: the plus shape, its 4-neighbour arms, 8-connectivity, the containment test and the black-veto test are all exactly invariant under every rotation and reflection. So under any D4 transform the same code, run directly in visible coordinates, recovers the transformed answer. There is no direction or axis to rewrite.\n\nColour roles are fixed constants: black=palette[0], grey=palette[5], yellow=palette[4], red=palette[2]. Rectangular grids are handled through separate H and W.\n\nUniqueness: the generator forces exactly one valid centre per fragment. If several candidates survived, all of them would be painted, as in the archived solver. The ordering of candidates does not affect the result. The fixtures are consistent with this uniform rule, and no contradictions were found.",
+    "limitations": "Assumes the constructor's domain: the field contains only black/grey plus yellow fragments, each fragment has a unique valid centre, and fragments are separate 8-connected components. If uniqueness were violated, every surviving candidate would be completed, which matches the archived solver. Demonstrations are not consulted because colour roles are fully determined by the palette. Not executed or tested by me."
+  }
+}

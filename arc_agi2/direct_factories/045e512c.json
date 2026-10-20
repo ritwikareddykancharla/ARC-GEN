@@ -1,0 +1,16 @@
+{
+  "task_id": "045e512c",
+  "factory_sha256": "dccc0da6ba5d992158e75c404582e989387eefb24a055f0c2c4bb555c2f8ba0f",
+  "constructor_sha256": "464954ca7bbd5ee9f37a1d5273e56cac62b3cab746032dbc5b9873b7375c258f",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 124386363194554,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 10.111520415986888,
+  "provenance": "Opus 5.5 subscription CLI draft; host source review and execution audit",
+  "limitations": "The template is chosen by component size rather than by the archived rule of most cells per colour. This deliberately fixes a generator-domain case: one fragment colour may be reused across up to three directions, and its total cell count can then exceed a 4-cell diamond template. Each single fragment has at most 3 cells, while the template has at least 4, so the size-based choice is unambiguous in the domain. It assumes fragments sit inside the template-anchored lattice cells and that chains of different groups do not overlap, both of which the constructor guarantees. Demonstrations are not used. I have not executed any tests. I found no contradictions between the fixtures and the uniform rule."
+}

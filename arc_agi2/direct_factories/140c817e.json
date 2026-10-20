@@ -1,0 +1,21 @@
+{
+  "task_id": "140c817e",
+  "factory_sha256": "bb8e5f7f7d1b2e89996a6a44ccfb5f62474ca7ec738dc4e1e523a418f870cbda",
+  "constructor_sha256": "638397e79f832d48e914219e9432f46bc677a46fe6c673bb9e2685aa8717aa4d",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 234160203294962,
+  "d4": 7,
+  "unique_base_inputs": 978,
+  "seconds": 3.8163180829724297,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft; host source restrictions and execution verification",
+  "draft_notes": {
+    "explanation": "The mechanism (full row+column cross through each seed, the 4 diagonal neighbours marked, seed recoloured) is invariant under every D4 transform: rows map to rows or columns, columns to the other, and the diagonal-neighbour set maps onto itself. So no direction needs rewriting; the emitted program works directly in visible coordinates on any rectangular grid. Only colour roles are specialised: line colour = palette[1], centre = palette[2], diagonal marker = palette[3]. Background is the most common colour; seeds are every non-background cell. The drawing order (crosses, then diagonals, then centres) matches the archived solver; the generator rejects scenes in which a diagonal marker or centre would be overwritten by another seed's line, so the order is consistent with the constructor's domain. Diagonal markers that fall outside the grid are dropped.",
+    "limitations": "This assumes the background is the strict majority colour, which holds because the generator places at most about 6 seeds on an 8-16 square grid. It also assumes every non-background cell in the input is a seed. Outside the generator's no-clobbering domain, the program follows the archived priority (centre over diagonal over line). The fixtures show no contradictions with the rule. I have not run any tests on this factory."
+  }
+}

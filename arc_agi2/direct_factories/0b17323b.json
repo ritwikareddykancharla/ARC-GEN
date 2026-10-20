@@ -1,0 +1,33 @@
+{
+  "task_id": "0b17323b",
+  "factory_sha256": "28b8d68cd39361af51ca8775873d23ddad21447ad07da8b7fd6f06b31cad8846",
+  "constructor_sha256": "7c5929250b577b0472255109d1ef6a233b295e0521af9e5d8ee2131da779e0c1",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 175551555921660,
+  "d4": 7,
+  "unique_base_inputs": 6,
+  "seconds": 3.8379036250989884,
+  "finite_default_domain": {
+    "exhaustive": true,
+    "parameters": {
+      "spacing": [
+        2,
+        3,
+        4
+      ],
+      "start": [
+        0,
+        1
+      ]
+    },
+    "cases_checked": 6,
+    "augmented_checks": 96,
+    "scope": "Entire default sampler domain; not a claim about arbitrary supplied parameters."
+  },
+  "provenance": "Opus 5.5 subscription CLI draft; host source review and execution audit",
+  "limitations": "The propagation direction is fixed per D4 from the generator's top-left-to-bottom-right convention rather than inferred from the demos. Inputs whose seeds run against that orientation are outside the constructor's domain. The program assumes the seeds are evenly spaced and collinear, as the generator guarantees. The fixtures are consistent with the uniform rule. No tests were run."
+}

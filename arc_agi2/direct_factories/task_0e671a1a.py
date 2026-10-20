@@ -1,0 +1,57 @@
+def build_program(d4, palette):
+    swap = (int(d4) % 2 == 1)
+    hub = int(palette[4])
+    dest_a = int(palette[3])
+    dest_b = int(palette[2])
+    path = int(palette[5])
+    bg = int(palette[0])
+    lines = [
+        'import numpy as np',
+        '',
+        'HUB = %d' % hub,
+        'DEST_A = %d' % dest_a,
+        'DEST_B = %d' % dest_b,
+        'PATH = %d' % path,
+        'BG = %d' % bg,
+        'SWAP = %r' % swap,
+        '',
+        'def solve(demonstrations, grid):',
+        '    g = np.array(grid, dtype=int)',
+        '    out = g.copy()',
+        '    H, W = g.shape',
+        '    def find(c):',
+        '        ys, xs = np.where(g == c)',
+        '        if len(ys) == 0:',
+        '            return None',
+        '        return (int(ys[0]), int(xs[0]))',
+        '    h = find(HUB)',
+        '    if h is None:',
+        '        return out.tolist()',
+        '    hr, hc = h',
+        '    def paint(y, x):',
+        '        if 0 <= y < H and 0 <= x < W and out[y, x] == BG:',
+        '            out[y, x] = PATH',
+        '    def seg(p, q):',
+        '        (y0, x0), (y1, x1) = p, q',
+        '        if y0 == y1:',
+        '            for x in range(min(x0, x1), max(x0, x1) + 1):',
+        '                paint(y0, x)',
+        '        elif x0 == x1:',
+        '            for y in range(min(y0, y1), max(y0, y1) + 1):',
+        '                paint(y, x0)',
+        '    pa = find(DEST_A)',
+        '    if pa is not None:',
+        '        ar, ac = pa',
+        '        corner = (ar, hc) if SWAP else (hr, ac)',
+        '        seg((hr, hc), corner)',
+        '        seg(corner, (ar, ac))',
+        '    pb = find(DEST_B)',
+        '    if pb is not None:',
+        '        br, bc = pb',
+        '        corner = (hr, bc) if SWAP else (br, hc)',
+        '        seg((hr, hc), corner)',
+        '        seg(corner, (br, bc))',
+        '    return out.tolist()',
+        '',
+    ]
+    return '\n'.join(lines)

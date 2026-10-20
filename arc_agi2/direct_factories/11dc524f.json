@@ -1,0 +1,21 @@
+{
+  "task_id": "11dc524f",
+  "factory_sha256": "64dbe25617c6c5981cc41b4ac8695946be1fed13d2252dc8f94592d5acdf8003",
+  "constructor_sha256": "afce72c37c2ace605d9f6d1d36e71041954ede099b92f419892d35da408d5f99",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 86127501291151,
+  "d4": 7,
+  "unique_base_inputs": 594,
+  "seconds": 4.267775415908545,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft; host source restrictions and execution verification",
+  "draft_notes": {
+    "explanation": "The emitted program works in the visible grid. It uses three colour constants taken from the palette: the shape colour palette[2], the block colour palette[5], and the background palette[7]. It finds the bounding boxes of the shape cells and the block cells, then erases both objects. Next it measures the empty gap between the two boxes along rows and along columns. The axis with the larger gap is the axis of approach. In the generator, the axis of approach has a gap of at least 1 and the other axis has a gap of at most 0, so this works for every D4 image. On that axis the shape slides toward the block until the boxes touch, whether it starts left, right, above or below. The shape is drawn at its new position. Each moved cell is then reflected across the contact line (2*edge-1-coord on the near side, or 2*edge+1-coord on the far side). The reflection is drawn in the block colour, which replaces the original 2x2 block. Under D4 the same visible mechanism turns vertical sliding into horizontal sliding and reverses directions under reflections. No rotation wrapper or colour unpermutation is used. The direction is inferred from pixel geometry, so d4 is accepted but not needed. All three train pairs and the test pair fit the same uniform rule, and no fixture contradicts it.",
+    "limitations": "The slide distance uses the actual bounding box of the shape cells. If the generator's sprite ever failed to fill its nominal wide x tall box (an empty edge row or column), the generator would place it using the nominal box. That would leave a one-cell gap that cannot be recovered from the pixels. I assume diagonally_connected_sprite always spans its full box, which the fixtures support. Missing shape or block colours return the input unchanged. Nothing was executed or tested by me."
+  }
+}

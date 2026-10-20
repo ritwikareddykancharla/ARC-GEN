@@ -1,0 +1,21 @@
+{
+  "task_id": "195c6913",
+  "factory_sha256": "46718edc42b0a3c435c7b3948ecc637c25b85bb55c6662032de79cbcb602e807",
+  "constructor_sha256": "df5d1267b8a53b45979377bc762253e67ea95d823ae0b51a30b16a0d6b8d48d2",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 192348111988714,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 13.762486833962612,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft; host source restrictions and execution verification",
+  "draft_notes": {
+    "explanation": "In the original orientation, the path's first direction is right (0,1) and its alternate direction is up (-1,0). The factory maps both direction vectors through the D4 transform. A row reversal negates dx. Each clockwise rotation maps (dy,dx) to (dx,-dy). The resulting visible vectors R and U are written into the emitted program as constants.\n\nThe emitted program works directly on the visible grid, step by step:\n1. It finds single-colour 4-connected components, skipping the most common colour.\n2. 2x2 components are blocks. Single cells are seeds.\n3. Blocks are grouped by their minimum coordinate along the U axis, which is the line the legend lies on. The largest group is the legend. It is ordered along R to give the cyclic pattern; the canonical left-to-right order becomes order along R.\n4. The remaining block gives the marker colour.\n5. Every block is erased to the majority colour of its surrounding ring.\n6. From each seed, the region colour is read one step along R. A zig-zag path is then traced on the erased base grid. It moves along R, painting pattern[idx % len]. On hitting a wall it paints that cell the marker colour and switches between R and U. It stops when the next cell is outside the grid, or when the cell after a turn is also a wall.\n\nThe pattern index continues across turns. All colour roles (pattern, marker, region, fill) come from the pixels, so the palette needs no constants. Reflections are handled because R and U are transformed independently, so the up direction flips correctly under mirroring.",
+    "limitations": "Detection assumes the constructor's guarantees: every terrain component except those of the most common colour has at least 5 cells, so 2x2 blocks and single cells are only legend/marker/seeds; legend has >=2 blocks on one line while the marker is off that line; paths of different seeds do not overlap. If the scene had stray singleton or 2x2 terrain components, they would be misread as seeds/blocks (same as the archived solver). Untested by me; fixtures appear consistent with the uniform rule."
+  }
+}

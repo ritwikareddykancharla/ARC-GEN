@@ -1,0 +1,16 @@
+{
+  "task_id": "0520fde7",
+  "factory_sha256": "c67aa0ed7f25cf6615c38fa2b9591675b53395ef707123dbaa91349883f79fb3",
+  "constructor_sha256": "5eb5a38969ca30ff0e55bbf54019b4a9d35c71d4ec65bf60b11b0a81919bb803",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 168827339459063,
+  "d4": 7,
+  "unique_base_inputs": 998,
+  "seconds": 1.8072169590741396,
+  "provenance": "Opus 5.5 subscription CLI draft; host source review and execution audit",
+  "limitations": "The program assumes the constructor's domain: two equal-size panels split by one full divider line, panels containing only palette[0] and palette[1], and output background palette[0] with marker palette[2]. The panels never contain colour 5, so a full line of the divider colour can only be the separator. If panels ever had unequal sizes, the program crops both to the smaller size, keeping the cells next to the outer edges. That case is outside the generator's domain, and its alignment is only a guess. The fixtures agree with this uniform rule, and no contradictions were found. No tests were run."
+}

@@ -1,0 +1,16 @@
+{
+  "task_id": "00d62c1b",
+  "factory_sha256": "c4cbc7236285f803e82b499b57d4b4eb9eae7d1287bda2c69a47fa089f8d1c33",
+  "constructor_sha256": "e33e7be5230856701352d5efc919b5ab4e34d98cb2a538bf77736df208355162",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 61007215118994,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 8.618667666916735,
+  "provenance": "Opus 5.5 subscription CLI draft; host source review and execution audit",
+  "limitations": "Assumes the generator's is_surrounded means 'not 4-connected via black cells to the grid border', consistent with the archived solver and all fixtures (no contradictions found). Background is fixed to palette[0] rather than inferred as the most common colour, matching the constructor's domain."
+}

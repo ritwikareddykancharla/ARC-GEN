@@ -1,0 +1,21 @@
+{
+  "task_id": "18286ef8",
+  "factory_sha256": "fe2e0fa3a0c6b7cb9faf677a3d483001c8f8b6f637b09a3cde2a9612198884ed",
+  "constructor_sha256": "74b06216cbb54040008f337dba88e498e6cd7c9287c467887eb70d2fa45fe655",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 192629818768363,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 4.713790041976608,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft; host source restrictions and execution verification",
+  "draft_notes": {
+    "explanation": "The mechanism is intrinsically D4-equivariant: the beacon's position is compared against the block's row span and its column span independently, giving a step component of -1/0/+1 per axis. Rotations and reflections map row/column spans to column/row spans and flip their order consistently, so the same visible-coordinate test yields the correct transformed step. The program therefore works directly in visible coordinates. Colour roles are specialised as constants: block = palette[5], marker = palette[9], beacon = palette[6]. It finds the block's bounding box from block-coloured cells, locates the marker inside it, and computes the step from the beacon's position relative to the spans. It then moves the marker one cell toward the beacon, restoring block colour at the old position, and recolours the beacon to the marker colour.",
+    "limitations": "Assumes the constructor's domain: one 3x3 block with a single marker at its centre, and exactly one beacon cell located outside the central panel. If several beacon-coloured cells existed, the first in row-major order would be used. Demonstrations are not consulted because the colour roles follow fully from the palette. I have not run any tests; no fixture contradictions were noticed when reading them."
+  }
+}

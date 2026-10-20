@@ -1,0 +1,21 @@
+{
+  "task_id": "103eff5b",
+  "factory_sha256": "b8e118c29a30920dc0f10669d333333a74db9f4300191d1e03689869a551f78e",
+  "constructor_sha256": "6c3415b0afa719fd36d50cc9677328bb2acad81d3a9367a1469d55969a02bdc8",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 43412604506587,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 7.860034541925415,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft; host source restrictions and execution verification",
+  "draft_notes": {
+    "explanation": "The generator draws a small legend and an enlarged copy of it in colour 8. The enlarged copy has block (r, c) equal to legend[size-1-c][r], so it is the legend rotated 90\u00b0 clockwise and scaled up. It then rotates both together, which keeps that clockwise relation. A rotation from d4 also keeps it. A reflection turns it into a counter-clockwise relation, because a reflection combined with a clockwise rotation gives a counter-clockwise one.\n\nThe emitted program works directly in the visible coordinates. It uses BG = palette[0] and ST = palette[8] as constants. The legend is every cell that is neither background nor ST. The program finds the bounding boxes of the legend and of the ST structure.\n\nIt maps each structure block (i, j) to a legend cell with explicit index formulas. The first formula it tries depends on d4: (lh-1-j, i) for clockwise when d4 < 4, and (j, lw-1-i) for counter-clockwise when d4 >= 4. Before using a formula, it checks three things: the block size divides the structure evenly, the block is square, and the pattern of solid ST blocks matches the legend's occupied cells. The other six orientations are kept only as a defensive fallback. Each matched block is then painted in its legend cell's colour, and the legend itself is left as it is.",
+    "limitations": "The program assumes the legend's bounding box matches the bounding box of the sprite's occupied cells, so the structure's bounding box is the scaled, rotated legend box. This is guaranteed whenever the legend is the only non-background, non-ST content, which is how the constructor builds scenes. If the legend's occupancy pattern is symmetric, more than one orientation can pass the mask check. The d4-specialised orientation is tried first, so in that case it still gives the generator's colouring. I have not run any tests; I checked the fixtures only by hand. They agree with a uniform clockwise rule, so nothing contradicts it."
+  }
+}

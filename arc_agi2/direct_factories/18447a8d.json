@@ -1,0 +1,21 @@
+{
+  "task_id": "18447a8d",
+  "factory_sha256": "63b5acbc604c009c247b775ba46f5e55c24f9e9e18105dc2bc0d54b19d0ed19d",
+  "constructor_sha256": "616d77deeef304c5cb79adb4dbc21c0c2ae35626c8da863b6162e283c9fc5e1f",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 18789162959773,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 5.919786582933739,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft; host source restrictions and execution verification",
+  "draft_notes": {
+    "explanation": "Canonically, bands of 3 lines are stacked vertically, each with a lock (colour 8) anchored at column 0 and a key anchored at the opposite edge; each key moves to the lock whose per-line counts sum with it to the constant width (area / number of band lines = 5) and is drawn flush against the lock. The factory tracks the lock->key direction vector through the D4 transform: a row reversal negates it, and each clockwise rotation maps (dr,dc)->(dc,-dr). Even rotation counts keep bands stacked along rows with horizontal lock->key motion; odd counts stack bands along columns with vertical motion, and the sign says whether the lock sits at the low or high index edge. The emitted program indexes visible rows or columns directly (g[i,:] or g[:,i]). It finds bands as runs of non-background lines, counts lock and key cells per line, matches keys to locks by complement sums, clears the old keys and writes each key adjacent to its lock along the visible direction. Background and lock colours are the constants palette[7] and palette[8]; key colours are any other colours present.",
+    "limitations": "Assumes palette is a permutation, so the lock and background colours stay distinct, and that keys within the episode have distinct colours, as the generator guarantees. If no key matches a lock, that band is left lock-only rather than raising an error. If several keys match, the first unused key in sorted-colour order is chosen, but the generator rules this out. The fixtures were consistent with the uniform rule; no contradictions were found. I have not run any tests."
+  }
+}

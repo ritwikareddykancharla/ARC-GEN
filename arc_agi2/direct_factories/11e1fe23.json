@@ -1,0 +1,21 @@
+{
+  "task_id": "11e1fe23",
+  "factory_sha256": "92cb2bf3494e31495f76c442499c7dc5234e60d5c3ff18b741ce0976bc46e772",
+  "constructor_sha256": "cedf774b2213979e0a8b07ed660d6ba4e7c0608c61b73f88bedd80b0cc8c1ca3",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 207579146311897,
+  "d4": 7,
+  "unique_base_inputs": 997,
+  "seconds": 3.3582986659603193,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft; host source restrictions and execution verification",
+  "draft_notes": {
+    "explanation": "The input has three coloured points on three corners of an odd-sized square. The fourth corner is background. The output keeps the input and adds three things. It draws the marker colour (original 5) at the square's exact centre. Each corner colour is then stamped on the diagonal neighbour of the centre that points toward that colour's corner. The emitted program works directly in visible coordinates. It collects the non-background cells, takes the midpoint of their bounding box as the centre, and uses the per-axis sign of (point - centre) to choose the diagonal neighbour. This construction is equivariant under every D4 transform: a reflection or rotation of the square moves the centre and the corner directions in the same way. So no axis or direction constants need specialising, and the visible-coordinate mechanism is already the transformed one. Palette roles are baked in as constants: background = palette[0] and centre marker = palette[5]. The empty-corner rule is automatic because the background corner is never collected. That corner's miniature cell keeps its background value, which matches the generator's write of colour 0.",
+    "limitations": "This assumes the generator's domain: exactly three non-background points forming three corners of an odd-sized square, so the midpoint is an exact integer. The marker colour is taken from palette[5] and is not inferred from the demonstrations. The demonstrations are not used. No fixture contradicts the rule."
+  }
+}

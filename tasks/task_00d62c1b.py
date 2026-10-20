@@ -62,11 +62,28 @@ def generate(size=None, rows=None, cols=None, brows=None, bcols=None,
       for c in range(1, wide - 1):
         grid[brow + r][bcol + c] = common.black()
         output[brow + r][bcol + c] = common.yellow()
-  # Finally, fill any cells that are surrounded.
+  # Static pixels and touching pots can enclose multi-cell pockets that were
+  # not one of the sampled rectangles. Label every enclosed 4-connected region,
+  # not only isolated cells. This changes synthetic labels, not validate().
+  output = [row[:] for row in grid]
+  visited = set()
   for r in range(size):
     for c in range(size):
-      if output[r][c] == common.black() and common.is_surrounded(output, r, c):
-        output[r][c] = common.yellow()
+      if grid[r][c] != common.black() or (r, c) in visited: continue
+      cells = [(r, c)]
+      visited.add((r, c))
+      touches_border = False
+      for row, col in cells:
+        if row in (0, size - 1) or col in (0, size - 1):
+          touches_border = True
+        for dr, dc in [(1, 0), (0, 1), (-1, 0), (0, -1)]:
+          nr, nc = row + dr, col + dc
+          if not (0 <= nr < size and 0 <= nc < size): continue
+          if (nr, nc) not in visited and grid[nr][nc] == common.black():
+            visited.add((nr, nc))
+            cells.append((nr, nc))
+      if not touches_border:
+        for row, col in cells: output[row][col] = common.yellow()
   return {"input": grid, "output": output}
 
 

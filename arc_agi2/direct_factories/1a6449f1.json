@@ -1,0 +1,21 @@
+{
+  "task_id": "1a6449f1",
+  "factory_sha256": "475815f269c0f797a7673519a34b0ab5e4d6678f880bf242a3ed4291844b4d63",
+  "constructor_sha256": "99777c7e71585dff173dc2037a79191bb1bd4ed0895393b339f924bb3a41dc45",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 234540487919323,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 13.69631191692315,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft; host source restrictions and execution verification",
+  "draft_notes": {
+    "explanation": "The task looks the same under every D4 transform. A hollow single-colour rectangular frame is still a frame after rotation or reflection, and cropping its interior commutes with the transform. So the emitted program works directly on the visible grid and needs no orientation-specific constants. The background is the constant palette[0], because the generator's background is colour 0. For each non-background colour, the program builds run-length tables of consecutive same-colour cells to the right and downward. It then lists every axis-aligned rectangle of at least 3x3 whose four sides are entirely that colour. It does this by checking that the top-left corner's runs and the far corners' runs are long enough. The rectangle with the largest interior area ((h-2)*(w-2)) is chosen, and its interior is copied verbatim, including any noise inside it. This generalises the archived solver's 'bbox or bbox shrunk by one' check. A frame touched by stray same-colour noise, even a chain longer than one cell, is still found exactly. In the generator, the target box has strictly the largest width and height, because widths and heights are sampled without replacement and sorted. Its interior area is therefore strictly the largest among the real frames.",
+    "limitations": "If noise happened to form a full same-colour line directly alongside a frame side, a slightly different rectangle could tie or win. With equal areas, the winner is the first one found in scan order, which depends on orientation. This is extremely unlikely under the generator's 1/4 noise density across 9 colours, and the archived solver shares the risk. Noise forming a complete hollow rectangle larger than the largest frame is practically impossible. The background is assumed to be palette[0]; frames and noise in the generator are never colour 0. Demonstrations are not used, because the rule is fully determined by the query. I have not run any tests. The fixtures are consistent with the uniform rule."
+  }
+}

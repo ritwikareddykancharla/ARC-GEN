@@ -1,0 +1,16 @@
+{
+  "task_id": "0b148d64",
+  "factory_sha256": "e67b5591b380f07c4bed1972ed8e6a27589255f88773d451fa870993d4645408",
+  "constructor_sha256": "f74adfdfd10b34f14229cead17f77ad0f2a6a4d86941bb029a733d78f46139e2",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 251389625583145,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 4.850507874973118,
+  "provenance": "Opus 5.5 subscription CLI draft; host source review and execution audit",
+  "limitations": "The tie-break relies on Python's ascending iteration order for sets of small ints, which the generator implicitly uses. If the query has only background, the program returns the grid unchanged; the generator never produces such grids. Demonstrations are not needed and are ignored. No contradictions between the fixtures and the uniform rule were found."
+}

@@ -1,0 +1,21 @@
+{
+  "task_id": "0e671a1a",
+  "factory_sha256": "2573e5c2612df9181ca6a67be6e4f2f757d2490db0589d750d4fe9a82dd9cb49",
+  "constructor_sha256": "b185f50cf049a7ff8e0f47c0849e26e73e653557f8d9dcf1ab010764b9233fb8",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 54860263103801,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 4.494974166969769,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft; host source restrictions and execution verification",
+  "draft_notes": {
+    "explanation": "The constructor places three single cells with pairwise distinct rows and columns. Colour 4 is the hub, and colours 3 and 2 are destinations. It joins each destination to the hub with grey (5) L-shaped corridors. In original coordinates the 4->3 corridor runs along the hub's row to the 3's column and then along that column, so its corner is (hub_row, col3). The 4->2 corridor runs along the hub's column to the 2's row and then along that row, so its corner is (row2, hub_col). Coloured cells are never overwritten; overlapping corridor cells simply stay grey. Under D4, reflections do not swap the row and column axes, but each odd number of clockwise rotations does. So the axes are swapped exactly when d4 % 2 == 1. When swapped, the corners in visible coordinates become (row_A, hub_col) for palette[3] and (hub_row, col_B) for palette[2]. The emitted program works directly in visible coordinates. It locates palette[4], palette[3] and palette[2], computes each corner from the specialized SWAP flag, and draws both straight segments (hub->corner, corner->destination). It paints palette[5] only on cells that hold the background colour palette[0]. Turning toward each target falls out of the min/max ranges, so all directions are handled.",
+    "limitations": "This assumes the constructor's domain: exactly one cell each of hub and destination colours, with distinct rows and columns, so corners never coincide with coloured cells. If a colour is missing, its corridor is skipped. If a colour appears more than once, only its first occurrence in row-major order is used. The background is taken as palette[0] rather than inferred from the demos. The factory has not been executed or tested. No contradictions between the fixtures and the uniform rule were found."
+  }
+}

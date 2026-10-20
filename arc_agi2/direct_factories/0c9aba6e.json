@@ -1,0 +1,21 @@
+{
+  "task_id": "0c9aba6e",
+  "factory_sha256": "f0e1b3043a8cad1271eb831b42bf20d056a93e27fcf73670f9f9f823924004f6",
+  "constructor_sha256": "4d3154d264e2827a1bfed85c9bef771292388a429c7ce80ef247b24a8ea72e6c",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 114863077118275,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 3.159299833001569,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft; host source restrictions and execution verification",
+  "draft_notes": {
+    "explanation": "The scene is two equal panels separated by a single line of colour 7. The output is the size of one panel, with 8 wherever both panels are background (0), and 0 everywhere else.\n\nThe D4 transform is rigid and is applied to the input and output alike. So in visible coordinates the two panels are still translates of each other, and their local cell order matches the output's local cell order. The visible rule is therefore: output[r][c] = palette[8] if panelA[r][c] == palette[0] and panelB[r][c] == palette[0], otherwise palette[0]. Here panelA and panelB are the two visible halves read in natural order.\n\nThe factory picks the divider axis from d4. It uses horizontal rows for 0 or 2 clockwise rotations and vertical columns for 1 or 3; reflection does not change the axis. It also bakes in palette[7] as the divider colour, palette[0] as the background and palette[8] as the fill. The emitted program finds the divider as the full line of the divider colour. Like the archived solver, it prefers the line whose colour appears nowhere else, falling back to the nearest candidate to the middle, or to the middle itself. It then slices the two panels directly along that axis and computes the NOR mask. It never rotates or recolours the grid.",
+    "limitations": "This assumes the palette is injective, so that palette[7] (divider), palette[0] (background) and palette[8] (fill) are distinct. This is the case for the generator's domain. If the divider cannot be found, the program falls back to the middle line. If the two panels differ in size (which never happens in the generator), both are truncated to the shorter length. I have not run any tests. The approved fixtures agree with the uniform NOR rule, and I found no contradictions."
+  }
+}

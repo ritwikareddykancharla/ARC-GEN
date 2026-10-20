@@ -1,10 +1,13 @@
 # Combined program and grid dataset
 
-Production exports use **one episode per row**, containing a lossless PNG and a
+Exports use **one episode per row**, containing a lossless PNG and a
 JSON record with both the program and the output grids. Images include query
 answers for human inspection; only `prompt` and `completion` are model inputs
 and targets. TAR shards group PNG/JSON pairs using the same episode identifier.
-Hugging Face's viewer may internally convert them to Parquet.
+Hugging Face's viewer may internally convert them to Parquet. The archive-backed
+viewer is not production-ready: its hosted conversion failed in Hugging Face's
+stream-file size tracking. The current public exporter test therefore uses
+individual PNGs with ImageFolder metadata instead.
 
 The target is 1,120,000 fresh base episodes, with up to eight distinct spatial
 variants each (8,960,000 before symmetry deduplication). Colour mapping is shared
@@ -32,14 +35,23 @@ recorded. Passing finite audits does not prove unrestricted generalization.
 
 - 213 native direct-coordinate certificates admitted after fresh audits and
   supplied-fixture checks.
-- Six additional reviewed factories: `62593bfd`, `e4888269`, `fc7cae8d`,
-  `65b59efc`, `142ca369`, `f931b4a8`. Each passed 1,000 fresh pairs, 8,000
-  augmented pair checks and 16 supplied-fixture variants.
+- 71 admitted factories. Each passed 1,000 fresh pairs, 8,000 augmented pair
+  checks and 16 supplied-fixture variants. Their audit records retain draft
+  limitations and source/constructor hashes. These checks are finite evidence,
+  not proof of correctness on every generated input.
+- The native domain of `0b17323b` has only six inputs. All six were checked
+  exhaustively across eight orientations and two palettes; its small domain is
+  recorded explicitly rather than counted as 1,000 unique examples.
 - Existing hand-reviewed direct rewrites supplement these sets; overlap means
   counts must be computed as a union, not added.
 - Local exporter test: 18 fresh base episodes, 144 augmented PNG/program/grid
   records. It requested 20 bases and reported a two-episode shortfall.
-- 229 regression tests pass.
+- The union currently admits 290 of 1,120 families; 830 still need direct
+  augmented program admission. Constructor coverage and program coverage are
+  different gates.
+- Synthetic labels for `00d62c1b` now fill every enclosed background component,
+  including incidental pockets. The `0bb8deee` sampler reserves room for its
+  three-cell sprite. Original supplied fixtures are unchanged.
 
 The full expanded dataset is **not complete**. The exporter test is not a
 production-size corpus or a claim of full program coverage. No model training
@@ -61,3 +73,12 @@ grid-only regression tests; they are not the production program-target format.
 The viewer must use one loader format. Do not mix ImageFolder PNG configurations
 and WebDataset TAR configurations in one card: the loader can be inferred as
 ImageFolder for both, returning zero rows for TAR files.
+
+The 144-row direct-PNG publication is an integration test, not the full corpus.
+Do not treat a successful `first-rows` response as sufficient: verify `/rows`
+pagination and image retrieval too. ZIP/JSONL and TAR experiments remain archived
+but are excluded from the default viewer.
+
+The `0d87d2a6` sampler now places rectangles incrementally rather than rejecting
+whole crowded layouts. Its refreshed audit passed 1,000 fresh pairs and 8,000
+augmented checks in 17 seconds without sampler rejections; fixtures are unchanged.

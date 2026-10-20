@@ -1,0 +1,16 @@
+{
+  "task_id": "070dd51e",
+  "factory_sha256": "6e140e8ac857fcc557d8e3cf61e0750557f2a85617155253f3d51b5c15741fe8",
+  "constructor_sha256": "aa760113e530bee78944cfb6257c0ae615c4126630327d4a1344bc9d8cf54656",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 141490846679331,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 13.688805000041611,
+  "provenance": "Opus 5.5 subscription CLI draft; host source review and execution audit",
+  "limitations": "Assumes the generator's domain: exactly two cells per foreground colour, aligned on one row or column, with endpoints that are not covered by other lines. Colours with a count other than two, or pairs that are not aligned, are left unchanged, as in the archived solver. Lines of the same orientation never overlap under the constructor's checks, so their drawing order does not matter. The fixtures agree with the uniform rule; no contradictions were found. I have not run any tests."
+}

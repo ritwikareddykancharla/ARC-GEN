@@ -1,0 +1,16 @@
+{
+  "task_id": "0607ce86",
+  "factory_sha256": "72fb50e924d4b6c5001896033f08126e6b6d1374fb33887274e80eb30c25aa2f",
+  "constructor_sha256": "c2bf1a6f39ced437545dc11bf3dd65a6b90bc2be79c91fb6cdaeefee74e47a9d",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 29180341242677,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 15.786836999934167,
+  "provenance": "Opus 5.5 subscription CLI draft; host source review and execution audit",
+  "limitations": "Nothing has been executed, so this has not been checked against the fixtures or fresh pairs. The main search assumes the constructor's domain: tiles 4-6 cells, offset 1-2 from the original leading edge, spacing 1-2, and copies = (N-2)//(t+s). Grids outside that domain use the density-threshold fallback, which can fail when noise is dense. The fallback crops tiles to the smallest band size if detected bands differ. Majority ties never occur in generator output; if one did, the solver would pick the smallest colour value, which may differ from the generator's choice. I found no contradictions between the fixtures and the rule."
+}

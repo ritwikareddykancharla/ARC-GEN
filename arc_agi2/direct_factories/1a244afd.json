@@ -1,0 +1,21 @@
+{
+  "task_id": "1a244afd",
+  "factory_sha256": "d0fe43760d8cdd76a6654ba319637720154026aa92e545b7955fe71199ad24e7",
+  "constructor_sha256": "346abebaf1e169c60c8165f0a05c9e8e0741fc3f35b924374b12ecbaf621cf71",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 146012474860565,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 5.940399833023548,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft; host source restrictions and execution verification",
+  "draft_notes": {
+    "explanation": "Each blue (palette[1]) cell is paired with exactly one pink (palette[6]) cell sharing its row or column. Pairing follows the generator's unique-candidate propagation: a pink with exactly one unmatched aligned blue is matched to it, repeated until nothing changes. When propagation completes, the resulting perfect matching is the unique one, and propagation is invariant under D4. A small minimum-distance backtracking step pairs anything left over. All pinks are erased to palette[8]. For each pair, the offset (dy,dx) from blue to pink is rotated 90 degrees about the blue, keeping its length, and a palette[7] cell is stamped there; off-grid targets are dropped. In original coordinates the rotation is (dy,dx)->(-dx,dy), counter-clockwise. Pure rotations of the grid preserve that sense, so it is used for d4<4. Reflections (d4>=4) reverse it to (dy,dx)->(dx,-dy). Everything runs directly in visible coordinates with palette-mapped colour constants.",
+    "limitations": "Not run or tested. Assumes the constructor's domain: one blue and one pink cell per pair, and a uniquely determinable matching, which the generator guarantees. The backtracking fallback for unmatched leftovers is limited to 12 blues; it should not trigger on generated scenes. The fixtures are consistent with the uniform rule, and the test case where a 7 lands on a former pink cell is handled by erasing all pinks before stamping."
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "task_id": "03560426",
+  "factory_sha256": "14e627c66e888f1dd6519d1eb32da20882ec3b612f9c7331e3f8deb9dcc8bd3f",
+  "constructor_sha256": "2e1e4c08b6868224dd5ab3a56c641773f011af3f56dd0ded9a1eed0d9fca6e65",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 35535249817787,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 4.130952708073892,
+  "provenance": "Opus 5.5 subscription CLI draft; host source review and execution audit",
+  "limitations": "Assumes background is palette[0] and that objects are single-colour 4-connected components that are separated along the sequence axis, as the generator guarantees. Placements that run off the grid are clipped, although the generator never produces them. Ties in the ordering key cannot occur in the generator's domain; they are broken by reading order. The fixtures are consistent with the uniform rule. No tests were run."
+}

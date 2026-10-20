@@ -1,0 +1,21 @@
+{
+  "task_id": "195ba7dc",
+  "factory_sha256": "e4f612963970ced31949c5121796026bb812b25eb3cd6a167db042f419e1d4e7",
+  "constructor_sha256": "30fee2d98afa62cdb7069c55f5e49cf95480cc39ef24e5aaa22ce58aa6b6ac88",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 182319256531848,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 3.269858125015162,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft; host source restrictions and execution verification",
+  "draft_notes": {
+    "explanation": "The input is two equal panels separated by a full line of colour 2. That line is a column x=6 in the native orientation. Each output cell is 1 where either panel holds the foreground colour 7 at the same panel-local position, and 0 where both are background. The two panels differ by a pure translation. So under any D4 transform they are still aligned cell by cell in visible coordinates, and the transformed output equals the elementwise OR of the two visible panels. The factory sets the divider orientation from d4. Even rotation counts (with or without reflection) keep a vertical divider column. Odd rotation counts give a horizontal divider row. It also specialises the colours: background palette[0], divider palette[2] and output 'on' colour palette[1]. The emitted program finds the full line of the divider colour along the chosen axis. If there are several candidates it takes the one closest to the centre. If there are none it falls back to the archived 'unique full single-colour line' heuristic and then to the midpoint. It cuts the two panels on either side, trims them to a common size and writes palette[1] where either panel is non-background, otherwise palette[0].",
+    "limitations": "Assumes the constructor's domain: two equal panels separated by a single full divider line of colour 2, foreground 7 on background 0, with the output using colours 0 and 1. A cell counts as set if it differs from the background, so any non-background colour counts, not just 7. Demonstrations are not consulted because the rule and its colour roles are fully fixed by d4 and the palette. The fixtures agree with the uniform OR rule; no contradictions were found. The factory has not been executed or tested by me."
+  }
+}

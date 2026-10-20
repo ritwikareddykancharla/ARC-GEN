@@ -27,12 +27,21 @@ def current_hashes(task_id, source):
 
 
 def qualifies(report):
+    finite = report.get("finite_default_domain", {})
+    diversity_ok = report.get("unique_base_inputs", 0) >= 100
+    # A reviewed finite native domain is not made richer by repeating it.
+    # Such families retain explicit small counts and adaptive episode quotas.
+    if (finite.get("exhaustive") is True
+            and finite.get("cases_checked", 0) == report.get("unique_base_inputs", 0)
+            and finite.get("cases_checked", 0) > 0
+            and finite.get("augmented_checks", 0) >= 16 * finite["cases_checked"]):
+        diversity_ok = True
     return (
         report.get("passed") is True
         and report.get("fresh_pairs_checked", 0) >= 1000
         and report.get("augmented_pair_checks", 0)
         >= 8 * report.get("fresh_pairs_checked", 0)
-        and report.get("unique_base_inputs", 0) >= 100
+        and diversity_ok
     )
 
 

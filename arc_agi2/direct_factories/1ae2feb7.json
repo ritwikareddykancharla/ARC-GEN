@@ -1,0 +1,21 @@
+{
+  "task_id": "1ae2feb7",
+  "factory_sha256": "d4976548429f9d2f734773516f4d2b10ca05ddbc70b2f3e1eff6e000216d65a7",
+  "constructor_sha256": "9f00d3f6192565beb3e8dfb7ef129e4574043b754e01143d27021fabe81a1bb7",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 116015462939950,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 6.1420035000192,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft; host source restrictions and execution verification",
+  "draft_notes": {
+    "explanation": "In the original task a vertical divider splits the grid. One side has short runs of colour, one row at a time. For each such row, every run of colour c and length n stamps c on the empty side at distances 1, 1+n, 1+2n, ... from the divider. Runs are stamped from the farthest to the nearest, so the run nearest the divider ends up on top.\n\nThe factory makes two choices:\n- **Axis, from d4.** An odd number of clockwise quarter turns makes the divider a horizontal row. In that case the emitted program finds the divider row, reads runs down each column outward from the divider, and stamps vertically. Otherwise it finds the divider column, reads along rows, and stamps horizontally. Reflections need no special handling here.\n- **Background, from palette.** The background is the constant palette[0].\n\nInside the emitted program, everything else is read from the grid in visible coordinates:\n- **Divider line:** the column or row with the most cells of one non-background colour. This is always the divider, because pattern rows are never adjacent and the divider covers at least h-1 cells.\n- **Stamping direction:** toward whichever side of the divider has fewer non-background cells.\n- **Divider and run colours:** read directly from the pixels.\n\nThe program handles background gaps next to the divider (offset 1), adjacent runs of different colours, a divider that stops one cell short, rectangular grids, and stamping that runs up to the grid edge.",
+    "limitations": "No tests were run. Two assumptions:\n- The background is palette[0], as in the constructor.\n- The divider is the line with the most cells of a single colour. The generator guarantees this, so I did not add extra tie-breaking beyond taking the first maximum.\n\nIf the two sides of the divider ever had equal non-background counts, the program would stamp toward the higher index. The generator never produces this case, since the pattern side is always non-empty and the output side is empty.\n\nI found no contradiction between the fixtures and the uniform rule."
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "task_id": "0ca9ddb6",
+  "factory_sha256": "55aa24d304e633b1f0111ba52d6c05f945f94d8ddaf253743dbbcfc34ea9a9be",
+  "constructor_sha256": "cf1ecf89b80161fc4bdd702fe481c224b44fde90ec83a92ddb406ac6d8616fdf",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 227853957783214,
+  "d4": 7,
+  "unique_base_inputs": 927,
+  "seconds": 2.585025415988639,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft; host source restrictions and execution verification",
+  "draft_notes": {
+    "explanation": "Each seed pixel of original colour 1 gets a plus of colour 7 on its four orthogonal neighbours; each seed of colour 2 gets an X of colour 4 on its four diagonal neighbours; other colours (6, 8) are left alone. Stamps write only onto background cells and are clipped at grid edges. Both neighbourhood shapes are mapped onto themselves by every rotation and reflection, so the emitted program uses the same offsets in visible coordinates for any d4. Only the colour roles are specialised: background = palette[0], rook seed = palette[1] stamping palette[7], bishop seed = palette[2] stamping palette[4]. Seeds are processed in reading order. The constructor guarantees non-overlapping stamps, so the order does not change the result. Rectangular grids work because H and W are read independently.",
+    "limitations": "Colour roles are fixed from the palette and not inferred from the demonstrations. This matches the constructor, which always uses 1\u21927 plus and 2\u21924 X. Where stamps would overlap (which the generator excludes), the first-placed stamp in reading order wins and existing non-background cells are never overwritten; the generator itself would let later stamps overwrite. The fixtures show no contradictions with the uniform rule."
+  }
+}

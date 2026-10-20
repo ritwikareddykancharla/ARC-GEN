@@ -1,0 +1,21 @@
+{
+  "task_id": "0f63c0b9",
+  "factory_sha256": "2ee340a2b143d9491d7a09876e038f4a8e784be3bd95ebadb380a24b7fcde47d",
+  "constructor_sha256": "413699f1715314922fba70011e71d31260046443a48e19c2c6d1cd2c5cf313ab",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 275134342977259,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 4.8274467079900205,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft; host source restrictions and execution verification",
+  "draft_notes": {
+    "explanation": "Original mechanism, before any D4 map:\n- Seeds are sorted by row.\n- Each seed paints its full row.\n- The left and right border columns are split into bands. Each border cell takes the colour of the nearest seed by row. When a cell is exactly between two seeds, it goes to the upper seed: the generator gives the upper band rows through floor((p+q)/2).\n- Row 0 takes the topmost seed's colour and the last row takes the bottommost seed's colour.\n\nHow the factory adapts it to the visible grid:\n- It tracks where the original 'up' direction ends up. A row reversal does not change it, and each clockwise turn maps up to right, then down, then left.\n- If 'up' stays vertical (d4%4 in {0,2}), seeds are sorted by row. Each seed paints a full row, bands go on the left/right columns, and the caps are the top and bottom rows.\n- Otherwise seeds are sorted by column. Each seed paints a full column, bands go on the top/bottom rows, and the caps are the leftmost and rightmost columns.\n- Tie breaking is the only direction-sensitive part. A tie goes to the lower-index seed when 'up' maps to up or left (k=0 or 3), and to the higher-index seed when it maps to down or right (k=1 or 2).\n- The caps use the minimum-index and maximum-index seed colours. This rule is the same in every orientation.\n- The background constant is palette[0]. Seed colours are read from the pixels, so no colour permutation is needed.",
+    "limitations": "- The background is assumed to be palette[0], which is what the generator always uses for the blank canvas.\n- Seeds are assumed to occupy distinct lines along the seed axis. The generator guarantees this with distinct rows at least 2 apart; if two seeds did share a line, the code would still run but the result would be arbitrary.\n- Rectangular grids are handled generically even though the generator only produces 15x15.\n- No fixture contradicts the rule. All four train pairs and the test pair match the formula floor((p+q)/2), ties upward.\n- I have not run any tests on this factory."
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "task_id": "136b0064",
+  "factory_sha256": "141e2914f132175042b951cf8a600800cc18c9397498d9aa4363a91ed746d70c",
+  "constructor_sha256": "ae970723f4315c2c45ec15a874836b8f7b244f7e021cf84c8c818b3ff6e2102f",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 74023061497727,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 14.590779666905291,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft; host source restrictions and execution verification",
+  "draft_notes": {
+    "explanation": "The factory works out where the original 'down' vector (1,0) and 'right' vector (0,1) end up under the D4 transform. A row reversal negates dx, and each clockwise rotation maps (dy,dx) to (dx,-dy). The palette is applied to the colour roles: the divider is palette[4], the marker palette[5], the background palette[0], and each glyph colour palette[1/2/3/6] gets its own move (right 3, left 2, left 4, down 2). The emitted program finds the divider as the full row or column of the divider colour; whether it looks for a row or a column depends on the transformed down vector. It slices out the canvas on the side the visible R vector points to, and treats the opposite side as the glyph panel. Glyphs are found as 8-connected components and sorted by their minimum projection onto R (which glyph column) and then onto D (position within that column). This reproduces the original order: left column top to bottom, then right column. Starting at the marker, it draws the staircase directly in visible coordinates. A down glyph paints 2 cells along D. A horizontal glyph steps one cell along D and then paints L cells along \u00b1R, reusing the corner cell, and the end cell becomes the new position. Cells outside the canvas are clipped, as in the generator. No grid is rotated or recoloured as a whole.",
+    "limitations": "This assumes palette is a permutation indexable by the original colours 0..9 and that the generator's layout holds: one full divider line, glyphs only on the far side of it, and one marker. Glyphs whose colour is not a mapped glyph colour are ignored. The fixtures match a single uniform rule; no contradictions were found. Nothing has been executed by me."
+  }
+}

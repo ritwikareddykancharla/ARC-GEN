@@ -1,0 +1,16 @@
+{
+  "task_id": "08ed6ac7",
+  "factory_sha256": "5dfbf141da0b73e048305a636b416ca0f0df667364a773ca9df541e154f352b6",
+  "constructor_sha256": "d8aa7a84d5d34b07979e40fe6587a5ea63b899721a718a0234cdcc3c68df1513",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 18483276935488,
+  "d4": 7,
+  "unique_base_inputs": 853,
+  "seconds": 3.8471543330233544,
+  "provenance": "Opus 5.5 subscription CLI draft; host source review and execution audit",
+  "limitations": "The generator always gives the bars distinct heights, so ties never happen within the domain. If a tie did occur, it would be broken by position on the cross axis in visible coordinates. That rule may differ from the archived solver, which uses the leftmost column in native coordinates. The program assumes the grey colour (palette[5]) and the rank colours (palette[1..4]) take their fixed generator roles. These colours are not inferred from the demonstrations. No tests were run, and the fixtures are consistent with the uniform rule."
+}

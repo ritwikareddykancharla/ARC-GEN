@@ -1,0 +1,21 @@
+{
+  "task_id": "12eac192",
+  "factory_sha256": "13ed5b3ad8b7ddccb090d76c26b25a884668af0517127e2bd7e11dc3ec84ee0d",
+  "constructor_sha256": "19c4be5f02e388e29cf42554053f6b94a37ddaaa5fdea49179656533452a5e45",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 177064772573367,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 2.4576725841034204,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft; host source restrictions and execution verification",
+  "draft_notes": {
+    "explanation": "The family recolours every small object. An object here is a single-colour, 4-connected component of non-background cells. If it has 1 or 2 cells, it becomes the marker colour (original 3). Objects with 3 or more cells stay unchanged. 4-connectivity and component size do not change under rotation or reflection, so the emitted program works directly in visible coordinates with no axis-specific logic. The colour roles are specialized as constants: the background is palette[0], because the generator skips exactly colour 0 rather than the most common colour, and the marker is palette[3]. Adjacent cells of different non-background colours are treated as separate objects, matching the generator's same-colour flood fill.",
+    "limitations": "This assumes the background is always original colour 0 (palette[0]), as in the generator. It does not use the archived solver's most-common-colour heuristic, which could fail when non-zero cells are the majority. Demonstrations are not consulted. I have not run any tests."
+  }
+}

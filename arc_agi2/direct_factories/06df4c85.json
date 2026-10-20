@@ -1,0 +1,16 @@
+{
+  "task_id": "06df4c85",
+  "factory_sha256": "64773f6819b35eed2131f51dc3149913a4796df8f2dc00e5c5d285ae6a396a6e",
+  "constructor_sha256": "d14b5787c849f3e49c17f2c4c29bcb000e05bf080325a294fa9456bc4d342512",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 29901816208530,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 11.998458832968026,
+  "provenance": "Opus 5.5 subscription CLI draft; host source review and execution audit",
+  "limitations": "- **Divider detection** assumes every panel row contains at least one divider pixel. Otherwise an all-empty panel row could look like a uniform line, though it is still excluded because its colour equals the empty colour. In the generator's domain (6 to 10 cells, so always at least 2 panels per line) this always holds.\n- **Spans crossing other colours:** only empty panels are filled. Under the constructor's constraints a joining span never crosses a panel of another colour. If it did, the generator would overwrite that panel and this program would leave it alone.\n- **Invisible dot:** if the generator's random dot were drawn in the empty colour, it is invisible in the input, so it is correctly ignored.\n- **Fixtures:** no contradiction with the uniform rule was observed."
+}

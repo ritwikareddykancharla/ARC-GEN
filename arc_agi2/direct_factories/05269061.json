@@ -1,0 +1,16 @@
+{
+  "task_id": "05269061",
+  "factory_sha256": "b522fc99ac9127a9e6e3df47c4a2df2dd99d7228eb9ab96e3a20583d43540900",
+  "constructor_sha256": "218b7d7cfc9a47c5f23928e8d5df0931782c78d243f8a8b749e7704691337486",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 181374487313716,
+  "d4": 7,
+  "unique_base_inputs": 988,
+  "seconds": 1.7189345840597525,
+  "provenance": "Opus 5.5 subscription CLI draft; host source review and execution audit",
+  "limitations": "The program assumes what the generator guarantees: each residue class of the visible diagonal key has at least one coloured cell, and all coloured cells in a class share one colour. If a class had no coloured cells, its cells would stay as they are in the input, matching the archived behaviour. Demonstrations are not used, since the rule can be read entirely from the query. The approved fixtures are consistent with this rule, and I found no contradictions. I have not run any tests."
+}

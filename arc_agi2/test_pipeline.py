@@ -2403,4 +2403,36 @@ class GeneratorTests(unittest.TestCase):
                     {'num_legends':True},{'height':12.0}):
             with self.assertRaises(ValueError):m.generate(**bad)
 
+    def test_wiring_four_occluders_across_all_orientations(self):
+        m=importlib.import_module('tasks.task_a47bf94d')
+        for orientation in range(8):
+            random.seed(89000+orientation)
+            p=m.generate(num_pipes=4,num_blocks=4,orientation=orientation)
+            remaining={(r,c) for r,row in enumerate(p['input'])
+                       for c,v in enumerate(row) if v==9}
+            count=0
+            while remaining:
+                stack=[remaining.pop()]
+                count+=1
+                while stack:
+                    r,c=stack.pop()
+                    for dr,dc in ((1,0),(-1,0),(0,1),(0,-1)):
+                        q=(r+dr,c+dc)
+                        if q in remaining:
+                            remaining.remove(q)
+                            stack.append(q)
+            self.assertEqual(count,4)
+            self.assertEqual(p['output'],grid(call(solver('a47bf94d'),p['input'])))
+
+    def test_wiring_rejects_impossible_counts_and_keeps_broader_controls(self):
+        m=importlib.import_module('tasks.task_a47bf94d')
+        for bad in ({'num_blocks':5},{'num_blocks':4,'num_pipes':2},
+                    {'num_pipes':True},{'height':20},
+                    {'configs':[('X','D'),('D','X')]}):
+            with self.assertRaises(ValueError):m.generate(**bad)
+        random.seed(89099)
+        p=m.generate(configs=[('S',None),('X','D')],num_pipes=2,num_blocks=0)
+        self.assertNotEqual(p['input'],p['output'])
+        self.assertEqual(p['output'],grid(call(solver('a47bf94d'),p['input'])))
+
 if __name__=='__main__':unittest.main()

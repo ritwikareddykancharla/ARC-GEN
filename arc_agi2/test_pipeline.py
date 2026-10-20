@@ -983,6 +983,40 @@ class GeneratorTests(unittest.TestCase):
                                   num_attached_specks=3,bridge_holes=True)
             self.assertEqual(pair['output'],grid(call(solver('71e489b6'),pair['input'])))
 
+    def test_docking_priority_and_legend_full_cycles(self):
+        dock=importlib.import_module('tasks.task_6e4f6532')
+        captured={}
+        original=dock._render
+        def capture(*args):
+            captured['ships']=args[-1]
+            return original(*args)
+        random.seed(30000)
+        with patch.object(dock,'_render',side_effect=capture):
+            pair=dock.generate(width=30,height=30,num_ships=6,
+                               thickness=1,divider=True)
+        multi=0
+        for pattern,_,t,target in captured['ships']:
+            cells=dock._place(dock._parse(pattern),t,target)
+            for (y,x),c in cells.items():
+                if c not in (8,9):
+                    multi += sum(cells.get((y+dy,x+dx)) in (8,9)
+                                 for dy,dx in ((1,0),(-1,0),(0,1),(0,-1)))>1
+        self.assertGreater(multi,0)
+        self.assertEqual(pair['output'],grid(call(solver('6e4f6532'),pair['input'])))
+        with self.assertRaises(ValueError):
+            dock.generate(width=15,height=15,thickness=2,divider=True)
+        rotate=importlib.import_module('tasks.task_6ffbe589')
+        random.seed(41000)
+        pair=rotate.generate(size=30,box_size=20,colors=[1,2,3,4],
+                             legend_sizes={1:4,2:8},top=0,left=0)
+        self.assertEqual(pair['output'],[row[:20] for row in pair['input'][:20]])
+        self.assertEqual(pair['output'],grid(call(solver('6ffbe589'),pair['input'])))
+        with self.assertRaises(ValueError):
+            rotate.generate(size=20,box_size=24)
+        with self.assertRaises(ValueError):
+            rotate.generate(size=20,figure=['110','010','011'],top=2,left=6,
+                            legend=[(1,[(-1,1)])])
+
     def test_episode_contract_and_disjoint_splits(self):
         with tempfile.TemporaryDirectory() as directory:
             previous=b.OUT;b.OUT=Path(directory);(b.OUT/'pools').mkdir()

@@ -74,13 +74,33 @@ def require_colour_evidence(task_id, demonstrations, queries, palette=None, d4=0
                        'dbc1a6ce', 'dc1df850', 'dd6b8c4b', 'dce56571',
                        'e45ef808', 'e345f17b', 'e3497940',
                        'e760a62e', 'e8593010', 'e99362f0', 'e6de6e8f',
-                       '37d3e8b2', 'ba9d41b8'):
+                       '37d3e8b2', 'ba9d41b8', 'd2abd087', 'e39e9282'):
         return
     palette = list(range(10)) if palette is None else palette
     bg = palette[0]
     colours = lambda g: {c for row in g for c in row} - {bg}
     required, seen = set(), set()
-    if task_id == 'ba9d41b8':
+    if task_id == 'd2abd087':
+        # Both branches have arbitrary paint colours; observe a corresponding
+        # demonstration before asking for that branch on the query.
+        for demo in demonstrations:
+            for cells in _colour_components(demo['input'], palette[5]):
+                branch = len(cells) == 6
+                ink = palette[2] if branch else palette[1]
+                if all(demo['output'][r][c] == ink for r, c in cells):
+                    seen.add(branch)
+        for query in queries:
+            required.update(len(cells) == 6 for cells in
+                            _colour_components(query['input'], palette[5]))
+    elif task_id == 'e39e9282':
+        # Every generated block has at least one marker and undergoes its
+        # colour-specific action, making a demonstrated block informative.
+        roles = {palette[5], palette[6]}
+        for demo in demonstrations:
+            seen.update(v for row in demo['input'] for v in row if v in roles)
+        for query in queries:
+            required.update(v for row in query['input'] for v in row if v in roles)
+    elif task_id == 'ba9d41b8':
         def variants(g):
             boxes = []
             for colour in {v for row in g for v in row} - {bg}:

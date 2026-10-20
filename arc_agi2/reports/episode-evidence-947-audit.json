@@ -1,0 +1,65 @@
+{
+  "checked_at": 1792522553.532532,
+  "reports": [
+    {
+      "task_id": "6a1e5592",
+      "sampled_episodes": 20,
+      "accepted_episodes": 20,
+      "missing_evidence_episodes": 0,
+      "verified_augmented_records": 160,
+      "sampler_rejections": [],
+      "errors": [],
+      "passed": true
+    },
+    {
+      "task_id": "d2abd087",
+      "sampled_episodes": 20,
+      "accepted_episodes": 20,
+      "missing_evidence_episodes": 0,
+      "verified_augmented_records": 160,
+      "sampler_rejections": [],
+      "errors": [],
+      "passed": true
+    },
+    {
+      "task_id": "e39e9282",
+      "sampled_episodes": 20,
+      "accepted_episodes": 19,
+      "missing_evidence_episodes": 1,
+      "verified_augmented_records": 152,
+      "sampler_rejections": [],
+      "errors": [],
+      "passed": true
+    },
+    {
+      "task_id": "e681b708",
+      "sampled_episodes": 20,
+      "accepted_episodes": 20,
+      "missing_evidence_episodes": 0,
+      "verified_augmented_records": 160,
+      "sampler_rejections": [],
+      "errors": [],
+      "passed": true
+    }
+  ],
+  "source_hashes": {
+    "6a1e5592": {
+      "constructor": "100fe85b58bb06d6085c258c5da918593ac345b643334fe58a19df07b8d27f15",
+      "factory": "d07a465f1852e71a89dbb5f1c8af38e7b645e203920cb8939eeb5be14fc88284"
+    },
+    "d2abd087": {
+      "constructor": "50c2467c99905e15604db7f2d8002988f6d9ae9f4923fc8ba5fc509bfb230176",
+      "factory": "abc2a87e7546b228c14d619046c4ea943da1997449f60dcf588048cdacf04222"
+    },
+    "e39e9282": {
+      "constructor": "3f57ad299fa735e9861e0e8854003e4b30c50062ea02faf1234dabf1ffefacbd",
+      "factory": "b18027b3c1551eb9257374cc3678f7b4300bfbfb640cb92f11752a38f6604151"
+    },
+    "e681b708": {
+      "constructor": "4e2f0ebb39f2b1b4463555ec7a2339d23324d57caeddbe20a8797fb58c5e995f",
+      "factory": "ce222ed714ee55007c3ffaaf0babc2179550682e4a6f52d8af5e5a51caa356c9"
+    }
+  },
+  "common_sha256": "4f0e06022661a3cc457bb0ff3895cd046189049047c26b744f8c73157bb859f0",
+  "evidence_gate_sha256": "dd565bfa53a68af80f15a0fdbbd317e3b729363522dd2cd68d341ab879f3c67f"
+}

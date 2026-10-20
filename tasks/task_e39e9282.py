@@ -17,6 +17,42 @@
 import common
 
 
+def _sample_markers(size, brows, bcols, bcolors):
+  """Choose legal side markers with unique output destinations per block."""
+  ids = common.grid(size, size, -1)
+  for idx, (r, c) in enumerate(zip(brows, bcols)):
+    common.rect(ids, 3, 3, r, c, idx)
+  prows, pcols, pidxs = [], [], []
+  for idx, (brow, bcol, color) in enumerate(zip(brows, bcols, bcolors)):
+    options = []
+    for prow, pcol in [(r, c) for r in (-1, 3) for c in range(3)] + [
+        (r, c) for r in range(3) for c in (-1, 3)]:
+      r, c = brow + prow, bcol + pcol
+      if not (0 <= r < size and 0 <= c < size): continue
+      neighbors = {common.get_pixel(ids, r+dr, c+dc)
+                   for dr in (-1, 0, 1) for dc in (-1, 0, 1)} - {-1}
+      if neighbors != {idx}: continue
+      if color == 6:
+        destination = (1 if prow in (-1, 3) else prow,
+                       1 if pcol in (-1, 3) else pcol)
+      else:
+        destination = (max(0, min(2, prow)), max(0, min(2, pcol)))
+      options.append((prow, pcol, destination))
+    wanted = common.randint(1, 5)
+    chosen, destinations = [], set()
+    for prow, pcol, destination in common.shuffle(options):
+      if destination in destinations: continue
+      destinations.add(destination)
+      chosen.append((prow, pcol))
+      if len(chosen) == wanted: break
+    if len(chosen) != wanted: return None
+    for prow, pcol in chosen:
+      prows.append(prow)
+      pcols.append(pcol)
+      pidxs.append(idx)
+  return prows, pcols, pidxs
+
+
 def generate(size=None, brows=None, bcols=None, bcolors=None, prows=None,
              pcols=None, pidxs=None):
   """Returns input and output grids according to the given parameters.
@@ -73,21 +109,19 @@ def generate(size=None, brows=None, bcols=None, bcolors=None, prows=None,
     size = 2 * common.randint(4, 7) + 1
     num_blocks = common.randint(1, 3)
     if size >= 13: num_blocks = common.randint(2, 7)
-    while True:
-      brows = [common.randint(0, size - 3) for _ in range(num_blocks)]
-      bcols = [common.randint(0, size - 3) for _ in range(num_blocks)]
-      if common.overlaps(brows, bcols, [3] * num_blocks, [3] * num_blocks, 1):
-        continue
+    for _ in range(2000):
+      placement = common.place_rectangles(
+          size, size, [3] * num_blocks, [3] * num_blocks, spacing=1)
+      if placement is None: continue
+      brows, bcols = placement
       bcolors = [common.randint(5, 6) for _ in range(num_blocks)]
-      prows, pcols, pidxs = [], [], []
-      for idx in range(num_blocks):
-        for _ in range(common.randint(1, 5)):
-          cdir = common.randint(0, 1)
-          prows.append(common.choice([-1, 3]) if cdir else common.randint(0, 2))
-          pcols.append(common.randint(0, 2) if cdir else common.choice([-1, 3]))
-          pidxs.append(idx)
+      markers = _sample_markers(size, brows, bcols, bcolors)
+      if markers is None: continue
+      prows, pcols, pidxs = markers
       grid, _ = draw()
       if grid: break
+    else:
+      raise RuntimeError("bounded sampler failed to place all blocks and markers")
 
   grid, output = draw()
   return {"input": grid, "output": output}

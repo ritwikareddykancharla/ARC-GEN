@@ -35,7 +35,7 @@ recorded. Passing finite audits does not prove unrestricted generalization.
 
 - 213 native direct-coordinate certificates admitted after fresh audits and
   supplied-fixture checks.
-- 724 admitted factories. Each passed 1,000 fresh pairs, 8,000 augmented pair
+- 728 admitted factories. Each passed 1,000 fresh pairs, 8,000 augmented pair
   checks and 16 supplied-fixture variants. Their audit records retain draft
   limitations and source/constructor hashes. These checks are finite evidence,
   not proof of correctness on every generated input.
@@ -46,7 +46,7 @@ recorded. Passing finite audits does not prove unrestricted generalization.
   counts must be computed as a union, not added.
 - Local exporter test: 18 fresh base episodes, 144 augmented PNG/program/grid
   records. It requested 20 bases and reported a two-episode shortfall.
-- The union currently admits 943 of 1,120 families; 177 still need direct
+- The union currently admits 947 of 1,120 families; 173 still need direct
   augmented program admission. Constructor coverage and program coverage are
   different gates.
 - Synthetic labels for `00d62c1b` now fill every enclosed background component,
@@ -459,3 +459,48 @@ counterexample. It remains on semantic hold; no labels were changed.
 
 Bulk generation has not launched. The production target remains 1,000 fresh
 episodes per family, with program and grid together, then D4 augmentation.
+
+## Marker, room and assignment checkpoint: 947 verified families
+
+Four more program families are admitted: `6a1e5592`, `d2abd087`, `e39e9282`,
+and `e681b708`. The union is **947/1,120**, leaving **173**; 728 factories have
+fresh execution certificates.
+
+- `d2abd087`: pack all requested 3..6 sprite boxes with spacing, retaining the
+  original dimensions and biased 4..8-pixel connected shapes. Demonstrations
+  must teach each query-required size/paint branch.
+- `e39e9282`: pack all blocks and select side markers with unique destinations
+  and exactly one neighbouring block. Preserve up to seven blocks and up to five
+  markers per block. Demonstrations must evidence any queried absorb/dissolve
+  colour role. One of 20 sampled episodes lacked that evidence and was excluded.
+- `e681b708`: retain the 16..30-cell axes and partial wall layouts, but reject
+  nonrectangular open rooms. A saved counterexample showed that the old
+  constructor could label L-shaped rooms using a bounding rectangle that crossed
+  an internal wall. Every supplied fixture and the archived explanation use
+  rectangular rooms. Dot sampling now uses only eligible cells with unique
+  perimeter votes and rechecks at least two dot colours after isolation filtering.
+- `6a1e5592`: pack ceiling/floor spans while retaining all three/four pieces.
+  A saved fresh counterexample proved pairwise footprint inequality insufficient:
+  a piece could cover several bays, allowing different complete output paintings.
+  An independent visible-input search now verifies unique complete placement,
+  requiring all pieces. It rejects ambiguity and budget exhaustion. Every supplied
+  fixture has a unique painting matching its original label.
+
+These changes preserve supplied fixture hashes. Randomized packing and the
+explicit validity/uniqueness filters change sampling distributions; no uniform
+sampling or coverage of every latent combination is claimed. Each factory passed
+1,000 fresh draws, 8,000 augmented checks and 16 supplied-fixture variants with
+zero sampler rejections. Unique inputs: 1,000 for all except `e39e9282` (998).
+
+Complete-episode verification accepted 79/80 base episodes and checked all 632
+augmented records exactly. The exclusion was missing demonstration evidence,
+not a discarded solver mismatch. Evidence:
+`reports/episode-evidence-947-audit.json`. **350 regression tests passed**.
+
+Separately, `f3b10344` remains on semantic hold: a legal 25x25 five-box scene
+produces 24 differing cells between the constructor's trimmed bridge blocking
+rule and the archived solver's full-width blocking rule. The counterexample is
+in `reports/f3b10344-bridge-boundary-investigation.json`; no labels were changed.
+
+Bulk generation and training have not started. Target: 1,000 fresh episodes per
+family, program and grid together, followed by consistent D4 augmentation.

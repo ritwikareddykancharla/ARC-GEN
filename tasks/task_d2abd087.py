@@ -31,12 +31,15 @@ def generate(rows=None, cols=None, idxs=None, brows=None, bcols=None, size=10):
   if rows is None:
     num_sprites = common.randint(3, 6)
     # Choose dimensions for the sprites & find non-overlapping positions.
-    while True:
+    for _ in range(2000):
       wides = [common.randint(2, 4) for _ in range(num_sprites)]
       talls = [6 - wide for wide in wides]
-      brows = [common.randint(0, size - tall) for tall in talls]
-      bcols = [common.randint(0, size - wide) for wide in wides]
-      if not common.overlaps(brows, bcols, wides, talls, 1): break
+      placement = common.place_rectangles(size, size, wides, talls, spacing=1)
+      if placement is not None:
+        brows, bcols = placement
+        break
+    else:
+      raise RuntimeError("bounded sampler failed to place all sprites")
     # Finally, choose the sprite contents (leaning towards sixes).
     counts = [common.randint(4, 8) for _ in range(num_sprites)]
     counts = [count if common.randint(0, 2) else 6 for count in counts]

@@ -17,6 +17,48 @@
 import common
 
 
+def _rectangular_rooms(grid):
+  """Reject wall layouts whose open components are not rectangular rooms."""
+  height, width = len(grid), len(grid[0])
+  free = {(r, c) for r in range(height) for c in range(width) if grid[r][c] == 0}
+  while free:
+    cells = {free.pop()}
+    stack = list(cells)
+    while stack:
+      r, c = stack.pop()
+      for p in ((r-1, c), (r+1, c), (r, c-1), (r, c+1)):
+        if p in free:
+          free.remove(p)
+          cells.add(p)
+          stack.append(p)
+    rs, cs = zip(*cells)
+    if len(cells) != (max(rs)-min(rs)+1)*(max(cs)-min(cs)+1):
+      return False
+  return True
+
+
+def _room_color(grid, prow, pcol):
+  """Original perimeter vote, returning None for nonrectangular/tied regions."""
+  height, width = len(grid), len(grid[0])
+  left, right, bottom, top = pcol, pcol, prow, prow
+  while bottom + 1 < height and grid[bottom][pcol] == 0: bottom += 1
+  while top > 0 and grid[top][pcol] == 0: top -= 1
+  while left > 0 and grid[prow][left] == 0: left -= 1
+  while right + 1 < width and grid[prow][right] == 0: right += 1
+  subset = []
+  for row in range(top, bottom + 1):
+    for col in range(left, right + 1):
+      if top < row < bottom and left < col < right: continue
+      if grid[row][col] not in (0, 1): subset.append(grid[row][col])
+      if row in (0, height - 1) or col in (0, width - 1): continue
+      if grid[row][col] == 0: return None
+  if not subset: return None
+  counts = {c: subset.count(c) for c in set(subset)}
+  best = max(counts.values())
+  winners = [c for c, n in counts.items() if n == best]
+  return winners[0] if len(winners) == 1 else None
+
+
 def generate(width=None, height=None, rows=None, cols=None, lefts=None,
              rights=None, tops=None, bottoms=None, colors=None, prows=None,
              pcols=None):
@@ -36,7 +78,7 @@ def generate(width=None, height=None, rows=None, cols=None, lefts=None,
     pcols: The column indices of the pixels.
   """
 
-  def draw(debug=False):
+  def draw(debug=False, require_two_colors=True):
     # Check that some line always connects to one side of the grid.
     if 0 not in lefts or 0 not in tops:
       if debug: print("No left or top.")
@@ -96,34 +138,10 @@ def generate(width=None, height=None, rows=None, cols=None, lefts=None,
     # Determine the colors of the pixels.
     pcolors = []
     for prow, pcol in zip(prows, pcols):
-      left, right, bottom, top = pcol, pcol, prow, prow
-      while bottom + 1 < height and grid[bottom][pcol] == 0:
-        bottom += 1
-      while top > 0 and grid[top][pcol] == 0:
-        top -= 1
-      while left > 0 and grid[prow][left] == 0:
-        left -= 1
-      while right + 1 < width and grid[prow][right] == 0:
-        right += 1
-      subset = []
-      for row in range(top, bottom + 1):
-        for col in range(left, right + 1):
-          if top < row < bottom and left < col < right: continue
-          if grid[row][col] not in [0, 1]: subset.append(grid[row][col])
-          if row in [0, height - 1] or col in [0, width - 1]: continue
-          if grid[row][col] == 0:
-            if debug: print("Expected a line here.")
-            return None, None, None, None  # We expected a line here.
-      if not subset: return None, None, None, None
-      counts = [subset.count(c) for c in subset]
-      max_count = max(counts)
-      subset = [c for c, count in zip(subset, counts) if count == max_count]
-      subset = list(set(subset))
-      if len(subset) != 1:
-        if debug: print("Multiple maximum counts.")
-        return None, None, None, None  # Multiple maximum counts.
-      pcolors.append(subset[0])
-    if len(set(pcolors)) < 2:
+      color = _room_color(grid, prow, pcol)
+      if color is None: return None, None, None, None
+      pcolors.append(color)
+    if require_two_colors and len(set(pcolors)) < 2:
       if debug: print("Not enough colors.")
       return None, None, None, None
     # Draw the pixels.
@@ -148,7 +166,7 @@ def generate(width=None, height=None, rows=None, cols=None, lefts=None,
     return grid, output, kept_prows, kept_pcols
 
   if width is None:
-    while True:
+    for _ in range(10000):
       base = common.randint(18, 28)
       width, height = base + common.randint(-2, 2), base + common.randint(-2, 2)
       num_rows, num_cols = common.randint(2, 3), common.randint(2, 3)
@@ -174,16 +192,30 @@ def generate(width=None, height=None, rows=None, cols=None, lefts=None,
       num_colors = (num_rows + 2) * (num_cols + 2)
       options = [3] * 15 + [2] * 10 + [4] * 6 + [8] * 3 + [6]
       colors = common.choices(options, num_colors)
+      # First validate the wall topology without committing to dot positions.
       prows, pcols = [], []
+      wall_grid, _, _, _ = draw(require_two_colors=False)
+      if wall_grid is None: continue
+      # Perimeter votes describe rooms only when each open component is a
+      # rectangle. An L-shaped region can otherwise count markers across an
+      # internal wall, contradicting the room-majority rule in the fixtures.
+      if not _rectangular_rooms(wall_grid): continue
       for row in range(height):
         for col in range(width):
+          if wall_grid[row][col] != 0: continue
+          if _room_color(wall_grid, row, col) is None: continue
           if common.randint(0, 9): continue
           prows.append(row)
           pcols.append(col)
       grid, _, kept_prows, kept_pcols = draw()
-      if grid:
-        prows, pcols = kept_prows, kept_pcols
-        break
+      if grid is None: continue
+      prows, pcols = kept_prows, kept_pcols
+      # Isolation filtering can remove the only dot of a second colour.
+      # Recheck rather than returning an invalid final pair.
+      grid, _, _, _ = draw()
+      if grid is not None: break
+    else:
+      raise RuntimeError("bounded sampler failed to construct coloured rooms")
 
   grid, output, _, _ = draw()
   return {"input": grid, "output": output}

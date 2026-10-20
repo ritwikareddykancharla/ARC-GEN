@@ -1,0 +1,37 @@
+{
+  "task_id": "e681b708",
+  "factory_sha256": "ce222ed714ee55007c3ffaaf0babc2179550682e4a6f52d8af5e5a51caa356c9",
+  "constructor_sha256": "4e2f0ebb39f2b1b4463555ec7a2339d23324d57caeddbe20a8797fb58c5e995f",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 137112758653459,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 21.24902175005991,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The generator draws straight wall lines in colour 1. Every line ends at a perpendicular line or at the grid border, so every room is a rectangle. Markers (colours other than 0 and 1) sit at line junctions and at line ends on the border. Each isolated pixel's colour is the strict majority of the marker cells on its room's bounding perimeter, corners included. The generator finds that perimeter by walking out from the pixel to the walls; when a room touches the grid edge, the edge row or column acts as the perimeter.\n\nThe emitted program rebuilds this directly in visible coordinates:\n1. Dots are line-coloured cells with no non-background 4-neighbour.\n2. Rooms are the 4-connected components of background plus dots.\n3. For each room, collect the set of marker cells in the 8-neighbourhood of the room's cells. This ring equals the generator's rectangle perimeter, including diagonal corner markers and edge-touching cases.\n4. Take the majority colour of that set and recolour the room's dots with it.\n\nEvery step (4-connectivity, 8-neighbour ring, counting) is invariant under rotation and reflection, so d4 needs no axis specialisation. Only colour roles are specialised: background is palette[0], line colour is palette[1], and all other colours count as markers.",
+    "limitations": "1. Ties: the generator rejects any room whose perimeter vote is tied, so ties are outside the domain. The emitted program still breaks a tie deterministically by taking the smallest colour value. That choice is not a puzzle rule and does not commute with palette permutation, so it should only matter off-domain.\n2. Background and line roles are taken as the fixed constants palette[0] and palette[1] rather than inferred from the demonstrations. This assumes the host applies a consistent colour mapping across the whole episode.\n3. Rooms with no dots, or with no adjacent markers, are left unchanged. The generator never produces a dot room without markers.\n4. Constructor check: the generator walks out from each pixel before any pixels are drawn, so other pixels never block the walk. This matches treating dots as open space. I found no constructor indexing defect that changes the visible rule.\n5. The fixtures appear consistent with the uniform majority rule. No tests have been run.",
+    "host_review": "Archived rule and every supplied fixture have rectangular connected open rooms. A saved counterexample showed the original generator could create L-shaped rooms and count markers across internal walls. Random generation now requires rectangular open components, independently of solver predictions, preserving partial walls/T junctions. Within a rectangle the perimeter vote equals the solver eight-neighbour boundary marker set; dots are isolated. Original fixtures unchanged. New sampler verifies two dot colours after isolation filtering.",
+    "host_sampler_revision": "Separate wall-topology construction from legal dot placement. Preserve16..30 canvas axes, original2..3 random horizontal/vertical line counts, endpoint constraints and intersection-colour distribution; sample dots at10% on eligible background cells. Reject nonrectangular rooms and tied/absent perimeter votes. Bound10k attempts. This conditions geometry and changes the scene distribution; no uniformity claim.",
+    "repair_verification": {
+      "task_id": "e681b708",
+      "factory_sha256": "ce222ed714ee55007c3ffaaf0babc2179550682e4a6f52d8af5e5a51caa356c9",
+      "constructor_sha256": "4e2f0ebb39f2b1b4463555ec7a2339d23324d57caeddbe20a8797fb58c5e995f",
+      "passed": true,
+      "fresh_pairs_checked": 1000,
+      "augmented_pair_checks": 8000,
+      "fixture_variants_checked": 16,
+      "sampler_rejections": [],
+      "seed": 137112758653459,
+      "d4": 7,
+      "unique_base_inputs": 1000,
+      "seconds": 21.24902175005991
+    }
+  }
+}

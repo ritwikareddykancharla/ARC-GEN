@@ -1,0 +1,37 @@
+{
+  "task_id": "6a1e5592",
+  "factory_sha256": "d07a465f1852e71a89dbb5f1c8af38e7b645e203920cb8939eeb5be14fc88284",
+  "constructor_sha256": "100fe85b58bb06d6085c258c5da918593ac345b643334fe58a19df07b8d27f15",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 13932905916369,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 9.971820874954574,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "In the original task a red (2) ceiling runs along the top. Black (0) bays are cut into it, and gray (5) pieces lie on the floor. Each piece is moved by translation only into the bay whose shape matches the part of the piece inside the ceiling band. The moved piece is painted blue (1) and its old floor cells are erased to black.\n\nThe factory works out which side the ceiling is on from d4. A row reversal leaves the top edge on top. Each clockwise turn then moves the top edge to the right, then the bottom, then the left. So d4%4 = 0, 1, 2, 3 puts the ceiling at top, right, bottom, left.\n\nThe ceiling band is found directly in visible coordinates. It runs from the ceiling edge to the farthest row or column (along the ceiling axis) that holds any red. Colour roles are the constants palette[2], palette[0], palette[5] and palette[1].\n\nBays are the 4-connected black components inside the band. Pieces are the 4-connected gray components. For every piece and every translation that keeps it inside the grid, a candidate is kept when:\n- it covers no red cell;\n- its in-band cells are non-empty and all lie in bays;\n- those cells exactly fill the bays they touch.\n\nIf a piece covers exactly one bay, this is the archived exact-equality fit. If it covers several, it handles a piece whose top row is split into separate parts.\n\nA backtracking exact-cover search then assigns candidates. Each bay must be covered exactly once, pieces must be distinct, and placed cells must not overlap. At each step it picks the bay with the fewest remaining options, so forced choices come first, as in the corrected rule. The search first requires every piece to be used and, if that fails, accepts any cover of all bays. Every assigned piece is erased and stamped blue at its new place. If no assignment exists, the input is returned unchanged, as the archived solver does.",
+    "limitations": "- **Ties between full solutions.** When several complete assignments are valid, the choice follows piece reading order and translation order in visible coordinates. This may differ from the archived solver's order under D4. The generator's footprint-uniqueness check makes such ties essentially absent.\n- **Split bays.** Treating a piece's band part as possibly covering more than one bay component goes beyond the archived solver. It only adds solutions in cases where the archived solver would have failed and returned the input unchanged.\n- **Ceiling side.** The ceiling side comes from d4, not from the pixels.\n- **Testing.** No tests were run.\n- **Fixtures.** No contradictions between the fixtures and the rule were found.",
+    "host_review": "Visible-coordinate exact-cover source reviewed. Ceiling orientation followsD4; pieces translate without rotations and fully cover all touched bay components. Pairwise footprint inequality was insufficient: a saved fresh counterexample has distinct assignments producing different painted outputs under reflection. Constructor now independently enumerates complete visible-input assignments, requires all pieces and one distinct output painting, and rejects ambiguity or node-budget exhaustion. Every supplied fixture has one painting matching its label. No query answers used in the uniqueness check.",
+    "host_sampler_revision": "Bounded one-dimensional packing selects disjoint horizontal spans for ceiling and floor pieces. Preserve original3/4 shape count, width1..4, height2..4, random connected creatures, convex ceiling, and footprint conditions. Add full assignment uniqueness rather than changing solver tie order. Original supplied fixtures unchanged; distribution conditioned on fitting and uniqueness, not uniform.",
+    "repair_verification": {
+      "task_id": "6a1e5592",
+      "factory_sha256": "d07a465f1852e71a89dbb5f1c8af38e7b645e203920cb8939eeb5be14fc88284",
+      "constructor_sha256": "100fe85b58bb06d6085c258c5da918593ac345b643334fe58a19df07b8d27f15",
+      "passed": true,
+      "fresh_pairs_checked": 1000,
+      "augmented_pair_checks": 8000,
+      "fixture_variants_checked": 16,
+      "sampler_rejections": [],
+      "seed": 13932905916369,
+      "d4": 7,
+      "unique_base_inputs": 1000,
+      "seconds": 9.971820874954574
+    }
+  }
+}

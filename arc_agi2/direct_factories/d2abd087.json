@@ -1,0 +1,37 @@
+{
+  "task_id": "d2abd087",
+  "factory_sha256": "abc2a87e7546b228c14d619046c4ea943da1997449f60dcf588048cdacf04222",
+  "constructor_sha256": "50c2467c99905e15604db7f2d8002988f6d9ae9f4923fc8ba5fc509bfb230176",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 19311201209579,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 3.2543066670186818,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "Each grey shape (palette[5]) is found as a 4-connected component in the visible grid. A shape with exactly 6 cells is painted palette[2] (red). Every other shape is painted palette[1] (blue). Background cells stay unchanged. Rotations and reflections preserve both 4-adjacency and cell counts, so the program needs no axis or direction specialisation. The emitted program works directly on the visible coordinates with the permuted colour constants. It has no normalisation wrapper and does not unpermute any colours. The two paint stages mirror the archived solver: size-6 shapes first, then the rest.",
+    "limitations": "This relies on the generator's non-overlap padding of 1, which keeps distinct sprites from touching orthogonally. The generator assigns colour by sprite index count, not by visible connectivity. If two sprites ever touched, their pixels would merge into one visible component and the label would disagree with the visible rule. With padding 1 that should not happen, but the host should check the overlaps semantics. The program also assumes continuous_creature yields 4-connected sprites. If it allowed diagonal-only connections, one sprite would split into several visible components and its size would be misjudged. That would be a constructor defect for host review, not a rule to reproduce. Grids are handled for any rectangular shape, and shapes touching the boundary are handled normally. I found no fixture contradictions: all train and test pairs follow the size-6 rule.",
+    "host_review": "common.continuous_creature grows via four-neighbour frontier, guaranteeing connected sprites. Bounding-box spacing keeps them distinct. Visible component size decides six-cell red versus other-size blue; D4 preserves count/connectivity. New demo-only evidence gate requires each query-needed paint branch to occur correctly in demonstrations. Fixtures unchanged.",
+    "host_sampler_revision": "Bounded packing retains requested 3..6 sprites, widths2..4, complementary heights6-width, size10 grid, original biased4..8 pixel counts, and padding1. Impossible dimension sets are resampled without reducing count; bounded exhaustion raises. Layout distribution is changed and not uniform.",
+    "repair_verification": {
+      "task_id": "d2abd087",
+      "factory_sha256": "abc2a87e7546b228c14d619046c4ea943da1997449f60dcf588048cdacf04222",
+      "constructor_sha256": "50c2467c99905e15604db7f2d8002988f6d9ae9f4923fc8ba5fc509bfb230176",
+      "passed": true,
+      "fresh_pairs_checked": 1000,
+      "augmented_pair_checks": 8000,
+      "fixture_variants_checked": 16,
+      "sampler_rejections": [],
+      "seed": 19311201209579,
+      "d4": 7,
+      "unique_base_inputs": 1000,
+      "seconds": 3.2543066670186818
+    }
+  }
+}

@@ -2327,4 +2327,29 @@ class GeneratorTests(unittest.TestCase):
         self.assertEqual(sum(row.count(2) for row in p['input']),24)
         self.assertEqual(p['output'],grid(call(solver('a395ee82'),p['input'])))
 
+    def test_staircase_rejects_underdetermined_wall_hugging(self):
+        m=importlib.import_module('tasks.task_97c75046')
+        kw=dict(height=8,width=6,columns=[None,None,None,(5,7),(4,7),(3,7)],
+                marker=(1,5),transpose=False,flip_rows=False,flip_cols=False)
+        with self.assertRaisesRegex(ValueError,'hugging'):m.generate(**kw)
+        kw['marker']=(2,4)
+        with self.assertRaises(ValueError):m.generate(**kw)
+        for bad in ({'transpose':'no'},{'height':True},
+                    {'height':10,'columns':[None,5,(4,9)],'marker':(1,2)}):
+            with self.assertRaises(ValueError):m.generate(**bad)
+
+    def test_staircase_orientation_and_canonical_size_contract(self):
+        m=importlib.import_module('tasks.task_97c75046')
+        for transpose in (False,True):
+            for rows in (False,True):
+                for cols in (False,True):
+                    random.seed(86000)
+                    p=m.generate(height=6,width=30,transpose=transpose,
+                                 flip_rows=rows,flip_cols=cols)
+                    self.assertEqual((len(p['input']),len(p['input'][0])),
+                                     (30,6) if transpose else (6,30))
+                    self.assertEqual(sum(row.count(5) for row in p['output']),1)
+                    self.assertNotEqual(p['input'],p['output'])
+                    self.assertEqual(p['output'],grid(call(solver('97c75046'),p['input'])))
+
 if __name__=='__main__':unittest.main()

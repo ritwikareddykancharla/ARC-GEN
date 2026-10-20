@@ -10,6 +10,43 @@ from .task_registry import NEW_TASK_IDS
 from .augmentation import apply_episode,settings,exhaustive_variants
 
 class GeneratorTests(unittest.TestCase):
+    def test_legend_bounds_pointer_precedence_marker_palette_and_connected_shape(self):
+        legend=importlib.import_module('tasks.task_3e6067c3')
+        random.seed(30000)
+        p=legend.generate(width=30,height=30,bg=8,frame=1,size=6,core=2)
+        self.assertEqual((len(p['input']),len(p['input'][0])),(30,30))
+        self.assertEqual(p['input'][-2],p['output'][-2])
+        self.assertTrue(all(x==y or x==8 for a,z in zip(p['input'],p['output']) for x,y in zip(a,z)))
+        with self.assertRaisesRegex(ValueError,'cannot fit'):
+            legend.generate(width=8,height=8,size=6,core=2)
+        with self.assertRaisesRegex(ValueError,'require explicit'):
+            legend.generate(rows=[1,8])
+        pointer=importlib.import_module('tasks.task_409aa875')
+        shapes=[(8,3,0,1),(3,8,1,0)]
+        p=pointer.generate(shapes=shapes,width=16,height=16,color=6)
+        self.assertEqual(p['output'][8][8],1)
+        p=pointer.generate(shapes=shapes+[(8,8,-1,0)],width=16,height=16,color=6)
+        # A shared target on a shape triggers whole-shape recolouring, not 1.
+        self.assertEqual([p['output'][r][c] for r,c in [(8,8),(9,7),(9,9)]],[9,9,9])
+        p=pointer.generate(shapes=[(1,5,-1,0)],width=16,height=16,color=6)
+        self.assertEqual(p['input'],p['output'])
+        jigsaw=importlib.import_module('tasks.task_446ef5d2')
+        for seed in range(30000,30010):
+            random.seed(seed)
+            p=jigsaw.generate(height=30,width=30,marker=4,corner='br')
+            counts=Counter(c for row in p['input'] for c in row)
+            self.assertEqual(counts[4],3)
+            self.assertNotEqual(counts.most_common(1)[0][0],4)
+            self.assertNotIn(4,{c for row in p['output'] for c in row})
+            self.assertEqual(p['output'],grid(call(solver('446ef5d2'),p['input'])))
+        corners=importlib.import_module('tasks.task_4a21e3da')
+        with self.assertRaisesRegex(ValueError,'4-connected'):
+            corners.generate(height=12,width=12,shape=['#..','...','..#'],
+                             top=3,left=3,vmarker=('top',3))
+        with self.assertRaisesRegex(ValueError,'reach the crossing'):
+            corners.generate(height=12,width=12,shape=['##...','.####','....#'],
+                             top=3,left=3,vmarker=('top',3),hmarker=('left',5))
+
     def test_template_controls_dead_end_rooms_nearest_key_and_arch_cups(self):
         template=importlib.import_module('tasks.task_3a25b0d8')
         with self.assertRaisesRegex(ValueError,'Both sprites'):

@@ -1,0 +1,21 @@
+{
+  "task_id": "83302e8f",
+  "factory_sha256": "fe5f6a5a1a71a3d20f1204bb6868057c4edb1676a4c608edf30ebfe74f6c72b4",
+  "constructor_sha256": "d467a3f0ff35cc2725783895ccd5e59e64e11564a461be085e03b679c5f6c099",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 95350580531923,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 17.197873249999247,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The constructor builds an N x N lattice with N = size*(m+1)-1. Lines sit at positions p with p % (m+1) == m. Some line pixels are blanked to black. In the output every blanked pixel becomes yellow (4). A room becomes yellow when a blanked pixel lies on one of its walls away from an intersection; such a pixel joins the room above/below or left/right of it. Every other room stays green (3).\n\nWhy D4 needs no rewrite: this lattice maps onto itself under every D4 transform. Under reversal p -> N-1-p, and N-1-p is still congruent to m mod (m+1). The doorway-to-room adjacency also maps onto itself, so the visible-coordinate rule is the same for every d4.\n\nWhat the emitted program does:\n- Colour roles are fixed constants: background = palette[0], sealed = palette[3], open = palette[4]. The line colour is whatever non-background colour appears, so it is never needed by name.\n- It infers the lattice directly from the visible pixels. It looks for row and column periods (m >= 1, with (n+1) divisible by m+1) such that every non-background cell lies on a lattice line and every lattice line has at least one non-background cell, and keeps the coarsest pair. Spurious finer lattices fail because their extra lines would be all background. Coarser lattices fail because a true line can never be fully blanked: at most size*m < N pixels are blanked.\n- Every background cell on a line is painted open. Each non-intersection gap marks its two neighbouring rooms, found by integer division by the period, as open.\n- All remaining room cells are painted open if their room is marked, otherwise sealed.\n- If no lattice fits (out of domain), it falls back to the archived connected-component bounding-box test.",
+    "limitations": "Discrepancies with the archived solver, for host review:\n- The archived solver's rule (component size == bounding-box area -> 3) does not match the generator in two reachable cases.\n  - Case (a): a blanked intersection pixel with four intact neighbours is an isolated 1x1 component. The archived solver paints it 3, but the generator always paints every blanked pixel yellow (4).\n  - Case (b): if all m pixels of a wall segment between two rooms are blanked, or a 2x2 block of rooms is fully opened including the centre intersection, the merged component is a solid rectangle. The archived solver calls it sealed (3), but the generator paints it 4.\n  - This factory follows the generator's mechanism: every gap is 4, and a room is 4 iff a non-intersection gap lies on its wall. So it intentionally differs from the archived program in those cases.\n- Gap pixels at intersections do not open any room. That matches the generator and is consistent with connectivity, because an intersection only touches wall cells.\n- The approved fixtures agree with this rule; I did not check them by execution.\n- Domain assumptions:\n  - The line colour differs from palette[0].\n  - Grids follow the constructor's square lattice. Rectangular grids work if each dimension has the form k*(m+1)-1.\n  - Other shapes use the bounding-box fallback, which is heuristic.\n- d4 is unused because the lattice and rule are D4-invariant in visible coordinates.\n- No tests were run by me."
+  }
+}

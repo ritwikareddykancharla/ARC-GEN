@@ -1,0 +1,21 @@
+{
+  "task_id": "8e1813be",
+  "factory_sha256": "afad4d63f6645d8e1c603cc83058bb7b4faf53bf1d9657c778d77927726d2922",
+  "constructor_sha256": "11020304781a1b6a9f9870a6b5402db7bd5d447d0a401870e6bbafd671cd659f",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 12168451834721,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 4.847263749921694,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The generator draws n full-length stripes in rows offset, offset+3, and so on. Each stripe has a distinct colour. It then places a black-framed (n+2)x(n+2) box with an n x n gray interior. The box can cut stripes, but every stripe keeps cells outside it. The output is n x n, and output row i is the colour of the i-th stripe from the top. The whole episode may be transposed.\n\nThe emitted program works directly in visible coordinates. Background is the constant palette[0] and gray is palette[5].\n\n- **Output size:** the canvas is the size of the gray block's bounding box.\n- **Orientation:** each non-background, non-gray colour is classified as a horizontal line (all its cells in one row) or a vertical line (all in one column).\n- **Broken lines:** the two pieces of a cut line share a colour, so they count as one line.\n- **Painting:** the majority orientation is used. Lines are sorted by their row or column, and canvas row i (or column i) is painted with the i-th colour.\n\nUnder every D4 transform the input stripes and the output stripes move together. Reversing the visible row order also reverses the output row order, and a rotation turns rows into columns in both grids. So ascending visible position is always the correct order, and d4 needs no special handling. Only the palette constants are specialized. The grid's orientation is inferred per grid, because the generator transposes at random anyway.",
+    "limitations": "- **Palette assumption:** background and gray are taken as palette[0] and palette[5]. That matches the constructor, but it would fail if a host scene used other role colours.\n- **Degenerate lines:** a line could, in principle, be reduced to a single cell. The constructor's domain never produces this (width >= height >= 9 keeps at least 4 cells outside the box). Such a line would fall back to a bounding-box span comparison.\n- **No defects found:** the constructor and fixtures agree with the uniform rule. I found no indexing bugs or hidden tie-breaks.\n- **Untested:** I have not run any tests."
+  }
+}

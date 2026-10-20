@@ -1,0 +1,21 @@
+{
+  "task_id": "7ec998c9",
+  "factory_sha256": "e92389cdd0f3f6efcc1c0deff208a98c4912c10d4b06a9fcce6bf41ed15764b0",
+  "constructor_sha256": "b27e20fb3c6d1aa00ec6a6f609eb757797b8701bfa30ec70aa6c8d6ddd68623d",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 154216794948692,
+  "d4": 7,
+  "unique_base_inputs": 810,
+  "seconds": 2.474612583988346,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "Mechanism in the original frame: a single seed sits on a uniform background. Colour 1 fills the seed's entire column, keeping the seed itself. Row 0 gets an arm from the seed column to the left wall, and the last row gets an arm from the seed column to the right wall, forming an S/Z shape. When the seed is at the exact grid centre, both arms swap to the opposite sides.\n\nUnder D4 the stroke axis stays vertical for even rotation counts and becomes horizontal for odd ones. The shape's handedness can be written as one bit: does the arm at the low end of the stroke run toward the low or the high side of the perpendicular axis? This bit flips with each 90-degree rotation and with the initial row reversal, so parity = (d4%4 + [d4>=4]) % 2. I checked this by mapping the arm cells through flip and clockwise rotation.\n\nThe emitted program works directly in visible coordinates:\n- It finds the background as the most common colour and takes the seed as the non-background cell.\n- It draws the full stroke through the seed along the specialised axis.\n- It draws the two arms on the stroke's end lines, pointing in opposite directions. The handedness is parity XOR centred.\n- It restores the seed colour.\n\nColour 1 becomes the constant palette[1]. The grid centre is invariant under D4, so the centre test needs no change.",
+    "limitations": "Constructor note for host review: the generator's actual flip condition is row == col (seed on the main diagonal), not 'seed at centre'. Its sampling loop rejects diagonal seeds except when it forces the centre on odd sizes. Inside the generator's domain the two conditions are therefore identical. The emitted program uses the D4-invariant centre test, matching the archived solver, and does not encode the diagonal latent; the diagonal test would map to an anti-diagonal under some transforms. The rule rests on a single centred demonstration, as the rule notes say. The program does not learn from demonstrations; it relies on d4 and palette[1]. It assumes exactly one seed cell on a background that is the strict majority colour. With several non-background cells, it uses the first in row-major order. Rectangular grids are handled with separate H and W, although the generator only produces square grids sized 5-8. No tests were run."
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "task_id": "695367ec",
+  "factory_sha256": "e67e703c8dcf674ea06d8eb98d73d67e6e744ad43c87a4e502e2d31657ff6f9d",
+  "constructor_sha256": "6b9d80b76f0bbc5660af829d90a2718efb3db969554c81bfc2c2822966480190",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 26566021894382,
+  "d4": 7,
+  "unique_base_inputs": 36,
+  "seconds": 5.587835125043057,
+  "finite_default_domain": {
+    "exhaustive": true,
+    "cases_checked": 36,
+    "augmented_checks": 576,
+    "definition": "Four solid-square sizes times nine non-background colours: 36.",
+    "query_distinct_from_demos": true,
+    "scope": "Default native parameter distribution only; finite input count is not inflated by repeated sampling."
+  },
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "In the original task, an n x n solid square of colour c becomes a 15x15 canvas of colour 0. Every row or column with index i % (n+1) == n is painted colour c. A D4 transform of the square 15x15 canvas only reverses or swaps axes. The lattice treats rows and columns the same way, so the only thing that changes is whether each visible axis is reversed. On a reversed axis, line indices i become 14 - i. The factory hard-codes a reversal flag for each visible axis, derived by tracing (r, c) through the row reversal (for d4 >= 4) and the clockwise rotations. The emitted program reads n from the visible query's side length, which is unchanged by D4. It takes the line colour directly from the visible input pixels, using the majority colour. It fills the background with palette[0], since original black maps to palette[0]. It then paints the lattice lines in visible coordinates, measuring indices from the far edge on any reversed axis. No normalisation wrapper or colour unpermutation is used.",
+    "limitations": "This assumes the constructor's domain: a solid square input with side 2 to 5 and a fixed 15x15 output. If a non-square input appeared, the program would use the smaller side as n. It takes the line colour as the majority colour of the query input and ignores the demonstrations. This is not tested here; the host's verification is pending."
+  }
+}

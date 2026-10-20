@@ -1,0 +1,21 @@
+{
+  "task_id": "6d1d5c90",
+  "factory_sha256": "af2fc10c6588b774edfb1523857dfb85ba3dc14f93574f139df378672490bdce",
+  "constructor_sha256": "08aa5bdbea9050a4a25a28746ec3f04e940596e135f1160b8d220491994ec817",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 276598283143272,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 4.1368581670103595,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "Original mechanism: the left column is a control strip of colour 6 with one cell of colour 2 at row r. The output is the remaining picture rolled cyclically down by r rows. I mapped the strip side and the roll direction through the D4 transform. Horizontal flip sends left to right and keeps down as down. Each clockwise rotation sends left to top to right to bottom, and down to left to up to right. The emitted program crops the visible strip, which may be left, right, top or bottom. It finds the palette[2] marker in that strip and measures its distance from the strip end where the roll direction begins: from the start if the direction is +, from the end if it is \u2212. It then rolls the picture by that distance in the visible direction. Colour roles are the constants palette[2] and palette[6]. If the marker colour is not found, the program falls back to the odd-one-out cell in the strip. No colours are permuted and no grids are rotated.",
+    "limitations": "The program assumes exactly one marker cell in the strip, which is what the constructor guarantees. With several markers it uses the first one in visible order. Strip-side detection is fixed by d4 rather than inferred from the demonstrations, so inputs outside the generator's domain (no control strip) give arbitrary rolls. No constructor defects were found. The fixtures match the uniform rule: shifts of 0, 2, 3 and 1."
+  }
+}

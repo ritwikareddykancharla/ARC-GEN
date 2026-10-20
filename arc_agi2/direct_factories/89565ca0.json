@@ -1,0 +1,21 @@
+{
+  "task_id": "89565ca0",
+  "factory_sha256": "ef880b1ab5b7906e12631866ae572c71d86fa29893be86c3f987007202556651",
+  "constructor_sha256": "a6726afbf6997e39a3c57a2b9373bdda89eb21819f21c30c1696125657b4dedc",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 116858120867042,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 76.79143974999897,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "Most of the mechanism is unchanged by any D4 transform, so it runs as written in the visible grid. The transform matters in only two places: the background colour and the layout of the output.\n\nFixed by the factory:\n- The background constant is palette[0].\n- Three output-layout flags are taken from a table derived per d4:\n  - whether bars run down columns instead of along rows;\n  - whether rank 0 sits at the far end of the lane axis;\n  - whether bars grow from the far edge.\n\nWhat the emitted program does:\n1. **Noise colour.** It finds the non-background colour that forms the most 8-connected pieces and treats it as noise.\n2. **Wall repair.** For each frame colour it bridges covered runs on every row and every column. A covered run is non-background, foreign-coloured cells lying between two cells of the frame colour. A run is bridged if it is 1 cell long, or if it is 2-3 cells long and the wall continues past one of its ends. The repair repeats, each pass reading the walls repaired so far, so gap chains resolve. It uses the same 10-pass cap as the constructor's readability check, and stops early once stable. This rule treats both directions alike, so rotations and reflections need no rewriting.\n3. **Counting.** Inside the frame's visible bounding box, it counts 4-connected non-wall regions that do not touch the box border.\n4. **Ordering.** Frames are sorted by count, ascending. Ties are broken by visible crossing votes, horizontal or vertical: the frame that passes under the other goes first.\n5. **Output.** It builds the visible output directly. Each frame gets one lane per rank. Lanes are rows or columns as set by the d4 flags, and rank 0 is at the near or far end. Each lane is filled with frame colour for `count` cells from the d4-chosen edge, and the rest is noise-colour padding. The output is never built canonically and then rotated.",
+    "limitations": "- **Hidden tie-break (needs host review).** When two frames share a count and the crossing votes are equal, the archived solver falls back to comparing numeric colour values. That ordering is not visible and changes under the palette. The emitted program keeps this deterministic fallback, but it is not part of the rule. The constructor guarantees every tie has a visible crossing with the later-painted frame on top, so valid scenes should never reach the fallback.\n- **Pass cap.** Repair is capped at 10 passes to match the constructor's `_readable` check exactly. A scene whose gap chains need more than 10 passes would be out of the guaranteed domain.\n- **Noise selection.** The noise colour relies on the constructor's strict margin: noise pieces are at least the largest frame-colour piece count plus 2. Ties are therefore assumed not to occur.\n- **Background.** The background colour is taken from palette[0] rather than inferred from the grid.\n- **Edge-case outputs.** Scenes with no frame colours return a 1x1 grid. This cannot happen in the constructor's domain.\n- **No contradictions found.** I read the fixtures and saw nothing that contradicts the uniform rule, but no code was executed."
+  }
+}

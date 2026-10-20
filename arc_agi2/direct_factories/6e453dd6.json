@@ -1,0 +1,21 @@
+{
+  "task_id": "6e453dd6",
+  "factory_sha256": "ac43883a9445dfb4f353f27fadf6869b9cf1d1f69526b1bf74613911dbd2cc23",
+  "constructor_sha256": "e4013256766e046fdd4a3836acfc9a6655e9a39ab8261e8d94001de0ed1608ec",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 33904278247919,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 19.435717500047758,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The factory works out the visible direction of motion from d4. In the original task, shapes move east toward a vertical divider. A row mirror (d4 >= 4) turns east into west. Each clockwise turn then maps a direction (dr, dc) to (dc, -dr). This gives an axis flag (the divider is a column or a row) and a sign. The four colour roles become constants: background = palette[6], divider = palette[5], ink = palette[0], mark = palette[2].\n\nThe emitted program works directly in visible coordinates:\n1. It finds the full divider line, a column or a row depending on the axis.\n2. It collects the ink cells on the shape side, which is the side opposite the motion sign.\n3. It splits them into 8-connected components.\n4. It erases all ink, then translates each component rigidly along the motion axis until its extreme cell sits next to the divider.\n5. For each shifted shape, it examines every line parallel to the motion. A line is marked when the shape has a cell in the wall-adjacent position and that line's cells are not contiguous, meaning there is an internal background gap.\n6. Each marked line is painted with the mark colour from just past the divider to the far grid edge.\n\nThis matches the constructor's _render and _marked_rows mechanism, the archived solver, and all supplied fixtures.",
+    "limitations": "Nothing has been tested yet. Host verification is still required.\n\nThe side the shapes start on is taken from d4 rather than inferred from pixels. This matches the constructor, which always places shapes on the source side.\n\nIf several full divider-colour lines existed, the first one would be used. The generator never produces this.\n\nShapes are separated by blank lines perpendicular to the divider in the constructor, so rigid shifts cannot collide. Inputs outside that guarantee are not handled specially.\n\nNo contradictions between the fixtures and the uniform rule were found. No constructor defects were found: there are no random tie-breaks, and every random choice is visible in the input."
+  }
+}

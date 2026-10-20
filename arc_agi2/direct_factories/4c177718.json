@@ -1,0 +1,21 @@
+{
+  "task_id": "4c177718",
+  "factory_sha256": "8ef89f92d049ca93e79e554feb61bbdf613572f9f01095aec70ac0b518c26267",
+  "constructor_sha256": "2126aa640a26b51bdd87091ca2c16c1f6d598af43842d0391dbed1c9da970d08",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 279880793354160,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 9.506302083027549,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "Canonical mechanism: a full divider line of colour 5 separates a legend strip (1-sprite, colour-2 T, colour-c sprite, laid out along the canonical 'right' direction with the c-sprite 8 cells after the 1-sprite) from a scene containing a translated copy of the 1-sprite. Output is the scene crop with the c-sprite stamped 3 cells further along canonical 'down' (if the T's bar is at its top, i.e. the extreme with more 2-pixels lies at the minimum 'down' projection) or 3 cells back (bar at bottom), column-aligned via the 3x3 legend boxes. The factory maps canonical down/right unit vectors through the D4 transform to visible vectors DV/RV and specialises colours as palette constants. The emitted program finds the visible divider row/column of palette[5], crops the scene side (determined by sign of DV), computes the legend->scene translation of the 1-sprite (pure translation, so min-coordinate differences suffice), decides the bar side by projecting T pixels onto DV, and stamps each legend c-pixel at P - 8*RV + T + s*3*DV in visible coordinates. Using the actual legend layout (rather than pixel bounding boxes) keeps alignment exact even when sprites don't fill their 3x3 boxes.",
+    "limitations": "Assumes the constructor's layout: c-sprite box offset exactly 8 cells from the 1-sprite box along canonical right, single divider line, single 1-sprite in the scene, and c colour distinct from background/1/2/5. Stamps out of bounds are clipped (never occur in the generator's domain). No fixture contradictions observed."
+  }
+}

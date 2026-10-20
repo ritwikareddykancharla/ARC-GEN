@@ -1,0 +1,21 @@
+{
+  "task_id": "7837ac64",
+  "factory_sha256": "db4121668c038c57f767e64a816facc0c918785efd19dc521bc571a989378446",
+  "constructor_sha256": "5f9977cb9c1d09b9eb8dae4582a8d4701838a191ab7d4ed4758db3385d9815df",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 29095316457665,
+  "d4": 7,
+  "unique_base_inputs": 998,
+  "seconds": 48.440749541972764,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The mechanism has no preferred direction. Line rows and line columns are found the same way: they are full lines that contain no background pixel. Lattice cells are the gaps between adjacent line rows and adjacent line columns. The output window is the span of special intersections, measured in line indices. Each output cell takes the shared colour of its four corner intersections when all four agree on a special colour; otherwise it is background. Because every step works directly on visible rows and columns, a rotation or reflection of the whole episode carries the output along with it. The emitted program therefore has no axis-specific code and does not use d4. The only colour constant is the background, palette[0], which is used both to detect lines and to fill empty output cells. The line colour is found from the line pixels that are not intersections, and the special colours are read from the pixels themselves.",
+    "limitations": "One deliberate deviation from the archived solver concerns how the line colour is found. The archived solver takes the most common colour among intersections. In this constructor's domain that can be wrong. For example, with spacing 4 and size 6 there are only 5x5=25 intersections, and a legal colour layout can give one special colour 12 corners while only 9 corners keep the line colour. That would misidentify the line colour, so the emitted program reads the line colour from non-intersection line pixels instead. The host should review this as a defect in the archived solver, not in the fixtures.\n\nThe output follows the visible corner rule, as the archived solver and the rule text do. The generator writes its latent colour grid directly. I could not construct a legal latent layout where an empty latent cell has four matching special corners, so the two should agree; this is argued by hand and has not been run.\n\nIf no special intersections or no lattice exist, which is outside the domain, the program returns a 3x3 background grid. No tests were run."
+  }
+}

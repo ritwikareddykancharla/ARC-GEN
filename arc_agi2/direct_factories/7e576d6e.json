@@ -1,0 +1,21 @@
+{
+  "task_id": "7e576d6e",
+  "factory_sha256": "b7e2c5c97a577acdd8a72ec39f4e51374c1ed862a499eccf55d55f8330ac7c65",
+  "constructor_sha256": "f0d7abe2c143ceadc6fc3b7c2ba0c8e48a45a345d139131d0d16a09627dfbd8a",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 260618719242111,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 18.40414429199882,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The emitted program works directly in the visible grid's coordinates and never transposes or rotates it. It infers colour roles from pixels. The background is the most common colour. Walls are full rows or columns that contain no background cell. Each wall's own majority colour is its wall colour, and the other cells are its gate; the gate centre is the rounded mean index of those gate cells. The two non-background cells off the walls are the dots, and the path takes the start dot's colour. There are two explicit branches. For horizontal walls, the path moves along the column to the row just before each wall (w - d), slides along that row to the gate centre, and repeats. After the last wall it moves to the end dot's row and then slides to the end dot. For vertical walls the same mechanism runs with the axes swapped: it moves along the row to column w - d, slides vertically to the gate row, and so on. The final legs are horizontal to the end column, then vertical to the end dot. Moving from the slide point through the gate centre recolours only the middle gate cell; the two outer gate cells stay unchanged. The path is not symmetric: it starts with a leg perpendicular to the walls and ends with one parallel to them. So the start dot must be chosen correctly. The constructor always places the start at index 1 on the low-index side, on whichever axis crosses the walls, before its optional transpose. The factory maps the original +row and +col unit vectors through the D4 transform. It bakes in the visible travel sign for row walls (from the vertical image vector) and for column walls (from the horizontal image vector). The start dot is the one with the smallest signed coordinate along the travel axis. Walls are visited in increasing signed order. The palette needs no constants because every role is recovered from pixel statistics and structure. I traced the d4=0 case by hand against fixture pair 1 and the test; it matches the described paths. Nothing has been executed.",
+    "limitations": "No tests were run by me. Constructor and archived-solver notes for host review: (1) The archived solver always takes the topmost (or leftmost after transposing) dot as the start. That is right only for the canonical orientation. Under vertical or horizontal flips it would start from the wrong dot and produce a different, incorrect path. This factory uses the D4-derived travel sign instead. (2) From a single visible input, start versus end cannot always be told apart. The start sits 1 cell from its edge, and the end sits 1 to 4 cells from the opposite edge, so an end at 1 cell is ambiguous. The direction therefore depends on the D4 constant, not on any per-scene cue. It would be fine to reason from demos too, but that is not done here. (3) The generator only makes 30x30 grids with exactly two dots of the path colour, 3 or 4 walls, distinct colours, and 3-cell gates. Rectangular grids are handled generically, but nothing outside that domain has been exercised. If walls existed in both orientations at once, the program would pick the axis with more full lines. If fewer than two dots were present, it would return the input unchanged. No fixture contradictions found."
+  }
+}

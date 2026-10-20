@@ -1,0 +1,21 @@
+{
+  "task_id": "68b16354",
+  "factory_sha256": "b2cce7419c40d2674276747c482fe43dca5e041313d8ddea243c3d531a5ac694",
+  "constructor_sha256": "ddd8923362ec5d7b79f2e7e7cc52af939946b1262c2de4c22a98429a9c43ee19",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 102409686638510,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 2.505616666050628,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The native mechanism mirrors the grid across its horizontal midline. It swaps row i with row n-1-i, working inward, and leaves the middle row in place when the height is odd. To get the visible-coordinate version, conjugate this flip by the D4 transform. The row-reversal step (d4>=4) commutes with reversing row order. A rotation by 1 or 3 quarter turns turns the vertical axis into the horizontal one. So for d4%4 in {0,2} the emitted program swaps rows top<->bottom. For d4%4 in {1,3} it swaps columns left<->right, again working inward, with the middle column fixed when the width is odd. Cells are only moved, so the palette needs no constants. The swaps work on any rectangular grid.",
+    "limitations": "The program does not use the demonstrations, since the rule is fully determined by d4. It assumes the episode follows the constructor's pure mirror rule. The fixtures are consistent with that rule, and no contradictions were found."
+  }
+}

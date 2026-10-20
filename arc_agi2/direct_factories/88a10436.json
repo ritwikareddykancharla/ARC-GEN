@@ -1,0 +1,22 @@
+{
+  "task_id": "88a10436",
+  "factory_sha256": "176561152553cabec85e4862424b2bcfccc3b464810b209824145a5b8fb939f2",
+  "constructor_sha256": "a8840112eb3f4526a05c4cfc242c69bf2b11716f480681e9638b8cb5fe6adfd9",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 57417363714732,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 4.590096166939475,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The factory writes a program that works directly in the visible grid coordinates. The background is the constant palette[0] and the marker is palette[5]. The program finds the marker cell and erases it to the background colour. It then takes the bounding box of every cell that is neither background nor marker; that box is the pattern. It stamps the pattern's non-background cells so that the pattern's anchor lands on the marker cell, and leaves the original pattern untouched. The generator anchors the copy at sprite cell (1,1), which is the centre of a 3x3 frame. For odd box extents the anchor is simply the middle cell, so D4 does not affect it. For even extents (which can only occur if the sprite does not fill its 3x3 frame), the factory keeps the archived convention in the original frame, which picks the middle index n//2 counted from the original start. To do this, the factory works out from d4 whether each visible axis runs forward or backward relative to the original axes. A forward axis uses offset n//2; a reversed axis uses (n-1)//2. The emitted program contains no rotation, no normalisation wrapper and no colour unpermuting. The demonstrations are not needed.",
+    "limitations": "Possible constructor defect for host review. The generator places the copy so that sprite cell (1,1) of its 3x3 frame lands on the grey cell. The rule and the archived solver instead use the bounding-box centre (h//2, w//2). The two agree whenever the sprite's bounding box spans 3 cells, or 1 cell, in each dimension. If common.conway_sprite can return a sprite that spans exactly 2 rows or 2 columns, the frame's centre is ambiguous from the visible input. A sprite occupying frame rows 0-1 and one occupying rows 1-2 look identical, and they need different offsets. In that case the archived floor rule (which this program mirrors under D4) is wrong for half of such sprites. I cannot see conway_sprite, so I cannot confirm whether it guarantees a full 3x3 bounding box. This cannot be resolved from demonstrations, because every pair has an independent sprite. Otherwise the program assumes exactly one marker cell and that the pattern contains no marker-coloured cells; both are guaranteed by the generator, which uses colours {1,2,3,6} and a separation of at least 4. The generator keeps the marker away from the border, so the copy should always fit; any stamped cells that would fall outside the grid are clipped. Nothing has been tested.",
+    "host_review": "Inspected common.py: conway_sprite preserves at least one pixel in every row and column; independent row/column shuffles preserve this property, so its full bounding box is visible. random_color/random_colors exclude background 0. overlaps with spacing=1 requires a full-cell gap. Domain concerns contingent on these helpers are resolved."
+  }
+}

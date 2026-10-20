@@ -1,0 +1,21 @@
+{
+  "task_id": "694f12f3",
+  "factory_sha256": "57e9e1924c7654a9b311d7dac49f4a5a21a33c5c3c78572c70e3ef5c0ee82c9e",
+  "constructor_sha256": "8efb727b9b4fb2ef1d87cbb1f262379880c8a080bc17fbb2984c059f5541cc0e",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 31587161644287,
+  "d4": 7,
+  "unique_base_inputs": 819,
+  "seconds": 7.904839750030078,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The emitted program uses the palette-mapped background, palette[0], as the background colour. It finds the 4-connected components of all other cells; each component is one solid rectangle of palette[4]. It sorts the components by cell count. The interior of the largest rectangle (its bounding box minus a one-cell border) is filled with palette[2], and every smaller rectangle's interior is filled with palette[1]. Size comparison, bounding boxes and border stripping are all invariant under rotations and reflections, so the program works directly in visible coordinates and d4 needs no special handling. The background is fixed at palette[0] rather than taken as the most common colour, because the blocks can cover more cells than the background.",
+    "limitations": "Relies on the generator's domain. There are exactly two solid rectangles separated by at least one background row (a row or column after D4). They never have equal cell counts, because the generator forces the idx-0 rectangle to be strictly smaller. Both are at least 3x3, so an interior always exists. If two rectangles tied in size, the stable sort would give 2 to the one found first in reading order; this case cannot occur in the constructor's domain. The demonstrations are not used, since colour roles come from the palette constants. The fixtures are consistent with the uniform rule. No tests were run."
+  }
+}

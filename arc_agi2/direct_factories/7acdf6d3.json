@@ -1,0 +1,21 @@
+{
+  "task_id": "7acdf6d3",
+  "factory_sha256": "1e66969490fd8b5c5d7369283049898fcb880a41d420fadeb28fec992e18568f",
+  "constructor_sha256": "b3df17dbe2cd5661e641c7bfaed649f40125aee19818d1ffee6e9abc3565026c",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 184636523641199,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 18.041606916929595,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "In the canonical frame the cups open upward, and a cup's capacity is the number of background cells that lie strictly between the leftmost and rightmost cup cells of each row of an 8-connected cup component. The D4 transform is a horizontal flip followed by d4%4 clockwise turns. A flip or a 180-degree turn keeps rows as rows. A 90 or 270 degree turn maps canonical rows to visible columns. The emitted program therefore measures the interior along visible rows when d4%4 is 0 or 2, and along visible columns when it is 1 or 3. The span between the minimum and maximum is symmetric, so reflections need no other change. The background is the constant palette[7]. The two foreground colours are palette[2] and palette[9]. Which of them is the cup and which is the filler is inferred from the pixels, as the archived solver does: try each ordered pair (cup, filler), take the 8-connected components of the cup colour, and look for a component whose non-empty interior count equals the number of filler cells. When a match is found, all filler cells are erased to the background and that interior is painted with the filler colour. The generator rejects filler pieces that enclose background along the canonical metric axis, and requires exactly one matching cup. So under the intended domain exactly one assignment and one component match, and the answer does not depend on iteration order.",
+    "limitations": "The program relies on the generator's guarantees: cups are separated by padded bounding boxes, filler lies outside cup interiors, filler pieces have no interior of their own, and exactly one cup matches. If several candidates matched, which is impossible in valid scenes, the first in a fixed deterministic order would be used. If none matched, the input is returned unchanged. The background is fixed to palette[7] and is not recomputed as the majority colour. The generator guarantees that it is the majority, so the two choices agree. Demonstrations are not consulted, because the metric axis is fully determined by d4. No constructor defects were observed. The fixtures agree with the uniform rule, including the role swap in the test pair."
+  }
+}

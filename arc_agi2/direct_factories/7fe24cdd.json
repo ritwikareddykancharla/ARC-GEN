@@ -1,0 +1,21 @@
+{
+  "task_id": "7fe24cdd",
+  "factory_sha256": "c4af5de9a15a14b81a192d1ef89ece3be210c09e8660c686e554662219a63529",
+  "constructor_sha256": "1ce197218db66b0cdca41c4aee6f3782a10c18d817866603e3fcbb7d099cf74b",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 63473398058986,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 1.5294445829931647,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "In the generator, each input pixel (r,c) is written to (r,c), (c, 2s-1-r), (2s-1-r, 2s-1-c) and (2s-1-c, r) of the 2s x 2s output. These four cells are the orbit of the pixel under clockwise quarter-turns about the canvas centre. Every D4 element normalises this rotation group, so a rotated or reflected episode has the same structure: the visible output is the rotation orbit of an unchanged copy of the visible input. That copy sits in the quadrant where the original top-left corner lands. Reversing rows sends TL to TR, and each clockwise rotation moves the corner TL->TR->BR->BL. The factory picks that quadrant as a constant. The emitted program places each visible input pixel at its offset position in that quadrant. It then stamps the pixel at its three clockwise rotations about the output centre. The four rotated quadrants tile the whole canvas, so every cell, including background, is copied from an input pixel. No colour constant is needed, which makes the program palette-independent. For example, with d4=0 the copy is at TL, matching the fixtures. With d4=1 the visible input is rot90(G) and the copy lands at TR, which is where rot(O) carries the original TL block.",
+    "limitations": "The constructor only produces square s x s inputs (s=3 in practice). For a non-square input the quarter-turn orbit does not tile a 2h x 2w rectangle. The emitted program then builds a 2*max(h,w) square canvas, skips out-of-range writes, and leaves the uncovered cells at 0; this is outside the generator's domain. The demonstrations are not consulted, because the placement quadrant is fully determined by d4. No fixture contradictions or constructor defects were found. All three train pairs and the test pair match the pinwheel rule."
+  }
+}

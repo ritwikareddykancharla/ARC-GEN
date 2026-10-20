@@ -1,0 +1,21 @@
+{
+  "task_id": "7953d61e",
+  "factory_sha256": "1772a13cac287a01a5f5b0fe2501710368b6fbf70cfbaddabd6c162fe7834a05",
+  "constructor_sha256": "85508b6fb6de40dcdd10e8fc496e948ef4925e595ee0566e36f93236b19be1f0",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 271842569213725,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 3.504613875062205,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The original rule builds a 2x2 canvas of input-sized blocks. In the original frame, block (r,c) holds rot90(A,k), with k=0,1,2,3 for TL, TR, BL, BR (counter-clockwise turns). The episode's D4 transform T acts on the whole output canvas. That has two effects. First, it moves the quadrant positions the same way it moves cells on a 2x2 grid. The factory therefore applies T to the label grid [[0,1],[2,3]]: it reverses each row if d4>=4, then rotates clockwise d4%4 times. Second, T changes what each block contains. The visible input is B = T(A), and T(rot90(A,k)) equals rot90(B,k) when T is a pure rotation. It equals rot90(B,-k) when T includes a reflection, because conjugating a rotation by a reflection reverses its direction. The factory bakes these per-quadrant turn counts into the emitted program as a constant table. The program then stamps np.rot90(visible_grid, TURNS[r][c]) into each quadrant of a doubled canvas, all in visible coordinates. No normalisation, inverse rotation or colour unpermutation is used. Colours are copied verbatim, so the palette needs no specialisation. Example: for d4=1, the table is [[2,0],[3,1]], so the visible input itself sits in the top-right quadrant.",
+    "limitations": "The constructor only produces 4x4 square inputs with 8x8 outputs, so square grids are the supported domain. For non-square inputs the rotated blocks have transposed shapes and a 2x2 tiling is not well defined. The emitted program then attempts np.block, which will raise if the shapes do not tile. Demonstrations are ignored because the mechanism is fully fixed by d4. The fixtures agree with the generator's index mapping: TL = A, TR = rot90(A,1), BL = rot90(A,2), BR = rot90(A,3). No contradictions, constructor defects or hidden tie-breaks were found. I have not run any tests; this is analytical reasoning only."
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "task_id": "7666fa5d",
+  "factory_sha256": "65eccb8dfff1b594ace821da32a57639d9ff4de0902e8e357db209f1433d6a79",
+  "constructor_sha256": "2a084ed7e4bfd63a7f52e4012218ce31f51948b52667615f0427de8f05e72dd0",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 272819278723024,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 11.167760292068124,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The ink cells form diagonal segments. In the original orientation they lie on anti-diagonals. A horizontal flip or a single quarter-turn swaps anti-diagonals and main diagonals. The factory therefore picks the visible line family from the parity of (reflection flag + clockwise turns).\n\nThe emitted program works in visible coordinates:\n- L is the line index: x+y for anti-diagonals, y-x for main diagonals.\n- P is the position along the line: the other combination of x and y.\n\nAll non-background cells (background = palette[8]) are grouped by L. Each group is split into maximal runs where P steps by 2, so collinear segments with a gap become separate segments.\n\nFor every pair of segments on different lines whose P-ranges overlap (endpoint-only overlap counts), every background cell strictly between the two lines and inside the shared P-range is painted palette[2]. This includes bands that have other segments inside them. Segment cells keep their colour.\n\nReflections only reverse the ordering of L or P. The rule uses only 'strictly between' and interval overlap, which do not depend on that ordering, so no extra direction handling is needed. The segment colour is not fixed: every non-background cell is treated as ink.",
+    "limitations": "- The background and fill colours are taken from palette[8] and palette[2]. They are not inferred from the demonstrations.\n- Any non-background cell is treated as segment ink. This matches the constructor, which uses one segment colour and never puts the fill colour in inputs.\n- Segment splitting relies on the constructor's guarantee that segments never touch or share cells. Two segments touching end-to-end on the same line would merge into one.\n- I found no fixture contradictions or constructor defects. Both train outputs and the test output match the all-pairs band rule.\n- This factory has not been run by me."
+  }
+}

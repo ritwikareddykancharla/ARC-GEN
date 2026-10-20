@@ -1,0 +1,21 @@
+{
+  "task_id": "8e2edd66",
+  "factory_sha256": "3ea9c27de66acaa0de8007774ba4db07f0bec18f394b8792981a2a705b121b07",
+  "constructor_sha256": "a3aab5ad2a94b3427e322e93e86f3bfa564ea39ba8edff9b43e2813a10e0d013",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 227936196263360,
+  "d4": 7,
+  "unique_base_inputs": 908,
+  "seconds": 3.7246872909599915,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The constructor writes output[3*(j//3)+i//3][3*(j%3)+i%3] = (1-vals[j])*color for every zero cell i. So output cell (3J+a, 3K+b) is C exactly when input(J,K) and input(a,b) are both background. In other words, the output is the Kronecker product M (x) M of the background mask M, coloured with C. This is the same as stamping the inverted tile into every block whose input cell is background. Under any D4 map, the transformed (M (x) M) equals the transformed M Kronecker-multiplied by the transformed M. This holds because a row reversal sends index 3J+a to 3(2-J)+(2-a), and the same argument covers transposes. The rule therefore reads identically in visible coordinates, so no axis needs specializing. The only colour role that needs a constant is the background, which becomes palette[0]. The foreground colour C is taken directly from the query's pixels: it is whichever non-background colour appears. The emitted program builds a background-filled canvas of size (h*h, w*w). It then stamps the tile (C where the input is background, background elsewhere) into each block whose input cell is background.",
+    "limitations": "The constructor guarantees at least one C cell, so an input made entirely of the background colour is outside the domain. In that case C cannot be determined and the program returns an all-background canvas. An input made entirely of C is in the domain, and the result is correctly an all-background 9x9 grid. The program assumes exactly one non-background colour, as the generator does. The fixtures agree with the uniform Kronecker-mask rule. No constructor defects or hidden tie-breaks were found."
+  }
+}

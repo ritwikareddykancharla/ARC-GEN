@@ -1,0 +1,21 @@
+{
+  "task_id": "810b9b61",
+  "factory_sha256": "09ed2027a8529956986692bfe630caf868b95f59ded7e404933eb489e0c73e5c",
+  "constructor_sha256": "e5b9b379d0f363cfdc1818abaca876a6f97c15b1c1f140991ae62f2d77af0c56",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 232957456669434,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 15.935761166969314,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The mechanism (recolour every 4-connected single-colour object that, by itself, encloses at least one pocket of non-object cells unreachable from the grid border) is invariant under all D4 transforms: rotations/reflections map borders to borders, 4-adjacency to 4-adjacency, and enclosed pockets to enclosed pockets, so no axis or direction needs specializing; the emitted program works directly in visible coordinates. Palette is specialized as constants: background = palette[0], shape colour = palette[1], recolour = palette[3]. For each object, a flood fill from all border cells through cells not belonging to that object is run; if any non-object cell remains unreached, the object is closed and all its cells become palette[3]. Other objects' cells are treated as passable, so a neighbour can never close a gap. Like the archived solver, every non-background colour is treated as potential object colour (inputs only contain palette[1]). Rectangular grids and objects touching the border are handled naturally (a gap on the border edge leaks to the border; a closed ring touching the border still has an interior that cannot reach it).",
+    "limitations": "Background is fixed to palette[0] rather than inferred as the most common colour (equivalent under the generator, whose canvas is dominated by colour 0). Teaching-stage intermediate canvases are not emitted; solve returns only the final grid. Constructor note for host review: the validate() fixture for pair 3 uses col=-1, producing a clipped box (the hook) whose output colour is decided by the generator's gap latent rather than geometry; here the geometry agrees (it has no hole) so no contradiction arises. The generator's output colour is decided by box size/gap latents, which coincides with the visible enclosure rule given its 1-cell padding between boxes and the gap-placement constraints (no corner gaps on boxes with holes); no fixture contradicts the uniform rule. No tests were run."
+  }
+}

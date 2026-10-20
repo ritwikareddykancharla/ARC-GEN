@@ -1,0 +1,21 @@
+{
+  "task_id": "845d6e51",
+  "factory_sha256": "fb6d3e9628095ecc6281d0891967194dac4149110fe7b892573d67e7a85d453c",
+  "constructor_sha256": "efb7d9ed8a87b2a2f22b217d2d111c4b329f4d3774c868d30c290e2225f65350",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 48928465656908,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 15.963771582930349,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The emitted program uses three fixed colours from the palette: background palette[0], green palette[3] and grey wall palette[5]. Every 4-connected single-colour component whose colour is not one of these three is a legend shape. Each legend shape is indexed by its free form, meaning the lexicographically smallest of its 8 dihedral images after shifting to the origin. Each green 4-connected component is then recoloured with the colour of the legend shape that has the same free form. Matching is invariant under the full D4 group, so this works directly in visible coordinates for every D4 index. No axis or direction needs to be specialised, and the legend's corner position never needs to be known. Mirrored chiral copies (the generator's reflection extension) are matched as well. As a secondary fallback, if no form matches, a green shape takes the colour of a legend shape with the same cell count, but only when that colour is unique. The archived solver instead let the last legend shape of that size win, which is a hidden tie-break; I did not reproduce it. Cells that are neither green nor matched are left unchanged.",
+    "limitations": "No tests have been run; the host still needs to verify the factory. Legend shapes are found by colour, not by locating the walled box. This is correct under the constructor's domain: only the legend uses non-green, non-grey, non-background colours, legend shapes are 4-connected with distinct colours, and green shapes are 8-separated and never enter the box. The size fallback is never exercised in the generator's domain, because every green has a matching legend form; outside that domain it is only a heuristic. The constructor documents mirrored chiral copies as a synthetic extension that the approved fixtures never show. The rule text's free-form (rotation plus reflection) reading covers this extension, and I found no contradiction between the fixtures and the uniform rule."
+  }
+}

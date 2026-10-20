@@ -1,0 +1,21 @@
+{
+  "task_id": "7df24a62",
+  "factory_sha256": "532bdba841309d7e600dcb74b7cb62943bd82f973a22ce68054b6b95c143d0e7",
+  "constructor_sha256": "9c216c77da9eb198f747a52a9a64aab33aa970e8c8bb6f54424bbc44f0f41d1e",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 91892739916395,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 118.78302345902193,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The emitted program uses three colour constants: background = palette[0], frame = palette[1] and dot = palette[4]. It works directly in visible coordinates.\n\nTemplate: the bounding box of all frame-coloured cells is the reference frame. Its interior gives a boolean dot pattern.\n\nOrientations: the program builds all distinct D4 orientations of that pattern (rot90 plus horizontal flip, with duplicates removed). It slides each one over every placement whose interior lies fully inside the grid. A placement is valid when both hold:\n1. Inside the window, the dot cells are exactly the pattern's dots and every other cell is background.\n2. Every surrounding frame cell that lies inside the grid is background. Frame cells outside the grid are simply clipped.\n\nAt each valid placement, the in-grid frame cells and the non-dot interior cells become the frame colour.\n\nWhy d4 is not used: the rule already searches all 8 orientations and treats every grid edge the same way (interior must be inside the grid, frame may be clipped). So the visible mechanism is the same under every D4 transform, and only the colour roles need specializing.\n\nRelation to the constructor: its own matcher treats blue as black and lets the reference frame match itself, then redraws it identically. It also rejects scenes by rejection sampling when a match has yellow on its frame or overlaps another match. On every scene it accepts, the stricter all-background test used here gives the same output.",
+    "limitations": "- The template is assumed to be the only frame-coloured object in the input, as the constructor guarantees. Any stray frame-coloured cell would enlarge the bounding box.\n- The template interior is taken as the full inner rectangle of that box. The constructor forces the pattern to touch all four interior edges, so this matches its domain.\n- No defects or fixture contradictions were found.\n- The constructor's 'illegal' rejection loop (yellow on a match frame, or overlapping matches) is a generation filter, not a puzzle rule. Scenes it would reject are handled by the stated visible rule: such placements are simply skipped, and matches are found on the input and stamped independently."
+  }
+}

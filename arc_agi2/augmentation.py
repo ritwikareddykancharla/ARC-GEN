@@ -54,3 +54,24 @@ def exhaustive_variants(pairs, palette=None):
                 'color_permutation': palette[:],
             }
     return list(variants.values())
+
+
+def demonstrations_disambiguate(variants):
+    """Reject conflicting answers to the same visible augmented puzzle.
+
+    A transform index is generation metadata, not information given to the
+    student. Symmetric demonstrations sometimes fail to reveal which direction
+    a rule uses. Query answers must therefore be unique given only the complete
+    demonstrations and query input. Demo ordering is not a directional clue.
+    """
+    encode = lambda x: json.dumps(x, sort_keys=True, separators=(',', ':'))
+    answers = {}
+    for variant in variants:
+        pairs = variant['pairs']
+        prompt = encode([sorted(encode(p) for p in pairs[:-1]),
+                         pairs[-1]['input']])
+        answer = encode(pairs[-1]['output'])
+        if prompt in answers and answers[prompt] != answer:
+            return False
+        answers[prompt] = answer
+    return True

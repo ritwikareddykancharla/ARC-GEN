@@ -1,0 +1,29 @@
+{
+  "task_id": "8a371977",
+  "factory_sha256": "92d5c2db91a1c29443c4ec96eb74675e253b6bdb350b0e14670d504b53e3a511",
+  "constructor_sha256": "777c9c101bbf0339b080de4af07b0e0a4bf353d74ebbb8ac02b501030ef39897",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 217469011275423,
+  "d4": 7,
+  "unique_base_inputs": 61,
+  "seconds": 16.97960037505254,
+  "finite_default_domain": {
+    "exhaustive": true,
+    "cases_checked": 61,
+    "augmented_checks": 976,
+    "definition": "Every permitted lattice box size/count, line thickness and border with total side at most 30.",
+    "query_distinct_from_demos": true,
+    "scope": "Default native parameter distribution only; finite input count is not inflated by repeated sampling."
+  },
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "Each cell of the lattice is a 4-connected component of the cell colour (palette[0]). The program takes each component's bounding box and collects the distinct top-row values and the distinct left-column values. A component is a border block if its top row is the smallest or largest top row, or its left column is the smallest or largest left column. Border blocks are painted palette[2] and all other blocks palette[3]. Line pixels (palette[1]) are left unchanged. The blocks are equal-size squares, the lattice is a regular square grid, and the ring of outermost blocks is a symmetric set, so the rule is the same in every D4 orientation. Under D4 only the side where the lattice is trimmed short changes (it can become top or left instead of bottom or right). Because the program measures positions relative to the blocks, not the grid edge, it works directly in visible coordinates with no change of axis. The palette only fixes the three colour constants. The emitted code does no rotation or colour unpermuting.",
+    "limitations": "This assumes the cell colour is palette[0], as in the constructor, where cells are always colour 0 and lines are always colour 1; the colour is not inferred from the demonstrations. Lattice positions are worked out from the cells' bounding-box top and left coordinates, which assumes all blocks have the same size, as the generator guarantees. The generator always produces num_boxes >= 3, so there are always inner blocks. If a lattice with fewer than 3 blocks per side appeared, every block would simply be coloured as border. No fixture contradictions or constructor defects were found. The docstring's 'trim' parameter name does not match the 'border' argument, but this is cosmetic. Untested by me; the host will verify it."
+  }
+}

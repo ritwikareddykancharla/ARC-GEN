@@ -1,0 +1,22 @@
+{
+  "task_id": "846bdb03",
+  "factory_sha256": "d9803d48279057af785ce1081aea9ca7715168e103664b354366083b71cf0bac",
+  "constructor_sha256": "7ec2fcefc3a5c384f81e21557ffbf61d10255d8bae485ce9f89c49695149abd8",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 46829332975850,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 6.1860646669520065,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "How the original puzzle works: four colour-4 corners mark a frame. Its left and right sides are columns in the two sprite colours. The output is the frame cropped out with its interior cleared. The two-colour shape is then pasted into the interior so that each colour sits in the half next to the side of the same colour. When the generator flipped the shape, the flip is a horizontal mirror across the axis that joins the two coloured sides.\n\nHow the factory maps this to visible coordinates:\n- Corner colour becomes palette[4] and background becomes palette[0].\n- D4 rotations by an odd number of steps (odd indices) swap the axes. So for even d4 the coloured sides stay vertical columns and the mirror is horizontal. For odd d4 the sides become the top and bottom rows and the mirror is vertical.\n- Reflections only change which visible side counts as 'first'. The program reads the first side's colour directly from the grid: the cell next to the top-left corner along the side.\n\nWhat the emitted program does:\n1. Crops the corner bounding box and clears the interior.\n2. Collects the shape cells: non-background, non-corner cells outside the frame.\n3. Decides whether to mirror along the side-to-side axis. It mirrors when the first-side colour lies on the far side of the other colour. It uses strict min/max separation, which always holds for generated scenes, with mean position as a fallback.\n4. Translates the shape so each colour lands in its own half of the interior along that axis. It first tries anchoring at the shape's extent, which equals the bounding-box crop that the archived solver uses. Across the other axis it anchors at the shape's minimum.\n5. Pastes the result. No grid is rotated and no colours are permuted.",
+    "limitations": "Not executed by me. Possible constructor ambiguity for host review: if conway_sprite can produce sprites whose combined cells do not touch row 0 of the sprite box, the cross-axis offset of the shape inside the frame cannot be recovered from the input. In that case the program anchors at the shape's minimum, matching the archived bbox solver in the original orientation. The same applies along the main axis when neither sprite reaches column 0; here the half-separation constraint picks the first consistent offset. The approved fixtures all have the shape bbox exactly equal to the interior, so they show no contradiction with the rule. The axis is fixed from d4 rather than re-inferred from the grid. The program assumes the generator's domain: exactly four corner cells, two distinct side colours, and the shape lying outside the frame's bounding box.",
+    "host_review": "Inspected common.py: conway_sprite preserves at least one pixel in every row and column; independent row/column shuffles preserve this property, so its full bounding box is visible. random_color/random_colors exclude background 0. overlaps with spacing=1 requires a full-cell gap. Domain concerns contingent on these helpers are resolved."
+  }
+}

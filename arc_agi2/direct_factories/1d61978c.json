@@ -1,0 +1,21 @@
+{
+  "task_id": "1d61978c",
+  "factory_sha256": "2a31bd7a6ebd9449e1108187ec8e0ca147cfa0361c14c0eebbec150cfd47edfc",
+  "constructor_sha256": "d6fd904960d287fd80468ea86190efdcc50e2ec3b3000096afb113dd2736b03d",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 120362241528847,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 6.301658834097907,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "All foreground (non-background) cells lie on diagonal segments of length >= 2. Every D4 transform maps diagonals to diagonals (possibly swapping the two orientations), and the rule is symmetric in the two orientations. The colour of a family depends only on whether that family holds more cells in total. So the mechanism is the same in visible coordinates. The emitted program classifies each foreground cell by which diagonal neighbour it has: one family for down-right/up-left, the other for down-left/up-right. It counts the cells in each family. It paints the family with more cells palette[8] and the other palette[2]. Background is the constant palette[7]. All other cells are copied unchanged.",
+    "limitations": "Exact ties between the two families cannot occur under the generator (pos != neg is enforced); if one did occur, the tie-break favours the visible down-right family, as the archived solver does, which is not D4-invariant. Isolated single foreground cells (not produced by the generator) are left unchanged. Cells with diagonal neighbours in both orientations cannot arise under the generator's spacing constraints; if they did, the program assigns them to the orientation with the longer run through the cell. The fixtures agree with the uniform rule."
+  }
+}

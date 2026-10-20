@@ -1,0 +1,22 @@
+{
+  "task_id": "8fbca751",
+  "factory_sha256": "23c90acf1f77a25e0a26ff3ae0b9614008f2f0421df48cbb00c451dc037e5b30",
+  "constructor_sha256": "f5c51b68e42fa974670d17ced0672671d49bc00ca9f78f8a8c6c9fa4e6cc5fdb",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 141496671295468,
+  "d4": 7,
+  "unique_base_inputs": 998,
+  "seconds": 5.436335042002611,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "Mechanism: the foreground cells (palette[8]) are partial contents of 4x4 boxes on a lattice with 4-cell spacing. Every lattice tile that contains foreground has its background cells (palette[0]) painted with palette[2]. Foreground cells stay unchanged.\n\nThe emitted program works directly in visible coordinates. It tries all 16 lattice offsets and keeps only those where every foreground cell lies inside a complete, in-grid 4x4 tile. This matches the generator, which only places whole boxes inside the grid. It then ranks the valid offsets in this order:\n1. Prefer a lattice that tiles the grid edge-to-edge along each axis whose length is divisible by 4. This is the 12x8 domain, where boxes sit at multiples of 4 from a grid corner, and stays true under every D4 transform.\n2. Prefer the fewest marked tiles.\n3. Prefer the archived anchor rule (extreme foreground row/column modulo 4). It is made D4-aware: the factory computes which visible side corresponds to the original top and left edges, so the anchor uses min or max accordingly.\n4. Prefer the lexicographically smallest offset.\n\nWhen each sprite spans its full 4x4 box, the completeness test alone forces the true offset in both generator modes:\n- 7x7 grids: there is only one complete tile per axis for each offset.\n- 12x8 grids: an edge row or column containing foreground forces offset 0.\n\nIf no offset is valid (outside the domain), the program falls back to the archived min-anchor rule, which allows partial tiles. Colours are taken as palette constants; this mechanism has no axis-specific motion. All three train pairs and the test pair are consistent with this uniform rule.",
+    "limitations": "1. If common.conway_sprite can return a sprite that does not touch all four sides of its 4x4 box, the box position can be visibly ambiguous. This matters especially in the 7x7 mode (box offset 1 or 2) and in 12x8 scenes where small sprites could fit in a shifted tile. The generator latent (brow, bcol) would then decide the answer, which is a constructor ambiguity requiring host review. My program resolves such cases with the deterministic preferences above, not a hidden random choice. The archived program's min-anchor rule is likewise only correct when sprites span their boxes.\n2. Background and fill colours are fixed as palette[0] and palette[2]. Any non-background cell is treated as foreground.\n3. Tile size 4 is fixed, as in the generator.\n4. I have run no tests.",
+    "host_review": "Inspected common.py: conway_sprite preserves at least one pixel in every row and column; independent row/column shuffles preserve this property, so its full bounding box is visible. random_color/random_colors exclude background 0. overlaps with spacing=1 requires a full-cell gap. Domain concerns contingent on these helpers are resolved."
+  }
+}

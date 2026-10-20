@@ -1,0 +1,21 @@
+{
+  "task_id": "4acc7107",
+  "factory_sha256": "96f3ae2d7319dc70da1736776b1bda5a8c7f10d0cc2e6c41194827c98f0d673c",
+  "constructor_sha256": "1a5087d47bdb7ba99cbe011c4e71d489973d65c1d4fd28cb4aad28b2c4689c20",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 231883259845459,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 9.701439750031568,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The factory works out where the canonical directions point in the visible grid. Canonical 'right' (+column) starts as (0,1), or (0,-1) for reflected indices. Canonical 'down' (+row) starts as (1,0). Each clockwise turn maps a direction (dr,dc) to (dc,-dr). From these two directions the factory picks the anchor edge, which is where the canonical left column sits, and the floor edge, which is where the canonical bottom row sits. It then emits specialised visible-coordinate expressions:\n- distance of a cell from the anchor edge;\n- distance of a cell from the floor edge;\n- the inverse that turns those two distances back into a (y, x) cell.\n\nThe emitted solver runs the full mechanism directly on the visible grid:\n1. Find single-colour 8-connected objects on background palette[0].\n2. The left colour is the colour of the object nearest the anchor edge. Ties go to the object reaching farthest from the floor, matching the canonical bbox-top tie-break.\n3. Sort the left-colour objects by size, largest first. Ties use the canonical reading order expressed in the anchor and floor distances.\n4. Each left-colour object greedily claims the nearest unclaimed other-colour object. Distance is the minimum Chebyshev distance, which is the same under every D4 transform. Candidates are ordered in the transformed reading order, so ties resolve the same way.\n5. Build two stacks. The left-colour stack is flush with the anchor edge. The other stack starts at (widest left-object extent along the anchor axis) + 1. Each stack starts at the floor edge and grows away from it with one empty line between objects.\n\nObject shapes are copied as rigid translations in visible space, so there is no rotation and no colour remapping. Only the background constant comes from the palette, and object colours are read from the pixels.",
+    "limitations": "Several tie-breaks are reproduced faithfully but cannot be exercised, because the generator rejects those cases:\n- an ambiguous left colour;\n- equal-size left objects;\n- the largest left object being equally near both candidates.\n\nThe background is taken as palette[0], following the generator, which always uses black. Out-of-bounds placements are clipped, as in the original, although valid scenes always fit. Scenes with other than two objects per colour are handled with the same generic pairing as the archived solver. I found no contradiction between the fixtures and the rule. I have not run any tests."
+  }
+}

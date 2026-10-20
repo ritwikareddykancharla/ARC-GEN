@@ -1,0 +1,22 @@
+{
+  "task_id": "67636eac",
+  "factory_sha256": "ab1e4bd139174019dd3d4fceed4e9aac190ff93dde5e6af73606b03a8287868f",
+  "constructor_sha256": "142a65e8cd80c3be8d0b646949adbc3f60d1ff971960ae37d37f5684e03194d9",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 197125465916440,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 15.238746125018224,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The generator places n identical 3x3 sprites. Each sprite has a distinct colour. The sprites are mutually non-overlapping along one axis and overlap along the other. The output concatenates the sprites' 3x3 windows along the separated axis, in increasing order along that axis. D4 transforms are applied to the input and output alike, so the visible-coordinate rule is unchanged. The separating axis becomes either visible rows or visible columns, and output slots always follow increasing visible coordinate. That is why the emitted program needs no direction constant, only the background palette[0]. The program groups cells by colour, not by connectivity, because the sprites can be only diagonally connected. For each colour it recovers the 3x3 window: a bbox extent of 3 starts at the bbox, and an extent of 1 is centred, as symmetric sprites require. The layout axis is the one along which window starts are pairwise separated by at least 3. This is more robust than the archived spread heuristic, which can fail when the overlapping axis has a large spread. If both axes or neither are separated, it falls back to comparing spreads. Each sprite is stamped into a 3 x 3n or 3n x 3 canvas filled with the background.",
+    "limitations": "Nothing has been run or tested. If a generated sprite's bbox has extent 2 along an axis, its position inside the 3x3 slot is ambiguous. This can only happen if common.is_symmetric does not enforce mirror symmetry on that axis. In that case the program assumes the sprite is aligned to the low side of the slot, which can be wrong under some D4 orientations. The background is taken as palette[0], following the generator's colour-0 background. The approved fixtures are consistent with the uniform rule, and no contradictions were found.",
+    "host_review": "Inspected common.conway_sprite: it preserves at least one cell in every row and column before shuffling row/column lists, which preserves those counts. common.is_symmetric explicitly checks both row and column reflection axes. The native sprite therefore spans the full 3x3 box."
+  }
+}

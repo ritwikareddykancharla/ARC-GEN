@@ -1,0 +1,21 @@
+{
+  "task_id": "6e82a1ae",
+  "factory_sha256": "c0bf2fb6680bd19dcb944313c4a5eb594e1c7640d04c309c78d8920f751801b1",
+  "constructor_sha256": "eae8d7b1b30f985b4cfb7987b243866f57945ce4cc703ee0cffc91739e2c99d7",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 241920698258301,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 7.626676750020124,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "Each grey shape (colour palette[5]) is found as an orthogonally connected component in the visible grid. It is recoloured by its cell count: size 4 becomes palette[1], size 3 becomes palette[2], and size 2 becomes palette[3]. This matches the constructor's output colour of 5 - count, with the colours passed through the palette. Every other cell, including the palette[0] background, is copied unchanged. Component size under 4-connectivity does not change under any rotation or reflection, so d4 changes no constant. It only means the program never assumes an orientation, and every scan works on the visible grid of whatever shape it is given. Positions and shapes are kept exactly as they appear.",
+    "limitations": "The constructor only makes sprites of 2, 3 or 4 cells, and they are kept apart with a padding of 1, so they never touch orthogonally. Any grey component of another size, which is outside the generator's domain, is left grey. The archived solver does the same. Demonstrations are not consulted, because the colour roles are fixed palette constants. If an input broke the padding assumption so that two sprites touched, they would be counted as one component. No fixture contradicts the uniform rule, and I found no constructor defect. I have not run any tests."
+  }
+}

@@ -1,0 +1,74 @@
+{
+  "task_id": "54db823b",
+  "factory_sha256": "8165edac5589c74c8caf53dcff773fcd8b32aff161d83b4f50a65a40eec3ec1f",
+  "constructor_sha256": "139295868829c0ab84b2a0f35fd19d27a21ee273f9bf07b12450e5c60b083eb3",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [
+    {
+      "seed": 56239317819095,
+      "error": "reference/generator deadline"
+    },
+    {
+      "seed": 115656931486954,
+      "error": "reference/generator deadline"
+    },
+    {
+      "seed": 13846964436534,
+      "error": "reference/generator deadline"
+    },
+    {
+      "seed": 204502627117959,
+      "error": "reference/generator deadline"
+    },
+    {
+      "seed": 218609329678423,
+      "error": "reference/generator deadline"
+    },
+    {
+      "seed": 276183498442719,
+      "error": "reference/generator deadline"
+    },
+    {
+      "seed": 140036471673720,
+      "error": "reference/generator deadline"
+    },
+    {
+      "seed": 264320819223354,
+      "error": "reference/generator deadline"
+    },
+    {
+      "seed": 73994598997230,
+      "error": "reference/generator deadline"
+    },
+    {
+      "seed": 170448696913032,
+      "error": "reference/generator deadline"
+    },
+    {
+      "seed": 257141593024688,
+      "error": "reference/generator deadline"
+    },
+    {
+      "seed": 37503765219087,
+      "error": "reference/generator deadline"
+    },
+    {
+      "seed": 186915294953114,
+      "error": "reference/generator deadline"
+    }
+  ],
+  "seed": 106948659054426,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 493.1148672499694,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The rule does not depend on orientation. Every rectangle (colour 3 with some colour-9 dots) is a 4-connected component of non-background cells, because the generator leaves at least a 1-cell gap between boxes. Each D4 transform maps rectangles to rectangles and keeps connectivity and dot counts, so the emitted program works directly in the visible coordinates. The only specialization needed is the palette: the background is palette[0] and the dot colour is palette[9]. The program finds the components, counts the dot-coloured cells in each one, and fills the bounding box of the component with the fewest dots with the background colour. The generator guarantees a unique minimum.",
+    "limitations": "No tests were run. If there were a tie for the fewest dots, the first component in the visible grid's reading order would be erased; the generator rules ties out. The program assumes rectangles never touch 4-adjacently, which the constructor's overlap check with margin 1 guarantees. Demonstrations are not used, because the colour roles come straight from the palette. The fixtures matched the uniform rule; no contradictions were found."
+  }
+}

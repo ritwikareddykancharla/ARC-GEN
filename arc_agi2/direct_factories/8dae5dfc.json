@@ -1,0 +1,21 @@
+{
+  "task_id": "8dae5dfc",
+  "factory_sha256": "0a53aa5c057c09817c11e6ad2cee1166e90a2b5d3eaad65a46ecd75fe3c504a0",
+  "constructor_sha256": "b209d0cc16e82b8f7452161bb0c4c4d3501ec2a011310ece17f7e5ae5e85052c",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 100285012927210,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 22.20862029097043,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "Each onion is a set of concentric rectangular rings. Within one onion, every colour is used for exactly one layer. The onions are separated from each other by at least one background cell. The emitted program does four things:\n1. It finds each onion as a 4-connected component of non-background cells. The background is the constant palette[0], since the generator always uses 0 as background.\n2. It computes each colour's bounding box inside that component.\n3. It orders the colours from outside to inside by decreasing bounding-box area. The layers are strictly nested, so these areas are strictly decreasing.\n4. It recolours every cell by mapping the colour at position i to the colour at position n-1-i, which reverses the layer order.\n\nComponents, nested bounding boxes and areas are all unchanged by rotation and reflection, so the D4 transform needs no direction-specific rewrite. Rectangles become rectangles and nesting is preserved. The palette affects only the background constant. Layer colours are read from the pixels, so no colour-role constants are needed.",
+    "limitations": "The program assumes the constructor's domain:\n- Onion boxes never touch each other, including 4-adjacency; the generator enforces this with an overlap margin of 1.\n- Layer colours inside one onion are distinct and never equal the background colour.\n\nIf an onion contained a repeated colour in two non-adjacent layers, the bounding-box ordering would merge them; the generator does not produce this. The area ties in the sort key cannot occur for valid nested layers; the colour value in the key only makes the ordering deterministic. I found no constructor defects and no contradictions with the fixtures. I have not run any tests."
+  }
+}

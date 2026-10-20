@@ -1,0 +1,21 @@
+{
+  "task_id": "7e4d4f7c",
+  "factory_sha256": "a23fffaf4aa94e78f9c3ce10e5d4750a55ecf7f87fe852c8d6a54af5dff0dba2",
+  "constructor_sha256": "b87d42629013a7bb9fa6e3b2a3597548f32e96a1d371c0446739c0e75ea553c4",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 113630531682468,
+  "d4": 7,
+  "unique_base_inputs": 999,
+  "seconds": 3.3983412500238046,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "In the canonical frame, row 0 is the pattern row and column 0 holds markers on odd rows. The output is the 3-row strip at the top. Row 0 is copied, row 1 is copied, and row 2 is reset to the background. Then the fill colour 6 is stamped in row 2 wherever row 0 is not background. Under the D4 transform, canonical row 0 lands on one visible edge: top for d4%4==0, right for 1, bottom for 2, left for 3. The row flip used for d4>=4 does not move row 0, only reverses the order along it. Order along the edge is preserved because the output gets the same transform. So the emitted program works directly in visible coordinates. It takes the 3-line strip next to the pattern edge, keeps the two lines nearest the edge (the pattern line and the first marker line), and builds the third line from scratch. That third line is background, with palette[6] at every position where the edge line is not background. The background is the most common colour of the query grid. The constructor guarantees it is a strict majority: at most w-1 pattern cells and h//2 markers, against at least 6 of 9 cells in the smallest 3x3 case. So no real tie can occur; a deterministic smallest-colour tie-break is kept only as a safeguard. The fill colour is the constant palette[6]. It is distinct from the mapped background and pattern colours because the constructor excludes 6 for both. The marker colour may legitimately equal the mapped 6, as in pair 3, and this does not affect the rule.",
+    "limitations": "The pattern edge is fixed by d4 rather than inferred from the demos. That is valid under the stated episode-wide transform. Grids thinner than 3 along the strip axis are outside the constructor domain (height >= 3); they are handled by background padding rather than by any intended rule. The approved fixtures match this uniform rule and no contradictions were found. No constructor defects were detected: the marker column at odd rows and copying row 1 are both consistent with the archived solver."
+  }
+}

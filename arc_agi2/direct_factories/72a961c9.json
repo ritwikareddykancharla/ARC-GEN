@@ -1,0 +1,21 @@
+{
+  "task_id": "72a961c9",
+  "factory_sha256": "f0738b687a6c8fcc7f6b2a70da6ace5c5fef4225e7f473a7e9f91fbb9fbcfdef",
+  "constructor_sha256": "e8ce33973c4bff9df1b9ed8ef0b6d4bfeb8d1b2c141845018404bda7711c3c61",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 224285483478466,
+  "d4": 7,
+  "unique_base_inputs": 966,
+  "seconds": 7.430907416972332,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "In the original task one full-width horizontal line of colour 1 lies on background 0. Each marker cell in the line is 8 or 2. From each marker a stalk grows toward lower row indices. The stalk is line-coloured cells (2 for an 8 marker, 3 for a 2 marker) and ends in a cap of the marker's own colour.\n\nThe factory rewrites this directly in visible coordinates:\n- **Colours:** background, line and marker colours become palette[0], palette[1], palette[8] and palette[2]. The stalk lengths stay keyed by marker colour: palette[8] gets 2 and palette[2] gets 3.\n- **Direction:** the growth direction comes from d4. Reversing each row (indices >= 4) does not change upward motion. Each clockwise rotation turns (dr, dc) into (dc, -dr), giving up, right, down, left for d4%4 = 0, 1, 2, 3.\n- **Line axis:** when growth is vertical, the line is the row with the most non-background cells. When growth is horizontal, it is the column with the most non-background cells.\n- **Drawing:** for every marker cell in the line, the program paints L line-coloured cells along the direction, then the cap. All writes are bounds-checked.",
+    "limitations": "- **Fixed stalk lengths:** the lengths (2 for the original 8, 3 for the original 2) are specialised constants from the constructor rather than learned from the demonstrations. Marker colours outside {palette[8], palette[2]} are ignored. The constructor never produces them; the archived solver defaulted them to length 2, and that fallback was not reproduced as a rule.\n- **Line detection:** this assumes a single line, as the constructor produces. It is not designed for multiple lines or noise.\n- **Boundaries:** the constructor guarantees stalks fit (the line sits at row >= 4 when a 2 is present, else >= 3). Clipping only matters outside that domain.\n- **No fixture contradictions or constructor defects were found:** the generator output matches all approved fixtures under the stated rule.\n- **Untested:** I have not run any tests on this factory."
+  }
+}

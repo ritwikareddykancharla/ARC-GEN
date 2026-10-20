@@ -1,0 +1,21 @@
+{
+  "task_id": "8f3a5a89",
+  "factory_sha256": "32649305257959155dcf81937ad27d1198f50dbbc2b6fe2102f341a968e1ad71",
+  "constructor_sha256": "e72623613dc46412048e0ce9f03e42e8465bb826deb999a7354786e1da0a96cc",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 151582088768886,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 29.318718208000064,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "Every step of the rule is unchanged by rotation and reflection, so the emitted program applies it directly to the visible grid.\n\n- **Region:** a 4-connected flood fill over background cells, starting from the 6.\n- **Objects:** 8-connected components of the non-background, non-marker cells.\n- **Survival:** an object survives if any of its cells 8-touches the region. Otherwise the whole object is erased to background.\n- **Walls:** surviving objects that touch the grid border.\n- **Frame:** a region cell becomes the frame colour if it is on the border or 8-touches a wall cell.\n\nNone of these tests depend on direction. The only thing that changes under D4 is the corner holding the 6, and the program finds the 6 by its colour (palette[6]).\n\nThe factory still works out the transformed corner from d4. It uses this to choose between several marker-coloured cells and as a fallback if none is present. The colour roles become constants: background = palette[8], marker = palette[6], frame = palette[7].\n\nThe program has no normalization wrapper, no inverse rotation and no colour un-permutation. It does not reject marker cells that are not on the transformed corner.",
+    "limitations": "- **Object colour:** the program treats any colour other than background and marker as object material. In the constructor's domain that is only palette[1].\n- **Several marker-coloured cells:** this cannot happen in the domain. If it did, the program would prefer the transformed bottom-left corner.\n- **Missing marker:** the flood fill would start at that corner, which would then be treated as a non-region seed. This is a fallback only and cannot happen in the domain.\n- **Fixtures:** I checked the canonical fixtures by hand against the rule. They are consistent with it, and I found no contradictions.\n- **Constructor:** the survival test uses 8-touch, which matches the rendering code. The constructor documents that this agrees with a 4-touch test for separated objects. I found no indexing bugs or hidden tie-breaks that would affect the visible answer.\n- **Testing:** none of this has been run or tested."
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "task_id": "67a3c6ac",
+  "factory_sha256": "78e95be79228e53dac4f3aa48fbbf7e2ab9be61fde9c00f43d12106be9f3e01b",
+  "constructor_sha256": "81524c67099c529cc336b7375bdef14867d9140e82b7d0333c11ab4f21c7e57b",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 221921795306999,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 1.9576857920037583,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The native rule mirrors the grid left-to-right: output[y][x] = input[y][W-1-x]. In visible coordinates the transformed rule is T\u2218flipH\u2218T^-1, where T is the D4 transform. A clockwise rotation by 0 or 180 degrees keeps the mirror axis vertical, so the program reverses each row. A rotation by 90 or 270 degrees turns that axis horizontal, so the program reverses the order of the rows instead. For the reflected indices (d4>=4), T = rot^k\u2218flipH. Conjugating flipH by T gives rot^k\u2218flipH\u2218rot^-k, which is the same as in the pure-rotation case. So only d4 % 2 decides the axis. The rule never refers to colours; it only rearranges cells. A palette permutation therefore commutes with it and needs no constants. The emitted program works directly on the visible grid and handles rectangular grids of any size. It needs no demonstrations, has no ties to break, and does not depend on object boundaries.",
+    "limitations": "The program assumes the episode follows the D4/palette convention stated in the task. It does not check the demonstrations against its fixed mirror axis; it infers nothing from them. The fixtures are consistent with the uniform rule: every approved pair is an exact row reversal. The archived solver's background fill is completely overwritten, so it has no effect and was left out."
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "task_id": "6ffbe589",
+  "factory_sha256": "c724a18519de198aaf6d296f6cdf41788d5ed21fd6092e303b1e039f5adea89c",
+  "constructor_sha256": "da022b8cb206213ed9f2390cb83a33a4bd83936ce8684fb056dca5e2e0e04b5d",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 236505975502010,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 25.806223375024274,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The emitted program follows the original rule directly in visible coordinates.\n\n1. It takes palette[0] as the background.\n2. It groups non-background cells into clusters by linking any cells within Chebyshev distance 2. This is equivalent to taking diagonal components and merging those within distance 2. The largest cluster is the nested figure, and its bounding box is cropped.\n3. Every remaining 8-connected single-colour piece is a legend entry: colour mapped to its cell count. The colours are read from the pixels, so no palette remapping is needed.\n4. Each colour layer inside the crop is rotated rigidly about the box centre by (legend count mod 4) quarter turns. Colours with no legend piece stay fixed. Layers that are not rotated are written first.\n\nThe only part that depends on D4 is the turn direction:\n- A pure rotation commutes with a quarter turn, so the turn stays clockwise (d4 0..3).\n- Any reflection (d4 4..7) conjugates clockwise into counter-clockwise, so the program uses the reverse direction.\n\nThe square crop maps onto itself under every D4 element, so cropping is unchanged. I checked the canonical fixtures by hand against this rule, including the test pair: 5 turns once, 3 turns twice and 4 turns once at the centre. They are consistent, and I found no contradiction.",
+    "limitations": "No tests have been run.\n\nThe program relies on several guarantees from the constructor:\n- The background is the original colour 0.\n- The figure is a single radius-2 cluster that touches all four sides of its square box, so the bounding box equals the box.\n- The figure has more cells than all legend pieces combined.\n- Legend pieces are single-coloured, at most one per colour, and separated by at least distance 2.\n\nIf the bounding box were not square, an odd quarter turn would leave that layer unrotated as a fallback, but the generator never produces such a box.\n\nIf two legend pieces of the same colour ever appeared, their sizes would be summed. The generator forbids this.\n\nThe constructor has no hidden random tie-breaks or indexing defects that affect the answer. Its layer write order is irrelevant because the layers occupy disjoint ring-depth bands, and rotation preserves ring depth."
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "task_id": "8e301a54",
+  "factory_sha256": "230bc64e54e4529d554f42c0cb9ebe090dab2a385ffdcff7bfe92e3603cfbfc5",
+  "constructor_sha256": "d5037390cf45cc196a47da3be7c7fc46cca3207aaf8c15048e51e7687896a22a",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 150029856999010,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 59.961251416942105,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "In the original task, every single-colour object moves 'down' by a number of cells equal to its own cell count. Any cells that go past the grid edge are dropped. The background is colour 7.\n\nUnder D4, a row reversal does not change a vertical direction vector. Each clockwise rotation maps a direction (dr, dc) to (dc, -dr). So 'down' becomes left for k=1, up for k=2 and right for k=3. The factory bakes this visible direction vector (DR, DC) into the emitted program as constants, and it sets the background constant to palette[7].\n\nThe emitted program starts from a background canvas. It finds connected components for each non-background colour, using 8-connectivity so it is robust if sprites are only diagonally connected. It then stamps each component's cells shifted by size*(DR, DC) directly in visible coordinates, clipping anything that falls outside the grid. Demonstrations are not needed.",
+    "limitations": "Assumes that, as in the generator, objects of different colours never touch each other (they are separated by a 1-cell margin). Assumes that shifted objects never collide; the generator guarantees this because objects occupy disjoint column ranges along the motion axis. If a collision did occur, the colour processed later (in sorted colour order) would win, which is not a rule of the puzzle. Also assumes that within one colour, distinct objects are not diagonally adjacent; the generator uses one object per colour. The background is fixed to palette[7] rather than inferred. No constructor defects were found, and the fixtures are consistent with the uniform rule."
+  }
+}

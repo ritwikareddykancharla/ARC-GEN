@@ -1,0 +1,38 @@
+def build_program(d4, palette):
+    pal = [int(v) for v in palette]
+    grey = pal[5]
+    table = {4: pal[1], 3: pal[2], 2: pal[3]}
+    lines = []
+    lines.append('import numpy as np')
+    lines.append('from collections import deque')
+    lines.append('')
+    lines.append('GREY = %d' % grey)
+    lines.append('SIZE_TO_COLOUR = {4: %d, 3: %d, 2: %d}' % (table[4], table[3], table[2]))
+    lines.append('')
+    lines.append('def solve(demonstrations, grid):')
+    lines.append('    g = np.array(grid, dtype=int)')
+    lines.append('    h, w = g.shape')
+    lines.append('    out = g.copy()')
+    lines.append('    mask = (g == GREY)')
+    lines.append('    seen = np.zeros((h, w), dtype=bool)')
+    lines.append('    for y in range(h):')
+    lines.append('        for x in range(w):')
+    lines.append('            if mask[y, x] and not seen[y, x]:')
+    lines.append('                seen[y, x] = True')
+    lines.append('                q = deque([(y, x)])')
+    lines.append('                cells = []')
+    lines.append('                while q:')
+    lines.append('                    cy, cx = q.popleft()')
+    lines.append('                    cells.append((cy, cx))')
+    lines.append('                    for dy, dx in ((1, 0), (-1, 0), (0, 1), (0, -1)):')
+    lines.append('                        ny, nx = cy + dy, cx + dx')
+    lines.append('                        if 0 <= ny < h and 0 <= nx < w and mask[ny, nx] and not seen[ny, nx]:')
+    lines.append('                            seen[ny, nx] = True')
+    lines.append('                            q.append((ny, nx))')
+    lines.append('                col = SIZE_TO_COLOUR.get(len(cells))')
+    lines.append('                if col is None:')
+    lines.append('                    continue')
+    lines.append('                for cy, cx in cells:')
+    lines.append('                    out[cy, cx] = col')
+    lines.append('    return out.tolist()')
+    return '\n'.join(lines) + '\n'

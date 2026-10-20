@@ -1,0 +1,21 @@
+{
+  "task_id": "8e5a5113",
+  "factory_sha256": "a1063e0abd653b892a997bcc83d1ba25cb38d1cdc06250957142d3a47325b30b",
+  "constructor_sha256": "45a24c005f7614de904bb6f957bacbb3b2dcfe8bcecc5ab1d696d97ab06f7e6a",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 138837362536313,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 5.1874046250013635,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The generator draws an s x s source pattern P. It then adds a grey divider, a panel holding P rotated 90 degrees clockwise, another grey divider, and a panel holding P rotated 180 degrees. In original coordinates the panels run left to right.\n\nThe factory works out the visible layout from d4. It starts from the original panel direction (right), which a reflection changes to left, and turns that direction clockwise d4%4 times. The result fixes two things: whether panels sit side by side (dividers are full columns) or stacked (dividers are full rows), and which end holds the source panel. Rotations commute with rotations, and a reflection reverses the turning sense. So the visible rule is: panel k is P turned k quarter turns clockwise when d4<4, and counter-clockwise when d4>=4. The 180-degree panel comes out the same either way.\n\nThe divider colour is the constant palette[5]. Only uniform lines of that colour count as dividers, which fixes the archived bug of treating any single-colour column as a divider. The emitted program finds the divider lines on the chosen axis and splits the grid into panels between them. It orders the panels from the source end and writes the turned copies directly into the visible grid. It does not transpose, inverse-rotate or recolour the grid.\n\nIf no grey dividers are found, it falls back to the generator's fixed layout (s, gap, s, gap, s), taking s from the short dimension.",
+    "limitations": "This assumes the generator's domain: the pattern colours never include grey (the generator excludes it), and every panel is square, so the turned copies fit their slots. A panel is written only when the turned pattern's shape matches the slot.\n\nThe demonstrations are not used, because the mechanism and divider colour are fully set by d4 and the palette.\n\nThe fixtures agree with a single uniform rule. I found no constructor defects or hidden tie-breaks. The test fixture output matches the generator's mapping (middle panel P rotated clockwise, right panel P rotated 180 degrees). I have not run any tests."
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "task_id": "776ffc46",
+  "factory_sha256": "0ed085ad8bcf6cc3add3994779400989d60da341e5351ec790ff9ee7a875f677",
+  "constructor_sha256": "b1d1d7557f7f6637e154928efe93a67595f3fcd18a49b63158ab3cfb8296f240",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 164720264313033,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 158.83828008302953,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "Mechanism: frames are 4-connected objects of the frame colour (palette[5]) that form a complete rectangular ring (h,w>=3, cell count 2(h+w)-4, every cell on the bbox border). Open L-shaped frames that use the grid edge are not rings. Every single-colour object that is not background (palette[0]), not frame-coloured and not target-coloured (palette[1]), and lies strictly inside a ring's bounding box, is a template. Its key is its cropped occupancy mask and its value is its colour. Every target-coloured 4-connected object whose cropped mask exactly equals a template key is recoloured to that template's colour. Everything else stays unchanged. The colour roles are specialised as palette constants. The ring test, the strict-containment test and the cropped-mask equality are each preserved exactly under every D4 transform. A rotated or reflected template still matches the identically transformed targets, so the program needs no axis or direction choice. d4 is accepted but has no effect, and the program works directly on visible coordinates of rectangular grids. I checked the approved fixtures by hand against this rule and found no contradiction. Pair 3 and pair 4, plus the test, contain open-L decoy frames, and these correctly do not produce templates.",
+    "limitations": "Assumes the palette is a permutation, so background, target and frame colours stay distinct. Background is fixed as palette[0] rather than inferred as the most common colour; these agree on generator output. If two enclosed templates had the same mask but different colours, the first in reading order wins. The generator never produces this. Constructor notes for host review: (1) the box-drawing loop is nested inside the per-sprite loop, so the frame is redrawn after every sprite. This is harmless, because the final frame is complete and sprites never overlap it. (2) Fresh generation never creates decoy boxes (TODO in source). Only the hand-written validate() fixtures contain open, edge-clipped frames, so fresh pairs exercise only the closed-ring case. (3) Recolouring in the generator is keyed on the sprite index rather than the visible mask. Every sprite index has a distinct mask, so this matches the visible mask-equality rule. Demonstrations are not used, because the rule is fully determined by the query grid. Not executed or tested by me."
+  }
+}

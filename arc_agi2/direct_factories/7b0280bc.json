@@ -1,0 +1,21 @@
+{
+  "task_id": "7b0280bc",
+  "factory_sha256": "c247cf74ecad13ee2ed7523fff50a51e703b47189561aed79e29c3b48991a5b5",
+  "constructor_sha256": "6ecbf7de5b07b953f1915e93bee2d6962294ae772de84a88b99143822909cd38",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 165374264547055,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 27.969572457950562,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The mechanism is a shortest-path search over a graph of pieces. The pieces are square blocks and 8-connected strokes, and two pieces are adjacent when any of their cells touch (8-neighbourhood). Nothing in this depends on orientation, so no direction-specific rewrite is needed. Rotating or reflecting the grid keeps squares square, keeps 4- and 8-connectivity unchanged, and keeps shortest-path lengths unchanged, so the same code works directly in visible coordinates for every d4.\n\nColour roles are read from the visible query grid:\n- **Background:** the most frequent colour.\n- **Line colour:** the colour that has a non-square 4-component (the generator guarantees one).\n- **Endpoint colour:** the block colour with exactly two blocks.\n- **Node colour:** the remaining block colour.\n\nThe program runs a BFS from one endpoint block to the other. Strokes on the chain are recoloured to palette[5] and intermediate node blocks to palette[3]. The factory bakes these two output colours in as constants. Endpoints, dead-end strokes, longer alternative routes and disconnected parts are left unchanged.",
+    "limitations": "Not run by me; no tests executed.\n\n- **Ties:** the generator guarantees a strictly unique shortest chain, so the BFS neighbour order never decides the answer within the generator's domain. On out-of-domain inputs with tied shortest routes, that order would act as an arbitrary tie-break.\n- **Role inference:** this assumes the generator's guarantees hold:\n  - exactly four colours are present;\n  - the background is strictly the most frequent colour;\n  - the line colour has a non-square 4-component;\n  - there are exactly two endpoint blocks and at least three node blocks;\n  - same-colour blocks never touch.\n- **Fixtures:** I found no contradiction between the fixtures and the uniform rule.\n- **Constructor note for host review (not a defect in the rule):**\n  - Random scenes compute the answer from the latent link graph rather than re-reading the painted grid. The constructor states that each stroke touches only the blocks it was built for, so the latent graph should equal the piece graph read from the grid. This equivalence was not independently verified.\n  - Dead-end strokes rely on `_fits` touching only their own block, which keeps them from creating extra adjacency."
+  }
+}

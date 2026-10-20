@@ -1,0 +1,21 @@
+{
+  "task_id": "6e02f1e3",
+  "factory_sha256": "e5ee3ab3f2955f743433cdcaa63ccf1132e1bb55ee8ea1400f0ae25a61d39cce",
+  "constructor_sha256": "2f58b5063e45360c265219d8bc81d2ecf8c3a1a69baf71584639b0d2801b1cbd",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 155019728540546,
+  "d4": 7,
+  "unique_base_inputs": 602,
+  "seconds": 4.575778209022246,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "Rule: count the distinct colours in the input. One colour draws the top row, two colours draw the main diagonal, and three or more draw the anti-diagonal. The line is drawn in gray (5) on a background of 0, on a canvas the same size as the input. The distinct-colour count does not change under a palette permutation or a D4 transform. So the emitted program counts colours directly on the visible grid. The factory applies the D4 transform (row reversal if d4>=4, then d4%4 clockwise rotations) to the three original line shapes on the 3x3 canvas. It sorts each result into one of six line kinds: top row, bottom row, left column, right column, main diagonal or anti-diagonal. It then hard-codes the kind for each count. For example, with d4=1 the one-colour case becomes the right column. With any reflection, or an odd number of rotations, the two diagonals swap roles. The background constant is palette[0] and the line colour is palette[5]. The emitted program fills a canvas with palette[0] and draws the chosen line in palette[5]. It works directly in visible coordinates, with no normalization wrappers and no colour unpermuting.",
+    "limitations": "The constructor only produces 3x3 grids with 1 to 3 distinct colours from {2,3,4} (before the palette is applied). For other grid shapes, edge lines span the full row or column and diagonals run from the visible corner for min(h,w) cells. That extrapolation is not defined by the generator. Inputs with more than 3 colours are treated like the 3-colour case. The demonstrations are not used, because the count-to-line mapping is fixed by the constructor and the factory specializes it. No constructor defects were found, and the fixtures match the uniform rule. Untested: this has not been executed and depends on host verification."
+  }
+}

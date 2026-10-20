@@ -1,0 +1,21 @@
+{
+  "task_id": "880c1354",
+  "factory_sha256": "96882d2b3bf760af82ef178fac4b43dccb906a5ea3dbd91f749e096344a31520",
+  "constructor_sha256": "54e41fb6815b639b5f0a6b3d6f9c62e34f866500f0657f8b8d45be2a97a4b01d",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 194835927934944,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 7.534363334067166,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The skeleton colours (original 4 and 7) become the constants palette[4] and palette[7], and those cells are never changed. Every other cell belongs to a 4-connected region. The program walks the visible border clockwise (top row, right column, bottom row reversed, left column up) and orders the regions by when the walk first reaches them. Each region touches the border in exactly one contiguous arc, so this order is a well-defined cycle no matter where the walk starts. Rotations (d4 0..3) keep the sense of the walk, so each region takes the colour of the previous region in the cycle, as in the original rule. Reflections (d4 4..7) reverse the sense of the walk, so in the visible clockwise walk each region takes the colour of the next region. Region colours are read from the pixels, so random palettes need no colour unpermutation. The rotation and reflection are not undone; the program only flips the shift direction.",
+    "limitations": "The emitted program relies on the constructor's invariants: every region touches the border in one contiguous arc, regions are 4-connected and at Chebyshev distance at least 2, and only the two skeleton colours are fixed. A region that never touches the border (impossible in this generator) would keep its colour. With fewer than two regions the grid is returned unchanged; the generator always uses at least two. Demonstrations are not used, because the mechanism is fully determined by d4 and the palette. I ran no tests. I found no contradictions between the fixtures and the uniform rule, and no constructor defects that affect the answer."
+  }
+}

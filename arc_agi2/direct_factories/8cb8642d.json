@@ -1,0 +1,21 @@
+{
+  "task_id": "8cb8642d",
+  "factory_sha256": "e5c393b9dc9e3f44bbd032a1a265233f88f8a0ba31f5375da6f9af4a1020d6ee",
+  "constructor_sha256": "4f95cea7a104c158bc4ea74c07d13904e3c3d8379892ce85a6a3db8de98763f3",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 144436078997305,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 57.513389125000685,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "Each rectangle is a solid block in one colour with a single marker cell of another colour. I find each rectangle as a 4-connected group of non-background cells. The background is the constant palette[0]. I do not use the most common colour as background, because one large box can fill most of the grid. Within a group, the most common colour is the frame colour and the other colour is the marker. The 1-cell frame is left as it is. Each interior cell is redrawn from two distances: dy, the distance to the nearer interior top or bottom row, and dx, the distance to the nearer interior left or right column. A cell takes the marker colour if any of these holds: dy == dx (the four corner diagonals forming the X); dy is at its maximum and dx >= dy (the horizontal bar in a wide interior); dx is at its maximum and dy >= dx (the vertical bar in a tall interior). Every other interior cell becomes background. I checked by hand that this matches the generator's box-coordinate formulas in every case its parity constraint allows: odd and even squares, and wide or tall boxes where the shorter side is odd. The figure depends only on the size of the box, not on its orientation. It is unchanged by all eight D4 transforms, and swapping rows and columns just exchanges dy with dx and the two bar clauses. So the same visible-coordinate code is correct for every d4 value; d4 needs no special handling, and only the background constant comes from the palette. The marker's corner position has no effect on the output, which is consistent with the generator.",
+    "limitations": "Only the code for each rectangle varies, never its orientation, because the rule is fully D4-symmetric. The program assumes the rectangles are separated by background, which the generator guarantees with its overlap margin of 1. It also assumes each rectangle has at least a 3x3 interior; the minimum box side is 5. If a marker ever had the background colour, the interior would be cleared to background, which is what the generator would output. The archived solver's crash, a missing collections import, is not part of the rule and is not reproduced. The archived solver also took the most common colour as background, which could fail when a box dominates the grid; this program uses palette[0] instead. I found no conflict between the fixtures and the uniform rule. These checks were done by hand; no tests have been run."
+  }
+}

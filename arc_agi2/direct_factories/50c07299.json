@@ -1,0 +1,29 @@
+{
+  "task_id": "50c07299",
+  "factory_sha256": "061d19f17c2a1dc57ab4cc55c5945d736f69adea7ae55fcf3bc890ecbc3b9283",
+  "constructor_sha256": "90b211c615ab300c4c99d0a30d9f341f004342393d6050cc8a5b97fae9109585",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 177409685769983,
+  "d4": 7,
+  "unique_base_inputs": 56,
+  "seconds": 5.128827375010587,
+  "finite_default_domain": {
+    "exhaustive": true,
+    "cases_checked": 56,
+    "augmented_checks": 896,
+    "definition": "All 56 allowed (line length, row) pairs on the native 16x16 grid.",
+    "query_distinct_from_demos": true,
+    "scope": "Default native parameter distribution only; finite input count is not inflated by repeated sampling."
+  },
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "In the original task, a short diagonal line runs lower-left to upper-right. It is erased, and a line one cell longer is drawn. The new line starts one step past the upper-right end and continues in direction (-1,+1).\n\nThe factory transforms that direction vector under the D4 element. A row reversal negates dx. Each clockwise rotation maps (dy,dx) to (dx,-dy). The resulting constants DY and DX are baked into the emitted program, which works directly in visible coordinates.\n\nThe emitted solver works in these steps:\n1. It takes the background to be the most common colour, preferring palette[7] on ties.\n2. It collects the non-background cells and counts them as n.\n3. It picks the leading end as the cell with the largest projection DY*y+DX*x. For a line along the travel diagonal this is unique, and it matches the archived min(y,x) choice in canonical orientation.\n4. It reads the line colour from that cell and erases all line cells.\n5. It draws n+1 cells at end + k*(DY,DX) for k=1..n+1, clipping at the grid edges.",
+    "limitations": "- Assumes a single diagonal line of one colour on a dominant background, which matches the generator's domain.\n- An input with no foreground cells is returned unchanged.\n- The fixtures are consistent with the uniform rule, and the generator always keeps the new line inside the 16x16 grid. Clipping is kept only for safety.\n- The demonstrations are not needed; the direction comes from d4."
+  }
+}

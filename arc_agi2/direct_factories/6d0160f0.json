@@ -1,0 +1,21 @@
+{
+  "task_id": "6d0160f0",
+  "factory_sha256": "0dbed4d22661fb825e50278973ec3819d38e28be3f6a218eaeb9ec41413abda1",
+  "constructor_sha256": "d412e805fc21c4ea4739ffc1526b6261510e6a1a48c1bfc7c2a55eb48447a355",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 213884124784115,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 6.881367958965711,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The emitted program works directly in the visible grid. It does not normalise the grid first. Three colour roles are fixed from the palette: background is palette[0], divider is palette[5] and marker is palette[4]. The program finds the full-length divider rows and columns of the divider colour, which split the grid into a lattice of panels. It finds the panel that holds the single marker cell and reads the marker's local (row, col) inside that panel. It then fills every panel with background and leaves the dividers alone. Finally it stamps the source panel's contents into the panel whose lattice index equals that local (row, col).\n\nThe rule needs no rewriting for different D4 values. The grid is 11x11 with dividers at 3 and 7, and every rotation or reflection maps a coordinate y = 4R + r either to itself or to 10 - y = 4(2-R) + (2-r). Transposes swap axes for both levels together. So the panel index and the local index inside a panel always change in the same way. The visible rule 'destination panel index = marker's visible local position' therefore holds in every orientation. For that reason d4 does not change the emitted code; only the palette constants are specialised.",
+    "limitations": "- The program assumes the constructor's domain: equal 3x3 panels separated by full divider lines, and exactly one marker cell. The generator guarantees one marker, because sampled pixels in a panel are distinct and non-marker colours exclude yellow.\n- If no marker is found, the program returns the grid with every panel cleared.\n- If the local index falls outside the panel lattice, which cannot happen in this domain, it does not stamp anything.\n- No constructor defects or contradictions with the fixtures were found. The archived solver uses the same mechanism."
+  }
+}

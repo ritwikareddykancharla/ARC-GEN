@@ -1,0 +1,21 @@
+{
+  "task_id": "8abad3cf",
+  "factory_sha256": "4cab16b59dd3d39a3acd1875261308532c9431e765e88bcdde8f42ac891ea20f",
+  "constructor_sha256": "76562875b348013a2a9e954bc694a931727f185362d785a7268177e837d63d13",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 193074056088546,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 2.9289177920436487,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The rule: count the cells of each non-background colour. Each count is a perfect square s*s, and that colour becomes one solid s x s square. The squares are sorted by increasing side and laid out in a strip with a one-cell background gap between neighbours. The strip's thickness is the largest side, and every square is flush with one long edge of the strip.\n\nIn canonical coordinates the smallest square sits at the left, the squares grow to the right, and they are bottom-aligned. The factory works out where these edges land after the D4 transform:\n- A row reversal swaps left and right.\n- Each clockwise rotation maps L->T, T->R, R->B and B->L.\n- The result is a START edge (where the smallest square sits) and an ALIGN edge (which side of the strip the squares are flush with).\n\nThe emitted program then builds the output directly in visible coordinates:\n- If START is L or R, the strip runs horizontally and the shape is (maxside, total). If START is T or B, it runs vertically and the shape is (total, maxside).\n- The offset along the strip is counted from the START edge.\n- Squares hug the ALIGN edge across the strip.\n\nThe background is the constant palette[7], which the constructor always uses. The side is round(sqrt(count)), so no imports beyond NumPy are needed.",
+    "limitations": "The constructor samples distinct side lengths, so ties in square size never occur in the domain. If one did, the program would order equal sides by visible colour value. That is an arbitrary choice, not part of the puzzle. Counts that are not perfect squares cannot occur either; the program would round the square root. The background is fixed to palette[7] rather than inferred. I checked by hand that colour 7 is always the most common colour in generated inputs, so this matches the domain. I found no fixture contradictions and no constructor defects that affect the visible rule. I have not run any tests."
+  }
+}

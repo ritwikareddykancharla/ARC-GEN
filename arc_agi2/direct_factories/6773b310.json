@@ -1,0 +1,21 @@
+{
+  "task_id": "6773b310",
+  "factory_sha256": "b86a34d222591d1f4b25fdb488417373f08ffa5d63014cfe81ba0a064850afd3",
+  "constructor_sha256": "0fa75218fe8dda2deb946557b9b9279235acd2f02a0c7f41786c0396c720fb47",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 220932673598679,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 7.320990749984048,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The family is an 11x11 grid cut by full divider lines of original colour 8 into 3x3 panels. Each panel holds one or two cells of colour 6, on background 0. Each output cell corresponds to one panel. It becomes 1 if that panel contains exactly two marks and stays 0 otherwise. A D4 transform applied to both input and output moves panel (r,c) and output cell (r,c) together. So the emitted program works directly in visible coordinates. It finds the full rows and full columns of the divider colour palette[8]. It splits the grid into panel spans along those lines. For each panel it counts the cells that are neither background palette[0] nor divider palette[8], which are the palette[6] marks. It writes palette[1] where the count is 2 and palette[0] elsewhere. The output shape matches the visible panel layout. No rotation, unrotation or global colour unpermutation is performed; the colour roles are fixed constants taken from the palette.",
+    "limitations": "The program assumes the constructor's domain: divider lines are complete rows and columns of palette[8], the background is palette[0], and marks are single cells that never lie on a divider. A count of exactly two is the only trigger, matching the generator, which places 1 or 2 marks per panel. If no divider lines are found, it returns a degenerate 1x1 background grid. The demonstrations are not used, because the colour roles follow fully from the palette. I found no contradictions between the fixtures and the uniform rule. I have not run any tests on this factory."
+  }
+}

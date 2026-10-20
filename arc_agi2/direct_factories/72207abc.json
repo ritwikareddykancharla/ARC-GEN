@@ -1,0 +1,21 @@
+{
+  "task_id": "72207abc",
+  "factory_sha256": "f7d5518b754e0c40f73093249e8648e5b08bce4ca6e11237463d7f83d745ed90",
+  "constructor_sha256": "bab40c3a9c55bb4b3dedd767ecaef9fdd3525e3b96118fffd4ee5689793b6253",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 83402081567668,
+  "d4": 7,
+  "unique_base_inputs": 524,
+  "seconds": 4.85456945898477,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "In the original orientation the seeds sit in the middle row. They start at column 0 and occupy triangular positions 0, 1 and optionally 3. The output paints colours[k mod n] at every triangular offset T(k)=k(k+1)/2 that is less than the line length.\n\nThe factory works out where the seed line lies under the D4 transform:\n- Its axis is a row for rotations 0 and 2, and a column for rotations 1 and 3.\n- Its start end is index 0 for rotations 0 and 1 and the far end for rotations 2 and 3. A pre-flip (d4 >= 4) swaps these two cases.\n- Background is the constant palette[0].\n\nThe emitted program first finds the row or column holding the non-background seeds. It reads their colours in order from the start end. It then paints the triangular offsets, measured from that end, until they leave the grid. All of this happens in visible coordinates; nothing is rotated back.",
+    "limitations": "The program assumes the constructor's domain: one straight seed line with 2 or 3 seed colours, starting at the grid edge, with a background equal to palette[0]. The seed line is chosen as the row or column with the most non-background cells; in this domain that choice is unique. The constructor hard-codes positions up to 28 and relies on draw to clip out-of-bounds cells. The program instead loops while T(k) is less than the line length, which gives the same result for widths 19 and 29. The fixtures are consistent with this uniform rule. No constructor defects or hidden tie-breaks were found."
+  }
+}

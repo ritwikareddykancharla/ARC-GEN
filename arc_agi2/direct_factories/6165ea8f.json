@@ -1,0 +1,21 @@
+{
+  "task_id": "6165ea8f",
+  "factory_sha256": "f9fbe6605a2d02893eccfc8df3ed499b83cedb9c6581153ec9f9a21a7f496d30",
+  "constructor_sha256": "ac6801925b5bba26b7d5b666500cca54dcb0981e1294dce757b4e2a755ab917f",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 191952028459907,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 22.608992042019963,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "In the original task the legend is the last column, read from the top down. I tracked where that line goes under each of the 8 D4 transforms (first flip each row if d4>=4, then rotate clockwise d4%4 times):\n- d4=0: last column, read top to bottom.\n- d4=1: last row, read right to left.\n- d4=2: first column, read bottom to top.\n- d4=3: first row, read left to right.\n- d4=4: first column, read top to bottom.\n- d4=5: first row, read right to left.\n- d4=6: last column, read bottom to top.\n- d4=7: last row, read left to right.\n\nThe emitted program reads that border line in the visible grid, in the direction above. It keeps the non-background pixels in order as the legend, using background = palette[0].\n\nFor each legend colour, it finds that colour's shape in the rest of the grid (the legend line is masked out). It crops the shape's mask and canonicalises it over all 8 rotations and reflections. This test does not change under D4, so it works directly on the visible pixels.\n\nThe original output table is symmetric. Its D4 image is therefore the same table with its header corner moved to another grid corner:\n- Rows are reversed for d4 in {2,3,5,6}.\n- Columns are reversed for d4 in {1,2,4,5}.\n\nThe program draws every 2x2 block straight at its visible position. Block index i sits at 3i, or at S-2-3i on a reversed axis. Header blocks get the legend colours, in legend order counting away from the corner. Diagonal blocks stay background. Off-diagonal blocks get palette[2] when the two shapes are congruent and palette[5] otherwise. The table side is S = 3(n+1)-1.",
+    "limitations": "- The background and mark colours come from the palette constants palette[0], palette[2] and palette[5]. They are not inferred from the demonstrations.\n- The program assumes the constructor's domain:\n  - Each legend colour appears in exactly one shape outside the legend line.\n  - The legend line holds only legend pixels, since shapes never touch the legend column or the one beside it.\n- If a shape's colour were missing, it would get a sentinel key and compare as different from every other shape.\n- I did not run any tests.\n- I found no contradictions between the fixtures and the uniform rule."
+  }
+}

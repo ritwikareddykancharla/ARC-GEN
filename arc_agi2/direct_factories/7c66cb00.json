@@ -1,0 +1,21 @@
+{
+  "task_id": "7c66cb00",
+  "factory_sha256": "d025b0812dcfc1fe981c09231c3c33a55ba50f0fd84a7f3824c75878c1c7a8f4",
+  "constructor_sha256": "ffc1fc06e7d404c1e7530cc9fef97ad03ca9827b032adf19d9fa4178bce59d6d",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 74098196727962,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 15.866630708100274,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The original mechanism works like this. Full-width bands are rows whose interior is a constant fill F and whose two end cells share a different colour E. Consecutive rows with the same (F, E) are grouped into one band. Every non-background cell outside the band rows is cleared to background. Each 4-connected multicolour shape in the free area is then split by colour. For each colour part, the program takes that part's own extent along the drop axis, inside that one shape. It shifts the part so its leading edge touches the band whose fill equals that colour, and paints the cells with that band's end colour. Uncovered band cells keep the fill, so holes stay visible.\n\nUnder D4 the original down direction maps as follows:\n- k=0: down\n- k=1: left\n- k=2: up\n- k=3: right\n\nHere k = d4 % 4. The row reversal used for d4>=4 only mirrors positions perpendicular to the drop direction.\n\nThe factory specializes two constants for the emitted program:\n- the band axis: rows for even k, columns for odd k;\n- whether to align a part's max or min coordinate to the band's max or min line.\n\nThe emitted program works directly in visible coordinates. In column mode it tests columns: interior rows 1..H-2 must be constant, and the top and bottom cells must share a different colour. Parts then slide horizontally. There is no transposition or rotation wrapper.\n\nColour roles are inferred from pixels rather than from palette constants:\n- background is the most frequent colour, which the constructor guarantees is strictly dominant;\n- fill and end colours are read from the band lines.\n\nThe result is therefore palette-invariant. The palette argument is accepted but not needed.",
+    "limitations": "- **Background colour.** It is assumed to be the strictly most frequent colour. The constructor enforces this with _dominated.\n- **Band detection.** Detection relies on these domain guarantees:\n  - shapes stay within lines 1..N-2 perpendicular to the bands, so free lines never look like bands;\n  - band fills are unique;\n  - bands are separated by at least one background line.\n- **Duplicate fills.** If two separate bands shared a fill (outside the domain), the later one would be used.\n- **Shape separation.** Shapes are found by 4-connectivity. This relies on the constructor's guarantees that shapes are connected and that their bounding boxes have at least one background gap.\n- **Stagger shapes.** The colour part is aligned as a whole (its joint extent within the shape), not component by component, matching the constructor.\n- **Clipping.** It is retained as in the constructor but never triggers in-domain.\n- **Unmatched colours.** Parts whose colour matches no band are simply erased; the constructor never produces these.\n- **Fixtures and constructor review.** No contradictions were found between the fixtures and the uniform rule. No hidden random tie-breaks affect the answer. One minor documentation imprecision: the constructor docstring phrase 'taken over the whole shape' means the colour's own bounding box within that one shape, which is what is implemented.\n- **Testing.** I have not run any tests."
+  }
+}

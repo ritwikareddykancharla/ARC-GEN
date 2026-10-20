@@ -1,0 +1,21 @@
+{
+  "task_id": "8618d23e",
+  "factory_sha256": "cfd0c64562b388f167284a414f07d5b3e2ba06933c247581a25657958a4e6a14",
+  "constructor_sha256": "a03125802dc48c1d9649232b7c23028a4f0c2e453fbab81f1560efee51fed435",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 4583744115030,
+  "d4": 7,
+  "unique_base_inputs": 994,
+  "seconds": 2.374628416961059,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The input is two equal halves placed one after the other along a split axis. The output is one cell larger in both dimensions and starts filled with the gap colour palette[9]. The first half (lower indices) is stamped at offset 0 along the split axis. The second half is stamped at offset 1, which leaves a full gap line between them. Along the other axis, the two halves sit at opposite offsets (x and 1-x), which leaves the L-shaped gap band. The factory sets two constants from d4. The split axis is visible rows when d4%4 is even and visible columns when it is odd. The value x is (d4 odd) XOR (d4>=4). This comes from tracking whether the split axis and the other axis are reversed under 'reverse each row, then rotate clockwise k times'. Visible offset x equals split_reversed XOR other_reversed, because the original top half sits at cross-offset 0 and the bottom half at cross-offset 1. Check for d4=0: rows split, x=0, top-left/bottom-right, matching the fixtures. Check for d4=1: the clockwise rotation puts the original bottom half on the left, and it carries original column offset 1, so it goes to row offset 1, giving x=1. The emitted program writes cells directly in visible coordinates. It has no rotation or recolouring wrapper and does not use the demonstrations.",
+    "limitations": "The gap colour is the constant palette[9]. The generator always uses 9 for it, and 9 never appears in inputs. The split assumes the extent along the split axis is even, which the constructor's domain guarantees (2*height). For odd extents the larger part would go to the second half, but that never occurs. No constructor defects were found: the fixtures match the uniform rule, and there are no hidden tie-breaks. I have not executed any tests. The offset table for each d4 was derived analytically."
+  }
+}

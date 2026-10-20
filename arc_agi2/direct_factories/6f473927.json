@@ -1,0 +1,21 @@
+{
+  "task_id": "6f473927",
+  "factory_sha256": "a46e883e642fe36836f6cfb6c54af359d771e7f2d84a6ad1968ce89ac5249017",
+  "constructor_sha256": "2be98d03e28d18be7c04534e540fb45c3afcf4dcc225d22e9d634b2bf03bf1f4",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 233903186546700,
+  "d4": 7,
+  "unique_base_inputs": 924,
+  "seconds": 13.625710500054993,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "This reproduces the archived mechanism in visible coordinates. The output doubles the input along the axis that was originally the width. That axis is horizontal when d4%4 is 0 or 2 and vertical when it is 1 or 3. One half is the unchanged input. The other half is the input mirrored across the seam and then complemented: shape (palette[2]) becomes empty (palette[0]), and every other cell becomes fill (palette[8]).\n\nThe constructor's test 'column 0 contains a 2' is rewritten as a test on one visible edge, KEY_EDGE. That edge starts as the left edge, or the right edge after the row reversal for d4>=4, and is then advanced one step clockwise per rotation. If the shape touches KEY_EDGE, the complement is attached on that side, so the touching edge faces the seam. Otherwise the complement is attached on the opposite side. Because the generator guarantees the shape touches exactly one of the two edges along the doubling axis, this is the same as the visible rule 'the edge the shape touches faces the seam; the empty edge faces outward.' Mirroring is horizontal for left/right attachment and vertical for top/bottom attachment. The program works on rectangular grids, with axis lengths 3..6 and 3..12 under the generator.",
+    "limitations": "Outside the generator's domain, when both or neither edge along the doubling axis contains shape cells, the program uses the archived solver's tie-break translated into visible coordinates (the edge mapped from the original column 0). That case cannot occur in generated pairs. The program assumes the palette is a permutation, so shape, empty and fill colours are distinct. Demonstrations are not used, because every colour role and the axis are fixed by palette and d4. The fixtures agree with the uniform rule, and I found no constructor defects."
+  }
+}

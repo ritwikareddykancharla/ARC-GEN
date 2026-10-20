@@ -1,0 +1,21 @@
+def build_program(d4, palette):
+    bg = int(palette[0])
+    lines = []
+    lines.append('import numpy as np')
+    lines.append('')
+    lines.append('BG = %d' % bg)
+    lines.append('')
+    lines.append('def solve(demonstrations, grid):')
+    lines.append('    g = np.array(grid, dtype=int)')
+    lines.append('    H, W = g.shape')
+    lines.append('    out = np.full_like(g, BG)')
+    lines.append('    for y in range(H - 1):')
+    lines.append('        for x in range(W - 1):')
+    lines.append('            c = g[y, x]')
+    lines.append('            if c == BG:')
+    lines.append('                continue')
+    lines.append('            if g[y, x + 1] == c and g[y + 1, x] == c and g[y + 1, x + 1] == c:')
+    lines.append('                out[y:y + 2, x:x + 2] = c')
+    lines.append('    return out.tolist()')
+    lines.append('')
+    return '\n'.join(lines) + '\n'

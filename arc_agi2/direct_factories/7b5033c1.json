@@ -1,0 +1,21 @@
+{
+  "task_id": "7b5033c1",
+  "factory_sha256": "bedda631aa086e132373338cb8cba267da816a0ed0ea206e10d25fc98876f27f",
+  "constructor_sha256": "3b6b16b89c3de3e2fa3954e27c82727d19ccf01ebe74376d597c59bf1183e4db",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 78059840481501,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 8.70294491702225,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The emitted program works directly on the visible grid. The background is the plurality colour, which a palette change does not affect. Every non-background cell is a path cell. The path is induced and 4-connected, so its two ends are the cells with exactly one path neighbour. The program walks from the chosen end to the single unvisited neighbour each step and records each cell's colour.\n\nThe constructor picks the end that is first in reading order: smallest original row, then smallest original column. Under the D4 transform the original row and column become a visible axis with a sign. The factory therefore emits a lexicographic key KEY_SPEC of (axis, sign) pairs:\n- d4=0: top, then left\n- d4=1: rightmost column, then top\n- d4=2: bottom, then right\n- d4=3: leftmost column, then bottom\n- d4=4: top, then right\n- d4=5: rightmost column, then bottom\n- d4=6: bottom, then left\n- d4=7: leftmost column, then top\n\nThe original Nx1 output column is also transformed:\n- d4 in {0, 4}: a column read top to bottom.\n- d4 in {2, 6}: a column with the walk order reversed, so the start cell's colour is at the bottom.\n- d4 in {1, 5}: a 1xN row with the start colour at the right, i.e. reversed.\n- d4 in {3, 7}: a 1xN row read left to right.\n\nNo colour constants are needed. The background is found by plurality, and path colours are copied through unchanged, so the palette is only implicit. Repeated colours in non-adjacent runs come out correctly because the walk goes cell by cell.",
+    "limitations": "- The program relies on the generator's guarantees: the background is the strict plurality colour, and the non-background cells form a single induced 4-connected path with at least 2 cells.\n- If a path were not induced (side contacts) or had several components, the walk could be ambiguous or incomplete. The emitted program then falls back deterministically, using the visible key to pick among multiple unvisited neighbours and the minimum-key cell when no degree-1 end exists. The constructor never produces such scenes.\n- With consistent_ends=False the constructor still uses reading order (path[-1] < path[0]) in original coordinates. The transformed key reproduces that exactly, so no contradiction arises.\n- The approved fixtures match the uniform rule; no fixture contradictions or constructor defects were found.\n- Demonstrations are not used, because orientation and end choice are fixed by d4.\n- The output is returned as nested Python lists."
+  }
+}

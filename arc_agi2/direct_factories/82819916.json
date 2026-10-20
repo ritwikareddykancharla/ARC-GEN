@@ -1,0 +1,21 @@
+{
+  "task_id": "82819916",
+  "factory_sha256": "02f80ea93f5a7cb08209476db8b8c1e075e0e5e9a51da1640369fefb0afc4fd2",
+  "constructor_sha256": "4b41c1b6b5b192ad765919f9683b0534f862008623b1bdbb7f25863ae67d8ca4",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 136792848536665,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 3.3128888750215992,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "Direct-coordinate rewrite of the pattern-extension rule. In the original family, one complete row (the template) uses two colours in a binary pattern. Other non-empty rows hold a short prefix from the left edge that contains both of that row's colours. The flip in D4 keeps rows as rows, and each clockwise quarter-turn swaps rows and columns. So the factory sets the line axis to columns when d4%4 is odd and to rows otherwise. Background is the constant palette[0]. The emitted solver works on visible rows or columns through explicit index helpers, with no transposing or rotating of the whole grid. It picks the template as a fully non-background line with exactly two colours, falling back to any full line. For each other non-empty line it builds the map template[x] -> line[x] over the filled cells and rewrites the whole line as map[template[x]]. The mapping is taken over all filled cells, so the result does not depend on which edge the prefix is anchored to: left, right, top or bottom after reflection or rotation. That edge is still computed and embedded as a reference constant.",
+    "limitations": "Assumes the constructor's domain: line colours are distinct and non-background, and each prefix contains both colours. The constructor can produce a prefix that spans the full line: this happens when the pattern's second colour first appears at the last position. That line then has no background cells and cannot be told apart from the template. Any such full line already matches its output, and with distinct colours it gives the same bijective mapping, so the answer is unaffected. The original solver picks the first full row, which is an orientation-dependent tie-break; this program instead picks any full two-colour line, which is equivalent under the generator's domain. If two template colours conflict within one prefix (not possible in the generator), the first occurrence along the line is used. No fixture contradictions were found. The factory has not been run or tested; I am relying on the host's verification on the approved fixtures and fresh pairs."
+  }
+}

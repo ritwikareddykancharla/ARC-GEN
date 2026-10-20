@@ -1,0 +1,21 @@
+{
+  "task_id": "7c8af763",
+  "factory_sha256": "5152dca039a38f5fe2443553c70465e4df82a9bd6b2621aa2d744000a20036b1",
+  "constructor_sha256": "db8519ba02ebcc9c403810b1e562d366158033e6404656d011ce2e48a6b9450c",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 275140894861732,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 7.836004665936343,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "Mechanism (constructor): a grey (5) lattice splits the 10x10 grid into rectangular rooms of background 0. Some lattice cells are replaced by markers 1 or 2. For each room, the constructor counts 1s and 2s in the (tall+2)x(wide+2) window around it, which is the room's 1-cell frame including corners. The room is then filled with the majority colour; lattice and markers are unchanged. The emitted program does this directly in visible coordinates. Rooms are found as 4-connected components of palette[0]. For each room, it counts palette[1] and palette[2] among all in-grid cells 8-adjacent to the room; for a rectangular room that is exactly the constructor's frame window. The room is filled with whichever of the two is more frequent. The rule is isotropic: room detection, the frame and the counting are invariant under rotations and reflections. So d4 needs no axis or direction specialization, and only the colour roles are specialized via palette (background, marker A, marker B). Including frame corners matches the generator literally. In-domain it agrees with the archived 4-neighbour ring, because frame corners are always interior lattice crossings (4 grey neighbours, never marked) or out of bounds. Markers on an edge-of-grid line cell sit on the room's orthogonal wall, so both versions count them. Room boundaries are unaffected by markers, since markers replace grey cells, not background, so components equal the constructor's boxes. Rectangular grids and rooms touching the border are handled because only in-bounds cells are counted, mirroring get_pixel's out-of-range behaviour.",
+    "limitations": "1) Ties: the constructor rejects any scene in which a room has equal counts of 1 and 2 (draw returns None and the scene is regenerated), so ties are outside the domain. The archived solver's n1 >= n2 -> colour 1 is an arbitrary choice, not a puzzle rule. The emitted program keeps a deterministic fallback to palette[1] only to stay total. Host review should treat any tie case as out of domain. 2) Counting rule: the constructor counts the full frame including corners, while the archived solver and the written rule count only orthogonal neighbours. These agree throughout the constructor's domain because corners can never hold markers. The emitted program follows the constructor's frame. 3) Unverified rule check: the task's rule text relied on a debug printout that was cut off before the last few rooms of pair 3. It did not confirm that every fixture room follows the majority rule; I have not run any tests, and it is left to the verifier. I found no contradiction from reasoning about the constructor, but the full-fixture check is still outstanding. 4) The program assumes the episode's palette maps 0, 1 and 2 to distinct colours, which a palette permutation guarantees. It does not use demonstrations; the rule is fully determined by the query input."
+  }
+}

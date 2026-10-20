@@ -1,0 +1,21 @@
+{
+  "task_id": "626c0bcc",
+  "factory_sha256": "177f781d0a361173f1939933b8356701dc6688c4032ef52345c4952746a99589",
+  "constructor_sha256": "786c7aa18754965d5077d4592a1105f26ef1023e7919874e79f1cb4a64ad75fa",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 109939025200107,
+  "d4": 7,
+  "unique_base_inputs": 996,
+  "seconds": 18.489767124992795,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The generator builds a foreground region (colour 8) from four or five pieces. A piece is either a 2x2 square (colour 1) or an L-tromino missing a specific corner: 2 has no top-left, 4 has no top-right and 3 has no bottom-left. The generator keeps a scene only when the region has exactly one exact tiling by these four shapes. So the output is that unique tiling, with each piece painted by its shape colour.\n\nThe factory applies the D4 transform directly to the four shape offset sets. A horizontal flip maps (r,c) to (r,-c), and each clockwise rotation maps (r,c) to (c,-r). Each shape is then re-anchored at its own first cell in reading order. The emitted program uses the constants palette[8] for the foreground and palette[1..4] for the piece colours.\n\nIn visible coordinates the program runs an exact-cover backtracking search. It takes the first uncovered foreground cell in reading order, which must be the reading-order-first cell of whichever piece covers it. It tries each transformed shape anchored there, recursing and backtracking on dead ends. Because the tiling is unique, the first complete cover found is the answer. Every non-foreground cell is left unchanged.",
+    "limitations": "Two parts of the archived rule text were dropped.\n\n- The archived 'exactly one L of each orientation' preference is not used. The generator does not guarantee it: five-piece scenes can repeat an L, and the approved test fixture has two no-top-left Ls. The generator's uniqueness check makes any exact tiling correct, so the constraint is unnecessary.\n- The rule text's own test analysis was wrong (it said one of each L), but the archived program's fallbacks still reach the correct unique tiling. The fixtures themselves are consistent with the uniform rule.\n\nTwo cases fall outside the generator's domain:\n\n- If a region has no exact tiling, the grid is returned unchanged.\n- If a region has several tilings, the first one found in reading-order search is used.\n\nThe program assumes the foreground colour is palette[8], as in every generated scene; it does not infer the foreground from the demonstrations."
+  }
+}

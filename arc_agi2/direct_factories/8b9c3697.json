@@ -1,0 +1,21 @@
+{
+  "task_id": "8b9c3697",
+  "factory_sha256": "968eebeb449489ed8c17df006393fad9c26cdfd27d9c8f2d74f0a151eb47301f",
+  "constructor_sha256": "e22d39863efa8ec843cc1c07777524e07c6e80e630085cf50474299d808093cc",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 112153435315126,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 26.68648487504106,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The emitted program works directly in the visible grid. The background is the most common colour, which the constructor guarantees. The red role is the constant palette[2] and the trail colour is the constant palette[0]. Every other non-background colour is comb ink. Combs are 4-connected components, each with its own bounding box.\n\nFor each red component that is a solid rectangle, the program tries the four cardinal directions. It slides the piece while the next cells are inside the grid and not comb, ignoring other red. A direction is accepted only if all of these hold:\n- the piece moved at least one step;\n- the whole front strip is cells of a single comb;\n- the two cells just past the strip's ends are not comb;\n- the landed cells lie inside that comb's bounding box.\n\nAll original red is first erased to background. Each accepted piece then paints its swept path, from its origin to just behind its landing, with palette[0], and the piece is stamped at the landing in palette[2].\n\nThe test is symmetric under every D4 transform: the four directions map onto each other, and the front, end and bounding-box tests are invariant. So no axis-specific rewrite is needed beyond carrying colour constants. The factory still pushes the archived direction order (up, down, left, right) through the D4 transform: reverse x for indices >= 4, then rotate (dy,dx)->(dx,-dy) d4%4 times. This keeps the visible scan order faithful to the original, although the constructor guarantees at most one fitting direction per piece, so order never changes the answer.",
+    "limitations": "Relies on the constructor's guarantees:\n- the background strictly dominates;\n- pieces never touch combs or each other, so red components are exactly the pieces;\n- comb bounding boxes are disjoint with a margin;\n- each fitting piece fits exactly one direction;\n- the paths of fitting pieces do not overlap.\n\nIf an explicit scene violated these, the result would depend on scan order. Comb ink is taken to be every colour other than background and red; a non-comb non-red colour would be treated as an obstacle, but the domain never contains one.\n\nThe demonstrations are not used, because roles come from palette constants and the dominant colour.\n\nNo constructor defects or fixture contradictions were found. The three train pairs and the test are consistent with the uniform rule, including the rejected overhang and leg-tip near misses."
+  }
+}

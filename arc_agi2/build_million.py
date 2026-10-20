@@ -22,7 +22,7 @@ from .fixture_policy import fixture_basis,APPROVED_CORRECTIONS
 from .generators.registry import GENERATORS,generate
 from .task_registry import NEW_TASK_IDS
 from .audit import relation,UPSTREAM_IDS
-from .augmentation import transformed, exhaustive_variants
+from .augmentation import transformed, exhaustive_variants, demonstrations_disambiguate
 from .contextual import CONTEXTUAL_TASK_IDS, verify_shared_picture_episode
 from .motif_context import MissingMotifEvidence, solve_demonstrated_motifs
 from .program_targets import compile_target, audit_target, make_record, TargetError
@@ -278,6 +278,9 @@ def make_episodes(arg):
                         palette=list(range(10));cfg=POLICY['augmentation']
                         if cfg['colour_permutation_default'] or tid in cfg['colour_permutation_task_ids']:rng.shuffle(palette)
                         variants=exhaustive_variants(four,palette)
+                        if not demonstrations_disambiguate(variants):
+                            failures['ambiguous_augmented_context_attempts']+=1
+                            continue
                         base_id=f'arcgen-{tid}-{split}-base-{fresh_count:05d}'
                         pending=[]
                         for variant in variants:

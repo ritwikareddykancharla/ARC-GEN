@@ -1,0 +1,21 @@
+{
+  "task_id": "7f4411dc",
+  "factory_sha256": "46c6b0729e86d8cbbd67bc53ad6706d6aca58b8a355bf32e40a11d93ff485470",
+  "constructor_sha256": "b3680c802b2d0a8b8f1281eb08402d135320621436d551be1915b83b215c04b0",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 133471955032605,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 3.7051184580195695,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "Mechanism: a coloured cell survives only if it belongs to some fully same-coloured 2x2 square; everything else becomes background. In the generator, boxes are at least 2x2 and are separated by a margin, and static pixels are pairwise non-adjacent and cannot create a second contact with any box. So the generated output, which shows only the boxes, matches exactly the union of monochrome 2x2 squares. This criterion is invariant under every D4 transform, because a 2x2 window maps to a 2x2 window under rotation and reflection. The emitted program therefore needs no axis or direction specialisation and works directly in visible coordinates on rectangular grids. The only palette-dependent constant is the background, palette[0], which is used in the comparison and for filling the canvas. The foreground colour is read from the pixels, so no colour remapping is needed. Windows are scanned over the whole grid, including the edges, so boxes touching the boundary are kept correctly.",
+    "limitations": "The background is fixed as palette[0], which follows the constructor's black canvas, instead of being inferred as the most frequent colour. This is the more robust choice and gives the same result whenever black is the majority, which holds in all generated scenes. No constructor defects or fixture contradictions were found: all four approved pairs agree with the 2x2-membership rule. I have not run any tests."
+  }
+}

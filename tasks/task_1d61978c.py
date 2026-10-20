@@ -57,14 +57,40 @@ def generate(rows=None, cols=None, lengths=None, angles=None):
 
   if rows is None:
     num_lines = common.randint(2, 7)
-    while True:
-      lengths = [common.randint(2, 10) for _ in range(num_lines)]
-      angles = [2 * common.randint(0, 1) - 1 for _ in range(num_lines)]
-      rows = [common.randint(0, 16 - length) for length in lengths]
-      cols = [common.randint(0 if angle == 1 else (length - 1),
-                             (16 - length) if angle == 1 else 15) for length, angle in zip(lengths, angles)]
+    for attempt in range(1000):
+      lengths = common.sample(list(range(2, 11)), num_lines)
+      positive = num_lines // 2 + (common.randint(0, 1) if num_lines % 2 else 0)
+      angles = common.sample([1] * positive + [-1] * (num_lines - positive), num_lines)
+      if sum(n * a for n, a in zip(lengths, angles)) == 0: continue
+      rows, cols = [None] * num_lines, [None] * num_lines
+      occupied, forbidden = set(), set()
+      # Pack long segments first. Rejection of whole random layouts was
+      # prohibitively slow for six or seven lines. All original separation,
+      # length and orientation constraints are retained.
+      for idx in sorted(range(num_lines), key=lambda i: -lengths[i]):
+        length, angle = lengths[idx], angles[idx]
+        candidates = [(r, c) for r in range(17 - length)
+                      for c in (range(17 - length) if angle == 1 else range(length - 1, 16))]
+        for row, col in common.sample(candidates, len(candidates)):
+          cells = {(row + i, col + i * angle) for i in range(length)}
+          if cells & forbidden: continue
+          blocked = cells | {(row - 1, col - angle),
+                             (row + length, col + angle * length)}
+          for r, c in cells:
+            blocked.update((r + dr, c + dc) for dr, dc in (
+                (0, 1), (0, -1), (1, 0), (-1, 0),
+                (0, 2), (0, -2), (2, 0), (-2, 0)))
+          if blocked & occupied: continue
+          rows[idx], cols[idx] = row, col
+          occupied.update(cells)
+          forbidden.update(blocked)
+          break
+        if rows[idx] is None: break
+      if any(r is None for r in rows): continue
       grid, _ = draw()
       if grid: break
+    else:
+      raise RuntimeError("Could not pack the requested diagonal lines")
 
   grid, output = draw()
   return {"input": grid, "output": output}

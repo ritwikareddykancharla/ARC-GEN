@@ -1,0 +1,21 @@
+{
+  "task_id": "6fa7a44f",
+  "factory_sha256": "81817b621f2fbaf74649f53b80fa6b082df9bd6a1f9393a914f263495158e01a",
+  "constructor_sha256": "7d74eaed9f8606dbea75c6c85c91c011f8059c23acf7a62137233ac8f2915233",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 144760838920498,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 1.6009334579575807,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The native rule stacks the grid on top of its vertical mirror image, giving output [g; flipud(g)] of size 2H x W. I applied each D4 transform to the input and output together. For index 4 (row-reverse only), the structure stays [G; flipud G]. For indices 2 and 6, it becomes [flipud G; G], so the mirror sits on top. For a clockwise quarter-turn (indices 1 and 5), the stack turns horizontal as [fliplr G | G], with the mirror on the left. For counter-clockwise (indices 3 and 7), it is [G | fliplr G], with the mirror on the right. The emitted program works directly in visible coordinates. It doubles along the selected axis, places the unchanged grid in the chosen half, and writes the reversed copy (reversed rows or reversed columns) in the other half. Colours are copied pixel for pixel, so the palette has no effect. Rectangular inputs are handled because h and w are read from the grid.",
+    "limitations": "The constructor only produces square 3x3 grids built from 4 random colours. No ties, objects or colour roles exist, so there is nothing to disambiguate. The demonstrations are not used, since the transform is fully determined by d4. I found no fixture inconsistencies and no constructor defects. I have not run any tests; host verification is still required."
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "task_id": "6d58a25d",
+  "factory_sha256": "740b7e3edf668e8b50b3f138d482d4793da354d78b721d0417e56e6ab75d5b52",
+  "constructor_sha256": "88e5837ae0da752c4ca57e87eb35878ae9cfdf78cfa724e5d595db13caee0866",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 154087568207436,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 17.685327833984047,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "In the original orientation, a 10-cell umbrella (an 8-cell chevron body plus two diagonal feet) opens downward. For every column inside the umbrella's span that contains a dot further down than the umbrella's lowest cell in that column, a line of the dot colour is drawn. It starts just past that lowest cell and runs to the bottom edge. This matches the generator: kite_above scans upward from each dot, and the fill climbs from the bottom until it meets the kite. Each column's kite cells are contiguous, so a dot in the notch also triggers a line.\n\nThe factory maps the downward direction through the D4 transform. The row-reverse leaves 'down' unchanged, and each clockwise turn maps (dr, dc) to (dc, -dr). So d4%4 = 0, 1, 2, 3 gives down, left, up, right. The factory also transforms the umbrella template offsets into visible coordinates.\n\nThe emitted program works directly in visible coordinates:\n- The background is palette[0], with the most frequent colour as a fallback.\n- The umbrella colour is the colour that contains the transformed umbrella template. Ties are broken by the largest 4-connected component, and if nothing matches, the largest component decides.\n- The dot colour is the remaining non-background colour.\n- For each line perpendicular to the motion direction within the umbrella's span, the program finds the umbrella cell furthest along the direction. If any dot lies beyond it, the program fills from the next cell to the grid edge.",
+    "limitations": "- Assumes exactly two non-background colours, as the generator produces. If there are more, the most frequent non-umbrella colour is used as the dot colour.\n- The grid is assumed to be mostly background.\n- Dots that the generator overwrote with the umbrella are invisible and correctly ignored.\n- The rule text mentions emitting intermediate 'teaching stages'. These are not part of the input-to-output mapping, so only the final grid is returned.\n- No constructor defects were found: the generator rule is uniform and deterministic, with no random tie-breaks affecting the output."
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "task_id": "6b9890af",
+  "factory_sha256": "dd07bddaf56d23201e1610dd5f973bf77b69151185ef32e0049fdee5bbfd2f35",
+  "constructor_sha256": "5f7a7e4ec501cb48dd658bd9483ac23320c5e7eaea4e768f3c8831ae815a0ab9",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 18126284159372,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 7.132924917037599,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The generator draws a square hollow frame of colour 2 and a sprite in one other non-background colour, both on background 0. The output is the cropped frame with its 3k x 3k interior filled by the 3x3 sprite enlarged into k x k blocks. Cropping by bounding box and block enlargement (Kronecker product) both commute with every D4 transform: rotating or reflecting the input rotates or reflects the frame crop and the sprite in the same way. So the emitted program works directly in visible coordinates. It finds the visible frame bounding box and blanks the interior. It then takes the bounding box of every cell that is neither background nor frame colour, and enlarges that motif by interior/3 separately along rows and columns. The only specialisation needed is colour roles: the background constant is palette[0] and the frame constant is palette[2]. The sprite colour is read from the pixels.",
+    "limitations": "This assumes the sprite's bounding box fills the full 3x3 lattice. That holds in every fixture and is apparently guaranteed by conway_sprite plus the diagonal-connectivity check. The source of common.conway_sprite was not supplied, so this guarantee is assumed rather than verified. If a sprite ever spanned fewer than 3 rows or columns, its offset inside the 3x3 lattice could not be recovered from the input. In that case the program places the enlarged motif at the interior's top-left, which may be wrong. It also assumes the background is palette[0] and that no other stray non-background pixels exist, which matches the constructor. The fixtures show no contradiction with a uniform rule. No tests were run.",
+    "host_review": "Inspected common.conway_sprite: it preserves at least one cell in every row and column before shuffling row/column lists, which preserves those counts. common.is_symmetric explicitly checks both row and column reflection axes. The native sprite therefore spans the full 3x3 box."
+  }
+}

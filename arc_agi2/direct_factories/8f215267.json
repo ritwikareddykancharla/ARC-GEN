@@ -1,0 +1,21 @@
+{
+  "task_id": "8f215267",
+  "factory_sha256": "9a98f8eeb7950c0be20c09af5018254c4449f854f03138d04d47b99ef367d6f2",
+  "constructor_sha256": "0cd3adce30d583d77f346f2567327e7294fc05f89cdaebade19530ddbb61cb90",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 247149716083425,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 18.559531957958825,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The emitted program works directly on the visible grid.\n\n1. **Background.** The background is the most common colour. The constructor guarantees it is a strict plurality.\n2. **Splitting objects.** It finds single-colour 4-connected components. A component counts as a frame if its bounding box is at least 3x3, the whole bounding-box border is that colour, and the interior is entirely background. This matches the constructor's reservation of hollow rings for frames: shapes are never rings, and solid shapes have filled interiors. Every other component is a small shape.\n3. **Erasing and counting.** Every small shape is erased to background, and the program counts shapes per colour.\n4. **Placing dots.** Each frame of colour c gets one single-cell dot per same-coloured shape. The dots lie on the frame's middle line, which exists because frame dimensions are odd in both axes. The first dot is two cells inside one particular edge, and each further dot steps two cells inward.\n\nWhich edge comes first is the only orientation-dependent part. In the original, dots start at the right edge and step left. The factory maps the original 'right' direction (0,+1) through the episode transform: a horizontal flip negates the column component, and each clockwise turn maps (dr,dc) to (dc,-dr).\n- If the result is horizontal, dots lie on the middle row and start from the right or left edge.\n- If it is vertical, dots lie on the middle column and start from the bottom or top edge.\n\nColour roles (background, frame colours, shape and distractor colours) are all inferred from pixels, so the palette is not needed. Distractor shapes, whose colour has no frame, are simply erased. Frames whose colour has no shapes stay unchanged.",
+    "limitations": "- **Not tested.** No tests were run; correctness is argued from the constructor's invariants.\n- **Fixture wording.** The fixtures agree with the uniform rule. The supplied rule text says test dots are placed at x = 9, 7, 5, 3 for a frame spanning x = 1..11. That only describes the 4-dot case (the colour-4 frame in the test has 4 shapes and gets 4 dots); it is not a contradiction.\n- **Capacity guard.** The program keeps the archived guard that stops placing dots if one would reach the frame's far edge. The constructor never exceeds capacity ((W-2)//2), so this guard never fires on generated data.\n- **Assumptions about frames.** The program assumes the background is the strict plurality colour. It also assumes frames are the only components whose bounding-box border is fully one colour with a background interior, which the constructor enforces (no hollow-ring shapes, 8-neighbour gaps everywhere).\n- **Orientation source.** The tally direction is taken from d4, not re-inferred from the demonstrations. This is valid because D4 applies uniformly to the whole episode.\n- **No constructor defects or hidden tie-breaks found.** Dot placement is fully determined by frame geometry and shape counts."
+  }
+}

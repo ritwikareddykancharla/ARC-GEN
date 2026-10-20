@@ -1,0 +1,21 @@
+{
+  "task_id": "7d7772cc",
+  "factory_sha256": "810c1ca7d0d41a7b184c174e09981074f3c802094dca5de6f9899561fa17c9ca",
+  "constructor_sha256": "703600ddb743c4596e945968c3b4bf6a18a028babf221911217ea5ae1d556b67",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 189830022803150,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 12.72530170797836,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The program works directly in visible coordinates and does not rotate or transpose the grid. It looks at every full single-colour row and column, and at each possible inside side for that line. For each one it predicts where the wall colour should appear: the line itself plus the two clipped frame sides, which run along the perpendicular grid edges from the wall to the grid boundary on the inside. It picks the line and side whose real cells of that colour differ least from this prediction. The true wall matches exactly. The other full lines are rows of the outside background, and they mismatch heavily because that colour fills whole regions. This replaces the archived solver's test (non-background colour, count greater than line length). That test can pick a full outside-background row when the top and bottom colours differ and the inside colour is the most common one.\n\nWith the wall at index i and the inside direction d, the reference line is i+d. The outside region is every line on the other side. The outside background is that region's most common colour, and markers are the outside cells that differ from it. Each marker is erased. It is then written to line i-d (next to the wall) if it equals the reference cell at the same position along the wall. Otherwise it goes to the far grid edge on the outside, which is index 0 or the last row or column depending on the side.\n\nThe native generator already randomises a vertical flip and a transpose, so all four wall directions are in-domain even before D4 is applied. Orientation is therefore inferred from pixels rather than fixed by d4. Palette changes need no special handling because every colour role is found from the grid. d4 and palette appear only in a documentation header.",
+    "limitations": "Not tested by me.\n\nIt assumes the constructor's domain: one wall line, frame sides clipped at the grid edges on the inside, marker colours different from the wall colour, at least one outside line, and the outside background being the outside region's majority colour. If several markers share one perpendicular line, later ones overwrite earlier ones. The generator never produces this.\n\nTwo defects in the archived solver should be reported for host review:\n1. Its wall choice can select a full outside-background row when the top and bottom background colours differ and the inside colour is the global background.\n2. Its global-background estimate can tie, as in the test fixture (colour 3 and colour 8 each appear 19 times).\n\nNeither defect is reproduced here. The fixtures agree with the uniform rule as I checked them by hand."
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "task_id": "8be77c9e",
+  "factory_sha256": "bb92fcdf69a337202aae612e45661ac3f94068322c4efaf2282110fa44ee1cac",
+  "constructor_sha256": "8fd8ad0c1b26150951843fa4c72defb3d16f5cddb78113b8bc70f5725ef756ba",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 64567348310256,
+  "d4": 7,
+  "unique_base_inputs": 427,
+  "seconds": 0.9425315000116825,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "Native mechanism: output = vstack(input, flipud(input)). The input is copied unchanged, and its reflection across the seam is attached on the bottom side, so the result doubles along that axis. Under the D4 transform, the initial row reversal for indices >= 4 leaves the vertical 'down' direction unchanged. Each clockwise rotation then maps down to left, then up, then right. So the reflected copy is attached on the visible side given by d4 % 4: 0 below, 1 left, 2 above, 3 right. The attached block is the visible input reflected across the seam: rows reversed for a vertical stack, columns reversed for a horizontal stack. I checked this algebraically. For example, rot_cw(flipud g) = fliplr(rot_cw g), and rot180(flipud g) = flipud(rot180 g). The program works directly in visible coordinates, using np.concatenate along the specialized axis. It applies no inverse rotation and no colour remapping. Colours are copied pixel-for-pixel, so the palette does not affect the mechanism and needs no constants. The rule handles rectangular grids naturally: the input is h x w, and the output is 2h x w or h x 2w depending on the seam axis.",
+    "limitations": "The palette argument is intentionally unused. The transformation only copies pixels, and the output canvas is fully covered by the two blocks, so no background or role colour is needed. The constructor only produces square size x size grids with blue on black. The emitted program also handles any rectangular grid of any colours. The fixtures match the uniform rule, and I found no constructor defects or hidden tie-breaks. Demonstrations are not consulted because d4 alone fixes the seam side. Nothing has been tested yet."
+  }
+}

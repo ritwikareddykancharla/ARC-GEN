@@ -1,0 +1,22 @@
+{
+  "task_id": "834ec97d",
+  "factory_sha256": "17086ae7c8a485e9f219a3c45c3ebed4b247f17fb19cb49c2952d80b72e01caf",
+  "constructor_sha256": "28b56a9646026c3b23574c33e2ffb443968f738ebeaaf8463753b8da1305f8c2",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 34626954267587,
+  "d4": 7,
+  "unique_base_inputs": 867,
+  "seconds": 2.993800541968085,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The original rule finds the single non-background pixel at (r,c). It paints yellow (4) over rows 0..r in every column whose parity matches c, which also overwrites the old pixel. It then moves the pixel one step down. The factory turns the original down vector (+1,0) into visible coordinates. Row reversal leaves this vector unchanged, and each clockwise turn maps (dr,dc) to (dc,-dr). The emitted program then works directly in that direction. If the motion is vertical, it stripes the columns matching the pixel's column parity, over the pixel's row and all rows behind it relative to the motion. If the motion is horizontal, it stripes the rows matching the pixel's row parity, over the pixel's column and all columns behind it. It then places the pixel one step forward. Parity is taken relative to the pixel, so (x-c)%2==0, and reflections cannot flip it. The colour roles are constants: background is palette[0] and stripe is palette[4]. The moving colour is read from the pixel. Rectangular grids are handled. If the forward cell falls outside the grid, the move is skipped, matching the archived solver's bounds check. The constructor never produces that case anyway, because row <= size-2.",
+    "limitations": "The program assumes exactly one non-background pixel, as the constructor guarantees. If several were present, it would use the first one in row-major order. An input with no visible pixel is returned unchanged. That would only happen if the constructor's random_color could return the background colour 0, which the source does not show; this case is flagged for host review. The demonstrations are not consulted, because the colour roles and direction are fixed by d4 and the palette. I found no contradictions in the fixtures and no generator defects.",
+    "host_review": "Inspected common.py: conway_sprite preserves at least one pixel in every row and column; independent row/column shuffles preserve this property, so its full bounding box is visible. random_color/random_colors exclude background 0. overlaps with spacing=1 requires a full-cell gap. Domain concerns contingent on these helpers are resolved."
+  }
+}

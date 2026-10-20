@@ -1,0 +1,21 @@
+{
+  "task_id": "67e8384a",
+  "factory_sha256": "985e168bb3bb98fd09389b4c243464c3c31741ce4f8b56e928bda158ff3c5ad2",
+  "constructor_sha256": "858b9e5012d44c44dc321dd43fc2e0d259942c4321d51a1a2bd0bc0d71d68b18",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 260192093219069,
+  "d4": 7,
+  "unique_base_inputs": 995,
+  "seconds": 1.7636119580129161,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "In the original task, the output is a four-way mirror (kaleidoscope) of the input. The input sits in the top-left quadrant, its left-right mirror is top-right, its top-bottom mirror is bottom-left, and its 180-degree rotation is bottom-right. The output has both horizontal and vertical mirror symmetry, so any D4 transform turns it into a kaleidoscope of the transformed input. The only change is which corner quadrant holds the unflipped visible input: wherever the D4 transform sends the original top-left corner. Reversing rows sends top-left to top-right, and each clockwise rotation advances the corner one step along the cycle TL, TR, BR, BL. The factory works out that corner and emits a program that builds a canvas of size 2h by 2w from the visible input. The input goes unchanged into that corner. A block in the other vertical half is flipped vertically, a block in the other horizontal half is flipped horizontally, and the diagonal block gets both flips. The rule has no colour logic, so the palette has no effect.",
+    "limitations": "Assumes every grid in the episode has the generator's structure: the output is exactly 2x the input in each dimension, built by mirroring. The program supports rectangular inputs, though the generator only produces 3x3 ones. Demonstrations are not consulted because the d4 index fully determines the corner. The fixtures are consistent with the uniform rule."
+  }
+}

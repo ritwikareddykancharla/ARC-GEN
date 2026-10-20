@@ -1,0 +1,21 @@
+{
+  "task_id": "7c9b52a0",
+  "factory_sha256": "7cee1d19b91dc77164bf144d94485a60444324eb6098800f28df47ac3b8bbe5a",
+  "constructor_sha256": "3c1da27069993acaffa0ce94a84bcca4e58ea565bdadbbcf285069a0e0de67b1",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 22935134882191,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 9.098973124986514,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The emitted program works directly on the visible grid. It takes the most common colour as the background. It then finds 4-connected multicolour components of all non-background cells. Each component is one box: a frame filled with the 'zero' colour, palette[0], that holds a coloured fragment. The bounding box of each component is the box itself.\n\nAll boxes share one size, so the output canvas uses the most common box size and is filled with palette[0]. Each box is stamped onto the canvas by its top-left corner. Every cell that is neither background nor palette[0] is copied to the same relative position.\n\nThe overlay is applied cell by cell relative to each box's corner. A rotation or reflection of the whole episode therefore rotates or reflects each box and the output in the same way. Because of this, no direction-specific constants are needed and d4 is deliberately unused. Only the role of colour 0, the box fill and output fill, is specialised to palette[0].\n\nFragments come from a single shared pattern, so they never overlap. The stamping order therefore cannot change the result.",
+    "limitations": "- **Background must be the most common colour.** This always holds here: the grid is 16x16 with at most four 5x5 boxes. The background is also assumed to differ from palette[0]; the generator's random_color is assumed to exclude 0.\n- **Boxes must not touch each other orthogonally.** The generator's 2-cell non-overlap margin guarantees this, and boxes never touch the grid edge.\n- **Larger merged components are not split.** If boxes did merge, the program uses the most common component size and stamps only the top-left part of any larger component.\n- **Single-cell components are ignored.** This matches the archived solver; boxes are at least 3x4.\n- **No fixture contradictions were found** against the uniform overlay rule.\n- **The rule text contains an irrelevant aside.** It says the 4-rectangle 'touches the background-free area only partly'. This does not affect the mechanism. No constructor defects were identified."
+  }
+}

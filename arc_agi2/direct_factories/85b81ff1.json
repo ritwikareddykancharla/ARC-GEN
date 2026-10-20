@@ -1,0 +1,21 @@
+{
+  "task_id": "85b81ff1",
+  "factory_sha256": "1303c06b928c4cf768b4bf00f5ca822dd11ef4ca385eb4f469162bdf2fb0214a",
+  "constructor_sha256": "171ba4b0a4536ffb435181ba0ec0cb20685b6ce858bbd9470a8063cf7aa387d2",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 197657417122164,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 9.119149541016668,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "Mechanism: separator lines are entirely the hole colour (originally 0). Background lines are entirely the background colour. Slot lines mix holes and background. Each slot line moves intact. The slots are re-ordered by hole count, descending, starting from the side that was originally the left.\n\nHow the factory specializes this:\n- **Hole colour:** set to palette[0].\n- **Background:** inferred per grid as the most common non-hole colour. The generator guarantees at least about 110 of 182 cells are background.\n- **Slot axis:** columns when d4%4 is even, rows when it is odd. A clockwise rotation turns original column c into row c.\n- **Placement direction:** reversed (the most-holed slot goes to the right or bottom) when the rotation count is 2 or 3. The reflection used for d4>=4 reverses the direction once more, so the rule is XOR.\n\nThe emitted program:\n1. Finds the slot lines directly in visible coordinates: those that are neither all hole nor all background.\n2. Lists them in the visible direction that matches the original left-to-right order.\n3. Stable-sorts their contents by hole count, descending.\n4. Writes them back into the same slot positions.\n\nNo transposition, rotation or colour remapping of the grid is used.",
+    "limitations": "- **Ties:** the generator samples distinct hole counts (1..6, five slots), so ties never occur. Inside the generator, a tie would make one column silently overwrite another in its count-keyed dict. That is a constructor quirk outside the domain and is not reproduced. The emitted program instead uses a stable sort that keeps the original-orientation order.\n- **Two-colour assumption:** the program assumes the grid uses only the hole colour and one background colour, as the constructor produces. Slot lines are identified as mixed lines. A slot with zero holes cannot occur, since counts are at least 1. A slot with six holes still contains background in its even positions, so it is detected correctly.\n- **Demonstrations unused:** orientation comes from d4 alone.\n- **Fixtures:** no contradictions with the uniform rule were found. These checks were done by reasoning only; I ran no tests."
+  }
+}

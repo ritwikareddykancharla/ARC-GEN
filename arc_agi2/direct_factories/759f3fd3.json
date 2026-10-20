@@ -1,0 +1,21 @@
+{
+  "task_id": "759f3fd3",
+  "factory_sha256": "f28534e21fcc63f3eab6e78f414ad3051ca717b876741af01dfa07c540c0897d",
+  "constructor_sha256": "a8bd1261376691da3cc3adbbbbec75f161b18d80e81d8de4961a137eb5c17027",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 134758099365982,
+  "d4": 7,
+  "unique_base_inputs": 663,
+  "seconds": 10.200017041061074,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The input is a background grid crossed by one full row and one full column of the line colour (original colour 3, so palette[3] after recolouring). Every background cell whose Chebyshev distance max(|y-cy|,|x-cx|) to the crossing is even becomes the ring colour (palette[4]). Cells at odd distance stay background (palette[0]), and the cross itself is kept. Every D4 transform maps one full row plus one full column to another full row plus full column, and it preserves Chebyshev distance from the crossing. So the same visible-coordinate mechanism works unchanged for every d4. Only the colour roles need specializing, and they become palette constants. The emitted program finds the full line-colour row and column directly in the visible grid. It then fills the even rings from the inside outward, clipping them at the grid edges. If no row or column is entirely the line colour, it falls back to the first row and column that contain no background.",
+    "limitations": "This assumes the constructor's domain: a single full row and a single full column of the line colour, with no other objects. The generator only makes square grids, but the code also handles rectangular grids. Under that domain there are no ties, because exactly one full row and one full column exist and the first is taken. No constructor defects or contradictions with the fixtures were found. The generator's rule (4 where the Chebyshev distance is even, then the 3 cross overwritten) matches both the archived solver and the fixtures. The demonstrations are not used, because the colour roles are fixed by the palette. No tests have been run."
+  }
+}

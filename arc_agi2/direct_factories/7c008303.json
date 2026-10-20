@@ -1,0 +1,21 @@
+{
+  "task_id": "7c008303",
+  "factory_sha256": "cffeb323032572c0ec2ef22546b7bf60935c82159b9fd54d09e06fd8cfeb42be",
+  "constructor_sha256": "f9723df2a0b1c0814102d16e820fe13bad47edc03963d99a5fd36c8868ab712f",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 53946348524532,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 6.365201457985677,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The input is split by one full row and one full column of the divider colour, palette[8]. The program finds both lines directly in the visible grid. If no line is completely uniform, it falls back to the row or column with the most divider cells.\n\nOn each axis, the larger side of the divider is the pattern panel (6 cells) and the smaller side is the key panel (2 cells). This gives the pattern panel and the 2x2 key in the opposite corner.\n\nThe output is the pattern panel, cut out using the panel's own borders rather than the bounding box of the pattern colour. The panel is split into halves along each axis. Every cell of colour palette[3] in quadrant (i,j) is recoloured with the key cell at the same visible position (i,j) inside the key panel. All other cells are copied unchanged, so the background palette[0] stays as it is.\n\nThe generator applies the same flip or rotation to the key and to the pattern, so the rule 'same relative position in key and in pattern' holds under every D4 transform. For that reason the emitted code needs no d4-specific branch. Palette is handled only by the two constants DIV=palette[8] and PAT=palette[3].",
+    "limitations": "Constructor and archive notes for host review:\n\n(1) The archived solver and the rule text crop the bounding box of colour 3. The generator draws random_pixels, which is not guaranteed to reach every edge of the 6x6 panel. When it does not, the archived solver would return a wrongly sized output. This factory crops the divider-delimited panel instead, which matches the generator's output, always size x size.\n\n(2) For an odd size, the generator assigns the middle row or column to the bottom/right quadrant in canonical orientation. After a flip that middle line moves to the other side, which is not a symmetric visible rule. This only matters if size is changed from the default 6, so here I just use floor-halving in visible coordinates.\n\n(3) The validate() parameters for the archive list different colours than the canonical fixtures (for example [2,1,1,4], which repeats a colour). The approved fixtures themselves are consistent with the uniform rule.\n\n(4) If a key colour ever equalled palette[0] or palette[8], the output would still be computed correctly, but divider detection relies on there being exactly one full line of palette[8] per axis. The generator guarantees this by excluding cyan from the key colours.\n\nNo tests have been run."
+  }
+}

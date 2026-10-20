@@ -1,0 +1,21 @@
+{
+  "task_id": "81c0276b",
+  "factory_sha256": "e95a9cad1b5c4a757b0f9d79c84bed8644492fd1258933ff4c70d4137ac017eb",
+  "constructor_sha256": "73af67441d1b1ee4e702d914e401a85b704fff80a6cebc8e2353c24a397c14e8",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 7239126091492,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 8.856876166071743,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "Native mechanism: the background is 0. Full-length lines of the divider (mode) colour split the input into cells, and each cell holds a 2x2 block. Blocks in the divider colour are filler. The program counts the other blocks per colour. The output is a histogram with one bar per colour. Bars are sorted by count with the rarest first, each bar's length equals its count, the bars are anchored at the left, and empty space is background.\n\nThe emitted program works directly in visible coordinates:\n- It takes background = palette[0] as a constant.\n- It infers the divider colour from the visible pixels: any full row or column of a single non-background colour.\n- It counts 4-connected single-colour components that are neither background nor divider. These are exactly the 2x2 blocks, because blocks are isolated by background and divider lines.\n- It paints the histogram in its D4-transformed layout.\n\nThe factory derives three constants from d4: bar axis, anchor side and bar ordering.\n- d0: horizontal bars, left-anchored, rarest at top.\n- d1: vertical, top-anchored, rarest at right.\n- d2: horizontal, right-anchored, rarest at bottom.\n- d3: vertical, bottom-anchored, rarest at left.\n- d4: horizontal, right-anchored, rarest at top.\n- d5: vertical, bottom-anchored, rarest at right.\n- d6: horizontal, left-anchored, rarest at bottom.\n- d7: vertical, top-anchored, rarest at left.\n\nThe output shape is (number of colours) x (max count) for horizontal layouts, and the transpose for vertical ones. The program never rotates grids and never remaps colours.",
+    "limitations": "- **Ties:** The constructor rejects scenes where two colours share a count, so ties never occur in the domain. The emitted program breaks ties by visible colour value, as the archived solver does. That fallback is not palette-invariant, but it cannot affect valid generated pairs.\n- **Background:** The background is fixed to palette[0] rather than taken as the most common colour. This is deliberate. With many filler blocks in the divider colour and small buffers, the divider colour can outnumber background pixels, which would break the archived solver's 'most common colour' assumption.\n- **Divider detection:** The program assumes at least one full divider row or column exists, which holds because width and height are at least 3 cells. If none were found, it falls back to the most frequent non-background colour.\n- **Fixtures:** None of the supplied fixtures contradicts the uniform rule, and no constructor defect was identified."
+  }
+}

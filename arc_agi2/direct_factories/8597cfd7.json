@@ -1,0 +1,29 @@
+{
+  "task_id": "8597cfd7",
+  "factory_sha256": "0050cbbd26ebca2559910225d506c8f97c3bc5014c4a263c854456a5f804cc8c",
+  "constructor_sha256": "cf15e3fee301297cd70bacda9d9d63c99a26d5adda10c134df051035ee2c0804",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 199073498977270,
+  "d4": 7,
+  "unique_base_inputs": 92,
+  "seconds": 4.184124584076926,
+  "finite_default_domain": {
+    "exhaustive": true,
+    "cases_checked": 92,
+    "augmented_checks": 1472,
+    "definition": "All increasing red/yellow bar pairs at heights 9 and 11 with unequal growth: 22 + 70 = 92.",
+    "query_distinct_from_demos": true,
+    "scope": "Default native parameter distribution only; finite input count is not inflated by repeated sampling."
+  },
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "In the canonical task, a full row of colour 5 at height//2 splits the grid. A red (2) bar and a yellow (4) bar each start at the top edge of each half. The answer is a 2x2 block of the colour whose cell count grows more from the top half to the bottom half. The factory carries this mechanism into visible coordinates. The row reversal for d4>=4 leaves the top and bottom halves in place, and k = d4%4 clockwise turns move the original top half to the top, right, bottom or left side. When k is odd, the divider becomes a full column of palette[5] and the halves are left and right. When k is even, it stays a row. FIRST_LOW records whether the original top half sits at the lower indices: True for k=0 (top) and k=3 (left), False for k=1 (right) and k=2 (bottom). The emitted solve() locates the full-length palette[5] line along the specialised axis, choosing the one nearest the centre and falling back to the middle index if none exists. It then counts palette[2] and palette[4] cells on each side. Growth is computed as count(original-bottom side) minus count(original-top side), and the winner fills a 2x2 grid. A 2x2 uniform grid is the same under every D4 transform, so the output needs no reorientation. No normalisation wrapper, grid rotation or global colour unpermutation is used. Colour roles are palette constants and direction is a specialised side choice.",
+    "limitations": "Equal growth for both colours cannot occur in the constructor, because draw() rejects it. The emitted fallback of palette[2] for that case is an arbitrary deterministic choice, not part of the puzzle. The program does not use the demonstrations; colour roles and orientation come entirely from d4 and the palette. I have not run or tested this factory. The fixtures agree with the uniform growth rule (bottom count minus top count, larger wins) and I found no contradictions or constructor indexing defects."
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "task_id": "868de0fa",
+  "factory_sha256": "881c4d3a3b616f362070048d9dc16311878c4136269fa8f65757c6e88bea791f",
+  "constructor_sha256": "ba622b127c137a2d9f3e82b2c8449344f1b5cff79c6443fc03fa23fb9d409d98",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 272192408059301,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 41.46006704098545,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The scene contains hollow square frames in colour 1 on a colour-0 background. Each frame's interior is filled with 7 if its side length is odd and with 2 if it is even. Because the frames are square, interior parity is the same for both axes. This means the mechanism is unchanged by any D4 transform, so the emitted program does not need to pick an orientation.\n\nColour roles become constants:\n- background = palette[0]\n- frame = palette[1]\n- odd fill = palette[7]\n- even fill = palette[2]\n\nThe emitted program works directly on the visible grid:\n1. Find each 4-connected component of the frame colour.\n2. Take its bounding box.\n3. Shrink the box by one cell on each side to get the interior.\n4. Paint only the background cells of that interior, choosing the fill by interior side parity.\n\nAll other cells are copied unchanged. Frames that touch the grid edge are handled, because only the component's own bounding box is used. The generator's overlap check with margin 1 keeps frames from overlapping or touching, so each component is exactly one frame.",
+    "limitations": "The program assumes the constructor's domain: square frames with side 3 to 10, separated so that 4-connected components do not merge, and no nesting. If a non-square frame appeared, which is outside this domain, the parity would be taken from the smaller interior side; this keeps the result consistent under D4. The archived solver instead used the interior width, which depends on orientation. No fixture contradicts the uniform odd-to-7 / even-to-2 rule. No constructor defects or hidden tie-breaks were found. The emitted program uses the palette constants rather than inferring the background as the most common colour."
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "task_id": "878187ab",
+  "factory_sha256": "220b5ef7e50ad67b0e1aa4f63266a7540582c0d54648b8041cd1ad6856ac7a3b",
+  "constructor_sha256": "8999abe6a80a357b5353029244cc3a5432b22d0a2cdf1e2ce07a2716a5298aff",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 277403876902781,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 7.647502625011839,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "In the original task, the output is a fixed 16x16 canvas filled with background colour 7. A colour-2 block sits on it. Its long side equals the larger of the two input colour counts, and its short side equals the smaller count. One corner of the block is fixed at a canvas corner. Two colour-4 diagonals start at the two corners of the block's anchored edge and move one step inward per step away from that edge, overlapping where they cross. The factory applies the D4 transform to three things: the anchor corner (canonical (15,0)), the width unit vector (canonical (0,+1)) and the height unit vector (canonical (-1,0)). Flips negate the column component, and each clockwise rotation maps (dr,dc) to (dc,-dr) and (r,c) to (c,15-r). These are baked into the program as integer constants. The emitted program works directly in visible coordinates. It counts the pixels of each non-background colour in the query input; positions and grid shape do not matter, so the counts are D4-invariant. It sets h to the smaller count and w to the larger, both capped at 16. It fills cells anchor + i*H + j*W with palette[2], then draws the cells at (k,k) and (k,w-1-k) with palette[4]. Background and drawing colours are palette[7], palette[2] and palette[4]. Under rotations by 90 or 270 degrees the larger count therefore runs vertically, as the transformed outputs require.",
+    "limitations": "Equal colour counts are not sampled by the constructor, but the result is the same either way: when the counts are equal the block is square, so the larger/smaller assignment cannot change it. If only one non-background colour appears (outside the domain), that count is used for both sides, which matches the archived solver. The background is taken to be palette[7], falling back to the most common colour if palette[7] is absent. Demonstrations are not used, because the mechanism is fully determined by the query counts. The 16x16 canvas size is a fixed constant of the family. Fixtures are consistent with the uniform rule; no constructor defects were found."
+  }
+}

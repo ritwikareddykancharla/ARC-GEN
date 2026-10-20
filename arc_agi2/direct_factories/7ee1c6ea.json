@@ -1,0 +1,21 @@
+{
+  "task_id": "7ee1c6ea",
+  "factory_sha256": "f8e61c7f8ceaba540c2503d019231ca31469cad8dbd6f5a49c207c8653c40418",
+  "constructor_sha256": "d1af18d45f52aeb2fd85cd810d9388ce9c8273442454dfededfa06426850ae9d",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 169513652846714,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 3.2543874999973923,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The constructor draws a square frame in colour 5. Inside the frame it swaps the two pair colours and leaves colour 0 alone. Nothing outside the frame changes. The noise outside the frame uses only 0 and the pair colours, so colour 5 appears only in the frame. The emitted program uses palette[5] as the frame colour and palette[0] as the colour that never swaps. It finds the frame from the bounding box of palette[5] cells. This works under every D4 transform because the frame is a square, so its bounding box is the same mechanism in visible coordinates. No rotation or unrotation is needed. The two colours to swap are read from the query grid itself: they are the grid colours other than the background and the frame. The program uses the whole grid rather than only the interior, so a pair colour that happens to be missing from the interior is still found. If the whole grid does not give exactly two such colours, the program falls back to the interior colours. It then swaps those two colours strictly inside the frame and copies everything else unchanged.",
+    "limitations": "This assumes common.random_colors never returns colour 0 in the pair, which matches the usual ARC-GEN behaviour of choosing colours from 1-9. If the constructor could pick 0 as a pair member, the background would itself swap inside the frame. Each scene would then have only two colours, which looks the same as a scene whose second pair colour is absent. The program would leave such a grid unchanged. This should be reviewed by the host. If neither the whole grid nor the interior gives exactly two candidate colours, the output equals the input, and this case is vanishingly rare in the generator's domain. No fixture contradicts the uniform rule. No tests have been run."
+  }
+}

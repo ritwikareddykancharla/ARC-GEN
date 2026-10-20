@@ -1,0 +1,21 @@
+{
+  "task_id": "7e0986d6",
+  "factory_sha256": "bc5064bbee058f832a264e570a2f1ee8a0dd79f842367120dea1d5d06597c853",
+  "constructor_sha256": "8c275d872c393164e83acf4d1e89a5604c63d985d50b73fb1fff0f2431c79891",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 278508303730905,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 68.90951208304614,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The rule is the same under every rotation and reflection. The input shows solid rectangles of one colour plus isolated noise pixels of another colour. In the output, noise pixels inside a rectangle take the rectangle colour and all other noise pixels become background.\n\nThe four quadrant checks below cover all directions equally, so the emitted program works directly in visible coordinates and d4 needs no rewriting.\n\nColour roles are set as follows:\n- Background is the constant palette[0].\n- Rectangle and noise colours change from pair to pair, so they are read from each grid. The block colour is the non-background colour with the most cells touching a same-colour orthogonal neighbour; noise pixels are isolated, so they score about zero. Any remaining non-background colours count as noise.\n\nInside test: a noise pixel is inside if, for some diagonal quadrant (dx, dy), three cells are solid: the horizontal neighbour, the vertical neighbour and the diagonal between them.\n- Boxes are at least 3x3, and noise pixels do not neighbour each other. So any pixel inside a box, including edges and corners, always has such a quadrant.\n- A pixel touching a box from outside has block colour on at most one axis side, or the diagonal is empty, so it fails the test.\n\nThe test is run to a fixed point, with already-confirmed inside noise counted as solid, so diagonally adjacent noise pixels inside one box are also handled.\n\nThis is the corrected 'corner' condition from the task rule, without the archived ray casts. Those rays can misfire when a noise pixel sits in a one-cell gap between two aligned boxes.\n\nChecked by hand on all fixture noise pixels: corner (5,4), edge pixels, and outside-touching pixels such as (5,5), (10,8) and test (7,12) are all classified as the labels require.",
+    "limitations": "1. **Boxes very close together.** The test assumes no outside noise pixel has three block neighbours forming an L whose cells come from different boxes. That can only happen when boxes touch or nearly touch with a sideways offset; a one-cell padding between boxes, as common.overlaps(...,1) appears intended, rules it out.\n   - The fixtures already break the padding: pair (14x13) has boxes rows 7-10 cols 3-7 and rows 10-12 cols 0-2 sharing an edge. The constructor's validate() parameters bypass the overlap check.\n   - No fixture noise falls in such a seam, so the fixtures stay consistent.\n2. **Height-2 box in the test.** The test fixture has a box only 2 rows tall (talls=[...,2]), below the generator's random range of 3-10. Its noise pixels are still classified correctly, but this is a constructor inconsistency worth host review.\n3. **Colour-role ties.** The block-colour heuristic picks the larger colour if two non-background colours tie on adjacency and count. That only happens in degenerate grids with no real boxes.\n4. **Background colour.** Background is assumed to be palette[0], the generator's colour 0.\n5. **Not tested.** No tests were run."
+  }
+}

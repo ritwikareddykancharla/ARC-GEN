@@ -1,0 +1,21 @@
+{
+  "task_id": "84f2aca1",
+  "factory_sha256": "7d3e4c569df349a6ed8e266dd26aeef01c59d9b8452024c072e8af909a9bb9f4",
+  "constructor_sha256": "58cfb7d8a868942c9491877debd4e376f868c05ea3328a3d0c3e695f4fc8e7dd",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 132041312724179,
+  "d4": 7,
+  "unique_base_inputs": 999,
+  "seconds": 18.811071584001184,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The rule is that each hollow 1-cell-thick frame has its enclosed background interior filled. A 1-cell interior (3x3 frame) gets original colour 5. A 2-cell interior (3x4 or 4x3 frame) gets original colour 7. Frame colour and position do not matter. The mechanism depends only on 4-connectivity and component size, so it is unchanged under every D4 transform. Rotation or reflection turns a horizontal 2-cell hole into a vertical one or the reverse, and the size is the same either way. So no axis needs specialising. The emitted program works directly on the visible grid. Background is the constant palette[0], and the fill colours are palette[5] and palette[7]. It flood-fills background components with 4-connectivity and skips any component that touches the grid border. Every other component is an enclosed hole and is filled by size. This matches the archived solver's table {1:5, 2:7}, including its fallback where any size above 1 maps to 7. Frames sitting flush against a grid edge are handled correctly, because their interior cells never lie on the border. Demonstrations are accepted but not needed.",
+    "limitations": "I have not run this code; the host verification is still pending. Background is taken to be palette[0] and not the most common colour. These agree in the generator's domain, which uses at most width*height//30 small boxes. The program assumes the open background is 4-connected to the border, which holds only if the constructor's overlaps(...,1) keeps at least a 1-cell gap between boxes. If the host's common.overlaps allowed boxes to touch, two neighbouring frames could enclose an extra background pocket. That pocket would then be filled by size, which would be a constructor-domain issue for the host to review. The generator only produces holes of 1 or 2 cells. Any larger enclosed pocket would get palette[7], copying the archived fallback; this is not a demonstrated rule. The fixtures contain no contradictions."
+  }
+}

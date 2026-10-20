@@ -1,0 +1,22 @@
+{
+  "task_id": "60b61512",
+  "factory_sha256": "12c645078075bc98cfbc088b2dcd8d0c5da95d6a3f62cd22a07f318efd290fbd",
+  "constructor_sha256": "f588e4c32d44a5d0c60d0fb08d84cbd80337a9dc45efd39239b358573ebc4ac9",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 142436468535491,
+  "d4": 7,
+  "unique_base_inputs": 967,
+  "seconds": 9.96087416599039,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The rule: find the 8-connected objects made of non-background cells (yellow, palette[4]). Each object's 3x3 bounding box has its background cells (palette[0]) filled with orange (palette[7]). Yellow cells and cells outside the boxes stay as they are.\n\nThis rule is invariant under D4, so the emitted program works directly on the visible grid using the palette constants BG and FILL.\n\nThe generator places the two 3x3 sprite slots at fixed positions and sometimes applies an inverted transpose. To keep that structure, the factory maps both slot layouts (normal and anti-transposed) into visible coordinates with the given d4. The emitted program then tries to assign each 8-connected object to its own slot box within one layout, and fills that whole 3x3 slot. This matches the generator exactly even if a sprite does not span all three rows or columns.\n\nIf no layout fits, or the grid is not 9x9, the program falls back to the archived solver's behaviour: it fills each object's own bounding box. When sprites span their full 3x3 box, both paths give the same result. On the canonical fixtures (train xpose=0, test xpose=1) the slot assignment picks the correct layout.",
+    "limitations": "No tests have been run.\n\nIf a sprite were smaller than 3x3 and both slot layouts could hold every object, the first layout (non-transposed in canonical terms) is chosen. This tie can only happen when conway_sprite produces sprites that do not reach every edge of the 3x3 box, which the archived solver also assumes does not happen.\n\nGrids that are not 9x9, or object layouts outside the generator's domain, fall back to plain bounding-box filling.\n\nBackground and fill colours are taken from palette[0] and palette[7], not inferred from the demonstrations.\n\nThe fixtures are consistent with the uniform rule; I found no contradictions.",
+    "host_review": "Inspected common.conway_sprite: it preserves at least one cell in every row and column before shuffling row/column lists, which preserves those counts. common.is_symmetric explicitly checks both row and column reflection axes. The native sprite therefore spans the full 3x3 box."
+  }
+}

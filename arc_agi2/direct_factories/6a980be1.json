@@ -1,0 +1,21 @@
+{
+  "task_id": "6a980be1",
+  "factory_sha256": "784a988c297c0a20fc66f43871dd772fff0f039d75054462a073947cf82fc921",
+  "constructor_sha256": "892eb94c9bc001d63c0cee505d0c3b311db439b128de1bf1fd7b460ab196390c",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 280906734848765,
+  "d4": 7,
+  "unique_base_inputs": 932,
+  "seconds": 9.87186820898205,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The scene has these parts: a one-cell frame of colour B, which is read from the corner; two full green lines (palette[3]) that bound a band; and, inside the band, a periodic run of red blocks (palette[2]) separated by background (palette[0]).\n\nThe emitted program works directly in visible coordinates:\n1. It looks for interior rows that are entirely green, and for interior columns that are entirely green, to decide whether the band is horizontal or vertical.\n2. It reads the 1-D pattern along the band from the first line inside the green line. This is the frame-excluded interior, where index 0 is visible position 1.\n3. It finds the smallest period of that pattern and extends it to every position x as seq[(x-1) mod p]. This fills the former frame cells at both ends of the band.\n4. It draws both green lines across the full grid.\n5. It writes the extended pattern into every line inside the band.\n6. It fills every line outside the band with B where the pattern is non-background and with background elsewhere.\n\nPeriodic extension in both directions is symmetric under reversal, so reflections need no special handling. A rotation only swaps the row and column branches, and both branches are written out explicitly with no transpose wrapper. The palette is baked in as the constants ZERO and GREEN; B is inferred from the grid. d4 only sets a tie-break preference, which is never triggered in the generator's domain.",
+    "limitations": "- Assumes the frame colour B differs from background, red and green. The generator excludes 2 and 3; it is assumed to exclude 0 as well.\n- The period is recovered from the interior run. This is unambiguous because the interior is at least 16 cells long and the period is at most 7 (Fine\u2013Wilf), but it would fail on scenes with fewer than about two periods visible.\n- If no pair of full green lines is found, the program returns the input unchanged.\n- No fixture contradictions were found. All three train pairs and the test pair agree with the uniform rule.\n- Not executed by me."
+  }
+}

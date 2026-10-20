@@ -1,0 +1,21 @@
+{
+  "task_id": "77fdfe62",
+  "factory_sha256": "165822a3f3bc5712936a494975ad78445099c68fb5a5588ceb19f9b401f2174b",
+  "constructor_sha256": "566e3a8d1cc2da993d4b9ca5c2d7821178ce22689f325f0da265554690bcfddc",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 23451991026760,
+  "d4": 7,
+  "unique_base_inputs": 998,
+  "seconds": 5.061361750005744,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The rule is that every marker cell (original colour 8) inside the central square takes the colour of the grid corner nearest to it. 'Nearest' means the corner of the quadrant that contains the cell. All other centre cells keep their background colour.\n\nThis geometric relation is invariant under all eight D4 transforms. Any rotation or reflection permutes the four corners and the four quadrants of the centre together, so the visible-coordinate rule stays the same: the top-left visible quadrant uses visible g[0][0], and likewise for the other three. For this reason the emitted program needs no d4-specific direction changes.\n\nThe palette is handled by specialising the constants:\n- The frame colour is palette[1].\n- The marker colour is palette[8].\n- Corner colours are read directly from the visible corner pixels.\n- Background cells are copied unchanged from the crop, so they appear as palette[0] without being named.\n\nThe centre is found by detecting the two full rows and the two full columns of the frame colour. If detection fails, it falls back to rows and columns 2..n-3. The centre is then split at h//2 and w//2. The program never inverse-transforms or repermutes the grid.",
+    "limitations": "The constructor only produces square grids with an even-sized centre (2, 4 or 6), so the quadrant split is always exact. For an odd-sized centre, the h//2 split would assign the middle row or column to the bottom or right quadrant, and that choice is not D4-symmetric. This case never occurs in the constructor's domain.\n\nrandom_colors excludes blue and cyan, so the frame and marker colours never clash with corner colours. If a corner colour were palette[0], the markers in that quadrant would simply become background, which matches the generator.\n\nIf the frame colour also filled some other entire row or column, detection would use the outermost full lines. That cannot happen with the generator's layout.\n\nNo fixture contradictions or constructor defects were found."
+  }
+}

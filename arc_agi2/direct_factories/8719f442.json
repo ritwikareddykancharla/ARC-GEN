@@ -1,0 +1,21 @@
+{
+  "task_id": "8719f442",
+  "factory_sha256": "e3e1c5080afe840a69042b2679b1de2e750997fafe904bc1253eca622bc622d5",
+  "constructor_sha256": "773fcd352267e69be3adcb2a9fb35d6101cc07d6c8465849db6a726a4853ae29",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 225239978771815,
+  "d4": 7,
+  "unique_base_inputs": 140,
+  "seconds": 6.23706804192625,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "I rewrote the mechanism directly in visible coordinates. The output is a 5x5 board of input-sized tiles. In the core (tile rows and columns 1..3), each input cell becomes a solid tile of its own colour. The background stays background, and the background constant is palette[0]. Each foreground cell on the top, bottom, left or right edge of the input then stamps an exact copy of the input into the outer-ring tile just beyond the core in that direction. A corner cell stamps two copies.\n\nThis rule is fully D4-equivariant. A rotation or reflection of the episode only permutes the cells and edges of the input in the same way it permutes the output tiles. So the same code is correct under every D4 transform, and no axis or direction specialisation is needed. The palette only enters through the background constant palette[0]. Foreground tiles copy the actual cell colour, which is palette[5].\n\nRing tiles written by different (cell, direction) pairs never overlap, and they never overlap core tiles. The ring corners (0,0), (0,4), (4,0) and (4,4) are never written. As a result, drawing order is irrelevant and there are no tie-breaks.",
+    "limitations": "The program assumes the background is palette[0] and that there is a single foreground colour, as in the constructor domain. It does not read the demonstrations. It is written generally for h x w inputs, producing a 5h x 5w output, although the constructor only produces 3x3 inputs. I found no constructor defects: the generator's direction tests (i//3==0/2, i%3==0/2) match the visible edge rule, and the fixtures are consistent with it."
+  }
+}

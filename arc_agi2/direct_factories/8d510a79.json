@@ -1,0 +1,21 @@
+{
+  "task_id": "8d510a79",
+  "factory_sha256": "4ac48abe39fed009a0d072315ad0e00a085bec9b5da6478ebbef9192cd3948a0",
+  "constructor_sha256": "4276f1ceca5fcda555f35f17c2a7feef891bca6c633c43ee90b5075791abda9d",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 27573576278140,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 5.878812875016592,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The factory works out which way the divider line runs. In native space it is a full row of colour 5. A horizontal mirror keeps it a row. An odd number of clockwise rotations makes it a column. So when d4%4 is 0 or 2 the program searches for a full row of palette[5], and otherwise for a full column. If no line of palette[5] is found, it falls back to any full uniform non-background line. The generated program then grows each seed perpendicular to the divider, directly in the visible coordinates, with no transposing or rotating. A palette[2] seed steps toward the divider. A palette[1] seed steps away from it, toward the grid border. Each streak paints background cells (palette[0]) and stops at the first cell that is not background. This matches the generator's own stopping rule: 'stop at a nonzero output cell or the grid edge'. A palette[2] streak therefore stops when it reaches the divider. 'Toward' and 'away' are measured relative to the divider, so they automatically flip with reflections and rotations; no direction table is needed. The colour roles are fixed constants taken from palette[0], [1], [2] and [5]. Grids may be rectangular, and seeds already on the border simply produce no streak.",
+    "limitations": "This has not been run or tested. The generator only makes 10x10 grids. It places at most one seed per column in each half, and always leaves at least one empty cell between a seed and the divider. So streaks never collide with each other or with other seeds. If out-of-domain inputs did have such collisions, this program stops a streak at the first non-background cell, as the generator does. The archived solver instead skips over that cell and keeps painting. I found no contradictions in the fixtures and no constructor defects. The approved fixtures appear to be built from the generator's validate() parameters with colour 1 and colour 2 roles as described, and all three are consistent with the uniform rule."
+  }
+}

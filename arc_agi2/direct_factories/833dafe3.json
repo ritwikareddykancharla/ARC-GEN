@@ -1,0 +1,21 @@
+{
+  "task_id": "833dafe3",
+  "factory_sha256": "6f9c7aeaeac4bc30b2fe616e4c764b3d9497fb54e6b433fbcf4c37472f4103b2",
+  "constructor_sha256": "5f0166ce3ccb1f6f1c88ddac151d4b3e5f2ee834e5a003b442bd1dee5f9dd00b",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 32455103803491,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 2.001849125023,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The native rule builds an output twice the input's size in both directions. The output is a kaleidoscope that is mirror-symmetric about its central horizontal and vertical axes, and the original input sits unchanged in the bottom-right quadrant. A D4 transform applied to the whole episode keeps this mirror structure, but it moves the quadrant that holds the unchanged visible input. That quadrant is the image of the bottom-right corner under the transform: d4=0 gives BR, 1 gives BL, 2 gives TL, 3 gives TR, 4 gives BL, 5 gives TL, 6 gives TR and 7 gives BR. The factory works out this corner and emits a direct program. The program places the visible input in that quadrant. The quadrant in the other row is the input flipped vertically. The quadrant in the other column is the input flipped horizontally. The diagonal quadrant is flipped both ways, which is a 180\u00b0 rotation. The four quadrants cover every output cell, so no background fill is needed, and the rule never refers to colour, so the palette is not used. Rectangular grids are handled naturally, with quadrants of size h by w.",
+    "limitations": "The generator produces only square grids, of size 3 to 8. Rectangular inputs are handled by the obvious generalisation. The demonstrations are not used, because the quadrant arrangement is fixed by d4. The archived solver fills the canvas with the background colour before stamping, but every cell is overwritten, so this program skips that step and the output is the same. I found no fixture contradictions or constructor defects. I have not run any tests."
+  }
+}

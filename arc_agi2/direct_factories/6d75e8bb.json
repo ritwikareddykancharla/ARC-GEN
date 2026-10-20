@@ -1,0 +1,21 @@
+{
+  "task_id": "6d75e8bb",
+  "factory_sha256": "b46a63a493dd49324d9df5101865794b805ca684f9c1b1ad3b6b2d746bc3d433",
+  "constructor_sha256": "7a36c3e1d31c9d33103b05e5fd5ff0045d262a9f2c0b24dd23a98ae5f9476c04",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 248684058750420,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 2.898075749981217,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The constructor builds a ragged cyan (8) shape out of horizontal strips. In the output, every cell of the shape's bounding rectangle that is not cyan becomes red (2); the rest of the grid stays background (0). The red rectangle has len(lengths) rows and max(lengths) columns. The extra cyan pixel always lies inside that rectangle because pcol < lengths[prow+1]. So the filled region is exactly the visible bounding box of the non-background cells. A bounding box maps to a bounding box under every rotation and reflection, so no axis or direction needs to change for the D4 transform. Only the colour roles move. The emitted program uses the constants palette[0] for background and palette[2] for fill, and works directly in the visible coordinates. It finds the bounding box of all cells that are not background and paints the background cells inside it with the fill colour. Background is a fixed palette constant rather than the most common colour. This avoids a failure the archived solver could hit: with 9 strips of length 6 in the smallest grid, the cyan count (up to 54) could exceed the background count (as low as 45).",
+    "limitations": "This assumes one non-background object per grid, which is what the constructor guarantees. No constructor defects were found: the extra pixel is always inside the strip rectangle, and the bounding box is determined by max(lengths), which is visible. The fixtures agree with the uniform rule. The emitted program ignores the demonstrations because the colour roles are fixed by the palette. These results come from reasoning only: no tests were run, and the host has not yet verified the factory."
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "task_id": "484b58aa",
+  "factory_sha256": "ce409d9cb649ba47721ebda7a78378275a636d2b9c7ccd4bf735c8fb35c3260a",
+  "constructor_sha256": "091edd48b157d0dd20edd61a2f462e61e21649fe2f8083cc890ea54f03c085c9",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 208811194345400,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 152.71404474996962,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The emitted program treats the masked-out cells as unknown. Their colour is the constant palette[0]. It then searches visible-grid translations (dy, dx) with dy >= 0 and -W < dx < W. A shift is kept only if every overlapping pair of known cells agrees and at least 40 cells overlap. Because this set of shifts is closed under D4 up to sign, the search runs directly in visible coordinates. The kept shifts are sorted by length. Ties, the direction tried first (+ or -), the order of the 4-connected hole components, and the order of cells within each component all follow the constructor-frame order. That order comes from mapping visible vectors and positions back through the inverse D4. This only sets the sort order; the grid itself is never rotated or recoloured. Each hidden cell is filled with the first known colour found by stepping along multiples of each valid shift. Cells filled earlier can serve as sources for later ones. Up to 5 extra passes resolve any cells left over. The generator always produces a true doubly periodic wallpaper (period `length` in both axes, and the fixtures use other period lattices), so the real period shifts always pass the check and fill the holes correctly.",
+    "limitations": "This approach depends on enough uncovered wallpaper to confirm the true periods: each needs at least 40 overlapping known cells. That always holds for 29x29 grids with five cutouts of at most 5x5. In principle, a large shift could pass the check spuriously if every disagreement happened to lie under the masks. The archived solver has the same weakness, and the tie-break ordering mirrors its choice. If a hole cannot be reached along any valid shift after 6 passes, it stays as the mask colour. The mask colour is fixed as palette[0] rather than inferred from the demonstrations. The fixtures agree with this uniform rule; no contradictions were found. These guarantees come from analysis only, since nothing was run."
+  }
+}

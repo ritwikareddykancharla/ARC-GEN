@@ -1,0 +1,21 @@
+{
+  "task_id": "825aa9e9",
+  "factory_sha256": "225a25d1b4c4ce7e0bf8308b8f4d7a786a1ad6687e6494caf8243b45d6d438fb",
+  "constructor_sha256": "a8b09561ad2badd5363de34fdb5f20d923318446fa323d68a6d1019c328d34db",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 261829441798681,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 14.113188166054897,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The air colour is fixed as palette[7]. Gravity is turned into a visible-coordinate step vector (GY, GX). In the original frame gravity points down. The row reversal for d4>=4 does not change a vertical direction, and each clockwise rotation maps down to left, then up, then right. The emitted program works directly in the visible grid:\n\n1. It splits non-air cells into single-colour 4-connected components.\n2. Components touching the grid edge on the gravity side become static ground. In the original frame this is the bottom edge.\n3. The other components are erased. They are then re-dropped, deepest along gravity first.\n4. Each object moves one step at a time along (GY, GX) as a rigid body while every cell passes these checks:\n   - It stays inside the grid and off the floor-edge line, which acts as a virtual floor.\n   - It does not overlap ground or an object that has already fallen.\n   - It does not end directly in front of a static ground cell along gravity. This gives the one-cell clearance above ground.\n5. Landing flush on an already-fallen object is allowed, because only overlap is forbidden there.\n\nThis matches the constructor's _drop and the archived ok() check, with the vertical axis replaced by the gravity vector.",
+    "limitations": "1. The supplied rule note says the program 'emits one canvas after each object lands'. Neither the constructor nor the archived solver does that: both return only the final grid, and so does this program. The note is inaccurate and needs host review; it is not part of the mechanism.\n2. Ground is identified as components touching the gravity-side edge. This relies on the constructor's guarantees:\n   - Ground is a skyline in which every column of ground touches the bottom edge.\n   - Movers are 8-separated, single-colour, and never on the bottom row.\n   - Mover colours differ from ground colours.\n   A scene that broke these guarantees, for example a floating ground piece, would be treated as a mover.\n3. Objects at equal depth keep their reading-order discovery order. The constructor ensures objects that share a gravity line have disjoint ranges along it, so this tie cannot change the result. No hidden random tie-break is reproduced.\n4. Fallen objects may touch pillars sideways, because clearance is checked only along gravity. The constructor itself labels this a synthetic extension that the canonical pairs do not uniquely establish.\n5. Demonstrations are not used, since the roles are fully determined by d4 and the palette.\n6. I have not run any tests."
+  }
+}

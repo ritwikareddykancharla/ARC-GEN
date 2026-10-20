@@ -1,0 +1,22 @@
+{
+  "task_id": "4c416de3",
+  "factory_sha256": "a15d3da5c774dbaf8c05c3fffcd4ed95d97e3be987dbdd7735d2b9a8ebe2b774",
+  "constructor_sha256": "d6997774027bf316aabd182f8b0fdf0229dfa0acd84afaab39888f0a22fe030d",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 108070559982232,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 25.57638737501111,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The rule is to find the frame corners. A corner is a cell whose row arm and column arm, 2 and 3 cells out, are both the frame colour, and whose inner diagonal neighbour is not frame. The program checks this in all four diagonal orientations (dy, dx) of the visible grid. It finds the decorated corner whose marker colour covers the most cells in the [-2,3]^2 window. That corner gives the template, recorded as (u, v) offsets relative to the corner's own inward orientation. The deepest diagonal cell of the template gives the marker depth D. Every other corner with a marker at (D, D) along its inward diagonal gets the template stamped in its marker colour, unless it is already fully decorated.\n\nThe scan covers all four orientations symmetrically, and each template is read and applied relative to its corner's own inward directions. So rotations and reflections are handled natively in visible coordinates; no axis needs specialising for d4. The generator's templates are symmetric about the diagonal, so transposing D4 elements stay consistent too. On the palette side:\n- The only fixed colour role is the frame colour, which becomes the constant palette[0].\n- Background is inferred as the most common colour.\n- Marker colours are read from the pixels.\n\nThe 2\u20133 cell arm probe is the repaired detector. It keeps finished decorations, which cover at most one arm cell, from hiding their own corners.",
+    "limitations": "The program relies on generator guarantees:\n- At least one decorated corner has its full template inside the grid. Ties between decorated corners are harmless because their templates are identical.\n- Undecorated marked corners never show a colour run as large as the template.\n- No other cell pattern matches the corner signature. The generator rejects scenes where this would happen.\n\nIt also assumes the background is the most common colour, which holds because frames are sparse outlines. Corners whose 2\u20133 cell arm probes fall outside the grid are not detected. This matches the generator, which never marks such corners. I found no fixture contradictions. No tests were run.",
+    "host_repair": "Corrected invalid doubled percent operator at factory string formatting; mechanism unchanged."
+  }
+}

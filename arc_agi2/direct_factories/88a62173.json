@@ -1,0 +1,26 @@
+{
+  "task_id": "88a62173",
+  "factory_sha256": "c65eefc423170a33b3d361e1334ea8d3a83a5f2a590f9d5ae4fe3850d55a4632",
+  "constructor_sha256": "d985f4cc21b98af46d8e80aaa091279d0cfd5e4dafcf567996b060ee06a18356",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 160240988204255,
+  "d4": 7,
+  "unique_base_inputs": 835,
+  "seconds": 1.623390541994013,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "Mechanism: the grid is 5\u00d75. A background separator runs through the middle row and the middle column, and it splits the grid into four 2\u00d72 panels. Three panels are identical and one differs. The output is the panel that differs, cropped exactly as it appears in the grid.\n\nHow the transforms are handled:\n- **D4:** Every D4 transform keeps the 5\u00d75 shape, keeps the separator in the middle, and maps the four panels onto each other. The emitted program crops the visible grid at rows 0\u20131 and 3\u20134 and columns 0\u20131 and 3\u20134 directly. Cropping a quadrant of the transformed grid gives the transformed quadrant, so the crop is already in visible coordinates. No rotation or inversion is applied.\n- **Palette:** The transforms permute panels and pixels together, so the identical-versus-odd relationship is unchanged. The comparison is plain pixel equality, so palette changes are handled automatically. palette[0] is kept only as a documented background constant.\n\nI chose fixed separator positions instead of the archived solver's search for all-background rows and columns. That search fails in valid generated scenes. For example, if the three identical panels use only their lower row (same={2,3}) and the odd panel is in the bottom half, then row 0 is entirely background. The search then treats it as a separator and builds the wrong panels.",
+    "limitations": [
+      "The program assumes the generator's fixed geometry: an odd-sized grid with the separator at index size//2 in both axes and two equal panels on each side. Grids with other layouts are outside the constructor's domain.",
+      "Constructor and archived-solver note for host review: the archived solver finds separators by scanning for all-background rows and columns. Valid generator outputs can contain such rows or columns inside the panels (for example, when no panel in the top half uses pixel indices 0 or 1), which makes that solver mis-segment the grid. I did not reproduce this behaviour; the factory uses the constructor's fixed geometry instead.",
+      "The generator guarantees exactly one unique panel because same != diff as sets. If no unique panel exists, which the generator cannot produce, the program returns the first panel.",
+      "No tests have been run by me."
+    ]
+  }
+}

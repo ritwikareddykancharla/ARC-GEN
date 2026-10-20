@@ -1,0 +1,21 @@
+{
+  "task_id": "67c52801",
+  "factory_sha256": "6b54a1069287f0ef166d8e7e7118812aa45620595f8e05676a6ffb716c8fee14",
+  "constructor_sha256": "a99c6499e8990c18d92d7f171b7eefe24a126e5070335cee6fc48e94d57bf2ab",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 123221602651553,
+  "d4": 7,
+  "unique_base_inputs": 994,
+  "seconds": 5.669777416042052,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "In the canonical frame the floor fills the bottom two rows. The gaps are runs of background (colour 0) in the second-to-last row. Each floating box is erased and then stamped into the gap whose width equals its 'length'. The length is the box's extent along the floor if its perpendicular extent is 2; otherwise it is the perpendicular extent. The stamp fills the gap line and the line just beyond it, away from the floor.\n\nThe floor side depends on the D4 transform. A horizontal reflection leaves 'down' unchanged, and each clockwise rotation maps the bottom edge to left, then top, then right. So for k = d4 % 4 the factory picks the side from [bottom, left, top, right][k]. The emitted program works in visible coordinates for that side:\n- the gap line is row H-2, row 1, column 1 or column W-2;\n- runs are scanned along that line;\n- the perpendicular and along extents are measured on the correct axes;\n- the box is stamped into the two lines next to the floor (rows H-3..H-2, rows 1..2, columns 1..2 or columns W-3..W-2).\n\nThe background constant is palette[0]. Objects are single-colour 4-connected components of non-background cells outside the two floor lines. Each gap is used at most once, so ties are handled.",
+    "limitations": "- The floor side comes from d4, not from the pixels. Background is assumed to be palette[0], as in the constructor, where the grid is zero-initialised.\n- Box lengths are assumed to be distinct and each to have a matching gap, as the generator guarantees. A box with no matching gap is erased and not stamped.\n- Objects are assumed never to lie in the two floor lines. This holds because the constructor keeps them at least one line away from the gap row.\n- No fixture contradictions with the uniform rule were observed.\n- I have not run any tests on this factory."
+  }
+}

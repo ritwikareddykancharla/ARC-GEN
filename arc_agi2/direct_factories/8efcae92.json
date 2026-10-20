@@ -1,0 +1,21 @@
+{
+  "task_id": "8efcae92",
+  "factory_sha256": "9eb61c1c86a2149c31c2a876ab2d047124afe52f60f8f21389e44fed10fc4fd0",
+  "constructor_sha256": "2ba65c3ebc9f1924fdd33ac19d7e84c5c9df46294af6a76ae6e81602c7c221f7",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 153405706811835,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 294.2835044589592,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The rule is to find every solid rectangle (a 4-connected group of non-background cells), count the red cells inside each one, and return the bounding-box crop of the rectangle with the most red cells.\n\n- **Palette:** colour roles become constants. The background is palette[0] and the red marker is palette[2]. The blue body (palette[1]) needs no special handling, because a rectangle is simply a group of any non-background cells.\n- **D4:** no direction-specific step is needed. Grouping cells, counting red cells and cropping a bounding box all work the same in whatever orientation the grid is shown. The crop is taken straight from the visible query grid, so the output already has the transformed orientation of the selected rectangle. No rotation or un-mapping of colours is done.\n- **Grid shape and edges:** rectangular grids work because only the array's own height and width are used. Rectangles touching the grid edge are handled by bounds checks during the grouping step.",
+    "limitations": "1. **Separation between rectangles.** The program assumes rectangles never touch side-by-side. The constructor's overlap check with margin 1 is meant to guarantee a black gap; if it ever let two boxes share an edge, they would be counted as one region. Corner-only contact is still separated correctly, because grouping uses side neighbours only.\n2. **Ties.** The constructor rejects scenes where two boxes have the same red count, so ties never occur in its domain. If one did occur, the program keeps the first region found when scanning row by row from the top-left of the visible grid. That choice depends on orientation, so it is not part of the intended rule; such a scene would be a constructor defect needing host review.\n3. **Where the target box appears.** The generator always places the winning box first in its internal list (counts[0] must be the maximum). This is a hidden detail that never shows in the visible grid, and the program does not rely on it.\n4. **Fixtures.** I found no contradictions in the approved fixtures. All three training pairs and the test pair match the most-red-cells rule. I have not run any tests."
+  }
+}

@@ -1,0 +1,46 @@
+{
+  "task_id": "57edb29d",
+  "factory_sha256": "caaf6eb64406816cb510af6dac91ff7909a33f09866d75e6cadcbcae7e197396",
+  "constructor_sha256": "350211e1503ac47870f3d923511c6bad7aa6cd031280af551519beab55a1be04",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [
+    {
+      "seed": 117314417031716,
+      "error": "reference/generator deadline"
+    },
+    {
+      "seed": 173710964649955,
+      "error": "reference/generator deadline"
+    },
+    {
+      "seed": 3695530843576,
+      "error": "reference/generator deadline"
+    },
+    {
+      "seed": 100915646475470,
+      "error": "reference/generator deadline"
+    },
+    {
+      "seed": 129470412816905,
+      "error": "reference/generator deadline"
+    },
+    {
+      "seed": 2585342414867,
+      "error": "reference/generator deadline"
+    }
+  ],
+  "seed": 58831230967333,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 364.2552924579941,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The frame colour is the constant palette[4]. If that colour is absent, the program falls back to the corner colour. Each 4-connected non-frame component is one rectangle. Its fill colour is its own corner cell; markers never sit on the rectangle border, so the corner is always fill. The single rectangle that is all fill is the blank target. For every marked rectangle, each non-fill cell gives the marker colour and its edge-distance pair (dy, dx) = (min(y, h-1-y), min(x, w-1-x)). These pairs are collected in a set. The output is the blank rectangle at its own visible size, filled with its colour, with the marker colour at every cell whose (dy, dx) is in the set. One extension covers the case where the blank rectangle is taller or wider than every marked one. A marker at dx=1 with dy>=3 can only come from the generator's full inner column line. A marker at dy=1 with dx>=3 can only come from its full inner row line. When either is seen, that line is drawn across the whole target length. The generator guarantees some marked box is at least 7 tall and some is at least 7 wide, so both lines are always detectable when present. This fixes a failure of the archived solver for tall or wide blanks. Edge distances are symmetric under all D4 transforms. Rotations and transposes only swap the roles of dy and dx, and they do so consistently in the demos, the query and the output. So the mechanism works directly in visible coordinates and needs no orientation constants. Colours are taken from pixels, except the frame, which is palette[4].",
+    "limitations": "Assumes the rectangles are separated by at least one frame cell, as the constructor's overlap padding implies, so that each component is exactly one rectangle. If no all-fill rectangle exists, which the generator never produces, the rectangle with the fewest non-fill cells is used as the target. I have not run any tests. I found no conflict between the fixtures and the rule."
+  }
+}

@@ -1,0 +1,97 @@
+{
+  "task_id": "c3202e5a",
+  "scope": "Local full-quota production-assembler audit only.1200unique native pool pairs,1000requested fresh bases. Grid pool then combined program/grid make_record on every augmented row; temporary audit rows removed,no public dataset or training launched.",
+  "pool_pairs": 1200,
+  "pool_draws": 1200,
+  "constructor_sha256": "48b9958edbad3ac85eb8984c782403663d30a5c117e2caf24775212d400e4309",
+  "metrics": {
+    "shards": [],
+    "episodes": 8000,
+    "fresh_episodes": 1000,
+    "requested_fresh_episodes": 1000,
+    "spatial_variant_upper_bound": 8000,
+    "symmetric_variants_removed": 0,
+    "variants_per_fresh_episode": {
+      "8": 1000
+    },
+    "query_histograms": {
+      "input": {
+        "height": {
+          "15": 808,
+          "19": 1504,
+          "29": 1472,
+          "11": 808,
+          "24": 664,
+          "17": 712,
+          "14": 704,
+          "23": 1328
+        },
+        "width": {
+          "15": 808,
+          "19": 1504,
+          "29": 1472,
+          "11": 808,
+          "24": 664,
+          "17": 712,
+          "14": 704,
+          "23": 1328
+        },
+        "longest": {
+          "15": 808,
+          "19": 1504,
+          "29": 1472,
+          "11": 808,
+          "24": 664,
+          "17": 712,
+          "14": 704,
+          "23": 1328
+        },
+        "shapes": {
+          "15x15": 808,
+          "19x19": 1504,
+          "29x29": 1472,
+          "11x11": 808,
+          "24x24": 664,
+          "17x17": 712,
+          "14x14": 704,
+          "23x23": 1328
+        }
+      },
+      "output": {
+        "height": {
+          "3": 3040,
+          "4": 2992,
+          "5": 1968
+        },
+        "width": {
+          "3": 3040,
+          "4": 2992,
+          "5": 1968
+        },
+        "longest": {
+          "3": 3040,
+          "4": 2992,
+          "5": 1968
+        },
+        "shapes": {
+          "3x3": 3040,
+          "4x4": 2992,
+          "5x5": 1968
+        }
+      }
+    },
+    "relations": {
+      "shrink": 8000
+    },
+    "failures": {},
+    "query_context_shortfalls": [],
+    "max_query_reuse_in_fresh_episodes": 1,
+    "max_pair_reuse_in_fresh_episodes": 11,
+    "distinct_inputs_used": 1177
+  },
+  "base_query_types": {
+    "changed_query": 1000
+  },
+  "verified_program_grid_records": 8000,
+  "seconds": 11.264980375068262
+}

@@ -1,0 +1,22 @@
+{
+  "task_id": "c3202e5a",
+  "passed": true,
+  "test_command": ".venv/bin/python -m unittest arc_agi2.test_panel_period",
+  "tests": 3,
+  "native_panel_geometries": 11,
+  "all_native_target_position_cases": 222,
+  "divider_dense_augmented_checks": 3552,
+  "smaller_false_period_target_position_cases": 385,
+  "smaller_false_period_augmented_checks": 6160,
+  "palettes": 2,
+  "d4": 8,
+  "domain": "Unchanged native random domain; explicit adversarial colors obey every native panel invariant. Covers all native panel sizes, panel counts and target positions. Does not enumerate all pixel fillings.",
+  "proof": "For smaller proposed period q<=s, a full candidate line intersects the unique target panel and a perpendicular real divider. Its colour must be D at the latter, but inside the target only 0 or F appears, neither D. Hence no smaller period exists. The true divider period exists; the unique {0,F} panel is selected.",
+  "fail_closed_checks": [
+    "multiple qualifying panels",
+    "missing periodic dividers"
+  ],
+  "constructor_unchanged": true,
+  "query_answers_used_by_solver": false,
+  "factory_sha256": "30956f4a50b5cde8aa8a8c93b869762df31860b3a1f424c2245b736c4a0fb82d"
+}

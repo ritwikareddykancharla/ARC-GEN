@@ -1,0 +1,29 @@
+{
+  "task_id": "c3202e5a",
+  "factory_sha256": "30956f4a50b5cde8aa8a8c93b869762df31860b3a1f424c2245b736c4a0fb82d",
+  "constructor_sha256": "48b9958edbad3ac85eb8984c782403663d30a5c117e2caf24775212d400e4309",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 55604561050899,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 1.8208881249884143,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "Find the smallest periodic full-line partition with a non-background divider colour shared by both axes. Crop the unique panel containing background and exactly one other colour. Operate directly in visible coordinates; palette[0] is the only specialized colour. No fallback geometry or panel ranking.",
+    "limitations": "Certified for unchanged native random domain and supplied fixtures. Arbitrary explicit colors outside that domain may lack a unique qualifying panel and are rejected. The native random domain has exactly one {0,F} panel, every other panel contains 0 plus at least two nonzero colours, D and F are nonzero and different.",
+    "host_review": {
+      "status": "reviewed",
+      "reason": "Any candidate divider period q <= true panel width s has a candidate cut inside the unique target panel. Such a full cut crosses real perpendicular dividers, so its colour would have to be D. Inside the target it meets only 0 or F, neither D. Contradiction. Thus no smaller period passes; the true one does. The claim uses the target panel as an input witness, not its stored output. The same reasoning holds after any D4 transform and bijective palette.",
+      "random_color_verified": "common.random_color selects from 1..9; fg excludes divider.",
+      "source_changes": "Removed arbitrary uniform-line fallback and fewer-colour/count/reading-order ranking. Require unique background-plus-one-colour panel.",
+      "constructor_changes": false,
+      "verification": "Fresh 1000 unique inputs,8000 augmented pair checks,16 fixtures passed. Three adversarial tests pass: all222native geometry/target placements, all385smaller-period/target cases, each16D4/palette variants; ambiguous/missing structures rejected."
+    }
+  }
+}

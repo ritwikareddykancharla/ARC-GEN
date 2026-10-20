@@ -1361,3 +1361,39 @@ reports are saved as `query-preserving-assembly-1067-<task_id>.json`.
 All 552 regression tests passed. Remaining: 41 semantic/context holds,
 9 execution failures and 3 missing factories. Bulk publication and model
 training remain pending complete coverage.
+
+
+## Coverage checkpoint: 1,068 families
+
+Added `c3202e5a`, selecting the unique background-plus-one-colour panel from
+a regular divider grid. The constructor and original fixtures are unchanged.
+The suspected smaller-period ambiguity is impossible within the native domain:
+any smaller candidate cut intersects both a perpendicular real divider (colour D)
+and the unique panel (only background and F, both different from D). Therefore
+it cannot be a uniform full line. The true divider period remains visible.
+
+The emitted program now rejects missing periodic structure or multiple qualifying
+panels instead of using heuristic fallback lines, colour counts or reading order.
+It operates in visible coordinates, with no inverse-transform wrapper.
+
+Validation:
+
+- New source-matched audit: 1,000 unique inputs, 8,000 augmented pair checks,
+  16 fixture variants, no sampler rejections.
+- Adversarial tests: all 222 native geometry/target positions, plus 385
+  smaller-period/target cases that preserve misleading divider lines everywhere
+  outside the target. Each runs under eight D4 transforms and two palettes:
+  3,552 and 6,160 checks respectively. These test every supported geometry and
+  position, not every possible pixel filling.
+- Independent episode audit: 20/20 base contexts, 160 verified D4 records,
+  no missing-evidence exclusions or execution errors.
+- Local production-assembler audit: 1,200 unique pool pairs produce all
+  1,000 requested bases and 8,000 verified combined program/grid records,
+  no shortfalls; maximum pair reuse 11. Temporary audit rows were removed.
+- Full regression: 555 tests passed.
+
+Evidence is in `reports/c3202e5a-divider-period-proof.json`,
+`reports/episode-evidence-1068-audit.json`, and
+`reports/query-preserving-assembly-1068-c3202e5a.json`.
+Remaining: 40 semantic/context holds, 9 execution failures and 3 missing
+factories. Expanded bulk publication and model training remain pending coverage.

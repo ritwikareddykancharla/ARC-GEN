@@ -250,6 +250,48 @@ class GeneratorTests(unittest.TestCase):
                 random.seed(seed)
                 pair=call(module.generate,seconds=3)
                 self.assertEqual(grid(pair['output']),grid(call(solve,grid(pair['input']),seconds=3)),(tid,seed))
+    def test_box_motion_and_lane_reading_preserve_mechanisms(self):
+        boxes=importlib.import_module('tasks.task_271d71e2')
+        lanes=importlib.import_module('tasks.task_291dc1e1')
+        for direction in ('up','down','left','right'):
+            for already in (0,5,6):
+                p=boxes.generate(30,30,[(12,12,2,3,direction,3,already)])
+                before=Counter(v for row in p['input'] for v in row)
+                after=Counter(v for row in p['output'] for v in row)
+                travel=min(6-already,4)
+                self.assertEqual(before[5]-after[5],travel)
+                self.assertEqual(after[7]-before[7],travel)
+                self.assertEqual(before[0],after[0])
+                self.assertEqual(p['output'],grid(call(solver('271d71e2'),p['input'])))
+        for seed in range(5):
+            random.seed(seed)
+            p=call(lambda:boxes.generate(width=30,height=24,num_boxes=4),seconds=3)
+            self.assertEqual((len(p['input']),len(p['input'][0])),(24,30))
+            self.assertEqual(p['output'],grid(call(solver('271d71e2'),p['input'])))
+        latent=[[[[3,4],[5,6]],[[9,9,9,9],[9,9,1,2]]],
+                [[[7,7],[7,7]],[[6,6,6,6],[6,6,6,6]]],
+                [[[4,3],[6,5]],[[3,3,3,3],[3,3,3,3]]]]
+        expected=None
+        for vertical in (False,True):
+            for one_top in (False,True):
+                for two_left in (False,True):
+                    p=lanes.generate(vertical,one_top,two_left,latent,width=20,num_lanes=3)
+                    if expected is None:expected=p['output']
+                    self.assertEqual(p['output'],expected)
+                    self.assertEqual(p['output'],grid(call(solver('291dc1e1'),p['input'])))
+        for n in (2,3,4,5):
+            random.seed(n)
+            p=call(lambda:lanes.generate(vertical=False,width=30,num_lanes=n),seconds=3)
+            self.assertEqual((len(p['input']),len(p['input'][0])),(3*n+2,30))
+            self.assertLessEqual(len(p['output']),30)
+            self.assertEqual(p['output'],grid(call(solver('291dc1e1'),p['input'])))
+        with self.assertRaisesRegex(ValueError,'dimensions'):
+            boxes.generate(width=9)
+        with self.assertRaisesRegex(ValueError,'outside grid'):
+            boxes.generate(10,10,[(8,8,2,2,'right',1,0)])
+        with self.assertRaisesRegex(ValueError,'do not fit'):
+            lanes.generate(lanes=[[lanes._solid(3,8),lanes._solid(4,8)]]*2,width=11)
+
     def test_colour_cycles_are_simultaneous_and_episode_wide(self):
         palette=[1,2,0,3,4,5,6,7,8,9]
         self.assertEqual(b.transformed([[0,1,2]],0,palette),[[1,2,0]])

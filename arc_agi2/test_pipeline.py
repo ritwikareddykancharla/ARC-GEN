@@ -11,6 +11,34 @@ from .fixture_policy import fixture_basis
 from .augmentation import apply_episode,settings,exhaustive_variants
 
 class GeneratorTests(unittest.TestCase):
+    def test_anchor_reflection_rejects_rotation_shortcuts_and_fits_extremes(self):
+        m=importlib.import_module('tasks.task_963f59bc')
+        for kw in [dict(sides=['right'],box_height=3,box_width=5),
+                   dict(sides=['down'],box_height=5,box_width=3),
+                   dict(width=26,height=26,num_markers=4,box_height=8,box_width=8),
+                   dict(width=7,height=3,sides=['right'],box_height=3,box_width=3)]:
+            for seed in range(20):
+                random.seed(seed);pair=m.generate(**kw)
+                cells={(y,x) for y,row in enumerate(pair['input']) for x,v in enumerate(row) if v==1}
+                ys,xs=zip(*cells);t,b,l,r=min(ys),max(ys),min(xs),max(xs)
+                self.assertNotEqual(cells,{(t+b-y,x) for y,x in cells})
+                self.assertNotEqual(cells,{(y,l+r-x) for y,x in cells})
+                self.assertEqual(pair['output'],grid(call(solver('963f59bc'),pair['input'])))
+                if 'num_markers' in kw:
+                    colours=set(sum(pair['input'],[]))-{0,1}
+                    self.assertEqual(len(colours),kw['num_markers'])
+                    for c in colours:self.assertEqual(sum(row.count(c) for row in pair['output']),len(cells))
+
+    def test_anchor_reflection_clipping_and_container_validation(self):
+        m=importlib.import_module('tasks.task_963f59bc')
+        cells=[(4,1),(4,2),(5,2),(6,1),(6,2),(6,3),(6,4)]
+        pair=m.generate(width=11,height=12,shape=cells,markers=[(5,10,6)])
+        self.assertLess(sum(row.count(6) for row in pair['output']),len(cells))
+        self.assertEqual(pair['output'],grid(call(solver('963f59bc'),pair['input'])))
+        for kw in [dict(sides=3),dict(colors=3),dict(shape=3,width=12,height=12),
+                   dict(shape=cells,markers=3,width=12,height=12)]:
+            with self.assertRaises(ValueError):m.generate(**kw)
+
     def test_bracket_count_is_retained_and_tight_packing_is_constructive(self):
         m=importlib.import_module('tasks.task_93c31fbe')
         random.seed(40000)

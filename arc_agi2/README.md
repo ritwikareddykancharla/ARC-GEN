@@ -2,6 +2,8 @@
 >
 > Target after coverage: **1,120 × 1,000 = 1,120,000 fresh episodes**, then all eight D4 transforms, **up to 8,960,000 episodes** before symmetry deduplication and adaptive family shortfalls. The builder now emits every D4 variant, deduplicates symmetric episodes, and reports fresh and augmented counts separately. Its full-coverage and reviewed-standalone guards still block bulk use.
 >
+> Next model-training stage, as clarified by the user: **plain SFT on query output grids**, using demonstration/query inputs, without hints or reasoning targets. Mastery-based family sampling is a proposed SFT curriculum and must be evaluated using free-generated exact grids.
+>
 > Colours are sampled by native generators. Extra episode-wide colour permutation is opt-in, not mandatory. Rotations/reflections always transform all demonstration and query grids consistently. Native solver validation occurs before augmentation: the augmented rule is `T f T^-1`, not necessarily the original direction-specific rule.
 
 # ARC-AGI-2 procedural generator research
@@ -12,11 +14,11 @@ This fork adds a reference-guided generator workflow and an adaptive episode bui
 
 - All **1,120** canonical tasks inventoried with saved Opus/Fable explanations, `transform(grid)` programs, provenance and separately labelled teaching fixtures.
 - **891 existing upstream generators** reproduce the canonical pair sets (pair ordering can differ between releases).
-- **161 new constructive implementations** have passed bounded validation, covering counting, selection, geometry, legends, relational motion, scaling, pattern construction and repair. Standalone conversion and review are tracked separately below.
+- **162 new constructive implementations** have passed bounded validation, covering counting, selection, geometry, legends, relational motion, scaling, pattern construction and repair. Standalone conversion and review are tracked separately below.
 - **Two variable-size extensions**: `0692e18c` (inverse self-tiling) and `00576224` (three-by-three tiling with mirrored middle band).
-- All 163 constructors (161 new families plus two size extensions) passed **300 bounded randomized checks each**: 160 use the archived pair solver, `78332cb0` uses the documented complete-chain verifier, `de493100` uses the dimension-aware reflection verifier, and `269e22fb` uses a demonstration-conditioned episode verifier. Of these, 162 reproduce all original examples; `581f7754` uses the explicitly approved, hash-pinned eight-cell teaching correction. Its unchanged canonical replay is reported separately as 4/5, versus 5/5 on the teaching copy. Outputs are constructed independently from latent parameters. New pictures in `269e22fb` are compared with an independent contextual verifier; its original fixtures still match the archived fixed-picture transform.
+- All 164 constructors (162 new families plus two size extensions) passed **300 bounded randomized checks each**: 161 use the archived pair solver, `78332cb0` uses the documented complete-chain verifier, `de493100` uses the dimension-aware reflection verifier, and `269e22fb` uses a demonstration-conditioned episode verifier. Of these, 163 reproduce all original examples; `581f7754` uses the explicitly approved, hash-pinned eight-cell teaching correction. Its unchanged canonical replay is reported separately as 4/5, versus 5/5 on the teaching copy. Outputs are constructed independently from latent parameters. New pictures in `269e22fb` are compared with an independent contextual verifier; its original fixtures still match the archived fixed-picture transform.
 - **22 additional fixed-size families / 111 size-parameter configurations** passed bounded 12-seed differential tests. Every such generated pair is checked again during generation. This is agreement evidence, not proof of semantic correctness.
-- **68 tasks still need constructive generators**. A saved transform is not itself an input generator. Reference packets and `reports/generator-roadmap.csv` provide the task-by-task backlog.
+- **67 tasks still need constructive generators**. A saved transform is not itself an input generator. Reference packets and `reports/generator-roadmap.csv` provide the task-by-task backlog.
 
 ## Inspect
 
@@ -72,7 +74,7 @@ The authoring campaign uses eight concurrent Claude CLI processes under the user
 
 A zero-error differential check is a bounded agreement test. It does not prove the saved solver is universally correct or that every original mechanism variant is covered.
 
-**155 standalone modules are now reviewed and registered** (the exact list lives in `task_registry.py`). Each passed 1,000 seed checks and exact reconstruction of its approved validation fixture: canonical for 154 modules, the labelled teaching copy for `581f7754`. The first sixteen used seeds 0..999 (including their 300 author-validation seeds); the next one hundred and thirty-nine used independent seeds 20,000..20,999. The regression suite also checks registered source hashes and seeds 10,000..10,019.
+**156 standalone modules are now reviewed and registered** (the exact list lives in `task_registry.py`). Each passed 1,000 seed checks and exact reconstruction of its approved validation fixture: canonical for 155 modules, the labelled teaching copy for `581f7754`. The first sixteen used seeds 0..999 (including their 300 author-validation seeds); the next one hundred and forty used independent seeds 20,000..20,999. The regression suite also checks registered source hashes and seeds 10,000..10,019.
 
 Twenty-four conversions replace earlier research constructors with the upstream task-file interface. The total is now 161 new constructive families, with 6 still awaiting standalone conversion/review. Remaining CLI drafts are authored and validated locally. Restricted shape and dimension ranges are documented per file and in `reports/standalone/`; the size-matching builder must respect those ranges.
 
@@ -358,3 +360,9 @@ For `94133066`, panel dimensions and orientation are chosen from analytically fe
 Two teacher-prose errors were corrected in `references/94133066.json`: the third training example is `flip_v`, and the query is `anti_transpose`. Independent canonical enumeration confirms these exact transforms. The original explanation is preserved verbatim in `original_teacher_explanation`; the labelled correction leaves the puzzle grids, solver code, source artifact hashes and provenance unchanged.
 
 Coverage is **1,052/1,120**, with **68 missing** and **155 reviewed standalone additions**. Bulk generation and training remain stopped pending complete coverage.
+
+### Anchor-based reflection review — 2026-10-20
+
+Registered `963f59bc` after five exact canonical pairs, 1,000 independent archived-solver checks and 1,320 input-only displacement checks (1,317 distinct pairs). The original random path admitted axis-symmetric shapes on2/1000 seeds, allowing a rotation shortcut, and never sampled sides28..30. Both axis symmetries are now excluded from sampled shapes and each feasible canvas side samples through30. All1,320 tested scenes distinguish anchor-centred rotation;1,162 distinguish anchoring at the facing bounding-box edge. Explicit clipping and canonical symmetric/edge cases are preserved. Four8x8-shape copies fit on26x26; narrow and minimum grids pass targeted trials. Final critic cases:22 successes,11 intended rejections. Malformed containers reject cleanly. All112 regression tests pass.
+
+Coverage is **1,053/1,120**, with **67 missing** and **156 reviewed standalone additions**. Scope restrictions, accepted-distribution caveats and finite validation limits remain in the task report. No bulk generation or model training launched.

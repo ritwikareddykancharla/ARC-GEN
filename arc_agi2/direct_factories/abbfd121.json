@@ -1,0 +1,24 @@
+{
+  "task_id": "abbfd121",
+  "factory_sha256": "8acff4ed8c05a2fc4c268182cb0fe2ec5f62502f8a60132d3c755bcbff94bfd1",
+  "constructor_sha256": "e5ef8e6e835fca814f38050e76d3e61cd5270b43623126600efb0206365f817e",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "evidence_rejections": 0,
+  "audit_scope": "1000 unchanged native draws, independent pure-Python constraint gate and NumPy direct program on each draw under all8D4 and permuted colours; no guess or ambiguous-scene resampling.",
+  "unique_base_inputs": 1000,
+  "seconds": 21.026026999927126,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Host-authored direct program with constructor/source review, source restrictions and execution verification.",
+  "draft_notes": {
+    "author": "host",
+    "explanation": "Enumerate all two/three-colour solid-rectangle interpretations compatible with the native sorted rectangle dimensions; enumerate every rectangular periodic motif with area at most16. For each interpretation, all visible pixels must agree within periodic residue classes. Every residue used under the largest rectangle must be observed. Retain every feasible completion, reject unknown queried residues, and require all completions to agree. The generated NumPy program and independent scalar constraint gate use separate implementations. Demonstrations are checked for consistency. The query answer is never read. D4/palette arguments are not used as an oracle: all coordinates and colours come from visible pixels.",
+    "mechanism_scope": "Native generator uses square periods3 or4; area\u226416 therefore contains its true mechanism and is closed under D4. Two or three blocks have mutually non-overlapping colours outside the wallpaper palette and nested sorted width/height sizes, so the actual mask and unique-largest target are among the enumerated interpretations. Alternate wallpaper colours that happen to form rectangles are not blindly masked; candidate subsets are enumerated. No hypothesis is chosen merely because it was visited first.",
+    "limitations": "This is uniqueness relative to the stated small-period/rectangle hypothesis class, not uniqueness among arbitrary functions. Explicit native parameter calls can construct hidden residues not identifiable from the input; these are rejected rather than guessed. Native random constructor is unchanged, and1000 unchanged random draws passed without any resampling or evidence rejection. No largest-target tie fallback, unbounded-period fallback, component fallback, or raw-crop fallback remains.",
+    "validation": "Six unit tests passed.1000 unique unchanged native samples,8000 D4/palette pair checks,16 original fixture variants passed. Test constructs identical input grids using native explicit constructor with two different hidden wallpaper residues/outputs; both gate and emitted program reject all8D4 variants."
+  }
+}

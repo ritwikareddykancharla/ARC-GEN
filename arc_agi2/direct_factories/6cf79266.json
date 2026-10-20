@@ -1,0 +1,24 @@
+{
+  "task_id": "6cf79266",
+  "factory_sha256": "5c2d51f992d6cc24aba98bc8c8bb4b9bc684739d28469c2f225354e10a4b426a",
+  "constructor_sha256": "7a1106510b6ad412df5507a92a9c7dfcfbc02ff7516063403e469fff15c0d26e",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "context_retries": 0,
+  "sampler_rejections": [],
+  "audit_scope": "250 fresh queries held fixed while resampling3demo context using visible window overlap convention evidence only; no query labels in admission; all four pairs executed under8D4per acceptedepisode.",
+  "unique_base_inputs": 1000,
+  "seconds": 49.34632300003432,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Host-authored direct program with constructor/source review, source restrictions and execution verification.",
+  "draft_notes": {
+    "author": "host",
+    "mechanism": "Fit union and eight visible non-overlap scan conventions on all demo outputs; emit only if all surviving query grids agree. Random native sampler admits overlap-free scenes. Canonical overlapping training example provides scan-direction evidence.",
+    "review": "Opus5.5CLI v3 diagnosis; host replaced invented conservative consensus grid with explicit ambiguity rejection, added independent cell-set gate and informative/uninformative overlap tests.",
+    "constructor_change": null,
+    "limitations": "Held-out overlapping fixture cannot be inferred from only overlap-free demonstrations; rejected explicitly. No label changes, no hidden D4 fallback, no query-label access."
+  }
+}

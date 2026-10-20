@@ -63,6 +63,46 @@ def _hole_count(cells):
 
 
 def require_colour_evidence(task_id, demonstrations, queries, palette=None, d4=0):
+    if task_id == '891232d6':
+        from .obstacle_path_evidence import require_obstacle_path_evidence
+        require_obstacle_path_evidence(demonstrations, queries,
+                    list(range(10)) if palette is None else palette)
+        return
+    if task_id == '3345333e':
+        from .occluded_symmetry_evidence import require_occluded_symmetry_evidence
+        require_occluded_symmetry_evidence(demonstrations, queries,
+                    list(range(10)) if palette is None else palette)
+        return
+    if task_id == '6cf79266':
+        from .hole_window_evidence import require_window_evidence
+        require_window_evidence(demonstrations, queries,
+                    list(range(10)) if palette is None else palette)
+        return
+    if task_id == '4852f2fa':
+        from .repeated_crop_evidence import require_repeated_crop_evidence
+        require_repeated_crop_evidence(demonstrations, queries,
+                    list(range(10)) if palette is None else palette)
+        return
+    if task_id == 'abbfd121':
+        from .wallpaper_evidence import require_wallpaper_evidence
+        require_wallpaper_evidence(demonstrations, queries,
+                    list(range(10)) if palette is None else palette)
+        return
+    if task_id == '94be5b80':
+        from .legend_stack_evidence import require_legend_stack_evidence
+        require_legend_stack_evidence(demonstrations, queries,
+                    list(range(10)) if palette is None else palette)
+        return
+    if task_id == '93b4f4b3':
+        from .gallery_alignment_evidence import require_gallery_evidence
+        require_gallery_evidence(demonstrations, queries,
+                    list(range(10)) if palette is None else palette)
+        return
+    if task_id == 'd9fac9be':
+        from .framed_centre_evidence import require_framed_centre_evidence
+        require_framed_centre_evidence(demonstrations, queries,
+                                      list(range(10)) if palette is None else palette)
+        return
     if task_id == '3a301edc':
         from .frame_band_evidence import require_band_evidence
         require_band_evidence(demonstrations, queries,

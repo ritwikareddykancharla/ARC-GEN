@@ -1,0 +1,25 @@
+{
+  "task_id": "4852f2fa",
+  "factory_sha256": "ab8e9868678af4bc64d2b54674094be9d1280b5fc08c5f3837e69b129b2107fc",
+  "constructor_sha256": "cbe2e5e98615a5147cc234bad5afff8dc636aeb36be0f0c41bc33af670d98a58",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "context_retries": 2,
+  "sampler_rejections": [],
+  "audit_scope": "250 fresh queries held fixed while resampling3demo context using visible crop padding and repetition direction evidence only; no query labels in admission; all four pairs executed under8D4per acceptedepisode.",
+  "unique_base_inputs": 1000,
+  "seconds": 16.523454040987417,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Host-authored direct program with constructor/source review, source restrictions and execution verification.",
+  "draft_notes": {
+    "author": "host",
+    "mechanism": "Fit joint crop padding and repetition-axis hypotheses from every demonstration; require unanimous query outputs.",
+    "review": "Opus5.5CLI identified full native sprite extents and explicit short-sprite identical-input/different-label witness. Host removed no-fit reset and hidden D4 axis, replacing with independently gated demo inference.",
+    "constructor_change": null,
+    "context_audit": "1000 fresh pairs/8000augchecks/16fixtures;2context retries holding query fixed, because some sampled demos contain only one copy and do not establish repetition direction.",
+    "tests": "5 focused tests including witness, informative short-sprite lesson, no query-label access and conflicting-demo rejection."
+  }
+}

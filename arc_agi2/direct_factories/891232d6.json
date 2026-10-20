@@ -1,0 +1,25 @@
+{
+  "task_id": "891232d6",
+  "factory_sha256": "dad125ea104b24d1d73c0d1ff6fa3c03ea09148143b23dbd3d9762649e94d0c0",
+  "constructor_sha256": "993527da7b6f6a1953cde4c878bc1d7d8207e4b0a980f1a01fdcf16053bde4cd",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "context_retries": 0,
+  "sampler_rejections": [],
+  "audit_scope": "250 fresh queries held fixed while resampling3demo context using visible immutable path evidence only; no query labels in admission; all four pairs executed under8D4per acceptedepisode.",
+  "unique_base_inputs": 1000,
+  "seconds": 17.37554475001525,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "Simulate each marked path independently against the immutable input. Merge only disjoint path write sets, so marker scan order cannot alter the result. Infer the up/side frame from demonstrations among all eight perpendicular cardinal frames; factory ignores d4. The independent gate uses a forward/lateral finite-state walker while target source uses a nested horizontal scan. Both compare every demo exactly and require a unique query prediction without query labels.",
+    "order_independence_argument": "In the native constructor, prior paths only change background or wall cells into colours2/3/4/6/8; no path writes0 or7. Every cell inspected by a later successful path must still be0 or7. Every path cell before writing is checked as0, either directly or when entering from the preceding step; obstacle hits are checked7. Therefore a successful native draw cannot depend on previous painted cells, and all accepted paths equal the isolated-input walks with disjoint writes. Later source markers reside on the bottom boundary, which no earlier upward path reads. Frozen-input simulation preserves accepted native drawings without reordering their mechanism.",
+    "limitations": "Malformed or intersecting input-defined paths are rejected. Such collisions cannot belong to a successfully returned native draw. Explicit caller inputs containing unrelated ink beyond native0/6/7 are not guaranteed. Colour roles use the episode-wide palette.",
+    "tests": "Six tests passed. Fresh audit:1000unique native pairs,8000D4 checks,16fixture variants,0retries/rejections. Additional native-permutation audit saved separately.",
+    "native_constructor_unchanged": true,
+    "evidence_gate": "arc_agi2.obstacle_path_evidence.require_obstacle_path_evidence(demonstrations,queries,palette)"
+  }
+}

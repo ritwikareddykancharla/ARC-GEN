@@ -36,7 +36,7 @@ def generate(width=None, height=None, bgcolor=None, orders=None, pattern=None):
       for r in range(height):
         for c in range(width):
           if common.randint(0, 1): shape.append((r, c))
-      if not common.connected(shape) or shape in shapes: continue
+      if not shape or not common.connected(shape) or shape in shapes: continue
       if len(set([r for r, _ in shape])) != height: continue
       shapes.append(shape)
     bgcolor = common.random_color()

@@ -1,0 +1,24 @@
+{
+  "task_id": "3345333e",
+  "factory_sha256": "0f847e51787e7d942579a501cd52ae8cc5fb2ea5ca52f15761368839941ab73b",
+  "constructor_sha256": "7bdba2e6aa5cb93d00128635b874bc5640e8bfc20d7825b0eae27c180541a7db",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "context_retries": 0,
+  "sampler_rejections": [],
+  "audit_scope": "250 query-fixed episodes,3 independent native demos each, all4 pairs checked under8D4 and shuffled palette; native generator unchanged.",
+  "unique_base_inputs": 1000,
+  "seconds": 33.118124041939154,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Host-authored direct program with constructor/source review, source restrictions and execution verification.",
+  "draft_notes": {
+    "author": "host",
+    "explanation": "Infer a common mirror direction and occluder extent from supplied demonstrations. Enumerate every solid-rectangle nonbackground colour and both mirror directions. An axis is admissible only if all hidden cells map to visible in-grid partners and every visible sprite pixel has a matching sprite or hidden partner inside the grid. Restore by visible mirror values; retain every answer, never rank axes/colours. Demo hypotheses survive only when their unique answer exactly matches every demo output. On the query every surviving hypothesis must be applicable and all answers must agree. Program uses NumPy; independent gate uses coordinate sets and directly checks completed-set symmetry. No query answers are read.",
+    "constructor_review": "Native occluder lies strictly on one side of the true axis and begins below a nonempty unobscured sprite row; its true mirrors are available. Connected half-sprite contains(0,0), so the untouched finite first row fixes the axis for the true direction. Nevertheless both colours can be rectangles, and cross-direction interpretations can disagree. Those cases remain in the constructor and are resolved by informative demo contexts. No direction comes from D4 parity and no default span4 is embedded.",
+    "limitations": "Hypothesis class is one-axis symmetry plus one exclusive-colour solid rectangle, with common direction and extent across an episode. Ambiguous contexts reject rather than pick scan order, most matches, largest colour, or colour index. Default native rectangle width is4, but the program learns the extent from examples. No generator changes or query-label admission are used.",
+    "validation": "Six tests including allD4/palette fixtures, reachable native ambiguity and its resolution, counterfactual demonstration rule, query-label poisoning, no-demo rejection and D4-argument independence."
+  }
+}

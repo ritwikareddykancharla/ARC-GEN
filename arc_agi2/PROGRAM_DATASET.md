@@ -1595,3 +1595,8 @@ afe3afe9 uses demos to distinguish packing toward the marked colour from clockwi
 ### Verified program coverage: 1,077 / 1,120
 
 72ca375d now learns symmetry predicates from demonstrations; transverse-symmetric decoys remain. 3a301edc now requires agreement among demonstrated band-thickness rules; original non-square fixture stays unchanged. Both pass 1,000 fresh pair audits, 8,000 augmented checks and 16 fixture variants. Full-quota assembly produces 1,000 fresh bases each: 8,000 symmetry records (110 transverse-decoy queries) and 7,996 band records (four equivalent variants removed, with independent transform-group checks). No quota shortfalls. All 608 tests pass. 43 program families remain. These local audits are not the expanded published dataset.
+
+
+### Verified program coverage: 1,085 / 1,120
+
+Eight families added: d9fac9be, abbfd121, 94be5b80, 93b4f4b3, 4852f2fa, 6cf79266, 3345333e, 891232d6. Each passes 1,000 fresh native pair checks, 8,000 augmented checks and 16 fixture variants. Direct programs reject unresolved visible ambiguities; demo-dependent conventions use demonstration answers only. Native constructors remain unchanged except a valid-draw-preserving empty-shape guard in 93b4f4b3. All 654 regression tests pass. The ring, wallpaper, legend and gallery full-quota audits each retain 1,000 bases / 8,000 combined program-grid records under explicitly audit-only local partitions. No production data or SFT launch. 35 verified-program families remain.

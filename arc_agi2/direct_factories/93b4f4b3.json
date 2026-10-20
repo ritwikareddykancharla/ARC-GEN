@@ -1,0 +1,25 @@
+{
+  "task_id": "93b4f4b3",
+  "factory_sha256": "67c6e334f0a2ad4e56f383cd2f360bd3a8d0c0013bbcc620a365beab3726faad",
+  "constructor_sha256": "33fb0cba849052f265913b5429fa1e23ec330cb3a9ba96752f93d9ff856b6c0c",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 65479262775451,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 8.888860792038031,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Host-authored direct program with constructor/source review, source restrictions and execution verification.",
+  "draft_notes": {
+    "author": "host",
+    "mechanism": "Match framed holes to gallery colour shapes preserving the transverse within-slot offset, translating only along the gallery stacking axis. All candidate frames, sides and colour matches must give a unique answer. Each demonstration must fit the same mechanism.",
+    "review": "Original fixtures all match aligned-slot rule; normalized silhouette-only archive fallback is insufficient for reachable translated twins. Explicit twin counterexample retained and tested under all D4.",
+    "constructor_change": "Skip empty random shape before common.connected(shape), which otherwise indexes an empty list. No valid draw removed; dimensions, connectivity, full-height condition and shape uniqueness unchanged.",
+    "limitations": "Finite random audit not a general proof. Ambiguous or malformed visible galleries reject; independent gate consumes no query answers.",
+    "tests": "6 tests including native translated twins, duplicate aligned shapes, canonical fixtures, background palette changes, query-label poisoning, absent gallery and empty-draw safety."
+  }
+}

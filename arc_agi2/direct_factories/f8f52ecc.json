@@ -1,0 +1,138 @@
+{
+  "task_id": "f8f52ecc",
+  "factory_sha256": "57891aa5cc7d9c8702481d3f176cbc27bf6ad65e9c5c98b43be5da77e66c2a47",
+  "constructor_sha256": "1ce46068e4f58a469da07dd3b1630dfd46c73681c723a8ec37e635555b4a5c37",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 264418504433789,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 5.638503374997526,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The emitted program applies the greedy linking rule directly to the visible grid. It does not normalise the grid.\n\nColour roles become constants:\n- Background is palette[1].\n- Wall is palette[8].\n- Colours are processed in the order palette[c] for ascending original c. This matters because links painted for earlier colours block later colours, and the generator certifies scenes under that order.\n\nFor each colour, the program repeats the following steps:\n1. Take the 4-connected pieces of that colour.\n2. Score every cross-piece cell pair. A link may be a straight path or one of the two single-corner L paths, using background cells only.\n3. A link is decided when it is straight, when only one L is open, or when an endpoint cell lies on a line piece. In that last case the first leg follows that line's visible axis, and endpoint a is checked before endpoint b.\n4. Pick the link with the smallest key (undecided, distance), so decided links come before undecided ones.\n5. Paint the path and repeat until the colour forms one piece or no open link remains.\n\nVertical and horizontal are visible concepts, and the orientation rule is axis-symmetric. Under odd quarter-turns, the constructor's vertical-first preference becomes horizontal-first. This preference only affects defaults: a corner cell having both axes, and the first-listed L for undecided pairs. Reflections need no extra handling, because L paths are expressed by endpoints and leg axis, not by signed directions. Colours that occur as a single piece are never touched, and walls are never painted.",
+    "limitations": "Points for host review:\n\n- **Scan-order tie-breaks.** The program breaks ties by visible reading order, not the constructor's original-frame order. The generator certifies every scene as forced under every scan-order tie-break, so this should not change answers in its domain. Scenes outside that certification (for example explicit, uncertified ones) could differ.\n- **Corner-cell preference.** The archived solver's preference for 'vertical' at a corner cell, and its default L for undecided pairs, are tie-breaks with no visible meaning. They are mapped to the corresponding visible axis rather than treated as part of the rule. In certified scenes these cases are always beaten by a strictly closer decided gap or have equivalent options.\n- **Fixed colour roles.** The program relies on background = palette[1] and wall = palette[8], not on inferring roles from the demonstrations.\n- **Runtime.** The search is brute-force over all cell pairs per link. This is fine for 30x30 grids with a few short routes, but would be slow for huge pieces.\n- **Fixtures and testing.** No fixture contradictions were found by inspection; the program has not been run.",
+    "independent_source_review": {
+      "verdict": "hold",
+      "mechanism": "For each non-background, non-wall colour, processed in a fixed order, the rule repeatedly joins the Manhattan-closest pair of separate same-colour pieces. Each link is a straight or single-corner L path over background cells only. Decided links (straight, only one L open, or L chosen by an endpoint's line axis) beat undecided ones. Walls (8) and single-piece colours never change. The constructor paints answers from hidden routes and keeps a scene only if a per-colour certificate or an exhaustive tie-order search shows the answer is forced. That check runs with colours in ascending original index, with earlier colours' hidden routes already painted.",
+      "evidence": [
+        "Factory acts directly on visible grids. BG=pal[1], WALL=pal[8], ORDER=[pal[c] for ascending original c not in (1,8)]. PRIMARY swaps the archived 'v' preference to 'h' for odd d4. There is no untransform/solve/retransform wrapper.",
+        "L paths are defined by endpoints and leg axis. Reflections preserve the axis, so mapping only the vertical/horizontal preference under odd quarter-turns is consistent with the archived lpath(vfirst).",
+        "Factory decision logic matches the archived transform: opts tried in (PRIMARY, OTHER) order, axis(a) checked before axis(b), key (not det, d) with a strict '<' comparison. The early 'continue' only skips pairs that could not win under strict '<'.",
+        "Scan-order independence within a colour: the certificate's evaluate() returns both the a-first and b-first orientation paths and requires the set to equal {design[g]}. _link_options likewise enumerates both. Visible reading-order tie-breaks therefore do not change certified answers.",
+        "Corner-cell 'v' priority does not affect design links. A gap endpoint cells[s-1] has neighbour s in the same, still-unfilled gap, so it has at most one coloured route neighbour. For non-design pairs the certificate only needs decided-ness, which does not depend on axis priority.",
+        "_rule_reproduces rejects scenes where any colour count >= the background count, so the archived 'most common colour' background equals palette[1] in-domain.",
+        "Canonical fixtures: the L gaps in test 2 (colour 3) and train 3 (colour 2) are closed by 8-walls. Train 3's colour-6 corner is decided by orientation. None depends on colour order."
+      ],
+      "blocking_issues": [
+        "Cross-colour processing order is an undemonstrated colour ranking, and the constructor does not exclude scenes whose answer depends on it. _rule_reproduces iterates `for col in sorted(set(counts) - {BG, WALL})` and paints each certified colour's full route into `grid` before certifying later colours. _certify_colour then treats those painted hidden cells as non-background in two places: in evaluate()/is_bg, where an alternative L blocked only by an earlier colour's hidden cells counts as 'only one L open' and therefore decided; and in perm_blocked, where a competing shortcut blocked only by those cells is skipped as permanently blocked. The prior notes admit this ('links painted for earlier colours block later colours, and the generator certifies scenes under that order').",
+        "Concrete reachable path. In _attempt's decidability pass, roll >= 0.88 (about 12% of hidden corners) adds no wall and no extension. The `any(x in wallcells for x in alt)` test ignores other routes' cells, and _walk only forbids overlap, not crossing a rectangle side. So route A (lower original index) can have hidden gap cells on route B's alternative L. Example: B's endpoint a sits at a visible route corner, so a's axis selects the alternative L. The certificate still passes because A's painted cells block that L. Under the opposite order, B would draw the alternative L through A's cells, or face an ambiguous link, giving a different output.",
+        "Under palette augmentation, 'ascending original index' is an arbitrary permutation of the visible colours. The factory hard-codes it via ORDER, and the host audit matches only because generator and solver share the same order. Nothing in the episode teaches it: f8f52ecc has no dedicated branch in require_colour_evidence, the generic else-branch (palette[4]/[7] and [1]/[8] two-cell lines with bg=palette[0]) is unrelated to this rule, and the D4 policy does not cover palette order.",
+        "Needed fix: scenes must be forced independently of colour order, for example by certifying each colour against only visible cells of other colours plus walls, or by rejecting scenes whose certificate relies on another colour's hidden cells. Alternatively, the episode must carry demonstrated evidence of the order."
+      ],
+      "nonblocking_limits": [
+        "Within-colour scan-order tie-breaks differ from the archived frame but are certified irrelevant in-domain. Explicit uncertified scenes could differ.",
+        "Fixed colour roles (BG=palette[1], WALL=palette[8]) rather than inference from demonstrations. Consistent with the generator domain.",
+        "The corner-cell axis preference and the undecided-pair default L are mapped via d4 parity. Correctness assumes the host's d4 indexing uses odd values for exactly the transposing elements.",
+        "Brute-force all-pairs search per link. Acceptable at 30x30 with sparse pieces.",
+        "Reachability of the order-dependent configuration is argued from source, not demonstrated with a seed. Its frequency is likely low (needs roll >= 0.88, a cross-route intersection with an alternative L or shortcut, and no distractor wall), but it is not excluded."
+      ],
+      "required_context_checks": [
+        "Re-solve sampled scenes with every permutation of the present piece colours (or at least reversed ORDER). Report any scene whose output changes; even one is a blocker.",
+        "Confirm whether any demonstration in a generated episode visibly fixes the colour processing order. Currently no evidence check exists for f8f52ecc.",
+        "Confirm the host's d4 convention: odd d4 values must be exactly the axis-swapping transforms for PRIMARY='h' to be correct.",
+        "Confirm that the host audit's palette augmentation actually permutes colours 0,2..7,9 and that ORDER is rebuilt per palette, as build_program does."
+      ],
+      "task_id": "f8f52ecc",
+      "factory_sha256": "1c562c09470d9bbe6336a525b0c29a72c1d05785ccea64b5b3f5f42e91468fb6",
+      "constructor_sha256": "cb7a6366e5a916d3910af6afafb88e6f7b13b5510fb09997c9649b3b5903bd10"
+    },
+    "host_review": "Host reproduced a two-colour scene where ascending order matches the latent answer and descending order draws the wrong L. Constructor now certifies each colour for every subset of relevant completed other routes, using per-colour sufficient proof or exhaustive tie-order fallback against the exact one-colour target. Other completed hidden cells outside the current route bounding box cannot lie on any L between its cells, so those subsets are equivalent. Induction over colour order establishes intended routes for every order within the certified domain. The factory now sorts visible palette colours, removing the native colour-rank lookup. Counterexample rejected; adding a visible wall makes it valid in both orders. All canonical fixture bytes preserved. Fresh1000pairs/8000D4/16fixture checks passed without sampler rejection. Forced1..6chain scenes pass every colour permutation plus both visible orders under8D4 and a nonidentity palette. This is domain-restricted certification with a bounded exhaustive fallback, not a claim about arbitrary path scenes.",
+    "resolved_prior_hold": true,
+    "all_colour_orders_review": {
+      "reports": [
+        {
+          "num_chains": 1,
+          "seed": 20261021210,
+          "order_checks": 17,
+          "input_sha256": "4869668432d2e9c60cb28e37049b988f05d8709dd5401610da9409de75529875"
+        },
+        {
+          "num_chains": 1,
+          "seed": 20261021211,
+          "order_checks": 17,
+          "input_sha256": "3e2e1329a3179819a9a6f02d40f3f4dce598b67909a52746fc741faeb707b866"
+        },
+        {
+          "num_chains": 2,
+          "seed": 20261021220,
+          "order_checks": 18,
+          "input_sha256": "67ff320160be1ea82eb2431d6864b903e8a8db527730ae3e6c0c581cf658b9aa"
+        },
+        {
+          "num_chains": 2,
+          "seed": 20261021221,
+          "order_checks": 18,
+          "input_sha256": "516eebc0e2aec015443006368cf710e23b2eb433e7c0b39c50e9aa55695fa867"
+        },
+        {
+          "num_chains": 3,
+          "seed": 20261021230,
+          "order_checks": 22,
+          "input_sha256": "048cf5a8624c8b49812bdfb6f3bc57ca076d76649276c0920f898a660e47d1f7"
+        },
+        {
+          "num_chains": 3,
+          "seed": 20261021231,
+          "order_checks": 22,
+          "input_sha256": "64dd6462a70b7732bc0e706a34694e5bf4fe083aa6d563a1ea2f5f2a7ebcaee8"
+        },
+        {
+          "num_chains": 4,
+          "seed": 20261021240,
+          "order_checks": 40,
+          "input_sha256": "530e680f72369f9079dbb52323070ceb4304369616784dfec78c2703d2360a57"
+        },
+        {
+          "num_chains": 4,
+          "seed": 20261021241,
+          "order_checks": 40,
+          "input_sha256": "54f7c1aaaee7b89e86839cdc73437ccfc297bef523533170ebb4f7e5ffaeb98c"
+        },
+        {
+          "num_chains": 5,
+          "seed": 20261021250,
+          "order_checks": 136,
+          "input_sha256": "4e6fbcb69fe5166df389dc83cdd477fc1d6fe1c86feba045d898bd11bc6a1bfc"
+        },
+        {
+          "num_chains": 5,
+          "seed": 20261021251,
+          "order_checks": 136,
+          "input_sha256": "0a9c478c2d5211d682671779efeb7cc4e5bc6cc4f7dba1f77b783c3d4eba7cd4"
+        },
+        {
+          "num_chains": 6,
+          "seed": 20261021260,
+          "order_checks": 736,
+          "input_sha256": "cf6bb2d4d6c4bf28a361446eb0ac98042695669d557fa7cd92cb625232b76668"
+        },
+        {
+          "num_chains": 6,
+          "seed": 20261021261,
+          "order_checks": 736,
+          "input_sha256": "569874428d26783cdc8ee0a00d91563fd6f651539a92d61e9ba8c400bb35193d"
+        }
+      ],
+      "checks": 1938,
+      "seconds": 1.207793951034546,
+      "constructor_sha256": "1ce46068e4f58a469da07dd3b1630dfd46c73681c723a8ec37e635555b4a5c37",
+      "factory_sha256": "57891aa5cc7d9c8702481d3f176cbc27bf6ad65e9c5c98b43be5da77e66c2a47"
+    }
+  }
+}

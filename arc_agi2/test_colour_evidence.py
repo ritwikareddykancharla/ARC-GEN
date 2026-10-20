@@ -5,6 +5,49 @@ from .program_targets import make_record
 
 
 class ColourEvidenceTests(unittest.TestCase):
+    def test_crossing_rays_require_axis_precedence_demonstration(self):
+        from tasks import task_f8be4b64 as gen
+        weak = gen.generate(size=12, rows=[3], cols=[3], colors=[1])
+        strong = gen.generate(size=12, rows=[3, 8], cols=[3, 8], colors=[1, 2])
+        query = gen.generate(size=14, rows=[4, 9], cols=[4, 9], colors=[5, 0])
+        for d4 in range(8):
+            pal = [3, 9, 0, 7, 2, 8, 1, 6, 4, 5]
+            a, b, q = apply_episode([weak, strong, query], d4, pal)
+            with self.assertRaises(MissingColourEvidence):
+                require_colour_evidence('f8be4b64', [a], [{'input': q['input']}], pal, d4)
+            require_colour_evidence('f8be4b64', [a, b], [{'input': q['input']}], pal, d4)
+            require_colour_evidence('f8be4b64', [a], [{'input': a['input']}], pal, d4)
+
+    def test_stray_face_rule_requires_evidence_against_diagonal_slide(self):
+        from tasks import task_f28a3cbb as gen
+        weak = gen.generate(rows=[3], cols=[4], colors=[1], pair=[1, 2])
+        strong = gen.generate(rows=[3], cols=[5], colors=[1], pair=[1, 2])
+        query = gen.generate(rows=[3], cols=[6], colors=[1], pair=[1, 2])
+        for d4 in range(8):
+            pal = [3, 9, 0, 7, 2, 8, 1, 6, 4, 5]
+            a, b, q = apply_episode([weak, strong, query], d4, pal)
+            with self.assertRaises(MissingColourEvidence):
+                require_colour_evidence('f28a3cbb', [a], [{'input': q['input']}], pal, d4)
+            require_colour_evidence('f28a3cbb', [a, b], [{'input': q['input']}], pal, d4)
+            require_colour_evidence('f28a3cbb', [a], [{'input': a['input']}], pal, d4)
+
+    def test_symbol_corner_rule_requires_disambiguating_demo(self):
+        from tasks import task_eee78d87 as gen
+        def pair(corner, top, left, center):
+            return gen.generate(corner=corner, top=top, left=left, center=center,
+                                colour=2, row=1, col=1, width=6, height=6)
+        weak = pair(False, True, True, True)
+        strong = pair(True, True, True, True)
+        ambiguous = pair(True, True, False, False)
+        agreed = pair(True, False, False, False)
+        for d4 in range(8):
+            pal = [3, 9, 0, 7, 2, 8, 1, 6, 4, 5]
+            a, b, q, same = apply_episode([weak, strong, ambiguous, agreed], d4, pal)
+            with self.assertRaises(MissingColourEvidence):
+                require_colour_evidence('eee78d87', [a], [{'input': q['input']}], pal, d4)
+            require_colour_evidence('eee78d87', [a, b], [{'input': q['input']}], pal, d4)
+            require_colour_evidence('eee78d87', [a], [{'input': same['input']}], pal, d4)
+
     def test_duplicate_parts_require_demonstrated_reading_order(self):
         import random
         from tasks import task_fea12743 as gen

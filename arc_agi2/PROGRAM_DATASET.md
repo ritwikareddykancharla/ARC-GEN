@@ -35,7 +35,7 @@ recorded. Passing finite audits does not prove unrestricted generalization.
 
 - 213 native direct-coordinate certificates admitted after fresh audits and
   supplied-fixture checks.
-- 793 admitted factories. Each passed 1,000 fresh pairs, 8,000 augmented pair
+- 797 admitted factories. Each passed 1,000 fresh pairs, 8,000 augmented pair
   checks and 16 supplied-fixture variants. Their audit records retain draft
   limitations and source/constructor hashes. These checks are finite evidence,
   not proof of correctness on every generated input.
@@ -46,7 +46,7 @@ recorded. Passing finite audits does not prove unrestricted generalization.
   counts must be computed as a union, not added.
 - Local exporter test: 18 fresh base episodes, 144 augmented PNG/program/grid
   records. It requested 20 bases and reported a two-episode shortfall.
-- The union currently admits 1012 of 1,120 families; 108 still need direct
+- The union currently admits 1016 of 1,120 families; 104 still need direct
   augmented program admission. Constructor coverage and program coverage are
   different gates.
 - Synthetic labels for `00d62c1b` now fill every enclosed background component,
@@ -636,3 +636,33 @@ See `reports/episode-evidence-1012-audit.json`. The remaining 108 families compr
 72 semantic/context holds, 33 execution failures and three missing factories.
 Bulk production and training remain unlaunched. The target remains 1,000 fresh
 base episodes per family, followed by consistent episode augmentations.
+
+## 1016-family checkpoint
+
+Four prior semantic holds were resolved. `f8be4b64` had a reproduced input
+collision: a hidden hollow plus changed the answer without changing any input
+pixel. Random generation now requires a uniquely evidenced arm for a hollow
+plus, retaining valid shared arms and spurious pockets. A separate 1,000-scene
+audit retained 170 overlapping-box scenes, 64 shared-arm scenes and 37 spurious
+pockets; four unidentifiable placement attempts were rejected. Original fixtures
+are unchanged. The ray-priority teaching gate requires demos that distinguish
+vertical and horizontal precedence when the query depends on it.
+
+`f8f52ecc` had a reproduced colour-order dependency. Each colour is now certified
+after every relevant subset of other completed colours; the emitted program
+uses visible colour ordering rather than an inverse-palette priority. The new
+check rejects the counterexample and accepts its visible-wall repair. Forced
+scenes with one through six route colours passed every permutation plus D4
+controls: 1,938 checks. Both repaired samplers passed 1,000 fresh pairs, 8,000
+augmented pair checks and 16 fixture variants with no sampler rejections.
+
+`eee78d87` now requires evidence distinguishing corner occupancy from inverted
+edge-midpoint readings; `f28a3cbb` requires evidence distinguishing nearest-face
+clamping from diagonal sliding whenever their query predictions differ. These
+checks preserve the full generator domains and never read query answers.
+
+The complete-episode audit sampled 80 bases, accepted 77, excluded three for
+missing evidence, and verified 616 augmented records. All 393 regression tests
+passed. See `reports/episode-evidence-1016-audit.json` and the two saved
+counterexamples. Remaining: 68 semantic/context holds, 33 execution failures,
+and three missing factories. Bulk generation and training remain unlaunched.

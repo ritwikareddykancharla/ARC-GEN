@@ -1537,8 +1537,8 @@
     }
   },
   "errors": [],
-  "sha256": "cb7a6366e5a916d3910af6afafb88e6f7b13b5510fb09997c9649b3b5903bd10",
-  "status": "reviewed_bounded_validation_passed",
+  "sha256": "1ce46068e4f58a469da07dd3b1630dfd46c73681c723a8ec37e635555b4a5c37",
+  "status": "validated_candidate_needs_semantic_review",
   "limitations": "Bounded randomized agreement with a saved solver is not proof of semantic completeness.",
   "candidate_path": "/Users/ritwika/projects/arc-agi2/outputs/research/arcgen-coverage-cli/host-reviewed/f8f52ecc/task_f8f52ecc.py",
   "attempts": 1,
@@ -3115,10 +3115,9 @@
       }
     },
     "errors": [],
-    "sha256": "cb7a6366e5a916d3910af6afafb88e6f7b13b5510fb09997c9649b3b5903bd10",
+    "sha256": "1ce46068e4f58a469da07dd3b1630dfd46c73681c723a8ec37e635555b4a5c37",
     "status": "validated_candidate_needs_semantic_review",
-    "limitations": "Bounded randomized agreement with a saved solver is not proof of semantic completeness.",
-    "review_candidate_sha256": "cb7a6366e5a916d3910af6afafb88e6f7b13b5510fb09997c9649b3b5903bd10"
+    "limitations": "Bounded randomized agreement with a saved solver is not proof of semantic completeness."
   },
   "authored_scope": "Random mode builds one hidden self-avoiding polyline route per repeated colour (1..6 colours). Routes have random left/right turns, so they can be staircases or U-turns. Their first and last segments may be one-cell stubs. Some route cells are revealed, with at most one corner per hidden gap. Walls are placed inside U-turns and on alternative Ls. Some endpoint pieces are extended to orient L choices. Some gaps are left to be decided later. Distractor walls and singleton colours are added. Sizes are 8..16 per side, with 17..30 as a synthetic extension. Explicit latent mode (5..30 per side) reconstructs all five canonical pairs. Deliberately not supported: unconnectable colours, branching outcomes, multi-corner links, and scenes whose answer depends on the reference's scan-order tie-breaks. Background and wall colours are fixed at 1 and 8.",
   "authored_constraints": [
@@ -3128,7 +3127,8 @@
     "Both route ends are visible. Each route has at least one hidden gap, and each gap has at most one corner.",
     "Every U turn has an interior wall parallel to its legs.",
     "A polynomial certificate per colour covers every design-subset state. In each one it shows that a decided gap link exists, that each decided gap link draws exactly its gap cells, and that every other decided cell pair is strictly beaten by an unfilled decided gap. If the certificate is inconclusive, an exhaustive tie-order search with a state budget must show a unique final grid equal to the design.",
-    "The input differs from the output."
+    "The input differs from the output.",
+    "Every colour is forced under every relevant subset of other completed routes, eliminating unobserved colour-order priority."
   ],
   "semantic_review": {
     "status": "reviewed",
@@ -3137,7 +3137,8 @@
       "Saved 14-independent-gap counterexample now constructs the expected straight completed route",
       "24 supported parameter controls pass; seven invalid controls reject",
       "100 additional independent seeds all produce unique inputs and match archived solver",
-      "1000 independent seeds 20000..20999; approved validation fixtures reconstructed exactly; canonical replay reported separately"
+      "1000 independent seeds 20000..20999; approved validation fixtures reconstructed exactly; canonical replay reported separately",
+      "Reproduced hidden cross-colour blocking counterexample; now certify each colour after all relevant subsets of completed other routes. 1938 explicit order/augmentation checks; unchanged fixtures; fresh1000seed archived-solver validation rerun."
     ],
     "limitations": [
       "Scenes the certificate cannot prove fall back to an exhaustive search with a state budget. These include chains of several decided-later gaps, very long alternative Ls crossing many gaps, and pairs whose influence set exceeds 12 gaps. In random mode such scenes are rejected silently when the budget is exceeded. In explicit mode they raise a distinct ValueError.",
@@ -3158,5 +3159,85 @@
       "success": 24,
       "rejected": 7
     }
+  },
+  "colour_order_audit": {
+    "reports": [
+      {
+        "num_chains": 1,
+        "seed": 20261021210,
+        "order_checks": 17,
+        "input_sha256": "4869668432d2e9c60cb28e37049b988f05d8709dd5401610da9409de75529875"
+      },
+      {
+        "num_chains": 1,
+        "seed": 20261021211,
+        "order_checks": 17,
+        "input_sha256": "3e2e1329a3179819a9a6f02d40f3f4dce598b67909a52746fc741faeb707b866"
+      },
+      {
+        "num_chains": 2,
+        "seed": 20261021220,
+        "order_checks": 18,
+        "input_sha256": "67ff320160be1ea82eb2431d6864b903e8a8db527730ae3e6c0c581cf658b9aa"
+      },
+      {
+        "num_chains": 2,
+        "seed": 20261021221,
+        "order_checks": 18,
+        "input_sha256": "516eebc0e2aec015443006368cf710e23b2eb433e7c0b39c50e9aa55695fa867"
+      },
+      {
+        "num_chains": 3,
+        "seed": 20261021230,
+        "order_checks": 22,
+        "input_sha256": "048cf5a8624c8b49812bdfb6f3bc57ca076d76649276c0920f898a660e47d1f7"
+      },
+      {
+        "num_chains": 3,
+        "seed": 20261021231,
+        "order_checks": 22,
+        "input_sha256": "64dd6462a70b7732bc0e706a34694e5bf4fe083aa6d563a1ea2f5f2a7ebcaee8"
+      },
+      {
+        "num_chains": 4,
+        "seed": 20261021240,
+        "order_checks": 40,
+        "input_sha256": "530e680f72369f9079dbb52323070ceb4304369616784dfec78c2703d2360a57"
+      },
+      {
+        "num_chains": 4,
+        "seed": 20261021241,
+        "order_checks": 40,
+        "input_sha256": "54f7c1aaaee7b89e86839cdc73437ccfc297bef523533170ebb4f7e5ffaeb98c"
+      },
+      {
+        "num_chains": 5,
+        "seed": 20261021250,
+        "order_checks": 136,
+        "input_sha256": "4e6fbcb69fe5166df389dc83cdd477fc1d6fe1c86feba045d898bd11bc6a1bfc"
+      },
+      {
+        "num_chains": 5,
+        "seed": 20261021251,
+        "order_checks": 136,
+        "input_sha256": "0a9c478c2d5211d682671779efeb7cc4e5bc6cc4f7dba1f77b783c3d4eba7cd4"
+      },
+      {
+        "num_chains": 6,
+        "seed": 20261021260,
+        "order_checks": 736,
+        "input_sha256": "cf6bb2d4d6c4bf28a361446eb0ac98042695669d557fa7cd92cb625232b76668"
+      },
+      {
+        "num_chains": 6,
+        "seed": 20261021261,
+        "order_checks": 736,
+        "input_sha256": "569874428d26783cdc8ee0a00d91563fd6f651539a92d61e9ba8c400bb35193d"
+      }
+    ],
+    "checks": 1938,
+    "seconds": 1.207793951034546,
+    "constructor_sha256": "1ce46068e4f58a469da07dd3b1630dfd46c73681c723a8ec37e635555b4a5c37",
+    "factory_sha256": "57891aa5cc7d9c8702481d3f176cbc27bf6ad65e9c5c98b43be5da77e66c2a47"
   }
 }

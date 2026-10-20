@@ -1,0 +1,67 @@
+{
+  "task_id": "f8be4b64",
+  "factory_sha256": "0fe64b2f03aa070441fd662ce2dca0b7c34610e8d94f13ec113499544936e7d9",
+  "constructor_sha256": "9f296e3a2447b193a72c50f07107988a91d48f3336bbb5091ac7cf693a45ba43",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 2508960234264,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 6.6633426250191405,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The factory produces a solver that works directly on the visible grid. It sets two colour constants from the palette: BG = palette[0] for the background and the hollow centre, and ARM = palette[3] for the plus arms.\n\nIt also picks which axis wins at crossings. In the original task, column rays override row rays. A horizontal flip (d4 >= 4) keeps columns as columns. A clockwise rotation by 1 or 3 turns columns into rows. So DOM_VERTICAL = (d4 % 4) in {0, 2}; otherwise visible row rays are the dominant ones.\n\nThe solver works in four steps.\n1. It finds plus centres: non-arm cells whose four orthogonal neighbours are all ARM. A centre that is not BG is always a real coloured plus.\n2. A BG-centred candidate counts as a hollow plus only if it is needed to explain arm cells. The solver keeps the forced candidates (those owning an arm that nothing else can explain), then takes a minimum cover of whatever arm cells remain. This drops spurious pockets fully enclosed by the arms of neighbouring pluses.\n3. Every centre casts minor-axis rays, then major-axis rays, in its centre colour. Each ray starts two cells out, just past its own arm, and paints only input-BG cells. It stops at the first non-BG input cell or at the grid edge.\n4. Because the major axis is painted last, it overrides the minor one at crossings. A hollow plus's major-axis BG ray therefore cuts gaps in the other lines. Its minor-axis ray is a visible no-op, exactly as in the generator.\n\nThis matches the generator in every case it can produce. Row and column positions are distinct, so rays on the same axis never overlap. A ray can reach another centre only by passing through that centre's arm first. Stopping at 'output == 3' is therefore the same as stopping at a non-background input cell.",
+    "limitations": "Constructor defect needing host review: the plus-placement loop in generate() appears to have its overlap check inverted. When common.overlaps(...) is true, it still accepts the layout as long as the seen_green flag matches, which happens with roughly 50% probability. As a result, fresh scenes can contain touching or diagonally packed pluses.\n\nIn such scenes, two pluses whose centres are offset by (2,2) enclose a background cell whose four neighbours are all arm cells. That cell is visually identical to a hollow plus. The archived solver would treat it as a hollow plus and cast 0-rays from it. The generator does not.\n\nThis program removes such pockets by minimal arm-cover. One configuration remains truly ambiguous in pixels: a genuine hollow plus whose four arms are all shared with pluses on two opposite diagonals. That case would be dropped, and ties between equally small covers fall back to scan order. Both situations are rare and cannot be decided from the visible pixels.\n\nThe generator only makes square grids. The program also accepts rectangular grids. Centres must sit at least one cell from the border, so all four arms exist. Demonstrations are not consulted, because the colour roles come from the palette.\n\nThe approved fixtures agree with this rule; no contradictions were found.",
+    "independent_source_review": {
+      "verdict": "hold",
+      "mechanism": "Each plus is a non-arm centre whose four orthogonal neighbours are arm colour 3. Every centre casts rays in its centre colour, including 0 for a hollow plus. A ray starts two cells out, paints only background cells, and stops at the first non-background input cell or the grid edge. Rays along the minor axis are drawn first, then rays along the major axis, so the major axis wins at crossings. In the original orientation the major axis is vertical, and a hollow plus's vertical 0-ray cuts gaps in horizontal lines. The factory adds a minimum arm-cover filter to discard background 'pocket' cells enclosed by neighbouring pluses' arms.",
+      "evidence": [
+        "Fixtures agree with the archived rule. Examples: pair 1 col 3 gaps in rows 7/11/15; pair 1 5-ray in col 13 stops at the 4-plus arm at row 15; pair 2 col 5 shows 8 over horizontals; test 4-ray stops at the 1-plus arm at row 12.",
+        "Generator stopping at output==3 is equivalent to stopping at a non-background input cell. Rows and columns are sampled without replacement, so a ray can reach another centre only by passing through that centre's arm. Vertical rays overwrite non-3 cells, while horizontal rays paint only -1 cells, so vertical wins whatever the list order. A hollow vertical 0-ray also blocks later horizontals, because 0 != -1.",
+        "Centres are never overwritten by another plus's arm, since that would need offset (0,\u00b11) or (\u00b11,0), which distinct rows and columns exclude.",
+        "DOM_VERTICAL = d4%4 in {0,2} is a genuine axis specialization. The solver acts in visible coordinates, and the host checked all 8 D4 variants (8000 augmented checks). The ray colour is the centre colour, not an arbitrary lookup, and the dominance axis is taught by crossings in the demonstrations.",
+        "Constructor placement loop: `if not common.overlaps(rows, cols, [3]*n, [3]*n): break; _, _, sg = draw(); if sg == seen_green: break`. Non-overlapping layouts are accepted unconditionally. Overlapping layouts (centres within 2 rows and 2 columns) are accepted whenever sg matches seen_green. The overlap guard is effectively inverted.",
+        "Overlapping centres at offset (\u00b12,\u00b12) create a background pocket whose four neighbours are all arms. These are pixel-identical to a hollow plus whose four arms are all shared."
+      ],
+      "blocking_issues": [
+        "Hidden latent determines the label for identical inputs. The constructor can emit a hollow plus (colour 0, sampled from [0,1,2,4,...]) at (R,C), with two other pluses at (R-1,C-1) and (R+1,C+1), or on the anti-diagonal. The two side pluses alone already produce every arm cell of the hollow plus, so the input is pixel-identical to the two-plus scene without it. With a fourth plus whose horizontal ray crosses column C outside rows R-1..R+1, the generator output has a 0 gap at column C; the two-plus scene does not. No visible-grid solver can be right on both. The factory resolves this as 'pocket' and would mismatch the hollow-plus label.",
+        "This is reachable: n \u2265 4 is allowed for size \u2265 12, the layout needs no other rejection, and overlapping layouts pass about 50% of the time via the seen_green match. It is rare, so a 1000-pair audit passing is not evidence it is excluded.",
+        "Root cause is the constructor's placement predicate, which admits touching or arm-sharing pluses absent from the archived task. The factory's minimum arm-cover heuristic exists only to fit these out-of-task synthetic scenes. Its tie-break between equal-size covers falls back to scan order, which is not a rule derivable from the demonstrations."
+      ],
+      "nonblocking_limits": [
+        "The solver accepts rectangular grids, but the generator emits only square ones.",
+        "Centres must sit at least one cell from the border. The constructor enforces this with rows/cols in range(2, size-2).",
+        "Within non-overlapping scenes, which is the regime of all approved fixtures, the factory reduces exactly to the archived rule. Coloured arms cover everything there, and every hollow plus has unshared arms, so it is forced.",
+        "seen_green has no effect for non-overlapping layouts. This is harmless to labels, but the sampling bias differs from what was apparently intended."
+      ],
+      "required_context_checks": [
+        "Host: measure how often fresh samples contain overlapping or arm-sharing pluses (centre offsets of at most 2 in both axes) and pocket candidates.",
+        "Host: deliberately construct the ambiguous case (hollow centre at the (\u00b11,\u00b11) diagonal midpoint between two pluses, plus a fourth plus whose row ray crosses that column). Confirm the generator label differs from the factory output and from the generator output for the same visible input without the hollow plus.",
+        "Decide whether to repair the constructor predicate so overlapping layouts are rejected, rather than admitting them with a cover heuristic. Repairing it restores the intended non-overlap constraint; it does not simplify the scenes.",
+        "If the factory is re-reviewed after a constructor fix, verify the cover filter becomes a no-op on all reachable scenes. Also confirm no augmented episode has conflicting answers for an identical query input."
+      ],
+      "task_id": "f8be4b64",
+      "factory_sha256": "0fe64b2f03aa070441fd662ce2dca0b7c34610e8d94f13ec113499544936e7d9",
+      "constructor_sha256": "b67df31dfb1469fa7ef73705613f771feee53f0869d0d8be77a77e42c365ffe4"
+    },
+    "host_review": "Host reproduced identical visible inputs with different answers: adding a hollow plus at(6,6) between crosses(5,5)/(7,7) changes row2,col6 from4 to0. Random sampling now requires each real hollow centre to have an arm not explained by any other candidate centre; real coloured centres retain four intact arms. Thus every real hollow is forced in the factory cover step, all true arms are covered, and false pockets are redundant. This removes latent-label ambiguity without globally prohibiting overlaps. A separate1000-sample audit retained170 overlapping boxes,64 shared-arm scenes,37 spurious-pocket scenes and358 hollow-cross scenes;4 ambiguous placements were rejected. Original fixtures hash unchanged. Fresh1000/8000/16 audit passed. Added same-query axis-precedence agreement across demos rather than assuming crossings are always demonstrated. Explicit latent replay is unchanged and may construct the recorded rejected counterexample; the guaranteed domain is random sampling plus approved fixtures.",
+    "sampling_diversity_review": {
+      "samples": 1000,
+      "placement_trials": 1234,
+      "rejected_unidentifiable": 4,
+      "accepted_overlapping_boxes": 170,
+      "accepted_shared_arms": 64,
+      "accepted_spurious_pockets": 37,
+      "accepted_hollow_crosses": 358,
+      "seed": 20261021101,
+      "constructor_sha256": "9f296e3a2447b193a72c50f07107988a91d48f3336bbb5091ac7cf693a45ba43"
+    },
+    "counterexample_report": "hidden-hollow-counterexample.json",
+    "resolved_prior_hold": true
+  }
+}

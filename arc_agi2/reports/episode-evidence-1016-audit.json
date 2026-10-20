@@ -1,0 +1,158 @@
+{
+  "checked_at": 1792526214.3383381,
+  "reports": [
+    {
+      "task_id": "f8be4b64",
+      "sampled_episodes": 20,
+      "accepted_episodes": 20,
+      "missing_evidence_episodes": 0,
+      "verified_augmented_records": 160,
+      "sampler_rejections": [],
+      "errors": [],
+      "passed": true
+    },
+    {
+      "task_id": "eee78d87",
+      "sampled_episodes": 20,
+      "accepted_episodes": 17,
+      "missing_evidence_episodes": 3,
+      "verified_augmented_records": 136,
+      "sampler_rejections": [],
+      "errors": [],
+      "passed": true
+    },
+    {
+      "task_id": "f28a3cbb",
+      "sampled_episodes": 20,
+      "accepted_episodes": 20,
+      "missing_evidence_episodes": 0,
+      "verified_augmented_records": 160,
+      "sampler_rejections": [],
+      "errors": [],
+      "passed": true
+    },
+    {
+      "task_id": "f8f52ecc",
+      "sampled_episodes": 20,
+      "accepted_episodes": 20,
+      "missing_evidence_episodes": 0,
+      "verified_augmented_records": 160,
+      "sampler_rejections": [],
+      "errors": [],
+      "passed": true
+    }
+  ],
+  "summary": {
+    "families": 4,
+    "sampled_base_episodes": 80,
+    "accepted_base_episodes": 77,
+    "excluded_missing_evidence": 3,
+    "verified_augmented_records": 616,
+    "errors": 0
+  },
+  "regression_tests": 393,
+  "production_generation": false,
+  "source_hashes": {
+    "arc_agi2/colour_evidence.py": "86f181eba1ea40597313b56183819264ee31721e125c277566b7244e71b59012",
+    "common.py": "879eb61e360e4a47ee1d569408e8c66114ac068794721fe1de1b59aaa476586a",
+    "tasks/task_f8be4b64.py": "9f296e3a2447b193a72c50f07107988a91d48f3336bbb5091ac7cf693a45ba43",
+    "arc_agi2/direct_factories/task_f8be4b64.py": "0fe64b2f03aa070441fd662ce2dca0b7c34610e8d94f13ec113499544936e7d9",
+    "tasks/task_eee78d87.py": "36c94618ee0accc4d9e325ad31426683c45d291e55932e19a6b955bda11d7165",
+    "arc_agi2/direct_factories/task_eee78d87.py": "af3f49fa4c6942f82d130481d6b1f1b5f84a6eee81c03f09617a509b26ed7da8",
+    "tasks/task_f28a3cbb.py": "a73e928b87ef144cc66a42ab67314805fa80178baaf30f01461f4ca97ea1a587",
+    "arc_agi2/direct_factories/task_f28a3cbb.py": "70d999f4c9fd8d0c82086340c77a4ea0a7de1425cd30173e38e0ec40b1d1b185",
+    "tasks/task_f8f52ecc.py": "1ce46068e4f58a469da07dd3b1630dfd46c73681c723a8ec37e635555b4a5c37",
+    "arc_agi2/direct_factories/task_f8f52ecc.py": "57891aa5cc7d9c8702481d3f176cbc27bf6ad65e9c5c98b43be5da77e66c2a47"
+  },
+  "hollow_sampling_diversity": {
+    "samples": 1000,
+    "placement_trials": 1234,
+    "rejected_unidentifiable": 4,
+    "accepted_overlapping_boxes": 170,
+    "accepted_shared_arms": 64,
+    "accepted_spurious_pockets": 37,
+    "accepted_hollow_crosses": 358,
+    "seed": 20261021101,
+    "constructor_sha256": "9f296e3a2447b193a72c50f07107988a91d48f3336bbb5091ac7cf693a45ba43"
+  },
+  "route_order_audit": {
+    "reports": [
+      {
+        "num_chains": 1,
+        "seed": 20261021210,
+        "order_checks": 17,
+        "input_sha256": "4869668432d2e9c60cb28e37049b988f05d8709dd5401610da9409de75529875"
+      },
+      {
+        "num_chains": 1,
+        "seed": 20261021211,
+        "order_checks": 17,
+        "input_sha256": "3e2e1329a3179819a9a6f02d40f3f4dce598b67909a52746fc741faeb707b866"
+      },
+      {
+        "num_chains": 2,
+        "seed": 20261021220,
+        "order_checks": 18,
+        "input_sha256": "67ff320160be1ea82eb2431d6864b903e8a8db527730ae3e6c0c581cf658b9aa"
+      },
+      {
+        "num_chains": 2,
+        "seed": 20261021221,
+        "order_checks": 18,
+        "input_sha256": "516eebc0e2aec015443006368cf710e23b2eb433e7c0b39c50e9aa55695fa867"
+      },
+      {
+        "num_chains": 3,
+        "seed": 20261021230,
+        "order_checks": 22,
+        "input_sha256": "048cf5a8624c8b49812bdfb6f3bc57ca076d76649276c0920f898a660e47d1f7"
+      },
+      {
+        "num_chains": 3,
+        "seed": 20261021231,
+        "order_checks": 22,
+        "input_sha256": "64dd6462a70b7732bc0e706a34694e5bf4fe083aa6d563a1ea2f5f2a7ebcaee8"
+      },
+      {
+        "num_chains": 4,
+        "seed": 20261021240,
+        "order_checks": 40,
+        "input_sha256": "530e680f72369f9079dbb52323070ceb4304369616784dfec78c2703d2360a57"
+      },
+      {
+        "num_chains": 4,
+        "seed": 20261021241,
+        "order_checks": 40,
+        "input_sha256": "54f7c1aaaee7b89e86839cdc73437ccfc297bef523533170ebb4f7e5ffaeb98c"
+      },
+      {
+        "num_chains": 5,
+        "seed": 20261021250,
+        "order_checks": 136,
+        "input_sha256": "4e6fbcb69fe5166df389dc83cdd477fc1d6fe1c86feba045d898bd11bc6a1bfc"
+      },
+      {
+        "num_chains": 5,
+        "seed": 20261021251,
+        "order_checks": 136,
+        "input_sha256": "0a9c478c2d5211d682671779efeb7cc4e5bc6cc4f7dba1f77b783c3d4eba7cd4"
+      },
+      {
+        "num_chains": 6,
+        "seed": 20261021260,
+        "order_checks": 736,
+        "input_sha256": "cf6bb2d4d6c4bf28a361446eb0ac98042695669d557fa7cd92cb625232b76668"
+      },
+      {
+        "num_chains": 6,
+        "seed": 20261021261,
+        "order_checks": 736,
+        "input_sha256": "569874428d26783cdc8ee0a00d91563fd6f651539a92d61e9ba8c400bb35193d"
+      }
+    ],
+    "checks": 1938,
+    "seconds": 1.207793951034546,
+    "constructor_sha256": "1ce46068e4f58a469da07dd3b1630dfd46c73681c723a8ec37e635555b4a5c37",
+    "factory_sha256": "57891aa5cc7d9c8702481d3f176cbc27bf6ad65e9c5c98b43be5da77e66c2a47"
+  }
+}

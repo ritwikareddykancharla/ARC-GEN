@@ -17,6 +17,32 @@
 import common
 
 
+def _identifiable_crosses(grid, rows, cols, colors):
+  """Require every sampled cross to have visible, unambiguous arm evidence.
+
+  Overlapping arms remain legal. A hollow cross needs an arm no other
+  candidate centre can explain; otherwise adding it may leave the input
+  unchanged while its background-colour ray changes the answer.
+  """
+  height, width = len(grid), len(grid[0])
+  steps = ((1, 0), (0, 1), (-1, 0), (0, -1))
+  candidates = {}
+  for r in range(1, height - 1):
+    for c in range(1, width - 1):
+      arms = {(r + dr, c + dc) for dr, dc in steps}
+      if grid[r][c] != 3 and all(grid[y][x] == 3 for y, x in arms):
+        candidates[r, c] = arms
+  for r, c, color in zip(rows, cols, colors):
+    if (r, c) not in candidates or grid[r][c] != color:
+      return False
+    if color == 0:
+      other_arms = set().union(*(a for centre, a in candidates.items()
+                                 if centre != (r, c)))
+      if not candidates[r, c] - other_arms:
+        return False
+  return True
+
+
 def generate(size=None, rows=None, cols=None, colors=None):
   """Returns input and output grids according to the given parameters.
 
@@ -71,9 +97,11 @@ def generate(size=None, rows=None, cols=None, colors=None):
     while True:
       rows = common.sample(list(range(2, size - 2)), num_crosses)
       cols = common.sample(list(range(2, size - 2)), num_crosses)
+      candidate_grid, _, sg = draw()
+      if not _identifiable_crosses(candidate_grid, rows, cols, colors):
+        continue
       if not common.overlaps(rows, cols, [3] * num_crosses, [3] * num_crosses):
         break
-      _, _, sg = draw()
       if sg == seen_green: break
 
   grid, output, _ = draw()

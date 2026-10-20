@@ -77,14 +77,119 @@ def require_colour_evidence(task_id, demonstrations, queries, palette=None, d4=0
                        'ed74f2f2', 'f2829549', 'ef135b50', 'f0afb749',
                        'f1bcbc2c', 'f5b8619d', 'f3e62deb',
                        'fafffa47', 'fd02da9e', 'fe9372f3', 'f9d67f8b',
-                       'fea12743', 'ff28f65a',
+                       'fea12743', 'ff28f65a', 'eee78d87', 'f28a3cbb', 'f8be4b64',
                        '37d3e8b2', 'ba9d41b8', 'd2abd087', 'e39e9282'):
         return
     palette = list(range(10)) if palette is None else palette
     bg = palette[0]
     colours = lambda g: {c for row in g for c in row} - {bg}
     required, seen = set(), set()
-    if task_id == 'fea12743':
+    if task_id == 'f8be4b64':
+        def variants(g):
+            h, w = len(g), len(g[0])
+            steps = ((1, 0), (-1, 0), (0, 1), (0, -1))
+            candidates = {}
+            for r in range(1, h-1):
+                for c in range(1, w-1):
+                    arms = {(r+dr, c+dc) for dr, dc in steps}
+                    if g[r][c] != palette[3] and all(g[y][x] == palette[3] for y, x in arms):
+                        candidates[r, c] = arms
+            centres = []
+            for p, arms in candidates.items():
+                others = set().union(*(a for q, a in candidates.items() if q != p))
+                if g[p[0]][p[1]] != bg or arms - others:
+                    centres.append(p)
+            results = []
+            for axes in (((0, 1), (1, 0)), ((1, 0), (0, 1))):
+                out = [row[:] for row in g]
+                for dr, dc in axes:
+                    for r, c in centres:
+                        for sign in (-1, 1):
+                            y, x = r+2*sign*dr, c+2*sign*dc
+                            while 0 <= y < h and 0 <= x < w and g[y][x] == bg:
+                                out[y][x] = g[r][c]
+                                y, x = y+sign*dr, x+sign*dc
+                results.append(out)
+            return results
+        _require_rule_agreement(task_id, demonstrations, queries, variants)
+        return
+    elif task_id == 'f28a3cbb':
+        def variants(g):
+            background = palette[6]
+            objects = []
+            for ink in sorted({v for row in g for v in row} - {background}):
+                components = list(_colour_components(g, ink))
+                block = max(components, key=len)
+                box = (min(r for r, c in block), max(r for r, c in block),
+                       min(c for r, c in block), max(c for r, c in block))
+                strays = set().union(*components) - block
+                objects.append((ink, box, strays))
+            results = []
+            # Compare nearest-face clamping with the archived constant-direction
+            # diagonal slide. Include all row/column tie orders for the slide.
+            for mode in range(9):
+                out = [row[:] for row in g]
+                for ink, box, strays in objects:
+                    for r, c in strays: out[r][c] = background
+                for ink, (r0, r1, c0, c1), strays in objects:
+                    def distance(p):
+                        r, c = p
+                        return max(r0-r, r-r1, c0-c, c-c1, 0)
+                    direction = max(0, mode-1)
+                    axis = direction // 4
+                    s1, s2 = (-1 if direction & 2 else 1), (-1 if direction & 1 else 1)
+                    ordered = sorted(strays, key=lambda p: (distance(p), s1*p[axis], s2*p[1-axis]))
+                    for r, c in ordered:
+                        dr = 1 if r < r0 else -1 if r > r1 else 0
+                        dc = 1 if c < c0 else -1 if c > c1 else 0
+                        if mode == 0:
+                            oy, ox = max(r0-r, r-r1, 0), max(c0-c, c-c1, 0)
+                            y = r0-1 if r < r0 else r1+1
+                            x = c0-1 if c < c0 else c1+1
+                            if oy > ox: x = min(max(c, c0), c1)
+                            elif ox > oy: y = min(max(r, r0), r1)
+                        else:
+                            y, x = r, c
+                            while dr or dc:
+                                yy, xx = y+dr, x+dc
+                                if not (0 <= yy < len(g) and 0 <= xx < len(g[0])) or out[yy][xx] == ink:
+                                    break
+                                y, x = yy, xx
+                        out[y][x] = ink
+                results.append(out)
+            return results
+        _require_rule_agreement(task_id, demonstrations, queries, variants)
+        return
+    elif task_id == 'eee78d87':
+        def variants(g):
+            cells = [(r, c) for r, row in enumerate(g)
+                     for c, ink in enumerate(row) if ink != palette[7]]
+            top = min(r for r, c in cells)
+            left = min(c for r, c in cells)
+            filled = lambda y, x: g[top+y][left+x] != palette[7]
+            # The fixtures confound corner occupancy with a complemented
+            # edge-midpoint bit. Require agreement on the same visible query,
+            # or a demonstration that distinguishes these interpretations.
+            results = []
+            for corner in (filled(0, 0), not filled(0, 1), not filled(1, 0)):
+                bits = {(True, True): filled(1, 1),
+                        (True, False): filled(1, 0),
+                        (False, True): filled(0, 1),
+                        (False, False): corner}
+                out = []
+                for r in range(16):
+                    row = []
+                    for c in range(16):
+                        ink = palette[0] if bits[r % 3 == 0, c % 3 == 0] else palette[7]
+                        if ink == palette[0] and 5 <= r <= 10 and 5 <= c <= 10:
+                            ink = palette[9]
+                        row.append(ink)
+                    out.append(row)
+                results.append(out)
+            return results
+        _require_rule_agreement(task_id, demonstrations, queries, variants)
+        return
+    elif task_id == 'fea12743':
         from itertools import combinations
         def variants(g):
             tiles = {(r, c): {(y, x) for y in range(4) for x in range(4)

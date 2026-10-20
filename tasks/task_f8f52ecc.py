@@ -15,7 +15,7 @@
 """ARC-GEN style generator for task f8f52ecc.
 
 Rule: the background is colour 1, bars of colour 8 are walls, and the other
-colours form small pieces. Colours are processed in ascending order. For each
+colours form small pieces. Colours may be processed in any order. For each
 colour with several 4-connected pieces, the rule repeatedly links the closest
 pair of pieces, measured by Manhattan distance between cells. A link is a
 straight path or a single-corner L path, and it may cross background cells
@@ -49,7 +49,10 @@ different colours may touch.
 
 Certification. The answer is always painted from the latent routes. A local
 check only rejects scenes whose designed answer is not forced by the rule
-under every scan-order tie-break. The check first tries a polynomial
+under every scan-order tie-break and colour-processing order. For each colour
+it checks every subset of other completed routes that can affect its paths.
+Routes outside its bounding box cannot block an L joining its cells and do
+not need subset enumeration. The check first tries a polynomial
 certificate per colour, which does not enumerate interleavings. It covers
 every 'design-subset' state, meaning the input plus any set of filled gaps.
 In each such state it requires two things:
@@ -470,7 +473,11 @@ def _settle(grid, col, budget):
 
 
 def _rule_reproduces(inp, out, chains, budget):
-  """True when every greedy order turns inp into exactly out."""
+  """Certify each colour after every relevant subset of completed colours.
+
+  By induction over any colour order, each completed route is its intended
+  route. Other colours' hidden cells cannot silently supply a missing wall.
+  """
   counts = collections.Counter(v for row in inp for v in row)
   if any(n >= counts[BG] for v, n in counts.items() if v != BG):
     return False
@@ -479,23 +486,41 @@ def _rule_reproduces(inp, out, chains, budget):
     cells = _route(way)
     pset = {tuple(p) for p in pieces}
     routes[col] = (cells, [x in pset for x in cells])
-  grid = [row[:] for row in inp]
+  merged = [row[:] for row in inp]
+  for col, (cells, _) in routes.items():
+    for r, c in cells:
+      merged[r][c] = col
+  if merged != out:
+    return False
   for col in sorted(set(counts) - {BG, WALL}):
-    if col in routes:
-      cells, filled = routes[col]
-      try:
-        _certify_colour(grid, col, cells, filled)
-      except _Inconclusive:
-        pass
-      else:
-        for r, c in cells:
-          grid[r][c] = col
-        continue
-    finals = _settle(grid, col, budget)
-    if len(finals) != 1:
-      return False
-    grid = [list(row) for row in finals.pop()]
-  return grid == out
+    cells, filled = routes.get(col, ([], []))
+    own = cells or [(r, c) for r, row in enumerate(inp)
+                    for c, ink in enumerate(row) if ink == col]
+    r0, r1 = min(r for r, c in own), max(r for r, c in own)
+    c0, c1 = min(c for r, c in own), max(c for r, c in own)
+    relevant = [other for other, (path, _) in routes.items()
+                if other != col and any(r0 <= r <= r1 and c0 <= c <= c1
+                                        and inp[r][c] != other for r, c in path)]
+    for mask in range(1 << len(relevant)):
+      grid = [row[:] for row in inp]
+      for i, other in enumerate(relevant):
+        if mask & (1 << i):
+          for r, c in routes[other][0]:
+            grid[r][c] = other
+      if cells:
+        try:
+          _certify_colour(grid, col, cells, filled)
+        except _Inconclusive:
+          pass
+        else:
+          continue
+      expected = [row[:] for row in grid]
+      for r, c in cells:
+        expected[r][c] = col
+      finals = _settle(grid, col, budget)
+      if finals != {tuple(tuple(row) for row in expected)}:
+        return False
+  return True
 
 
 # Random scene construction.

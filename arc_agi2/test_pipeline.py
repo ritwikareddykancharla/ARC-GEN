@@ -2143,4 +2143,36 @@ class GeneratorTests(unittest.TestCase):
             self.assertEqual((len(p['input']),len(p['input'][0])),(h,w))
             self.assertEqual(p['output'],grid(call(solver('9bebae7a'),p['input'])))
 
+    def test_projectile_minimum_geometry_and_lateral_decoys(self):
+        m=importlib.import_module('tasks.task_9f669b64')
+        for direction in ('up','down','left','right'):
+            h,w=(3,6) if direction in ('up','down') else (6,3)
+            for seed in range(10):
+                random.seed(81000+seed)
+                p=m.generate(direction=direction,height=h,width=w)
+                self.assertEqual((len(p['input']),len(p['input'][0])),(h,w))
+                self.assertEqual(p['output'],grid(call(solver('9f669b64'),p['input'])))
+            for kind in ('twin','isolated','shape'):
+                for side in ('low','high'):
+                    random.seed(81000)
+                    p=m.generate(direction=direction,height=30,width=30,decoy=kind,
+                                 decoy_side=side,colors=[0,1,2,3])
+                    self.assertTrue(any(3 in row for row in p['input']))
+                    self.assertEqual(p['output'],grid(call(solver('9f669b64'),p['input'])))
+
+    def test_projectile_scaled_parameters_and_invalid_iterables(self):
+        m=importlib.import_module('tasks.task_9f669b64')
+        random.seed(81000)
+        p=m.generate(direction='up',height=30,width=30,proj_w=10,proj_l=6,
+                     thickness=8,margin=3,layers=[(0,5)],gap=3,dgap=2,
+                     decoy='none',colors=[0,1,2])
+        self.assertEqual(sum(row.count(0) for row in p['input']),60)
+        self.assertEqual(sum(row.count(1) for row in p['input']),128)
+        self.assertEqual(sum(row.count(0) for row in p['output'][:6]),60)
+        self.assertEqual(p['output'],grid(call(solver('9f669b64'),p['input'])))
+        for kw in ({'height':1},{'layers':[5]},{'layers':iter([(0,2)])},
+                   {'colors':iter([0,1,2])},{'proj_w':3},
+                   {'decoy':'none','colors':[0,1,2,3]}):
+            with self.assertRaises(ValueError):m.generate(**kw)
+
 if __name__=='__main__':unittest.main()

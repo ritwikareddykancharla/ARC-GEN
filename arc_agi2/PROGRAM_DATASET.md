@@ -35,7 +35,7 @@ recorded. Passing finite audits does not prove unrestricted generalization.
 
 - 213 native direct-coordinate certificates admitted after fresh audits and
   supplied-fixture checks.
-- 812 admitted factories. Each passed 1,000 fresh pairs, 8,000 augmented pair
+- 813 admitted factories. Each passed 1,000 fresh pairs, 8,000 augmented pair
   checks and 16 supplied-fixture variants. Their audit records retain draft
   limitations and source/constructor hashes. These checks are finite evidence,
   not proof of correctness on every generated input.
@@ -46,7 +46,7 @@ recorded. Passing finite audits does not prove unrestricted generalization.
   counts must be computed as a union, not added.
 - Local exporter test: 18 fresh base episodes, 144 augmented PNG/program/grid
   records. It requested 20 bases and reported a two-episode shortfall.
-- The union currently admits 1031 of 1,120 families; 89 still need direct
+- The union currently admits 1032 of 1,120 families; 88 still need direct
   augmented program admission. Constructor coverage and program coverage are
   different gates.
 - Synthetic labels for `00d62c1b` now fill every enclosed background component,
@@ -818,3 +818,26 @@ factories. A separate subscription-CLI batch is drafting repairs for the 68
 older semantic holds, using their explicit host-review concerns. Those drafts
 are not automatically applied or admitted. No bulk generation or training has
 launched.
+
+## 1032-family checkpoint
+
+`8731374e` now searches all colour components for solid-border rectangles with
+single-colour interior dots in distinct rows and columns. It returns a unique
+maximum-area output, rejecting ties instead of using enumeration order. A
+larger plain noise component does not distract it. The old majority-edge crop
+failed when adjacent noise occupied exactly half an edge.
+
+Noise can also extend an entire box edge, yielding the same input with different
+latent crop labels. A regression constructs that ambiguity explicitly. Random
+sampling accepts only labels matching the unique largest visible dotted box;
+explicit calls and original fixture labels remain unchanged. This largest-box
+convention is a documented restriction, not an assertion that latent crops can
+always be recovered from arbitrary noise.
+
+The repair passed 1,000 distinct fresh inputs, 8,000 augmented pair checks,
+16 fixture variants and 20 complete episodes (160 D4 records). The saved failure,
+large-component decoy, ambiguous crop widths, tied outputs and fixture hashes
+have regression coverage. Remaining: 70 semantic/context holds, 15 execution
+failures and three missing factories. Bulk generation has not launched.
+
+All 434 regression tests passed for this checkpoint.

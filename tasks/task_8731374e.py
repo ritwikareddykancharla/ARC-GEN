@@ -16,6 +16,60 @@
 
 import common
 
+from collections import deque
+
+
+def _box_outputs(grid):
+    h,w = len(grid),len(grid[0])
+    seen=set()
+    components=[]
+    for y in range(h):
+        for x in range(w):
+            if (y,x) in seen:continue
+            colour=grid[y][x];q=deque([(y,x)]);seen.add((y,x));cells=[]
+            while q:
+                cy,cx=q.popleft();cells.append((cy,cx))
+                for ny,nx in [(cy+1,cx),(cy-1,cx),(cy,cx+1),(cy,cx-1)]:
+                    if 0<=ny<h and 0<=nx<w and (ny,nx) not in seen and grid[ny][nx]==colour:
+                        seen.add((ny,nx));q.append((ny,nx))
+            if len(cells)>=8:
+                components.append((colour,min(y for y,x in cells),max(y for y,x in cells),min(x for y,x in cells),max(x for y,x in cells)))
+    prefixes={}
+    best=0;answers=set()
+    for colour,by0,by1,bx0,bx1 in components:
+        if colour not in prefixes:
+            p=[[0]*(w+1) for _ in range(h+1)]
+            for y,row in enumerate(grid):
+                acc=0
+                for x,v in enumerate(row):
+                    acc+=v==colour;p[y+1][x+1]=p[y][x+1]+acc
+            prefixes[colour]=p
+        p=prefixes[colour]
+        def count(y0,x0,y1,x1):
+            return p[y1+1][x1+1]-p[y0][x1+1]-p[y1+1][x0]+p[y0][x0]
+        for y0 in range(by0,by1-1):
+            for y1 in range(y0+2,by1+1):
+                height=y1-y0+1
+                columns=[x for x in range(bx0,bx1+1) if count(y0,x,y1,x)==height]
+                for i,x0 in enumerate(columns):
+                    for x1 in columns[i+1:]:
+                        width=x1-x0+1;area=height*width
+                        if width<3 or area<best:continue
+                        if count(y0,x0,y0,x1)!=width or count(y1,x0,y1,x1)!=width:continue
+                        dots=[(y,x,grid[y][x]) for y in range(y0+1,y1) for x in range(x0+1,x1) if grid[y][x]!=colour]
+                        if not dots or len({v for y,x,v in dots})!=1:continue
+                        if len({y for y,x,v in dots})!=len(dots) or len({x for y,x,v in dots})!=len(dots):continue
+                        out=[list(row[x0:x1+1]) for row in grid[y0:y1+1]]
+                        for y,x,v in dots:
+                            out[y-y0]=[v]*width
+                            for row in out:row[x-x0]=v
+                        encoded=tuple(tuple(row) for row in out)
+                        if area>best:best=area;answers=set()
+                        answers.add(encoded)
+    return answers
+
+
+
 
 def generate(width=None, height=None, wide=None, tall=None, rowoffset=None,
              coloffset=None, rows=None, cols=None, colors=None):
@@ -33,21 +87,29 @@ def generate(width=None, height=None, wide=None, tall=None, rowoffset=None,
     colors: a list of colors for the pixels
   """
   if width is None:
-    width, height = common.randint(15, 30), common.randint(15, 30)
-    wide, tall = common.randint(6, 10), common.randint(6, 10)
-    rowoffset = common.randint(1, height - tall - 1)
-    coloffset = common.randint(1, width - wide - 1)
-    colors = [common.randint(0, 9) for _ in range(width * height)]
-    color_list = common.sample(range(10), 2)
-    color, boxcolor = color_list[0], color_list[1]
-    for r in range(tall):
-      for c in range(wide):
-        colors[(rowoffset + r) * width + coloffset + c] = boxcolor
-    num_pixels = common.randint(1, 3)
-    rows = common.sample(range(1, tall - 1), num_pixels)
-    cols = common.sample(range(1, wide - 1), num_pixels)
-    for r, c in zip(rows, cols):
-      colors[(rowoffset + r) * width + coloffset + c] = color
+    for _ in range(1000):
+      width, height = common.randint(15, 30), common.randint(15, 30)
+      wide, tall = common.randint(6, 10), common.randint(6, 10)
+      rowoffset = common.randint(1, height - tall - 1)
+      coloffset = common.randint(1, width - wide - 1)
+      colors = [common.randint(0, 9) for _ in range(width * height)]
+      color_list = common.sample(range(10), 2)
+      color, boxcolor = color_list[0], color_list[1]
+      for r in range(tall):
+        for c in range(wide):
+          colors[(rowoffset + r) * width + coloffset + c] = boxcolor
+      num_pixels = common.randint(1, 3)
+      rows = common.sample(range(1, tall - 1), num_pixels)
+      cols = common.sample(range(1, wide - 1), num_pixels)
+      for r, c in zip(rows, cols):
+        colors[(rowoffset + r) * width + coloffset + c] = color
+
+      example = generate(width, height, wide, tall, rowoffset, coloffset,
+                         rows, cols, colors)
+      answers = _box_outputs(example['input'])
+      if answers == {tuple(tuple(line) for line in example['output'])}:
+        return example
+    raise RuntimeError('8731374e: unique dotted box sampling exhausted')
 
   grid, output = common.grid(width, height), common.grid(wide, tall)
   for r in range(height):

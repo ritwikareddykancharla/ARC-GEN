@@ -34,13 +34,96 @@ def require_colour_evidence(task_id, demonstrations, queries, palette=None, d4=0
                        'c61be7dc', 'd0f5fe59', 'd037b0a7', 'd23f8c26',
                        'd406998b', 'd2acf2cb', 'cf98881b', 'd511f180',
                        'd631b094', 'd5d6de2d', 'd90796e8', 'd364b489',
-                       'dbc1a6ce', 'dc1df850'):
+                       'dbc1a6ce', 'dc1df850', 'dd6b8c4b', 'dce56571',
+                       'e45ef808', 'e345f17b', 'e3497940'):
         return
     palette = list(range(10)) if palette is None else palette
     bg = palette[0]
     colours = lambda g: {c for row in g for c in row} - {bg}
     required, seen = set(), set()
-    if task_id == 'dc1df850':
+    if task_id == 'e45ef808':
+        def ties(g):
+            lines = list(g) if d4 % 2 else list(zip(*g))
+            heights = [sum(c == palette[6] for c in line) for line in lines]
+            return {name for name, height in (('peak-tie', max(heights)),
+                                              ('valley-tie', min(heights)))
+                    if heights.count(height) > 1}
+        for demo in demonstrations:
+            seen.update(ties(demo['input']))
+        for query in queries:
+            required.update(ties(query['input']))
+    elif task_id == 'e345f17b':
+        def has_nor(g):
+            if d4 % 2:
+                half = len(g)//2
+                return any(a == b == bg for x, y in zip(g[:half], g[half:])
+                           for a, b in zip(x, y))
+            half = len(g[0])//2
+            return any(row[c] == row[c+half] == bg for row in g for c in range(half))
+        if any(has_nor(q['input']) for q in queries):
+            required.add('nor-mark-colour')
+        if any(has_nor(d['input']) and any(palette[4] in row for row in d['output'])
+               for d in demonstrations):
+            seen.add('nor-mark-colour')
+    elif task_id == 'e3497940':
+        def variants(g):
+            if d4 % 2:
+                mid = len(g)//2
+                first, second = g[:mid], g[mid+1:][::-1]
+                merged = [[b if b != bg else a for a, b in zip(x, y)]
+                          for x, y in zip(first, second)]
+                return [merged, merged[::-1]]
+            mid = len(g[0])//2
+            merged = [[b if b != bg else a for a, b in zip(row[:mid], row[mid+1:][::-1])]
+                      for row in g]
+            return [merged, [row[::-1] for row in merged]]
+        _require_rule_agreement(task_id, demonstrations, queries, variants)
+        return
+    elif task_id == 'dd6b8c4b':
+        from .augmentation import transformed
+        orders = []
+        for orientation in range(8):
+            indices = transformed([[0, 1, 2], [3, 4, 5], [6, 7, 8]],
+                                  orientation, list(range(10)))
+            orders.append(sorted(((r-1, c-1) for r in range(3) for c in range(3)),
+                                 key=lambda p: indices[p[0]+1][p[1]+1]))
+        def tank(g):
+            cores = [(r, c) for r, row in enumerate(g) for c, ink in enumerate(row)
+                     if ink == palette[2]]
+            if len(cores) != 1:
+                raise MissingColourEvidence(f'{task_id}: expected one visible tank core')
+            cy, cx = cores[0]
+            cells = {(cy+dr, cx+dc) for dr in (-1, 0, 1) for dc in (-1, 0, 1)}
+            reached, stack = set(cells), list(cells)
+            while stack:
+                r, c = stack.pop()
+                for p in ((r+1, c), (r-1, c), (r, c+1), (r, c-1)):
+                    if (0 <= p[0] < len(g) and 0 <= p[1] < len(g[0])
+                            and p not in reached and g[p[0]][p[1]] != palette[6]):
+                        reached.add(p)
+                        stack.append(p)
+            count = min(9, sum(g[r][c] == palette[9] for r, c in reached-cells))
+            return cy, cx, count
+        possible = set(range(8))
+        for demo in demonstrations:
+            cy, cx, count = tank(demo['input'])
+            observed = {(dr, dc) for dr in (-1, 0, 1) for dc in (-1, 0, 1)
+                        if demo['output'][cy+dr][cx+dc] == palette[9]}
+            possible &= {i for i, order in enumerate(orders) if set(order[:count]) == observed}
+        if not possible:
+            raise MissingColourEvidence(f'{task_id}: demonstrations fit no tank fill order')
+        for query in queries:
+            _, _, count = tank(query['input'])
+            if len({frozenset(orders[i][:count]) for i in possible}) > 1:
+                raise MissingColourEvidence(f'{task_id}: demonstrations leave tank fill order ambiguous')
+        return
+    elif task_id == 'dce56571':
+        # The input/background role is 8 here, unlike the common zero canvas.
+        if any(sum(c != palette[8] for row in q['input'] for c in row) > 1 for q in queries):
+            required.add('centred-line-axis')
+        if any(sum(c != palette[8] for row in d['input'] for c in row) > 1 for d in demonstrations):
+            seen.add('centred-line-axis')
+    elif task_id == 'dc1df850':
         def paints(g):
             return any(0 <= r+dr < len(g) and 0 <= c+dc < len(row)
                        and g[r+dr][c+dc] == bg

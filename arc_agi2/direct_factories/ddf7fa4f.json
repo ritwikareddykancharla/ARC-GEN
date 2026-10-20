@@ -1,0 +1,56 @@
+{
+  "task_id": "ddf7fa4f",
+  "factory_sha256": "29a7bf1148cdb8702cd7bfbd411b4248fce339451dcca2673631e3ec02dcdff0",
+  "constructor_sha256": "292cbe3dd6ce8b504df3f37da12415e62f69006dc3cd574af78a591f0478ee30",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 80081082047477,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 37.16940591705497,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "In the original frame, single-cell 'lights' sit on the top row. Each grey (5) rectangle spans exactly one light's column, and its grey cells take that light's colour. The generator guarantees four things: each box lies under only its own light, boxes never touch (not even diagonally), boxes start at row 2 or lower, and the light colours exclude grey.\n\nThe factory works out where the light edge appears in visible coordinates and which axis carries the alignment. A row reversal (d4>=4) leaves the top row on top and keeps column alignment. Each clockwise rotation moves the light edge from top to right, then bottom, then left, and swaps the alignment axis between columns and rows. For d4%4 values 0, 1, 2 and 3, the edge is the top row, last column, bottom row and first column respectively. The alignment is by x for even values and by y for odd values.\n\nThe emitted program uses palette[0] as the background and palette[5] as grey. It reads the marker cells on that edge line, meaning cells that are neither background nor grey, together with their coordinate along the alignment axis. It then flood-fills each 4-connected grey component and takes the component's span on the alignment axis. The component is recoloured with the marker whose coordinate falls inside that span. Rectangular grids are handled through H and W.",
+    "limitations": "No tests were run. Several cases fall outside the constructor's domain and are handled by deterministic fallbacks that are not part of the puzzle rule:\n- If no marker falls inside a component's span, the program uses the marker nearest the span centre, breaking ties toward the smaller coordinate. This is carried over from the archived solver.\n- If several markers fall inside the span, it takes the first in edge order.\n- If grey components touch, they are merged into one.\n- The program assumes that the light colours are never the original background 0 or grey 5, as the generator implies.\n\nI found no constructor defects or contradictions in the fixtures. All nine training blocks and all three test blocks match the column-alignment rule.",
+    "independent_source_review": {
+      "verdict": "accept",
+      "mechanism": "Single-cell 'lights' sit on one edge line: the top row in the native frame. Each grey (5) rectangle covers exactly one light's coordinate along the alignment axis and is recoloured with that light's colour. The factory fixes the visible marker edge and alignment axis for each D4 variant: k=0 top row/x, k=1 last column/y, k=2 bottom row/y\u2192x, k=3 first column/y. A horizontal row reversal (d4>=4) keeps the top edge. The emitted solver reads non-BG, non-GRAY cells on that edge, flood-fills each 4-connected GRAY component and picks the marker whose coordinate lies within the component's span on AX.",
+      "evidence": [
+        "The constructor draws lights from the disjoint ranges [0,2], [4,5] and [7,9], so light columns are distinct.",
+        "colors = random_colors(3, exclude=[gray]) draws from 1..9, so marker colours are never 0 or 5. Under a palette permutation, palette[c] differs from palette[0] and palette[5]. The emitted marker filter `v != BG and v != GRAY` is therefore exact.",
+        "Rejection sampling with `under != (i == j)` ensures box j's column span [cols[j], cols[j]+wides[j]) contains light j and no other light. So the label is visibly determined by column overlap and is not a hidden latent. `inside` always has exactly one element in-domain, so the inside[0] tie choice and the nearest-midpoint fallback are unreachable.",
+        "Box separation is checked with strict `<` on both axes (`rows[i]+talls[i] < rows[j]` etc.). This requires at least a one-cell gap on some axis, so boxes are never 4-adjacent or diagonally adjacent. Each grey 4-component is exactly one rectangle.",
+        "wides>=2 and talls>=2, so boxes are never single cells. rows>=2, so no grey cell lies on the marker edge or the adjacent line, and the edge scan sees only lights.",
+        "Each grey component has the same span on the alignment axis in visible coordinates as in native coordinates, up to reflection, and marker coordinates transform consistently. So the containment test is invariant. The solver works directly in augmented coordinates with no untransform/retransform wrapper. Only the edge line and axis constant are specialised, which is permitted.",
+        "No arbitrary colour lookup is involved. The marker colours are visible in each query input, so no extra demonstration evidence is needed. The task is not in the episode_evidence_checks list, which is consistent with this.",
+        "All 9 train blocks and 3 test blocks in the fixtures match the column-containment rule.",
+        "The host audit passed 1000 fresh pairs, 8000 augmented pair checks (consistent with all 8 D4 variants) and 16 fixture variants, with no sampler rejections. This empirically confirms that the edge/axis table matches the host's D4 convention."
+      ],
+      "blocking_issues": [],
+      "nonblocking_limits": [
+        "The nearest-midpoint fallback (ties broken toward the smaller coordinate) and first-in-edge-order selection when several markers are inside are unreachable under the constructor's domain.",
+        "Touching grey components would merge. The constructor excludes this through its strict gap check.",
+        "The marker edge and axis are hard-coded per d4 rather than inferred. This is a legitimate orientation specialisation, taught by demonstrations where markers are visibly on that edge.",
+        "The grid size is fixed at 10x10 in the constructor. The solver uses H and W generically, but coverage of non-square or other sizes is not exercised."
+      ],
+      "required_context_checks": [
+        "Confirm the host's D4 convention: rotation count k=d4%4 clockwise, combined with a horizontal row reversal for d4>=4, applied in the order the factory assumes. The passing 8000 augmented checks support this, but the review cannot verify it independently from source.",
+        "Confirm the palette is a permutation, so palette[0] and palette[5] are distinct from the mapped light colours."
+      ],
+      "task_id": "ddf7fa4f",
+      "factory_sha256": "29a7bf1148cdb8702cd7bfbd411b4248fce339451dcca2673631e3ec02dcdff0",
+      "constructor_sha256": "292cbe3dd6ce8b504df3f37da12415e62f69006dc3cd574af78a591f0478ee30"
+    },
+    "host_review": {
+      "decision": "accept",
+      "resolution": "Source review and execution audit agree on the constructor domain. Unreachable defensive branches are documented in the independent review.",
+      "augmentation_evidence": "Audit loops through all eight D4 transforms; the report d4=7 field is the final loop index, not the only tested transform. Shared palette and D4 apply to all episode pairs.",
+      "limitations": "Execution verification certifies sampled/domain cases, not universal rule identifiability from three demonstrations."
+    }
+  }
+}

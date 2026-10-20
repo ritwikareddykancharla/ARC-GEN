@@ -1,0 +1,65 @@
+{
+  "task_id": "e179c5f4",
+  "factory_sha256": "78f02cd53741e70ceaa6fe68c502c4a5157600f45a9abb5c594d3c95284c8828",
+  "constructor_sha256": "fdcfa61599a7be3c36ee31a68e53ad7fa50f2d1bed5c3b240174fff1960b2852",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 24264175782218,
+  "d4": 7,
+  "unique_base_inputs": 9,
+  "seconds": 6.378052999963984,
+  "finite_default_domain": {
+    "exhaustive": true,
+    "cases_checked": 9,
+    "augmented_checks": 144,
+    "definition": "All nine native widths 2 through 10 on the ten-row bouncing-path canvas.",
+    "query_distinct_from_demos": true,
+    "scope": "Default native parameter distribution only; finite input count is not inflated by repeated sampling."
+  },
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "Canonical rule: a single colour-1 cell sits in the bottom-left corner. The output repaints the background as 8. A 1-coloured path goes upward one row per step and shifts one cell sideways each step. It reflects off the side walls with period 2(W-1). The factory pushes the canonical travel vector (up) and the initial lateral vector (right) through the D4 transform. A row reversal negates the column components, and each clockwise rotation maps (dr,dc) to (dc,-dr). This produces the visible travel direction and the visible bounce axis. The emitted program finds the start cell by its colour palette[1], falling back to any non-palette[0] cell. It fills the output with palette[8] and keeps the start cell. It then steps along the visible travel vector until it leaves the grid. The lateral coordinate is computed with the folded-modulo bounce formula along the perpendicular axis, and the first sideways move goes away from the wall the start touches. No normalization wrapper is used, and the generation works directly in visible coordinates. Colour roles are fixed constants palette[0], palette[1] and palette[8]. The fixtures are consistent with this uniform rule.",
+    "limitations": "Travel direction comes from d4, which is needed because canonical width 10 gives a square 10x10 grid where the corner alone does not fix the axis. The lateral start direction is inferred from the start cell's wall contact and falls back to the d4-derived direction. Fresh generator scenes always place the start in the canonical corner, so this path is not exercised. A degenerate lateral size of 1 keeps the path in a straight line, which the constructor never produces since width is at least 2. If several palette[1] cells were present, the first in row-major order would be used. The generator never produces that. I did not see any constructor defects or hidden random tie-breaks in common.bounce from the material supplied, but its source was not shown. I have not executed the code.",
+    "independent_source_review": {
+      "verdict": "accept",
+      "mechanism": "Bouncing diagonal path. Each input is an all-palette[0] canvas, 10 rows high and 2 to 10 columns wide, with one palette[1] cell in the canonical bottom-left corner. The output repaints the canvas as palette[8] and draws palette[1] one cell per step along the travel axis. The lateral coordinate follows a triangle wave of period 2(S-1), starting by moving away from the wall the start cell touches. The emitted solver finds the start by its path colour and steps along a visible travel vector (TR,TC) until it leaves the grid. It computes the perpendicular coordinate with the folded-modulo formula. Both vectors are produced by pushing the canonical up/right vectors through the D4 index.",
+      "evidence": [
+        "common.bounce is now visible and verified. ingrid is filled with b and output with k. Cell (h-1,0) gets u in both grids. The loop runs r from h-1 down to 0, writes output[r][c]=u, then does c+=c_dir and negates c_dir when c reaches 0 or width-1. This gives c = 0,1,...,W-1,W-2,...,0,..., a triangle wave of period 2(W-1). For W=2 the column alternates 0,1. That matches the factory formula m=(start+k)%p, pos = m if m<=S-1 else p-m, with start=0 and sign=+1.",
+        "The only random latent is width = randint(2,10), and width is directly visible. Height is fixed at 10. Nothing hidden decides the label.",
+        "W=1 is unreachable because randint starts at 2, so the S==1 branch and p=0 are never hit. The constructor also always produces exactly one palette[1] cell, so the row-major first-match tie in _find_start never matters.",
+        "Fixture check: width 3 top row has its 1 at x=1, width 4 at x=3, width 5 (test) at x=1. All agree with the triangle wave. The width-2 output alternates as expected.",
+        "Factory direction mapping. d4>=4 negates the column components. Each clockwise rotation maps (dr,dc)->(dc,-dr), which takes up (-1,0) to right (0,1), consistent with a clockwise grid rotation of the bottom-left start. Host augmented checks (8000, covering all D4 variants of 1000 fresh pairs) passed, so this agrees with the host's D4 convention.",
+        "The solver works in visible coordinates. It reads the start cell, specializes only the travel/lateral axes and the colour constants, and has no untransform/native-solve/retransform wrapper.",
+        "Square 10x10 case (W=10). Travel-up/lateral-right gives cells (9-k, k) for k=0..9 because tri(k)=k when k<=9. Travel-right/lateral-up gives the same anti-diagonal. Transposed interpretations therefore produce identical outputs, and there is no axis ambiguity for square queries.",
+        "Travel direction is a shared episode orientation constant. Non-square demonstrations show it directly, and square ones are interpretation-invariant. This is an allowed demonstration-taught spatial constant.",
+        "Colour roles palette[0] (input background), palette[8] (output background) and palette[1] (path) are fixed task constants and appear in every demonstration. This task is not in the colour-association check list, and no arbitrary lookup is involved."
+      ],
+      "blocking_issues": [],
+      "nonblocking_limits": [
+        "The _find_start fallbacks (any non-palette[0] cell, then a corner) and the S==1 branch are out of the constructor's domain. They are defensive only.",
+        "The lateral start sign falls back to the d4-derived LC/LR when the start is not on a wall. The constructor never produces that case.",
+        "The archived canonical program has an unused 'half' variable. It is harmless and irrelevant to the factory.",
+        "The base input space is small: 9 distinct inputs (widths 2 to 10). This is inherent to the original task and does not reduce its complexity.",
+        "The prior note's caveat that common.bounce was unseen is now resolved: the source was inspected and matches the solver formula."
+      ],
+      "required_context_checks": [
+        "Confirm that every episode shares one d4 across its demonstrations and query, so the travel-axis constant is taught by the demonstrations.",
+        "Confirm the host's D4 convention (flip then clockwise rotations) matches the factory's composition order. Host augmented-pair checks already passing is strong evidence of this."
+      ],
+      "task_id": "e179c5f4",
+      "factory_sha256": "78f02cd53741e70ceaa6fe68c502c4a5157600f45a9abb5c594d3c95284c8828",
+      "constructor_sha256": "fdcfa61599a7be3c36ee31a68e53ad7fa50f2d1bed5c3b240174fff1960b2852"
+    },
+    "host_review": {
+      "decision": "accept",
+      "resolution": "Exhaustively enumerated all nine native widths 2..10: 144 augmented checks across all eight D4 transforms and two palettes. Use adaptive finite-family episode allocation, not a false uniqueness quota.",
+      "augmentation_evidence": "Audit loops through all eight D4 transforms; the report d4=7 field is the final loop index, not the only tested transform. Shared palette and D4 apply to all episode pairs.",
+      "limitations": "Execution verification certifies sampled/domain cases, not universal rule identifiability from three demonstrations."
+    }
+  }
+}

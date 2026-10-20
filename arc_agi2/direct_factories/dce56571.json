@@ -1,0 +1,54 @@
+{
+  "task_id": "dce56571",
+  "factory_sha256": "170b987816b5e2c9d79d034593a71ae6e7729298edff3fcc200a8f9531d016d4",
+  "constructor_sha256": "d48d05a8cbce8fce002ac50b1c2c58ef340f80f8f70edfd37fae4ac93e9f2452",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 269276187614472,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 4.815655832993798,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The original mechanism works like this. The background is colour 8. The program counts every non-background cell (n) and clears the canvas. It then draws n cells of the foreground hue as a horizontal line on row H//2, starting at column (W-n)//2.\n\nThe factory traces how the original row and column axes are carried by the D4 transform. A row reversal flips whichever original axis lies on visible axis 1. Each clockwise rotation swaps the axes and reverses the one that moves onto visible axis 1. From this the factory sets three constants:\n- whether the visible line is horizontal or vertical;\n- whether the along-line direction is reversed;\n- whether the cross (middle-line) direction is reversed.\n\nFor reversed directions the program uses the mirrored floor formulas: (C-1)//2 for the middle line and (L-n+1)//2 for the start. This keeps the visible line exactly where the transformed original line would be.\n\nColour roles: the background is the constant palette[8]. The line hue is read from the query's pixels as the most common non-background colour.\n\nThe emitted program works directly in visible coordinates and never rotates or recolours the grid. In the generator's domain the height is odd and n has the same parity as the width, so the centring is exact and no rounding tie-break is ever actually needed.",
+    "limitations": "- The program assumes the background is palette[8], as the constructor guarantees. It does not infer the background from frequency.\n- If more than one non-background colour were present, which is outside the domain, the line uses the most frequent one. Ties go to the lowest colour value, because np.unique sorts values and argmax picks the first maximum.\n- If n exceeds the line length, which is outside the domain, the line is clipped to the grid.\n- An empty foreground returns a blank background canvas.\n- The rule's mention of 'two stages' is a presentation detail. Only the final grid is returned.\n- I found no contradictions between the fixtures and the uniform rule. Because of the parity constraint, the generator never produces a rounding ambiguity.\n- None of this has been tested; the host's verification run will be the first check.",
+    "independent_source_review": {
+      "verdict": "accept",
+      "mechanism": "Background is the constant palette[8], a genuine rule colour. The program counts the n non-background cells and reads the line hue from the query's own pixels. It clears the canvas and draws an n-cell line on the middle line of the cross axis, centred along the line axis. D4 handling uses three specialised constants: LINE_AXIS, ALONG_REV and CROSS_REV. The program works directly in visible coordinates. It never untransforms, rotates or recolours the whole grid.",
+      "evidence": [
+        "Constructor domain: width = randint(9,30) and height = 2*randint(1,5)+1, so height is always odd (3..11). The sampling loop only breaks when len(pixels) % 2 == width % 2 and len(pixels) <= width. So H//2 is the exact middle row, (W-n)//2 is exactly centred, and the line always fits. No rounding tie is reachable.",
+        "Reversed-axis formulas are exact. Original start s=(W-n)//2 occupies s..s+n-1. After reversal the visible start is W-n-s = (W-n+1)//2, which matches ALONG_REV. The reversed cross index is H-1-H//2 = (H-1)//2, which matches CROSS_REV and equals H//2 for odd H anyway. So the D4 constants affect only placement, never a hidden latent.",
+        "The label depends only on visible quantities: the grid shape, the non-background cell count and the single foreground hue. The constructor's random latents (wide, tall, brow, bcol, sprite bits) affect only the input picture, and the output is fully determined by visible count and shape.",
+        "Hue is taken from the query via np.unique/argmax over non-background cells. The domain has exactly one foreground colour (random_color excluding 8), so no tie arises. The colour is read off the query, not looked up from an arbitrary association, so no demonstration evidence is needed.",
+        "Fixtures recheck. Train 1: n=9, 7x11 grid, row 3, cols 1..9. Train 2: n=6, 5x10 grid, row 2, cols 2..7. Train 3: n=15, 9x15 grid, row 4, full width. Test: I counted the colour-5 cells per row as 1+4+3+2+1+1+1+1 = 14; 11x28 grid, row 5, cols 7..20. All match the constructor formula.",
+        "The emitted code has no fixed answers and no fixture-specific branches. The single code path is parameterised only by bg and three orientation booleans derived from d4.",
+        "Host audit passed: 1000 fresh pairs, 8000 augmented checks and 16 fixture variants, with no sampler rejections. This is consistent with _axis_map matching the host's D4 convention, at least for the audited d4 values."
+      ],
+      "blocking_issues": [],
+      "nonblocking_limits": [
+        "The emitted program uses the constant palette[8] as background, whereas the archived program infers it by frequency. Both agree in-domain because n <= W and H >= 3, so background is always the majority colour.",
+        "Out-of-domain fallbacks (clipping when n > line length, choosing the most frequent hue when several colours exist, returning a blank canvas when there is no foreground) are excluded by the constructor and do not affect correctness.",
+        "The rule text's 'two stages' presentation is ignored; only the final grid is returned. This is acceptable.",
+        "The _axis_map convention (row reversal applied before clockwise rotations for d4 >= 4) cannot be verified from source alone against the host's D4 definition. Correctness here rests on the host audit's augmented checks.",
+        "For even heights or a parity mismatch, the reversed-axis formulas would correctly mirror the floor rounding. These cases are unreachable from the constructor, so they are not exercised."
+      ],
+      "required_context_checks": [
+        "Confirm the host audit's augmented checks covered all 8 D4 values, not only the recorded d4=7, so that _axis_map is validated against the host transform convention for every orientation."
+      ],
+      "task_id": "dce56571",
+      "factory_sha256": "170b987816b5e2c9d79d034593a71ae6e7729298edff3fcc200a8f9531d016d4",
+      "constructor_sha256": "d48d05a8cbce8fce002ac50b1c2c58ef340f80f8f70edfd37fae4ac93e9f2452"
+    },
+    "host_review": {
+      "decision": "accept",
+      "resolution": "Require a multi-pixel demonstration before a multi-pixel query to teach the centred line axis.",
+      "augmentation_evidence": "Audit loops through all eight D4 transforms; the report d4=7 field is the final loop index, not the only tested transform. Shared palette and D4 apply to all episode pairs.",
+      "limitations": "Execution verification certifies sampled/domain cases, not universal rule identifiability from three demonstrations."
+    }
+  }
+}

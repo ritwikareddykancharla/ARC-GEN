@@ -1,0 +1,51 @@
+{
+  "task_id": "e2092e0c",
+  "factory_sha256": "208f057ca3664a43fefc226e90d5f0071017c7601abb406e4daca0327e75f8ee",
+  "constructor_sha256": "942505be2518d34a09844326643ae66385e7a36d98206e15c2f3b4a89c703370",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 188219250605072,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 9.817898959037848,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The constructor fixes a 3x3 key pattern in the original top-left corner. A grey L-frame (row 3 and column 3) encloses it. The constructor plants exactly one other copy of the pattern elsewhere and outlines that copy with a grey 5x5 hollow ring. D4 transforms the whole grid. So in visible coordinates the key moves to one corner, and the planted copy is transformed the same way, which means a direct cell-by-cell comparison of 3x3 windows is still correct. The factory works out which corner holds the key. A clockwise rotation moves TL to TR to BR to BL. Reversing each row first moves TL to TR, so the corner index is k for d4<4 and (1+k)%4 for d4>=4. The emitted program reads the 3x3 key from that visible corner. It scans every other 3x3 window for an exact match and paints the one-cell ring around it in palette[5], clipping at the grid edges. The interior is left alone. Any key-area window other than the key itself overlaps the grey frame. The key contains no grey, so those windows can never match.",
+    "limitations": "The generator guarantees exactly one non-key match. If several matches existed, which the constructor's domain rules out, the emitted program would take the first one in visible row-major order. That choice is not a puzzle rule. If no match exists, the input is returned unchanged. The frame colour is fixed to palette[5], matching the constructor's grey. Rectangular grids are handled by anchoring the key at the visible corner using the actual H and W. The fixtures are consistent with the rule, and I found no constructor defects. None of this has been tested.",
+    "independent_source_review": {
+      "verdict": "accept",
+      "mechanism": "The input has a 3x3 key window in one visible corner, fenced by a grey L of palette[5] cells. The constructor plants exactly one other copy of the key. The output paints a 5x5 hollow grey ring around that copy and leaves its interior untouched. The emitted solver chooses the key corner from the D4 index and reads the key from the visible grid. It scans every other 3x3 window for an exact match and paints the one-cell ring in palette[5], clipping at the grid edges.",
+      "evidence": [
+        "find_matches scans in row-major order, so (0,0) is always the first match. matches.pop(0) therefore removes the key itself. `len(find_matches()) == 1` then requires exactly one non-key match after planting. The output label comes from that visible match, not from the hidden brow/bcol latent.",
+        "Placement ranges are brow, bcol in [1, 11]. The exclusions are `brow<5 and bcol<=5` and `brow<=5 and bcol<5`. Together they stop the planted copy from overwriting the grey L at (i,3)/(3,i) for i<=3, and stop the ring from overlapping the key. The ring spans rows brow-1 to brow+3, which is at most 14, and cols bcol-1 to bcol+3, which is at least 0. So the constructor never clips, and the solver's clipping is only an out-of-domain fallback.",
+        "Every window other than the key that intersects the key region contains a grey L cell. Windows with r>=1 and c<=3 contain (3,c); windows with r=0 and 1<=c<=3 contain (y,3). The key excludes grey (`if grey in upper_left: continue`), so none of these windows can match. In any case the constructor checks uniqueness over all windows.",
+        "D4 maps the key and its planted copy by the same transform, so exact cell-by-cell window matching still works in visible coordinates. The 5x5 hollow ring is D4-invariant. The solver works directly in visible coordinates and does not wrap an untransform/retransform around a native solve.",
+        "The solver's frame colour is GREY = palette[5]. That is the genuine rule colour, and it matches both hollow_rect(..., grey) and the archived program's g[3,3].",
+        "The key's zero count is restricted to 4 or 5, which avoids degenerate keys. The common.hollow_rect/draw implementations draw only the ring cells and clip out-of-bounds cells, as claimed.",
+        "Host audit: passed, with 1000 fresh pairs, 8000 augmented checks and 16 fixture variants."
+      ],
+      "blocking_issues": [],
+      "nonblocking_limits": [
+        "The corner-index formula (k for d4<4, (1+k)%4 otherwise) depends on the host's D4 convention: rotation applied after row reversal. I cannot confirm that convention from source alone; the host audit's 8000 augmented checks are the only evidence that it is right.",
+        "With multiple matches the solver would pick the first in row-major order. The constructor excludes this case.",
+        "With no match the solver returns the input unchanged. The constructor excludes this case.",
+        "Edge clipping is never exercised in the constructor domain."
+      ],
+      "required_context_checks": [],
+      "task_id": "e2092e0c",
+      "factory_sha256": "208f057ca3664a43fefc226e90d5f0071017c7601abb406e4daca0327e75f8ee",
+      "constructor_sha256": "942505be2518d34a09844326643ae66385e7a36d98206e15c2f3b4a89c703370"
+    },
+    "host_review": {
+      "decision": "accept",
+      "resolution": "Source review and execution audit agree on the constructor domain. Unreachable defensive branches are documented in the independent review.",
+      "augmentation_evidence": "Audit loops through all eight D4 transforms; the report d4=7 field is the final loop index, not the only tested transform. Shared palette and D4 apply to all episode pairs.",
+      "limitations": "Execution verification certifies sampled/domain cases, not universal rule identifiability from three demonstrations."
+    }
+  }
+}

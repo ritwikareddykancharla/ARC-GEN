@@ -5,8 +5,67 @@ from .program_targets import make_record
 
 
 class ColourEvidenceTests(unittest.TestCase):
+    def test_symmetric_folded_demos_do_not_choose_output_side(self):
+        # A truly symmetric output leaves which side to keep unresolved.
+        weak = {'input': [[1, 1, 5, 0, 0]], 'output': [[1, 1]]}
+        teacher = {'input': [[1, 0, 5, 0, 0]], 'output': [[1, 0]]}
+        for d4 in range(8):
+            pal = [3, 9, 0, 7, 2, 8, 1, 6, 4, 5]
+            a, t = apply_episode([weak, teacher], d4, pal)
+            with self.assertRaises(MissingColourEvidence):
+                require_colour_evidence('e3497940', [a], [{'input': t['input']}], pal, d4)
+            require_colour_evidence('e3497940', [a, t], [{'input': t['input']}], pal, d4)
+
+    def test_peak_and_valley_ties_need_separate_evidence(self):
+        def pair(heights):
+            h = 8
+            g = [[0]*len(heights)] + [[1]*len(heights) for _ in range(h-1)]
+            for c, n in enumerate(heights):
+                for r in range(h-n, h):
+                    g[r][c] = 6
+            out = [row[:] for row in g]
+            peak = max(range(len(heights)), key=lambda c: (heights[c], c))
+            valley = min(range(len(heights)), key=lambda c: (heights[c], c))
+            for c, colour in ((peak, 4), (valley, 9)):
+                for r in range(1, h-heights[c]):
+                    out[r][c] = colour
+            return {'input': g, 'output': out}
+        for d4 in range(8):
+            pal = [3, 9, 0, 7, 2, 8, 1, 6, 4, 5]
+            unique, peak, valley = apply_episode(
+                [pair([1, 2, 3]), pair([1, 3, 3]), pair([1, 1, 3])], d4, pal)
+            with self.assertRaises(MissingColourEvidence):
+                require_colour_evidence('e45ef808', [unique, peak],
+                                        [{'input': valley['input']}], pal, d4)
+            require_colour_evidence('e45ef808', [unique, peak, valley],
+                                    [{'input': valley['input']}], pal, d4)
+
+    def test_tank_fill_evidence_compares_actual_orders_not_just_partial_count(self):
+        from tasks import task_dd6b8c4b as gen
+        def pair(n):
+            spots = [(0, c) for c in range(7)]+[(6, c) for c in range(7)]
+            return gen.generate(height=7, width=7, tank=(3, 3), walls=[], nines=spots[:n])
+        for d4 in range(8):
+            pal = [3, 9, 0, 7, 2, 8, 1, 6, 4, 5]
+            full, row, corner, two = apply_episode([pair(9), pair(3), pair(1), pair(2)], d4, pal)
+            # A complete first row still does not teach left-to-right versus
+            # right-to-left. A count-only "2..8 is informative" rule is wrong.
+            with self.assertRaises(MissingColourEvidence):
+                require_colour_evidence('dd6b8c4b', [full, row], [{'input': two['input']}], pal, d4)
+            require_colour_evidence('dd6b8c4b', [full, row, corner],
+                                    [{'input': two['input']}], pal, d4)
+            require_colour_evidence('dd6b8c4b', [full], [{'input': full['input']}], pal, d4)
+
     def test_missing_recolour_and_construction_evidence(self):
         cases = [
+            ('e345f17b',
+             {'input': [[6, 6, 5, 5]], 'output': [[0, 0]]},
+             {'input': [[6, 0, 0, 0]], 'output': [[0, 4]]}),
+            ('dce56571',
+             {'input': [[8, 8, 8], [8, 1, 8], [8, 8, 8]],
+              'output': [[8, 8, 8], [8, 1, 8], [8, 8, 8]]},
+             {'input': [[1, 8, 8], [8, 1, 8], [8, 8, 1]],
+              'output': [[8, 8, 8], [1, 1, 1], [8, 8, 8]]}),
             ('dc1df850',
              {'input': [[0, 3, 0]], 'output': [[0, 3, 0]]},
              {'input': [[0, 2, 0]], 'output': [[1, 2, 1]]}),

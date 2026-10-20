@@ -1,0 +1,60 @@
+{
+  "task_id": "dc46ea44",
+  "factory_sha256": "a15b7672a91d9a21d240fcecdf8c1adc8d8064232deacf6e3cdd1b65d06f116c",
+  "constructor_sha256": "ae85b35a470a63ac673a8e37f43320b80f5ba70e7e1096ff0ef6868d0f5c73ae",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 209111750885990,
+  "d4": 7,
+  "unique_base_inputs": 978,
+  "seconds": 9.864897291059606,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The factory works out where the canonical 'down' and 'right' directions point in visible coordinates. It starts from down=(1,0) and right=(0,1). If d4>=4 it negates the column component, to account for the row reversal. It then rotates both vectors clockwise d4%4 times using (a,b)->(b,-a). The colour roles are fixed constants: background palette[7], divider palette[4] and hook palette[6].\n\nThe emitted program works directly in visible coordinates:\n1. It finds the full divider line that is perpendicular to the down axis.\n2. It takes every cell on the down side of that line and clears it to background.\n3. It splits those cells into the hook (hook colour) and the payload (any other non-background colour).\n4. It translates the hook along -down so that its leading extreme touches the grid edge. This is the canonical 'top row 0'.\n5. It finds the tip: the moved hook cell that is most extreme in -right, and among ties the one furthest along down.\n6. It translates the payload transparently, so that the maximum-down and maximum-right extents of its bounding box land on the tip. Only coloured cells are drawn, and they are drawn over the hook.\n\nUnder the constructor's constraints, the payload's coloured bounding box always matches its 3x2 template's bottom-right corner, because template row 2 and the right column are both nonempty. So the bounding-box anchor reproduces the generator's placement at template top-left (0, jcol-3).",
+    "limitations": "Assumes a single divider line of palette[4] perpendicular to the canonical vertical axis. If none is found, it falls back to any uniform non-background line. If there is still none, it returns the input unchanged. The hook must be in palette[6] and must lie entirely in the payload half. Payload cells landing outside the grid are skipped; this cannot happen under the generator's domain (jcol>=3). No constructor defects were found: the generator's template-based output placement agrees with the bounding-box rule, and the fixtures are consistent with it.",
+    "independent_source_review": {
+      "verdict": "accept",
+      "mechanism": "The scene has an 11x11 grid on background palette[7], with a full palette[4] divider in canonical row 5. A fixed palette[6] hook sits below the divider: cells (6..8,jcol), (8,jcol-2) and (9,jcol-1). A single-hue payload is drawn from a 3x2 template below the divider. In the output, everything below the divider is cleared. The hook is translated up by 6 rows. The payload is stamped transparently so that its bounding-box bottom-right lands on the hook tip (2,jcol-2), drawn over the hook.",
+      "evidence": [
+        "Constructor rejection checks force template row 1 (colors[2]+colors[3]), template row 2 (colors[4]+colors[5]), the left column (0,2,4) and the right column (1,3,5) to be nonempty. So the payload bounding box always ends at template (2,1). The output expression output[i//2][jcol-3+i%2] puts template (2,1) at (2,jcol-2), which is the moved tip. The template-based placement therefore equals the visible bounding-box rule.",
+        "Template row 0 may be empty, which gives a 2-row payload. The bottom-right anchor is unaffected, so the vertical extent is never a hidden latent.",
+        "The overlap guard `bcol >= jcol-4 and bcol <= jcol+1` rejects every placement where payload columns {bcol,bcol+1} would touch hook columns {jcol-2..jcol}. Accepted placements leave a gap of at least one column.",
+        "The divider check `grid[5][c] != 7` rejects brow=5 when template row 0 is coloured, so the divider row stays intact and the payload lies strictly below it.",
+        "The hue comes from random_color(exclude=[4,6,7]), which gives {1,2,3,5,8,9}. It is never 0 (so `if not color` is safe) and never collides with the hook, divider or background. A palette bijection preserves this.",
+        "jcol is in [3,10], so the output payload columns jcol-3 >= 0, and hook columns jcol-2 >= 1 and jcol <= 10 are all in bounds.",
+        "Every latent (jcol, brow, bcol, colors) is recoverable from the visible input, and the output depends only on the hook column and the payload's relative shape. No hidden-random label determination was found.",
+        "Hook drawing order matches the payload-over-hook overwrite. Fixture pair 3 (colors[5]=0) shows the tip staying 6, which matches the transparent stamp.",
+        "Factory: D and R are orthonormal visible unit vectors. pd and ps are projections onto them. The payload displacement od*D + os*R changes pd by exactly od and ps by exactly os.",
+        "Divider detection: only one line is uniformly palette[4], and it is perpendicular to D. `below` uses pd > dproj, which handles a negative step correctly.",
+        "Edge shift: edge = min(0,(H-1)DR) + min(0,(W-1)DC), and sh = edge - top. This moves the hook's extreme -D cell exactly onto the boundary in either sign case. With DR=-1, the hook's maximum row maps to H-1.",
+        "The tip is unique in canonical terms: only (2,jcol-2) has hook column jcol-2. The tie-break is therefore unused but harmless.",
+        "The solver works natively in visible coordinates with specialised direction and colour constants. There is no untransform/solve/retransform wrapper.",
+        "The four fixture parameter sets reproduce the approved train/test grids. Host audit: 1000 fresh pairs, 8000 augmented checks and 16 fixture variants passed with no sampler rejections."
+      ],
+      "blocking_issues": [],
+      "nonblocking_limits": [
+        "There is a secondary divider fallback (any uniform non-background line) and an identity return when no divider or hook is found. Both are unreachable under the constructor.",
+        "The out-of-bounds skip on payload stamping cannot trigger in the domain (jcol>=3).",
+        "The solver assumes the hook colour is palette[6] and the divider colour is palette[4]. These roles are constant across all demonstrations, so this is legitimate specialisation."
+      ],
+      "required_context_checks": [
+        "Confirm D4 convention parity: d4>=4 means a row reversal applied before d4%4 clockwise turns, matching the host augmentation. The host's 8000 augmented checks at d4=7 are consistent with this.",
+        "No colour-association evidence check is needed. dc46ea44 is not in the episode_evidence_checks list, and the payload hue is copied through rather than looked up."
+      ],
+      "task_id": "dc46ea44",
+      "factory_sha256": "a15b7672a91d9a21d240fcecdf8c1adc8d8064232deacf6e3cdd1b65d06f116c",
+      "constructor_sha256": "ae85b35a470a63ac673a8e37f43320b80f5ba70e7e1096ff0ef6868d0f5c73ae"
+    },
+    "host_review": {
+      "decision": "accept",
+      "resolution": "Source review and execution audit agree on the constructor domain. Unreachable defensive branches are documented in the independent review.",
+      "augmentation_evidence": "Audit loops through all eight D4 transforms; the report d4=7 field is the final loop index, not the only tested transform. Shared palette and D4 apply to all episode pairs.",
+      "limitations": "Execution verification certifies sampled/domain cases, not universal rule identifiability from three demonstrations."
+    }
+  }
+}

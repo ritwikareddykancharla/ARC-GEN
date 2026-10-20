@@ -1,0 +1,55 @@
+{
+  "task_id": "e50d258f",
+  "factory_sha256": "b86d35daeb95a8eb681b72bbb06dd0dee6b4a033b432e4f549b730d3af52c96c",
+  "constructor_sha256": "e5c127badafbe6729f04aa3ad99823c25fd72c189e6df9aaa805b3cc158bf49e",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 154656472061290,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 10.89494295802433,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The input holds several solid rectangles on the background. Each rectangle is filled with two filler colours plus some red cells. The output is an exact crop of the rectangle that contains the most red cells.\n\nThe emitted program works directly in visible coordinates. It finds the 4-connected components of non-background cells, where the background is the constant palette[0]. For each component it counts cells equal to palette[2], the red role. It then crops the bounding box of the component with the highest count.\n\nCropping an axis-aligned rectangle commutes with every D4 transform. A rotated or reflected scene therefore yields the correspondingly transformed crop with no direction-specific logic, so d4 needs no specialization. The filler colours (palette[1], palette[8]) play no role. Under the palette mapping only the background and red constants change.",
+    "limitations": "The background and red roles are fixed from the palette; nothing is inferred from the demos.\n\nThe generator draws the red counts as distinct values from 1..4 (sample without replacement, sorted descending). The chosen box therefore always has a strictly unique maximum, so ties never arise in the constructor's domain. The program still breaks hypothetical ties deterministically, first by larger area and then by top-left reading order, but this is not a puzzle rule.\n\nThe program assumes the boxes do not touch orthogonally. The constructor's overlaps(..., 1) padding appears intended to guarantee this. If two boxes did touch, they would merge into one component.\n\nNo fixture contradictions were found. All three train pairs and the test pair agree with the max-red rule.\n\nThe rule text describes three emitted stages, but the archived solver returns only the final crop. This factory likewise returns only the crop.",
+    "independent_source_review": {
+      "verdict": "accept",
+      "mechanism": "The input has 2\u20133 solid rectangles on the background. Each is filled with palette[1] and palette[8], plus k distinct red (palette[2]) cells. The output is the exact crop of the rectangle with the most red cells. The emitted solver takes the 4-connected components of cells != BG, counts cells == RED in each, and crops the bounding box of the component with the maximum count. It works directly in visible coordinates.",
+      "evidence": [
+        "Constructor: num_boxes = min(3, randint(2,5)) gives 2 or 3 boxes. Widths and heights are 3..6.",
+        "Placement uses overlaps(rows, cols, wides, talls, 1). Per common.py, this requires at least a one-cell gap in rows or columns between every pair of boxes. Boxes therefore never touch orthogonally or diagonally, and each box is exactly one 4-connected component.",
+        "Fill pixels come from choice([1, 8]) and reds from common.red() = 2. No fill cell is 0, so each component equals its full rectangle and its bbox is the rectangle.",
+        "num_reds = sorted(sample(range(1,5), num_boxes), reverse=True). Counts are distinct and box 0 gets the strict maximum.",
+        "Red positions come from sample(range(wide*tall), num_red), so they are distinct cells and the visible red count equals num_red exactly.",
+        "The output copies box 0 (`if not idx: output[r][c] = colors[i]`). The label is therefore the unique max-red box, which is determined from visible input rather than a hidden latent.",
+        "Fixtures were checked by hand: pair 1 has 5 vs 4 vs 1, pair 2 has 3 vs 2 vs 1, pair 3 has 3 vs 2, and the test has 4 vs 3 vs 2. Each has a unique max that matches the output crop.",
+        "The factory counts RED over component cells, which is equivalent to the archived bbox count because components are full rectangles.",
+        "The crop of an axis-aligned rectangle commutes with D4. Components and counts are D4-invariant, so no untransform wrapper is used or needed.",
+        "Under palette mapping only BG = palette[0] and RED = palette[2] matter. The fillers map to palette[1] and palette[8], which are distinct from both.",
+        "Host audit passed: 1000 fresh pairs, 8000 augmented checks and 16 fixture variants, with no sampler rejections."
+      ],
+      "blocking_issues": [],
+      "nonblocking_limits": [
+        "The tie-break key (cnt, len(cells), -y0, -x0) and the empty-component fallback cannot be reached in the constructor's domain, because red counts are distinct and at least 2 boxes always exist.",
+        "The original demonstrations do not distinguish 'most red cells' from 'highest red density': in pair 1 and pair 2 both select the same box, and pair 3 boxes are equal size. Generated episodes follow the count rule, which is the archived rule, so this is only an identifiability nuance of the original task.",
+        "The rule text describes three, then two, emitted stages. The archived solver and the factory return only the final crop. This is a documentation mismatch with no effect on labels.",
+        "If boxes ever touched orthogonally, the solver would merge them into one component. The constructor's spacing=1 overlap check excludes this."
+      ],
+      "required_context_checks": [],
+      "task_id": "e50d258f",
+      "factory_sha256": "b86d35daeb95a8eb681b72bbb06dd0dee6b4a033b432e4f549b730d3af52c96c",
+      "constructor_sha256": "e5c127badafbe6729f04aa3ad99823c25fd72c189e6df9aaa805b3cc158bf49e"
+    },
+    "host_review": {
+      "decision": "accept",
+      "resolution": "Source review and execution audit agree on the constructor domain. Unreachable defensive branches are documented in the independent review.",
+      "augmentation_evidence": "Audit loops through all eight D4 transforms; the report d4=7 field is the final loop index, not the only tested transform. Shared palette and D4 apply to all episode pairs.",
+      "limitations": "Execution verification certifies sampled/domain cases, not universal rule identifiability from three demonstrations."
+    }
+  }
+}

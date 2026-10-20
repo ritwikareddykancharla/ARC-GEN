@@ -1,0 +1,55 @@
+{
+  "task_id": "de1cd16c",
+  "factory_sha256": "2287cbb2b148e5a83d424e221436f91489bb18c510afd27f472e8cf55dcdb191",
+  "constructor_sha256": "fa955f282bf6bfeec05c7fbe49be014877c6d35ace5755ca810bc4999a4e2bcf",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 7627922358154,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 9.858338749967515,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The input is a guillotine grid of large solid rectangles. Isolated dots of one colour are scattered over them, and the output is the 1x1 colour of the region holding the most dots.\n\nHow the emitted program works:\n1. It picks the dot colour as the rarest colour. In the generator, regions are at least 5x5 with at most 5 dots each, and there are at most 14 dots in total, so the dot colour is always strictly rarest.\n2. It recovers the rectangle partition directly in visible coordinates. Rows are grouped greedily into bands: within a band each column keeps one non-dot colour, and dots act as wildcards. The same is done for columns.\n3. Each band cell gets its majority non-dot colour. Dot counts are summed per region colour, which merges same-coloured blocks as in the fixtures, e.g. the 3x2 test layout with two 8-blocks. The program outputs the colour with the largest tally.\n\nWhy this is better than the archived solver: the archived solver labels each dot by a 4-neighbour majority. That can mislabel a dot on a region boundary when other dots surround it. The structural partition avoids that.\n\nOn the generator's domain the partition is unique. A band boundary could only be hidden if both sides' boundary rows were entirely dots. That needs at least 5 dots in each of two quadrants, which the distinct counts sampled from 0..5 rule out.\n\nThe rule treats rows and columns symmetrically and reads every colour role from the pixels. So no D4 or palette specialization is needed, and build_program returns the same direct-coordinate program for every variant. The hand-checked results match all fixtures: train outputs 6, 2, 4, 8 and test output 2.",
+    "limitations": "1. **Tie fallback.** If two region colours tie for the most dots, the program picks the larger region, then the lower colour. This cannot happen in the generator, because counts are distinct samples from range(6) and the 4 colours are distinct. Under a palette change the colour tie-break could differ, but that case is outside the domain.\n2. **Rarest-colour ties.** If two colours tied for rarest, the lower colour value would be taken as the dot colour. This does not occur in the domain.\n3. **Fixtures outside the generator's domain.** The approved fixtures use repeated region colours, e.g. colors [3,2,8,8], [1,8,1,4] and [3,3,2,8,1,8], and the test fixture has a 3x2 layout. That is outside generate()'s random domain of a 2x2 grid with distinct colours. The program handles them by tallying per colour, which is consistent with all fixture labels.\n4. **Possible generator defect.** The generator calls common.all_pixels(wide, tall). If that helper actually returned (row<wide, col<tall), dots could fall outside their quadrant, or outside the grid, whenever wide != tall. The label (mostest) would then disagree with the visible counts. I assume the helper yields in-quadrant (row, col); otherwise this is a constructor defect needing host review.\n5. **Not tested.** I have not run any tests on the factory or the emitted program.",
+    "independent_source_review": {
+      "verdict": "accept",
+      "mechanism": "The input is a guillotine partition of solid rectangles with scattered dots of a single rarest colour. The output is a 1x1 grid holding the region colour with the most dots. The emitted program picks the dot colour as the rarest colour. It splits rows and then columns into maximal bands in which every column (or row) keeps one non-dot colour, with dots acting as wildcards. Each band-cross block gets its majority non-dot colour, dots are tallied per colour, and the unique maximum is returned. Rows and columns are handled the same way and all colour roles are read from pixels, so the same program runs in any D4 or palette variant's visible coordinates without an untransform wrapper.",
+      "evidence": [
+        "Constructor random domain: wides and talls are each 2 values in 5..10; colors = sample(range(10), 4) are distinct; pcolor = random_color(exclude=colors) differs from every region colour; counts = sample(range(6), 4) are distinct.",
+        "mostest is the colour at the last index with count == max(counts). Because counts are distinct, the maximum is unique and the label is fully determined by the visible dot counts. There is no hidden-latent tie.",
+        "Checked against common.py: all_pixels(width, height) yields (r, c) with r < height and c < width. The call all_pixels(wide, tall) therefore gives p[0] < tall and p[1] < wide, and the offsets sum(talls[:ridx]) and sum(wides[:cidx]) keep every dot inside its own quadrant. Prior limitation 4 is a non-issue.",
+        "common.grid(sum(wides), sum(talls)) builds a grid that is width by height, so the indexing is consistent.",
+        "Dot colour is strictly rarest. There are at most 5+4+3+2 = 14 dots, while each region is at least 5x5 = 25 cells with at least 20 cells left visible.",
+        "Partition recovery is exact in the random domain. Because colours are distinct, every column changes colour across the horizontal boundary. The first row of the lower band always contains a non-dot cell in a column whose profile is already set. A full row of 10 or more dots would need two quadrants with 5 dots each, which distinct counts forbid. At most one column of the upper band can be all dots (the single 5-count quadrant when tall = 5), and the first lower-band row still has at least 2 non-dot cells. The same holds for columns. No premature split occurs because non-dot colours within a band column are constant.",
+        "Hand-traced the 3x2 test fixture (colors [3,3,2,8,1,8]). Row bands are [0,4), [4,12), [12,18); column bands are [0,9), [9,19). Tallies are 3:1, 2:5, 8:2+1=3, 1:2, giving output 2. This matches the fixture.",
+        "Hand-traced train pair 2 (colors [3,2,8,8]): 3:1, 2:4, 8:2, giving 2. Hand-traced train pair 3 (colors [1,8,1,4]): 8:1, 4:2, 1:0, giving 4. Both match.",
+        "Merging per colour versus per region never changes the label in the fixtures. In the test, the per-region and per-colour maximum is both the 2 region with 5 dots.",
+        "There are no arbitrary colour or shape associations, so no episode colour-evidence requirement applies. de1cd16c is not in the episode-check list, and the context check correctly does not apply.",
+        "The host audit passed 1000 fresh pairs, 8000 augmented checks and 16 fixture variants with no sampler rejections. This is consistent with the source analysis above."
+      ],
+      "blocking_issues": [],
+      "nonblocking_limits": [
+        "The tie fallback (largest area, then lowest colour) is palette-dependent. It is unreachable in the generator because counts are distinct and colours are distinct.",
+        "The lowest-value tie-break for the rarest colour is likewise unreachable, since the dot colour is strictly rarest.",
+        "The archived rule text calls dots 'isolated', but the generator samples pixels freely, so dots can be 4-adjacent, including across quadrant boundaries. The archived 4-neighbour-majority solver could mislabel such dots. The factory's structural partition does not depend on isolation, so the emitted program is unaffected.",
+        "Fixtures use repeated region colours and a 3x2 layout that the random domain (2x2, distinct colours) never produces. The per-colour tally fits all fixture labels, but repeated-colour tie behaviour is only exercised by fixtures, not by sampled data."
+      ],
+      "required_context_checks": [],
+      "task_id": "de1cd16c",
+      "factory_sha256": "2287cbb2b148e5a83d424e221436f91489bb18c510afd27f472e8cf55dcdb191",
+      "constructor_sha256": "fa955f282bf6bfeec05c7fbe49be014877c6d35ace5755ca810bc4999a4e2bcf"
+    },
+    "host_review": {
+      "decision": "accept",
+      "resolution": "Source review and execution audit agree on the constructor domain. Unreachable defensive branches are documented in the independent review.",
+      "augmentation_evidence": "Audit loops through all eight D4 transforms; the report d4=7 field is the final loop index, not the only tested transform. Shared palette and D4 apply to all episode pairs.",
+      "limitations": "Execution verification certifies sampled/domain cases, not universal rule identifiability from three demonstrations."
+    }
+  }
+}

@@ -1,0 +1,56 @@
+{
+  "task_id": "e0fb7511",
+  "factory_sha256": "66678c1ecbc5e75d939cbf63226c3357e9a8a59445b143a4a63c1a850790de63",
+  "constructor_sha256": "3857588ff73d8b3866193818d618dc323c66986853ee719a64ee247ff18c48f4",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 106791773409715,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 9.341875291080214,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The rule is to find the 4-connected components of the scattered colour, which is original colour 0. Every component with at least 2 cells is recoloured to original colour 8. Singletons are left unchanged. This is the same as the generator's test of whether a 0-cell has an orthogonal 0-neighbour.\n\nThe 4-neighbourhood is invariant under every D4 transform, so no axis needs specialising. The emitted program works directly in visible coordinates and handles rectangular grids. The only specialisation is colour: the scattered colour becomes palette[0] and the mark colour becomes palette[8]. The background, palette[1], is never touched. Components are found by BFS in reading order and processed largest first, as in the archived solver; the order does not affect the result.",
+    "limitations": "The scattered colour is fixed as palette[0] rather than inferred from demos. This matches the constructor, which only produces colours 0 and 1.\n\nThe archived solver instead uses all non-background cells, with background taken as the most common colour. That is equivalent in this domain. It could only diverge if 0 were ever the majority colour, and the generator's 1-in-8 zero density makes that practically impossible.\n\nThe generator's minimum of 13 eights is a filter on scenes, not a rule, and is not reproduced. No fixture contradictions or constructor indexing defects were observed. Out-of-bounds lookups in the generator are not 0, so boundary cells are handled correctly.",
+    "independent_source_review": {
+      "verdict": "accept",
+      "mechanism": "The input has background palette[1] with scattered palette[0] cells. Every 4-connected component of palette[0] with at least 2 cells is recoloured to palette[8]. Singletons are left unchanged.",
+      "evidence": [
+        "Constructor draw(): for each 0-cell in `grid`, `output[row][col] = 8` if any orthogonal neighbour satisfies `common.get_pixel(grid, row+dr, col+dc) == 0`. Neighbours are read from the unmodified input `grid`, so writing into `output` during the loop cannot leak into later decisions.",
+        "common.get_pixel returns -1 out of bounds, so border cells never gain a phantom 0 neighbour.",
+        "Having an orthogonal 0-neighbour is exactly equivalent to belonging to a 4-connected 0-component of size at least 2. The factory's BFS over `g == ZERO` with the `len(c) < 2` skip therefore reproduces the constructor labels exactly.",
+        "The constructor's colours are only 0 and 1 (`1 if color else 0`). No 8 appears in any input, so MARK never collides with existing ink.",
+        "Fixture check: in train pair 1, (0,10)/(1,11) and (1,2)/(2,1) touch only diagonally and stay 0. This confirms 4-connectivity, matching both the constructor's offsets and the solver's offsets.",
+        "The factory emits a solver that works directly in visible coordinates. The 4-neighbourhood is D4-invariant, so no untransform/retransform wrapper is needed and none is used. The only specialisation is colour: ZERO=palette[0], MARK=palette[8].",
+        "Labels depend only on the visible input. No hidden random latent determines them: the 13-eight minimum is a rejection filter, not a labelling input.",
+        "Host audit passed: 1000 fresh pairs, 8000 augmented checks, 16 fixture variants, no sampler rejections."
+      ],
+      "blocking_issues": [],
+      "nonblocking_limits": [
+        "The scattered colour is hard-coded as palette[0] rather than inferred from the demonstrations. This matches the constructor domain, which only ever produces 0 and 1.",
+        "The archived solver instead uses 'non-most-common colour'. It would diverge from the emitted solver only if 0 were the majority, which is astronomically unlikely at density 1/8 over 169 cells.",
+        "The components-sorted-by-size step is cosmetic and does not affect the output.",
+        "The constructor's `count(8) < 13` filter is a scene-acceptance condition and is correctly not reproduced in the solver.",
+        "If validate() were given fixed colours that fail the filter, it would return None grids. This is not reachable with the supplied fixtures."
+      ],
+      "required_context_checks": [
+        "None task-specific. e0fb7511 is not in the require_colour_evidence list, which is appropriate because this is not an arbitrary colour lookup: the demonstrations show the palette[0]\u2192palette[8] recolouring directly.",
+        "Standard D4 conflict rejection is sufficient. The rule is orientation-invariant, so no D4 variant can produce conflicting answers."
+      ],
+      "task_id": "e0fb7511",
+      "factory_sha256": "66678c1ecbc5e75d939cbf63226c3357e9a8a59445b143a4a63c1a850790de63",
+      "constructor_sha256": "3857588ff73d8b3866193818d618dc323c66986853ee719a64ee247ff18c48f4"
+    },
+    "host_review": {
+      "decision": "accept",
+      "resolution": "Source review and execution audit agree on the constructor domain. Unreachable defensive branches are documented in the independent review.",
+      "augmentation_evidence": "Audit loops through all eight D4 transforms; the report d4=7 field is the final loop index, not the only tested transform. Shared palette and D4 apply to all episode pairs.",
+      "limitations": "Execution verification certifies sampled/domain cases, not universal rule identifiability from three demonstrations."
+    }
+  }
+}

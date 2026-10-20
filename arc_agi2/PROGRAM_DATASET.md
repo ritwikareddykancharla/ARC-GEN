@@ -35,7 +35,7 @@ recorded. Passing finite audits does not prove unrestricted generalization.
 
 - 213 native direct-coordinate certificates admitted after fresh audits and
   supplied-fixture checks.
-- 653 admitted factories. Each passed 1,000 fresh pairs, 8,000 augmented pair
+- 671 admitted factories. Each passed 1,000 fresh pairs, 8,000 augmented pair
   checks and 16 supplied-fixture variants. Their audit records retain draft
   limitations and source/constructor hashes. These checks are finite evidence,
   not proof of correctness on every generated input.
@@ -46,7 +46,7 @@ recorded. Passing finite audits does not prove unrestricted generalization.
   counts must be computed as a union, not added.
 - Local exporter test: 18 fresh base episodes, 144 augmented PNG/program/grid
   records. It requested 20 bases and reported a two-episode shortfall.
-- The union currently admits 872 of 1,120 families; 248 still need direct
+- The union currently admits 890 of 1,120 families; 230 still need direct
   augmented program admission. Constructor coverage and program coverage are
   different gates.
 - Synthetic labels for `00d62c1b` now fill every enclosed background component,
@@ -189,7 +189,7 @@ palettes: `b7fb29bc` (49), `ba26e723` (22), `bdad9b1f` (18), `be03b35f` (14),
 273 tests passed. No expanded generation or model training launched.
 
 
-## Latest continuation: 872 verified families
+## Earlier continuation: 872 verified families
 
 Seventy additional factories bring program-target coverage to **872/1,120**,
 with 248 still pending. All 1,120 generator files already exist. Each training
@@ -221,3 +221,31 @@ passed.**
 HF's default viewer again returned HTTP 200 with 144 preview rows; a returned
 image decoded at 1188×1974 pixels. Scalable archive viewing remains unresolved.
 Full expanded generation and model training have not launched.
+
+## Latest continuation: 890 verified families
+
+Eighteen more reviewed factories bring direct program coverage to **890/1,120**
+(671 factory certificates, with overlapping native/manual targets). All 1,120
+constructors already exist; 230 program targets remain unadmitted.
+
+New episode gates check tank fill order against all eight candidate orders on
+the same query input, distinguish peak and valley tie evidence, require the
+centred-line axis and NOR output colour to be demonstrated, and reject
+ambiguous folded-panel output sides. These gates never consume query answers.
+For `e45ef808`, the generator's leftmost valley tie convention differs from the
+archived prose; a tied-valley query now requires tied-valley demonstration
+evidence. Original fixtures contain no such tie and remain unchanged.
+
+The fresh audit sampled 360 base episodes across 18 families: 356 accepted and
+four rejected for insufficient demonstration evidence. All **2,848** accepted
+augmented program-and-grid records executed exactly; gate decisions were
+invariant across all eight orientations. Report:
+`reports/episode-evidence-890-audit.json`. **291 regression tests passed.**
+The finite `e179c5f4` input domain was exhaustively checked: nine native inputs,
+144 checks across eight orientations and two palettes. Finite families must use
+adaptive quotas rather than duplicate inputs to claim extra diversity.
+
+The public HF exporter preview remains 144 rows. Expanded generation and model
+training have not launched. Production target remains 1.12M fresh base episodes
+and up to 8.96M augmented rows before deduplication and adaptive reductions,
+with both program and grid in each row.

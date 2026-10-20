@@ -1,0 +1,56 @@
+{
+  "task_id": "de493100",
+  "factory_sha256": "2b80b98d6065e353dadfb00059c1fc0bb301c7ad643ec8938bd26864a0bd3a47",
+  "constructor_sha256": "97f9a02dd455e72e6e11bfad9368a551fdfd1e689d078d732037b2482693306c",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 143164621041389,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 22.125874833087437,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The source mosaic is an N x N crop of an (N+2) x (N+2) mosaic. That mosaic is mirror-symmetric about row sum N+1 and column sum N+1, and the transpose acts as a weak fallback cue. Under the D4 view the crop's missing two rows or columns may sit on the opposite side. Each visible axis therefore has its own mirror sum, either H+1 or H-3 (W+1 or W-3 for columns). The transpose fallback becomes either the main diagonal (i,j)->(j,i) or the anti-diagonal (i,j)->(W-1-j,H-1-i).\n\nThe factory derives these offsets by applying the D4 coordinate map to the original reflections and the original transpose. It checks the offsets at two sizes to confirm they do not depend on N, then emits them as constants. The mask colour is palette[7], and all other colours are copied through unchanged.\n\nThe emitted program works directly in visible coordinates:\n1. Find the mask bounding box.\n2. Group the visible cells into orbits keyed by (min(i,Rs-i), min(j,Cs-j)), voting on the value in each orbit.\n3. Fill each masked cell from its own orbit.\n4. If that orbit has no visible cell, use the orbit of the cell's diagonal image (the transpose cue, matching the archived solver's orbit[::-1]).\n5. Return the filled crop.",
+    "limitations": "- **Non-square grids:** the constructor's domain is even square grids of side 12..30. Rectangular inputs are handled with per-axis H and W offsets, but the anti-diagonal fallback is only well defined for square grids.\n- **Unrecoverable cells:** if a masked cell has neither a direct mirror partner nor a transpose cue (the constructor forbids this), the program fills it with the most frequent visible colour instead of raising an error.\n- **Disagreeing partners:** where visible partners disagree, the majority value wins, with ties going to the smallest colour. Under the constructor this never happens.\n- **Weak fallback cue:** the transpose fallback is only partially supported by the generator. The quadrant is forced to break transpose symmetry somewhere, and random masks always require direct partners. So the fallback is only exercised by explicit fixture replays such as train pair 1. In that pair it reproduces the approved output, but it is a weak cue rather than a guaranteed rule.\n- **No constructor defects found:** I saw no fixture that contradicts the uniform rule.\n- **Untested:** I have not run this code on any fixture or fresh pair; the host verification will be the first test.",
+    "independent_source_review": {
+      "verdict": "accept",
+      "mechanism": "The input is an N\u00d7N crop (even N, 12..30) of an (N+2)\u00d7(N+2) mosaic that is mirror-symmetric about row sum N+1 and column sum N+1. One rectangle is painted with colour 7. The output is the hidden patch, recovered from visible cells in the same mirror orbit. If a hidden cell's orbit has no visible cell, the orbit of its transpose image is used instead; only canonical train pair 1 needs this. The emitted solver works in augmented coordinates. It uses per-axis mirror sums H+ROW_OFF and W+COL_OFF (each offset is +1 or \u22123), and a main-diagonal or anti-diagonal fallback, all derived by conjugating the original reflections and transpose through the D4 map.",
+      "evidence": [
+        "Constructor labels come from full[y][x] = Q[min(y,N+1-y)][min(x,N+1-x)]. The direct partners (y,N+1-x), (N+1-y,x) and (N+1-y,N+1-x) share exactly the orbit key (min(y,N+1-y), min(x,N+1-x)). So orbit voting over visible cells is equivalent to the constructor's partner check.",
+        "Random masks are accepted in the first `_sample_mask` loop only if `_recoverable` holds. The constructive fallback places the rectangle in columns 2..qs-1, or reflects it into qs..N-1. Its partner columns N+1-x then lie wholly in the opposite half, inside the grid and unmasked. So every random hidden cell has a visible direct partner, and labels are not decided by hidden latents.",
+        "Explicit masks with a random quadrant also require `_recoverable`. With an explicit quadrant, `_has_reconstruction_cues` requires every visible member of the direct orbit agree with the label. Failing that, every visible member of the transposed orbit {(c,r),(c,a-r),(a-c,r),(a-c,a-r)} must agree. That set is exactly the visible part of the orbit[::-1] key used by the archived solver and of key(*diag(i,j)) in the emitted solver.",
+        "Colour 7 is excluded from COLOURS, from `_check_palette` and from `_parse_quadrant`. So the mask is the only 7 region and its bounding box equals the rectangle.",
+        "Factory derivation: augmented row i = n-1-y maps reflection y\u2192s-y to i\u2192(n-3)-i, giving ROW_OFF = -3. Otherwise the sum stays n+1. Since reflections are affine, the single probe point (5,8) is enough.",
+        "In the -3 case, augmented rows 28 and 29 get keys -1 and -2. These are unique and do not collide with valid keys, which correctly models the two partnerless original rows 0 and 1.",
+        "Transpose conjugation: g\u00b7T\u00b7g\u207b\u00b9 under D4 is either T or the anti-transpose (i,j)\u2192(n-1-j,n-1-i). The factory tests the probe point against both and raises on anything else. Size-uniformity is checked at n=30 and n=20.",
+        "The emitted solver reads no hidden state and does no whole-grid untransform. It works directly on visible coordinates with specialised axis constants and takes the mask colour from palette[7].",
+        "Host audit passed: 1000 fresh pairs, 8000 augmented checks and 16 fixture variants, with no sampler rejections."
+      ],
+      "blocking_issues": [],
+      "nonblocking_limits": [
+        "The transpose fallback is exercised only by the canonical train pair 1 replay. There, 8 cells (rows 14\u201317, columns 0\u20131) have no direct partner. The random generator never relies on it, so only the fixture covers this path. The cue is visible in that pair's own input and is verified against the label by `_has_reconstruction_cues`.",
+        "The emitted solver silently falls back to majority voting, the global modal colour, or copying unmasked cells. All of these are out of domain: the constructor guarantees partners agree, every hidden cell is recoverable, and the mask is a full rectangle.",
+        "The anti-diagonal fallback is only meaningful for square grids. The constructor only emits square grids.",
+        "Single-colour hidden patches are allowed only for explicit fixture replay or explicit 1\u00d71 masks. Random scenes enforce at least two colours, which preserves the task's difficulty."
+      ],
+      "required_context_checks": [
+        "Confirm the host's D4 index convention matches the factory's fwd: optional column reversal x\u2192n-1-x, then k%4 clockwise turns (y,x)\u2192(x,n-1-y). The passing 8000 augmented checks suggest it does.",
+        "If canonical train pair 1 is ever used as a query, confirm the host accepts the weak transpose cue as legitimately inferable from that query's visible input. No colour-association evidence check applies to this task, and none is needed."
+      ],
+      "task_id": "de493100",
+      "factory_sha256": "2b80b98d6065e353dadfb00059c1fc0bb301c7ad643ec8938bd26864a0bd3a47",
+      "constructor_sha256": "97f9a02dd455e72e6e11bfad9368a551fdfd1e689d078d732037b2482693306c"
+    },
+    "host_review": {
+      "decision": "accept",
+      "resolution": "Uniform mirror-orbit reconstruction; transpose fallback is fixture-only and accepted based on visible reconstruction cues. No fixture ID or query answer is used; random corpus does not exercise this fallback.",
+      "augmentation_evidence": "Audit loops through all eight D4 transforms; the report d4=7 field is the final loop index, not the only tested transform. Shared palette and D4 apply to all episode pairs.",
+      "limitations": "Execution verification certifies sampled/domain cases, not universal rule identifiability from three demonstrations."
+    }
+  }
+}

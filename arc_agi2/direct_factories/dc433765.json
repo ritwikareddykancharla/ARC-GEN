@@ -1,0 +1,54 @@
+{
+  "task_id": "dc433765",
+  "factory_sha256": "007799a39e0903f795027627e31e5208b373fad1ae2d336db87e049d8fcfafc7",
+  "constructor_sha256": "514bb7fa68d2f3cedb6642e455db6e31759da6f255824c7d67e3cfe46e240152",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 248174931700577,
+  "d4": 7,
+  "unique_base_inputs": 922,
+  "seconds": 3.882505499990657,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The family contains one mover pixel (original green 3) and one target pixel (original yellow 4) on a black background. The mover steps exactly one cell toward the target, with step (sign(dy), sign(dx)) computed from the visible row and column offsets. This rule is equivariant under every D4 transform. A rotation or reflection maps the offset vector and its componentwise sign consistently, and straight versus diagonal alignment is preserved. So the emitted program applies the step directly in visible coordinates and needs no direction constants. Colour roles are specialised as palette constants: MOVER=palette[3], TARGET=palette[4], BG=palette[0]. The program erases the mover's old cell to the background colour and writes the mover at the new cell. The target is left unchanged.",
+    "limitations": "Assumes exactly one mover cell and one target cell, as the constructor guarantees. If several exist, the first in row-major order is used. If either colour is missing, the input is returned unchanged. The constructor always places the target in the mover's row, column or one of its diagonals, at Chebyshev distance of at least 2. The step therefore never collides with the target or leaves the grid. Defensive guards return the input unchanged in those impossible cases. Background is taken as palette[0], which is the constructor's fixed black background, rather than inferred from pixel counts. The fixtures are consistent with the uniform rule and I found no constructor defects. I have not run any tests.",
+    "independent_source_review": {
+      "verdict": "accept",
+      "mechanism": "Each grid has one mover cell (raw colour 3) and one target cell (raw colour 4) on background (raw 0). The mover takes one step (sign(ty-my), sign(tx-mx)) toward the target: its old cell becomes background and the target stays put. The emitted solver specialises MOVER=palette[3], TARGET=palette[4] and BG=palette[0]. It finds both cells with np.where, computes the componentwise sign step in visible coordinates and writes the result. The sign step is D4-equivariant, so no direction constants or untransform wrapper are needed.",
+      "evidence": [
+        "Constructor: `output[rows[1]][cols[1]] = grid[rows[1]][cols[1]] = yellow()` places the target in both grids. `grid[rows[0]][cols[0]] = green()` places the mover in the input only, so the old cell is implicitly background in the fresh output from common.grids. The four `rows[0] +=/-=` and `cols[0] +=/-=` lines are exactly the componentwise sign step. The output then gets green at the stepped cell.",
+        "Random branch: candidate target pixels lie on the mover's row, column or one of its diagonals. The `abs(r-row)<=1 and abs(c-col)<=1` exclusion gives Chebyshev distance >= 2. So the step lands strictly between mover and target: it stays in-grid and never overwrites the target. The solver's out-of-bounds and collision guards are therefore unreachable in-domain.",
+        "Exactly one mover and one target per grid, at distinct cells. np.where row-major [0] indexing is therefore unambiguous, and the solver's empty-colour fallback is unreachable.",
+        "Background comes from common.grids(width, height) with default color=0, i.e. raw 0. So BG=palette[0] matches the erased-cell colour.",
+        "The validate() parameters reproduce all 7 train and 2 test approved fixtures, including the in-place list mutation, which only affects the call's own lists. The archived program is the same sign-step rule.",
+        "Colour roles are fixed by the constructor (green always moves, yellow always stays). Every demonstration shows the mover changing position and the target staying, so the role assignment is taught in-episode. It is not a hidden latent and not a per-instance arbitrary lookup.",
+        "`_sign` returns Python ints from bool subtraction. The index arithmetic is on Python ints, with no numpy-unsigned or overflow issue.",
+        "Host audit passed: 1000 fresh pairs, 8000 augmented checks, 16 fixture variants, no sampler rejections."
+      ],
+      "blocking_issues": [],
+      "nonblocking_limits": [
+        "The constructor only produces aligned pairs (same row, column or diagonal). The solver's sign-step would still be well-defined for non-aligned pairs, but that case is out of domain and untested.",
+        "The defensive returns (missing colour, out-of-bounds step, step onto target) return the input unchanged. They are unreachable under the constructor and are not a rule-switching mechanism.",
+        "Grid sizes are limited to width 3\u201312 and height width..width+2, so the solver is not exercised on larger grids. The rule is size-independent, so this is not a concern."
+      ],
+      "required_context_checks": [
+        "No arbitrary colour-association evidence check is needed. The mover/target roles are constant across the family and visible in every demonstration (dc433765 is correctly absent from require_colour_evidence's task list).",
+        "Standard D4-conflict context policy suffices. The rule is D4-equivariant, so augmented variants with the same visible input cannot demand conflicting answers."
+      ],
+      "task_id": "dc433765",
+      "factory_sha256": "007799a39e0903f795027627e31e5208b373fad1ae2d336db87e049d8fcfafc7",
+      "constructor_sha256": "514bb7fa68d2f3cedb6642e455db6e31759da6f255824c7d67e3cfe46e240152"
+    },
+    "host_review": {
+      "decision": "accept",
+      "resolution": "Source review and execution audit agree on the constructor domain. Unreachable defensive branches are documented in the independent review.",
+      "augmentation_evidence": "Audit loops through all eight D4 transforms; the report d4=7 field is the final loop index, not the only tested transform. Shared palette and D4 apply to all episode pairs.",
+      "limitations": "Execution verification certifies sampled/domain cases, not universal rule identifiability from three demonstrations."
+    }
+  }
+}

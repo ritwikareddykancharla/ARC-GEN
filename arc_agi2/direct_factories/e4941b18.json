@@ -1,0 +1,56 @@
+{
+  "task_id": "e4941b18",
+  "factory_sha256": "0a9f2daeffbe9d03ff27bec820e6897ad3593d42b6ebf748d0d56679f65871be",
+  "constructor_sha256": "cfe3d39d4851abb7e073ca19bd485644a3534e3ffa5b0265f205fb7063b3e0a8",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 235410854645356,
+  "d4": 7,
+  "unique_base_inputs": 922,
+  "seconds": 10.224707416025922,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "In the canonical frame the two markers sit in the line just above a solid 5-block whose bottom row touches the grid edge. The 2 moves onto the 8's cell and its old cell becomes background. The 8 is placed on the block's far edge line, the bottom row. It goes one cell outside the block along the marker axis, on the side toward which the 8 lies relative to the 2. The archived solver uses bx1+1 when x8>x2 and bx0-1 otherwise.\n\nUnder D4 the horizontal flip keeps the marker side as 'up'. Each clockwise rotation then moves that side up->right->down->left, so only d4%4 decides the geometry. The factory emits code specialised to that frame:\n- k=0: markers are above the block. The far edge is row by1, and the column is chosen by the x-order of 8 versus 2.\n- k=2: markers are below. The far edge is row by0, column chosen the same way.\n- k=1: markers are to the right. The far edge is column bx0, and the row is by1+1 or by0-1 depending on the y-order of 8 versus 2.\n- k=3: markers are to the left. The far edge is column bx1, row chosen as for k=1.\n\nReflections need no extra handling because the outward side is always computed from the visible relative order of the two markers. Colour roles are baked in as palette constants: background=palette[7], block=palette[5], mover=palette[2], pushed marker=palette[8]. The block's bounding box comes from its visible cells. The program works on rectangular grids and needs no absolute coordinates.",
+    "limitations": "Not tested.\n- Assumes exactly one cell each of the mover and pushed colours, and a single solid block of palette[5], which is the constructor's domain. If several cells share a marker colour, the first in reading order is used.\n- The two markers are never adjacent and never equal, so there is no tie. The constructor guarantees the outside cell exists (left+width <= size-1, and the mirror under flop). An in-bounds guard just skips placement if a malformed scene ever breaks this.\n- Demonstrations are not consulted; the frame comes from d4.\n- The rule text mentions two teaching-stage canvases, but solve returns only the final grid.\n- I found no constructor defects or fixture contradictions: all approved train and test fixtures match the uniform rule.",
+    "independent_source_review": {
+      "verdict": "accept",
+      "mechanism": "Background palette[7], one solid rectangle of palette[5] and two single-cell markers (palette[2] and palette[8]) in the line touching one side of the block. The 2 moves onto the 8's cell and its old cell becomes background. The 8 is placed on the block's far edge line (the edge opposite the markers), one cell outside the block, on the side toward which the 8 lay relative to the 2 along the marker axis. Canonically the far edge is row by1, with tx = bx1+1 if x8>x2 else bx0-1. The factory specialises the far edge to by1/by0/bx0/bx1 for d4%4 = 0/2/1/3 and computes the side from the visible marker order.",
+      "evidence": [
+        "Constructor: size in [5,20], width in [3,size-1], height in [2,size-2], left in [0,size-width-1]. So left+width <= size-1, the output cell (size-1, left+width) is always in bounds, and the marker row size-height-1 >= 1 always exists.",
+        "Constructor: `red + 1 < cyan` gives the 8 strictly right of the 2 and never adjacent, so there is no tie or adjacency ambiguity. The output 8 at column left+width is right of the block, which matches 'side toward the 8'. The flop mirrors both the 8's side and the landing side, so the label depends only on visible relative order, not on the hidden flop latent.",
+        "The block's bottom row is size-1, the edge opposite the markers. The output writes `output[size-1][left+width] = 8` onto a cell that is background in both grids. The 2's write `output[row][left+cyan] = 2` replaces the 8 cell, and the old 2 cell stays 7 because output is built fresh. Exactly three cells change, matching all fixtures.",
+        "Validate fixtures reproduce the approved train/test pairs. For example, test flop=True, left=1, width=17: unflopped 8 at column 18 becomes column 0 after flop, giving (18,0). Red at col 3\u219215 and cyan at col 8\u219210 after flop, matching the 8 at (9,10) and 2 at (9,15).",
+        "Factory solver acts directly on visible coordinates. It finds markers and the block bbox by palette colour via argwhere min/max, which is valid because the block is the only palette[5] region and is solid. It specialises only the far-edge axis per rotation class, an allowed orientation constant. There is no untransform/native-solve/retransform wrapper.",
+        "Rotation mapping checks: k=1 (markers right) has far edge bx0 and side chosen by y8 vs y2. k=3 (markers left) has far edge bx1. k=2 (markers below) has far edge by0. The side selection is frame-invariant because it uses the 8's visible position relative to the 2.",
+        "Colour roles (which marker moves, which is pushed) are shown in every demonstration, since every demo contains both markers and the changed cells. They are not arbitrary unseen lookups, and this task is not in the colour-evidence check list.",
+        "Host audit passed: 1000 fresh pairs, 8000 augmented pair checks and 16 fixture variants, with no sampler rejections."
+      ],
+      "blocking_issues": [],
+      "nonblocking_limits": [
+        "The factory relies on the host D4 convention: the reflection must be applied so that d4 and d4+4 share the same marker side after rotation, i.e. only d4%4 determines the far edge. This is not verifiable from source alone. The 8000 augmented checks would expose a mismatch, and they passed.",
+        "Uses the first argwhere hit if a marker colour appeared more than once. The constructor never produces this.",
+        "The in-bounds guard silently skips placement for malformed scenes. This is excluded by the constructor (left+width <= size-1).",
+        "The rule text mentions two teaching-stage canvases; solve returns only the final grid.",
+        "Demonstrations are not consulted; the orientation comes from d4 even though it is also inferable from the visible query."
+      ],
+      "required_context_checks": [
+        "Confirm the host D4 composition convention makes the marker side depend only on d4%4 (reflection keeps the canonical 'up' side before rotation), consistent with the passing augmented audit across all 8 transforms.",
+        "Confirm the context policy's D4-conflict rejection sees no conflicting query answers. None are expected, since the label depends only on visible marker order and block geometry."
+      ],
+      "task_id": "e4941b18",
+      "factory_sha256": "0a9f2daeffbe9d03ff27bec820e6897ad3593d42b6ebf748d0d56679f65871be",
+      "constructor_sha256": "cfe3d39d4851abb7e073ca19bd485644a3534e3ffa5b0265f205fb7063b3e0a8"
+    },
+    "host_review": {
+      "decision": "accept",
+      "resolution": "Source review and execution audit agree on the constructor domain. Unreachable defensive branches are documented in the independent review.",
+      "augmentation_evidence": "Audit loops through all eight D4 transforms; the report d4=7 field is the final loop index, not the only tested transform. Shared palette and D4 apply to all episode pairs.",
+      "limitations": "Execution verification certifies sampled/domain cases, not universal rule identifiability from three demonstrations."
+    }
+  }
+}

@@ -1,0 +1,55 @@
+{
+  "task_id": "df9fd884",
+  "factory_sha256": "b1eb18a326b7ec6bdfd607c75050a5e63ed626331ead1cd5c677d4988d975683",
+  "constructor_sha256": "0561ad2e77a3d5644804712d045fbb8886b420711393433b74aa0c61cab8149a",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 54800188822579,
+  "d4": 7,
+  "unique_base_inputs": 497,
+  "seconds": 4.138180084060878,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "Generator mechanism: there are two colour-4 cups on a colour-7 background. The source cup hangs from the edge opposite the motion direction and opens toward the grid. The destination cup sits on the far edge. The shape is a 3 x wide pattern whose bottom frame row and middle row are always present, so its bounding box is always the full pattern width. In the input it floats above the far cup. In the output it is translated rigidly so that it lies laterally inside the source cup's interior and rests flush against the far edge. The generator places it at bcols[0]+1, which confirms the 'under the top bracket' reading over the mirrored-bottom-bracket reading.\n\nThe D4 transform only changes the motion direction. Clockwise rotation maps canonical 'down' to left, up and right for d4%4 = 1, 2, 3. The row-reversal used for d4>=4 leaves the motion direction unchanged and only mirrors positions. Mirroring is already a native symmetry of the family (the generator's flop).\n\nThe factory emits code for exactly one visible direction:\n- It finds the cup cells of colour palette[4] that touch the source edge and takes their lateral span.\n- It takes the moving cells: everything that is neither palette[7] nor palette[4].\n- It computes the lateral offset lo + (span - objsize)//2 - objmin, and the motion-axis offset that brings the object flush with the opposite edge.\n- It erases the object and restamps its exact cells, keeping any holes.\n\nThe cup's position is read directly from the visible grid, so reflections are handled automatically.",
+    "limitations": "Background and cup colours are taken from palette[7] and palette[4]. Every other colour is treated as the moving object. The program assumes there is exactly one source cup touching the anti-motion edge, as the constructor guarantees. If no cup cells touch that edge, the input is returned unchanged. The centring formula is the archived one. Inside the constructor's domain it equals 'cup start + 1' because the object's bounding width always equals the cup interior width. Fixtures agree with the generator. The rule text's stated ambiguity (top bracket vs. mirrored bottom bracket) is settled by the generator in favour of the top bracket, which is what is implemented. No constructor defects were found that affect the answer. One generator quirk does not change the answer: colour 0 in the latent colour list means 'skip cell', so shapes can contain holes. These holes are preserved because cells are translated rigidly. No tests have been run.",
+    "independent_source_review": {
+      "verdict": "accept",
+      "mechanism": "There are two colour-4 cups on a colour-7 background. The source cup is a top-edge bracket at bcols[0] that opens toward the grid. The destination cup sits on the far edge at bcols[1]. In the input, a 3 x wide pattern floats above the far cup. In the output it is translated rigidly so that its columns start at bcols[0]+1 (inside the source cup's interior) and its last row is flush with the far edge. The emitted solver does four things: it reads the source-cup span from the cells of palette[4] on the anti-motion edge; it treats every cell that is neither palette[7] nor palette[4] as the mover; it computes the lateral offset min(edge)+(span-size)//2-min(obj) and the axial offset that makes the object flush with the far edge; it erases the object and restamps it. One of four direction blocks is chosen by d4%4.",
+      "evidence": [
+        "Horizontal placement matches the constructor. The output uses bcols[0]+1+i%wide. span=wide+2 and the object's width is wide, so (span-size)//2=1 and min(edge)=bcols[0].",
+        "Object width is always wide. For wide=1 there is a single column. For wide=2, colors[2] and colors[3] (the middle row) are never zeroed, so min(cs)=bcols[1]+1 and the bounding width is 2.",
+        "Axial flush is correct. The bottom row is always present: colors[2] for wide=1, and at most one of colors[4]/colors[5] is zeroed for wide=2. The output therefore occupies row size-1, and dr=(H-1)-max(rs) reproduces size-3+i//wide even when top rows are missing.",
+        "Flop is handled from visible data. Under flop the top cup's leftmost column is size-2-wide-bcols[0], and the constructor's new left column is size-1-wide-bcols[0], which equals min(edge)+1.",
+        "Edge detection is clean. brow>=1 keeps the shape off row 0. The bottom cup only touches row size-1. The constraint bcols[0]+wide+2<bcols[1] separates the cups horizontally. The output shape rows are >= size-3 >= 5, so the shape never collides with either cup.",
+        "The mover set is exact. random_color(exclude=[4,7]) excludes the cup and background colours, 0 is used only as 'skip', and the palette permutation keeps the mapped colours distinct. Holes are preserved by rigid translation.",
+        "Rotation blocks are consistent with rotating canonical 'top cup, fall down'. rot1 has the cup on the right column and moves left. rot2 has the cup on the bottom row and moves up. rot3 has the cup on the left column and moves right. The d4>=4 mirror leaves the motion axis unchanged, as the flop symmetry implies.",
+        "The solver works directly in visible coordinates and has no untransform/native-solve/retransform wrapper.",
+        "The host audit passed: 1000 fresh pairs, 8000 augmented checks and 16 fixture variants, with no sampler rejections."
+      ],
+      "blocking_issues": [],
+      "nonblocking_limits": [
+        "The original ARC train pairs all have bcols=[0,5], so 'centre under the top bracket' and 'mirror of the bottom bracket' coincide there. The constructor settles this in favour of the top bracket, and fresh synthetic episodes with independent bcols usually disambiguate it. This is a property of the task, not a solver defect.",
+        "The fallback that returns the input unchanged when no cup touches the source edge, and the out-of-bounds guard on stamping, are unreachable within the constructor's domain.",
+        "The solver ignores the demonstrations. That is acceptable because the rule is deterministic and spatial, and it needs no colour-lookup association.",
+        "Correctness depends on the d4>=4 augmentation being a mirror that preserves the motion axis. This is inferred from the prior notes and the passing 8-variant augmented audit; I did not verify it independently from augmentation source."
+      ],
+      "required_context_checks": [
+        "Confirm that the host's D4 indexing (d4%4 = number of clockwise quarter-turns; d4>=4 adds a row-reversal mirror) matches the factory's assumed direction mapping. The augmented audit passing for all 8 variants suggests it does."
+      ],
+      "task_id": "df9fd884",
+      "factory_sha256": "b1eb18a326b7ec6bdfd607c75050a5e63ed626331ead1cd5c677d4988d975683",
+      "constructor_sha256": "0561ad2e77a3d5644804712d045fbb8886b420711393433b74aa0c61cab8149a"
+    },
+    "host_review": {
+      "decision": "accept",
+      "resolution": "Source review and execution audit agree on the constructor domain. Unreachable defensive branches are documented in the independent review.",
+      "augmentation_evidence": "Audit loops through all eight D4 transforms; the report d4=7 field is the final loop index, not the only tested transform. Shared palette and D4 apply to all episode pairs.",
+      "limitations": "Execution verification certifies sampled/domain cases, not universal rule identifiability from three demonstrations."
+    }
+  }
+}

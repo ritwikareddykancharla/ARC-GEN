@@ -1,0 +1,54 @@
+{
+  "task_id": "e3497940",
+  "factory_sha256": "b837df090e7c723f7dc1f1f5c5a287a97d172c249e296dd7ad0e3fddccc13232",
+  "constructor_sha256": "ac5dd67fce0602bb06a6cdba8600ab7f212de54396130baa4a5675bc12bf0845",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 198015609191496,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 3.2946622079471126,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "In the original orientation, a full-height divider of colour 5 splits the grid. The output is the left part. Each output cell takes the colour of its mirror cell across the divider (x -> 2d - x) when that cell is not background (0); otherwise it keeps the left-half cell.\n\nThe factory works out where the kept side ends up after the D4 transform. Without a flip the kept side starts on the left; with a row-reversal flip it starts on the right. Each clockwise rotation moves it one step round L -> T -> R -> B -> L. If the kept side ends up left or right, the emitted program looks for a full column of palette[5]. If it ends up top or bottom, it looks for a full row of palette[5]. The program then keeps the cells on that side of the divider and overlays the non-palette[0] cells mirrored across the divider (index -> 2d - index). Background and divider colours are fixed as constants palette[0] and palette[5].\n\nThe program finds the divider position from the pixels and chooses the most central candidate if there are several. If no divider is found, it falls back to the grid midline. This handles rectangular grids of any size in the constructor's domain.",
+    "limitations": "Where both halves are coloured at the same mirrored cell, the program lets the mirrored cell win. The generator always gives such cells the same colour, so overlay order never matters in this domain. If the divider line is missing, the program falls back to the grid midline, which is outside the generator's domain. If the two halves were unequal in size, mirrored cells that fall outside the grid would be ignored; the generator always makes the halves equal. No fixture contradictions or constructor defects were found. The program does not use the demonstrations.",
+    "independent_source_review": {
+      "verdict": "accept",
+      "mechanism": "The input has a full-height divider column of colour 5 at x=width. The output is the kept half, with the opposite half reflected across the divider and laid over it. The constructor writes each pixel (r,c) to grid[r][width-c-1] if left is set and to grid[r][width+c+1] if right is set. It always writes output[r][width-c-1]=color. The two input cells are exact mirrors (2*width-(width-c-1) = width+c+1), so the output is the union of the left half and the mirrored right half. The factory emits a solver that works in visible coordinates. It finds the full line of palette[5] (a column for L/R, a row for T/B) and keeps the cells on the D4-mapped side. For each kept cell it reads the cell at 2d-index and overwrites the kept cell when that mirror cell is not palette[0].",
+      "evidence": [
+        "Mirror indexing matches. In the constructor, width-c-1 and width+c+1 are symmetric about d=width, and in the emitted solver xm=2*d-x (or ym=2*d-y) is the same reflection.",
+        "Each (r,c) appears once per generated row because c runs over range(randint(1,4)). When both sides are set, they get the same colour. The overlay order therefore never changes a label, and no hidden latent decides a cell beyond what is visible on at least one side.",
+        "side=randint(0,2) always sets at least one of left or right. So every output pixel is visible in the input on the kept side, the opposite side, or both. The label is fully determined by visible content.",
+        "random_colors(2, exclude=[gray]) keeps pixel colours off 5. Under the palette map, no non-divider column or row can be entirely palette[5]. The divider is therefore the unique candidate, and the central-tie key and the w//2 or h//2 fallback are never reached in domain.",
+        "The emitted solver uses BG=palette[0] as a constant rather than the most common colour. This matters because a random scene can contain up to 64 cells of one colour, which can outnumber the zeros.",
+        "The kept-side constant (L/T/R/B) is a genuine orientation of the rule and is visible in the demonstrations: output size and placement show which half is the canvas. It is not a wrapper of the form untransform, native solve, retransform; the solve loops act directly on the augmented grid.",
+        "The factory's d4 side mapping relies on a convention: flip means row reversal, and k counts clockwise quarter turns. That convention is consistent with the host audit, which passed 8000 augmented pair checks and 16 fixture variants with no sampler rejections."
+      ],
+      "blocking_issues": [],
+      "nonblocking_limits": [
+        "The archived native transform takes the background as the most common colour. It would misidentify the background when one ink dominates, which the constructor can produce. The emitted factory program avoids this by using the palette[0] constant, so the defect is not inherited.",
+        "The midline fallback for a missing divider, and silently ignoring out-of-range mirror cells for unequal halves, are both outside the constructor's domain.",
+        "Overlay precedence (the mirrored cell wins) is never tested, because coincident cells always share a colour.",
+        "The demonstrations are not used at runtime. The orientation and palette constants are fixed per variant."
+      ],
+      "required_context_checks": [
+        "Confirm that the host's D4 index convention is row-reversal flip combined with clockwise rotation, as the side table assumes. The audit pass across all eight variants is consistent with this, but I cannot verify it from source.",
+        "No colour-association evidence check is needed: e3497940 is not in require_colour_evidence's list, and the rule involves no arbitrary colour lookup."
+      ],
+      "task_id": "e3497940",
+      "factory_sha256": "b837df090e7c723f7dc1f1f5c5a287a97d172c249e296dd7ad0e3fddccc13232",
+      "constructor_sha256": "ac5dd67fce0602bb06a6cdba8600ab7f212de54396130baa4a5675bc12bf0845"
+    },
+    "host_review": {
+      "decision": "accept",
+      "resolution": "Compare both folded-panel keep-side hypotheses on the same query; symmetric demonstrations cannot resolve a nonsymmetric query.",
+      "augmentation_evidence": "Audit loops through all eight D4 transforms; the report d4=7 field is the final loop index, not the only tested transform. Shared palette and D4 apply to all episode pairs.",
+      "limitations": "Execution verification certifies sampled/domain cases, not universal rule identifiability from three demonstrations."
+    }
+  }
+}

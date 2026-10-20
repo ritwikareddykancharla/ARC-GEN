@@ -1,0 +1,60 @@
+{
+  "task_id": "dd6b8c4b",
+  "factory_sha256": "e2499840127f8437bad296ddb06c47361bf46eaa288c310d0209980ee03b3a48",
+  "constructor_sha256": "57e8d07965c559fa7f037328ffd51de06714332c1969c93c3b0c881b2750962d",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 27709353246522,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 12.962046874919906,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The emitted program uses the palette-mapped constants palette[7] (ground), palette[6] (wall), palette[9] (item), palette[3] (ring) and palette[2] (core).\n\nIt works in visible coordinates as follows:\n1. It finds the core cell. If there are several, it picks the one with the most ring neighbours.\n2. It runs a 4-connected BFS from all nine tank cells through every non-wall cell. Items are passable, so an item sitting in a doorway does not block the search.\n3. It sorts the reached items by path length and takes at most nine.\n4. It erases the taken items to ground.\n5. It paints the same number of tank cells with the item colour.\n\nThe only D4-dependent part is the fill order. The constructor fills the tank in canonical reading order: the offsets (dr,dc) in row-major order from the top-left, with the centre fifth. The factory maps each of those offsets through the same transform used for the grids:\n- for d4>=4, mirror the columns, (dr,dc)->(dr,-dc);\n- then apply the clockwise rotation (dr,dc)->(dc,-dr) d4%4 times.\n\nThe result is a constant list of visible offsets, so the visible program fills, for example, column-wise from the top-right when the grid has been rotated once. BFS distances are D4-invariant, so the selection of items needs no change.",
+    "limitations": "Tie-breaking among equal path lengths at the ninth/tenth cut-off is unspecified. The constructor rejects such scenes, so the program's fallback order (distance, then visible row/column) is not a rule. Scenes with tied cut-offs would need host review.\n\nThe rule prose given in the task description says test 1 collects five 9s. The canonical fixture collects six, because (2,0) is reachable via row 10 and (9,8). The fixture is consistent with the uniform BFS rule, and this program follows the fixture. The prose is in error.\n\nThe program assumes the palette is a permutation and that exactly one valid tank exists, as the constructor guarantees. I have not run or tested the factory.",
+    "independent_source_review": {
+      "verdict": "accept",
+      "mechanism": "Run a 4-connected BFS from all nine tank cells through every non-wall (non-6) cell. 9s are passable. Take the reachable 9s in order of path length, at most nine (the tank's capacity). Erase each taken 9 to 7. Paint that many tank cells 9 in the tank's reading order, starting top-left; the centre 2 is the fifth cell. The emitted solver runs the same BFS directly on the visible grid using palette-mapped constants. Its only D4-dependent part is the constant FILL_ORDER: canonical row-major offsets mapped by a column mirror (if d4>=4) and then d4%4 clockwise turns (dr,dc)->(dc,-dr). BFS path lengths are D4-invariant, so 9 selection needs no specialisation.",
+      "evidence": [
+        "I hand-checked all five canonical pairs against the constructor rule:",
+        "Train 1: the only frame gap is (7,5), opening into the room in row 8. The 9s (8,7) and (8,8) are taken, and the tank cells (4,4) and (4,5) are filled.",
+        "Train 3: there are no walls. All four 9s are taken, and (4,4), (4,5), (4,6) and (5,4) are filled.",
+        "Train 2: there are 15 reachable 9s. Path lengths: (8,5)=2, (9,5)=3, (9,2)=7, (8,1)=9, (6,9)=11, (5,2)=11, (4,8)=12, (3,0)=15, (1,6)=19, then (0,6)=(1,7)=20. The ninth/tenth cut-off is 19 vs 20, so there is no tie, and the taken set equals the fixture's removed set.",
+        "Test 1: (9,8) is open, so the inner corridor connects through row 10 and column 0 to (2,0). Column 10 and row 0 are sealed off by row 1 and column 9. Six 9s are taken and six tank cells are filled, matching the canonical output. The constructor's note that the archived prose's 'five' is wrong is correct.",
+        "Test 2: path lengths are (10,4)=6, (1,2)=6, (3,2)=6, (10,6)=8, (1,10)=8, (3,10)=8, (7,2)=14, (7,10)=16, (10,0)=19, then (10,1)=20. Taking nine gives a full tank and keeps (10,1). (10,0) is reachable only by walking through the 9 at (7,2), which confirms that 9s are passable. (0,4) and (0,6) are walled in. All of this matches the fixture.",
+        "_collect's tie flag compares reached[8] and reached[9] by distance. Both generate() and _sample_scene reject ties, so the solver's (dist, visible row/col) tie order never decides an answer.",
+        "Walls, nines and tank are disjoint in every generation path. The frame, arms, rooms and segments all respect forbidden, which contains the tank. 'walled' layouts pass tank_set as forbidden. _check_scene re-checks overlaps for explicit scenes.",
+        "The output depends only on visible content: walls, 9s and tank position. No hidden latent decides a label. The single core 2 makes the tank unique, and _find_core's ring-neighbour scoring is only a harmless guard.",
+        "The factory has no untransform/native-solve/retransform wrapper. The fill-order offsets are the genuine orientation constant of the rule. tf's (dr,dc)->(dc,-dr) is a clockwise quarter turn. The host audit passed 8000 augmented checks, and partial fills are common, so a convention mismatch would have shown up.",
+        "The archived program uses BFS discovery order instead of a sorted (dist, p) order. The two differ only on ties, which are excluded."
+      ],
+      "blocking_issues": [],
+      "nonblocking_limits": [
+        "Fill orientation is an orientation constant that must be taught by demonstrations. A demo with 1 filled cell reveals only the starting corner. A demo with 9 (every overflow scene) reveals nothing. Under D4 augmentation, a visible episode whose demos all have fill counts of 1 or 9 leaves the order ambiguous between two variants that transpose about that corner. The constructor does not prevent such episodes, though they need several uninformative demos in a row.",
+        "The path-length selection under overflow, and the rule that 9s are passable, are learnable only from overflow or chokepoint demos. The generator steers toward these scenes but does not guarantee them per episode.",
+        "Tie-breaking at the ninth/tenth cut-off is undefined by the rule. The constructor excludes it, so the solver's coordinate tie order is out of domain.",
+        "Grid sizes other than 11x11, non-square grids and the 'walled' layout are synthetic extensions. All of them follow the same uniform BFS rule.",
+        "The solver assumes exactly one core cell and a palette that is a permutation, both of which the constructor guarantees."
+      ],
+      "required_context_checks": [
+        "Episode composition: if the query's fill count is between 2 and 8, at least one demonstration should have a fill count between 2 and 8. This fixes the starting corner and direction under the applied D4. Otherwise the transposed fill order is equally consistent with the visible demos. The 'same visible demos, conflicting answers' check may not catch this, because the transposed variant's demo inputs differ.",
+        "If the query is an overflow scene that needs path-length rather than Manhattan selection, or has a 9 on a chokepoint, prefer episodes in which at least one demonstration shows overflow or chokepoint behaviour.",
+        "Confirm that the host's D4 index convention (flip columns first, then rotate clockwise d4%4 times) matches the factory's tf. The passing 8000 augmented checks strongly suggest it does."
+      ],
+      "task_id": "dd6b8c4b",
+      "factory_sha256": "e2499840127f8437bad296ddb06c47361bf46eaa288c310d0209980ee03b3a48",
+      "constructor_sha256": "57e8d07965c559fa7f037328ffd51de06714332c1969c93c3b0c881b2750962d"
+    },
+    "host_review": {
+      "decision": "accept",
+      "resolution": "Compare all eight candidate tank fill orders on the SAME visible query, retaining only orders consistent with demonstration outputs. A partial row alone is insufficient. Regression covers counts 1, 2, 3 and 9 under all D4 transforms.",
+      "augmentation_evidence": "Audit loops through all eight D4 transforms; the report d4=7 field is the final loop index, not the only tested transform. Shared palette and D4 apply to all episode pairs.",
+      "limitations": "Execution verification certifies sampled/domain cases, not universal rule identifiability from three demonstrations."
+    }
+  }
+}

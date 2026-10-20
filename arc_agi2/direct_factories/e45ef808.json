@@ -1,0 +1,58 @@
+{
+  "task_id": "e45ef808",
+  "factory_sha256": "746680eb73bb1d2495f831f30bcbcea6f2b6cc14c01202c4d94af74f81f30f3b",
+  "constructor_sha256": "6e080d8ebb4f8f5ac5e5978751dcd1c0b01695251e739e78d6748dafebd7d260",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 61761013322967,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 8.878230332979001,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "In the generator, each of the 12 columns holds a bar of terrain colour 6 that rises from the bottom edge. Row 0 is a ceiling of colour 0, and the rest is sky of colour 1. The output paints the sky cells of the tallest bar with 4 and the sky cells of the shortest bar with 9.\n\nThe factory pushes the original 'down' vector (the direction of terrain growth) and the original 'right' vector (the tie-break axis) through the episode transform. The transform is an optional row reversal, then d4%4 clockwise turns. The results decide two constants for the emitted program:\n- whether the bars are visible columns or visible rows;\n- which direction of the bar index counts as original 'rightward'.\n\nThe emitted program works directly in visible coordinates. It measures each bar's height by counting the terrain colour palette[6] in that bar. It picks the tallest bar, breaking ties toward the bar furthest original-right, and paints that bar's palette[1] sky cells with palette[4]. It picks the shortest bar, breaking ties toward the bar furthest original-left, and paints its sky cells with palette[9]. The ceiling (palette[0]) and the terrain are never repainted, because only cells equal to palette[1] change. Grid sizes are read from the query, so rectangular shapes are handled.",
+    "limitations": "Constructor and fixture discrepancy for host review: the generator sets the 4 column with 'rightmost tallest' (>= scanning left to right). It sets the 9 column with 'leftmost shortest' (<= scanning right to left). The archived solver and the rule text instead break valley ties toward the rightmost column. The approved fixtures contain no tied valley, so the demonstrations do not determine the valley tie-break. This factory follows the generator, which produces the labels: peak ties go original-right and valley ties go original-left. Valley ties are common in fresh generated scenes, so the archived solver would disagree with labels there. The asymmetric valley tie-break is a generator-latent rule that no visible demonstration supports, and it should be reviewed.\n\nThe program assumes the generator's domain:\n- the terrain is the only palette[6] content and is contiguous from the floor;\n- the peak and the valley are distinct bars, which len(set(lengths)) >= 5 guarantees.\n\nRoles come from palette constants, not from inference from the demonstrations. No tests were run.",
+    "independent_source_review": {
+      "verdict": "hold",
+      "mechanism": "Twelve floor-anchored columns of terrain colour 6 sit under a sky of colour 1, with row 0 a ceiling of colour 0. The output paints the sky cells of the tallest column with 4 and the sky cells of the shortest column with 9. The constructor breaks peak ties toward the rightmost column (`if lengths[c] >= lengths[pos]: pos = c`, scanning c=0..11). It breaks valley ties toward the leftmost column (`pos = 11; for c in range(11,-1,-1): if lengths[c] <= lengths[pos]: pos = c`). The emitted solver measures bar heights by counting TER in each visible bar. It picks the peak with max(heights, SIGN*i) and the valley with min(heights, SIGN*i), then repaints only BG cells.",
+      "evidence": [
+        "Solver logic agrees with the constructor in the generator domain. Height by TER count is valid because terrain is contiguous from the floor. max(..., SIGN*i) gives the original-rightmost tallest bar. min(..., SIGN*i) gives the original-leftmost shortest bar. Only BG cells are repainted, so the ceiling and terrain are untouched. The constructor's `range(1, 12 - length)` yields exactly the sky cells.",
+        "Peak and valley cannot coincide, because `len(set(lengths)) >= 5` guarantees at least two distinct heights.",
+        "The solver works directly in visible coordinates: VERTICAL chooses columns or rows, SIGN orients the tie axis, and n is read from the query shape. There is no untransform/solve/retransform wrapper. Colours are palette-specialised rule colours.",
+        "The peak tie-break (rightmost) is demonstrated in canonical train pair 2, where x=7 and x=11 tie and x=11 gets 4.",
+        "No canonical fixture has a tied valley. The archived rule text and archived program (`valley = max(range(w), key=lambda x: (tops[x], x))`) break valley ties rightmost, which contradicts the constructor's leftmost choice.",
+        "Valley ties are frequently reachable in fresh scenes. The random walk clamps at `length < 1 -> 1` and `> 7 -> 7`, so runs of equal minimum heights, especially 1, are common across 12 columns.",
+        "`require_colour_evidence` returns immediately for e45ef808: it is not in the task list. No episode check ensures that a tied-valley demonstration precedes a tied-valley query.",
+        "Host audit passed: 1000 fresh pairs and 8000 augmented checks. This confirms the factory copies the constructor's labels, including the asymmetric valley tie-break."
+      ],
+      "blocking_issues": [
+        "Ambiguous valley tie-break that is not visibly supported. The constructor expression `for c in range(11, -1, -1): if lengths[c] <= lengths[pos]: pos = c` labels tied valleys leftmost. That convention is absent from the canonical demonstrations. It is also the opposite of the natural symmetric reading, since peaks demonstrably break rightmost, and the opposite of the archived rule and solver. Fresh episodes often contain queries with tied minimum columns. Nothing guarantees an in-episode demonstration showing which tied valley column receives 9. Such query answers are fixed by a generator convention rather than visible evidence, and the factory deliberately encodes that convention (`valley = min(..., SIGN * i)`). Matching host execution does not resolve this.",
+        "The same identifiability concern applies, more weakly, to peak ties in fresh episodes. The canonical fixture demonstrates rightmost, but nothing ensures each synthetic episode does."
+      ],
+      "nonblocking_limits": [
+        "The solver assumes TER appears only as floor-contiguous terrain and that BG is palette[1]. The constructor guarantees both.",
+        "The orientation mapping (row reversal when d4>=4, flipping `right` but not `down`, then clockwise turns) follows the host's transform convention. I could not verify it independently. Host checks over all 8 augmentations passed, which supports it.",
+        "Grid size is fixed at 12x12 by the constructor. The solver reads the shape from the query anyway."
+      ],
+      "required_context_checks": [
+        "Add an e45ef808 episode check. If a query has multiple columns sharing the minimum terrain height, require at least one demonstration whose input has a tied minimum and whose output shows the 9 on the original-leftmost tied column. Otherwise reject or resample the episode.",
+        "Optionally, apply the analogous requirement for tied maximum heights: a demonstration must show 4 on the original-rightmost tied column whenever a query has a tied peak.",
+        "Alternatively, the host should explicitly decide whether the constructor's leftmost valley convention counts as an admissible generator-defined rule despite contradicting the archived rule text."
+      ],
+      "task_id": "e45ef808",
+      "factory_sha256": "746680eb73bb1d2495f831f30bcbcea6f2b6cc14c01202c4d94af74f81f30f3b",
+      "constructor_sha256": "6e080d8ebb4f8f5ac5e5978751dcd1c0b01695251e739e78d6748dafebd7d260"
+    },
+    "host_review": {
+      "decision": "accept",
+      "resolution": "Resolved review hold with separate peak-tie and valley-tie evidence gates. Query ties require a demonstration of that tie category. Synthetic valley convention is leftmost, opposite the archived prose; canonical fixtures have no valley tie and remain unchanged.",
+      "augmentation_evidence": "Audit loops through all eight D4 transforms; the report d4=7 field is the final loop index, not the only tested transform. Shared palette and D4 apply to all episode pairs.",
+      "limitations": "Execution verification certifies sampled/domain cases, not universal rule identifiability from three demonstrations."
+    }
+  }
+}

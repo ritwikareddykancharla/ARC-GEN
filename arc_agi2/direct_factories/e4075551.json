@@ -1,0 +1,55 @@
+{
+  "task_id": "e4075551",
+  "factory_sha256": "5e200cfe3c156b7ad694c844aba07146de523ecd71b1906719b0da802b7bbb1c",
+  "constructor_sha256": "a475ebcff8ec4f3b5ba7d43ba92f5fb44fd171367dbee88db3dfd20738cd27c6",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 262890277225496,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 7.22127395903226,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The constructor places five single pixels. One is a red centre pixel, strictly inside the frame. The other four are unique extremes: one topmost, one bottommost, one leftmost and one rightmost.\n\nThe output draws a rectangular frame through these four extremes, coloured by their pixels. It then draws a grey cross along the red pixel's row and column, strictly inside the frame, and keeps the red cell red.\n\nThe constructor draws in this order: grey lines, then the side columns, then the top and bottom rows, then the pixels. So in the original orientation, the top and bottom rows own the four corners. That corner ownership is the only part of the mechanism that is not D4-symmetric.\n\nThe emitted program works directly in the visible coordinates:\n- When d4 % 4 is 0 or 2, the axes are not swapped, so the visible top and bottom rows own the corners.\n- When d4 % 4 is 1 or 3, the original rows become visible columns, so the visible left and right columns own the corners.\n- Reflections do not change ownership, because the frame is mirror-symmetric.\n\nColour roles are specialised as constants: red = palette[2], grey = palette[5], background = palette[0]. The colours of the four extremes are read from the pixels. Everything else is copied from the input.",
+    "limitations": "- **Assumes the constructor's domain.** The program expects exactly one red (palette[2]) pixel and four other non-background pixels with unique extremes in each direction. The generator guarantees this: the middle offsets lie in [3, size-4], so there are no ties.\n- **Background is fixed to palette[0]** rather than inferred from the grid.\n- **Inputs outside the domain are handled only minimally.** If no red pixel is present, the input is returned unchanged. Ties in the extremes are not resolved in any meaningful way, because the constructor never produces them.\n- **No fixture contradictions or constructor defects found.** Corner ownership follows deterministically from the draw order and matches all fixtures.",
+    "independent_source_review": {
+      "verdict": "accept",
+      "mechanism": "Five isolated pixels on background: one red centre and four outer pixels, each a unique extreme (top, bottom, left, right). The output draws a rectangle through the four extremes, each side in its pixel's colour. The constructor's draw order is grey, then the side columns over rows[0]..rows[4], then the top and bottom rows, then the pixels, so the top and bottom rows own the corners. A grey cross is drawn through the red cell strictly inside the frame, and the red cell stays red. The emitted solver reads the extremes in visible coordinates and specialises only corner ownership. For an even axis case (d4%4 in {0,2}) the visible rows own the corners. Otherwise the visible columns do, with full-height side columns and top/bottom slices limited to x0+1:x1.",
+      "evidence": [
+        "Unique extremes. tall and wide are drawn from 7..11, so randint(3, tall-4) and randint(3, wide-4) are non-empty. Every non-extreme row or column offset lies in [3, size-4], strictly between row and row+tall-1 (and col and col+wide-1). So the top/bottom rows and left/right columns each hold exactly one pixel, and no extreme pixel sits at a frame corner. No tie can occur.",
+        "Bounds. row \u2264 height-tall-1 gives a bottom row \u2264 height-2, and row \u2265 1. The same holds for columns. The frame always fits inside the grid.",
+        "Colours. random_colors(5, exclude=[2,5]) samples 5 distinct colours from the 7 allowed, and colors[2]=2 is then forced. Red is therefore unique, grey never appears in the input, and the background is 0. This matches the solver's RED=palette[2], GREY=palette[5] and BG=palette[0].",
+        "Overlaps are harmless. The left or right pixel can share the centre row (pair 1: left at row 8, red at row 8). It lies on its own column, which the constructor's later draws overwrite with the same colour. The top or bottom pixel can share the centre column, but it lies on the frame row. The final pixel draw rewrites only each pixel's own colour, so no hidden overwrite changes the label.",
+        "The constructor's grey lines extend over the frame cells but are overwritten by the frame. The solver's grey slices out[cy, x0+1:x1] and out[y0+1:y1, cx] are strictly inside, which gives the same result.",
+        "The solver works directly in augmented coordinates. It computes the extremes with min/max over visible rows and columns and has no untransform wrapper. Corner ownership is a genuine orientation constant, swapped between rows and columns under quarter turns and unaffected by reflections because the frame is mirror-symmetric.",
+        "Ownership is visible in every demonstration: all four corners are drawn in each output (for example, pair 2 corners (1,2)=8 and (11,2)=6). A D4-augmented episode therefore teaches the constant. Same-visible-demo conflicts cannot arise.",
+        "The host audit passed on 1000 fresh pairs, 8000 augmented checks (consistent with all 8 D4 variants) and 16 fixture variants. This corroborates the d4%4 axis-swap convention used in the factory."
+      ],
+      "blocking_issues": [],
+      "nonblocking_limits": [
+        "The background is fixed to palette[0] rather than inferred. The constructor always uses background 0 with only 5 foreground cells, so this matches the domain.",
+        "The no-red and no-other-pixel fallbacks return the input unchanged. These cases are out of domain because the constructor always places red and four extremes.",
+        "Ties among extremes would be resolved arbitrarily by min/max. The constructor excludes ties through its offset range [3, size-4].",
+        "The parity mapping between d4 and axis swap (d4%4 in {0,2} means no swap) depends on the host's D4 indexing. It is supported by the host audit passing across augmented checks, but it was not independently derivable from the source alone."
+      ],
+      "required_context_checks": [
+        "Confirm the host's D4 index convention maps d4%4 in {1,3} to an axis-swapping transform (transpose or quarter-turn). The 8000 augmented checks suggest this holds.",
+        "No arbitrary colour-association evidence check is needed. e4075551 is not in require_colour_evidence's list, outer colours are read from the input pixels, and red/grey are fixed role colours present in every demonstration."
+      ],
+      "task_id": "e4075551",
+      "factory_sha256": "5e200cfe3c156b7ad694c844aba07146de523ecd71b1906719b0da802b7bbb1c",
+      "constructor_sha256": "a475ebcff8ec4f3b5ba7d43ba92f5fb44fd171367dbee88db3dfd20738cd27c6"
+    },
+    "host_review": {
+      "decision": "accept",
+      "resolution": "Source review and execution audit agree on the constructor domain. Unreachable defensive branches are documented in the independent review.",
+      "augmentation_evidence": "Audit loops through all eight D4 transforms; the report d4=7 field is the final loop index, not the only tested transform. Shared palette and D4 apply to all episode pairs.",
+      "limitations": "Execution verification certifies sampled/domain cases, not universal rule identifiability from three demonstrations."
+    }
+  }
+}

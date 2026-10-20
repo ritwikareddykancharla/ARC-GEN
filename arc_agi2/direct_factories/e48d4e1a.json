@@ -1,0 +1,56 @@
+{
+  "task_id": "e48d4e1a",
+  "factory_sha256": "3f7eaad181eaf3665fc65248774a89659658d25ee00eca4db9a02902d1474a74",
+  "constructor_sha256": "377806b8acce5e546db6bdc116e657b3627b0a9262604d3931819e954cf1a580",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 229799556462897,
+  "d4": 7,
+  "unique_base_inputs": 599,
+  "seconds": 7.351649916963652,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The original rule: the input has a cross made of one full row and one full column in a single colour C. It also has a gray counter of n cells. The output is a blank background with the cross shifted by n. The vertical line moves left by n and the horizontal line moves down by n.\n\nThe factory maps the two original motion vectors through the D4 transform: left is (0,-1) and down is (1,0). A horizontal flip negates dc, and each clockwise rotation maps (dr,dc) to (dc,-dr). After the transform, one vector is horizontal; its sign (SH) is the shift for whatever line is a visible column. The other vector is vertical; its sign (SV) is the shift for the visible row. Under odd rotations the original column becomes a visible row, and this mapping handles that automatically.\n\nColour roles are fixed constants: the background is palette[0] and the counter is palette[5]. The cross colour is read from the grid, as the colour shared by a full uniform non-background row and a full uniform non-background column. The emitted program counts n as the cells that are neither background nor cross colour. It then draws the visible column at c+SH*n and the visible row at r+SV*n on a fresh background canvas. Everything works directly in visible coordinates; the program never rotates or recolours the grid.",
+    "limitations": "The program assumes the constructor's domain. The cross lines are complete, and the constructor guarantees this because col is at most size-2 and row is at least offset, so the gray never overwrites the cross. The cross colour is non-gray and differs from palette[0]. If common.random_color could return 0, the cross would be invisible and the task would be ill-posed; that would be a constructor issue for host review. Shifted positions are clamped to the grid as a safety measure, but the constructor already caps the offset so the clamp should never trigger. If no matching full row and column are found, the input is returned unchanged. I found no contradictions between the fixtures and the uniform rule, and no hidden tie-breaks. I have not run any tests.",
+    "independent_source_review": {
+      "verdict": "accept",
+      "mechanism": "The input contains a full row and a full column in one colour C, which form a cross. It also contains n gray counter cells (palette[5]) stacked in the top of the right-edge column. The output is a fresh background canvas with only the cross: the column is moved left by n and the row is moved down by n. The emitted solver locates a full uniform row and a full uniform column that share the same colour and are neither background nor gray. It counts n as the cells that are neither background nor C. It then redraws the visible column at c+SH*n and the visible row at r+SV*n. SH and SV are the original motion vectors (0,-1) and (1,0) passed through the D4 map tf. Whichever transformed vector is horizontal drives the visible column, and whichever is vertical drives the visible row. This automatically handles odd rotations, where the original column becomes a visible row.",
+      "evidence": [
+        "Constructor domain: row and col are each drawn from randint(1, size-2), so both lie in 1..8. offset = min(randint(1,3), size-row-1, row, col), so offset is at least 1. That guarantees at least one gray cell, which is a visible counter in every demonstration.",
+        "Cross integrity: the gray loop writes grid[r][size-1] for r < offset, and offset <= row. So r never equals row, and the cross row's last cell is never overwritten. Also col <= size-2, so the cross column never coincides with the gray column. Both cross lines are therefore complete, which the solver's np.all checks require.",
+        "Output bounds: offset <= size-row-1 and offset <= col give row+offset <= size-1 and col-offset >= 0. The solver's clamp is therefore never exercised in-domain, and the label is never clipped.",
+        "Colour roles: common.random_color(exclude=[gray]) draws from 1..9 minus 5. The cross colour is therefore never background 0 and never gray, matching the solver's exclusions of BG and GRAY under palette remapping.",
+        "Uniqueness: the only full uniform non-background line in each direction is the cross line. The gray column is at most 3 long out of 10 cells and is excluded as GRAY anyway. Its top cell is gray, so it cannot pass the g[0,x] test. No tie-break is needed.",
+        "Count: cells with value not in {BG, C} are exactly the offset gray cells, so n == offset. The label depends only on visible quantities: line positions, cross colour and gray count. No hidden latent enters.",
+        "Fixtures: all four train pairs and the test pair match a shift of column -n and row +n. The validate() parameters reproduce the archived fixtures exactly.",
+        "Visible-coordinate solving: the emitted program never rotates, flips or recolours the grid. Only the shift signs SH and SV and the colour constants are specialised, which counts as orientation constants taught by the demonstrations. Every demonstration shows the shift direction because offset >= 1.",
+        "Host audit: passed on 1000 fresh pairs, 8000 augmented checks and 16 fixture variants, with no sampler rejections. This is consistent with the tf rotation convention matching the host D4 convention. A wrong rotation sense would flip the signs on odd d4 variants and fail the audit."
+      ],
+      "blocking_issues": [],
+      "nonblocking_limits": [
+        "The offset distribution is biased toward smaller values near the edges because of the min caps. This is a distribution property, not a correctness issue.",
+        "The solver's fallbacks (returning the input unchanged when no matching cross is found, and clamping the shifted positions) are out-of-domain defensive code. The constructor excludes both cases.",
+        "The solver counts n over all non-BG, non-C cells and does not check where the counter sits. This matches the constructor domain but would not detect stray noise.",
+        "The correctness of the tf rotation sense relative to the host augmentation is inferred from the host audit passing all d4 variants. It cannot be verified from source alone."
+      ],
+      "required_context_checks": [
+        "None task-specific: e48d4e1a is not in the require_colour_evidence list. The rule involves no arbitrary colour lookup. The cross colour is read from the query, and the shift direction is a deterministic orientation constant demonstrated in every pair.",
+        "The standard D4 conflict rejection policy applies. No conflict is expected, because every demonstration shows a nonzero shift in a fixed direction."
+      ],
+      "task_id": "e48d4e1a",
+      "factory_sha256": "3f7eaad181eaf3665fc65248774a89659658d25ee00eca4db9a02902d1474a74",
+      "constructor_sha256": "377806b8acce5e546db6bdc116e657b3627b0a9262604d3931819e954cf1a580"
+    },
+    "host_review": {
+      "decision": "accept",
+      "resolution": "Source review and execution audit agree on the constructor domain. Unreachable defensive branches are documented in the independent review.",
+      "augmentation_evidence": "Audit loops through all eight D4 transforms; the report d4=7 field is the final loop index, not the only tested transform. Shared palette and D4 apply to all episode pairs.",
+      "limitations": "Execution verification certifies sampled/domain cases, not universal rule identifiability from three demonstrations."
+    }
+  }
+}

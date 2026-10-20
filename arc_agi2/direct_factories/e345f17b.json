@@ -1,0 +1,55 @@
+{
+  "task_id": "e345f17b",
+  "factory_sha256": "4218a44d363b450aecb6a10d3baf35f4b54fbb63200b69a77395e4fbcd68cea1",
+  "constructor_sha256": "36a112d0063caa1b799873ef414893434b8efce28e6959bdafb96757a395b5a2",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 118125748847973,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 1.7192797920433804,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The constructor puts two equal binary panels next to each other in the original frame. The left panel uses colour 6 and the right panel uses colour 5. The output is the same size as one panel. A cell is 4 where both panels are background (0) at that aligned position; every other cell is 0.\n\nA D4 transform acts on the concatenated grid blockwise. Each panel is transformed by the same map and the blocks are rearranged:\n- Rotations by 90 or 270 degrees turn the side-by-side layout into a top/bottom stack.\n- Reflections swap and flip the panels together.\n\nThe output undergoes the same transform, so cell alignment between the two visible panels and the visible output is preserved. The emitted program does the following in visible coordinates:\n1. It splits along the columns when d4 is an even number of quarter-turns, and along the rows when it is odd.\n2. It takes the two equal halves.\n3. It paints palette[4] wherever both halves equal palette[0], and fills every other cell with palette[0].\n\nNOR is symmetric, so it does not matter which visible half came from the original 6-panel or 5-panel. Panel colours are not needed; only background equality matters.",
+    "limitations": "- The program assumes the visible grid divides evenly into two panels along the axis implied by d4. The generator always gives 4x8, or 8x4 after an odd rotation; with an odd length, the leftover line would be ignored.\n- Background is taken as palette[0] and the mark colour as palette[4]. This assumes the palette is a permutation, so palette[0] differs from the panel colours palette[5] and palette[6].\n- Demonstrations are not consulted; all roles come from d4 and palette.\n- I found no constructor defects or fixture contradictions. The approved fixtures match the uniform NOR rule.",
+    "independent_source_review": {
+      "verdict": "accept",
+      "mechanism": "The input is two equal binary panels: colour 6 on 0 and colour 5 on 0, side by side in a 4x8 grid. The output is one 4x4 panel. A cell becomes 4 where both aligned panel cells are 0 (a cellwise NOR); every other cell is 0. The emitted solver specializes three things: the split axis (from d4 parity), the background (palette[0]) and the mark (palette[4]). It splits the visible grid into two equal halves along that axis and applies NOR directly in visible coordinates.",
+      "evidence": [
+        "Constructor: grid = common.grid(2*width, height) gives height rows and 2*width columns. top[i] goes to grid[i//width][i%width] and bottom[i] to grid[i//width][width + i%width], so the two panels are aligned cellwise. The output uses the same index (i//width, i%width) with 4 iff top[i]+bottom[i]==0. The label depends only on visible input cells; no hidden latent affects it.",
+        "Checked against the fixtures. Train 1 row 0 is left 6060, right 0055, output 0400. Train 4 row 3 is left 0060, right 0550, output 4004. Test 2 row 3 is left 6600, right 5550, output 0004. All are consistent with NOR.",
+        "The archived transform matches: half = w//2, and the mask is (left==0)&(right==0) set to 4.",
+        "Factory axis choice: split_rows = (d4%4)%2==1. Every D4 element either preserves axes (identity, rot180, the two axis flips) or swaps them (rot90, rot270, the two diagonal transposes). Under the usual encoding, where d4 is k quarter-turns plus an optional reflection, the parity of k decides which. Host audit ran 8000 augmented checks over 1000 fresh pairs (8 variants each) and passed, which is consistent with this convention.",
+        "D4 acts on the concatenated grid blockwise. Both panels and the output get the same map, so cell alignment survives; only panel order and side change. NOR is symmetric, so panel order does not matter, and the solver never needs to identify which panel is the 6-panel or the 5-panel.",
+        "This is not an untransform/native-solve/retransform wrapper. The solver slices and masks directly in visible coordinates.",
+        "Colour roles: BG=palette[0] and MARK=palette[4] are genuine rule colours. Every demonstration with a nonempty output shows the mark colour. There is no arbitrary lookup table, and the task is not in the episode_evidence_checks list, correctly.",
+        "Output canvas is np.full(a.shape, BG), so non-marked cells are background, matching the constructor's 0 mapped through the palette."
+      ],
+      "blocking_issues": [],
+      "nonblocking_limits": [
+        "The solver ignores the demonstrations. The split axis comes from d4 rather than from the visible shape. This is fine within the generator domain, where the shape is always 4x8 or 8x4 and SPLIT_ROWS agrees with the longer axis.",
+        "With an odd split-axis length the leftover line would be dropped silently. This is out of domain: the constructor always uses 2*width.",
+        "The solver relies on palette being a permutation, so that palette[0] differs from palette[5] and palette[6].",
+        "Random panels can occasionally give an all-background output, or nearly full or empty panels. These are legitimate instances of the rule, not label errors."
+      ],
+      "required_context_checks": [
+        "Confirm the host d4 encoding: odd (d4%4) must correspond exactly to the axis-swapping transforms (rot90, rot270, transpose, anti-transpose). The passing 8-variant audit suggests it does.",
+        "Standard check that no two D4 variants share visible demos and query input but have conflicting query answers. This is not expected here, because the rule is symmetric and alignment-preserving."
+      ],
+      "task_id": "e345f17b",
+      "factory_sha256": "4218a44d363b450aecb6a10d3baf35f4b54fbb63200b69a77395e4fbcd68cea1",
+      "constructor_sha256": "36a112d0063caa1b799873ef414893434b8efce28e6959bdafb96757a395b5a2"
+    },
+    "host_review": {
+      "decision": "accept",
+      "resolution": "A query needing NOR marks requires a demonstration exposing the mark colour.",
+      "augmentation_evidence": "Audit loops through all eight D4 transforms; the report d4=7 field is the final loop index, not the only tested transform. Shared palette and D4 apply to all episode pairs.",
+      "limitations": "Execution verification certifies sampled/domain cases, not universal rule identifiability from three demonstrations."
+    }
+  }
+}

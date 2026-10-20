@@ -10,6 +10,23 @@ from unittest.mock import patch
 from .runtime import reference, solver, verification_solver, grid
 
 
+class CommutingGapTests(unittest.TestCase):
+    def test_fourteen_independent_gaps_have_one_completed_grid(self):
+        """Equal-distance commuting links must not exhaust tie enumeration."""
+        module = importlib.import_module('tasks.task_f8f52ecc')
+        pair = module.generate(
+            height=5, width=30,
+            chains=[(2, [(2, 0), (2, 28)],
+                     [(2, col) for col in range(0, 29, 2)])])
+        expected = [[1] * 30 for _ in range(5)]
+        expected[2][:29] = [2] * 29
+        self.assertEqual(pair['output'], expected)
+        self.assertEqual(grid(verification_solver('f8f52ecc')(pair['input'])),
+                         expected)
+        self.assertEqual(sum(value == 2 for row in pair['input'] for value in row),
+                         15)
+
+
 class CompleteChainTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):

@@ -2785,4 +2785,24 @@ class GeneratorTests(unittest.TestCase):
         self.assertGreater(len(cells),40)
         with self.assertRaises(ValueError):m.generate(base=inp,cracks=[(sorted(cells),[])])
 
+    def test_bar_path_clearance_and_corner_extension(self):
+        m=importlib.import_module('tasks.task_cb2d8a2c')
+        pair=m.generate(direction='down',length=12,width=7,seed=3,
+                        bars=[(4,'L',5,1)])
+        # One blue marker requires a two-cell clearance in both directions.
+        expected={(0,3),(1,3)}|{(2,x) for x in range(3,7)}|{(y,6) for y in range(3,12)}
+        green={(y,x) for y,row in enumerate(pair['output']) for x,v in enumerate(row) if v==3}
+        self.assertEqual(green,expected)
+        self.assertEqual(pair['output'][4][:5],[2]*5)
+        self.assertEqual(pair['output'],grid(call(solver('cb2d8a2c'),pair['input'])))
+
+    def test_bar_path_tight_count_and_nonintersecting_rejection(self):
+        m=importlib.import_module('tasks.task_cb2d8a2c')
+        for direction in ('down','up','right','left'):
+            p=m.generate(length=29,width=5,num_bars=7,direction=direction)
+            self.assertEqual(sum(row.count(1) for row in p['input']),7)
+            self.assertEqual(p['output'],grid(call(solver('cb2d8a2c'),p['input'])))
+        with self.assertRaisesRegex(ValueError,'meet every bar'):
+            m.generate(length=10,width=10,seed=5,bars=[(4,'L',3,1)])
+
 if __name__=='__main__':unittest.main()

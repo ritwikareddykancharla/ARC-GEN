@@ -72,4 +72,6 @@ The authoring campaign uses three concurrent Claude CLI processes under the user
 
 A zero-error differential check is a bounded agreement test. It does not prove the saved solver is universally correct or that every original mechanism variant is covered.
 
-Reviewed standalone modules now include `135a2760`, `16de56c4`, and `62593bfd`; each passed 1,000 fresh seed checks and exact original-fixture reconstruction. Remaining CLI drafts are being authored and validated locally.
+**12 standalone modules are now reviewed and registered**: `009d5c81`, `0a2355a6`, `135a2760`, `16de56c4`, `1818057f`, `2de01db2`, `3194b014`, `423a55dc`, `45a5af55`, `505fff84`, `62593bfd`, and `97d7923e`. Each passed 1,000 seed checks and exact original train/test fixture reconstruction. These checks include the first 300 author-validation seeds and 700 additional seeds; they are not 1,300 independent samples. Each file has 1,000 distinct native inputs in that check.
+
+The nine most recent conversions replace existing research constructors with the upstream task-file interface, so they improve integration and reviewed coverage without adding nine previously unavailable task families. The total currently remains 33 new constructive families, of which 21 still await standalone conversion/review. Remaining CLI drafts are being authored and validated locally. Restricted shape and dimension ranges are documented per file and in `reports/standalone/`; the size-matching dataset builder must respect those supported ranges.

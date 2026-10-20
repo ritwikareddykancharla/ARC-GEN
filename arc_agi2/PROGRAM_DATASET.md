@@ -35,7 +35,7 @@ recorded. Passing finite audits does not prove unrestricted generalization.
 
 - 213 native direct-coordinate certificates admitted after fresh audits and
   supplied-fixture checks.
-- 808 admitted factories. Each passed 1,000 fresh pairs, 8,000 augmented pair
+- 812 admitted factories. Each passed 1,000 fresh pairs, 8,000 augmented pair
   checks and 16 supplied-fixture variants. Their audit records retain draft
   limitations and source/constructor hashes. These checks are finite evidence,
   not proof of correctness on every generated input.
@@ -46,7 +46,7 @@ recorded. Passing finite audits does not prove unrestricted generalization.
   counts must be computed as a union, not added.
 - Local exporter test: 18 fresh base episodes, 144 augmented PNG/program/grid
   records. It requested 20 bases and reported a two-episode shortfall.
-- The union currently admits 1027 of 1,120 families; 93 still need direct
+- The union currently admits 1031 of 1,120 families; 89 still need direct
   augmented program admission. Constructor coverage and program coverage are
   different gates.
 - Synthetic labels for `00d62c1b` now fill every enclosed background component,
@@ -784,3 +784,37 @@ Remaining: 70 semantic/context holds, 20 execution failures and three missing
 factories. No bulk generation or model training has launched.
 
 All 422 regression tests passed at the 1027-family checkpoint.
+
+## 1031-family checkpoint
+
+Four more families have direct programs with complete fresh-pair evidence.
+
+- `5b37cb25`: notch templates work even when small boxes have disconnected
+  corner fragments. Differently coloured overlapping plus stamps are rejected
+  in random sampling and by the solver, instead of following hidden draw order.
+  A saved identical-input/two-output witness demonstrates the ambiguity.
+  Equal-colour overlaps remain allowed; explicit historical calls are unchanged.
+- `8a004b2b`: scaled-template placements are enumerated and must yield one
+  output. The draft's margin-one assumption failed the approved query, whose
+  sprite touches the bottom edge. The repaired search permits edge contact
+  while retaining the four corner markers. No scale-one or scan-order fallback.
+- `b7256dcd`: different-colour markers seeding the same shape cell no longer
+  silently overwrite one another in random generation. The program rejects
+  conflicting component colours; same-colour markers remain valid. Explicit
+  historical calls and fixture labels are unchanged.
+- `e40b9e2f`: generated latent pinwheels are accepted only if they are the
+  unique minimum-addition quarter-turn completion. The program enumerates
+  integer/half-cell centres and rejects output ties, without distance or
+  reading-order tie breaks. The saved failure has an eleven-cell completion
+  whereas its latent label adds twelve.
+
+All four passed 1,000 fresh pairs, 8,000 augmented pair checks and 16 fixture
+variants each. Distinct-input counts were 1,000, 1,000, 999 and 997 respectively.
+All 80 complete episodes passed, giving 640 D4 records. All 429 regression tests
+passed. Source hashes and counterexamples are saved with the audit report.
+
+Remaining: 70 semantic/context holds, 16 execution failures and three missing
+factories. A separate subscription-CLI batch is drafting repairs for the 68
+older semantic holds, using their explicit host-review concerns. Those drafts
+are not automatically applied or admitted. No bulk generation or training has
+launched.

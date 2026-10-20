@@ -17,6 +17,64 @@
 import common
 
 
+def _place(rows, cols, idxs, colors, row, col, bump, size):
+  grid = common.grid(size, size)
+  output = common.grid(size, size)
+  for r, c, idx, color in zip(rows, cols, idxs, colors):
+    if idx in [-1, 0]: grid[row + r + bump][col + c] = color
+    if idx in [-1, 1]: grid[row - c][col + r] = color
+    if idx in [-1, 2]: grid[row + c + bump][col - r - bump] = color
+    if idx in [-1, 3]: grid[row - r][col - c - bump] = color
+    output[row + r + bump][col + c] = color
+    output[row - c][col + r] = color
+    output[row + c + bump][col - r - bump] = color
+    output[row - r][col - c - bump] = color
+  return grid, output
+
+
+def _rule_completions(grid):
+  """(added, completion) for every centre allowed by the visible rule."""
+  height, width = len(grid), len(grid[0])
+  cells = [(r, c, grid[r][c]) for r in range(height) for c in range(width)
+           if grid[r][c] != 0]
+  results = []
+  for cy2 in range(2 * height):
+    for cx2 in range(2 * width):
+      if (cy2 - cx2) % 2: continue
+      out = [list(line) for line in grid]
+      added, valid = 0, True
+      for r, c, color in cells:
+        dy, dx = 2 * r - cy2, 2 * c - cx2
+        for _ in range(3):
+          dy, dx = dx, -dy
+          ty, tx = dy + cy2, dx + cx2
+          if ty % 2 or tx % 2:
+            valid = False
+            break
+          nr, nc = ty // 2, tx // 2
+          if nr < 0 or nr >= height or nc < 0 or nc >= width:
+            valid = False
+            break
+          if out[nr][nc] == 0:
+            out[nr][nc] = color
+            added += 1
+          elif out[nr][nc] != color:
+            valid = False
+            break
+        if not valid: break
+      if valid: results.append((added, out))
+  return results
+
+
+def _unambiguous(grid, output):
+  """True iff the label is the unique fewest-added valid completion."""
+  results = _rule_completions(grid)
+  if not results: return False
+  best = min(added for added, _ in results)
+  winners = [out for added, out in results if added == best]
+  return len(winners) == 1 and winners[0] == output
+
+
 def generate(row=None, col=None, rows=None, cols=None, idxs=None, colors=None,
              bump=None, size=10):
   """Returns input and output grids according to the given parameters.
@@ -32,34 +90,29 @@ def generate(row=None, col=None, rows=None, cols=None, idxs=None, colors=None,
     size: the width and height of the (square) input grid
   """
   if row is None:
-    length = common.randint(2, 4)
-    bump = length == 2
-    row = common.randint(length + bump, size - length - bump)
-    col = common.randint(length + bump, size - length - bump)
-    rows, cols, idxs = [], [], []
-    for c in range(length):
-      for r in range(c + 1):
-        if (r > 1 or c > 1) and common.randint(0, 1): continue
-        rows.append(r)
-        cols.append(c)
-        if length == 2:
-          idxs.append(-1 if r < 1 and c < 1 else common.randint(0, 3))
-        else:
-          idxs.append(-1 if r < 2 and c < 2 else common.randint(0, 3))
-    color_list = common.random_colors(2)
-    colors = [common.choice(color_list) for _ in idxs]
+    for _ in range(1000):
+      length = common.randint(2, 4)
+      bump = length == 2
+      row = common.randint(length + bump, size - length - bump)
+      col = common.randint(length + bump, size - length - bump)
+      rows, cols, idxs = [], [], []
+      for c in range(length):
+        for r in range(c + 1):
+          if (r > 1 or c > 1) and common.randint(0, 1): continue
+          rows.append(r)
+          cols.append(c)
+          if length == 2:
+            idxs.append(-1 if r < 1 and c < 1 else common.randint(0, 3))
+          else:
+            idxs.append(-1 if r < 2 and c < 2 else common.randint(0, 3))
+      color_list = common.random_colors(2)
+      colors = [common.choice(color_list) for _ in idxs]
+      grid, output = _place(rows, cols, idxs, colors, row, col, bump, size)
+      if _unambiguous(grid, output):
+        return {"input": grid, "output": output}
+    raise RuntimeError("no unambiguous pinwheel scene within sampling budget")
 
-  grid = common.grid(size, size)
-  output = common.grid(size, size)
-  for r, c, idx, color in zip(rows, cols, idxs, colors):
-    if idx in [-1, 0]: grid[row + r + bump][col + c] = color
-    if idx in [-1, 1]: grid[row - c][col + r] = color
-    if idx in [-1, 2]: grid[row + c + bump][col - r - bump] = color
-    if idx in [-1, 3]: grid[row - r][col - c - bump] = color
-    output[row + r + bump][col + c] = color
-    output[row - c][col + r] = color
-    output[row + c + bump][col - r - bump] = color
-    output[row - r][col - c - bump] = color
+  grid, output = _place(rows, cols, idxs, colors, row, col, bump, size)
   return {"input": grid, "output": output}
 
 

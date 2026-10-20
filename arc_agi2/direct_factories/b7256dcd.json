@@ -1,0 +1,30 @@
+{
+  "task_id": "b7256dcd",
+  "factory_sha256": "108560466231f2d646b501703206d087d270124414e7e93b9681c4bf8c5b1ac1",
+  "constructor_sha256": "764b60670ff02af4e1cc9fa9f1cfe99e773d9f4e3c7f8eee43112719b82e7f51",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 37408972846320,
+  "d4": 7,
+  "unique_base_inputs": 999,
+  "seconds": 2.4657641670200974,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "diagnosis": "The failing check is the third demonstration pair, which the host evaluates as a query. Under this palette, background = 2, shape = 5, and d4 = 0. The relevant input rows are [5,5,5] / [4,2,2] / [5,5,5] / [3,2,2]. Marker 4 at (3,0) and marker 3 at (5,0) both touch the same shape cell (4,0), from above and below. Each marker touches exactly one shape cell, so the generator's draw() check (len(coords) > 1) does not reject the scene. Phase 1 runs in original row-major order, so it writes output[4][0] = 4 and then overwrites it with 3. Phase 2 floods 3 across the component with nothing to conflict against. The label 3 3 3 therefore comes only from the generator's scan order. Nothing visible picks 3 over 4. The candidate program, like the archived solver, takes the first touching marker in visible reading order and gets 4 4 4. The same tie under other D4 transforms would match either the first or the last marker depending on orientation, so no uniform visible rule reproduces these labels. When two different colours seed different cells of one component, the generator already rejects the scene, because phase 2 hits a foreign colour. The only gap is two different colours seeding the same cell.",
+    "constructor_issue": "Constructor defect for host review. draw() lets two markers of different colours touch the same 6-cell from different sides. The later marker in the generator's unrotated row-major scan silently overwrites the earlier one, so the label depends on a hidden scan-order tie-break that is not part of the intended visible rule. The scene is genuinely ambiguous under the rule 'a marker recolours every shape it touches'. The repair rejects such scenes. Phase 1 records which colour seeded each 6-cell and returns None if a different colour seeds the same cell. Together with the existing phase-2 conflict check, this guarantees that every recoloured component is touched by markers of a single colour only. This check depends only on the scene, not on which solution a solver finds. The canonical fixtures contain no such tie, so validate() inputs and outputs are unchanged. The random sampling loop is also bounded with a large attempt cap that raises an error instead of looping forever. The only distribution change is the removal of the ambiguous same-cell different-colour scenes. Sizes, shape counts, marker counts and the mechanism are unchanged.",
+    "explanation": "Label connected shape components from adjacent markers, erase markers, and reject conflicting colours for a component. Random generator now catches same-cell marker conflicts before overwrite; explicit calls and fixture outputs are unchanged.",
+    "limitations": "Colour roles remain palette-specialized. Same-colour markers sharing a component are allowed; random sampling has bounded retries.",
+    "host_review": {
+      "fixture_sha256": "66a45da366597b99a987088364fd86acbeeff3608fbf994c14939c53e92d838f",
+      "fixtures_unchanged": true,
+      "review": "Constructor and emitted program reviewed against failure, source mechanism and visible invariants. Fresh execution validation pending.",
+      "additional_repair": "Preserve original explicit calls; random sampling rejects conflicting/nonunique labels. Emitted programs reject nonunique outputs rather than choose palette/scan-order ties. Stamp overlap with equal colours remains allowed.",
+      "validation": "1000 fresh pairs,8000 D4/palette pair checks,16 fixture variants passed. Original explicit fixture hashes unchanged."
+    }
+  }
+}

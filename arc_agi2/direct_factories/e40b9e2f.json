@@ -1,0 +1,30 @@
+{
+  "task_id": "e40b9e2f",
+  "factory_sha256": "ad4eb704e759d15bb6f49c9a3e68cf8440442517dd8929163f01d5f3dc1b2e2f",
+  "constructor_sha256": "6f9ecc89c0be5ceee8437118564cb460c24c44ffd430168609017c10d688c863",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 141405402761253,
+  "d4": 7,
+  "unique_base_inputs": 997,
+  "seconds": 5.2896958329947665,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "diagnosis": "The failing check is the third demonstration (train index 2, d4=0, background 3). The generator built that scene with the pinwheel centre at cell (4,5), and its label adds 12 cells. A second centre also passes every check the visible rule makes: the half-cell point (3.5,5.5), doubled (7,11). Under that centre the four copies of the 3x3 block of 2s cover rows 2-5 and cols 4-7, which adds 6 cells and absorbs the stray 2 at (2,6). The two 7s at (4,8) and (6,5) fall in the same 4-orbit, so only (3,3) and (1,6) are added. The 2 at (3,2) adds (0,6), (4,9) and (7,5). No image leaves the grid or lands on a cell of a different colour. That completion adds 11 cells, fewer than the generator's 12. The rule in the task description and the archived solver both pick the centre that adds the fewest cells, so both predict the 11-cell completion. The candidate program applied that rule correctly. The label is the generator's latent 12-cell completion, which the visible rule does not select. This is not a coding error in the program, and no tie-break can fix it, because the two candidates differ in added count rather than tying.",
+    "constructor_issue": "generate() places a random pinwheel and emits the full union of its four rotations. It never checks that this union is the completion the visible rule selects, which is the conflict-free half-cell centre that adds the fewest cells. In sparse or stray-cell scenes, a different centre can yield a smaller valid 4-fold-symmetric completion. The input then admits two valid completions, the visible rule picks the other one, and the generator labels with its hidden centre (a latent-variable label). The host counterexample's third training pair is an instance of this. The approved fixtures are consistent with the rule; the problem lies only in random sampling. Proposed repair, for host review: in the random branch only, reject any scene where the generator's output is not the unique minimum-added completion over all valid centres. The check enumerates every centre and does not depend on which candidate a greedy solver reaches first. Two different centres can never give the same non-empty output, since that output would then be symmetric about two distinct points of a finite grid. So the check is simply that the generator's centre is the strict unique minimiser. It is D4- and palette-invariant: valid centres map equivariantly and added counts are preserved. The explicit-parameter path used by validate() is unchanged, so fixture inputs and outputs are untouched.",
+    "explanation": "Enumerate half-cell and cell centres, construct all conflict-free quarter-turn completions, and require one minimum-added output. Random latent pinwheels are retained only when their independently drawn output is that unique completion.",
+    "limitations": "Fewest-added completion is the fixture-supported family convention. No centre-distance or scan-order tie breaks. Explicit fixtures unchanged; random loop bounded.",
+    "host_review": {
+      "fixture_sha256": "77a3898ea9af400ac919c8d38227f580ae8c4d88692f24c0570b435289069a2b",
+      "fixtures_unchanged": true,
+      "review": "Constructor and emitted program reviewed against failure, source mechanism and visible invariants. Fresh execution validation pending.",
+      "additional_repair": "Preserve original explicit calls; random sampling rejects conflicting/nonunique labels. Emitted programs reject nonunique outputs rather than choose palette/scan-order ties. Stamp overlap with equal colours remains allowed.",
+      "validation": "1000 fresh pairs,8000 D4/palette pair checks,16 fixture variants passed. Original explicit fixture hashes unchanged."
+    }
+  }
+}

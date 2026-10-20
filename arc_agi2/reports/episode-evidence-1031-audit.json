@@ -1,0 +1,68 @@
+{
+  "checked_at": 1792528326.674102,
+  "reports": [
+    {
+      "task_id": "5b37cb25",
+      "sampled_episodes": 20,
+      "accepted_episodes": 20,
+      "missing_evidence_episodes": 0,
+      "verified_augmented_records": 160,
+      "sampler_rejections": [],
+      "errors": [],
+      "passed": true
+    },
+    {
+      "task_id": "8a004b2b",
+      "sampled_episodes": 20,
+      "accepted_episodes": 20,
+      "missing_evidence_episodes": 0,
+      "verified_augmented_records": 160,
+      "sampler_rejections": [],
+      "errors": [],
+      "passed": true
+    },
+    {
+      "task_id": "b7256dcd",
+      "sampled_episodes": 20,
+      "accepted_episodes": 20,
+      "missing_evidence_episodes": 0,
+      "verified_augmented_records": 160,
+      "sampler_rejections": [],
+      "errors": [],
+      "passed": true
+    },
+    {
+      "task_id": "e40b9e2f",
+      "sampled_episodes": 20,
+      "accepted_episodes": 20,
+      "missing_evidence_episodes": 0,
+      "verified_augmented_records": 160,
+      "sampler_rejections": [],
+      "errors": [],
+      "passed": true
+    }
+  ],
+  "summary": {
+    "families": 4,
+    "sampled_base_episodes": 80,
+    "accepted_base_episodes": 80,
+    "excluded_missing_evidence": 0,
+    "sampler_rejections": 0,
+    "verified_augmented_records": 640,
+    "errors": 0
+  },
+  "regression_tests": 429,
+  "production_generation": false,
+  "source_hashes": {
+    "common.py": "879eb61e360e4a47ee1d569408e8c66114ac068794721fe1de1b59aaa476586a",
+    "arc_agi2/colour_evidence.py": "86f181eba1ea40597313b56183819264ee31721e125c277566b7244e71b59012",
+    "tasks/task_5b37cb25.py": "430d11264632612ced3850b6fcc2324cbf6d09d9177d71b7de276dd6163f9c28",
+    "arc_agi2/direct_factories/task_5b37cb25.py": "81c1ec4e40db749e389552b761fa7c4f9751381e240e00bf2b23106aaa2efb35",
+    "tasks/task_8a004b2b.py": "afaa1870a8ade97fd3eafaae68c42bb84801fcb3eb7b6585a7127907cd57b8c8",
+    "arc_agi2/direct_factories/task_8a004b2b.py": "af3dfea0474681fa4767983bc128292417d47d1ad8503076c7624524e140a1b1",
+    "tasks/task_b7256dcd.py": "764b60670ff02af4e1cc9fa9f1cfe99e773d9f4e3c7f8eee43112719b82e7f51",
+    "arc_agi2/direct_factories/task_b7256dcd.py": "108560466231f2d646b501703206d087d270124414e7e93b9681c4bf8c5b1ac1",
+    "tasks/task_e40b9e2f.py": "6f9ecc89c0be5ceee8437118564cb460c24c44ffd430168609017c10d688c863",
+    "arc_agi2/direct_factories/task_e40b9e2f.py": "ad4eb704e759d15bb6f49c9a3e68cf8440442517dd8929163f01d5f3dc1b2e2f"
+  }
+}

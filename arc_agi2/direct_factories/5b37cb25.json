@@ -1,0 +1,30 @@
+{
+  "task_id": "5b37cb25",
+  "factory_sha256": "81c1ec4e40db749e389552b761fa7c4f9751381e240e00bf2b23106aaa2efb35",
+  "constructor_sha256": "430d11264632612ced3850b6fcc2324cbf6d09d9177d71b7de276dd6163f9c28",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 194811828751557,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 37.16422087501269,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "Find notch templates in all four visible directions and paint pluses using the corresponding frame-side colour. Conflicting stamp colours raise instead of resolving by draw order. Random sampling rejects only differently coloured overlaps; explicit historical calls and all fixtures are preserved. Equal-colour overlaps remain permitted.",
+    "limitations": "Native30x30 framed rectangular-blob scenes; notch wall-template assumptions are generator-specific. Constructor placement and notch loops bounded.",
+    "diagnosis": "The failing pair is counterexample train[2], with frame colours top 9, right 1, bottom 2, left 0. The box spanning rows 2-9 (cols 16-25) has a bottom notch centred at (9,22). The box spanning rows 11-17 (cols 19-25) has a top notch centred at (11,22). The two boxes are separated by the single background row 10, which `overlaps(..., spacing=1)` permits.\n\nBoth notches' outer arms land on the same cell, (10,22). The generator stamps pluses in box-index order, so the later box wins. Here that gave the bottom colour 2 rather than the top colour 9.\n\nBox index is a hidden latent: nothing visible decides which colour the shared cell should get. The failed program stamped in reading order and produced 9. No visible rule can recover the generator's label in general, because the mirrored configuration with the opposite box order looks identical.\n\nSeparately, the previous program's bounding-box notch scan fails on 5-wide or 5-tall boxes where notches detach the box corners. The new template detector removes that weakness.",
+    "constructor_issue": "Constructor defect requiring host review: plus stamps may overlap. This happens when the outer arms of facing notches meet in a one-cell gap between boxes, horizontally or vertically. The overlapped cell's output colour is then decided by hidden box ordering, not by the visible input.\n\nThe existing collision check `grid[row][col] not in [fgcolor, bgcolor]` can never fire inside the canvas, so it never rejects these scenes.\n\nProposed repair:\n- Track the cells already stamped in `draw()` and reject any scene where two pluses share a cell. This uniqueness condition does not depend on any solver.\n- Bound the box and plus sampling loops, with a RuntimeError if the budget is exhausted.\n\nThe explicit fixtures have no shared cells; I checked this by hand from their parameters, so their inputs and outputs are unchanged. The distribution change is a mild conditioning that excludes scenes where facing notches align across a one-cell gap. Sizes, box counts, side counts and plus offsets are unchanged.",
+    "host_review": {
+      "fixture_sha256": "ecabfbc17aef7c803bc1da45e7abb07ac992792cd4157a91a43a1e19f873e222",
+      "fixtures_unchanged": true,
+      "review": "Constructor and emitted program reviewed against failure, source mechanism and visible invariants. Fresh execution validation pending.",
+      "additional_repair": "Preserve original explicit calls; random sampling rejects conflicting/nonunique labels. Emitted programs reject nonunique outputs rather than choose palette/scan-order ties. Stamp overlap with equal colours remains allowed.",
+      "validation": "1000 fresh pairs,8000 D4/palette pair checks,16 fixture variants passed. Original explicit fixture hashes unchanged."
+    }
+  }
+}

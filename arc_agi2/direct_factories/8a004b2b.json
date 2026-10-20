@@ -1,0 +1,31 @@
+{
+  "task_id": "8a004b2b",
+  "factory_sha256": "af3dfea0474681fa4767983bc128292417d47d1ad8503076c7624524e140a1b1",
+  "constructor_sha256": "afaa1870a8ade97fd3eafaae68c42bb84801fcb3eb7b6585a7127907cd57b8c8",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 153132467682147,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 12.891740959021263,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "diagnosis": "The failing case is the third program check, which is train pair 3 of the counterexample episode (palette [7,3,1,6,5,9,2,0,8,4], d4=0). This scene is genuinely ambiguous; the factory did not mis-solve it.\n\n**What the scene contains.**\n- The frame corners (colour 5) sit at rows 4 and 10, columns 2 and 12, giving a 7x11 crop.\n- The template below the frame is [[6,6],[1,1]] in visible colours, which is [[3,3],[2,2]] in canonical colours.\n- Inside the frame there are two shown blocks with k=2: a 6-block at crop (2..3, 4..5) and a 1-block at crop (4..5, 4..5).\n\n**Why two answers fit.** Both template columns are identical (6 above 1), so the shown blocks fit either column equally well.\n- Offset (2,4): the shown blocks are template cells (0,0) and (1,0), and the sprite is stamped at columns 4..7.\n- Offset (2,2): the shown blocks are template cells (0,1) and (1,1), and the sprite is stamped at columns 2..5.\n\nBoth placements:\n- keep a margin of at least 1 from the frame edge;\n- have k=2;\n- have shown count 2, within the generator's [2, n//2] bounds;\n- satisfy the constraint k <= 7 - w.\n\nNo visible evidence separates them.\n\n**How each answer was chosen.**\n- The label used offset (2,4). That comes from the latent `shows` indices.\n- The archived solver reproduces it only through a hidden tie-break. No colour is unique, so it falls back to the largest object, then takes the first dictionary entry of that colour in canonical coordinates, which is (0,0).\n- The failed factory sorted its hypotheses by (-k, oy, ox) and picked ox=2, which disagrees with the label.\n\nThe earlier note about a missing `collections` import is unrelated to this failure.",
+    "constructor_issue": "The random branch of `generate()` can produce scenes where the visible input supports several (scale, offset) placements of the template, and these placements give different outputs. The label is then decided by latent `shows`, `irow` and `icol`, not by anything visible.\n\nThis happens whenever the shown blocks can be slid onto other template cells of the same colours. A typical case is a template with repeated columns or rows, or one with few colours.\n\nThe proposed repair adds a rejection step that depends only on the visible input:\n- It enumerates every k >= 2 and every offset with a margin of at least 1 from the frame edge.\n- A placement is consistent when every scaled template block is either entirely its own colour or entirely background, at least one block is shown, and every non-background interior cell is covered by a shown block.\n- The scene is kept only if exactly one distinct output results and that output equals the generated label.\n\nThis check does not depend on D4 and does not depend on which hypothesis a solver prefers.\n\nThe explicit fixture parameters in `validate()` and their outputs are unchanged. All four fixtures are uniquely determined under this check, because each has a uniquely coloured shown block: 2, 3, 2 and 8 respectively. That claim comes from reasoning by hand; I have not executed it.\n\nDistribution change: the repair removes ambiguous scenes. These are mostly scenes with repetitive templates where the shown blocks can be translated. Sampling is bounded at 1000 attempts and raises RuntimeError on exhaustion, which is expected to be practically unreachable.",
+    "explanation": "Enumerate every scale>=2 and translation of the visible template into the marker crop, including edge contact. All observed blocks must match whole template cells or background. Retain the four corner markers. Return an output only when all valid hypotheses produce the same grid. Random latent rendering is unchanged; filter rejects nonunique outputs.",
+    "limitations": "Native random scenes have a margin, but the approved test reaches the bottom edge. Uniqueness is therefore checked across edge-touching placements too. No scale1 fallback or coordinate-order choice.",
+    "host_review": {
+      "fixture_sha256": "90eafd40a35094bfcd937a7543175e6bc0974a2e758bdc9d862fe2e84ae0299b",
+      "fixtures_unchanged": true,
+      "review": "Constructor and emitted program reviewed against failure, source mechanism and visible invariants. Fresh execution validation pending.",
+      "additional_repair": "Preserve original explicit calls; random sampling rejects conflicting/nonunique labels. Emitted programs reject nonunique outputs rather than choose palette/scan-order ties. Stamp overlap with equal colours remains allowed.",
+      "fixture_correction": "CLI claim that every fixture obeys margin1 was false. The approved query uses mag4 and touches the bottom edge away from the corners. Both exhaustive gate and emitted solver now allow edge contact while preserving all four corner markers; no fallback guessing.",
+      "validation": "1000 fresh pairs,8000 D4/palette pair checks,16 fixture variants passed. Original explicit fixture hashes unchanged."
+    }
+  }
+}

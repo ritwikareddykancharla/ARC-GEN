@@ -34,6 +34,8 @@ def generate(fgcolor=None, bgcolor=None, colors=None, wides=None, talls=None,
     pidxs: The box indices of the pluses.
   """
 
+  random_sampling = fgcolor is None
+
   def draw():
     grid, output = common.grids(30, 30)
     common.rect(grid, 28, 28, 1, 1, bgcolor)
@@ -46,6 +48,7 @@ def generate(fgcolor=None, bgcolor=None, colors=None, wides=None, talls=None,
     for wide, tall, brow, bcol in zip(wides, talls, brows, bcols):
       common.rect(grid, wide, tall, brow, bcol, fgcolor)
       common.rect(output, wide, tall, brow, bcol, fgcolor)
+    stamped = {}
     for prow, pcol, pidx in zip(prows, pcols, pidxs):
       color = bgcolor
       if prow == 0: color = colors[0]
@@ -55,6 +58,11 @@ def generate(fgcolor=None, bgcolor=None, colors=None, wides=None, talls=None,
       for dr, dc in [(-1, 0), (0, 1), (1, 0), (0, -1), (0, 0)]:
         row, col = brows[pidx] + prow + dr, bcols[pidx] + pcol + dc
         if grid[row][col] not in [fgcolor, bgcolor]: return None, None
+        # Two pluses sharing a cell (e.g. outer arms of facing notches across
+        # a one-cell gap) would get a colour decided by hidden box order.
+        if random_sampling and (row, col) in stamped and stamped[row, col] != color:
+          return None, None
+        stamped[row, col] = color
         grid[row][col] = bgcolor
         output[row][col] = color
     return grid, output
@@ -64,34 +72,45 @@ def generate(fgcolor=None, bgcolor=None, colors=None, wides=None, talls=None,
     fgcolor = colors.pop()
     bgcolor = colors.pop()
     num_boxes = common.randint(3, 4)
-    while True:
-      wides = [common.randint(5, 20) for _ in range(num_boxes)]
-      talls = [common.randint(5, 20) for _ in range(num_boxes)]
-      brows = [common.randint(2, 28 - tall) for tall in talls]
-      bcols = [common.randint(2, 28 - wide) for wide in wides]
-      if not common.overlaps(brows, bcols, wides, talls, 1): break
-    while True:
-      prows, pcols, pidxs = [], [], []
-      for bidx, (wide, tall) in enumerate(zip(wides, talls)):
-        sides = common.sample([0, 1, 2, 3], common.randint(1, 3))
-        if 0 in sides:
-          prows.append(0)
-          pcols.append(common.randint(2, wide - 3))
-          pidxs.append(bidx)
-        if 1 in sides:
-          prows.append(common.randint(2, tall - 3))
-          pcols.append(wide - 1)
-          pidxs.append(bidx)
-        if 2 in sides:
-          prows.append(tall - 1)
-          pcols.append(common.randint(2, wide - 3))
-          pidxs.append(bidx)
-        if 3 in sides:
-          prows.append(common.randint(2, tall - 3))
-          pcols.append(0)
-          pidxs.append(bidx)
-      grid, _ = draw()
-      if grid: break
+    done = False
+    for _ in range(200):
+      placed = False
+      for _ in range(20000):
+        wides = [common.randint(5, 20) for _ in range(num_boxes)]
+        talls = [common.randint(5, 20) for _ in range(num_boxes)]
+        brows = [common.randint(2, 28 - tall) for tall in talls]
+        bcols = [common.randint(2, 28 - wide) for wide in wides]
+        if not common.overlaps(brows, bcols, wides, talls, 1):
+          placed = True
+          break
+      if not placed: continue
+      for _ in range(100):
+        prows, pcols, pidxs = [], [], []
+        for bidx, (wide, tall) in enumerate(zip(wides, talls)):
+          sides = common.sample([0, 1, 2, 3], common.randint(1, 3))
+          if 0 in sides:
+            prows.append(0)
+            pcols.append(common.randint(2, wide - 3))
+            pidxs.append(bidx)
+          if 1 in sides:
+            prows.append(common.randint(2, tall - 3))
+            pcols.append(wide - 1)
+            pidxs.append(bidx)
+          if 2 in sides:
+            prows.append(tall - 1)
+            pcols.append(common.randint(2, wide - 3))
+            pidxs.append(bidx)
+          if 3 in sides:
+            prows.append(common.randint(2, tall - 3))
+            pcols.append(0)
+            pidxs.append(bidx)
+        grid, _ = draw()
+        if grid:
+          done = True
+          break
+      if done: break
+    if not done:
+      raise RuntimeError("Sampling budget exhausted")
 
   grid, output = draw()
   return {"input": grid, "output": output}

@@ -16,6 +16,8 @@
 
 import common
 
+MAX_ATTEMPTS = 200000
+
 
 def generate(width=None, height=None, colors=None):
   """Returns input and output grids according to the given parameters.
@@ -24,12 +26,15 @@ def generate(width=None, height=None, colors=None):
     colors: A list of colors to use.
   """
 
+  random_sampling = width is None
+
   def draw():
     grid, output = common.grids(width, height)
     for i, color in enumerate(colors):
       output[i // width][i % width] = grid[i // width][i % width] = color
     # First, spread the color to any purple neighbors, and erase the pixel.
     num_changed = 0
+    seeded = {}
     for row in range(height):
       for col in range(width):
         if grid[row][col] in [6, 7]: continue
@@ -42,6 +47,11 @@ def generate(width=None, height=None, colors=None):
         if not coords: continue
         if len(coords) > 1: return None, None, None
         r, c = coords[0]
+        # Reject ambiguous scenes: two different marker colours touching the
+        # same purple cell would otherwise be resolved by hidden scan order.
+        if random_sampling and (r, c) in seeded and seeded[(r, c)] != grid[row][col]:
+          return None, None, None
+        seeded[(r, c)] = grid[row][col]
         output[r][c] = grid[row][col]
         num_changed += 1
     # Second, continue to spread the color to other purple neighbors.
@@ -64,7 +74,11 @@ def generate(width=None, height=None, colors=None):
   if width is None:
     width, height = common.randint(3, 7), common.randint(3, 7)
     num_shapes = 3 if width >= 6 and height >= 6 else 2
+    attempts = 0
     while True:
+      attempts += 1
+      if attempts > MAX_ATTEMPTS:
+        raise RuntimeError("b7256dcd sampler exceeded attempt budget")
       grid = common.grid(width, height, 7)
       wides = [common.randint(2, 3) for _ in range(num_shapes)]
       talls = [common.randint(1, 3) for _ in range(num_shapes)]

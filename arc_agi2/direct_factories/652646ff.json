@@ -1,0 +1,25 @@
+{
+  "task_id": "652646ff",
+  "factory_sha256": "f6bc4c5dd993b2434d3c8951c871d43b673db4aafe1e61c57edc5b9996379f18",
+  "constructor_sha256": "885cfd6dd63b3316bc2b337e515a4fd688ee020cc9c12f59b26cb57a193a7859",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 217523954554155,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 5.791003708029166,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Host-authored direct program with constructor/source review, source restrictions and execution verification.",
+  "draft_notes": {
+    "diagnosis": "The failure is in the second train pair (index 1) of the counterexample. That pair's background is 4, its rings are 5 (top), 3 and 6, and its noise colours are 7 and 9. Noise colour 9 has exactly two pixels, at (9,9) and (12,6). Both cells lie on ring 3's true placement, at offset (8,5). Every other in-grid cell of that placement is colour 3 or colour 5, so none is background. The failed factory had a fallback that accepted any colour with 2-7 cells if some in-range placement contained all its cells and had no background cells. Colour 9 passed that test with ring 3's placement and became a fourth ring. Ring 9 and ring 3 then share all twelve cells. Each colour is visible on some shared cell, so the occlusion relations formed a cycle 9<->3. The program emitted four bands instead of the expected three (5, 3, 6). The fallback was wrong because hidden cells of a lower ring are legitimately covered by other rings, so 'no background on the placement' does not separate noise from rings. The archive's alternative test (some connected piece of size >= 2) is also unsound for this generator, because same-coloured noise pixels can be adjacent, as colour 7 is at (6,11)-(6,12) in this pair. The repaired solver separates rings from noise by visible count. It also keeps a stricter fallback, explained in the explanation.",
+    "constructor_issue": "Some weak top-ring scenes are genuinely ambiguous. The constructor keeps uniquely identifiable weak rings and rejects only scenes with ambiguous output orders or latent-label disagreement. No minimum8 cutoff is added to the top ring.",
+    "explanation": "Infer background and strong rings with8+ visible pixels. Enumerate placements for every possible weak top-ring colour; the other colours must fit at most7 visible noise pixels using at most2 noise colours. Enumerate layer permutations, requiring each lower ring to show8+ pixels and visible overlap by its predecessor. Render each explanation behind noise and require pixel-for-pixel agreement with the input. Accept only one resulting colour order; multiple geometries with the same output order are allowed. Stack complete6x6 rings directly in visible output orientation. Random sampling uses the same exhaustive identifiability condition on independently generated latent labels; no changes to explicit examples.",
+    "limitations": "Native6x6 ring template;size10..20;2..4 rings with every lower ring >=8 visible pixels, predecessor overlap,3..7 noise draws using at most2 colours. Unique output order is required, though placements may be ambiguous if they yield the same order. Generator filtering conditions the distribution on identifiability.",
+    "author": "host",
+    "host_review": "Exact scene-explanation search retains weak top rings. Stress probe:5076 legal scenes with1..7 visible top-ring cells;2932 uniquely solvable,2144 ambiguous. True latent order was present in every feasible-order set. Random sampling now rejects only nonunique output order or label disagreement; original latent rendering and all explicit calls preserved. No blanket >=8 top-ring cutoff."
+  }
+}

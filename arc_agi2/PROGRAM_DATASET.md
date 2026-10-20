@@ -35,7 +35,7 @@ recorded. Passing finite audits does not prove unrestricted generalization.
 
 - 213 native direct-coordinate certificates admitted after fresh audits and
   supplied-fixture checks.
-- 805 admitted factories. Each passed 1,000 fresh pairs, 8,000 augmented pair
+- 808 admitted factories. Each passed 1,000 fresh pairs, 8,000 augmented pair
   checks and 16 supplied-fixture variants. Their audit records retain draft
   limitations and source/constructor hashes. These checks are finite evidence,
   not proof of correctness on every generated input.
@@ -46,7 +46,7 @@ recorded. Passing finite audits does not prove unrestricted generalization.
   counts must be computed as a union, not added.
 - Local exporter test: 18 fresh base episodes, 144 augmented PNG/program/grid
   records. It requested 20 bases and reported a two-episode shortfall.
-- The union currently admits 1024 of 1,120 families; 96 still need direct
+- The union currently admits 1027 of 1,120 families; 93 still need direct
   augmented program admission. Constructor coverage and program coverage are
   different gates.
 - Synthetic labels for `00d62c1b` now fill every enclosed background component,
@@ -746,3 +746,41 @@ Remaining: 68 semantic/context holds, 25 execution failures and three missing
 factories. Bulk generation and training remain unlaunched.
 
 All 415 regression tests passed at the 1024-family checkpoint.
+
+## 1027-family checkpoint
+
+`652646ff` uses complete scene explanations to distinguish partial rings from
+noise and recover the visible occlusion chain. Unlike the proposed draft
+restriction, it does not require eight visible cells on the top ring. A stress
+probe produced 5,076 legal scenes with 1–7 visible top-ring cells: 2,932 had
+unique output orders and 2,144 were ambiguous. The latent true order was among
+the feasible explanations in every case. All 23,456 D4/palette checks of the
+unique cases passed. Random sampling rejects nonunique output orders, preserving
+identifiable weak rings and the independently drawn latent outputs. Explicit
+fixtures are unchanged. Multiple placements with the same output order remain
+allowed. The scope remains the native ring template and noise model.
+
+`6cbe9eb8` now recognizes a frame fragmented into four pieces and propagates
+texture exclusions. The suggested solid-inside-solid constructor change was
+rejected: the original generator already forbids overwriting a solid interior.
+Its generator is unchanged.
+
+`ce602527` now requires a unique output source for a scale-two clipped clue.
+The generator rejects ambiguous sprite identities; the program does not use
+palette-priority ties or unsupported scale fallbacks. The random sampler's
+misplaced hidden-cell check was corrected and retries bounded. Explicit
+fixtures remain unchanged.
+
+All three passed 1,000 fresh pairs and 8,000 augmented checks each, with 1,000
+unique inputs per family. Frame generation hit nine five-second deadlines
+during that audit. Complete-episode validation accepted 59 bases and checked
+472 D4 records; one further frame episode hit its sampling deadline. These
+failed sampling attempts are recorded, not padded with duplicates.
+
+The 30-task Opus CLI repair batch has finished: 27 repair drafts and three
+diagnoses. Host review continues. Two drafts were moved to semantic/fixture
+holds rather than admitted through demo memorization or hidden-latent rules.
+Remaining: 70 semantic/context holds, 20 execution failures and three missing
+factories. No bulk generation or model training has launched.
+
+All 422 regression tests passed at the 1027-family checkpoint.

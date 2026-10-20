@@ -17,6 +17,84 @@
 import common
 
 
+from itertools import permutations as _ring_permutations
+
+_RING_TEMPLATE = [(0,2),(0,3),(1,1),(1,4),(2,0),(2,5),(3,0),(3,5),(4,1),(4,4),(5,2),(5,3)]
+
+
+def _ring_orders(grid):
+    h, w = len(grid), len(grid[0])
+    counts = {}
+    cells = {}
+    for y,row in enumerate(grid):
+        for x,c in enumerate(row):
+            counts[c] = counts.get(c,0)+1
+            cells.setdefault(c,set()).add((y,x))
+    bg = max(counts,key=counts.get)
+    colours = set(counts)-{bg}
+    strong = {c for c in colours if counts[c]>=8}
+    weak = colours-strong
+
+    def placements(c):
+        anchor = min(cells[c])
+        found = []
+        for ty,tx in _RING_TEMPLATE:
+            oy,ox = anchor[0]-ty,anchor[1]-tx
+            if not (-1 <= oy <= h-5 and -1 <= ox <= w-5):
+                continue
+            full = {(oy+dy,ox+dx) for dy,dx in _RING_TEMPLATE}
+            if cells[c] <= full:
+                found.append(full)
+        return found
+
+    fixed = {}
+    for c in strong:
+        candidates = placements(c)
+        if len(candidates)!=1:
+            return bg,set()
+        fixed[c] = candidates[0]
+    variants = [dict(fixed)]
+    # Only the top ring may show fewer than eight pixels. A candidate must
+    # explain its entire visible colour; the remaining colours are noise.
+    for c in weak:
+        for pos in placements(c):
+            if any(grid[y][x]==bg or grid[y][x] in strong
+                   for y,x in pos if 0<=y<h and 0<=x<w):
+                continue
+            variant = dict(fixed)
+            variant[c] = pos
+            variants.append(variant)
+    answers = set()
+    for masks in variants:
+        n = len(masks)
+        if n not in ((3,4) if h>15 else (2,3)):
+            continue
+        noise = colours-set(masks)
+        if not 1 <= len(noise) <= 2 or not 1 <= sum(counts[c] for c in noise) <= 7:
+            continue
+        if len({frozenset(p) for p in masks.values()}) != n:
+            continue
+        for order in _ring_permutations(masks):
+            if any(counts[c]<8 for c in order[1:]):
+                continue
+            # Every lower ring must visibly be covered by its immediate
+            # predecessor, exactly as the construction's chain rule requires.
+            if any(not any(0<=y<h and 0<=x<w and grid[y][x]==order[i-1]
+                           for y,x in masks[c]) for i,c in enumerate(order) if i):
+                continue
+            predicted = {}
+            for c in reversed(order):
+                for y,x in masks[c]:
+                    if 0<=y<h and 0<=x<w:
+                        predicted[y,x] = c
+            if all(c in noise or predicted.get((y,x),bg)==c
+                   for y,row in enumerate(grid) for x,c in enumerate(row)):
+                answers.add(tuple(order))
+    return bg,answers
+
+
+
+
 def generate(size=None, bgcolor=None, brows=None, bcols=None, bcolors=None,
              prows=None, pcols=None, pcolors=None):
   """Returns input and output grids according to the given parameters.
@@ -66,14 +144,18 @@ def generate(size=None, bgcolor=None, brows=None, bcols=None, bcolors=None,
     bgcolor = colors.pop()
     bcolors = [colors.pop() for _ in range(num_blobs)]
     pixel_colors = [colors.pop() for _ in range(2)]
-    while True:
+    for _ in range(200000):
       brows = [common.randint(-1, size - 5) for _ in range(num_blobs)]
       bcols = [common.randint(-1, size - 5) for _ in range(num_blobs)]
       prows = [common.randint(0, size - 1) for _ in range(num_pixels)]
       pcols = [common.randint(0, size - 1) for _ in range(num_pixels)]
       pcolors = common.choices(pixel_colors, num_pixels)
       grid, _ = draw()
-      if grid: break
+      if not grid: continue
+      _, possible_orders = _ring_orders(grid)
+      if possible_orders == {tuple(bcolors)}: break
+    else:
+      raise RuntimeError("652646ff: unique visible ring order sampling exhausted")
 
   grid, output = draw()
   return {"input": grid, "output": output}

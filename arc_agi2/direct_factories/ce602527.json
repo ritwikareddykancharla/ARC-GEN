@@ -1,0 +1,29 @@
+{
+  "task_id": "ce602527",
+  "factory_sha256": "cb44ce2d823455e8bcab858db86acbc745f1848b0eb45a7c20e8e1f9d7e70513",
+  "constructor_sha256": "932fea3545da1cd1dde5d9abdfccac9064efed863d6eec86bfe21773801165a2",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 48646821405630,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 11.383622374967672,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "diagnosis": "The failing case is train pair 2 of the counterexample episode (d4=0). Its background is 0 and the magnified clue is colour 3, which covers rows 0-7 and cols 0-3. The two small sprites are colour 5 (rows 0-3, cols 3-5) and colour 1 (rows 14-17, cols 3-5). Both have exactly the same shape: `..X / .X. / .X. / X.X`. Scaled by 2 and placed at offset (0,-2), either shape reproduces the visible 3-cells exactly; the hidden part is the sprite's column 0, which lands at cols -2..-1. So (clue=3, source=5) and (clue=3, source=1) are equally valid explanations. The visible pixels cannot tell which colour the output should be. The label picks 5 only because 5 was the generator's latent sprite index 0. The candidate's last-resort tie-break (colour value) chose 1. No rule based on visible pixels can recover the latent index, so this is a sampling defect, not a solver mechanism bug. Fitting it would mean inventing a hidden tie-break, such as nearest-to-clue or palette order.",
+    "constructor_issue": "1) Ambiguous scenes. The random branch never checks that the decoy sprite (idx 1) fails to explain the clue. When the two conway sprites are identical, or differ only in the row or column that the magnified copy pushes off-grid, both sprites match and the answer depends only on the hidden latent. The constructor should also reject scenes where the decoy, scaled, matches the source sprite, or any other cross pair matches. 2) Indentation bug. `if not some_hidden: legal = False` sits inside the per-pixel loop. It therefore requires the first processed sprite-0 pixel to already have a hidden scaled cell, which is an accidental extra rejection rather than 'some part is hidden'. The magnified offset is always forced to -2 or the far-side equivalent, so after the fix the intended condition always holds. 3) Unbounded loops. The `while True` sampling loops have no bound. 4) Shuffle quirk, noted only. common.conway_sprite shuffles the rows and cols lists independently, so sprites are random scatters with full row and column coverage, and duplicate pixels are rejected via `legal`. This lives in the common helpers, so I left it unchanged; it does not affect labels. The canonical fixtures are not contradicted. validate() passes explicit parameters, `legal` is ignored on that path, and its inputs and outputs are unchanged.",
+    "explanation": "Group pixels by colour on a strict-modal background. Enumerate scale2 matches for every ordered clue/source pair at every feasible clipped translation. Return the source crop only when all explanations determine one output. Random sampling checks the same output-source uniqueness and independently draws its latent answer. Fixed the misplaced some_hidden test and bounded the sampling loops. Original explicit fixtures unchanged.",
+    "limitations": "Scope is the native scale2 clipped-clue mechanism. Ambiguous source/output identity raises ValueError; there are no palette-order ties or scale3/4 fallbacks. Multiple clues for the same unique source remain permitted. Original shared conway_sprite helper is unchanged.",
+    "host_review": {
+      "fixture_sha256": "6aa588231027a199e994aa5a75e4c4d3b7ee680358e9613a483f0be2e8a6bb78",
+      "fixtures_unchanged": true,
+      "review": "Constructor and emitted program reviewed against failure, source mechanism and visible invariants. Fresh execution validation pending.",
+      "additional_repair": "Removed palette-ranked tie breaks and scale3/4 fallbacks. Enumerate scale2 explanations and require a unique output; constructor gate likewise checks output/source uniqueness rather than unnecessarily requiring unique clue identity."
+    }
+  }
+}

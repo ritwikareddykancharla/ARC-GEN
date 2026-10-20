@@ -1,0 +1,62 @@
+{
+  "checked_at": 1792527935.631489,
+  "reports": [
+    {
+      "task_id": "652646ff",
+      "sampled_episodes": 20,
+      "accepted_episodes": 20,
+      "missing_evidence_episodes": 0,
+      "verified_augmented_records": 160,
+      "sampler_rejections": [],
+      "errors": [],
+      "passed": true
+    },
+    {
+      "task_id": "6cbe9eb8",
+      "sampled_episodes": 19,
+      "accepted_episodes": 19,
+      "missing_evidence_episodes": 0,
+      "verified_augmented_records": 152,
+      "sampler_rejections": [
+        {
+          "seed": 93612077737052,
+          "error": "TimeoutError('reference/generator deadline')"
+        }
+      ],
+      "errors": [],
+      "passed": true
+    },
+    {
+      "task_id": "ce602527",
+      "sampled_episodes": 20,
+      "accepted_episodes": 20,
+      "missing_evidence_episodes": 0,
+      "verified_augmented_records": 160,
+      "sampler_rejections": [],
+      "errors": [],
+      "passed": true
+    }
+  ],
+  "summary": {
+    "families": 3,
+    "attempted_base_episodes": 60,
+    "sampled_base_episodes": 59,
+    "accepted_base_episodes": 59,
+    "excluded_missing_evidence": 0,
+    "sampler_rejections": 1,
+    "verified_augmented_records": 472,
+    "errors": 0
+  },
+  "production_generation": false,
+  "source_hashes": {
+    "common.py": "879eb61e360e4a47ee1d569408e8c66114ac068794721fe1de1b59aaa476586a",
+    "arc_agi2/colour_evidence.py": "86f181eba1ea40597313b56183819264ee31721e125c277566b7244e71b59012",
+    "tasks/task_652646ff.py": "885cfd6dd63b3316bc2b337e515a4fd688ee020cc9c12f59b26cb57a193a7859",
+    "arc_agi2/direct_factories/task_652646ff.py": "f6bc4c5dd993b2434d3c8951c871d43b673db4aafe1e61c57edc5b9996379f18",
+    "tasks/task_6cbe9eb8.py": "89b22283ed89f690e00120d6b9b04e2eec3096c039d1568f54ebd6d92e539109",
+    "arc_agi2/direct_factories/task_6cbe9eb8.py": "7fffea698e0456121b4ef884e908ecffffac832b1fd498fd86af7842c6593e58",
+    "tasks/task_ce602527.py": "932fea3545da1cd1dde5d9abdfccac9064efed863d6eec86bfe21773801165a2",
+    "arc_agi2/direct_factories/task_ce602527.py": "cb44ce2d823455e8bcab858db86acbc745f1848b0eb45a7c20e8e1f9d7e70513"
+  },
+  "regression_tests": 422
+}

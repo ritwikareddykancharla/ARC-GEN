@@ -14,11 +14,11 @@ This fork adds a reference-guided generator workflow and an adaptive episode bui
 
 - All **1,120** canonical tasks inventoried with saved Opus/Fable explanations, `transform(grid)` programs, provenance and separately labelled teaching fixtures.
 - **891 existing upstream generators** reproduce the canonical pair sets (pair ordering can differ between releases).
-- **167 new constructive implementations** have passed bounded validation, covering counting, selection, geometry, legends, relational motion, scaling, pattern construction and repair. Standalone conversion and review are tracked separately below.
+- **168 new constructive implementations** have passed bounded validation, covering counting, selection, geometry, legends, relational motion, scaling, pattern construction and repair. Standalone conversion and review are tracked separately below.
 - **Two variable-size extensions**: `0692e18c` (inverse self-tiling) and `00576224` (three-by-three tiling with mirrored middle band).
-- All 169 constructors (167 new families plus two size extensions) passed **300 bounded randomized checks each**: 166 use the archived pair solver, `78332cb0` uses the documented complete-chain verifier, `de493100` uses the dimension-aware reflection verifier, and `269e22fb` uses a demonstration-conditioned episode verifier. Of these, 168 reproduce all original examples; `581f7754` uses the explicitly approved, hash-pinned eight-cell teaching correction. Its unchanged canonical replay is reported separately as 4/5, versus 5/5 on the teaching copy. Outputs are constructed independently from latent parameters. New pictures in `269e22fb` are compared with an independent contextual verifier; its original fixtures still match the archived fixed-picture transform.
+- All 170 constructors (168 new families plus two size extensions) passed **300 bounded randomized checks each**: 167 use the archived pair solver, `78332cb0` uses the documented complete-chain verifier, `de493100` uses the dimension-aware reflection verifier, and `269e22fb` uses a demonstration-conditioned episode verifier. Of these, 169 reproduce all original examples; `581f7754` uses the explicitly approved, hash-pinned eight-cell teaching correction. Its unchanged canonical replay is reported separately as 4/5, versus 5/5 on the teaching copy. Outputs are constructed independently from latent parameters. New pictures in `269e22fb` are compared with an independent contextual verifier; its original fixtures still match the archived fixed-picture transform.
 - **22 additional fixed-size families / 111 size-parameter configurations** passed bounded 12-seed differential tests. Every such generated pair is checked again during generation. This is agreement evidence, not proof of semantic correctness.
-- **62 tasks still need constructive generators**. A saved transform is not itself an input generator. Reference packets and `reports/generator-roadmap.csv` provide the task-by-task backlog.
+- **61 tasks still need constructive generators**. A saved transform is not itself an input generator. Reference packets and `reports/generator-roadmap.csv` provide the task-by-task backlog.
 
 ## Inspect
 
@@ -74,9 +74,9 @@ The authoring campaign uses eight concurrent Claude CLI processes under the user
 
 A zero-error differential check is a bounded agreement test. It does not prove the saved solver is universally correct or that every original mechanism variant is covered.
 
-**161 standalone modules are now reviewed and registered** (the exact list lives in `task_registry.py`). Each passed 1,000 seed checks and exact reconstruction of its approved validation fixture: canonical for 160 modules, the labelled teaching copy for `581f7754`. The first sixteen used seeds 0..999 (including their 300 author-validation seeds); the next one hundred and forty-five used independent seeds 20,000..20,999. The regression suite also checks registered source hashes and seeds 10,000..10,019.
+**162 standalone modules are now reviewed and registered** (the exact list lives in `task_registry.py`). Each passed 1,000 seed checks and exact reconstruction of its approved validation fixture: canonical for 161 modules, the labelled teaching copy for `581f7754`. The first sixteen used seeds 0..999 (including their 300 author-validation seeds); the next one hundred and forty-six used independent seeds 20,000..20,999. The regression suite also checks registered source hashes and seeds 10,000..10,019.
 
-Twenty-four conversions replace earlier research constructors with the upstream task-file interface. The total is now 161 new constructive families, with 6 still awaiting standalone conversion/review. Remaining CLI drafts are authored and validated locally. Restricted shape and dimension ranges are documented per file and in `reports/standalone/`; the size-matching builder must respect those ranges.
+Twenty-four conversions replace earlier research constructors with the upstream task-file interface. The total is now 168 new constructive families, with 6 still awaiting standalone conversion/review. Remaining CLI drafts are authored and validated locally. Restricted shape and dimension ranges are documented per file and in `reports/standalone/`; the size-matching builder must respect those ranges.
 
 Independent validation exposed a background-inference failure in the saved `d4c90558` solver: a thick frame can dominate a small grid, causing the checker to interpret the wrong colour as background. The constructor now samples the explicit domain where 0 strictly outnumbers every other colour. The failing examples are retained in `reports/standalone/d4c90558-counterexamples.json`. This restriction is not evidence that the conceptual counting rule fails on denser scenes.
 
@@ -418,3 +418,14 @@ A palette-validation defect could previously paint None into a panel when frame 
 In 843 scenes a repaired bar touches a foreign colour while its cells remain in their own panel. This corrects the critic's claim that all foreign-colour adjacency is excluded. Adjacent notches, 12×12 rectangles and scenes without visible frame remain valid explicit extensions, separately documented from native sampling. All four defect directions and 376 overlapping panel-box cases were observed. Eleven invalid controls reject; critic retests have 20 successful reference matches and 10 intended rejections. All 124 regression tests pass.
 
 Coverage is **1,058/1,120**, with **62 missing** and **161 reviewed standalone additions**. Bulk generation and model training remain stopped pending complete reviewed coverage.
+
+
+## Dotted-path connectivity review — 2026-10-20
+
+Registered `9ba4a9aa`: follow the colour of the first dot from a checkerboard through connected dotted paths and extract the reached ring. Added disconnected same-colour tails behind a different-colour barrier, so colour matching alone can select a wrong ring. This is a labelled synthetic extension with an explicit `disconnected_decoy` control. Random scenes now receive post-construction target and solid-window checks.
+
+All four canonical pairs replay exactly; 1,000 independent random inputs agree with the archived solver. A separate input-only box detector and union-find connectivity audit passes 1,693 distinct scenes, including every supported height/width combination from 14 to 30. Of those scenes, 1,024 contain a same-colour decoy; 480 of 1,000 defaults contain one. Forced decoys work at every supported shape. Ten invalid controls reject, and the critic-case retest records 29 successful calls and eight intended rejections.
+
+The random generator covers spaced tree layouts with optional non-main continuation beyond the target; it does not claim arbitrary cyclic graph coverage. Ring count and walk length remain sampled controls. The full regression suite passes **126 tests**, including a disconnected-target counterexample and forced decoy checks at 14×14 and 30×30.
+
+Coverage is **1,059/1,120**, with **61 missing** and **162 reviewed standalone additions**. Six older constructive drafts still need standalone conversion and review. Bulk generation and model training remain stopped pending complete reviewed coverage.

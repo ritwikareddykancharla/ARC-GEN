@@ -2069,4 +2069,46 @@ class GeneratorTests(unittest.TestCase):
         self.assertEqual(p['output'],grid(call(solver('9b5080bb'),p['input'])))
         self.assertFalse(any(0 in row for row in p['input']))
 
+
+    def test_dotted_route_rejects_same_colour_disconnected_target(self):
+        m=importlib.import_module('tasks.task_9ba4a9aa')
+        args=dict(height=14,width=14,background=0,
+            boxes=[('checker',1,1,1,2),('ring',1,9,4,5),('ring',9,5,7,8)],
+            segments=[(3,2,4,2,8),(6,4,6,4,6),(3,6,6,8,6)])
+        p=m.generate(**args,target=1)
+        self.assertEqual(p['output'],[[4,4,4],[4,5,4],[4,4,4]])
+        self.assertEqual(p['output'],grid(call(solver('9ba4a9aa'),p['input'])))
+        with self.assertRaises(ValueError):m.generate(**args,target=2)
+        with self.assertRaises(ValueError):m.generate(**args,target=1,disconnected_decoy=True)
+        for value in (1,'yes'):
+            with self.assertRaises(ValueError):m.generate(disconnected_decoy=value)
+
+    def test_dotted_route_forced_decoy_control_at_size_extremes(self):
+        m=importlib.import_module('tasks.task_9ba4a9aa')
+        original=m._render;captured=[]
+        def record(h,w,bg,boxes,dots):
+            captured.append((boxes,dots))
+            return original(h,w,bg,boxes,dots)
+        with patch.object(m,'_render',record):
+            for size in (14,30):
+                for decoy in (False,True):
+                    for seed in range(10):
+                        random.seed(seed)
+                        p=m.generate(height=size,width=size,disconnected_decoy=decoy)
+                        boxes,dots=captured[-1]
+                        _,top,left,_,_=next(box for box in boxes if box[0]=='checker')
+                        adjacent={(top-1,left+k) for k in range(3)}|{(top+3,left+k) for k in range(3)}
+                        adjacent|={(top+k,left-1) for k in range(3)}|{(top+k,left+3) for k in range(3)}
+                        starts=set(dots)&adjacent;self.assertEqual(len(starts),1)
+                        start=next(iter(starts));colour=dots[start]
+                        same={pos for pos,c in dots.items() if c==colour}
+                        reached={start};pending=[start]
+                        while pending:
+                            y,x=pending.pop()
+                            for pos in ((y-2,x),(y+2,x),(y,x-2),(y,x+2)):
+                                if pos in same and pos not in reached:
+                                    reached.add(pos);pending.append(pos)
+                        self.assertEqual(bool(same-reached),decoy)
+                        self.assertEqual(p['output'],grid(call(solver('9ba4a9aa'),p['input'])))
+
 if __name__=='__main__':unittest.main()

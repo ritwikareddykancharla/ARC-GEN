@@ -11,6 +11,44 @@ from .fixture_policy import fixture_basis
 from .augmentation import apply_episode,settings,exhaustive_variants
 
 class GeneratorTests(unittest.TestCase):
+    def test_reachable_boundary_marker_floating_and_whole_objects(self):
+        m=importlib.import_module('tasks.task_8f3a5a89')
+        pair=m.generate(height=10,width=10,objects=[[[0,3,2,5]],[[4,6,5,7]]])
+        self.assertEqual(pair['output'][0][4],1)  # Interior of a surviving wall.
+        self.assertEqual(pair['output'][4][5],8)  # Floating island gets no frame.
+        self.assertEqual(pair['output'][8][1],8)  # The marker is not a wall.
+        self.assertEqual(pair['output'],grid(call(solver('8f3a5a89'),pair['input'])))
+        pair=m.generate(height=5,width=7,objects=[[[0,3,4,3]]])
+        self.assertEqual((len(pair['input']),len(pair['input'][0])),(5,7))
+        self.assertEqual(pair['output'][0],[7,7,7,1,8,8,8])
+        self.assertEqual(pair['output'],grid(call(solver('8f3a5a89'),pair['input'])))
+        boxed=m.generate(height=5,width=5,objects=[[[3,0,3,1],[4,1,4,1]]])
+        self.assertEqual({v for row in boxed['output'] for v in row},{6,8})
+
+    def test_reachable_boundary_bounds_before_allocation_and_near_bulges(self):
+        m=importlib.import_module('tasks.task_8f3a5a89')
+        with patch.object(m,'_rect_cells',side_effect=AssertionError('allocated')):
+            with self.assertRaisesRegex(ValueError,'bounds'):
+                m.generate(height=10,width=10,objects=[[[0,0,10**9,10**9]]])
+        for objects in [2,[2],[[]],[[[True,0,1,1]]]]:
+            with self.assertRaises(ValueError):m.generate(height=10,width=10,objects=objects)
+        random.seed(4)
+        wall={(y,8) for y in range(20)}
+        augmented=m._add_bulges(20,20,wall,(19,0))
+        self.assertTrue(wall<=augmented)
+        self.assertTrue(all(x<=8 for y,x in augmented))
+
+    def test_reachable_boundary_retains_mode_after_failed_proposal(self):
+        m=importlib.import_module('tasks.task_8f3a5a89');attempts=[];original=m._try_scene
+        def fail_once(h,w,mode):
+            attempts.append(mode)
+            return None if len(attempts)==1 else original(h,w,mode)
+        random.seed(212)
+        with patch.object(m,'_try_scene',fail_once):pair=m.generate(height=10,width=10)
+        self.assertGreater(len(attempts),1)
+        self.assertEqual(len(set(attempts)),1)
+        self.assertEqual(pair['output'],grid(call(solver('8f3a5a89'),pair['input'])))
+
     def test_comb_slot_full_depth_and_near_miss_rejections(self):
         m=importlib.import_module('tasks.task_8b9c3697')
         base=dict(width=20,height=20,background=3,ink=4,

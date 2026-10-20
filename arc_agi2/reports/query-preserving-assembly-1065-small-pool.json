@@ -1,0 +1,164 @@
+{
+  "task_id": "b7cb93ac",
+  "scope": "Local production-assembler audit from256 native random draws. Every row verified with combined program/grid make_record; no bulk job or publication.",
+  "pool_pairs": 256,
+  "source_hash": "8a656f32ac253bad48390e10ee27e41e32068bc6a9b93412e93a3bf51f0cb70d",
+  "metrics": {
+    "shards": [],
+    "episodes": 648,
+    "fresh_episodes": 81,
+    "requested_fresh_episodes": 82,
+    "spatial_variant_upper_bound": 648,
+    "symmetric_variants_removed": 0,
+    "variants_per_fresh_episode": {
+      "8": 81
+    },
+    "query_histograms": {
+      "input": {
+        "height": {
+          "16": 60,
+          "15": 80,
+          "10": 56,
+          "8": 80,
+          "13": 84,
+          "9": 96,
+          "11": 68,
+          "12": 68,
+          "14": 56
+        },
+        "width": {
+          "15": 80,
+          "16": 60,
+          "10": 56,
+          "8": 80,
+          "13": 84,
+          "9": 96,
+          "11": 68,
+          "12": 68,
+          "14": 56
+        },
+        "longest": {
+          "16": 120,
+          "13": 88,
+          "10": 32,
+          "11": 72,
+          "15": 128,
+          "9": 40,
+          "14": 88,
+          "8": 16,
+          "12": 64
+        },
+        "shapes": {
+          "16x15": 12,
+          "15x16": 12,
+          "16x10": 4,
+          "10x16": 4,
+          "8x16": 16,
+          "16x8": 16,
+          "13x16": 4,
+          "16x13": 4,
+          "9x16": 4,
+          "16x9": 4,
+          "11x16": 12,
+          "16x11": 12,
+          "12x16": 8,
+          "16x12": 8,
+          "13x8": 4,
+          "8x13": 4,
+          "10x13": 12,
+          "13x10": 12,
+          "13x13": 24,
+          "12x13": 4,
+          "13x12": 4,
+          "13x11": 8,
+          "11x13": 8,
+          "9x13": 4,
+          "13x9": 4,
+          "10x9": 8,
+          "9x10": 8,
+          "10x8": 8,
+          "8x10": 8,
+          "8x11": 4,
+          "11x8": 4,
+          "11x9": 16,
+          "9x11": 16,
+          "11x10": 16,
+          "10x11": 16,
+          "9x15": 16,
+          "15x9": 16,
+          "15x13": 12,
+          "13x15": 12,
+          "14x15": 8,
+          "15x14": 8,
+          "15x8": 12,
+          "8x15": 12,
+          "10x15": 8,
+          "15x10": 8,
+          "15x11": 4,
+          "11x15": 4,
+          "15x15": 8,
+          "8x9": 12,
+          "9x8": 12,
+          "9x9": 16,
+          "14x9": 8,
+          "9x14": 8,
+          "13x14": 12,
+          "14x13": 12,
+          "14x12": 16,
+          "12x14": 16,
+          "11x14": 4,
+          "14x11": 4,
+          "14x14": 8,
+          "8x8": 16,
+          "9x12": 12,
+          "12x9": 12,
+          "8x12": 8,
+          "12x8": 8,
+          "11x12": 4,
+          "12x11": 4,
+          "12x12": 16
+        }
+      },
+      "output": {
+        "height": {
+          "3": 324,
+          "4": 324
+        },
+        "width": {
+          "4": 324,
+          "3": 324
+        },
+        "longest": {
+          "4": 648
+        },
+        "shapes": {
+          "3x4": 324,
+          "4x3": 324
+        }
+      }
+    },
+    "relations": {
+      "shrink": 648
+    },
+    "failures": {
+      "no_three_demo_packing_context": 1,
+      "episode_constraints_exhausted": 1
+    },
+    "query_context_shortfalls": [
+      {
+        "query_input_hash": "bf53c0feb1f529413346905258c71678623160df782a38dc661a055c618bba1c",
+        "stratum": "10|shrink",
+        "context_attempts": 1
+      }
+    ],
+    "max_query_reuse_in_fresh_episodes": 1,
+    "max_pair_reuse_in_fresh_episodes": 18,
+    "distinct_inputs_used": 175
+  },
+  "base_query_types": {
+    "swap_tie": 32,
+    "unique_painting": 49
+  },
+  "verified_program_grid_records": 648,
+  "seconds": 1.8034091669833288
+}

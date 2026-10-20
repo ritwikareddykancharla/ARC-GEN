@@ -1,0 +1,682 @@
+{
+  "task_id": "b7cb93ac",
+  "scope": "Local production-assembler audit from1200 native random draws;1000 base episode target. Every row verified with combined program/grid make_record; no bulk job or publication.",
+  "pool_pairs": 1200,
+  "source_hash": "8a656f32ac253bad48390e10ee27e41e32068bc6a9b93412e93a3bf51f0cb70d",
+  "metrics": {
+    "shards": [],
+    "episodes": 7184,
+    "fresh_episodes": 898,
+    "requested_fresh_episodes": 1000,
+    "spatial_variant_upper_bound": 7184,
+    "symmetric_variants_removed": 0,
+    "variants_per_fresh_episode": {
+      "8": 898
+    },
+    "query_histograms": {
+      "input": {
+        "height": {
+          "12": 664,
+          "16": 856,
+          "11": 900,
+          "8": 788,
+          "10": 864,
+          "14": 704,
+          "13": 788,
+          "15": 796,
+          "9": 824
+        },
+        "width": {
+          "16": 856,
+          "12": 664,
+          "11": 900,
+          "8": 788,
+          "10": 864,
+          "14": 704,
+          "13": 788,
+          "15": 796,
+          "9": 824
+        },
+        "longest": {
+          "16": 1632,
+          "13": 976,
+          "10": 520,
+          "11": 768,
+          "15": 1288,
+          "9": 248,
+          "14": 1016,
+          "8": 112,
+          "12": 624
+        },
+        "shapes": {
+          "12x16": 88,
+          "16x12": 88,
+          "11x16": 136,
+          "16x11": 136,
+          "8x16": 108,
+          "16x8": 108,
+          "10x16": 108,
+          "16x10": 108,
+          "14x16": 68,
+          "16x14": 68,
+          "16x13": 68,
+          "13x16": 68,
+          "15x16": 112,
+          "16x15": 112,
+          "16x16": 80,
+          "9x16": 88,
+          "16x9": 88,
+          "13x9": 92,
+          "9x13": 92,
+          "12x13": 80,
+          "13x12": 80,
+          "13x13": 96,
+          "13x10": 104,
+          "10x13": 104,
+          "8x13": 72,
+          "13x8": 72,
+          "13x11": 92,
+          "11x13": 92,
+          "10x10": 136,
+          "10x8": 96,
+          "8x10": 96,
+          "9x10": 96,
+          "10x9": 96,
+          "11x8": 84,
+          "8x11": 84,
+          "11x10": 100,
+          "10x11": 100,
+          "11x9": 136,
+          "9x11": 136,
+          "11x11": 128,
+          "8x15": 80,
+          "15x8": 80,
+          "15x12": 76,
+          "12x15": 76,
+          "15x15": 80,
+          "10x15": 84,
+          "15x10": 84,
+          "9x15": 100,
+          "15x9": 100,
+          "11x15": 60,
+          "15x11": 60,
+          "14x15": 104,
+          "15x14": 104,
+          "13x15": 100,
+          "15x13": 100,
+          "8x9": 68,
+          "9x8": 68,
+          "9x9": 112,
+          "8x14": 88,
+          "14x8": 88,
+          "12x14": 92,
+          "14x12": 92,
+          "14x10": 84,
+          "10x14": 84,
+          "14x13": 84,
+          "13x14": 84,
+          "11x14": 76,
+          "14x11": 76,
+          "9x14": 60,
+          "14x9": 60,
+          "14x14": 48,
+          "8x8": 112,
+          "12x11": 88,
+          "11x12": 88,
+          "12x12": 32,
+          "12x9": 72,
+          "9x12": 72,
+          "8x12": 80,
+          "12x8": 80,
+          "12x10": 56,
+          "10x12": 56
+        }
+      },
+      "output": {
+        "height": {
+          "3": 3592,
+          "4": 3592
+        },
+        "width": {
+          "4": 3592,
+          "3": 3592
+        },
+        "longest": {
+          "4": 7184
+        },
+        "shapes": {
+          "3x4": 3592,
+          "4x3": 3592
+        }
+      }
+    },
+    "relations": {
+      "shrink": 7184
+    },
+    "failures": {
+      "no_three_demo_packing_context": 102,
+      "episode_constraints_exhausted": 102
+    },
+    "query_context_shortfalls": [
+      {
+        "query_input_hash": "bf53c0feb1f529413346905258c71678623160df782a38dc661a055c618bba1c",
+        "stratum": "10|shrink",
+        "context_attempts": 1
+      },
+      {
+        "query_input_hash": "a99a1f80f6c410e93b085c5daa85a2c7e8b005e55be3f5339096dcdf3f30cd68",
+        "stratum": "10|shrink",
+        "context_attempts": 1
+      },
+      {
+        "query_input_hash": "5b233b8be8d9df3ee8c709609da7bf055afd9a51d7881adea3f52e29717585ca",
+        "stratum": "11|shrink",
+        "context_attempts": 1
+      },
+      {
+        "query_input_hash": "56f07d39c6292ea26543cffc55758db166b74628f22219ba766b209dac6e2097",
+        "stratum": "15|shrink",
+        "context_attempts": 1
+      },
+      {
+        "query_input_hash": "8fc60c96a876a486e346de097caf658a054ab089e799c7a03797aa8c68605b5c",
+        "stratum": "15|shrink",
+        "context_attempts": 1
+      },
+      {
+        "query_input_hash": "96cf582c9b48741e1261298218d3b2d35ad01987b8509058f1c6bd534bec23f5",
+        "stratum": "15|shrink",
+        "context_attempts": 1
+      },
+      {
+        "query_input_hash": "4bf6d818a4d28930ed37cbc0fc64cda0c35bcd10d0bc406f3d88ffe8719c3aee",
+        "stratum": "15|shrink",
+        "context_attempts": 1
+      },
+      {
+        "query_input_hash": "667ae715cb59bbf9f15b0ec7cde1d40bf84332f8300be1e4747ae161ea607f49",
+        "stratum": "15|shrink",
+        "context_attempts": 1
+      },
+      {
+        "query_input_hash": "dc4fb404ec84864ceca871b21fc98f064c1345228d68fc07b4180ab0d73e9ee5",
+        "stratum": "15|shrink",
+        "context_attempts": 1
+      },
+      {
+        "query_input_hash": "f93767821bed4a681afead9d99edf7fd112a0a23d83eab76bb401508d595ec67",
+        "stratum": "15|shrink",
+        "context_attempts": 1
+      },
+      {
+        "query_input_hash": "c50ac746cefcb6d22e7308fb6922da009b0bdbeb5a1ab4501dd124e74aceded8",
+        "stratum": "15|shrink",
+        "context_attempts": 1
+      },
+      {
+        "query_input_hash": "6f1ea7beda168a742c77dcb65d3b96bb9b5bbe93df5825cf59952c202fab116d",
+        "stratum": "15|shrink",
+        "context_attempts": 1
+      },
+      {
+        "query_input_hash": "c68bca7e2ba5fd0a99bf556da5f6b31253c769f322ff3afd52d1586d1bd42f24",
+        "stratum": "15|shrink",
+        "context_attempts": 1
+      },
+      {
+        "query_input_hash": "7a575bb4a997c06127f96d010a258534fdd30e6664ea59b2939748cfef8c97c5",
+        "stratum": "9|shrink",
+        "context_attempts": 1
+      },
+      {
+        "query_input_hash": "b3ad38e25b71d946d993320c31a12249b1990dfd9f41076c0708576291ba4bc9",
+        "stratum": "9|shrink",
+        "context_attempts": 1
+      },
+      {
+        "query_input_hash": "a969078eb9fe6483a43b9479f0d388dbc627367431a4e7fc7a81bebac2f5cb09",
+        "stratum": "9|shrink",
+        "context_attempts": 1
+      },
+      {
+        "query_input_hash": "e16f058eaef3b10cf21061bbfc9b79b9164c880fb2b3605b4d6da65598d37ecd",
+        "stratum": "9|shrink",
+        "context_attempts": 1
+      },
+      {
+        "query_input_hash": "5e085e05f126e334f10cc5818a2f36ea44d9da36edac1a6da2eec93a1b606eea",
+        "stratum": "9|shrink",
+        "context_attempts": 1
+      },
+      {
+        "query_input_hash": "05c57cfb522555db525d44714a38998ee063274c6dacac179b6d28403e40ea96",
+        "stratum": "9|shrink",
+        "context_attempts": 1
+      },
+      {
+        "query_input_hash": "62d217ea45c8af0434e3cba1a4ce9f2ab98976a0926cc9b51126cda1a07b886d",
+        "stratum": "9|shrink",
+        "context_attempts": 1
+      },
+      {
+        "query_input_hash": "529cde0833240fe2daba25c4ce054152546af0ada894829d54e359dc382ce86b",
+        "stratum": "14|shrink",
+        "context_attempts": 1
+      },
+      {
+        "query_input_hash": "a7dca38561db72a3afeeff14d75b1037ecbd48e91a3a87ca5d8c5e702557e05e",
+        "stratum": "14|shrink",
+        "context_attempts": 1
+      },
+      {
+        "query_input_hash": "214e83ff329ac6ec03b434fe58360e1693bcf6c395392929ff5bbc8f0c988f03",
+        "stratum": "14|shrink",
+        "context_attempts": 1
+      },
+      {
+        "query_input_hash": "9d5823e67813dae71c615d75245a51d33ea5fbc2abab83ba053914637b4525f6",
+        "stratum": "14|shrink",
+        "context_attempts": 1
+      },
+      {
+        "query_input_hash": "ee7f9d53d8171c96461927508a2238dc160349d9327876d7842a5dfd8538969b",
+        "stratum": "14|shrink",
+        "context_attempts": 1
+      },
+      {
+        "query_input_hash": "285be7d6a1c69b7f963594f8944bc1d6620b4ac612e8f27a844050d1f0203550",
+        "stratum": "14|shrink",
+        "context_attempts": 1
+      },
+      {
+        "query_input_hash": "90967d860ffe6b167a8820e7c6ad07187085905dfe4422ebd24c37cfed46c94c",
+        "stratum": "14|shrink",
+        "context_attempts": 1
+      },
+      {
+        "query_input_hash": "fa8c16dfac2ddd34229a7570395cff0ea709d0b7c07ae650ff15bcae4d446aa5",
+        "stratum": "14|shrink",
+        "context_attempts": 1
+      },
+      {
+        "query_input_hash": "8a97047f3e7e8219f6777c6b5d0e968b92f4fcb5c765229840ee58f7aa138580",
+        "stratum": "14|shrink",
+        "context_attempts": 1
+      },
+      {
+        "query_input_hash": "6071b33b68114843c46c4264fb13769defa14f8c4f84c33d738c3bd64fc38f8c",
+        "stratum": "14|shrink",
+        "context_attempts": 1
+      },
+      {
+        "query_input_hash": "2d7f85b17ace22c4556cefa3bae2110c2725e38e177278472e8d3264ec934564",
+        "stratum": "14|shrink",
+        "context_attempts": 1
+      },
+      {
+        "query_input_hash": "c6a8ceff965dcf7f39e307d2362bf0e93c1248998b63449e2a35ceb64c88808a",
+        "stratum": "14|shrink",
+        "context_attempts": 1
+      },
+      {
+        "query_input_hash": "4ab9cfb5bafb353e430e2baf82d77bbba956e1f99b6b9b550e3ed5d0c2c929e8",
+        "stratum": "14|shrink",
+        "context_attempts": 1
+      },
+      {
+        "query_input_hash": "71cf521e4dff8ec44aff383ffb41da7d0ea80dbac94b947ec6b3ce15ae8b44f8",
+        "stratum": "14|shrink",
+        "context_attempts": 1
+      },
+      {
+        "query_input_hash": "c061d05c5a6e5287d22040178f54dac3ba8e585eca3dc99abb4ade064b57c2c3",
+        "stratum": "14|shrink",
+        "context_attempts": 1
+      },
+      {
+        "query_input_hash": "8b10c10773a425f64b2330fa4356010728ab668feb65341b61ee5674766faf9d",
+        "stratum": "14|shrink",
+        "context_attempts": 1
+      },
+      {
+        "query_input_hash": "379d6e6e15fc5418ed7bb2b9aa16cd831c28717f60c721a270edf0ff245eb992",
+        "stratum": "14|shrink",
+        "context_attempts": 1
+      },
+      {
+        "query_input_hash": "5c566ce7eba88cbf1989a7988dc376db9dc6786f90bf1f05e52ea137b346dc92",
+        "stratum": "14|shrink",
+        "context_attempts": 1
+      },
+      {
+        "query_input_hash": "a4a44c5ddb19b094ec79d3c836524f162b6886dab52048cf0499f53b27b480f4",
+        "stratum": "14|shrink",
+        "context_attempts": 1
+      },
+      {
+        "query_input_hash": "d22f39bc50e429abafadc96aacc39743eb9a235e35060d64839c4e28f744d32a",
+        "stratum": "14|shrink",
+        "context_attempts": 1
+      },
+      {
+        "query_input_hash": "4c8074e38b5eccd0650dd940e286025186a1553def68e161727bac2cbe665993",
+        "stratum": "14|shrink",
+        "context_attempts": 1
+      },
+      {
+        "query_input_hash": "11fa33fe3dc1d0588c4e2c9e2ba29a00928f74b9437c6ff2bbc8b97d47d0d74f",
+        "stratum": "14|shrink",
+        "context_attempts": 1
+      },
+      {
+        "query_input_hash": "c3f1fc9f4335fa2edac5557e26afd0b10c5c7bf1f41c9836416032761acff833",
+        "stratum": "14|shrink",
+        "context_attempts": 1
+      },
+      {
+        "query_input_hash": "6f81627eced4a751f5561a4609df9e389177f820d1d37698d20a53a029053703",
+        "stratum": "14|shrink",
+        "context_attempts": 1
+      },
+      {
+        "query_input_hash": "670187da8ebdef700b12022e208cef18c3b6160d5a01f05f40f1d75c89a7c803",
+        "stratum": "14|shrink",
+        "context_attempts": 1
+      },
+      {
+        "query_input_hash": "f0424a64964afbea9f5780cc33a52b5f8b0c9465692855f6dd522f97fb07293e",
+        "stratum": "14|shrink",
+        "context_attempts": 1
+      },
+      {
+        "query_input_hash": "7ca05d4efc245421c6df6c3a27919ab3020f89764b04738afce9e2922668eff7",
+        "stratum": "14|shrink",
+        "context_attempts": 1
+      },
+      {
+        "query_input_hash": "497c08c9bea738e460f0d81ff0add3ee32a0843a7942242ece85ee2691edbe4d",
+        "stratum": "14|shrink",
+        "context_attempts": 1
+      },
+      {
+        "query_input_hash": "5b794a9ec10eb07f7e97057ba071481f70fa411dac1bb519959e2bcef40fb200",
+        "stratum": "14|shrink",
+        "context_attempts": 1
+      },
+      {
+        "query_input_hash": "fcbe2b4c80716f19bf91c003b5a96a8c4408c50098c1c24e19f97a9d1cb3307d",
+        "stratum": "14|shrink",
+        "context_attempts": 1
+      },
+      {
+        "query_input_hash": "7469d4fc6ebe87cc28a38d2ab0b27187659cb462b7d0e8836cbc8a7d9a7b1d79",
+        "stratum": "14|shrink",
+        "context_attempts": 1
+      },
+      {
+        "query_input_hash": "20992e415bfc1e148d8d56e50b4b659df93e1a9825a5a3ee5487dbcdb9295462",
+        "stratum": "14|shrink",
+        "context_attempts": 1
+      },
+      {
+        "query_input_hash": "761cb35087482b3a9fd751f2718d2116daa9dafd7c17b8018c7206dc865e58f6",
+        "stratum": "14|shrink",
+        "context_attempts": 1
+      },
+      {
+        "query_input_hash": "679372b74c64ddff420a426ffe9b5927cdee6c64ea06541116610db4adced771",
+        "stratum": "14|shrink",
+        "context_attempts": 1
+      },
+      {
+        "query_input_hash": "8d915bcb6cbc3dbfd4af0ec9bbce685ea1f31dd891fe6afa301253357d6cd1d3",
+        "stratum": "14|shrink",
+        "context_attempts": 1
+      },
+      {
+        "query_input_hash": "b821b5727b5dd41b529e23dcf6d8ed508095d5e008bba0e3c55ab516b20fe941",
+        "stratum": "14|shrink",
+        "context_attempts": 1
+      },
+      {
+        "query_input_hash": "856b7ce91f9463cbd7faf933f4ac882bad1a680773a58d5a11bfc7b900e5edac",
+        "stratum": "14|shrink",
+        "context_attempts": 1
+      },
+      {
+        "query_input_hash": "491221a6cb5ef58bffb307a6c8fa6c9bcb42132bfd103105c69ebf37395c8927",
+        "stratum": "14|shrink",
+        "context_attempts": 1
+      },
+      {
+        "query_input_hash": "dd3b50820483932f727bfeec77d9707682e95e1295f8049cb2d23438138dbb5e",
+        "stratum": "14|shrink",
+        "context_attempts": 1
+      },
+      {
+        "query_input_hash": "223ea39e5d377b7ebfc04a992d921caf9773553c934a3e9a6e8b4e6ef29c432b",
+        "stratum": "14|shrink",
+        "context_attempts": 1
+      },
+      {
+        "query_input_hash": "5b38ced6aec686855aecc8055507bde92759c4f2124da9fc450a2aa438781663",
+        "stratum": "14|shrink",
+        "context_attempts": 1
+      },
+      {
+        "query_input_hash": "90c766615a527566009fb5d4ae319f8d334faefb8062309518a63985621fd648",
+        "stratum": "14|shrink",
+        "context_attempts": 1
+      },
+      {
+        "query_input_hash": "eb5d2b47cc8ff710a7f038101cf58aa833cda781fd20240647efad06c64bb321",
+        "stratum": "14|shrink",
+        "context_attempts": 1
+      },
+      {
+        "query_input_hash": "f204a11e70f719bce1483ed77d3f540892eb348bd22e63647ea6e8cc299b4277",
+        "stratum": "14|shrink",
+        "context_attempts": 1
+      },
+      {
+        "query_input_hash": "6e4e237276a72e9c270e1453329ab78e9295acac777ff9d244917d3c526bd93b",
+        "stratum": "14|shrink",
+        "context_attempts": 1
+      },
+      {
+        "query_input_hash": "4e97a51b244753c8400cbe9ae1282ce4879b655b70d0014ca803a37bcaabba68",
+        "stratum": "14|shrink",
+        "context_attempts": 1
+      },
+      {
+        "query_input_hash": "195a6debf226e8a29e85e4da849f6ac2c7ebc08242a12e218df8925270d85907",
+        "stratum": "14|shrink",
+        "context_attempts": 1
+      },
+      {
+        "query_input_hash": "be9a7e50f53eaf063d484ba14f9a3d5fbf9a4711039ec3680c1705b005485a83",
+        "stratum": "8|shrink",
+        "context_attempts": 1
+      },
+      {
+        "query_input_hash": "1f2cea60cb88b37130f4bd92ba5b3f741cc7827118cb1b7063e7655f9796d645",
+        "stratum": "8|shrink",
+        "context_attempts": 1
+      },
+      {
+        "query_input_hash": "20172b85538b65b695053085b41264414f9467633d70263a5973567bdf189526",
+        "stratum": "8|shrink",
+        "context_attempts": 1
+      },
+      {
+        "query_input_hash": "e77dc107168582eb052ffc5c87e7403db91574b0bc0dfd2cda8dd9aaf5c4cd07",
+        "stratum": "8|shrink",
+        "context_attempts": 1
+      },
+      {
+        "query_input_hash": "93f805caa58878d2aa9c1510b88fa91991c410e0e46116ec20530c1dcfe76a50",
+        "stratum": "8|shrink",
+        "context_attempts": 1
+      },
+      {
+        "query_input_hash": "2971e2025ea29d5665929975065898c99f542b2684e8a13409ae68f30d902e9f",
+        "stratum": "8|shrink",
+        "context_attempts": 1
+      },
+      {
+        "query_input_hash": "8058b1c738f6f7a2006e9d5f3362770a9d0c27189fdc3dfb953ee70d25381047",
+        "stratum": "12|shrink",
+        "context_attempts": 1
+      },
+      {
+        "query_input_hash": "269b62f8d687cbfbfdc52d8d3f5c167595adf6fb324239beb5a4882d80375744",
+        "stratum": "12|shrink",
+        "context_attempts": 1
+      },
+      {
+        "query_input_hash": "076716cc7e8ba4e56d1bfddb007715b5995fb75bee40991b8ce942ddea028246",
+        "stratum": "12|shrink",
+        "context_attempts": 1
+      },
+      {
+        "query_input_hash": "45c73359f8611080841bdc945a9db3b6a0722c0328bdba775d081bf3e6dde817",
+        "stratum": "12|shrink",
+        "context_attempts": 1
+      },
+      {
+        "query_input_hash": "2b7b66c9293fb11d50f69a9a319976cb31984853f35b952c4381f2ecb0ede628",
+        "stratum": "12|shrink",
+        "context_attempts": 1
+      },
+      {
+        "query_input_hash": "3c1e00441c974afcc619a58d46c7106b7220398c0cb7cbf460f108ef42decb14",
+        "stratum": "12|shrink",
+        "context_attempts": 1
+      },
+      {
+        "query_input_hash": "87d63cef183616f4ae59903bf1889ac4e1bc28f406435366086e3cd5f493eaca",
+        "stratum": "12|shrink",
+        "context_attempts": 1
+      },
+      {
+        "query_input_hash": "aecab13220af71847f9063addc16234a7018fcd7c65b3ef959fecd4e4c8f1d78",
+        "stratum": "12|shrink",
+        "context_attempts": 1
+      },
+      {
+        "query_input_hash": "7c68870a57f2b5996abf8a92f4c863470363c9f6a1c2b9bd680b0d8eeb4aa8f6",
+        "stratum": "12|shrink",
+        "context_attempts": 1
+      },
+      {
+        "query_input_hash": "0bd1a7526aae03424cbe9a1865cc9035b2485220cce42113f0bdfb5d4f2d4a38",
+        "stratum": "12|shrink",
+        "context_attempts": 1
+      },
+      {
+        "query_input_hash": "909c6e3888c9c4474d520c04019830ae224c515de54d20a8004cf3c914c70c0e",
+        "stratum": "12|shrink",
+        "context_attempts": 1
+      },
+      {
+        "query_input_hash": "911323de8d62add554304271ca4995ab91746457fe43528f96d759a73fc284bb",
+        "stratum": "12|shrink",
+        "context_attempts": 1
+      },
+      {
+        "query_input_hash": "52d7129be221ffe16b6ecc4d97115828a97c859f707ba540a7214504fc86282b",
+        "stratum": "12|shrink",
+        "context_attempts": 1
+      },
+      {
+        "query_input_hash": "a8146de632615ada9e544abbde41facf6cfc49a4eb3fc6d6a262f9ac9cc8c105",
+        "stratum": "12|shrink",
+        "context_attempts": 1
+      },
+      {
+        "query_input_hash": "8c8200aaf3c1969b33c2174a7f576252f0a922fa8ba11efdf9fa77bc5a4c7a9f",
+        "stratum": "12|shrink",
+        "context_attempts": 1
+      },
+      {
+        "query_input_hash": "aafcb5ac55622ef5a29b736936683baeff1c2cf8745af80b1fdad744188a376e",
+        "stratum": "12|shrink",
+        "context_attempts": 1
+      },
+      {
+        "query_input_hash": "3c5dcf52c5e830c902992397a2c16abcf0445857ae21e2dfd12862c6eb679855",
+        "stratum": "12|shrink",
+        "context_attempts": 1
+      },
+      {
+        "query_input_hash": "4f9f9aa464df3d1f46d07ad4b56182bd9ac93ab31b7512326e098bc5b49a7423",
+        "stratum": "12|shrink",
+        "context_attempts": 1
+      },
+      {
+        "query_input_hash": "167c840cdfd9c7ba706fbc46300e586ce2981512b0e4a469863803907e33a298",
+        "stratum": "12|shrink",
+        "context_attempts": 1
+      },
+      {
+        "query_input_hash": "74d42b6fa1ba8b3f5cf85650f3a200dadaf7e5445d0e08dafb334db6c6ff077e",
+        "stratum": "12|shrink",
+        "context_attempts": 1
+      },
+      {
+        "query_input_hash": "063b5365417a8a7cd75e202bbcd34aef9a2ecd315b4beddbee000e7fb971e82a",
+        "stratum": "12|shrink",
+        "context_attempts": 1
+      },
+      {
+        "query_input_hash": "82119346ce02db8791532128876151c62a195906f01e25c0bbba14f47b69ef4e",
+        "stratum": "12|shrink",
+        "context_attempts": 1
+      },
+      {
+        "query_input_hash": "013df429a707881d97ff5779f505d57c600955b9bbdc40f27dc2c54d10bced32",
+        "stratum": "12|shrink",
+        "context_attempts": 1
+      },
+      {
+        "query_input_hash": "eb98d05ea1027a75c91086c532d89177fe3dd2d96823f3a01763d55a4a46d38d",
+        "stratum": "12|shrink",
+        "context_attempts": 1
+      },
+      {
+        "query_input_hash": "b58475d5e203fc52b6cb795d938f12a6d946e5a44c9fac0cdbf2ac1bbf693fbf",
+        "stratum": "12|shrink",
+        "context_attempts": 1
+      },
+      {
+        "query_input_hash": "66ee0c746c438f26524c006cc159edd70be6cb3fabf39406d3381224b3a7f8a4",
+        "stratum": "12|shrink",
+        "context_attempts": 1
+      },
+      {
+        "query_input_hash": "4b87935b8628257818f76350744cc725813cf666f75735d1a00b71aa8349fd91",
+        "stratum": "12|shrink",
+        "context_attempts": 1
+      },
+      {
+        "query_input_hash": "8a3a95775fa918d8b290b6637463492c09a1f6b694279df80380b3cf05c5d087",
+        "stratum": "12|shrink",
+        "context_attempts": 1
+      },
+      {
+        "query_input_hash": "eba922ae29dfd8a91035b3ce47f1d7f5839dc5e48b8752eaf2f0bb602f3e3514",
+        "stratum": "12|shrink",
+        "context_attempts": 1
+      }
+    ],
+    "max_query_reuse_in_fresh_episodes": 1,
+    "max_pair_reuse_in_fresh_episodes": 33,
+    "distinct_inputs_used": 1147
+  },
+  "base_query_types": {
+    "swap_tie": 266,
+    "unique_painting": 632
+  },
+  "verified_program_grid_records": 7184,
+  "seconds": 18.535950583056547
+}

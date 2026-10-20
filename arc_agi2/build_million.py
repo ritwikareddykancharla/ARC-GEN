@@ -257,7 +257,14 @@ def make_episodes(arg):
                         else:
                             ds=[p for p in rows if p['input_hash']!=q['input_hash'] and pair_uses[p['input_hash']]<32]
                             if len(ds)<3:break
-                            demos=rng.sample(ds,3)
+                            if tid == 'b7cb93ac':
+                                from .packing_evidence import select_packing_demonstrations
+                                demos=select_packing_demonstrations(ds,q['input'],rng,q['canonical_input_hash'],pair_uses)
+                                if demos is None:
+                                    failures['no_three_demo_packing_context']+=1
+                                    break
+                            else:
+                                demos=rng.sample(ds,3)
                         four=demos+[q]
                         try:
                             require_colour_evidence(tid,demos,[{'input':q['input']}])

@@ -1266,3 +1266,52 @@ program/grid records verified. See
 All 535 regression tests passed. Remaining: 44 semantic/context holds,
 9 execution failures and 3 missing factories. Bulk generation and training
 have not launched; these records are local validation artifacts.
+
+## 1065-family checkpoint
+
+- `b7cb93ac`: preserve native tie layouts, including an above-left winner and
+  varied output-slot relationships. Do not apply the draft proposal restricting
+  winners to below-left and left-ordered output slots. An independent exact-
+  cover dynamic program enumerates all minimum-rotation tilings with identical
+  piece multiplicities. Compare four keep-orientation directions and sixteen
+  strict input/output relative-order mappings. Policy ties retain all painted
+  answers. Demonstrations determine rectangle dimensions and filter policies;
+  all surviving query paintings must agree. The hypothesis class assumes this
+  family's minimum-number-of-rotated-pieces objective, not every possible cost.
+- Original demonstrations have unique painted answers; the original query has
+  two minimum-cost paintings. No original labels were changed or exempted from
+  context checks. Two fresh tied demonstrations plus a unique one resolve that
+  query; all 16 D4/palette combinations verify. The report
+  `b7cb93ac-positional-tie-evidence.json` includes the teaching context and seeds.
+- Removed the emitted solver's silent 5,000-tiling storage cap. The new factory
+  passed 1,000 unique fresh pairs, 8,000 augmented checks and 16 fixture variants.
+  The constructor source is unchanged. Native episode auditing accepted 12/20
+  independent contexts and verified 96 augmented records, with zero errors.
+
+Production assembly now searches up to three distinct policy-evidence groups
+for this family using demo answers and query INPUT only. It respects existing
+split, canonical-input distinctness and pair-reuse limits. Equivalent evidence
+is grouped, less-used witnesses are preferred, and unique-painting examples
+fill spare demo slots so rare tie evidence is preserved for hard queries.
+Tests cover a query requiring all three examples, absence of a suitable context,
+canonical-equivalent duplicate exclusion, usage balancing, and D4 closure of
+the complete candidate sets. A query is never swapped for an easier one during
+context selection.
+
+Diagnostic development audits are saved separately: random-context selection
+completed 48/82 bases on a 256-pair pool; evidence search completed 81/82 there;
+on a 1,200-pair pool the unbalanced selector exhausted useful witnesses and
+completed 898/1,000. These are separate seeded assembly runs, not a matched-query
+accuracy comparison, because context RNG consumption affects later strata.
+
+The final production-assembler audit uses 1,200 native fresh pairs and completes
+**1,000/1,000 fresh episodes**, including **354 swap-tie queries** and 646 unique
+paintings. **All 8,000 augmented program/grid records verified**, with zero
+context shortfalls and no raised reuse caps. The earlier small-pool shortfall
+also gains a three-demo context in this larger pool. See
+`reports/query-preserving-assembly-1065-audit.json`.
+
+All 543 regression tests passed. Remaining: 43 semantic/context holds,
+9 execution failures and 3 missing factories. Audit rows were generated in a
+local temporary directory; this was not the expanded public dataset launch.
+Bulk generation and model training remain pending complete coverage.

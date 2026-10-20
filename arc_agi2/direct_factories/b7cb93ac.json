@@ -1,0 +1,23 @@
+{
+  "task_id": "b7cb93ac",
+  "factory_sha256": "aec4d9fb7bebd024d6cbd5d58f5c6dc60e5288de3edd710fe54c09fc82cfc7a4",
+  "constructor_sha256": "8a656f32ac253bad48390e10ee27e41e32068bc6a9b93412e93a3bf51f0cb70d",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 235516901972357,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 2.7792631660122424,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The emitted program works directly in visible coordinates.\n\nBasic constants:\n- The background is the constant palette[0].\n- Pieces are the single-colour 4-connected components that are not background.\n- The target rectangle is 3x4 when d4 is 0, 2, 4 or 6, and 4x3 otherwise.\n\nHow a D4 transform affects the rules:\n- Conjugating by any D4 element maps the group of quarter-turn rotations onto itself.\n- So 'rotate but never mirror' is still the visible rule.\n- A piece costs 0 exactly when its slot shape equals its own visible normalised shape; otherwise it costs 1.\n\nSearch:\n- Identical pieces (same colour and same visible shape) are grouped into types, as the constructor does.\n- An exact cover search fills the first empty cell in reading order, with branch-and-bound on cost.\n- It collects every minimum-cost tiling.\n- If they all paint one grid, that grid is the answer.\n\nTie rule:\n- The constructor's only allowed tie is the swap tie. The tiling wins where the input piece lying entirely further LEFT stays unrotated.\n- 'Left' is carried into visible coordinates. Start with the vector (0,-1), reflect the column for d4 >= 4, then apply the clockwise rotation (dr,dc) -> (dc,-dr) d4%4 times.\n- Each piece type gets a projection score: its minimum dot product with that vector.\n- Types are ordered by score, highest first. Tilings are compared by their unrotated counts in that order, so the tiling whose further-along piece is unrotated wins.\n- This is exactly the 'winner entirely further left' condition, not search order.",
+    "limitations": "Input pieces are separated, monochrome four-connected components totaling12 cells. Output dimensions are3x4 or4x3 under D4. Native constructor admits unique painted minimum-cost answers or one orientation-swap tie with entirely separated winner/rival. The episode gate establishes relevant positional choice within its documented20policy class using only demo outputs and query inputs. Canonical tie test lacks sufficient native demo evidence; original benchmark labels unchanged, no export exemption. Program itself uses constructor direction metadata to emit a direct visible-coordinate solver, but that metadata is not supplied to the student. Stored tilings are no longer silently truncated.",
+    "host_review": "Keep original generator distribution, explicit positional tie layouts and all fixture labels. Independent exact-cover DP enumerates every minimum-rotated-piece packing, then compares four keep-orientation directions and sixteen input/output strict relative-order mappings. Policy ties keep all painted outputs rather than a type/colour/search-order fallback. Demonstrations filter candidate sets; queries require agreement. Canonical train has no painted tie and canonical query is ambiguous without additional demos; two fresh tied teaching examples plus one unique example resolve it. Removed silent5000 stored-tiling cap from emitted factory. New full execution audit passed1000unique/8000augmented/16fixture checks.",
+    "semantic_draft_review": "Do not adopt CLI proposal restricting winners to below-left or constraining output slot order. Those are recoverable hard cases; retain them and teach the convention in context. The hypothesis set assumes the fixed target rectangle and minimum-number-of-rotated-pieces objective; it does not exclude every possible cost function or spatial relationship."
+  }
+}

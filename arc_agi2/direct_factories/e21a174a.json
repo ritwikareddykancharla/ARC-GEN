@@ -1,0 +1,30 @@
+{
+  "task_id": "e21a174a",
+  "factory_sha256": "9a7bd1eade3b50e802f69b4a535f4880613e95f9649e2af05764860098d931fd",
+  "constructor_sha256": "4381181864c5c87454c3ac012c6475b95ce6381bc3bd0c873e147d147beb9d8e",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 40803398468904,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 4.3329769999254495,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The constructor builds a gap-free stack of single-colour strips. In the original frame these are horizontal bands, so rows 1..H-2 are all non-empty and each row has one colour. Consecutive rows with the same colour form one band. The output writes the bands in reverse order inside the same extent, and each band's internal lines are copied unchanged, not mirrored. The generator packs from the bottom, but because the extent is preserved that is the same as packing from the top.\n\nUnder D4, a horizontal flip keeps the bands horizontal and each quarter turn swaps the axis. The factory therefore picks the row axis when d4%4 is even and the column axis when it is odd. Reversing band order inside a fixed extent is symmetric, so no direction choice is needed beyond the axis.\n\nThe background is the constant palette[0], because colour 0 is the constructor's background. The emitted program scans the visible lines along the chosen axis and groups consecutive same-colour non-empty lines into bands. It then clears the stack extent and writes the bands back in reverse order using direct row slices or direct column slices.",
+    "limitations": "Bands are separated only by colour changes, which follows the constructor. If two adjacent bands had the same colour they would merge into one. The constructor appears to use distinct colours from random_colors, so this should not happen, but that is not verified.\n\nA line that unexpectedly contains several non-background colours takes its most frequent colour, with ties going to the smallest; this never happens in the constructor's domain.\n\nFor the archived solver's contiguity rule, a band also ends at an empty gap line. The constructor never produces gaps, so whether gaps should be preserved or packed cannot be confirmed from its domain.\n\nThe fixtures agree with this uniform rule. I found no constructor defects that would affect the intended answer.",
+    "host_review": "Host read complete constructor and factory. Preserve band colours through full-scene connectivity retries; cap the lower-width spacing range at a valid one-cell margin. Factory reverses contiguous one-colour bands along the D4-specialized axis and preserves each band internally.",
+    "repair_verification": {
+      "fixture_bytes_unchanged": true,
+      "fresh_pairs": 1000,
+      "augmented_pair_checks": 8000,
+      "fixture_variants": 16,
+      "regression_module": "arc_agi2.test_sampling_domains",
+      "independent_review": "Host source review; no additional CLI review claimed."
+    }
+  }
+}

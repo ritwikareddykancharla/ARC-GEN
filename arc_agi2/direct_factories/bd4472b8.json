@@ -1,0 +1,29 @@
+{
+  "task_id": "bd4472b8",
+  "factory_sha256": "25094bcc29abe1b63f581fd55226b26f4dc036a19bba433f7d626c4eb1364425",
+  "constructor_sha256": "319ccc4f27194f037d72ba9b2a53ebb587222ed1153f2fcedf358824ddbd67ad",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 149928327375648,
+  "d4": 7,
+  "unique_base_inputs": 797,
+  "seconds": 1.230055500054732,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Host-authored direct program with constructor/source review, source restrictions and execution verification.",
+  "draft_notes": {
+    "author": "host",
+    "explanation": "Read the colours in order from the header, preserve the separator, then paint two complete repetitions of the colour sequence into successive bands. Header traversal and band-writing direction are specialized for each D4 using explicit visible indices. Output never normalizes or untransforms a grid.",
+    "host_review": "Read the colours in order from the header, preserve the separator, then paint two complete repetitions of the colour sequence into successive bands. Header traversal and band-writing direction are specialized for each D4 using explicit visible indices. Output never normalizes or untransforms a grid.",
+    "limitations": "Native height is2*n+2 and width n. Native colours exclude0and5, are distinct, and n is2..6; episode palette changes all roles consistently.",
+    "verification": {
+      "fresh_pairs": 1000,
+      "augmented_pair_checks": 8000,
+      "fixture_variants": 16,
+      "api_calls": 0
+    }
+  }
+}

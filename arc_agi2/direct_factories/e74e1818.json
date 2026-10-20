@@ -1,0 +1,30 @@
+{
+  "task_id": "e74e1818",
+  "factory_sha256": "12f72602726eaee60e0863524ac5a4e09588a0fb8c98eefe352ab8f12dd563b1",
+  "constructor_sha256": "7108c49b0de8bf0d0d0e2f723166747563c25a4763b6fce8fb5ddfa8118d728d",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 16602184326224,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 3.245459917001426,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "In the original task, the grid is a stack of horizontal bands. Each band is a run of consecutive rows that use one non-background colour. The generator's draw() finds these runs by the colour present in each row, then writes each run back in reverse row order. Mirroring a band is its own inverse, so only the band axis matters under D4. A horizontal flip (d4>=4) keeps rows as rows. An odd number of clockwise rotations turns rows into columns. The factory therefore picks rows when d4%4 is 0 or 2, and columns otherwise. It then emits code that scans visible lines along that axis. Each line's key is its set of non-background colours, with the background fixed to palette[0]. Consecutive lines with the same non-empty key form a band. Each band's lines are reversed in place, either rows top-to-bottom or columns left-to-right. Empty border lines are left unchanged. This matches the constructor's segmentation directly. It also matches the archived per-colour bounding-box flip whenever band colours are distinct, which holds in the generator's domain.",
+    "limitations": "Assumes each band line contains exactly one non-background colour and that adjacent bands use different colours. The generator guarantees this through random_colors and its sprite coverage check. If two adjacent bands shared a colour, the generator's own segmentation would merge them too, so the behaviour stays consistent with it. Lines containing several colours are grouped only with identical colour sets, which is outside the generator's domain. The generator's use of list(set(row))[0] would be ambiguous for multi-colour rows, but that never occurs in its domain; flag it for host review if mixed rows ever appear. No fixture contradictions were found: all three train pairs and the test pair follow the rule. Demonstrations are not consulted; the background is taken as palette[0].",
+    "host_review": "Host read complete constructor and factory. Random band count must permit n positive lengths <=n to sum to height-2; infeasible counts removed before sampling, all canvas sizes retained. Narrow canvases use valid one-cell margins. Factory reflects each contiguous same-colour band independently along the specialized axis.",
+    "repair_verification": {
+      "fixture_bytes_unchanged": true,
+      "fresh_pairs": 1000,
+      "augmented_pair_checks": 8000,
+      "fixture_variants": 16,
+      "regression_module": "arc_agi2.test_sampling_domains",
+      "independent_review": "Host source review; no additional CLI review claimed."
+    }
+  }
+}

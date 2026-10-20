@@ -1,0 +1,29 @@
+{
+  "task_id": "62c24649",
+  "factory_sha256": "6d291555f6838efec38bcde4f28806f0e644deedb4b21cd9e24144f8a81b3f06",
+  "constructor_sha256": "60059424930a1555cb518bd368fb4f2322c61631c6c18197938e2d7640b8baa9",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 182019949964043,
+  "d4": 7,
+  "unique_base_inputs": 999,
+  "seconds": 1.0105283330194652,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Host-authored direct program with constructor/source review, source restrictions and execution verification.",
+  "draft_notes": {
+    "author": "host",
+    "explanation": "Double both dimensions and mirror the input across both internal seams. D4 changes which corner contains the unchanged input; factory specializes direct output indices to that corner. No input normalization, wrapper, hidden grid, or per-query lookup. Every output cell reads the displayed query directly.",
+    "host_review": "Double both dimensions and mirror the input across both internal seams. D4 changes which corner contains the unchanged input; factory specializes direct output indices to that corner. No input normalization, wrapper, hidden grid, or per-query lookup. Every output cell reads the displayed query directly.",
+    "limitations": "Native constructor defaults to3x3; algebra works for arbitrary supported square sizes. Keep ARC maximum output dimension constraints in the sampler.",
+    "verification": {
+      "fresh_pairs": 1000,
+      "augmented_pair_checks": 8000,
+      "fixture_variants": 16,
+      "api_calls": 0
+    }
+  }
+}

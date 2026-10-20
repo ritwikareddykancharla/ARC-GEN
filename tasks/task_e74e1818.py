@@ -51,7 +51,10 @@ def generate(width=None, height=None, colors=None):
 
   if width is None:
     width = height = 2 * common.randint(3, 7) + 1
-    colors = common.random_colors(common.randint(3, height // 2))
+    # Each of n bands has length at most n. Exclude impossible n values
+    # before sampling lengths (e.g. three bands cannot occupy thirteen rows).
+    counts = [n for n in range(3, height // 2 + 1) if n * n >= height - 2]
+    colors = common.random_colors(common.choice(counts))
     while True:
       lengths = [common.randint(1, len(colors)) for _ in colors]
       if sum(lengths) + 2 == height: break
@@ -59,7 +62,7 @@ def generate(width=None, height=None, colors=None):
       offset = 1
       grid = common.grid(width, height)
       for i, color in enumerate(colors):
-        spacing = common.randint(1, width // 2 - 3)
+        spacing = common.randint(1, max(1, width // 2 - 3))
         while True:
           sprite = common.grid(width, lengths[i])
           for r in range(lengths[i]):

@@ -58,15 +58,15 @@ def generate(width=None, height=None, colors=None):
 
   if width is None:
     width, height = common.randint(7, 13), common.randint(7, 13)
-    colors = common.random_colors(height // 3 + 1)
+    band_colors = common.random_colors(height // 3 + 1)
     while True:
-      lengths = [common.randint(1, len(colors)) for _ in colors]
+      lengths = [common.randint(1, len(band_colors)) for _ in band_colors]
       if sum(lengths) + 2 == height: break
     while True:
       offset = 1
       grid = common.grid(width, height)
-      for i, color in enumerate(colors):
-        spacing = common.randint(1, width // 2 - 3)
+      for i, color in enumerate(band_colors):
+        spacing = common.randint(1, max(1, width // 2 - 3))
         while True:
           sprite = common.grid(width, lengths[i])
           for r in range(lengths[i]):

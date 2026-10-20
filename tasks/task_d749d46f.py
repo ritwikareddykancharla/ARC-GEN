@@ -29,8 +29,12 @@ def generate(wides=None, talls=None, bgcolor=None, fgcolor=None):
 
   if wides is None:
     num_boxes = common.randint(4, 6)
-    talls = [common.randint(1, 6) for _ in range(num_boxes)]
-    wides = [common.randint(1, min(5, 9 // tall)) for tall in talls]
+    while True:
+      talls = [common.randint(1, 6) for _ in range(num_boxes)]
+      wides = [common.randint(1, min(5, 9 // tall)) for tall in talls]
+      # Rotating tall pieces expands the output's horizontal extent.
+      if sum(max(w, t) for w, t in zip(wides, talls)) + num_boxes - 1 <= 30:
+        break
     colors = common.random_colors(2)
     bgcolor, fgcolor = colors[0], colors[1]
 

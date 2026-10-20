@@ -1,0 +1,29 @@
+{
+  "task_id": "e41c6fd3",
+  "factory_sha256": "fd7f5b7d418578ca2a5446f2eecffbae565fc17a85b3ddb6c3f8da14490e2a11",
+  "constructor_sha256": "2e1e6684d04f56cfd5c0faf84355d70b3cca19ade75d152f5901c0adb9de77e4",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 276955585073098,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 9.156897749984637,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Host-authored direct program with constructor/source review, source restrictions and execution verification.",
+  "draft_notes": {
+    "author": "host",
+    "explanation": "Group pixels by unique object colour. Translate each object along the specialized alignment axis so its bounding-box minimum aligns with that of the palette[8] anchor. Since objects share one shape and extent, this also works with reversed axes. Distinct orthogonal spans prevent collisions.",
+    "host_review": "Group pixels by unique object colour. Translate each object along the specialized alignment axis so its bounding-box minimum aligns with that of the palette[8] anchor. Since objects share one shape and extent, this also works with reversed axes. Distinct orthogonal spans prevent collisions.",
+    "limitations": "Constructor requires unique nonbackground object colours, shared shape and nonoverlapping orthogonal bounding intervals. Alignment-axis specialization must be evident in demos, checked by dataset augmentation disambiguation.",
+    "verification": {
+      "fresh_pairs": 1000,
+      "augmented_pair_checks": 8000,
+      "fixture_variants": 16,
+      "api_calls": 0
+    }
+  }
+}

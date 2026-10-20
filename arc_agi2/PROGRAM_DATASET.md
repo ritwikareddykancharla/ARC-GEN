@@ -35,7 +35,7 @@ recorded. Passing finite audits does not prove unrestricted generalization.
 
 - 213 native direct-coordinate certificates admitted after fresh audits and
   supplied-fixture checks.
-- 698 admitted factories. Each passed 1,000 fresh pairs, 8,000 augmented pair
+- 706 admitted factories. Each passed 1,000 fresh pairs, 8,000 augmented pair
   checks and 16 supplied-fixture variants. Their audit records retain draft
   limitations and source/constructor hashes. These checks are finite evidence,
   not proof of correctness on every generated input.
@@ -46,7 +46,7 @@ recorded. Passing finite audits does not prove unrestricted generalization.
   counts must be computed as a union, not added.
 - Local exporter test: 18 fresh base episodes, 144 augmented PNG/program/grid
   records. It requested 20 bases and reported a two-episode shortfall.
-- The union currently admits 917 of 1,120 families; 203 still need direct
+- The union currently admits 925 of 1,120 families; 195 still need direct
   augmented program admission. Constructor coverage and program coverage are
   different gates.
 - Synthetic labels for `00d62c1b` now fill every enclosed background component,
@@ -312,3 +312,25 @@ produce explicit shortfalls; counts are never padded with duplicate episodes.
 Bulk generation and model training have not been launched at this checkpoint.
 
 Regression validation for the boundary-repair checkpoint: **307 tests passed**.
+
+## Sampling and missing-target checkpoint: 925 verified families
+
+Eight additional direct factories bring coverage to **925/1,120**, with
+**195 remaining** and 706 factory certificates.
+
+- `e21a174a`: preserve the band palette across rejected-scene retries; support narrow canvas margins.
+- `e74e1818`: exclude impossible band-count/height combinations before sampling; support narrow margins.
+- `d749d46f`: reject box dimensions whose rotated output exceeds ARC's 30-cell extent, retaining four to six boxes.
+- `e6721834`: keep combined horizontal panels within 30 columns. Independently enumerate valid marker placements and reject multiple distinct paintings. Repeated marker colours remain allowed, and equivalent assignments with the same painting remain accepted.
+- `62c24649`, `a406ac07`, `bd4472b8`, `e41c6fd3`: added missing direct programs for mirrored expansion, edge-legend intersections, repeated colour bands, and anchor alignment. These four factories are host-authored; the other four began as CLI drafts.
+
+Every family passed 1,000 fresh pairs, 8,000 D4 pair checks and 16 supplied-fixture
+variants. All supplied fixtures of the four repaired constructors are unchanged.
+A separate audit passed 160 base episodes / 1,280 augmented program-and-grid records
+with no errors or evidence exclusions. Hash-pinned evidence is in
+`reports/episode-evidence-925-audit.json`.
+
+The production target remains 1,000 fresh episodes per family before augmentations.
+Full dataset generation and training remain unlaunched while coverage is incomplete.
+
+Regression validation for this checkpoint: **316 tests passed**.

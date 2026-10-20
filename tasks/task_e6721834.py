@@ -17,6 +17,52 @@
 import common
 
 
+def _unique_placement(width, height, shapes, dots, max_states=100000):
+  """Require one painted region across all legal marker-matching placements.
+
+  Shapes are (width, height, [(row, col, colour), ...]). A shape may be
+  omitted from the target panel, but cannot be used twice. This enumerator
+  uses the visible marker constraints, not the constructor's chosen answer.
+  """
+  candidates = []
+  for wide, tall, markers in shapes:
+    first_r, first_c, first_color = markers[0]
+    options = []
+    for (r, c), color in dots.items():
+      if color != first_color: continue
+      top, left = r - first_r, c - first_c
+      if top < 0 or left < 0 or top + tall > height or left + wide > width:
+        continue
+      marked = {(top + y, left + x): ink for y, x, ink in markers}
+      if any(dots.get(p) != ink for p, ink in marked.items()): continue
+      cells = frozenset((y, x) for y in range(top, top + tall)
+                        for x in range(left, left + wide))
+      if any(p in dots and p not in marked for p in cells): continue
+      options.append((frozenset(marked), cells,
+                      (top, top + tall, left, left + wide)))
+    candidates.append(options)
+
+  target, solutions, states = frozenset(dots), set(), 0
+
+  def search(index, covered, painted, boxes):
+    nonlocal states
+    states += 1
+    if states > max_states or len(solutions) > 1: return
+    if index == len(candidates):
+      if covered == target: solutions.add(painted)
+      return
+    search(index + 1, covered, painted, boxes)
+    for marked, cells, box in candidates[index]:
+      if covered & marked: continue
+      if any(not (box[1] < other[0] or other[1] < box[0] or
+                  box[3] < other[2] or other[3] < box[2]) for other in boxes):
+        continue
+      search(index + 1, covered | marked, painted | cells, boxes + [box])
+
+  search(0, frozenset(), frozenset(), [])
+  return states <= max_states and len(solutions) == 1
+
+
 def generate(width=None, height=None, rows=None, cols=None, idxs=None,
              colors=None, brows=None, bcols=None, bidxs=None, bsides=None,
              wides=None, talls=None, backs=None, forecolor=None, horiz=None,
@@ -49,6 +95,9 @@ def generate(width=None, height=None, rows=None, cols=None, idxs=None,
     forecolor = common.random_color(exclude=backs)
     num_boxes = 2 if height < 12 else 3
     foreside, horiz = common.randint(0, 1), common.randint(0, 1)
+    # Two horizontal panels share one ARC grid; vertical panels may retain
+    # the wider native widths because their total width is not doubled.
+    if horiz: width = min(width, 15)
     # Choose box sizes and positions.
     while True:
       wides = [common.randint(2, 7) for _ in range(num_boxes)]
@@ -71,17 +120,28 @@ def generate(width=None, height=None, rows=None, cols=None, idxs=None,
           if bcols[j] + wides[bidxs[j]] < bcols[i]: continue
           overlaps = True
       if not overlaps: break
-    # Choose box contents.
-    rows, cols, idxs, colors = [], [], [], []
-    for idx in range(num_boxes):
-      wide, tall = wides[idx], talls[idx]
-      pixels = common.sample(common.all_pixels(wide, tall), idx + 1)
-      row_list, col_list = zip(*pixels)
-      color = common.random_color(exclude=backs + [forecolor])
-      rows.extend(row_list)
-      cols.extend(col_list)
-      idxs.extend([idx for _ in pixels])
-      colors.extend([color for _ in pixels])
+    # Repeated marker colours are allowed, but the visible markers must
+    # determine one target painting rather than a hidden random assignment.
+    for _ in range(128):
+      rows, cols, idxs, colors, shapes = [], [], [], [], []
+      for idx in range(num_boxes):
+        wide, tall = wides[idx], talls[idx]
+        pixels = common.sample(common.all_pixels(wide, tall), idx + 1)
+        row_list, col_list = zip(*pixels)
+        color = common.random_color(exclude=backs + [forecolor])
+        rows.extend(row_list)
+        cols.extend(col_list)
+        idxs.extend([idx for _ in pixels])
+        colors.extend([color for _ in pixels])
+        shapes.append((wide, tall, [(r, c, color) for r, c in pixels]))
+      dots = {}
+      for brow, bcol, bidx, bside in zip(brows, bcols, bidxs, bsides):
+        if bside == foreside: continue
+        for row, col, color in shapes[bidx][2]:
+          dots[brow + row, bcol + col] = color
+      if _unique_placement(width, height, shapes, dots): break
+    else:
+      raise ValueError("Could not sample unambiguous marker placements")
 
   inwidth, inheight = width * (2 if horiz else 1), height * (1 if horiz else 2)
   grid = common.grid(inwidth, inheight, backs[0 if foreside else 1])

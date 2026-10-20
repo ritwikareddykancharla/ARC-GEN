@@ -1,0 +1,52 @@
+{
+  "task_id": "ff28f65a",
+  "factory_sha256": "fdaa52054021baf9b894d92bb01ddf3c6d00154afe053b4e1522fff836e69b1c",
+  "constructor_sha256": "d750c6b6a0212dabc167d380d189920b79d0620f1b208eacd63783ae54fac697",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 142788732233974,
+  "d4": 7,
+  "unique_base_inputs": 418,
+  "seconds": 4.919425875064917,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The task counts the 2x2 square objects in the input. It then fills that many cells of a 3x3 output in a fixed order. The original order is (0,0), (0,2), (1,1), (2,0), (2,2): the corners of an X and its centre. The factory applies the D4 transform directly to those five 3x3 coordinates. For d4>=4 it first mirrors the column (c -> 2-c), then rotates clockwise d4%4 times ((r,c) -> (c, 2-r)). It emits the resulting visible-coordinate order as a literal constant. Colour roles become constants: palette[0] is the input and output background, palette[1] is the fill colour, and palette[2] is the square colour. The emitted solve counts 4-connected same-colour non-background components. 4-connectivity is right because the generator's spacing rule allows squares to touch diagonally (offset 2,2) but never edge-to-edge. It then fills the first n cells of the transformed order on a 3x3 canvas of palette[0]. Grid size and shape are irrelevant, and objects on the boundary are handled by the bounds-checked flood fill.",
+    "limitations": "The constructor only produces square inputs of size 3 to 7 with 1 to 5 boxes. If there were more than 5 objects, the extra ones would be ignored, matching the constructor's cap. The background is taken to be palette[0] as a fixed constant rather than inferred, which matches the generator: the background is always colour 0, and 4 red cells never outnumber 5 black ones even in the 3x3 case. Objects are found by 4-connectivity among non-background cells. Diagonally touching squares are therefore counted separately, as the generator intends. I found no fixture contradictions or constructor defects; the fixtures agree with the count-to-X-order rule.",
+    "independent_source_review": {
+      "verdict": "accept",
+      "mechanism": "Count the non-touching 2x2 squares of colour palette[2] on a palette[0] background, giving n (1 to 5). Fill the first n cells of a fixed X-shaped order on a 3x3 palette[0] canvas with palette[1]. The order is (0,0), (0,2), (1,1), (2,0), (2,2) in native coordinates. The factory maps these five coordinates through the D4 transform and emits the result as a literal ORDER constant, so the solver works directly in visible coordinates.",
+      "evidence": [
+        "Constructor output depends only on len(rows): `if len(rows) >= k: output[...] = common.blue()` for k = 1 to 5. Square positions affect only the input picture. No hidden latent decides the label beyond the visible count.",
+        "Overlap rejection rule: a pair is rejected when not(|dr|>1 and |dc|>1) and |dr|<=2 and |dc|<=2. A pair is therefore accepted only if (|dr|>=2 and |dc|>=2), or |dr|>=3, or |dc|>=3.",
+        "Under that rule, squares can never share an edge or overlap. They can touch only at corners (offset 2,2). Counting 4-connected same-colour components in the emitted `_count_objects` therefore gives exactly num_boxes.",
+        "num_boxes is always between 1 and 5: 1 for sizes 3 and 4, 1-2 for 5, 2-3 for 6, 3-5 for 7. So n=0 and n>5 are unreachable, and the `if i >= n: break` loop covers every reachable count.",
+        "Placement is always feasible. A 7x7 grid with 5 squares is shown in fixtures, 6x6 with 3 squares fits, and smaller sizes need only 1 square. The rejection loop terminates in practice.",
+        "Colour roles match common.py: common.grid defaults to colour 0, which is palette[0] for both input and output background. blue() is palette[1] and red() is palette[2]. The emitted BG, FG and OBJ constants match these roles.",
+        "Using BG as a fixed constant is correct because the constructor background is always colour 0. The solver does not rely on majority inference.",
+        "The factory's tf (column mirror for d4>=4, then d4%4 clockwise quarter-turns on n=3) is applied to the order coordinates only. It is not a whole-grid untransform/solve/retransform wrapper.",
+        "The count is D4-invariant, so no input-side transform is needed.",
+        "All 8 approved train fixtures and 3 test fixtures match the count-to-X-order rule. Equal counts give equal outputs (pairs 1/5 and 3/7).",
+        "Host audit passed: 1000 fresh pairs, 8000 augmented checks and 16 fixture variants, with no sampler rejections. The augmented checks are consistent with tf matching the host D4 convention."
+      ],
+      "blocking_issues": [],
+      "nonblocking_limits": [
+        "The order of fills within the X is an orientation constant that varies with D4 augmentation. The cell set is D4-invariant, but which corner comes first, second or fourth is not. This order has to be learned from demonstrations with suitable counts (1, 2 or 4). Deterministic spatial orientation constants taught by demos are allowed, and the general D4-conflict rejection policy covers episodes that leave it ambiguous.",
+        "The constructor caps the count at 5. More than 5 objects would be silently truncated, but this is out of domain.",
+        "The rule text says sizes 3, 5, 6, 7, but the constructor also yields size 4 (always with one square). This does not affect correctness.",
+        "The solver counts every 4-connected non-background same-colour component without checking that it is a 2x2 shape or has colour OBJ. This is harmless because the constructor places only palette[2] 2x2 squares."
+      ],
+      "required_context_checks": [
+        "Confirm that the host's general D4-variant ambiguity rejection applies to ff28f65a. The task is not in the require_colour_evidence list, so the only protection is rejecting episodes whose demo counts do not settle the transformed fill order for the query's count. For example, demos with only counts 3 and 5 plus a query with count 1 or 2 would leave the order unresolved."
+      ],
+      "task_id": "ff28f65a",
+      "factory_sha256": "fdaa52054021baf9b894d92bb01ddf3c6d00154afe053b4e1522fff836e69b1c",
+      "constructor_sha256": "d750c6b6a0212dabc167d380d189920b79d0620f1b208eacd63783ae54fac697"
+    },
+    "host_review": "Host checked 4-connected square count and D4-transformed partial X prefix. Added same-query eight-order agreement because count3/5demos can leave count1unresolved. Tested asymmetric query inputs without outputs underall8D4."
+  }
+}

@@ -1,0 +1,53 @@
+{
+  "task_id": "f9012d9b",
+  "factory_sha256": "6d0e6d1d1078c8a4f2c63837bf2a0cc29a4ae1332c88fcac0f80938fa70737b6",
+  "constructor_sha256": "d8c30c25b6ebac87d74b8083ff96971f9c5fcbdbcc89ce3bde52e83d9794b6ab",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 146609380973887,
+  "d4": 7,
+  "unique_base_inputs": 989,
+  "seconds": 4.937078875023872,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The grid is a periodic wallpaper in which a block of original colour 0 hides part of the pattern. Applying any D4 transform to a doubly periodic tiling gives another doubly periodic tiling in the visible coordinates. Rotations by 90 degrees swap the row and column periods, and reflections only shift the phase. Because of this, the emitted program searches every (row period py, column period px) pair directly on the visible grid. Hidden cells are skipped in the consistency check. A pair is accepted only if it also determines every hidden cell from a visible cell in the same residue class. The ordering does not depend on orientation: smallest py+px first, then the most square pair. A tie between transposed pairs (a,b) and (b,a) only matters if their fills differ. In that case the program uses the smallest square tiling, since the generator always uses a square minisize tile. The hole colour is the only specialised constant, set to palette[0]. Hidden cells are filled from their residue classes, and the program returns the bounding box of the hole. The output has the same shape as the hole, and its orientation follows automatically. This works for rectangular grids, holes touching any border, and fully generic visible coordinates. It reproduces all approved fixtures: periods (2,2), (2,2), (3,3), and (3,3) for the test.",
+    "limitations": "The hole colour is assumed to be palette[0]. The generator draws its two pattern colours with common.random_colors, which presumably excludes black, so the pattern should never use the hole colour; I have not verified this. The archived solver breaks ties between equal-sum periods by scanning py in ascending order. That rule depends on orientation, so I replaced it with a symmetric ordering plus a square-tile fallback. Within the constructor's domain (square grids of size 4-7, tile size 2 or 3, holes of size 1-3), every residue class of the true tile is visible outside the hole. I also argue, but have not proven, that any smaller consistent period gives the same fill, so the choice of rule should never change the answer. No fixture contradicts the rule. No tests have been run. Search cost is O(H*W) periods times O(H*W) cells, which is trivial for this domain and still acceptable at 30x30. If no consistent period exists, which is outside the domain, the program falls back to the most frequent visible colour.",
+    "independent_source_review": {
+      "verdict": "accept",
+      "mechanism": "The input is a doubly periodic wallpaper built from a minisize\u00d7minisize tile of two non-zero colours, with a square block painted over in colour 0 (the hole). The emitted solver checks every (py, px) period on the visible cells and ignores hole cells. A period is kept only if it is consistent and gives every hole cell a visible residue representative. Kept periods are ordered by (py+px, |py-px|), which does not depend on orientation. The solver fills the hole from the residue table and returns the bounding box of the hole. Only the hole colour is specialised (palette[0]).",
+      "evidence": [
+        "Constructor: colours come from common.random_colors(2), which samples from range(1,10). The pattern therefore never contains 0, and palette[0] is a sound hole colour under colour permutation.",
+        "Constructor: the label is grid[r+row][c+col], copied before the hole is blacked out. The label is exactly the periodic tile value, with no hidden latent beyond the tile, and the tile is fully observable.",
+        "Coverage case 1 (size 4, tile 2, hole 1\u00d71): every residue class of the true tile appears outside the hole.",
+        "Coverage case 2 (sizes 5\u20136, tile 2, hole 2\u00d72): same result; at least 3 or 4 full rows and columns remain, covering both parities.",
+        "Coverage case 3 (size 7, tile 3, hole 2\u00d72 or 3\u00d73): at least 4 full rows and 4 full columns remain, covering every residue mod 3. Each partially hidden row or column still has at least 4 visible cells, which also covers every residue mod 3.",
+        "So the true (m,m) period is always a valid candidate. Any smaller consistent period, such as (1,2), (2,1), (1,1), or (2,2) inside a 3-tile, is witnessed by full rows and columns. It forces a true degeneracy of the tile (for example, equal rows or constant rows), so it gives the same fill.",
+        "Transposed-pair ties: if both (a,b) and (b,a) are true periods, their fills agree. The square fallback runs only when the fills disagree, which the argument above suggests does not happen in this domain.",
+        "No whole-grid untransform: the solver works in visible coordinates. Rotating the grid swaps (py, px), and the search over all pairs is symmetric, so D4 is handled without wrappers. The output's shape and orientation come from the visible hole's bounding box.",
+        "Fixture walk: periods (2,2) give [[8]] and [[1,1],[2,1]]. Period (3,3) gives [[5,5],[5,2]] and the test output [[1,8,8],[8,8,1],[8,1,8]].",
+        "Episode evidence: no arbitrary colour association is involved. The rule is pure periodic completion, and the evidence-check list does not include f9012d9b, which is appropriate.",
+        "Host audit: 1000 fresh pairs and 8000 augmented checks passed, with 989 unique base inputs. This is a large share of a small parameter space (sizes 4\u20137, 2^4 or 2^9 tiles, hole positions)."
+      ],
+      "blocking_issues": [],
+      "nonblocking_limits": [
+        "The claim that any smaller visible-consistent period yields the true fill is argued only informally, here and in the prior notes. It holds for the constructor's coverage geometry and is supported by the audit, but it is not formally proven for unrestricted inputs.",
+        "The ordering differs from the archived solver, which scans py ascending within equal sums. This is a legitimate orientation-symmetric replacement, not a constructor-bug copy. In this domain both orderings agree whenever the fills are unique.",
+        "Out-of-domain branches (no hole returns the grid unchanged; no consistent period falls back to the most frequent visible colour) are defensive. The constructor excludes both, since it always has a hole and always has the true tile period.",
+        "The square-tile fallback encodes a family prior (square minisize). It is reachable only if transposed minimal periods disagree, which the coverage argument suggests does not happen in this domain."
+      ],
+      "required_context_checks": [
+        "Confirm that the augmentation palette keeps palette[0] as the image of the original colour 0, the hole colour, in every emitted variant.",
+        "Confirm that the D4-conflict context policy (rejecting variants with the same visible inputs but conflicting answers) has nothing to reject here, because the answer is a deterministic crop of the hole."
+      ],
+      "task_id": "f9012d9b",
+      "factory_sha256": "6d0e6d1d1078c8a4f2c63837bf2a0cc29a4ae1332c88fcac0f80938fa70737b6",
+      "constructor_sha256": "d8c30c25b6ebac87d74b8083ff96971f9c5fcbdbcc89ce3bde52e83d9794b6ab"
+    },
+    "host_review": "Host checked periodic residue fit, candidate ordering, hole crop and complete true-period witnesses in default size4..7 geometry. No inverse wrapper or hidden answer lookup. Source review inference is finite-domain, not proof for unrestricted periods; existing1000/8000 audit retained."
+  }
+}

@@ -1,0 +1,48 @@
+{
+  "task_id": "feca6190",
+  "factory_sha256": "f369f110dd19aad8af4042f0e147971b0c4031bf47849a97c14e179f1480fedb",
+  "constructor_sha256": "7569a9b066a540e062e3fa7c5f53ca37d648632052463f6234f92299ce79e687",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 225355365404412,
+  "d4": 7,
+  "unique_base_inputs": 815,
+  "seconds": 3.2554545409511775,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The canonical rule is out[y][x] = inp[x + y - (N-1)] when that index lies in 0..L-1, with N = L * (number of non-background cells). I pushed the D4 map through this formula directly instead of transforming grids.\n\nIn the visible coordinates, the input is a row for even rotation counts (d4 in 0,2,4,6) and a column for odd counts. Its flattened index p is either the original index c (d4 in 0,1,6,7) or L-1-c (d4 in 2,3,4,5).\n\nFor a visible output cell (Y,X), the input index that feeds it is affine: p = SX*X + SY*Y + A*(N-1) + B*(L-1). The constants per d4 are:\n- 0 and 7: (1,1,-1,0), anti-diagonals reading forward.\n- 2 and 5: (1,1,-1,1).\n- 1: (-1,1,0,0), main diagonals.\n- 6: (1,-1,0,0).\n- 3: (-1,1,0,1).\n- 4: (1,-1,0,1).\n\nThe background is palette[0]. The emitted program counts non-background input cells to get N and allocates an N x N background canvas. It then draws one 45-degree stripe per coloured input cell, solving X = SX*(p - off - SY*Y) for each row Y and dropping cells outside the canvas, as the archived solver does. Within the generator's domain no two stripes share a cell, so no ties arise. Colours are copied from the visible input pixels, so any palette works.",
+    "limitations": "Untested: neither the factory nor the emitted program has been run, including on the approved fixtures.\n\nIt assumes the generator's domain: the input is a single row or column (length 5 in practice, but any length L works) and holds at least one non-background cell. An all-background input is outside the domain and returns [[background]] as a guard. If N = L*n exceeds 30 for other lengths, the program still builds the larger grid.\n\nThe background is fixed as palette[0] rather than inferred from the demos, which matches the constructor, where 0 is always the background.\n\nI found no constructor defects or fixture contradictions. The constructor loop range(c, size) is exactly the in-bounds condition of the anti-diagonal formula, so no rule depends on indexing quirks.",
+    "independent_source_review": {
+      "verdict": "accept",
+      "mechanism": "A 1x5 strip with n non-background cells becomes an N x N canvas, where N = 5n. Each coloured strip cell at index c becomes a 45-degree stripe of its colour. In canonical orientation the stripe satisfies X = c + (N-1-Y), clipped to the canvas. The emitted solver reads the strip in visible coordinates: a row for even d4, a column for odd d4. It then draws each stripe with the per-d4 affine relation p = SX*X + SY*Y + A*(N-1) + B*(L-1), solved as X = SX*(p - off - SY*Y).",
+      "evidence": [
+        "Constructor: output[r][size-1+c-r] = color for r in range(c, size). The column is x = size-1+c-r. x <= size-1 iff r >= c, and x >= 0 always holds for r < size. So range(c, size) is exactly the in-bounds set and nothing is truncated by index quirks.",
+        "Stripes for different c have distinct values of x+r (size-1+c), so they never overlap. Writes for colour 0 land only on the background. There are no ties or overwrite-order effects.",
+        "size = num_colors*5 with num_colors in 1..5 (random_colors(randint(1,5)) samples distinct non-zero colours). So N <= 25 <= 30, and n >= 1 means the N == 0 guard is out of domain.",
+        "d4=0 check: the table gives (1,1,-1,0), so off = -(N-1). Then X = p + (N-1) - Y, which matches the archived transform x = c + (N-1-y) and the fixture bottom row (Y = N-1 gives X = p).",
+        "The input length is always 5, so the visible input is 1x5 or 5x1. The HORIZ-based seq selection is unambiguous. L and n are invariant under D4 and under palette permutation, so N is computed correctly in visible coordinates.",
+        "The solver computes everything directly in augmented coordinates using only orientation constants. There is no whole-grid untransform/solve/retransform wrapper.",
+        "No hidden latent determines the label. The output is fully determined by the visible input strip.",
+        "Host audit passed 1000 fresh pairs, 8000 augmented checks and 16 fixture variants with no sampler rejections. This is consistent with the per-d4 table matching the host augmentation convention."
+      ],
+      "blocking_issues": [],
+      "nonblocking_limits": [
+        "I cannot independently confirm the 8 table rows for d4 != 0 without the augmentation module's exact D4 convention. Correctness for those rows rests on the host audit covering all augmented variants.",
+        "Background is fixed as palette[0] rather than inferred. This matches the constructor, where 0 is always the background.",
+        "The guards for an all-background input and for N > 30 are outside the generator's domain."
+      ],
+      "required_context_checks": [
+        "None blocking. The task has no arbitrary colour or shape association: colours are copied from input pixels. The stripe direction is an orientation constant that every demonstration teaches, since each demo has at least one coloured cell. The task is not in the episode-evidence list, and the generic D4-conflict policy suffices."
+      ],
+      "task_id": "feca6190",
+      "factory_sha256": "f369f110dd19aad8af4042f0e147971b0c4031bf47849a97c14e179f1480fedb",
+      "constructor_sha256": "7569a9b066a540e062e3fa7c5f53ca37d648632052463f6234f92299ce79e687"
+    },
+    "host_review": "Host checked strip nonzero count, canvas size5*n<=25 and affine visible-coordinate stripe equation. Host augmentation is horizontal flip first then clockwise. Full8D4 audit validates alltable rows; no inverse-grid wrapper."
+  }
+}

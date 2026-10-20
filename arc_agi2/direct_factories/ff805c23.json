@@ -1,0 +1,45 @@
+{
+  "task_id": "ff805c23",
+  "factory_sha256": "eafc2961849d21d540649d8460328c6bf5ce03f843c3dbdc0c6e9c62d4d00696",
+  "constructor_sha256": "d927bd76ac0c6c93a06bf79f094cedcacc2d6478153fe20ce96d092f92a9645c",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 149331897060242,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 6.930022208020091,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The scene is a square canvas with full eight-way (D8) symmetry. A solid 5x5 block of the original colour 1 covers part of it. The answer is the hidden content under that block.\n\nHow the factory handles D4 and the palette:\n- A D4 transform of a D8-symmetric square is still D8-symmetric.\n- The set of seven symmetric partners of any cell is the same in every visible frame. Those partners are the left-right, up-down and both diagonal mirrors, plus the 180-degree and 90-degree rotations.\n- So the emitted program works directly in visible coordinates. It uses the true dihedral orbit of each visible cell and needs no normalisation.\n- The only constant that gets specialised is the patch colour, which becomes palette[1].\n\nWhat the emitted program does:\n1. It finds every cell of the patch colour.\n2. For each patch cell, it fills in the colour of a symmetric partner that is not itself covered by the patch.\n3. It crops the patch's bounding box and returns it.\n\nThe constructor guarantees that every orbit has at least one uncovered cell; it rejects any placement where an orbit is fully covered. All uncovered cells in an orbit carry the same colour, so the order of the partners does not matter, and there is no hidden tie-break. Patches touching the grid edge are fine because each partner is checked against the grid bounds.",
+    "limitations": "- The program assumes the patch colour palette[1] appears only in the patch. The constructor guarantees this: the three scene colours are drawn excluding blue, and the background is black (0).\n- The canvas is assumed square, which matches the constructor's domain (size 24). On a non-square grid, any diagonal partner that falls out of bounds is simply skipped.\n- If no patch colour is present, the program returns the grid unchanged. This is a degenerate fallback outside the constructor's domain.\n- I found no contradictions in the fixtures and no constructor defects. Before placing the patch, the generator rejects any placement that would fully hide an orbit, so the answer is always determined by visible pixels.\n- I have not run any tests.",
+    "independent_source_review": {
+      "verdict": "accept",
+      "mechanism": "The constructor builds a 24x24 canvas with full D4 symmetry. For every fundamental-domain cell (r <= c < 12), all 8 images in `cells` get `colors[idx]`. A 5x5 block of blue (1) is placed at (brow, bcol). The output is the original content under that block. The emitted solver finds the PATCH-coloured cells (PATCH = palette[1]) and fills each one from its 7 dihedral partners in visible coordinates, using only partners that are in bounds and not PATCH (majority vote). It then crops the patch's bounding box.",
+      "evidence": [
+        "Orbit check is sound. `draw` paints blue first, then checks each orbit for at least one non-blue cell before painting it. Orbits from the r <= c fundamental domain are disjoint, so cells painted for earlier orbits never mask a fully covered later orbit. A fully hidden orbit causes `return False` and resampling. So every patch cell has at least one uncovered partner among the 7 listed. A patch cell is itself covered, so the uncovered witness is always a different orbit member.",
+        "Every uncovered cell in an orbit carries the same `colors[idx]`. The factory's Counter majority therefore always has a single unanimous value. It equals the archived program's first-non-patch choice, so the order of partners is irrelevant and there is no hidden tie-break.",
+        "The patch colour is unique in the input. `color_list` uses `random_color(exclude=[blue])`, the background is `black()` = 0, and all validate() colour lists contain no 1. Under a palette permutation, palette[1] stays distinct from every scene colour.",
+        "Visible coordinates are used directly. The D4 group of a square is closed: in any D4-transformed frame, the canvas is still D4-symmetric and the partner formula `_partners` lists the same orbit. The patch maps to another axis-aligned 5x5 block, and the output transforms the same way as the cropped region. No untransform, native-solve or retransform wrapper is used. The only specialised constant is the patch colour.",
+        "Output size is right. The patch is a solid 5x5 square and is the only PATCH-coloured region, so the bounding-box crop is exactly 5x5. Bounds checks cover patches that touch the edge, though partners are always in bounds when H == W.",
+        "Host audit: 1000 fresh pairs, 8000 augmented checks and 16 fixture variants passed, with no sampler rejections reported."
+      ],
+      "blocking_issues": [],
+      "nonblocking_limits": [
+        "The `len(ys) == 0` identity fallback is outside the constructor's domain, which always places a patch.",
+        "Behaviour on non-square grids is undefined but out of domain; size is fixed at 24.",
+        "The rule text's comment about pair 2 lacking symmetry data and its 'first partner' ordering are descriptive only. Under the constructor, every valid ordering gives the same answer.",
+        "ff805c23 is not in the special evidence list, so it reaches the generic fallback branch of `require_colour_evidence`. That branch only fires on lines with exactly two non-background cells forming a specific colour pair, which is effectively impossible in these dense symmetric scenes. It is harmless and also unnecessary, because the rule involves no arbitrary colour association."
+      ],
+      "required_context_checks": [],
+      "task_id": "ff805c23",
+      "factory_sha256": "eafc2961849d21d540649d8460328c6bf5ce03f843c3dbdc0c6e9c62d4d00696",
+      "constructor_sha256": "d927bd76ac0c6c93a06bf79f094cedcacc2d6478153fe20ce96d092f92a9645c"
+    },
+    "host_review": "Host checked fullD4 orbit partition and constructor rejection of fully coveredorbits. Visible partners unanimous, patchcolour excluded from pattern; crop equals5x5default. Review generic fallback claim corrected: no whitelist means earlyreturn."
+  }
+}

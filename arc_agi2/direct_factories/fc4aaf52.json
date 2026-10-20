@@ -1,0 +1,49 @@
+{
+  "task_id": "fc4aaf52",
+  "factory_sha256": "feb9620e3e0c8ef0ad4400bef3d7bb8fce08f9ee7d787bbf91df3b21d73e1e7b",
+  "constructor_sha256": "028ee2489e08e0604ec7464bd0c9723c59f2e560707d945829dd9c3d03e5bc92",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 225650134567590,
+  "d4": 7,
+  "unique_base_inputs": 993,
+  "seconds": 5.559518957976252,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The constructor draws a figure that is mirror-symmetric across the line between rows 7 and 8. Each row of the figure is a contiguous segment: an outline colour around an interior fill colour. The output swaps the two figure colours. It then shifts the top half (rows 0-7) right one column at a time until rows 7 and 8 share no occupied column. Because rows 7 and 8 are identical contiguous segments, the total shift equals the width of the cut row.\n\nThe factory carries two direction vectors through the D4 transform: the direction pointing toward the moving half, starting as up (-1,0), and the shift direction, starting as right (0,1). A row reversal negates the column component. Each clockwise rotation maps (dr,dc) to (dc,-dr). These vectors are baked into the emitted program as constants, together with the background palette[8].\n\nThe emitted program works directly in visible coordinates:\n1. Find the non-background figure.\n2. Swap its two colours.\n3. Find its extent along the cut axis, which is rows if the moving direction is vertical and columns otherwise. Split that extent in half.\n4. Pick the half on the moving side and measure the occupied extent of its line next to the cut.\n5. Erase that half and redraw it, colour-swapped, offset by that width along the shift direction.",
+    "limitations": "None of this has been run or tested; it was written from reading the generator and the archived solver.\n\n- **Background:** assumed to be palette[8], as fixed by the constructor.\n- **Odd extents:** if the figure's extent along the cut axis were odd, which the constructor never produces, each half would take floor(n/2) lines and the middle line would stay put.\n- **Clipping:** shifted cells landing off-grid are dropped. The constructor never needs this, since the shift is at most 7 and the figure ends by column 7, so nothing passes column 14.\n- **Colour count:** the colour swap only happens when exactly two figure colours are present. The constructor guarantees this by rejecting grids that do not have exactly 3 colours.\n- **Generator quirk, not a defect:** the generator shifts one column at a time and copies column 0 in place. Column 0 is always background in its domain, so this has no visible effect.\n- **Fixtures:** both training pairs and the test output agree with the shift-by-cut-row-width rule. I found no contradictions.",
+    "independent_source_review": {
+      "verdict": "accept",
+      "mechanism": "The constructor builds a figure from contiguous row segments. Pattern row k is drawn at grid rows 7-k and 8+k, so the figure is mirror-symmetric about the 7|8 line and its height is even. Segment columns stay in [1,7]. Every cell whose four neighbours are all non-cyan becomes the fill colour fgcolor, and everything else in the figure is the outline colour bgcolor. The output swaps the two figure colours. It then shifts rows 0-7 right one column at a time until rows 7 and 8 share no occupied column. Rows 7 and 8 are the same contiguous segment of width w, so the total shift is exactly w. The emitted solver bakes in D4-transformed constants: the direction toward the moving half (UR,UC) and the shift direction (SR,SC). It works directly in visible coordinates: it swaps the two non-background colours, splits the figure's extent along the cut axis, takes the half on the moving side, measures the occupied extent of that half's line at the cut, erases the half, and redraws it offset by w along the shift direction.",
+      "evidence": [
+        "Even height and cut position: draw() writes grid[7-row] and grid[8+row] for the same pattern row. The extent is therefore rows 7-k..8+k, and lo+half-1 = 7 equals the generator's cut row. In the solver, cut = lo+half-1 when moving toward the low side, and cut = hi-half+1 when moving toward the high side.",
+        "Shift equals width: the stop condition `output[7][col] != 8 and output[8][col] != 8` first clears when the shift reaches w, because the rows are identical contiguous segments [s, s+w-1]. The solver's `idx.max()-idx.min()+1` on the cut line gives that same w.",
+        "No clipping is reachable: s >= 1, s+w-1 <= 7 and w <= 7, so the largest shifted column is s+2w-1 <= 14 < 16. The generator's in-place copy keeps column 0, which is always background because start >= 1. The generator therefore matches a clean translation, and the solver's off-grid guard is never used.",
+        "Fill assignment is well defined: rows are contiguous segments, so a cyan cell cannot have both horizontal neighbours non-cyan. Only figure cells can become fgcolor. The row-major in-place pass only turns non-8 cells into another non-8 colour, so the order of the pass cannot change the result.",
+        "Colours: `len(set(flatten(grid))) != 3` rejects any scene without both figure colours, so the solver's `len(cols)==2` swap branch always runs. The figure colours are sampled from {0..7,9}, so neither can equal the background 8, which maps to palette[8].",
+        "The figure may be only diagonally connected, for example when the length is 1 and start moves by +1. The solver never uses connectivity, only the bounding extent and the cut line, so this does not matter.",
+        "D4 handling: the solver keeps the logic symmetric and specializes the two direction vectors. Vertical or horizontal axis comes from UR != 0, and low or high side from UR==-1 or UC==-1. There is no untransform/solve/retransform wrapper. The host audit passed 8000 augmented checks across all orientations, which is consistent with a correct vector mapping.",
+        "Archived program: it uses the same mid = y0 + h//2, measures the width of the last row of the upper half, and shifts right. It agrees with the generator.",
+        "No hidden latent decides the label: the output follows from the visible figure alone. There are no lookup associations. The swap is a fixed role-free permutation of two colours, and the move direction is a deterministic spatial constant taught by the demonstrations' absolute positions."
+      ],
+      "blocking_issues": [],
+      "nonblocking_limits": [
+        "Unreachable branches: odd extent (the middle line would stay), an empty cut line, a figure with only one colour, and off-grid clipping. None of these is produced by the constructor.",
+        "The background is fixed to palette[8] rather than inferred. This is correct for the constructor domain.",
+        "The 8 D4 direction vectors were not traced against the host's augmentation convention line by line. Correctness of the mapping rests on the symmetric solver structure plus the host's augmented pass."
+      ],
+      "required_context_checks": [
+        "None specific: fc4aaf52 has no entry in episode_evidence_checks, which is appropriate because there is no arbitrary colour association. The generic D4 conflicting-answer rejection in context_policy is sufficient. Each demonstration shows the absolute location of both halves, so it fixes which half moves and in which direction."
+      ],
+      "task_id": "fc4aaf52",
+      "factory_sha256": "feb9620e3e0c8ef0ad4400bef3d7bb8fce08f9ee7d787bbf91df3b21d73e1e7b",
+      "constructor_sha256": "028ee2489e08e0604ec7464bd0c9723c59f2e560707d945829dd9c3d03e5bc92"
+    },
+    "host_review": "Host checked even mirror extent, moving cut width, two-colour swap and no clipping in16x16 default domain. Direction vectors match horizontal flip then clockwise rotation. Every demo moves a nonempty half and exposes direction."
+  }
+}

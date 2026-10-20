@@ -1,0 +1,47 @@
+{
+  "task_id": "fe9372f3",
+  "factory_sha256": "aedab033821cb2cfc9cbb13a93cb3e6140b68cbdcbf7497068920eecd6a514ec",
+  "constructor_sha256": "351e686e7fd1da420cbe180b307fe9ff5cff5240e120714fa20e64917cf74642",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 221141132889505,
+  "d4": 7,
+  "unique_base_inputs": 979,
+  "seconds": 6.660881416988559,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The constructor draws a single five-cell plus (colour 2) on background 0. It then fills the two diagonals through the centre with colour 1 out to the edges. Each orthogonal arm is extended to the edges with colour 4 where |distance| % 3 == 1 and colour 8 everywhere else. The plus cells keep colour 2.\n\nThe whole construction is symmetric under every D4 transform. Diagonals stay diagonals, orthogonal lines stay orthogonal lines, and the cadence depends only on distance from the centre. So the emitted program works directly in the visible coordinates with no direction specialisation.\n\nThe palette is folded into constants: BG=palette[0], PLUS=palette[2], DIAG=palette[1], MARK=palette[4], FILL=palette[8]. The program finds the centre as the bounding-box midpoint of the plus-coloured cells. It falls back to any non-background cells if none have the plus colour. It paints diagonal rays from distance 1 and orthogonal rays from distance 2, writing only onto background cells, so the plus is never overwritten.\n\nI have not run any tests. The host's fixture and fresh-pair checks are still needed.",
+    "limitations": "Assumes exactly one plus, as the generator guarantees. The generator always places the centre at least 3 cells from every border and uses a grid of at least 7x7, so the plus is never clipped. A clipped or multiple plus would fall outside the domain.\n\nThe generator writes the ray colours over every cell, while the program paints only background cells. These give the same result because the input contains nothing except background and the plus.\n\nThe demonstrations are not used, because the colour roles come fully from the palette.\n\nNo constructor defects or fixture contradictions were found. All three fixtures match the uniform rule.",
+    "independent_source_review": {
+      "verdict": "accept",
+      "mechanism": "The input holds one five-cell plus in colour palette[2] on a palette[0] background. The constructor colours both full diagonals through the centre palette[1]. It colours the full centre row and column palette[4] where |distance| % 3 == 1 and palette[8] otherwise. It then writes the plus (palette[2]) back over the five centre cells. The emitted solver takes the centre as the bounding-box midpoint of the PLUS-coloured cells. It paints the four diagonal rays from d=1, then the four orthogonal rays from d=2 (MARK if d%3==1, else FILL), writing only onto BG cells.",
+      "evidence": [
+        "Constructor domain: width and height are in [7,30], row is in [3,height-4] and col is in [3,width-4]. So all five plus cells and the 3x3 bounding box lie inside the grid. The bbox midpoint (y0+y1)//2 and (x0+x1)//2 is exactly (row,col).",
+        "Overwrite order in the constructor: a diagonal cell meets the centre row or column only at the centre itself, so no non-plus cell sees two writes. The row and column formulas give 4 at d=1, but those cells are plus cells and get overwritten by 2. The solver's choice to start orthogonal rays at d=2 and diagonal rays at d=1 therefore reproduces the constructor exactly.",
+        "Diagonal d=1 cells are the plus notches and are background in the input. Every non-plus input cell is background, so painting only BG cells is equivalent to the constructor's unconditional writes.",
+        "Cadence: abs(col-c)%3==1 in the constructor matches d%3==1 in the solver for all d>=2 in both directions.",
+        "D4 invariance holds. The plus is D4-symmetric, diagonals map to diagonals, orthogonals map to orthogonals, and the cadence depends only on |d|. No direction or axis is specialised and there is no untransform wrapper. The solver works directly in visible coordinates.",
+        "Palette roles are taken from fixed rule colours: BG=P[0], DIAG=P[1], PLUS=P[2], MARK=P[4], FILL=P[8]. All three fixtures match: pair 1 (16x7 at (3,3)), pair 2 (10x12 at (4,4)) and the test (17x30 at (11,7), with 4s at x=3 and x=11 and at y=1,4,7,15,\u2026,27).",
+        "The host audit passed 1000 fresh pairs, 8000 augmented checks and 16 fixture variants, with no sampler rejections."
+      ],
+      "blocking_issues": [],
+      "nonblocking_limits": [
+        "Evidence for the MARK colour (palette[4]) is not guaranteed in every demonstration. A d=4 orthogonal cell is absent only when width==7 with col==3 and height==7 with row==3. A demo with a 7x7 grid and the plus centred shows no MARK colour. If every sampled demonstration had that exact configuration while the query did not, the permuted MARK colour would be unobserved in context. Per demo the probability is about (1/24)^2. Across two or more demos the chance is negligible, and no specific context check covers this task. DIAG (d=1 notches) and FILL (d=2 always lies in bounds because 3<=col<=width-4) are always shown.",
+        "The fallback that uses any non-BG cells when no PLUS-coloured cell exists, and the early return on an empty grid, are both out of domain. The constructor always places exactly one complete plus.",
+        "The solver assumes a single plus, which the constructor guarantees. Multiple or clipped pluses are outside the domain."
+      ],
+      "required_context_checks": [
+        "Optionally confirm that sampled episodes include at least one demonstration in which palette[4] appears in the output (any demo except the 7x7 centred-plus case). This only matters in the astronomically rare event that every demo is 7x7 with the plus at (3,3)."
+      ],
+      "task_id": "fe9372f3",
+      "factory_sha256": "aedab033821cb2cfc9cbb13a93cb3e6140b68cbdcbf7497068920eecd6a514ec",
+      "constructor_sha256": "351e686e7fd1da420cbe180b307fe9ff5cff5240e120714fa20e64917cf74642"
+    },
+    "host_review": "Host checked plus centre, diagonal rays and orthogonal distance modulo3 cadence. Added input-only check requiring demonstrated palette4 when query reachesdistance4; tested7x7counterexample underall8D4. Query answer never read."
+  }
+}

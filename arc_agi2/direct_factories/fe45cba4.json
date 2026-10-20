@@ -1,0 +1,52 @@
+{
+  "task_id": "fe45cba4",
+  "factory_sha256": "7800f078092cff8f3fc1dceceda7a4638107d7b725df5579459915931a620193",
+  "constructor_sha256": "44d0bf07bd61c6436ba83f69c8175864cf7c63d737a7b543ddfa48e35a204c9a",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 65534897911553,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 15.501814249902964,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The factory rewrites the archived mechanism directly in visible coordinates. Sockets are anchored to one grid edge. In the canonical frame this is the right edge, and pieces lie toward the left. The factory pushes the original 'left' vector (0,-1) through the D4 map: a flip negates the column component, and each clockwise rotation maps (dr,dc) to (dc,-dr). This gives the visible direction (VR,VC) that points away from the socket edge. The emitted solver then does the following:\n1. It infers the background as the most frequent colour. The constructor guarantees this is strict, so no palette constant is needed.\n2. It extracts 4-connected single-colour components.\n3. For each colour with exactly two components, it chooses the piece as the component that reaches furthest from the socket edge. Its sort key is (min depth, -max depth), where depth = -(VR*r + VC*c). This exactly mirrors the archived sort key (box x0, -box x1).\n4. It searches every non-zero translation of the piece. A valid translation stays in bounds, avoids the socket, and lands only on background (cells the piece already occupies count as free). It must also make the piece plus the socket exactly fill their joint bounding box.\n5. It erases the piece and stamps it at the matching translation. The constructor's _unique_fit guarantees that exactly one translation qualifies, so the search order is irrelevant.\nUnpaired sockets, which form a single component of their colour, are left unchanged. Grids may be rectangular, and the search covers all shifts within the grid dimensions.",
+    "limitations": "Background inference relies on the constructor's guarantee that the background is strictly the most frequent colour. If two same-colour components tied on the (min depth, -max depth) key, the order would fall back to the component discovery order. The constructor forbids this, because pieces always start strictly further from the socket edge than their socket. Colours with more than two components are ignored, matching the archived solver. The constructor excludes same-colour decoys and multiple pieces per socket. If no fitting translation exists, the pair is left untouched. I found no fixture contradictions and no constructor defects that the rule depends on. As stated, no tests were run.",
+    "independent_source_review": {
+      "verdict": "accept",
+      "mechanism": "Sockets are anchored to one grid edge (the right edge in canonical coordinates). For each colour with exactly two 4-connected components, the component that reaches furthest from the socket edge is the piece. The emitted solver uses the sort key (min depth, -max depth), where depth = -(VR*r + VC*c); in canonical orientation this reduces to the column index. The solver then searches every non-zero translation of the piece that stays in bounds, avoids the socket, and lands only on background or the piece's own old cells, and accepts the one where piece plus socket exactly fill their joint bounding box. It erases the piece and stamps it at the new position. Colours with a single component (unpaired sockets) are left unchanged.",
+      "evidence": [
+        "Label determinism: the constructor output fills rows r0..r0+h-1 and cols width-w-1..width-1. This equals the translation move = (r0-pr, width-w-1-pc), because the spine lands at width-w-1 and notch cell (dr,dc) lands at width-w+dc, which is exactly the socket's notch. _scene_ok/_unique_fit requires found == [move] under the same constraints as the solver's _fit (in bounds, not on socket, background or own cell, union is a rectangle). So the label is the unique visible fit, not a hidden latent.",
+        "Search ranges agree: the solver's dy range (-H+1..H-1) differs from the constructor's (-H..H-1) only by dy=-H, which can never be in bounds.",
+        "Component structure: _notch_ok and the add() guard in _make_notch keep the socket connected. Every notch bay touches column 0, so the piece connects through its spine. _gap_ok forbids 8-adjacency between a piece and any socket or other piece. Socket colours are distinct (random.sample / explicit check). Each paired colour therefore has exactly two components and each unpaired colour exactly one; there are no same-colour decoys.",
+        "Piece ordering has no ties: the constructor enforces pc < width - w. Every socket's top row is solid from col width-w, so the piece's min column is strictly smaller than the socket's. This also mirrors the archived key (x0, -x1).",
+        "Moves do not interfere: target rectangles lie in disjoint socket bands. _socket_zones keeps pieces out of every socket bbox plus the column just left of it, so stamped targets never collide with other objects. Both the solver and _unique_fit test occupancy against the input grid, and the solver erases before stamping, so overlap between old and new piece cells is handled.",
+        "Background: _bg_dominant enforces a strict most-frequent colour, so the solver's Counter.most_common is unambiguous and no palette constant is needed.",
+        "Fixtures: validate() reproduces train pair 1 (2-piece spine rows 2-5 col 0, notch at rows 3-4 cols 1-2), train pair 2 (9-piece at (1..3,0)+(2,1), lone 2 socket untouched), and the test layout. The checked cells match the approved grids.",
+        "Visible coordinates: the factory only specialises the direction constant (VR, VC) by pushing (0,-1) through flip and clockwise rotation. It applies no whole-grid untransform/retransform.",
+        "Episode evidence: there are no arbitrary colour associations; the task is not in the colour-evidence list. The direction toward the loose pieces is a deterministic spatial orientation constant taught by the demonstrations (pieces always lie away from the socket edge). This direction is what disambiguates the reverse fit seen in pair 2.",
+        "Host audit passed 1000 fresh pairs and 8000 augmented checks with no sampler rejections."
+      ],
+      "blocking_issues": [],
+      "nonblocking_limits": [
+        "The factory's flip-then-rotate composition for (VR, VC) is correct only if the augmentation's d4 index uses the same convention. I cannot verify this from source alone; the 8000 augmented checks (1000 \u00d7 8 orientations) support it empirically.",
+        "The solver ignores colours with more than two components and returns unchanged pairs when no fit exists. Both cases are excluded by the constructor (no decoys, one piece per socket, unique fit enforced).",
+        "Scope is limited to sockets on a single edge, one piece per socket, and pieces in disjoint row slots. Explicit height 7 and width 8 are near-template boundary cases, as the constructor documents.",
+        "Background inference relies on the constructor's strict-dominance guarantee rather than on demonstrations."
+      ],
+      "required_context_checks": [
+        "Confirm that the augmentation module's d4 numbering (d4 >= 4 meaning horizontal flip applied before d4 % 4 clockwise rotations) matches the factory's vector mapping. Host augmented checks indicate agreement.",
+        "Confirm that the context policy rejects any episode where D4-variant demonstrations would leave the piece/socket direction ambiguous for the query. This is not expected, because every demonstration shows the piece on the side away from the socket edge."
+      ],
+      "task_id": "fe45cba4",
+      "factory_sha256": "7800f078092cff8f3fc1dceceda7a4638107d7b725df5579459915931a620193",
+      "constructor_sha256": "44d0bf07bd61c6436ba83f69c8175864cf7c63d737a7b543ddfa48e35a204c9a"
+    },
+    "host_review": "Host reviewed _notch_ok, _piece_cells, _socket_zones, _gap_ok, _unique_fit and _scene_ok. Constructor guarantees strict background majority, leftward loose pieces, distinct socket colours and exactly one nonzero translation completing the rectangle. Reserved socket zones and row separation prevent sequential-colour interference. D4 direction mapping preserves the socket-edge relation. Unpaired sockets remain unchanged. Existing 1000 fresh / 8000 augmented / 16 fixture checks match current hashes; this is bounded domain evidence, not a universal solver proof."
+  }
+}

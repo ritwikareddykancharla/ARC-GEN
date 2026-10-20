@@ -5,6 +5,83 @@ from .program_targets import make_record
 
 
 class ColourEvidenceTests(unittest.TestCase):
+    def test_duplicate_parts_require_demonstrated_reading_order(self):
+        import random
+        from tasks import task_fea12743 as gen
+        state = random.getstate()
+        try:
+            random.seed(20261021)
+            weak = gen.generate(tie=False)
+            strong = gen.generate(tie=True)
+        finally:
+            random.setstate(state)
+        for d4 in range(8):
+            pal = [3, 9, 0, 7, 2, 8, 1, 6, 4, 5]
+            a, b = apply_episode([weak, strong], d4, pal)
+            with self.assertRaises(MissingColourEvidence):
+                require_colour_evidence('fea12743', [a], [{'input': b['input']}], pal, d4)
+            require_colour_evidence('fea12743', [b], [{'input': b['input']}], pal, d4)
+
+    def test_count_demos_must_disambiguate_partial_x_order(self):
+        from tasks import task_ff28f65a as gen
+        weak = gen.generate(size=7, rows=[0, 0, 3], cols=[0, 3, 0])
+        strong = gen.generate(size=4, rows=[1], cols=[1])
+        for d4 in range(8):
+            pal = [3, 9, 0, 7, 2, 8, 1, 6, 4, 5]
+            a, b = apply_episode([weak, strong], d4, pal)
+            with self.assertRaises(MissingColourEvidence):
+                require_colour_evidence('ff28f65a', [a], [{'input': b['input']}], pal, d4)
+            require_colour_evidence('ff28f65a', [b], [{'input': b['input']}], pal, d4)
+
+    def test_corner_figures_require_rule_agreement(self):
+        from tasks import task_fd02da9e as gen
+        weak = gen.generate(colors=[1, 7, 7, 7])
+        strong = gen.generate(colors=[1, 3, 4, 5])
+        query = gen.generate(colors=[7, 7, 2, 7])
+        for d4 in range(8):
+            pal = [3, 9, 0, 7, 2, 8, 1, 6, 4, 5]
+            a, b, q = apply_episode([weak, strong, query], d4, pal)
+            with self.assertRaises(MissingColourEvidence):
+                require_colour_evidence('fd02da9e', [a], [{'input': q['input']}], pal, d4)
+            require_colour_evidence('fd02da9e', [b], [{'input': q['input']}], pal, d4)
+
+    def test_stacked_nor_requires_visible_mark_colour(self):
+        from tasks import task_fafffa47 as gen
+        weak = gen.generate(rows=[r for r in range(3) for c in range(3)],
+                            cols=[c for r in range(3) for c in range(3)], idxs=[0]*9)
+        strong = gen.generate(rows=[0, 1, 2], cols=[0, 1, 2], idxs=[0, 1, 0])
+        for d4 in range(8):
+            pal = [3, 9, 0, 7, 2, 8, 1, 6, 4, 5]
+            a, b = apply_episode([weak, strong], d4, pal)
+            with self.assertRaises(MissingColourEvidence):
+                require_colour_evidence('fafffa47', [a], [{'input': b['input']}], pal, d4)
+            require_colour_evidence('fafffa47', [b], [{'input': b['input']}], pal, d4)
+
+    def test_plus_marker_requires_long_enough_demonstration(self):
+        from tasks import task_fe9372f3 as gen
+        weak = gen.generate(width=7, height=7, row=3, col=3)
+        strong = gen.generate(width=8, height=7, row=3, col=3)
+        for d4 in range(8):
+            pal = [3, 9, 0, 7, 2, 8, 1, 6, 4, 5]
+            a, b = apply_episode([weak, strong], d4, pal)
+            with self.assertRaises(MissingColourEvidence):
+                require_colour_evidence('fe9372f3', [a], [{'input': b['input']}], pal, d4)
+            require_colour_evidence('fe9372f3', [b], [{'input': b['input']}], pal, d4)
+
+    def test_diagonal_repair_requires_demonstration(self):
+        from tasks import task_f9d67f8b as gen
+        fixtures = gen.validate()
+        # Original train pairs need H/V repair only; the original query adds
+        # diagonal repair. Its labels stay unchanged; synthetic teaching must
+        # explicitly expose that additional construction stage.
+        for d4 in range(8):
+            pal = [3, 9, 0, 7, 2, 8, 1, 6, 4, 5]
+            pairs = apply_episode(fixtures['train']+fixtures['test'], d4, pal)
+            demos, query = pairs[:-1], pairs[-1]
+            with self.assertRaises(MissingColourEvidence):
+                require_colour_evidence('f9d67f8b', demos, [{'input': query['input']}], pal, d4)
+            require_colour_evidence('f9d67f8b', demos+[query], [{'input': query['input']}], pal, d4)
+
     def test_corridor_start_must_be_taught_when_it_changes_query(self):
         from tasks import task_f1bcbc2c as gen
         weak = gen.generate(flop=0, col=3, pos=-1, lengths=[4, 3, 7])

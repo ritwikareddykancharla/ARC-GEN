@@ -1,0 +1,48 @@
+{
+  "task_id": "ff2825db",
+  "factory_sha256": "9d19c18f779b27957e574e984c19fd1b271ed2c20aece4cfe60b79629e97def2",
+  "constructor_sha256": "dbe41cce7d6750910c44a07443e6d674b3709b3b9e3db792cbb5b14ca85e4c53",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 6705889719683,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 3.1208512500161305,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "In the canonical task, row 0 is a fixed colour strip. A one-cell frame occupies rows 1..9 and cols 0..9. The interior is 7 rows by 8 columns of background plus two scattered colours. The output keeps the strip, recolours the frame to the most frequent non-background interior colour, clears the interior, and draws a hollow rectangle in that colour on the bounding box of its interior cells.\n\nUnder D4, a horizontal flip leaves the strip on top, and each clockwise rotation moves it top -> right -> bottom -> left. The factory therefore picks one of four specialised frame-bounds lines from d4 % 4, written directly in visible coordinates using H and W. The program never rotates any grid.\n\nThe palette affects only the background constant, BG = palette[0]. The frame colour, strip colours and mode colour are all read from the pixels. Mode counting, frame recolouring, interior clearing and bounding-box outline drawing then work directly on the visible grid. The rectangle's rows and columns come from the actual cell positions, so they are automatically correct under any rotation or reflection.",
+    "limitations": "1. The strip side comes from d4 rather than being detected from the pixels. The program assumes the constructor's fixed layout: a one-cell strip line on one side and a full one-cell frame around the rest. Grids are 10x10 in this domain, and the bounds are written in terms of H and W.\n2. The generator rejects ties for the mode colour. If a tie ever occurred, the emitted program would pick the numerically smallest colour value. This is a deterministic fallback, not a puzzle rule. The archived solver's argmax-on-sorted-values behaves the same way, and under a permuted palette that choice is arbitrary. It would need host review if ties appeared.\n3. If the interior contains no non-background cells, the program returns the input unchanged. The generator never produces this case.\n4. The task's rule text says '8x8 interior', but the constructor's interior is actually 7 rows by 8 columns. The code follows the constructor.\n5. No fixture contradictions were found.",
+    "independent_source_review": {
+      "verdict": "accept",
+      "mechanism": "The scene is 10x10. One side holds a fixed palette strip and the rest is a one-cell frame around a 7x8 interior containing background plus exactly two non-background colours. The output keeps the strip, recolours the whole frame to the strictly most frequent interior colour, clears the interior to background, and draws a hollow rectangle in that colour on the bounding box of that colour's interior cells.",
+      "evidence": [
+        "Constructor layout: `hollow_rect(grid, 10, 9, 1, 0, fgcolor)` draws the frame on rows 1..9 and cols 0..9. Row 0 is the strip `i+1` for cols 2i and 2i+1. `colors` fill `grid[row+2][col+1]` for rows 0..6 and cols 0..7, so the interior is exactly rows 2..8 by cols 1..8.",
+        "The label is fully visible-determined. `len(set(colors)) != 3` rejects anything other than {0, a, b}. `if len(mode) != 1` rejects count ties. `if wide < 2 or tall < 2` rejects degenerate boxes. The output is built on a fresh zero grid with the strip, frame and a hollow rectangle only, which matches 'clear interior then outline'.",
+        "No hidden latent affects the answer. `fgcolor`, `color1` and `color2` come from distinct `common.sample` picks, so the frame colour never appears in the interior. The output depends only on interior counts and positions.",
+        "Factory k=0 bounds are (1, H-1, 0, W-1). That gives `inner = g[2:H-1, 1:W-1]`, which matches the constructor exactly. k=1/2/3 move the excluded strip line to the right column, bottom row and left column, and the interior is always `g[r0+1:r1, c0+1:c1]`. H-flip (d4>=4) keeps row 0 as the strip, and `d4 % 4` selects the line consistently with the stated convention. The host's 8000 augmented checks (1000 pairs x 8 D4) passed.",
+        "The solver acts directly in visible coordinates. Bounding-box indices come from `np.nonzero(inner == c)` offset by `r0+1` and `c0+1`, so no grid is ever rotated. `out[r0:r1+1, c0:c1+1] = c` followed by the interior reset to BG recolours exactly the frame ring and leaves the strip intact via `g.copy()`.",
+        "Palette handling: only `BG = palette[0]` is specialised. The mode colour, frame colour and strip colours are read from pixels, and counts are invariant under colour permutation.",
+        "Episode evidence: ff2825db is not in the `require_colour_evidence` task list, so it returns early. This is appropriate because the rule involves no arbitrary colour lookup; the new colour is the visible interior mode. The strip side is a deterministic orientation constant, shown in every demonstration.",
+        "The canonical fixtures match the constructor's `validate()` inputs and the archived transform. For example, pair 1 has six 5s against three 1s, and the 5s' box spans rows 3-6 and cols 2-7."
+      ],
+      "blocking_issues": [],
+      "nonblocking_limits": [
+        "The tie fallback `vals[counts == top].min()` is arbitrary under palette permutation. It is unreachable because the constructor rejects `len(mode) != 1`.",
+        "The empty-interior early return is unreachable, because the constructor requires two non-background colours.",
+        "The strip side is fixed by d4, not detected from pixels. This is acceptable as a spatial orientation constant, but it assumes the constructor's fixed single-strip layout.",
+        "The sampler has a dimension mix-up: `brow, bcol = randint(0, 8 - wide), randint(0, 7 - tall)` uses width for the row offset and height for the column offset. The scatter region then gets clipped by the 7x8 loop bounds. This skews the placement distribution only and never affects label correctness, since outputs are computed from the actual cells.",
+        "The rule text says '8x8 interior', but it is actually 7x8. Code and solver follow the constructor."
+      ],
+      "required_context_checks": [],
+      "task_id": "ff2825db",
+      "factory_sha256": "9d19c18f779b27957e574e984c19fd1b271ed2c20aece4cfe60b79629e97def2",
+      "constructor_sha256": "dbe41cce7d6750910c44a07443e6d674b3709b3b9e3db792cbb5b14ca85e4c53"
+    },
+    "host_review": "Host checked realized unique interior mode, bbox>=2x2 and frame/strip bounds. Label depends on visible cells. Known upstream brow/bcol bounds use width/height swapped, affecting placement distribution not target correctness; retained as recorded scope limitation. No silent label change."
+  }
+}

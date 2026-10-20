@@ -1,0 +1,50 @@
+{
+  "task_id": "fb791726",
+  "factory_sha256": "064feccd9bc756253a37054a576d20b42fa605c29e488b8f7493b5aa0a215b02",
+  "constructor_sha256": "1a4676281cecd52a4e7e1a65179872dda5b2466f30de440dbdd4facad54ab77d",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 140931343430111,
+  "d4": 7,
+  "unique_base_inputs": 296,
+  "seconds": 3.9344256669282913,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "Rule in its original orientation: make a canvas twice the input's height and width, filled with background (colour 0). Stamp the input into the top-left and bottom-right quadrants. Wherever two equal marks sit two cells apart in a column with an empty cell between them, paint the middle row fully with colour 3.\n\nHow the factory adapts it to each D4 view:\n- **Copy quadrants.** The D4 map moves the 2x2 block layout the same way it moves a 2x2 matrix. So the factory applies the D4 map to [[1,0],[0,1]] and reads off where the copies land. This gives the main diagonal (TL/BR) or the anti-diagonal (TR/BL).\n- **Line direction.** For an odd number of clockwise rotations, the vertical mark pairs become horizontal pairs and the full rows become full columns. A horizontal reflection leaves vertical pairs vertical, and the scan itself is symmetric, so reflection needs no other change.\n- **Colours.** Background becomes palette[0] and the line colour becomes palette[3]. The mark colour is read from the pixels.\n\nThe emitted program works directly in visible coordinates and handles rectangular grids, since h and w are kept separate. It collects all qualifying lines first and paints them afterwards, so painting cannot create new detections. Pairs cannot form across the two copies, because those copies occupy disjoint column and row ranges.",
+    "limitations": "- **Constants rather than inference.** Background and line colour are fixed from the palette (palette[0] and palette[3]); they are not inferred from the demonstrations.\n- **Constructor defects for host review.**\n  - The constructor only produces square grids of size 4-7, but the training fixtures include a 3x3 grid. That fixture is still consistent with the rule.\n  - In the size-6 case, if the second random column equals the first, the second pair is silently dropped. That case is still consistent with the visible rule.\n  - The constructor never makes two pairs share a column, and its pair rows are fixed at 1 and 4. The program does not depend on either property.\n- **No contradictions found.** The fixtures are consistent with the uniform rule.",
+    "independent_source_review": {
+      "verdict": "accept",
+      "mechanism": "Output is a 2h\u00d72w canvas filled with background. The input is stamped into two diagonal quadrants. Every same-colour pair two cells apart along the pair axis, with a background cell between them, causes the full line through that middle cell to be painted with the line colour (palette[3]). All lines are detected first and painted afterwards. In the native view this is TL/BR copies with full rows. Under D4 the copies sit on the main diagonal when (k+flip) is even and on the anti-diagonal when it is odd. The pair axis and painted lines become columns exactly when k is odd.",
+      "evidence": [
+        "Constructor (generate): input pairs are placed at rows prow\u00b11 in column pcol. The output copies them at (prow\u00b11, pcol) and (prow\u00b11+size, pcol+size), and paints rows prow and prow+size full-width with 3. This matches the archived transform: stamp at (0,0) and (h,w), then paint the row between each vertical gapped same-colour pair.",
+        "No spurious detections are reachable. The two copies occupy disjoint row and column ranges, so no column contains cells from both copies. In the size-6 two-pair case the second pair is only added when 'pcol not in pcols', so the rows 0/2 and 3/5 pairs never share a column. The rows 2/4 or 2/3 cross-pair combinations therefore cannot occur. Detection happens before painting, so painted lines cannot create new pairs.",
+        "Mark colour excludes 3 (random_color(exclude=[3])), so a mark never equals the line colour. The middle cell of each pair is always background in the mark's column.",
+        "Factory quadrant logic: the parity rule is convention-independent. Rotations by an odd k and a pure horizontal flip swap the diagonal and anti-diagonal; transpose-like elements (flip combined with odd k) preserve them. The m-matrix construction encodes exactly this parity. VERTICAL=(k%2==0) matches the axis swap under flip\u2218rot^k.",
+        "The emitted solver works directly on visible coordinates. It uses separate h and w, stamps the visible input unchanged into the visible quadrants, and scans and paints in visible rows or columns. There is no untransform/retransform wrapper.",
+        "BG=palette[0] and LINE=palette[3] are genuine task constants. The line colour appears in every demonstration output and the background in every grid. The mark colour is read from the pixels.",
+        "Every demonstration contains at least one pair, which teaches both the copy diagonal and the line axis. The context policy rejects D4 variants with conflicting query answers.",
+        "Host audit passed: 1000 fresh pairs, 8000 augmented checks and 16 fixture variants, with no sampler rejections."
+      ],
+      "blocking_issues": [],
+      "nonblocking_limits": [
+        "Constructor diversity is narrow. Pair rows are always 0/2 (plus 3/5 only at size 6), there are at most two pairs, the grid is always square, and the random size range is 4\u20137. The 3\u00d73 train fixture is only produced through validate(). Only 296 unique base inputs were observed.",
+        "In the size-6 case, when the second random column collides with the first, the second pair is silently dropped. The result is still consistent with the rule.",
+        "The solver handles more general cases (rectangular grids, shared columns, multiple colours) than the constructor ever exercises. This is untested but appears correct by inspection.",
+        "Background and line colour are fixed from the palette rather than inferred from the demonstrations. This is acceptable because both are constant across the task."
+      ],
+      "required_context_checks": [
+        "Confirm the augmentation's D4 index convention (d4>=4 meaning flip-based vs transpose-based) matches the factory's assumption. The supplied audit across all 8 D4 variants and the fixture variants indicates it does.",
+        "Confirm the context policy's D4-conflict rejection is applied to episodes, so the copy diagonal and line axis are always determined by the visible demonstrations."
+      ],
+      "task_id": "fb791726",
+      "factory_sha256": "064feccd9bc756253a37054a576d20b42fa605c29e488b8f7493b5aa0a215b02",
+      "constructor_sha256": "1a4676281cecd52a4e7e1a65179872dda5b2466f30de440dbdd4facad54ab77d"
+    },
+    "host_review": "Host checked quadrant permutation, pair detection before painting and no cross-copy pairs. Every demo has line colour and axis evidence; builder applies shared D4/palette plus prompt conflict checks. Default domain narrow (sizes4..7,at most2pairs) explicitly retained rather than claiming unrestricted diversity."
+  }
+}

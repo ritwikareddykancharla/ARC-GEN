@@ -76,13 +76,103 @@ def require_colour_evidence(task_id, demonstrations, queries, palette=None, d4=0
                        'e760a62e', 'e8593010', 'e99362f0', 'ea9794b1', 'e6de6e8f',
                        'ed74f2f2', 'f2829549', 'ef135b50', 'f0afb749',
                        'f1bcbc2c', 'f5b8619d', 'f3e62deb',
+                       'fafffa47', 'fd02da9e', 'fe9372f3', 'f9d67f8b',
+                       'fea12743', 'ff28f65a',
                        '37d3e8b2', 'ba9d41b8', 'd2abd087', 'e39e9282'):
         return
     palette = list(range(10)) if palette is None else palette
     bg = palette[0]
     colours = lambda g: {c for row in g for c in row} - {bg}
     required, seen = set(), set()
-    if task_id == 'f1bcbc2c':
+    if task_id == 'fea12743':
+        from itertools import combinations
+        def variants(g):
+            tiles = {(r, c): {(y, x) for y in range(4) for x in range(4)
+                              if g[1+5*r+y][1+5*c+x] != bg}
+                     for r in range((len(g)-1)//5) for c in range((len(g[0])-1)//5)}
+            maximum = max(tiles, key=lambda p: len(tiles[p]))
+            mask = tiles[maximum]
+            pairs = [(a, b) for a, b in combinations(tiles, 2)
+                     if maximum not in (a, b) and tiles[a] | tiles[b] == mask]
+            results = []
+            for axis in (0, 1):
+                for first in (-1, 1):
+                    for second in (-1, 1):
+                        order = sorted(tiles, key=lambda p: (first*p[axis], second*p[1-axis]))
+                        ranks = {p: i for i, p in enumerate(order)}
+                        selected = min(pairs, key=lambda ab: sorted(ranks[p] for p in ab))
+                        out = [row[:] for row in g]
+                        for p, ink in [(maximum, palette[3])]+[(p, palette[8]) for p in selected]:
+                            for y, x in tiles[p]: out[1+5*p[0]+y][1+5*p[1]+x] = ink
+                        results.append(out)
+            return results
+        _require_rule_agreement(task_id, demonstrations, queries, variants)
+        return
+    elif task_id == 'ff28f65a':
+        from .augmentation import transformed
+        order = [(0, 0), (0, 2), (1, 1), (2, 0), (2, 2)]
+        def variants(g):
+            count = sum(1 for _ in _colour_components(g, palette[2]))
+            out = [[bg]*3 for _ in range(3)]
+            for r, c in order[:count]: out[r][c] = palette[1]
+            return [transformed(out, direction, list(range(10))) for direction in range(8)]
+        _require_rule_agreement(task_id, demonstrations, queries, variants)
+        return
+    elif task_id == 'fd02da9e':
+        canvas = palette[7]
+        figures = {(0, 0): [(1, 1), (1, 2), (2, 1), (2, 2)],
+                   (0, 7): [(1, 5), (1, 6), (2, 5), (2, 6)],
+                   (7, 0): [(4, 2), (5, 2), (6, 3)],
+                   (7, 7): [(4, 5), (5, 5), (6, 4)]}
+        def move(y, x, direction):
+            if direction >= 4:
+                x = 7 - x
+            for _ in range(direction % 4):
+                y, x = x, 7 - y
+            return y, x
+        tables = [{move(*corner, direction): [move(*cell, direction) for cell in shape]
+                   for corner, shape in figures.items()} for direction in range(8)]
+        def variants(g):
+            results = []
+            for table in tables:
+                out = [[canvas] * 8 for _ in range(8)]
+                for (r, c), shape in table.items():
+                    for y, x in shape:
+                        out[y][x] = g[r][c]
+                results.append(out)
+            return results
+        _require_rule_agreement(task_id, demonstrations, queries, variants)
+        return
+    elif task_id == 'fe9372f3':
+        def has_mark(g):
+            cells = [(r, c) for r, row in enumerate(g) for c, v in enumerate(row) if v == palette[2]]
+            y = (min(r for r, c in cells) + max(r for r, c in cells)) // 2
+            x = (min(c for r, c in cells) + max(c for r, c in cells)) // 2
+            return max(y, x, len(g)-1-y, len(g[0])-1-x) >= 4
+        if any(has_mark(q['input']) for q in queries): required.add('periodic-marker-colour')
+        if any(has_mark(d['input']) and palette[4] in colours(d['output']) for d in demonstrations):
+            seen.add('periodic-marker-colour')
+    elif task_id == 'f9d67f8b':
+        # The first two native rows/columns lie outside the H/V mirror crop.
+        # Track its off-centre axes in the visible orientation; only inputs
+        # determine whether a diagonal-repair demonstration is needed.
+        def needs_diagonal(g):
+            h, w = len(g), len(g[0])
+            ay, ax = (h+2)//2, (w+2)//2
+            if d4 >= 4: ax = w-ax
+            for _ in range(d4 % 4):
+                ay, ax, h, w = ax, h-ay, w, h
+            for r, row in enumerate(g):
+                for c, ink in enumerate(row):
+                    if ink != palette[9]: continue
+                    partners = ((r, 2*ax-1-c), (2*ay-1-r, c), (2*ay-1-r, 2*ax-1-c))
+                    if not any(0 <= y < h and 0 <= x < w and g[y][x] != palette[9]
+                               for y, x in partners): return True
+            return False
+        if any(needs_diagonal(q['input']) for q in queries): required.add('diagonal-repair')
+        if any(needs_diagonal(d['input']) and all(palette[9] not in row for row in d['output'])
+               for d in demonstrations): seen.add('diagonal-repair')
+    elif task_id == 'f1bcbc2c':
         wall, plug, paint = palette[7], palette[9], palette[8]
         def variants(g):
             h, w = len(g), len(g[0])
@@ -280,10 +370,12 @@ def require_colour_evidence(task_id, demonstrations, queries, palette=None, d4=0
             if len(colours(demo['output'])) == 1:
                 seen.add(glyph(demo['input']))
         required.update(glyph(q['input']) for q in queries)
-    elif task_id in ('e345f17b', 'f2829549'):
-        gap, mark = (0, palette[4]) if task_id == 'e345f17b' else (1, palette[3])
+    elif task_id in ('e345f17b', 'f2829549', 'fafffa47'):
+        gap, mark = {'e345f17b': (0, palette[4]), 'f2829549': (1, palette[3]),
+                     'fafffa47': (0, palette[2])}[task_id]
+        vertical = bool(d4 % 2) != (task_id == 'fafffa47')
         def has_nor(g):
-            if d4 % 2:
+            if vertical:
                 half = len(g)//2
                 return any(a == b == bg for x, y in zip(g[:half], g[half+gap:])
                            for a, b in zip(x, y))

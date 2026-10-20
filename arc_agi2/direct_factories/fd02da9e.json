@@ -1,0 +1,51 @@
+{
+  "task_id": "fd02da9e",
+  "factory_sha256": "dc34812d49186c69676bf8ac70de3a158490d19e7ecba2cb14f378989eeb0b07",
+  "constructor_sha256": "e17295a603b3d07ca80767e6795e49d394f7710b4f9cd7a2b4845621726ab0f1",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 122342296606374,
+  "d4": 7,
+  "unique_base_inputs": 617,
+  "seconds": 2.8925640829838812,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The original rule works like this. The background is colour 7 on an 8x8 grid. Each non-background corner pixel is cleared. A figure of that pixel's colour is then stamped at fixed inward offsets from its corner. Top corners get a 2x2 block at inward offsets dy,dx in {1,2}. Bottom corners get the bent 3-cell stroke at inward offsets (3,2), (2,2), (1,3). Left and right versions mirror each other.\n\nThe factory sends every original corner and its absolute figure cells through the episode's D4 map: optionally reverse each row, then rotate clockwise d4%4 times. It then re-expresses each figure as inward offsets from the visible corner it lands on. The result is a table keyed by visible corner type (bottom-row?, right-column?).\n\nThe emitted program uses visible coordinates directly. For each visible corner whose colour differs from the constant background palette[7], it clears the seed. It then stamps that colour at corner + inward_sign * offset, using that corner's table entry. Under transposing D4 elements, the 2x2 blocks and bent strokes move to whichever visible sides they now occupy. The stroke's long leg turns horizontal where appropriate, and reflections reverse the inward directions. The figure colour is always read from the seed pixel, so no colour unpermuting is done. There is no normalization wrapper and no call to a native solver.",
+    "limitations": "The figure offsets are hard-coded relative to corners, matching the constructor's fixed 8x8 domain. On other grid sizes the figures would still be stamped at the same inward offsets, with bounds clipping. The background is taken as the constant palette[7]. That always matches the constructor, which never places colour 7 as a seed and always has at least one seed. Corners are deduplicated in case of degenerate 1-wide grids, which the generator never produces. No constructor defects or fixture contradictions were found: the fixtures match the generator and archived solver exactly. The figures never overlap, so stamping order does not matter. This factory has not been run or tested.",
+    "independent_source_review": {
+      "verdict": "accept",
+      "mechanism": "Each non-background corner seed is cleared to background. A fixed figure in the seed's own colour is then stamped at inward offsets from that corner. Top corners in native coordinates get a 2x2 block at offsets dy,dx in {1,2}. Bottom corners get the bent 3-cell stroke at offsets (3,2), (2,2), (1,3). Left and right versions mirror each other. The factory pushes each native corner and its absolute figure cells through the episode D4 map. It then stores, for each visible corner type, the inward offsets measured from that visible corner. The emitted solver stamps directly in visible coordinates.",
+      "evidence": [
+        "Constructor: common.random_colors(4) samples distinct colours from 1..9. The list comprehension maps 7 to 0, and randint(0,1) then randomly blanks each slot to 7. The loop requires len(set(colors)) > 1, so at least one seed is a non-7 colour. Seed colours are distinct and never 7.",
+        "Constructor output starts as an all-7 grid and never writes the corners, so seeds are cleared. Stamping colour 7 for an empty corner is a no-op. The four figures occupy disjoint cells, none of them a corner, so stamp order and clear order cannot interact.",
+        "Archived program matches the constructor: top_offs [(1,1),(1,2),(2,1),(2,2)] and bot_offs [(3,2),(2,2),(1,3)], applied with inward signs sy and sx. The approved fixtures equal generate() outputs for the listed colour vectors.",
+        "Factory fmap optionally reverses columns (c -> w-1-c), then applies (r,c) -> (c, h-1-r) d4%4 times. That is a clockwise rotation. On the square 8x8 domain, swapping h and w is harmless.",
+        "D4 maps the corner set onto itself bijectively, so all four keys (bottom?, right?) of OFFS are filled exactly once. Offsets are abs(y-vy), abs(x-vx), which is correct because every figure cell lies inward of its own corner.",
+        "Transpose spot check: the native bottom-left stroke {(4,2),(5,2),(6,3)} lands at the visible top-right corner (0,7) with offsets {(2,3),(2,2),(3,1)}. The solver with sy=+1 and sx=-1 produces (2,4), (2,5), (3,6), the transposed cells. Correct.",
+        "Visible palette: BG is palette[7], which is never a seed colour. The stamp colour is read from the visible seed, so it already equals palette[orig]. No colour unpermuting is needed or done.",
+        "The solver acts in visible coordinates with only a per-corner offset table. There is no whole-grid untransform, no native solve, no retransform, and no call to _native_solve.",
+        "Host audit passed: 1000 fresh pairs, 8000 augmented checks (which fits all 8 D4 elements), and 16 fixture variants, with no sampler rejections."
+      ],
+      "blocking_issues": [],
+      "nonblocking_limits": [
+        "The figure offsets are hard-coded, which matches the constructor's fixed 8x8 domain. Other grid sizes are out of domain and would just clip at the bounds.",
+        "BG is the constant palette[7] rather than being inferred from the grid. The constructor always guarantees this.",
+        "Which figure belongs to which corner is a fixed spatial constant of the task, not a colour association. Synthetic episodes can still ask about a corner whose figure no demonstration showed under that D4. That is a learnability property of the generator's random subsets. The source review finds no labelling defect from it.",
+        "The corner-dedup branch only matters for 1-wide grids, which the constructor never produces."
+      ],
+      "required_context_checks": [
+        "Confirm the host augmentation's D4 convention (column flip first, then clockwise rotations by d4%4) matches fmap. The passing audit over 8000 augmented checks strongly suggests it does.",
+        "Apply the standard D4-conflict context policy: reject an episode if D4 variants with identical visible demonstrations and query input would give conflicting query answers. That is the remaining safeguard when a query corner's figure orientation was not demonstrated."
+      ],
+      "task_id": "fd02da9e",
+      "factory_sha256": "dc34812d49186c69676bf8ac70de3a158490d19e7ecba2cb14f378989eeb0b07",
+      "constructor_sha256": "e17295a603b3d07ca80767e6795e49d394f7710b4f9cd7a2b4845621726ab0f1"
+    },
+    "host_review": "Host checked corner-specific direct offset tables and8x8 domain. Added same-query comparison of all8 spatial assignments; symmetric square-only demos cannot authorize an unshown asymmetric stroke. Tests cover missing mapping vs fully demonstrated mapping in every D4 view."
+  }
+}

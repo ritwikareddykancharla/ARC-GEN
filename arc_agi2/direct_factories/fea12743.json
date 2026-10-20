@@ -1,0 +1,51 @@
+{
+  "task_id": "fea12743",
+  "factory_sha256": "f2631adc41d94bd4e8fec887f98934d502ca581a531677bc1df54b3689e770a5",
+  "constructor_sha256": "1b025d3b33de799da6c39d752e68d6b68666579d15eb0a73f6ad425f87366485",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 271558249784680,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 9.663782250019722,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The lattice of 4x4 tiles separated by 1-cell gutters has origins at 1+5k on both axes. Every D4 transform maps this lattice onto itself, with the dimensions swapped for odd rotations. So the emitted program reads the tiles directly from the visible grid. A tile's mask is its cells that are not the background colour palette[0].\n\nThe mechanism is unchanged by D4 and by palette changes:\n1. Count the cells in each tile; the tile with the unique maximum is recoloured palette[3].\n2. The candidates are the other tiles whose cells all lie inside the max tile.\n3. The pair of candidates whose union equals the max tile exactly is recoloured palette[8].\n4. All other tiles keep palette[2].\n\nThe only part that depends on orientation is the tie-break. In tie scenes one part tile is duplicated, and the copy that comes earlier in the constructor's reading order wins. This is shown in canonical pair 2.\n\nIn visible coordinates, that reading order becomes a transformed scan order. The factory hard-codes the flip and the number of rotations from d4. The program then maps each visible lattice position to its row-major rank in the constructor's lattice and picks the pair with the lexicographically smallest (rank, rank) tuple. This reproduces the order of itertools.combinations over reading-ordered tiles exactly. It is a direction-specialised scan order, not a grid normalisation: no grid is rotated and no colours are permuted.\n\nThe colour roles are fixed constants: palette[0], palette[2], palette[3] and palette[8].",
+    "limitations": "1. The tie-break follows the constructor's reading-order convention. Canonical pair 2 demonstrates it, but it is a conventional choice rather than a property visible in the tile shapes. Under D4 it becomes 'first in the transformed scan order', which the factory hard-codes from d4. If the host considers the reading-order tie-break a constructor convention, this needs review. The generator only creates ties between two copies of the same part, and it never creates ties between disjoint pairs.\n2. The program assumes the generator's domain:\n   - the grid is 5R+1 by 5C+1;\n   - the max tile is unique, which the constructor guarantees;\n   - at least one pair qualifies.\n   If no pair qualifies, only the max tile is recoloured.\n3. The demonstrations are not used, because the colour roles come from the palette constants.\n4. I have not run any tests.",
+    "independent_source_review": {
+      "verdict": "accept",
+      "mechanism": "The grid is a lattice of 4x4 tiles at origins 1+5k with 1-cell background gutters. The tile with the unique largest non-background count is recoloured palette[3]. The candidates are the other tiles whose cells lie inside the max tile. The candidate pair whose union equals the max tile exactly is recoloured palette[8]. All other tiles keep their ink. In tie scenes, one part is duplicated, so two pairs qualify, and the pair containing the copy that comes earlier in the constructor's reading order wins. The emitted solver reads tiles directly in visible coordinates. Its only orientation-dependent element is a rank table built from the hard-coded d4 (flip, then clockwise quarter-turns). That table reproduces the constructor's row-major tile order, which is a direction-specialised scan order rather than a whole-grid untransform.",
+      "evidence": [
+        "Constructor tie labelling is consistent with the reading-order rule. In _sample_scene, after shuffle, the first of partA/copyA receives the role 'part' (seen_a). _scene_ok then requires pairs[0] == wanted, where pairs come from itertools.combinations over increasing indices. With A at i < A' at j and B at k, the lexicographically first pair always contains i, whether k<i, i<k<j or k>j. So the earlier copy always wins, and the check enforces it.",
+        "Uniqueness is enforced. _scene_ok requires sizes.count(len(m)) == 1 and max(sizes) == len(m), so the max tile is unique. For random scenes, tie=False requires exactly one qualifying pair and tie=True requires exactly two. Duplicated distractors and subset distractors are screened by _completes, and the final count is also checked in _scene_ok. _union_ambiguous removes competing 'union' readings among non-max tiles.",
+        "_split_max and _split_equal both yield strict subsets whose union is m, so left != right and both are strict candidates. MIN_TIE_TILES=5 is enforced through _choose_layout(min_tiles), so a tie scene always has room for at least one distractor.",
+        "The solver's lattice geometry is correct under D4. A tile spanning 1+5t..4+5t maps to 1+5(C-1-t)..4+5(C-1-t) under a flip of a width-(5C+1) grid, so the tile lattice is preserved. rv and cv are recomputed from the visible H and W. _reading_rank swaps R and C for odd ROT, so ranks are computed over the constructor's original lattice dimensions.",
+        "The solver's pair choice minimises the sorted (rank, rank) tuple. This equals the lexicographically first pair of itertools.combinations over reading-ordered indices. Max selection uses the key (count, -rank), which is harmless because the max is unique.",
+        "Canonical pair 2 check at d4=0: tiles (1,6), (6,1) and (11,1) have ranks 1, 2 and 4. The qualifying pairs are (1,2) and (2,4), and the solver picks (1,2). This matches the fixture.",
+        "Colours are intrinsic role constants: palette[0], palette[3] and palette[8]. There is no arbitrary shape-to-colour lookup, so the colour-evidence list correctly omits fea12743. The solver does not untransform the grid or permute colours.",
+        "Host audit: passed, with 1000 fresh pairs, 8000 augmented checks, 16 fixture variants and no sampler rejections."
+      ],
+      "blocking_issues": [],
+      "nonblocking_limits": [
+        "The tie-break orientation is a latent of the episode's d4. If a query is a tie scene (about 20% of scenes with at least 5 tiles) and no demonstration contains a tie that resolves the scan direction, the visible demos do not determine which duplicate copy becomes 8. Correctness therefore relies on the host's generic D4-conflict context rejection, not on the constructor or the solver.",
+        "_reading_rank assumes the augmentation applies the flip first and then clockwise quarter-turns, mapping (y,x) to (x, h-1-y). augmentation.transformed is not supplied here. The convention is supported only by the host's 8000 augmented checks, which include tie scenes at about a 20% rate.",
+        "The solver ignores the demonstrations, and the INK constant is unused. If no pair qualifies, only the max tile is recoloured. The constructor excludes that case, so this is an out-of-domain fallback only.",
+        "rank.get(p, 0) defaults and the rv==0 or cv==0 early return are defensive branches that are unreachable for constructor grids of size 5R+1 by 5C+1 with R, C \u2265 1.",
+        "Ties between disjoint pairs are never generated. The solver's lexicographic rule would still match the constructor convention, but that case is untested."
+      ],
+      "required_context_checks": [
+        "Confirm the generic policy ('D4 variants with the same visible demos/query input but conflicting query answers are rejected') is actually applied to fea12743 episodes. It should reject tie-scene queries whose demonstrations leave the scan-order direction ambiguous. require_colour_evidence returns early for this task_id, so it provides no such check.",
+        "Confirm that the 8000 augmented_pair_checks cover all 8 d4 values, as 1000 \u00d7 8 suggests, and not only the reported d4=7. Confirm that the tie scenes among them exercised _reading_rank under both odd and even rotations, with and without the flip."
+      ],
+      "task_id": "fea12743",
+      "factory_sha256": "f2631adc41d94bd4e8fec887f98934d502ca581a531677bc1df54b3689e770a5",
+      "constructor_sha256": "1b025d3b33de799da6c39d752e68d6b68666579d15eb0a73f6ad425f87366485"
+    },
+    "host_review": "Host checked _scene_ok unique maximum and exact qualifying pair counts, first duplicate part selected by native row-major order. Generic transformed-prompt collision check alone is insufficient for asymmetric query inputs. Added candidate agreement across all8 row/column scan directions on SAME query; tests reject untaught tie and accept explicit teaching."
+  }
+}

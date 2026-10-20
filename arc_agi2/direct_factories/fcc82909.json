@@ -1,0 +1,47 @@
+{
+  "task_id": "fcc82909",
+  "factory_sha256": "26237f0fe91fea8c40fd4d336c787b28c407870aedf3534a144d45c8fc10ca0b",
+  "constructor_sha256": "c052d2f62454cd9200903d0f26d718b81dd9f7d250296f6b92cc32e23e67e2c2",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 223008293244247,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 5.5459717500489205,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "Mechanism: each multicolour 2x2 block (found as a 4-connected component of non-background cells) gets a solid 'tail' of the original colour 3, as wide as the block, extending away from the block's far side for a length equal to the block's number of distinct colours. Only background cells are painted, and the tail is clipped at the grid edge. In the original orientation the tail goes down. Row reversal (d4>=4) does not change vertical directions. Each clockwise rotation maps down to left, then up, then right. So the direction depends only on d4%4 and is baked in as (DR, DC). The emitted program measures the extent along the perpendicular axis and the start edge directly in visible coordinates. Colour roles are constants: background = palette[0] and tail = palette[3]. The distinct-colour count does not change under a bijective palette.",
+    "limitations": "Blocks are segmented with 4-connectivity, which matches the constructor's domain. Box columns never overlap and consecutive boxes differ in row by at least 2, so blocks can touch only diagonally and tails can never land on another block. Background is fixed to palette[0], and the generator always uses black. I assume common.random_colors never yields 0. If it could, a block would contain background cells and the segmentation would break; the host should confirm this. A block may legitimately have just 1 distinct colour (colours are drawn with replacement), giving a tail of length 1, and this is handled. The constructor writes tails unconditionally, while this program paints only background cells. These behave identically in the generator's domain because columns are disjoint. I found no contradictions between the fixtures and the rule, and no constructor defects needing host review. I have not run any tests.",
+    "independent_source_review": {
+      "verdict": "accept",
+      "mechanism": "Each 2x2 multicolour block, found as a 4-connected non-background component, gets a solid tail of palette[3]. The tail is as wide as the block's perpendicular extent. It starts at the block's far edge in the fixed direction for this d4: down for k=0, then left, up and right for k=1,2,3 under clockwise rotation, with row-reversal leaving it unchanged. Its length equals the number of distinct visible colours in the block. Tails are clipped to the grid and paint only background cells.",
+      "evidence": [
+        "Constructor label: `shadow = len(set(colors[idx*4:(idx+1)*4]))` paints `shadow` rows of green below the block. This depends only on visible block colours, not on the hidden `num_colors` latent. When colours are drawn with replacement the set can be smaller than num_colors, including 1. The solver counts `len(set(g[y][x] for y, x in cells))`, so it matches.",
+        "Bounds: `brows <= size-2-num_colors` and `shadow <= num_colors`, so the constructor never writes past the bottom edge. The solver's clipping is a harmless out-of-domain guard.",
+        "Separation: `overlaps_1d(bcols, [2]*n)` gives disjoint column ranges. Sorted disjoint columns give bcols[i+2] >= bcols[i]+4. The consecutive-box check |brows diff| >= 2 rules out shared rows. So blocks can be at most diagonally adjacent, never 4-adjacent, and 4-connected segmentation yields exactly one component per block.",
+        "Tails stay in their block's own columns, which no other block or tail occupies. The constructor's unconditional write and the solver's background-only write therefore agree.",
+        "common.random_colors samples from range(1,10) with green excluded. Block cells are never 0 or 3, so blocks never contain background or tail-colour cells. This settles the prior note's open assumption.",
+        "Fixtures were checked by hand against the rule, e.g. test block (1,1/2,1) has 2 colours and gets a tail on rows 3-4, and block (2,9/1,6) has 4 colours and gets rows 3-6. Every pair matches.",
+        "The emitted solver works directly in visible coordinates. Direction (DR, DC), BG and TAIL are baked-in constants, with no untransform or retransform wrapper. The start edge (r1+1, r0-n, c1+1, c0-n) and the perpendicular span are computed from the visible bbox.",
+        "Episode evidence: tail direction and tail colour are deterministic spatial and colour constants. Every demo shows them, because every block has at least 1 colour and so at least one tail row. No arbitrary colour lookup is involved. The fcc82909 task falls into the generic branch of the evidence checks, whose active pairs (4/7, 1/8 line pairs) concern a different task family. I judge no specific check is needed here.",
+        "Host audit passed: 1000 fresh pairs, 8000 augmented checks, 16 fixture variants, no sampler rejections."
+      ],
+      "blocking_issues": [],
+      "nonblocking_limits": [
+        "The direction table assumes the augmentation composes row-reversal so that it preserves the vertical tail direction for all k. The host's augmented checks, run at d4=7 among others, are consistent with this convention, but I cannot verify the composition order from source alone.",
+        "Background is fixed at palette[0] rather than inferred. This is correct within the constructor's domain, which always uses black.",
+        "Outside the domain (4-touching blocks, or tails crossing other blocks) the solver would merge components or skip non-background cells. The constructor excludes both cases."
+      ],
+      "required_context_checks": [],
+      "task_id": "fcc82909",
+      "factory_sha256": "26237f0fe91fea8c40fd4d336c787b28c407870aedf3534a144d45c8fc10ca0b",
+      "constructor_sha256": "c052d2f62454cd9200903d0f26d718b81dd9f7d250296f6b92cc32e23e67e2c2"
+    },
+    "host_review": "Host checked component separation, actual distinct colour count vs latent upper bound, nonoverlapping tails and bounds. At least1tail cell perobject means paint and direction taught. Review generic evidence fallback wording corrected; no additional association gate required."
+  }
+}

@@ -1,0 +1,54 @@
+{
+  "task_id": "fd4b2b02",
+  "factory_sha256": "8a0a4337c450b84419763264a97e537d59f423119f0e803784bcaf890ae818b1",
+  "constructor_sha256": "e0fb682b1a0785f462b3b5cd3d27a6dc77d230b54c756089815e52529c0fe946",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 50663497107602,
+  "d4": 7,
+  "unique_base_inputs": 977,
+  "seconds": 10.816639584023505,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The mechanism is invariant under D4. A single solid seed rectangle spawns four diagonal chains, one toward each corner. Each successive piece is the previous piece transposed (height and width swapped) and given the other colour of the pair {3,6}. It is placed so that it touches the previous piece's outward corner diagonally. Rotating or reflecting this rule gives the same rule: transposition commutes with the D4 action on rectangle dimensions, and outward diagonal corner contact maps to outward diagonal corner contact. So the emitted program works directly in visible coordinates and needs no orientation-specific constants. Only the colour roles are specialized: background = palette[0], and the swap pair is palette[3] <-> palette[6]. The seed is the bounding box of non-background cells, and its colour is the majority non-background colour. Chains are drawn with clipping at the grid edges until a piece lies entirely outside the grid. This matches the generator's 30-iteration loop, which always overshoots grids of size 15-30 because the seed sits at least 5 cells from every edge.",
+    "limitations": "This is untested; the host will verify it. The construction assumes exactly one solid seed rectangle whose colour is palette[3] or palette[6] on a palette[0] background, as the constructor guarantees. If the seed colour is outside the pair, a fallback swap colour is used; this never happens in the constructor's domain. d4 is accepted but not needed, because the rule is D4-symmetric. The four chains never overlap within the generator's domain, so drawing order does not matter. I found no constructor defects or fixture contradictions: the generator's per-direction offset updates (e.g. cols[1] += t after the swap) match the visible corner-touching rule.",
+    "independent_source_review": {
+      "verdict": "accept",
+      "mechanism": "There is one solid seed rectangle (height h, width w, colour X, which is palette[3] or palette[6]) on a palette[0] background. Four diagonal chains grow outward from it. Each next piece is the previous piece transposed and given the other colour of the pair {palette[3], palette[6]}. It is placed so its corner touches the previous piece's outward corner. Pieces are clipped at the grid edge, and each chain stops once a piece lies completely outside the grid.",
+      "evidence": [
+        "Constructor offsets checked against the visible rule. After the swap `w, t = t, w`, new w is the old tall and new t is the old wide.",
+        "Up-left: rows[0] -= t and cols[0] -= w give (r - w_old, c - h_old).",
+        "Up-right: rows[1] -= t and cols[1] += t give (r - w_old, c + w_old).",
+        "Down-left: rows[2] += w and cols[2] -= w give (r + h_old, c - h_old).",
+        "Down-right: rows[3] += w and cols[3] += t give (r + h_old, c + w_old).",
+        "All four match the factory's nr/nc formulas: `r + ph` or `r - nh`, and `c + pw` or `c - nw`, with nh = pw and nw = ph.",
+        "common.rect draws through common.draw, which clips at the grid edge. This matches the solver's max/min slice clipping.",
+        "Termination is safe. Each chain is monotone outward on both axes, so once a piece is fully off-grid no later piece can re-enter. The solver's `break` is therefore equivalent to the constructor's 30-iteration overshoot.",
+        "30 iterations is enough. Every two steps move at least h + w >= 3 cells, and the grid is at most 30.",
+        "The chains are pairwise disjoint. For example, the first up-left piece occupies cols [c - h, c) and the first up-right piece occupies [c + w, c + w + h), and later pieces move further out. Same-colour overwrite order is therefore irrelevant.",
+        "Seed extraction is sound. The bounding box of non-background cells is exactly the seed, since the input contains only one solid rectangle. Its majority colour is the seed colour.",
+        "Seed placement guarantees that adjacent pieces are visible. brow and bcol lie in [5, size - dim - 5], so the first piece in every direction lands in-grid. Every demonstration output therefore shows both colours of the swap pair.",
+        "The swap pair is not an arbitrary hidden association. Both pair colours appear in every demo output, and the query seed colour is one of them.",
+        "The rule commutes with D4. Transposing pieces and outward-corner contact are both preserved under rotation and reflection. The solver computes everything from visible coordinates and has no whole-grid untransform wrapper.",
+        "The archived program and the emitted factory source are algorithmically identical.",
+        "The host audit passed 1000 fresh pairs, 8000 augmented checks and 16 fixture variants."
+      ],
+      "blocking_issues": [],
+      "nonblocking_limits": [
+        "The fallback colour for a seed outside {CA, CB} is unreachable, because the constructor only uses colours 3 and 6 (palette[3] and palette[6]).",
+        "The solver assumes a single solid seed rectangle. The constructor guarantees this; inputs with multiple objects are out of domain.",
+        "The d4 argument is unused. This is correct because the rule is D4-invariant."
+      ],
+      "required_context_checks": [],
+      "task_id": "fd4b2b02",
+      "factory_sha256": "8a0a4337c450b84419763264a97e537d59f423119f0e803784bcaf890ae818b1",
+      "constructor_sha256": "e0fb682b1a0785f462b3b5cd3d27a6dc77d230b54c756089815e52529c0fe946"
+    },
+    "host_review": "Host checked four monotone outward rectangle chains with alternating transposed sizes/colours. Input has single solidseed; margins ensure both colours taught. Direct solver termination and clipped painting agree with constructor30iterations withinmax30grid."
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "task_id": "f9d67f8b",
+  "factory_sha256": "1a219ad95c1fc69e5dcb428685557029227802d1298c40c85dad48d857fddae3",
+  "constructor_sha256": "763425a769d0ece0ec55cd48341bbe4a1bc10dc7cfacd484877c4e073e970588",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 199974554426440,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 22.921530583058484,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The emitted program works directly on the visible grid. The occluder colour is the constant palette[9].\n\n**Axis detection.** For each dimension it scans every candidate mirror axis a, comparing row or column pairs (a-1-j, a+j) and ignoring occluded cells. Among the axes with no disagreement it picks the one closest to the centre.\n\n**Tie-break.** In the original orientation the true axes sit at S/2+1, which is off-centre toward higher indices. The factory tracks where that offset ends up under D4: a row reversal negates the column sign, and each clockwise rotation maps (row sign, col sign) to (col sign, -row sign). The emitted program then breaks distance ties in favour of the visible side where the off-centre axis lies.\n\n**Step 1.** Each occluded cell copies the agreeing value of its in-bounds, non-occluded partners: the horizontal mirror (y, 2ax-1-x), the vertical mirror (2ay-1-y, x), and the double mirror.\n\n**Step 2.** Cells still occluded are read from the step-1 canvas through the diagonal partners about the detected centre. These are the transpose (x+ay-ax, y+ax-ay) and its three mirror images, which together form the four non-axis elements of the dihedral group about the centre. A cell is filled only if exactly one value is found.\n\nThis partner set is D4-invariant once the axes are detected in visible coordinates. Rotations and reflections therefore change only which axis side is preferred and the occluder colour constant. No grid is rotated or recoloured.",
+    "limitations": "**Archived tie-break defect (requires host review).** The archived solver breaks equal-distance axis ties by smaller index. That rule is orientation-dependent. It is safe only because the generator refutes the axes S/2-1 and S/2 in the canonical orientation. I replaced it with a D4-specialised preference toward the true off-centre side, which is equivalent in-domain but not a visible mechanism; I report it rather than copying it.\n\n**Inconsistent evidence.** The archived solver raises an error on conflicting step-1 or step-2 evidence. The emitted program instead leaves such cells as the occluder colour, and it returns partial results if no axis is accepted. Neither case occurs in the constructor's domain.\n\n**Diagonal symmetry.** The diagonal symmetry holds only partially across the pattern. The generator forces agreement only on the transpose pairs that the fallback actually reads, so step 2 depends on that generator guarantee.\n\n**Grid shapes.** Rectangular grids are handled generically, but the generator only produces even-sized square grids (16\u201330).\n\n**Testing.** I have not run any tests.",
+    "independent_source_review": {
+      "verdict": "accept",
+      "mechanism": "Occluded mosaic repair. The pattern has off-centre mirror axes at S/2+1 per dimension, so column x maps to S+1-x and row y to S+1-y. Step 1 fills each 9 from any visible horizontal, vertical or double mirror partner. Step 2 fills each remaining 9 from the step-1 canvas through its four diagonal partners about the detected centre: the transpose (x+ay-ax, y+ax-ay) and that cell's three mirror images. The solver finds the axes from visible evidence in augmented coordinates, ignoring the occluder colour palette[9].",
+      "evidence": [
+        "Axis uniqueness. With span=S+2 and half=span//2, the true axis is a=half, because pair sums 2a-1=S+1. Axis scores |2a-S| are even, so only a=half-1 (score 0) and a=half-2 (score 2, tied) can match or beat it. _scene_problem refutes both on the visible input in both dimensions. The true axis is always accepted because the scene is exactly symmetric and the check ignores 9s. The accepted minimum is therefore unique.",
+        "Tie-break under augmentation. A flip maps the true axis to half-2 and the refuted pair to {half-1, half}. The emitted ROW_PREF/COL_PREF term in _axis only decides ties among accepted axes, and no tie survives in-domain. So the D4 preference constant has no effect on any in-domain output. The archived smaller-index tie-break would also be correct in every orientation.",
+        "Step-1 partners. Constructor _hv_split uses (y,span-1-x), (span-1-y,x) and (span-1-y,span-1-x). With ax=ay=half these equal the archived and emitted partners 2a-1-coord. Mirror partners render the same quadrant entry, so in-domain they agree. The emitted solver fills only when exactly one value is found; the archived solver raises on conflict. These are equivalent in-domain.",
+        "Step-2 partners. Constructor _diag_partners gives (x,y), (x,span-1-y), (span-1-x,y), (span-1-x,span-1-y). This equals the archived set with yy=x, xx=y and equals the emitted cands=[(yy,xx)]+mirrors(yy,xx).",
+        "Equivariance of step 2. The diagonal partners are the transpose coset of the dihedral group about the visible centre. That set is closed under conjugation by any D4 element, so computing it in augmented coordinates is legitimate. There is no untransform/retransform wrapper.",
+        "Label correctness. All four diagonal partners of (y,x) fold to quadrant entry Q[f(x)][f(y)]. _symmetrize sets Q[fx][fy]=Q[fy][fx] for every left-over cell. _diagonal_safe then rejects any scene in which a known partner disagrees with the true output. Known partners are cells that are visible or restored in step 1 (the hv set), matching the archived reads from `partial`.",
+        "Order independence. Both solvers read step 2 from a frozen `partial` copy, so the fill order does not matter. Left-over cells never count as each other's known partners.",
+        "Labels are fully observable. The output is the un-occluded render, and every hidden cell is reconstructed only from visible or step-1-restored cells. No hidden random latent leaks into a label.",
+        "Colours. Pattern colours are 1..8 and the occluder is 9 (palette[9] after permutation), so the occluder never collides with a pattern colour. Emitted outputs contain no OCC in-domain.",
+        "Fixtures. validate() rebuilds the canonical fixtures from explicit quadrants and masks through the same _scene_problem checks. The native test uses an edge block at rows 0-7, cols 12-18, which needs the diagonal step.",
+        "Host audit. It passed 1000 fresh pairs with 8000 augmented checks and 16 fixture variants, with no sampler rejections."
+      ],
+      "blocking_issues": [],
+      "nonblocking_limits": [
+        "Diagonal fallback is weakly identifiable. It is inherited from the archived rule and the native task, where no train pair needs it and only the test does. Synthetic episodes may also ask for the diagonal fallback on a query whose demonstrations never show it. Correctness relies on the generator forcing transpose agreement only on the pairs actually read.",
+        "The prior notes overstate the tie-break concern. The D4-specialised preference is inert in-domain, not a needed correction, and its sign derivation was not verified. It cannot change any in-domain output.",
+        "Out-of-domain behaviour differs from the archive. The emitted solver leaves conflicting or absent evidence as OCC and returns partial results when no axis is found, where the archived solver raises. The constructor excludes both cases.",
+        "Only even square sizes 16-30 are generated, with native 30 sampled at 60%. Non-native sizes are synthetic extensions using the same two-cell off-centre crop.",
+        "Corner-probe ('strip') scenes rely on a single in-grid diagonal partner, (0,1)<->(1,0). This is valid under the rule but rests on the least-attested part of the hypothesis."
+      ],
+      "required_context_checks": [
+        "Confirm the host D4 audit covered all eight orientations for diagonal-family scenes, including the strip and shadow families. augmented_pair_checks=8000 suggests 1000 pairs x 8 orientations.",
+        "Confirm palette[9] is held fixed per episode, so all demonstrations and the query share the occluder colour."
+      ],
+      "task_id": "f9d67f8b",
+      "factory_sha256": "1a219ad95c1fc69e5dcb428685557029227802d1298c40c85dad48d857fddae3",
+      "constructor_sha256": "763425a769d0ece0ec55cd48341bbe4a1bc10dc7cfacd484877c4e073e970588"
+    },
+    "host_review": "Host checked axis refutation, frozen stage1 diagonal reads and unique known partner assertions. Forced edge/shadow/orbit/strip at sizes16/30 each passed320 checks (1280 total), all8D4/two palettes. Added input-only diagonal-stage teaching gate. Original canonical demos do not teach its query diagonal stage; original labels unchanged, synthetic episodes require that stage demonstrated.",
+    "forced_family_review": {
+      "family_checks": {
+        "edge": 320,
+        "shadow": 320,
+        "orbit": 320,
+        "strip": 320
+      },
+      "checks": 1280,
+      "sizes": [
+        16,
+        30
+      ],
+      "pairs_per_size_per_family": 10,
+      "palettes": 2,
+      "d4": 8,
+      "factory_sha256": "1a219ad95c1fc69e5dcb428685557029227802d1298c40c85dad48d857fddae3",
+      "constructor_sha256": "763425a769d0ece0ec55cd48341bbe4a1bc10dc7cfacd484877c4e073e970588"
+    }
+  }
+}

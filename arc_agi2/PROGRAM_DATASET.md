@@ -35,7 +35,7 @@ recorded. Passing finite audits does not prove unrestricted generalization.
 
 - 213 native direct-coordinate certificates admitted after fresh audits and
   supplied-fixture checks.
-- 774 admitted factories. Each passed 1,000 fresh pairs, 8,000 augmented pair
+- 793 admitted factories. Each passed 1,000 fresh pairs, 8,000 augmented pair
   checks and 16 supplied-fixture variants. Their audit records retain draft
   limitations and source/constructor hashes. These checks are finite evidence,
   not proof of correctness on every generated input.
@@ -46,7 +46,7 @@ recorded. Passing finite audits does not prove unrestricted generalization.
   counts must be computed as a union, not added.
 - Local exporter test: 18 fresh base episodes, 144 augmented PNG/program/grid
   records. It requested 20 bases and reported a two-episode shortfall.
-- The union currently admits 993 of 1,120 families; 127 still need direct
+- The union currently admits 1012 of 1,120 families; 108 still need direct
   augmented program admission. Constructor coverage and program coverage are
   different gates.
 - Synthetic labels for `00d62c1b` now fill every enclosed background component,
@@ -617,3 +617,22 @@ original fixtures are preserved. The repaired sampler passed 1,000 fresh pairs
 and 8,000 augmented pair checks, with 970 unique inputs and no sampler failures.
 
 All 377 regression tests passed at this checkpoint.
+
+## 1012-family checkpoint
+
+Nineteen additional factories passed source review and complete-episode checks.
+The audit sampled 380 base episodes, accepted 373, excluded seven whose demos
+lacked required evidence, and verified 2,984 D4 records. Six new evidence tests
+cover corner-shape mappings, NOR paint colour, long-plus marker colour, diagonal
+repair, duplicate-part ordering and partial-X order. Query answers are never
+used by those evidence gates. All 383 regression tests passed.
+
+The mosaic repair family was also checked with all four occlusion families at
+sizes 16 and 30, across eight D4 transforms and two palettes: 1,280 checks.
+The original diagonal-repair benchmark query lacks that stage in its demos;
+its labels are unchanged and synthetic teaching episodes require the stage.
+
+See `reports/episode-evidence-1012-audit.json`. The remaining 108 families comprise
+72 semantic/context holds, 33 execution failures and three missing factories.
+Bulk production and training remain unlaunched. The target remains 1,000 fresh
+base episodes per family, followed by consistent episode augmentations.

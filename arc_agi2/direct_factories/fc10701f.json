@@ -1,0 +1,48 @@
+{
+  "task_id": "fc10701f",
+  "factory_sha256": "61bb3578dbf17f7687b0e3354aa09bd4fe06c60ed0c3e8590f64e60e3e7c7463",
+  "constructor_sha256": "2c63d35bd618780851335341b56ea6d3c4932ecda9131bbfc4f48f48f1346b85",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 113912919953906,
+  "d4": 7,
+  "unique_base_inputs": 998,
+  "seconds": 7.128309500054456,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "Each scene has a square box of colour palette[7] (the mover) and a box of the same size and shape in colour palette[9] (the target). The two boxes are aligned either vertically or horizontally. Pairs of palette[0] posts stand beside the corridor between them. The emitted program works directly in the visible coordinates. It finds the bounding boxes of the mover and target colours. If the boxes share a column span, the corridor runs along rows; if they share a row span, it runs along columns. Target cells are recoloured to the mover colour, and old mover cells become background palette[6]. For each slice strictly between the two boxes, the program checks the cell just outside each end of the slice. If both are palette[0], the whole slice across the box's width is filled with palette[2]. The generator draws both orientations itself (transpose/flip), so the program detects the axis from the pixels. That makes it correct under every D4 transform without rotating or normalising anything. Under any D4 transform the two boxes still share a span along one axis, and the posts still sit directly outside the corridor ends. Palette roles are baked in as palette[c] constants. Post rows that lie beside the target box, or beyond it, are not strictly between the boxes and so are not painted. This matches the constructor, which paints only rows with prow >= brows[0]+scale, all of which are below brows[1].",
+    "limitations": "These points come from reading the code only; nothing has been run. (1) The program assumes the palette is a permutation, so the background, post, gate, mover and target colours are all distinct. (2) Colour roles are fixed from the palette and are not inferred from the demonstrations. (3) When the boxes are adjacent (the constructor allows a zero-length gap), the corridor is empty and only the move is applied. The generator then rejects such scenes anyway, because it requires at least one gate. (4) No constructor defects were found. The fixtures are consistent with the uniform rule, and post rows inside the target box's span correctly stay unpainted.",
+    "independent_source_review": {
+      "verdict": "accept",
+      "mechanism": "There is one palette[9] square (the target) and one palette[7] square (the mover), both the same size. They share a column span, or a row span after flip/transpose. Two-cell palette[0] posts flank certain slices. The output recolours the target to the mover colour and the old mover to background palette[6]. Every slice strictly between the two boxes that has a post cell immediately outside both ends is filled with palette[2] across the box width.",
+      "evidence": [
+        "Constructor draw(): posts go at columns bcol-2, bcol-1, bcol+scale and bcol+scale+1 for each prow. Gate paint is `output[prow][bcol:bcol+scale]=2` only when `prow >= brows[0]+scale`. In the random branch, prows stop once `prow+1 >= brows[1]`, so painted rows lie in [brows[0]+scale, brows[1]-2]. These are strictly between the boxes, which is exactly what the solver's `range(lo+1, hi)` scans.",
+        "Post rows only exist at prows. Inside the corridor, every row with posts at bcol-1 and bcol+scale is a painted prow, and every painted prow has those posts. So the solver's test `g[y,x0-1]==POST and g[y,x1+1]==POST` is equivalent to the constructor's painting condition.",
+        "Post rows above the target or alongside it (prow < brows[0]+scale) are not painted by the constructor. The solver excludes them because it scans only strictly between the bounding boxes. The test (flipped) and train 3 both exercise this case: test row 11 lies inside the target, and test rows 13\u201323 lie beyond it.",
+        "Geometry is always valid. size \u2265 4(scale+1) gives brows[1]-brows[0] \u2265 scale, so the boxes never overlap. bcol \u2265 3 and bcol \u2264 size-scale-3 keep posts in bounds. The 7 box ends at \u2264 size. Post columns never overwrite box cells.",
+        "Zero gap (adjacent boxes), or no prow in the corridor, gives good=False and draw() returns None, so the sampler rejects it. The first prow \u2264 3 < brows[1]-1 always holds because brows[1] \u2265 3\u00b7scale+2 \u2265 5.",
+        "Axis detection: boxes separated along one axis cannot share both spans. The `a[1]==b[1] and a[3]==b[3]` test therefore selects the vertical case exactly, and the elif selects the horizontal case. The solver works on visible coordinates with no whole-grid untransform, and handles flip, transpose and D4 directly.",
+        "I hand-checked all four fixtures (three train, one flipped test) against the solver logic. Gate positions match: train1 rows 3, 5, 8; train2 x=3, 5; train3 x=7, 10; test rows 6, 8.",
+        "Colour roles (target\u2192mover, mover\u2192bg, gate=2, post=0) are constant and appear in every demonstration. No per-instance arbitrary colour lookup exists, so no extra context evidence is needed.",
+        "Host audit passed: 1000 fresh pairs, 8000 augmented checks, 16 fixture variants, no sampler rejections recorded."
+      ],
+      "blocking_issues": [],
+      "nonblocking_limits": [
+        "Assumes the palette is a permutation, so the bg/post/gate/mover/target colours are distinct. The factory does not check this.",
+        "The fallback that returns the recoloured-only grid when a box is missing is out of domain, because the constructor always draws both boxes.",
+        "Random scenes always put the target box nearer the start of the grid (brows[0] \u2264 size//2). Flip/transpose plus D4 augmentation cover other directions, and the solver is direction-agnostic.",
+        "The solver checks only the inner post cell (x0-1 / x1+1), not the full two-cell post. This is equivalent within the constructor's domain."
+      ],
+      "required_context_checks": [],
+      "task_id": "fc10701f",
+      "factory_sha256": "61bb3578dbf17f7687b0e3354aa09bd4fe06c60ed0c3e8590f64e60e3e7c7463",
+      "constructor_sha256": "2c63d35bd618780851335341b56ea6d3c4932ecda9131bbfc4f48f48f1346b85"
+    },
+    "host_review": "Host checked corridor between box bounding boxes, posts above/inside/between boxes and constructor rejection requiring a painted gate. Direct geometry equivariant; all five colour roles shown; no hidden lookup."
+  }
+}

@@ -1,0 +1,50 @@
+{
+  "task_id": "f9a67cb5",
+  "factory_sha256": "4ad45014b013a4863b409be97477f4d2a58017e1c7b66f682a99d3c6e7348ee7",
+  "constructor_sha256": "c28caec3e4e09dd3d94eaf234516658ccc4f3af3358d49aefaa0fab137578b8c",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 201564198165939,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 9.470926290960051,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The generator is an order-independent closure. A cell reached by the flow goes one step forward if the cell ahead is open. If the cell ahead is a wall, it spreads one step to each side. A side-spread cell whose ahead cell is open is a gap: it only flows forward and stops spreading there, so each side stops at the first gap. Bottom/out-of-bounds stops the flow.\n\nThe native family already includes flip and transpose, so the marker can sit on any edge. The direction therefore has to be read from the visible grid in every D4 frame. The emitted program finds the marker (palette[2]) and uses the edge it sits on. The generator puts it at least 3 cells from the corners, so the edge is unambiguous. Flow goes perpendicular and inward, with side-spread along the visible perpendicular axis. Spreading is symmetric, so reflections need no extra handling.\n\nColour roles are fixed palette constants. Background is palette[0], wall is palette[8], and paint/marker is palette[2]. Any non-background, non-paint cell is treated as blocking. The emitted program works natively in visible coordinates and does not rotate or recolour the grid.",
+    "limitations": "d4 is deliberately not used to pick the direction, because the native family's flip/transpose latents already make direction a visible property of each grid. If the marker were in a corner (impossible under the generator), a fallback infers the axis from majority wall lines. Demonstrations are not consulted; roles come from the palette. No intermediate teaching checkpoints are emitted, only the final grid. I found no constructor defect affecting the visible rule. The generator's side pushes could overwrite a wall only if a wall shared the flow row, but wall rows are spaced at least 2 apart, so this never happens. The DFS order does not affect the final set. Not executed or tested by me.",
+    "independent_source_review": {
+      "verdict": "accept",
+      "mechanism": "Water-flow closure. The marker sits on one edge, never at a corner, and flow moves inward perpendicular to that edge. A reached cell moves forward if the cell ahead is open. If the cell ahead is a wall, it spreads one cell to each side. A spread cell whose ahead cell is open is a gap: it only flows forward, so each side stops at the first gap. Flow stops when the cell ahead is outside the grid. Native frames are flipped and/or transposed, so the marker can sit on any edge, and the emitted solver reads the direction from the visible marker edge.",
+      "evidence": [
+        "Constructor: pcol = randint(3, width-4) keeps the native marker at least 3 cells from the corners. common.flip reverses rows and common.transpose swaps axes, so in every frame (including D4-augmented ones) the marker is on exactly one edge and not in a corner. The solver's unambiguous-edge branch therefore always applies.",
+        "Wall rows start at row 2 or 3 and step by 2 or 3, ending with row+2 < height. Each wall row satisfies sum(lengths)+num_segments-1 == width with every length >= 1. So gaps are single interior cells, no gap touches the grid border, wall rows are never adjacent, and row 1 is always open below the row-0 marker.",
+        "Constructor branch rules: if the cell below is 0, push it. If it is 8, push both sides. If it is 2, it was already visited, and the decision depends only on the static 8 test, so the closure is order-independent. The solver mirrors this: it pushes ahead when the ahead cell is not a wall and spreads to the sides only when it is. Since 'below == 2' means 'already seen', both produce the same final set.",
+        "The constructor never checks whether side-pushed cells are walls, but they lie in non-wall rows (wall rows are spaced at least 2 apart), so they are never 8. The solver's extra not-is_wall guard is therefore inert.",
+        "A gap cell in a wall row always has an open cell ahead (the next row is not a wall), so the constructor never spreads sideways inside a wall row. The solver matches this.",
+        "The bottom-edge condition 'row+1 >= height: continue' matches the solver's 'ahead out of bounds: continue'.",
+        "The marker cell is painted in the output and starts the flow. In the solver, is_wall treats MARK as non-blocking, and the marker cell is included in seen, so it is painted MARK (it already is).",
+        "sides = [(dx,dy), (-dx,-dy)] is perpendicular to (dy,dx) for every visible edge direction. The solver uses the visible coordinates directly, with no untransform/solve/retransform wrapper.",
+        "Colour roles bg/wall/mark come from palette[0], palette[8] and palette[2]. These are genuine rule roles, not lookup associations, and the direction is a visible property of each query grid. No demonstration evidence about colour associations is needed, and the task is not in the episode-evidence list.",
+        "Host audit passed: 1000 fresh pairs, 8000 augmented checks and 16 fixture variants, with no sampler rejections."
+      ],
+      "blocking_issues": [],
+      "nonblocking_limits": [
+        "The archived rule mentions teaching checkpoints, one canvas per stage. The emitted solver returns only the final grid.",
+        "The fallback for a corner or interior marker (majority wall-line orientation) is unreachable under the constructor and was not validated.",
+        "Demonstrations are not consulted. Roles are fixed by the palette, which is acceptable for this deterministic spatial rule.",
+        "The constructor's length rejection loop can need many retries for 4 segments at large widths. This affects efficiency only, not correctness.",
+        "Source review only; I did not execute anything. Equivalence is argued from the constructor's structural invariants (wall rows spaced at least 2 apart, interior single-cell gaps, marker off-corner)."
+      ],
+      "required_context_checks": [],
+      "task_id": "f9a67cb5",
+      "factory_sha256": "4ad45014b013a4863b409be97477f4d2a58017e1c7b66f682a99d3c6e7348ee7",
+      "constructor_sha256": "c28caec3e4e09dd3d94eaf234516658ccc4f3af3358d49aefaa0fab137578b8c"
+    },
+    "host_review": "Host checked constructor wall spacing, single-cell interior gaps, off-corner edge marker and static-wall flow closure. Lateral positions cannot be walls because wall rows are nonadjacent. Source direction inference handles D4 directly."
+  }
+}

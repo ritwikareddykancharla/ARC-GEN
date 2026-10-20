@@ -1,0 +1,46 @@
+{
+  "task_id": "fafffa47",
+  "factory_sha256": "3772ab688195f19f64f847c6e4e674cd13513ea73f95b7890d21ceb6ce72ed36",
+  "constructor_sha256": "c5b8214d1283080141943ec9ab942b0e0561835246cbbdb8d33780428d9529bf",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 280516880802539,
+  "d4": 7,
+  "unique_base_inputs": 999,
+  "seconds": 2.6118072499521077,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "In the original task, a 6x3 input is made of two 3x3 halves stacked vertically. The top half uses 9 and the bottom half uses 1. The output is red (2) wherever both halves are background (0) and 0 everywhere else, which is a cellwise NOR.\n\nEvery D4 transform is affine with a shared linear part. So the halves map to two adjacent equal blocks along the long axis of the visible grid. A cell (i,j) in one block corresponds to cell (i,j) in the other block and to output cell (i,j), each in its own block-local coordinates.\n\nThe emitted program works directly in visible coordinates. It picks the split axis from d4: rows for an even number of rotations, columns for an odd number. It falls back to the long dimension if the shape disagrees. It then splits the grid into two equal halves and paints palette[2] wherever both halves equal palette[0], leaving palette[0] elsewhere. NOR is symmetric, so the program never needs to know which half carried 9 and which carried 1. All colour roles are palette constants, so no recolouring of the whole grid is done. It also handles any half size, not just 3.",
+    "limitations": "The program assumes the constructor's domain: two equal halves stacked along the long axis, with background palette[0]. A square input is outside that domain, and for one the program simply splits along the d4-derived axis. The fixtures agree with the uniform NOR rule. I found no constructor defects. The generator's resampling loop, which requires every row and column to be touched, does not affect the visible rule. I have not run any tests.",
+    "independent_source_review": {
+      "verdict": "accept",
+      "mechanism": "Each input stacks two equal s\u00d7s halves: maroon marks in one half and blue marks in the other. The output is s\u00d7s, with red wherever both halves are background at the same local cell (a cellwise NOR) and background elsewhere. Under any D4 transform, the two halves become adjacent equal blocks along the long axis of the visible grid. Because they share a linear part, local cell (i,j) in one block matches local cell (i,j) in the other block and in the output. The emitted solver splits along the d4-derived long axis and marks palette[2] wherever both halves equal palette[0]. It works directly in visible coordinates.",
+      "evidence": [
+        "Constructor: common.grid(size, 2*size) builds width=size and height=2*size, so the input is 6 rows by 3 columns. Marks go to grid[size+r][c] when idx is set (blue), otherwise grid[r][c] (maroon). Output red is set iff grid[r][c]==0 and grid[size+r][c]==0. This matches the archived transform and all six fixtures.",
+        "The resampling loop only requires the union of marks to cover all 3 rows and 3 columns. It never reads any hidden latent that the visible rule depends on, and the label depends only on visible cells.",
+        "Factory: axis is 1 for odd d4, else 0. A 2s\u00d7s grid under an odd quarter-turn becomes s\u00d72s, which is horizontal stacking, and a reflection does not change the axis. The shape safety net agrees with this because the input is never square (2s vs s).",
+        "Correspondence is preserved: a D4 map is affine and acts on both halves and on the output with the same linear part. Block-local indices therefore align without any untransform. NOR is symmetric, so which half carries 9 and which carries 1 does not matter.",
+        "Colour roles are palette constants: BG=palette[0] and MARK=palette[2]. The input inks palette[1] and palette[9] are handled implicitly as anything that is not BG. There is no whole-grid recolour wrapper and no native-solve wrapper.",
+        "Host audit passed: 1000 fresh pairs, 8000 augmented checks, and 16 fixture variants, with d4=7 in this run."
+      ],
+      "blocking_issues": [],
+      "nonblocking_limits": [
+        "The mark colour (palette[2]) is only taught by a demonstration whose output contains at least one NOR cell. The constructor can produce a pair with no doubly-empty cell: each cell is doubly empty with probability about 0.25, so an all-covered 3\u00d73 pair has probability on the order of 0.075. An episode where every demonstration lacks a red cell while the query has one is therefore reachable, but it is extremely rare for multi-demonstration episodes (roughly 0.075^k). All canonical fixtures display the red mark.",
+        "The solver assumes the constructor domain: background palette[0] and two equal halves along the long axis. Square inputs, which the constructor never produces, would fall back to the d4 axis.",
+        "Source review only; I have not executed anything myself."
+      ],
+      "required_context_checks": [
+        "fafffa47 is not in the episode-evidence task list and falls through to the generic branch. That branch's active pairs (palette[4]/[7], palette[1]/[8]) never trigger here, so no check confirms the NOR mark colour. The host may want a check similar to e345f17b's 'nor-mark-colour': if the query has a cell that is background in both halves, require at least one demonstration whose output contains palette[2]."
+      ],
+      "task_id": "fafffa47",
+      "factory_sha256": "3772ab688195f19f64f847c6e4e674cd13513ea73f95b7890d21ceb6ce72ed36",
+      "constructor_sha256": "c5b8214d1283080141943ec9ab942b0e0561835246cbbdb8d33780428d9529bf"
+    },
+    "host_review": "Host checked stacked NOR geometry and symmetric local correspondence. Added missing-mark evidence gate for native vertical panels; query may require red only after demo output shows it. Tested all8D4 with nonidentity palette. Review generic-fallback wording corrected: absent whitelist returns early."
+  }
+}

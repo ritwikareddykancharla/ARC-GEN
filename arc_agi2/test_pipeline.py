@@ -2670,4 +2670,17 @@ class GeneratorTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError,'several grid corners'):
             m.generate(width=4,height=5,corners=[[3,['####']],[3,['####']],None,None])
 
+    def test_bracket_accepts_wide_explicit_strokes_with_fitting_mirror(self):
+        m=importlib.import_module('tasks.task_bf32578f')
+        p=m.generate(width=30,height=8,offsets=[0,26,27],even=True,cap=0,left=0,top=0,colour=2)
+        self.assertEqual(sum(v==2 for v in p['output'][2]),4)
+        self.assertEqual(p['output'],grid(call(solver('bf32578f'),p['input'])))
+
+    def test_bracket_bounds_reject_before_geometry_allocation(self):
+        m=importlib.import_module('tasks.task_bf32578f')
+        with patch.object(m,'_scene',side_effect=AssertionError('geometry reached')):
+            for kw in ({'offsets':[0,0,10**7]},{'cap':10**7},{'offsets':[0]*16}):
+                with self.assertRaises(ValueError):m.generate(**kw)
+        with self.assertRaises(ValueError):m.generate(offsets=iter([0,1,2]))
+
 if __name__=='__main__':unittest.main()

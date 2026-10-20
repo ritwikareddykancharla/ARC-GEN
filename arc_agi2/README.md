@@ -14,11 +14,11 @@ This fork adds a reference-guided generator workflow and an adaptive episode bui
 
 - All **1,120** canonical tasks inventoried with saved Opus/Fable explanations, `transform(grid)` programs, provenance and separately labelled teaching fixtures.
 - **891 existing upstream generators** reproduce the canonical pair sets (pair ordering can differ between releases).
-- **190 new constructive implementations** have passed bounded validation, covering counting, selection, geometry, legends, relational motion, scaling, pattern construction and repair. Standalone conversion and review are tracked separately below.
+- **191 new constructive implementations** have passed bounded validation, covering counting, selection, geometry, legends, relational motion, scaling, pattern construction and repair. Standalone conversion and review are tracked separately below.
 - **Two variable-size extensions**: `0692e18c` (inverse self-tiling) and `00576224` (three-by-three tiling with mirrored middle band).
-- All 192 constructors (190 new families plus two size extensions) passed **300 bounded randomized checks each**: 189 use the archived pair solver, `78332cb0` uses the documented complete-chain verifier, `de493100` uses the dimension-aware reflection verifier, and `269e22fb` uses a demonstration-conditioned episode verifier. Of these, 191 reproduce all original examples; `581f7754` uses the explicitly approved, hash-pinned eight-cell teaching correction. Its unchanged canonical replay is reported separately as 4/5, versus 5/5 on the teaching copy. Outputs are constructed independently from latent parameters. New pictures in `269e22fb` are compared with an independent contextual verifier; its original fixtures still match the archived fixed-picture transform.
+- All 193 constructors (191 new families plus two size extensions) passed **300 bounded randomized checks each**: 190 use the archived pair solver, `78332cb0` uses the documented complete-chain verifier, `de493100` uses the dimension-aware reflection verifier, and `269e22fb` uses a demonstration-conditioned episode verifier. Of these, 192 reproduce all original examples; `581f7754` uses the explicitly approved, hash-pinned eight-cell teaching correction. Its unchanged canonical replay is reported separately as 4/5, versus 5/5 on the teaching copy. Outputs are constructed independently from latent parameters. New pictures in `269e22fb` are compared with an independent contextual verifier; its original fixtures still match the archived fixed-picture transform.
 - **22 additional fixed-size families / 111 size-parameter configurations** passed bounded 12-seed differential tests. Every such generated pair is checked again during generation. This is agreement evidence, not proof of semantic correctness.
-- **39 tasks still need constructive generators**. A saved transform is not itself an input generator. Reference packets and `reports/generator-roadmap.csv` provide the task-by-task backlog.
+- **38 tasks still need constructive generators**. A saved transform is not itself an input generator. Reference packets and `reports/generator-roadmap.csv` provide the task-by-task backlog.
 
 ## Inspect
 
@@ -74,7 +74,7 @@ The authoring campaign uses eight concurrent Claude CLI processes under the user
 
 A zero-error differential check is a bounded agreement test. It does not prove the saved solver is universally correct or that every original mechanism variant is covered.
 
-**184 standalone modules are now reviewed and registered** (the exact list lives in `task_registry.py`). Each passed 1,000 seed checks and exact reconstruction of its approved validation fixture: canonical for 183 modules, the labelled teaching copy for `581f7754`. The first sixteen used seeds 0..999 (including their 300 author-validation seeds); the next one hundred and sixty-eight used independent seeds 20,000..20,999. The regression suite also checks registered source hashes and seeds 10,000..10,019.
+**185 standalone modules are now reviewed and registered** (the exact list lives in `task_registry.py`). Each passed 1,000 seed checks and exact reconstruction of its approved validation fixture: canonical for 184 modules, the labelled teaching copy for `581f7754`. The first sixteen used seeds 0..999 (including their 300 author-validation seeds); the next one hundred and sixty-nine used independent seeds 20,000..20,999. The regression suite also checks registered source hashes and seeds 10,000..10,019.
 
 Twenty-four conversions replace earlier research constructors with the upstream task-file interface. The total is now 188 new constructive families, with 6 still awaiting standalone conversion/review. Remaining CLI drafts are authored and validated locally. Restricted shape and dimension ranges are documented per file and in `reports/standalone/`; the size-matching builder must respect those ranges.
 
@@ -592,3 +592,12 @@ Registered `bc93ec48`. Four canonical pairs, 1,000 independent seed checks and *
 Defaults include 392 scenes where the translated bounding box reaches a destination corner but the actual shape does not cover that corner, 144 with foreign colours inside a corner object's bounding box, and 456 with foreign-colour contacts. An explicit component occupying two grid corners now rejects, resolving an ambiguity in the draft. Thirteen invalid controls reject. The critic's 22 valid/eight rejection cases pass; its old success expectation for the multi-corner component intentionally fails. Background 7, sub-half-grid random corner objects, nonoverlapping stamps and restrictions on same-colour adjacency remain explicit limitations.
 
 **169 regression tests pass. Coverage: 1,081/1,120; 39 missing; 184 reviewed standalone additions.** Six older constructors remain to convert. Bulk generation and model training remain stopped.
+
+
+## Bracket fill and reflection — reviewed checkpoint
+
+Registered `bf32578f`. All four original pairs, 1,000 independent seed checks and **2,206 distinct input-derived row-span/mirror checks** pass. Tests include all 784 rectangles from 3x3 to 30x30, 300 large native cases, 112 half-length/parity/cap combinations and six wider explicit stroke profiles. Of the 300 large cases, 80 have brackets taller than the previous 16-row ceiling and 44 exceed the previous 13-column ceiling; maximum native bracket dimensions are 30 rows and 15 columns.
+
+The CLI repair initially imposed x1<=14 on explicit inputs as well as random proposals. Host review preserved wider valid explicit strokes by bounding coordinates before allocation and checking the actual mirrored footprint. Profiles with bracket widths up to 28 are independently tested. Eighteen invalid controls reject; extreme offsets/caps and excessive half-length reject before geometry allocation. Critic tests pass 21 valid and nine rejection cases. Fixed zero background, a single symmetric right-opening bracket, non-concave offsets, in-bounds mirrors and the native x1<=14 proposal remain documented restrictions. Larger/irregular shapes are synthetic extensions.
+
+**171 regression tests pass. Coverage: 1,082/1,120; 38 missing; 185 reviewed standalone additions.** Six older constructors remain to convert. Bulk generation and model training remain stopped.

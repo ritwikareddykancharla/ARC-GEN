@@ -1,6 +1,6 @@
 {
   "task_id": "78332cb0",
-  "status": "requires_complete_chain_verifier",
+  "status": "resolved_with_complete_chain_verifier",
   "canonical_data_changed": false,
   "input": [
     [
@@ -341,5 +341,13 @@
       7
     ]
   ],
-  "explanation": "Swap the middle and last panels of canonical train[2]. The unique complete chain still orders colours 8,1,9, but the archived reading-order greedy solver chooses 8,9,1 and disconnects the final step. The repaired draft restricts random layout order to avoid this reference failure, so it is not ready for unrestricted chain generation."
+  "explanation": "Swap the middle and last panels of canonical train[2]. The unique complete chain still orders colours 8,1,9, but the archived reading-order greedy solver chooses 8,9,1 and disconnects the final step. The repaired draft restricts random layout order to avoid this reference failure, so it is not ready for unrestricted chain generation.",
+  "resolution": {
+    "verifier": "arc_agi2/verified_rules.py",
+    "original_reference_preserved": true,
+    "canonical_pairs_exact": 5,
+    "independent_generated_samples": 1000,
+    "archived_greedy_disagreements": 202,
+    "targeted_greedy_traps": 120
+  }
 }

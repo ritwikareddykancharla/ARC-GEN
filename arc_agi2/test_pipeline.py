@@ -687,7 +687,8 @@ class GeneratorTests(unittest.TestCase):
             key=lambda p:json.dumps(p,sort_keys=True)
             for split in ['train','test']:
                 self.assertEqual(sorted(map(key,actual[split])),sorted(map(key,expected[split])),(tid,split))
-            solve=solver(tid)
+            from .runtime import verification_solver
+            solve=verification_solver(tid)
             for seed in range(10000,10020):
                 random.seed(seed)
                 from .contextual import CONTEXTUAL_TASK_IDS, verify_shared_picture_episode

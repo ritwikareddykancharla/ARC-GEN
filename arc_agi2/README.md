@@ -12,11 +12,11 @@ This fork adds a reference-guided generator workflow and an adaptive episode bui
 
 - All **1,120** canonical tasks inventoried with saved Opus/Fable explanations, `transform(grid)` programs, provenance and separately labelled teaching fixtures.
 - **891 existing upstream generators** reproduce the canonical pair sets (pair ordering can differ between releases).
-- **131 new constructive implementations** have passed bounded validation, covering counting, selection, geometry, legends, relational motion, scaling, pattern construction and repair. Standalone conversion and review are tracked separately below.
+- **132 new constructive implementations** have passed bounded validation, covering counting, selection, geometry, legends, relational motion, scaling, pattern construction and repair. Standalone conversion and review are tracked separately below.
 - **Two variable-size extensions**: `0692e18c` (inverse self-tiling) and `00576224` (three-by-three tiling with mirrored middle band).
-- All 133 constructors (131 new families plus two size extensions) passed **300 bounded randomized checks each**: 132 use the archived pair solver; `269e22fb` uses a demonstration-conditioned episode verifier. Of these, 132 reproduce all original examples; `581f7754` uses the explicitly approved, hash-pinned eight-cell teaching correction. Its unchanged canonical replay is reported separately as 4/5, versus 5/5 on the teaching copy. Outputs are constructed independently from latent parameters. New pictures in `269e22fb` are compared with an independent contextual verifier; its original fixtures still match the archived fixed-picture transform.
+- All 134 constructors (132 new families plus two size extensions) passed **300 bounded randomized checks each**: 132 use the archived pair solver, `78332cb0` uses the documented complete-chain verifier, and `269e22fb` uses a demonstration-conditioned episode verifier. Of these, 133 reproduce all original examples; `581f7754` uses the explicitly approved, hash-pinned eight-cell teaching correction. Its unchanged canonical replay is reported separately as 4/5, versus 5/5 on the teaching copy. Outputs are constructed independently from latent parameters. New pictures in `269e22fb` are compared with an independent contextual verifier; its original fixtures still match the archived fixed-picture transform.
 - **22 additional fixed-size families / 111 size-parameter configurations** passed bounded 12-seed differential tests. Every such generated pair is checked again during generation. This is agreement evidence, not proof of semantic correctness.
-- **98 tasks still need constructive generators**. A saved transform is not itself an input generator. Reference packets and `reports/generator-roadmap.csv` provide the task-by-task backlog.
+- **97 tasks still need constructive generators**. A saved transform is not itself an input generator. Reference packets and `reports/generator-roadmap.csv` provide the task-by-task backlog.
 
 ## Inspect
 
@@ -29,7 +29,7 @@ The report separates 1,000 training tasks from 120 public evaluation tasks, quer
 Install Python 3.12+, numpy, pyarrow and huggingface-hub. From the repository root:
 
 ```sh
-python -m unittest arc_agi2.test_pipeline arc_agi2.test_contextual -v
+python -m unittest arc_agi2.test_pipeline arc_agi2.test_contextual arc_agi2.test_verified_rules -v
 python -m arc_agi2.audit --workers 8
 python -m arc_agi2.validate_parameters
 ARCGEN_WORKERS=32 python -m arc_agi2.build_million
@@ -72,9 +72,9 @@ The authoring campaign uses eight concurrent Claude CLI processes under the user
 
 A zero-error differential check is a bounded agreement test. It does not prove the saved solver is universally correct or that every original mechanism variant is covered.
 
-**125 standalone modules are now reviewed and registered** (the exact list lives in `task_registry.py`). Each passed 1,000 seed checks and exact reconstruction of its approved validation fixture: canonical for 124 modules, the labelled teaching copy for `581f7754`. The first sixteen used seeds 0..999 (including their 300 author-validation seeds); the next one hundred and nine used independent seeds 20,000..20,999. The regression suite also checks registered source hashes and seeds 10,000..10,019.
+**126 standalone modules are now reviewed and registered** (the exact list lives in `task_registry.py`). Each passed 1,000 seed checks and exact reconstruction of its approved validation fixture: canonical for 125 modules, the labelled teaching copy for `581f7754`. The first sixteen used seeds 0..999 (including their 300 author-validation seeds); the next one hundred and ten used independent seeds 20,000..20,999. The regression suite also checks registered source hashes and seeds 10,000..10,019.
 
-Twenty-four conversions replace earlier research constructors with the upstream task-file interface. The total is now 131 new constructive families, with 6 still awaiting standalone conversion/review. Remaining CLI drafts are authored and validated locally. Restricted shape and dimension ranges are documented per file and in `reports/standalone/`; the size-matching builder must respect those ranges.
+Twenty-four conversions replace earlier research constructors with the upstream task-file interface. The total is now 132 new constructive families, with 6 still awaiting standalone conversion/review. Remaining CLI drafts are authored and validated locally. Restricted shape and dimension ranges are documented per file and in `reports/standalone/`; the size-matching builder must respect those ranges.
 
 Independent validation exposed a background-inference failure in the saved `d4c90558` solver: a thick frame can dominate a small grid, causing the checker to interpret the wrong colour as background. The constructor now samples the explicit domain where 0 strictly outnumbers every other colour. The failing examples are retained in `reports/standalone/d4c90558-counterexamples.json`. This restriction is not evidence that the conceptual counting rule fails on denser scenes.
 
@@ -158,3 +158,11 @@ Coverage is **1,020/1,120**, with **100 missing** and **123 reviewed standalone 
 Coverage: **1,022/1,120**, **98 missing**, **125 reviewed standalone**. Bulk generation and training remain stopped.
 
 A separate `78332cb0` counterexample shows that the archived greedy chain solver fails when the middle and last panels of canonical train[2] swap positions. The original data is unchanged. That candidate remains unregistered until its complete-chain verification is resolved; restricting generated reading order to hide the solver failure is insufficient.
+
+### Complete-chain verification removes reading-order bias
+
+`78332cb0` now samples freely shuffled panel chains with repeated contacts. The archived reference is preserved, but its first-match greedy step is disproven by a permutation of canonical train[2]. A separate verifier enumerates complete panel orders, requires exactly one connected chain using every panel, and reconstructs its strip. It uses no constructor state or expected answer. Canonical fixtures remain unchanged and both verifiers solve all five.
+
+All 1,000 independent generator seeds pass the complete-chain verifier; **202 disagree with the archived greedy solver**, 342 use repeated contacts, 26 have non-adjacent repeat detours, 302 use a single shape colour and 72 contain full-line shape distractors. All 120 targeted greedy traps pass, including 60 six-panel cases with output long-side29. Tests cover every permutation and transpose of the canonical three-panel case, ambiguous-chain rejection, controls and the actual pair-pool builder using the stronger verifier. Generated targets still come from independently sampled latent chains; no canonical output was changed.
+
+Coverage: **1,023/1,120**, **97 missing**, **126 reviewed standalone**. All **51 regression tests** pass. The 32-worker repair campaign finished with101 passes and5 held candidates; one of those five passed a separate independent-failure repair. The remaining four depend on unapproved curated fixture differences and have not been registered. Bulk generation and model training remain stopped.

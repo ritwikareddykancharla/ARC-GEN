@@ -6,7 +6,7 @@ This is a conservative AST screen and timeout, not a security sandbox.
 import argparse,ast,hashlib,importlib.util,json,random,traceback
 from pathlib import Path
 import numpy as np
-from .runtime import reference,solver,grid,call,pairs,check_reference
+from .runtime import reference,solver,verification_solver,verification_basis,grid,call,pairs,check_reference
 
 from .fixture_policy import fixture_basis
 from .contextual import CONTEXTUAL_TASK_IDS, verify_shared_picture_episode
@@ -35,7 +35,12 @@ def validate(tid,path,samples=300,seed_start=0):
     source=path.read_text();screen(source)
     spec=importlib.util.spec_from_file_location('candidate_'+tid,path);m=importlib.util.module_from_spec(spec)
     call(spec.loader.exec_module,m,seconds=5)
-    r=reference(tid);f=solver(tid);original=check_reference(tid)
+    r=reference(tid);f=verification_solver(tid);original=check_reference(tid)
+    verifier=verification_basis(tid)
+    verified_replay=None
+    if verifier['mode']!='archived_pair_solver':
+        verified_replay={kind:all(grid(call(f,p['input']))==p['output'] for p in pairs(r[kind]))
+                         for kind in ['canonical','teaching_fixture']}
     got=call(m.validate,seconds=30)
     # Keep corrected variants explicit; never silently overwrite the benchmark.
     matches={kind:got==r[kind] for kind in ['canonical','teaching_fixture']}
@@ -81,9 +86,10 @@ def validate(tid,path,samples=300,seed_start=0):
             errors.append({'seed':seed,'error':str(e)[:16000]})
             if len(errors)>=3:break
     basis=fixture_basis(tid,r)
-    ready=not errors and len(seen)>=20 and changed>=20 and replays<=samples//10 and matches[basis['fixture']] and original[basis['fixture']]['all_exact']
+    ready=not errors and len(seen)>=20 and changed>=20 and replays<=samples//10 and matches[basis['fixture']] and original[basis['fixture']]['all_exact'] and (verified_replay is None or verified_replay[basis['fixture']])
     return {'task_id':tid,'ready':ready,'samples_requested':samples,'samples_attempted':attempted,'samples_passed':passed,
-            'verifier_mode':'demonstration_conditioned_episode' if tid in CONTEXTUAL_TASK_IDS else 'archived_pair_solver',
+            'verifier_mode':'demonstration_conditioned_episode' if tid in CONTEXTUAL_TASK_IDS else verifier['mode'],
+            'verifier_evidence':verifier,'improved_verifier_fixture_replay':verified_replay,
             'seed_start':seed_start,'seed_end_exclusive':seed_start+attempted,
             'fixture_basis':basis,'unique_inputs':len(seen),'changed_pairs':changed,'fixture_replays':replays,
             'shapes':[list(s) for s in sorted(shapes)],'fixture_matches':matches,'original_solver_replay':original,

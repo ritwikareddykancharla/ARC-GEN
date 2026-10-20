@@ -2,7 +2,7 @@
 import argparse,concurrent.futures as cf,csv,hashlib,importlib,json,random,sys,time
 from collections import Counter
 from pathlib import Path
-from .runtime import BASE,reference,solver,check_reference,call,grid,pairs
+from .runtime import BASE,reference,solver,verification_solver,verification_basis,check_reference,call,grid,pairs
 from .generators.registry import GENERATORS,generate
 from .fixture_policy import fixture_basis
 from .contextual import CONTEXTUAL_TASK_IDS, verify_shared_picture_episode
@@ -18,7 +18,7 @@ def fixture_check(tid):
         return {'task_id':tid,'matches_pair_set':a==b,'canonical_pairs_missing':len(b-a),'extra_pairs':len(a-b)}
     except Exception as e:return {'task_id':tid,'matches_pair_set':False,'error':repr(e)}
 def extension_check(tid):
-    f=solver(tid);shapes=Counter();errors=[];n=300
+    f=verification_solver(tid);shapes=Counter();errors=[];n=300
     standalone=(ROOT/'tasks'/f'task_{tid}.py').exists() and tid not in UPSTREAM_IDS
     module=importlib.import_module('tasks.task_'+tid) if standalone else None
     constructor=module.generate if module else None
@@ -36,12 +36,15 @@ def extension_check(tid):
                 assert grid(call(f,p['input']))==p['output'],'reference mismatch'
             shapes[f"{len(p['input'])}x{len(p['input'][0])}->{len(p['output'])}x{len(p['output'][0])}"]+=1
         except Exception as e:errors.append({'seed':seed,'error':str(e)})
-    orig=check_reference(tid);basis=fixture_basis(tid)
+    orig=check_reference(tid);basis=fixture_basis(tid);verifier=verification_basis(tid)
+    improved_replay=(all(grid(call(f,p['input']))==p['output'] for p in pairs(reference(tid)[basis['fixture']]))
+                     if verifier['mode']!='archived_pair_solver' else True)
     return {'task_id':tid,'sampled':n,'passed':n-len(errors),'errors':errors,'shapes':dict(shapes),'original_replay':orig,
-        'ready':not errors and orig[basis['fixture']]['all_exact'], 'fixture_basis':basis,
+        'ready':not errors and orig[basis['fixture']]['all_exact'] and improved_replay, 'fixture_basis':basis,
+        'verifier_evidence':verifier,
         'scope':('Fresh shared-picture episodes vs a demonstration-conditioned verifier; original fixtures also checked with archived solver.'
                  if tid in CONTEXTUAL_TASK_IDS else
-                 'Independent constructor vs saved solver and original fixtures; agreement does not prove semantic completeness.')}
+                 'Independent constructor vs the documented rule verifier and original fixtures; agreement does not prove semantic completeness.')}
 
 def summarise(ps):
     out={'pairs':len(ps),'input':{},'output':{},'relations':dict(Counter(relation(p) for p in ps))}

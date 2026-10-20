@@ -23,6 +23,15 @@ def solver(tid):
     ns.update(np=np,emit=lambda *a,**kw:None,__name__='reference')
     call(exec,compile(r['code'],f'reference/{tid}','exec'),ns)
     return ns['transform']
+def verification_solver(tid):
+    """Use a documented improved verifier when the archived code is disproven."""
+    from .verified_rules import VERIFIERS
+    return VERIFIERS[tid] if tid in VERIFIERS else solver(tid)
+
+def verification_basis(tid):
+    from .verified_rules import VERIFIER_EVIDENCE
+    return VERIFIER_EVIDENCE.get(tid,{'mode':'archived_pair_solver'})
+
 def grid(x):
     a=np.asarray(x)
     if a.ndim!=2 or not all(1<=n<=30 for n in a.shape) or not np.issubdtype(a.dtype,np.integer) or np.any(a<0) or np.any(a>9):

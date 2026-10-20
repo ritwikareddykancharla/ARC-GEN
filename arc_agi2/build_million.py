@@ -16,7 +16,7 @@ import numpy as np
 import pyarrow as pa
 import pyarrow.parquet as pq
 from huggingface_hub import HfApi,CommitOperationAdd,snapshot_download
-from .runtime import BASE,reference,solver,call,grid
+from .runtime import BASE,reference,solver,verification_solver,call,grid
 from .fixture_policy import fixture_basis,APPROVED_CORRECTIONS
 from .generators.registry import GENERATORS,generate
 from .task_registry import NEW_TASK_IDS
@@ -93,7 +93,7 @@ def picture_episode(module, tid, sample_seed):
 
 def pool_signature(tid,configs):
     # Invalidate cached pools after constructor, verifier, policy or selection changes.
-    files=[Path(__file__),BASE/'runtime.py',BASE/'contextual.py',BASE/'fixture_policy.py',BASE/'helpers.py',BASE/'training_policy.json',
+    files=[Path(__file__),BASE/'runtime.py',BASE/'verified_rules.py',BASE/'contextual.py',BASE/'fixture_policy.py',BASE/'helpers.py',BASE/'training_policy.json',
            BASE/'references'/f'{tid}.json',BASE.parent/'common.py',BASE/'task_registry.py']
     files+=sorted((BASE/'generators').glob('*.py'))
     native=BASE.parent/'tasks'/f'task_{tid}.py'
@@ -115,8 +115,8 @@ def make_pool(tid):
     existing=(BASE.parent/'tasks'/f'task_{tid}.py').exists()
     native_module=importlib.import_module('tasks.task_'+tid) if existing else None
     native=native_module.generate if existing else None
-    refs=solver(tid) if tid in GENERATORS or tid not in UPSTREAM_IDS else None
-    if configs and refs is None:refs=solver(tid)
+    refs=verification_solver(tid) if tid in GENERATORS or tid not in UPSTREAM_IDS else None
+    if configs and refs is None:refs=verification_solver(tid)
     rows=[];seen={};canonical=set();reject=Counter();stale=0;trials=0
     while len(rows)<POOL_SIZE and time.monotonic()-start<FAMILY_SECONDS and trials<POOL_SIZE*40:
         trials+=1;s=seed(tid,'pair',trials);random.seed(s);np.random.seed(s % (2**32));kw={};mode='default' if tid in UPSTREAM_IDS else 'standalone_constructor'
@@ -312,7 +312,7 @@ Three demonstration pairs and one query per episode, with generator-produced out
 - All fixture-verified ARC-GEN generators whose task IDs occur in ARC-AGI-2, plus independently constructed, tested extensions.
 - Adaptive fresh quotas: at most two episodes per unique canonical input in the pair pool, with a {POLICY['planned_dataset']['fresh_episodes_per_family']:,}-episode family ceiling before augmentation. Families with little variation receive fewer examples.
 - Target query longest-side distribution at each integer size 1–30 jointly with output expansion/shrinkage/same-shape, measured on all 1,120 public tasks. Exact height, width and rectangular-shape histograms are reported separately. Unsupported targets become explicit shortfalls; difficulty is not proven equal by dimensions.
-- Size overrides require original replay and differential seed checks. Overridden/extended pairs use saved teacher solvers, except episode-shared picture family `269e22fb`: it uses an independent verifier conditioned on a demonstration output, since its archived solver contains only the original picture. Default upstream generators have fixture checks, not full semantic proofs.
+- Size overrides require original replay and differential seed checks. Overridden/extended pairs use saved teacher solvers with documented verifier improvements: `78332cb0` checks the unique complete panel chain because the archived greedy program fails on valid panel permutations. Episode-shared picture family `269e22fb` uses an independent verifier conditioned on a demonstration output, since its archived solver contains only the original picture. Original teacher programs and benchmark data remain unchanged. Default upstream generators have fixture checks, not full semantic proofs.
 - Fresh input pool, no duplicated full native episodes, no equivalent inputs inside an episode. Every fresh episode expands into all eight D4 transforms. Symmetric identical episodes are stored once, with every represented transform recorded in `equivalent_d4`; fresh and augmented counts remain separate. Colours are generated natively; extra palette permutation is opt-in per family. One transformation applies consistently to all demonstration inputs/outputs and the query input/output.
 - Input equivalence classes under palette renaming and D4 are assigned to one split before episode construction, including across families. All 1,120 public task families, including the former 20 holdouts, are training-eligible after generator validation. Synthetic validation measures new-input generalization within known families.
 - For `269e22fb`, each fresh picture is shared by its three demonstrations and query. These pairs are stored together and never mixed with a different picture. The picture equivalence class and every crop belong to the same deterministic split. Fresh-episode capacity is limited to the number of complete context bundles, rather than multiplying the number of queries.

@@ -240,6 +240,13 @@ def solve(demonstrations, grid):
         import ast
         source, _ = native_program(task_id)
         class Colours(ast.NodeTransformer):
+            def visit_Call(self, node):
+                # A size-7 box may occupy 25/49 cells, so modal colour is
+                # the outline rather than the background. This family's
+                # background role is known and follows palette augmentation.
+                if isinstance(node.func, ast.Name) and node.func.id == 'background':
+                    return ast.copy_location(ast.Constant(palette[0]), node)
+                return self.generic_visit(node)
             def visit_Dict(self, node):
                 if [getattr(k,'value',None) for k in node.keys] == [5,7,9] and [getattr(v,'value',None) for v in node.values] == [8,4,3]:
                     node.values = [ast.Constant(palette[c]) for c in (8,4,3)]

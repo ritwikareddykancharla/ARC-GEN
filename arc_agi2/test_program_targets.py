@@ -5,6 +5,48 @@ from .runtime import reference
 from .program_targets import compile_target, audit_target, verify, make_record, TargetError, clean
 
 class ProgramTargets(unittest.TestCase):
+    def test_empty_box_examples_rejected_even_when_program_is_exact(self):
+        for role in ('train', 'test'):
+            ep = self.episode('00dbd492')
+            blank = [[6] * 7 for _ in range(7)]
+            ep[role][0]['input'] = blank
+            if role == 'train':
+                ep['train'][0]['output'] = blank
+            else:
+                ep['solutions'][0] = blank
+            with self.assertRaisesRegex(TargetError, 'background-only'):
+                make_record(ep)
+
+    def test_smallest_box_sampler_is_nonempty(self):
+        import random
+        from unittest.mock import patch
+        from tasks import task_00dbd492
+        original = task_00dbd492.common.randint
+        def smallest_canvas(a, b):
+            return 7 if (a, b) == (7, 23) else original(a, b)
+        state = random.getstate()
+        try:
+            for seed in range(20):
+                random.seed(seed)
+                with patch.object(task_00dbd492.common, 'randint', smallest_canvas):
+                    pair = task_00dbd492.generate()
+                self.assertEqual(len(pair['input']), 7)
+                self.assertEqual(len({v for row in pair['input'] for v in row}), 2)
+                self.assertNotEqual(pair['input'], pair['output'])
+        finally:
+            random.setstate(state)
+
+    def test_box_can_have_more_outline_than_background(self):
+        from tasks import task_00dbd492
+        pair = task_00dbd492.generate(size=7, rows=[0], cols=[0], thicks=[2])
+        palette = [3, 9, 0, 7, 2, 8, 1, 6, 4, 5]
+        for d4 in range(8):
+            source, _ = compile_target('00dbd492', d4, palette)
+            ns = {}
+            exec(source, ns)
+            result = ns['solve']([], transformed(pair['input'], d4, palette))
+            self.assertEqual(result.tolist(), transformed(pair['output'], d4, palette))
+
     def episode(self, tid, d4=0, palette=None):
         palette = palette or list(range(10))
         task=reference(tid)['teaching_fixture']

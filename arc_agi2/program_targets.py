@@ -251,6 +251,13 @@ def verify(source, episode, seconds=3):
 
 def make_record(episode, source_repo='', source_revision=''):
     task_id = episode['task_id']
+    if task_id == '00dbd492':
+        # Older ARC-GEN samples at size 7 could contain zero boxes. Exact
+        # execution alone accepts these vacuous examples. Check all demos and
+        # queries, including palette-augmented copies, before target export.
+        inputs = [p['input'] for p in episode['train'] + episode['test']]
+        if any(len({c for row in inp for c in row}) < 2 for inp in inputs):
+            raise TargetError('00dbd492: background-only input has no box to fill')
     source, basis = compile_target(task_id, episode.get('d4_transform', 0), episode.get('color_permutation'))
     audit_target(task_id, source)
     checked = verify(source, episode)

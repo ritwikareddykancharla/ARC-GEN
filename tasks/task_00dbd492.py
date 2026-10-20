@@ -31,7 +31,9 @@ def generate(size=None, rows=None, cols=None, thicks=None):
   if size is None:
     size = common.randint(7, 23)
     max_thick = 2 if size < 9 else 3
-    num_boxes = size // 4 - 1
+    # A 7x7 canvas still fits one 5x5 box. Zero boxes would produce a
+    # background-only identity pair that teaches none of this task's rule.
+    num_boxes = max(1, size // 4 - 1)
     while True:
       thicks = [common.randint(1, max_thick) for _ in range(num_boxes)]
       sizes = [2 * thick + 3 for thick in thicks]

@@ -957,3 +957,34 @@ single-pair distributions are unchanged. Remaining: 65 semantic/context holds,
 have not launched.
 
 All 467 regression tests passed for this checkpoint.
+
+## 1046-family checkpoint
+
+- `ae3edfdc`: require a demonstrated satellite-to-centre association for each
+  satellite colour used by a query. Keep zero-petal flowers in the native
+  generator; do not force both associations into every single pair.
+- `e509e548`: require demonstration evidence for each query L/U/H category's
+  output colour. Topology is measured from connected objects, branch degree
+  and corners. Keep the independent shape-type draws, including scenes missing
+  one or two categories. Replace simultaneous random-box rejection with bounded
+  randomized backtracking (256 size draws, 1,024 search nodes each). Height
+  10..20, width height+-2, box count 1+max(height,width)//3, box sizes 3..5 and
+  one-cell spacing remain. Position probabilities change; there is no lattice
+  or small-size fallback. The four previously timed-out audit seeds now produce
+  placements, and the full fresh audit records zero sampler timeouts (previously
+  four). The original fixture hash is unchanged.
+- `e5790162`: preserve two-segment paths. Compare all four independent
+  clockwise/counterclockwise assignments for the two obstacle colours, retain
+  those fitting every demonstration, then require agreement on each query.
+  Infer initial heading from the visible noncorner border start. Reject cyclic
+  alternative hypotheses using visited states. Do not assume that seeing one
+  colour teaches the other by elimination.
+
+The gates consume demonstration outputs and query inputs only. All three have
+hash-matched certificates for 1,000 fresh pairs, 8,000 D4 checks and 16 fixture
+variants; `e509e548` was re-audited after its packing change. The 60 new complete
+episodes all passed, yielding 480 augmented records without sampler rejections.
+Remaining: 62 semantic/context holds, 9 execution failures, 3 missing factories.
+Bulk generation and training have not launched.
+
+All 475 regression tests passed for this checkpoint.

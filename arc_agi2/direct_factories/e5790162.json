@@ -1,0 +1,23 @@
+{
+  "task_id": "e5790162",
+  "factory_sha256": "15c97caa6f7eccb8408ba15554998da66a29ffe2dd47ef81c59efd5fc6f1395f",
+  "constructor_sha256": "9807205cbc2783ee7210d0faf7e0814cae0d63477effb28e2b5bc8df8c752d1b",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 9960413630382,
+  "d4": 7,
+  "unique_base_inputs": 857,
+  "seconds": 7.319665499962866,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "In the canonical frame, a green snake starts at the single 3 on the left edge and heads right. It paints every cell it enters. When the cell ahead is a 6 it turns clockwise, and when it is an 8 it turns counter-clockwise. The obstacle itself is never painted, and the snake stops when the next step would leave the grid. In the generator, the unflipped path alternates right then down (6 at the end of each horizontal run, 8 at the end of each vertical run). The flipped variant mirrors the grid vertically and swaps the colours, which keeps 6 = clockwise and 8 = counter-clockwise. The factory works this mechanism out directly in visible coordinates. It reflects and then rotates the starting heading (0,1) for the D4 index, using cw rotation (dr,dc)->(dc,-dr). For reflected indices (d4>=4) it swaps which palette colour means a clockwise turn, because a mirror reverses handedness. Turns are applied on screen as cw (dy,dx)->(dx,-dy) and ccw (dy,dx)->(-dx,dy). Background, green and the two turn colours become palette constants. The emitted program finds the green cell, walks from it, and paints palette[3] until it reaches the border.",
+    "limitations": "The starting heading comes from the D4 index rather than being inferred from which edge the green cell sits on. This matches the stated episode-wide transform. Any non-background, non-green colour other than the two legend colours is treated as a clockwise turn, the same default the archived solver uses; the generator never produces such colours. A step bound guards against loops, which cannot happen in the generator's domain because the path is monotone and ends at a border. The generator draws only single 3/6/8 pixels on a black background, with segment lengths of at least 2. I found no constructor defects or fixture contradictions: all five train pairs and the test pair follow the uniform rule. I have not executed this code.",
+    "host_review": "Keep two-segment paths and original random/explicit constructor. Compare four independent CW/CCW assignments to obstacle colours by exact demonstration reproduction; require predictions agree on each query. Heading inferred from unique noncorner border start. Cyclic hypotheses rejected using visited state. No query answers used, no assumption that knowing one colour determines the other.",
+    "semantic_draft_review": "Opus5.5 subscription CLI draft reviewed; evidence handled at episode level, not by removing native simple scenes."
+  }
+}

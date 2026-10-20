@@ -79,13 +79,82 @@ def require_colour_evidence(task_id, demonstrations, queries, palette=None, d4=0
                        'fafffa47', 'fd02da9e', 'fe9372f3', 'f9d67f8b',
                        'fea12743', 'ff28f65a', 'eee78d87', 'f28a3cbb', 'f8be4b64',
                        '37d3e8b2', 'ba9d41b8', 'd2abd087', 'e39e9282',
-                       'b0c4d837', 'e133d23d', 'b27ca6d3', 'd94c3b52'):
+                       'b0c4d837', 'e133d23d', 'b27ca6d3', 'd94c3b52',
+                       'ae3edfdc', 'e509e548', 'e5790162'):
         return
     palette = list(range(10)) if palette is None else palette
     bg = palette[0]
     colours = lambda g: {c for row in g for c in row} - {bg}
     required, seen = set(), set()
-    if task_id == 'b0c4d837':
+    if task_id == 'ae3edfdc':
+        for satellite, centre in ((palette[7], palette[1]), (palette[3], palette[2])):
+            if any(satellite in row for q in queries for row in q['input']):
+                required.add(satellite)
+            for demo in demonstrations:
+                a, b = demo['input'], demo['output']
+                centres = [(r, c) for r, row in enumerate(a) for c, ink in enumerate(row) if ink == centre]
+                if any(a[r][c] == satellite and b[r][c] != satellite
+                       for r, row in enumerate(a) for c in range(len(row))):
+                    if any(0 <= r+dy < len(b) and 0 <= c+dx < len(b[0])
+                           and b[r+dy][c+dx] == satellite
+                           for r, c in centres for dy, dx in ((1, 0), (-1, 0), (0, 1), (0, -1))):
+                        seen.add(satellite)
+    elif task_id == 'e509e548':
+        def category(cells):
+            branch, corners = False, 0
+            for r, c in cells:
+                horizontal = int((r, c-1) in cells) + int((r, c+1) in cells)
+                vertical = int((r-1, c) in cells) + int((r+1, c) in cells)
+                branch |= horizontal + vertical >= 3
+                corners += horizontal == vertical == 1
+            return 'H' if branch else 'U' if corners >= 2 else 'L'
+        ink_for = {'H': palette[2], 'U': palette[6], 'L': palette[1]}
+        for demo in demonstrations:
+            for cells in _colour_components(demo['input'], palette[3]):
+                key = category(cells)
+                if all(demo['output'][r][c] == ink_for[key] for r, c in cells): seen.add(key)
+        for query in queries:
+            required.update(category(cells) for cells in _colour_components(query['input'], palette[3]))
+    elif task_id == 'e5790162':
+        def variants(g):
+            starts = [(r, c) for r, row in enumerate(g) for c, ink in enumerate(row) if ink == palette[3]]
+            if len(starts) != 1:
+                raise MissingColourEvidence('e5790162: expected one snake start')
+            h, w = len(g), len(g[0])
+            y0, x0 = starts[0]
+            headings = [(dy, dx) for edge, dy, dx in
+                        ((y0 == 0, 1, 0), (y0 == h-1, -1, 0),
+                         (x0 == 0, 0, 1), (x0 == w-1, 0, -1)) if edge]
+            if len(headings) != 1:
+                raise MissingColourEvidence('e5790162: start heading is ambiguous')
+            outputs = []
+            # Each obstacle independently means clockwise or counterclockwise.
+            # Do not infer the second colour merely by assuming a bijection.
+            for turns in range(4):
+                out = [row[:] for row in g]
+                y, x = y0, x0
+                dy, dx = headings[0]
+                visited = set()
+                while True:
+                    state = y, x, dy, dx
+                    if state in visited:
+                        out = [[-1]]  # Invalid cyclic hypothesis, never a target.
+                        break
+                    visited.add(state)
+                    yy, xx = y+dy, x+dx
+                    if not (0 <= yy < h and 0 <= xx < w): break
+                    ink = g[yy][xx]
+                    if ink in (palette[6], palette[8]):
+                        bit = 0 if ink == palette[6] else 1
+                        dy, dx = (dx, -dy) if turns & (1 << bit) else (-dx, dy)
+                    else:
+                        y, x = yy, xx
+                        out[y][x] = palette[3]
+                outputs.append(out)
+            return outputs
+        _require_rule_agreement(task_id, demonstrations, queries, variants)
+        return
+    elif task_id == 'b0c4d837':
         from .augmentation import transformed
         def empty_layers(g):
             cells = [(r, c) for r, row in enumerate(g)

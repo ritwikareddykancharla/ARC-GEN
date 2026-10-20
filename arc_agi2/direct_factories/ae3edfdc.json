@@ -1,0 +1,23 @@
+{
+  "task_id": "ae3edfdc",
+  "factory_sha256": "ea3932c1c9b1a2e393c422915a88c8cc54b6750b0371022c0b5b36f2a63a7ca6",
+  "constructor_sha256": "c7c6f41a5b13bae6d457db3e467a4b26478da53a18eed59f1ddb87de9f2f0990",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 139856867129369,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 16.321369999903254,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The visible mechanism has two centres and their satellites. Under the palette, the centre palette[1] attracts satellites of colour palette[7], and the centre palette[2] attracts satellites of colour palette[3]. The background is palette[0]. These roles are baked in as constants.\n\nEach satellite shares either a row or a column with its own centre. It slides along that line to the cell next to the centre, on the side it came from. The emitted program applies this directly in visible coordinates: if a satellite shares the centre's row it moves horizontally, and if it shares the column it moves vertically. Because the rule is symmetric under every rotation and reflection, rotations and reflections only swap or reverse these cases, and the code covers all of them natively. The d4 value is therefore only recorded in a comment.\n\nThe program first erases every satellite, then writes the new positions. This means a vacated cell can never overwrite a newly placed petal. It works on any rectangular grid and with satellites on the boundary.",
+    "limitations": "If a centre is missing, its satellites stay where they are. A satellite that is not aligned with its centre also stays where it is. The constructor never produces either case.\n\nThe constructor's draw() rejects any scene where two landing cells collide or where the input cells overlap. So no tie-breaking is needed, and none is invented.\n\nThe archived solver locates the background as the most common colour, whereas this program uses palette[0] directly. Both agree on the generator's domain.\n\nThe constructor's internal indexing is not reproduced as a rule. In that indexing, flower idx 0 is colour 2 with petals 3, and idx 1 is colour 1 with petals 7. Only the visible pairing is used: 7 goes to 1 and 3 goes to 2, consistent across all fixtures.\n\nNo fixture contradictions were found.",
+    "host_review": "Keep native zero-petal scenes and existing direct factory. Do not apply CLI proposal removing flowers with zero petals. Episode gate requires moved satellite-to-adjacent-centre evidence for each query-used satellite colour. No query labels are read. All four fixtures unchanged.",
+    "semantic_draft_review": "Opus5.5 subscription CLI draft reviewed; evidence handled at episode level, not by removing native simple scenes."
+  }
+}

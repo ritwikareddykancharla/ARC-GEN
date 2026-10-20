@@ -11,6 +11,62 @@ from .fixture_policy import fixture_basis
 from .augmentation import apply_episode,settings,exhaustive_variants
 
 class GeneratorTests(unittest.TestCase):
+    def test_noise_triangle_counts_cells_excludes_marker_and_preserves_figure(self):
+        m=importlib.import_module('tasks.task_902510d5')
+        figure=[(4,4),(5,5),(6,4),(7,5),(8,4)]
+        pair=m.generate(width=10,height=10,figure=figure,figure_color=4,
+                        corner='tl',corner_color=2,
+                        noise=[(0,4,4),(0,5,4),(2,8,2)])
+        expected=[[0]*10 for _ in range(10)]
+        for r,c in figure:expected[r][c]=4
+        for r in range(3):
+            for c in range(3-r):expected[r][c]=4
+        self.assertEqual(pair['output'],expected)
+        self.assertEqual(pair['output'],grid(call(solver('902510d5'),pair['input'])))
+        bad=dict(width=6,height=6,figure=[5],figure_color=1,
+                 corner='tl',corner_color=2,noise=[(0,3,1)])
+        with self.assertRaises(ValueError):m.generate(**bad)
+        with self.assertRaises(ValueError):m.generate(**(bad|{'figure':5}))
+
+    def test_noise_triangle_large_figures_scale_with_canvas(self):
+        m=importlib.import_module('tasks.task_902510d5')
+        random.seed(40000);pair=m.generate(width=30,height=30)
+        main=max(m._components(pair['input'],30,30),key=len)
+        self.assertGreaterEqual(len(main),45)
+        self.assertLessEqual(len(main),112)
+        self.assertFalse(m._has_block(main))
+        self.assertEqual(pair['output'],grid(call(solver('902510d5'),pair['input'])))
+
+    def test_legend_erases_before_earlier_fill_and_reserves_background(self):
+        m=importlib.import_module('tasks.task_9385bd28')
+        pair=m.validate()['train'][2]
+        # Later 4->0 row erases these pieces before earlier 2->9 and1->6 fills.
+        self.assertEqual(pair['input'][4][6],4)
+        self.assertEqual(pair['output'][4][6],9)
+        self.assertEqual(pair['input'][8][9],4)
+        self.assertEqual(pair['output'][8][9],6)
+        reserve=m.validate()['train'][0]
+        self.assertEqual(reserve['output'][3][5],0)
+        self.assertEqual(reserve['output'],grid(call(solver('9385bd28'),reserve['input'])))
+        random.seed(40000)
+        hard=m.generate(width=10,height=10,require_erase_first=True)
+        self.assertEqual(hard['output'],grid(call(solver('9385bd28'),hard['input'])))
+        with self.assertRaises(ValueError):m.generate(bg=0,require_erase_first=True)
+        with self.assertRaises(ValueError):m.generate(require_erase_first=1)
+
+    def test_legend_explicit_detection_and_input_key_positions(self):
+        m=importlib.import_module('tasks.task_9385bd28')
+        with self.assertRaisesRegex(ValueError,'identifiable'):
+            m.generate(width=10,height=10,bg=0,legend=[(1,0),(2,0)],
+                       legend_pos=(8,0),objects=[])
+        with self.assertRaisesRegex(ValueError,'plurality'):
+            m.generate(width=2,height=2,bg=0,legend=[(1,2),(3,4)],
+                       legend_pos=(0,0),objects=[])
+        pair=m.validate()['test'][1]
+        self.assertEqual(pair['output'][1][1],2)  # Only the original8 block.
+        self.assertEqual(pair['output'][4][9],8)  # Newly painted8 is not a new key.
+        self.assertEqual(pair['output'],grid(call(solver('9385bd28'),pair['input'])))
+
     def test_reachable_boundary_marker_floating_and_whole_objects(self):
         m=importlib.import_module('tasks.task_8f3a5a89')
         pair=m.generate(height=10,width=10,objects=[[[0,3,2,5]],[[4,6,5,7]]])

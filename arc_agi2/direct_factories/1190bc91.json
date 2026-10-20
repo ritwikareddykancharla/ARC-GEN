@@ -1,0 +1,29 @@
+{
+  "task_id": "1190bc91",
+  "factory_sha256": "a88f0d1e878830634202d4249325859a7a8a39ad98ebd4feba01f07820b5dd8e",
+  "constructor_sha256": "1fa8da57f8f77a107a4db439040a9d693158b4e07805b761127721fb25fc38f3",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 277710264478882,
+  "d4": 7,
+  "unique_base_inputs": 997,
+  "seconds": 2.1233629579655826,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "Generate diagonal rays head-first, then fill connected background regions from actual adjacent markers. Enforce contiguous collinear sequence with one border tail and domino markers; reject conflicting region colours instead of reading-order fill. Random sampler enumerates valid geometry with1:9 absent/present left-colour weighting and requires markers lie in their labelled regions. Explicit historical calls retain prior labels; fixtures unchanged.",
+    "limitations": "Requires majority background, at least3 distinct sequence colours in a contiguous straight line with one border endpoint, and distinct-colour domino markers. Random size4..10, explicit calls preserved; no generation retry loop. Invalid geometry raises instead of fallback reading order.",
+    "diagnosis": "**There is no host counterexample.** The previous factory passed the random audit. The hold is semantic: the archived mechanism floods from each marker, while the constructor paints fixed geometric regions no matter where the markers are. The previous factory copied the constructor's geometry (parallel marker paints T, perpendicular marker paints L), so it agreed with the labels but not with the stated flood mechanism.\n\n**Root cause in the constructor.** draw() places each 2-cell pair with put(), which accepts any still-unpainted (0) cell. It does not require the pair to lie in the region its colour paints.\n\n**Which disagreement is actually reachable.** I analysed this by hand.\n- *lcolor pair in B (claimed in the current notes): unreachable.* With lcolor != 0, row 0 outside T is either lcolor or ray colours, so the tcolor pair must sit in T, which forces spacing <= h + prow - 2. Column 0 of B needs spacing >= prow + h + 2, which contradicts that.\n- *tcolor pair in L with lcolor = 0: reachable.* Here L stays 0 in the output, so the tcolor pair may sit on row 0 inside L. This needs spacing <= h - prow - 2, so size >= 8. An example is size 8, K = 3, prow = 2, spacing = 1.\n  - The label paints T (a region the pair does not touch) with tcolor and leaves the pair's own wedge background.\n  - The flood mechanism instead fills L with tcolor and leaves T at 0.\n\n**Nature of the problem.** Each input still has one deterministic label, so this is not an identical-input/different-output ambiguity. It is a label that contradicts the documented and archived mechanism: \"each marker floods the region it touches\".\n\n**Demonstrations cannot reliably fix this at episode level.** Episodes rarely contain such a scene. Choosing the geometric rule would mean adopting a generator latent (which border the pair is on) as the rule.",
+    "constructor_issue": "When left colour is zero, original random placement can put the top marker in an unpainted wedge while the label colours a disconnected triangle. Only random placement is restricted to marker-consistent regions; historical explicit calls remain unchanged.",
+    "original_cli_draft_notes": "/Users/ritwika/projects/arc-agi2/outputs/research/arcgen-coverage-cli/direct-program-rewrites/semantic-repairs-v2/1190bc91/notes.json",
+    "host_review": {
+      "fixture_sha256": "633b18868273cd1288cf7d1247a7368cc33f8495738e0fb33ec29558812bc7d8",
+      "fixtures_unchanged": true,
+      "review": "Generate diagonal rays head-first, then fill connected background regions from actual adjacent markers. Enforce contiguous collinear sequence with one border tail and domino markers; reject conflicting region colours instead of reading-order fill. Random sampler enumerates valid geometry with1:9 absent/present left-colour weighting and requires markers lie in their labelled regions. Explicit historical calls retain prior labels; fixtures unchanged."
+    }
+  }
+}

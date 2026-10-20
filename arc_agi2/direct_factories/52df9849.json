@@ -1,0 +1,32 @@
+{
+  "task_id": "52df9849",
+  "factory_sha256": "f7e4d7b1498183a65a78cf2f516d14d0cca277a5931b7de0eef63e9b2b0f048b",
+  "constructor_sha256": "3580993d5907745bd86959398ce095cae355a5f691e6ae275a4e5ddcfc1d9dc4",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 145049035341582,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 18.207385707995854,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Host-authored direct program with constructor/source review, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "Rejected draft blanket ban on covered shaved shapes. Enumerate visible-compatible rectangles, diagonals and monotone staircase masks; use endpoint visibility guaranteed by per-strip corner checks. Enumerate two-layer roles with same-layer pixel separation, exact occlusion consistency, partial overlap and colour visibility after reversal. Keep multiple explanations only when their completed outputs agree. No palette-order overwrite. Original fixture test2 has a diagonal and rectangle in the same layer whose bounding boxes overlap while their pixels remain separated. Use actual mask separation, not bounding-box separation, in program and sampling evidence; this includes native scenes and the supplied geometric mechanism.",
+    "limitations": "Native shape grammar: rectangles, diagonals, or rows/columns shaved inward by0..1 cells per side at each step. Same-layer shapes separated by one cell; bounding boxes may overlap. Every colour partially occluded in one of the two layer orders and remains visible. Geometry extents inferred from native corner/strip endpoint constraints. Random labels accepted only when all valid visible parses agree; bounded100000scene attempts and200000search nodes. Explicit fixtures unchanged. Original simultaneous placement rarely packs3objects per layer and exhausted100000attempts. Random path now proposes each rectangle size1..16, enumerates legal non-overlapping positions, and samples one uniformly;12size retries per object before restarting scene. Counts remain independently1..3 per layer and all native size/position support remains possible. This changes the proposal distribution toward packable scenes, not the shape mechanism; explicit fixtures unchanged.",
+    "diagnosis": "The counterexample fails on demonstration pair 0 ([false, true, true, true]), not on the query. All five colours are listed below in visible palette-mapped colours, background 1:\n- **Colour 4** (order 0) is a shaved rectangle: rows 0-6, cols 12-15, plus row 7, cols 13-15 only. It is partly covered by 6 (row 4) and by 2.\n- **Its bounding box**, rows 0-7 \u00d7 cols 12-15, contains no background. Cell (7,12) shows colour 2.\n- **The bbox rule** therefore paints (7,12) with 4.\n- **The generator's label** keeps 2 at (7,12), because the shaved 4 strip in row 7 started at col 13.\n- **Other colours:** colour 9 is restored correctly; colours 2, 5 and 6 are unchanged.\n\nNothing in the visible input distinguishes \"4 extends under the 2 at (7,12)\" from \"4's row-7 strip stops at col 13\". The label depends on a hidden shave latent. This is genuine ambiguity, not a solver bug, so the repair rejects such scenes instead of special-casing them.\n\nThe query itself (diagonal 7 on top of the 2, 4 and 5 rectangles) is handled correctly by the bbox and diagonal rule.",
+    "constructor_issue": "Hidden shaved geometry can be ambiguous, but not every covered staircase is ambiguous. Retain recoverable covered staircases through shape-and-layer inference, reject only distinct completed outputs or search failure.",
+    "author": "host",
+    "original_cli_draft_notes": "/Users/ritwika/projects/arc-agi2/outputs/research/arcgen-coverage-cli/direct-program-rewrites/execution-repairs-v2/52df9849/notes.json",
+    "host_review": {
+      "fixture_sha256": "c8a5902d5d9f4b3db02d5f79cd77571860f1979b70812aba5f7e6415a281c8a3",
+      "fixtures_unchanged": true,
+      "review": "Rejected draft blanket ban on covered shaved shapes. Enumerate visible-compatible rectangles, diagonals and monotone staircase masks; use endpoint visibility guaranteed by per-strip corner checks. Enumerate two-layer roles with same-layer bbox spacing, exact occlusion consistency, partial overlap and colour visibility after reversal. Keep multiple explanations only when their completed outputs agree. No palette-order overwrite.",
+      "fixture_scope_fix": "Original fixture test2 has a diagonal and rectangle in the same layer whose bounding boxes overlap while their pixels remain separated. Use actual mask separation, not bounding-box separation, in program and sampling evidence; this includes native scenes and the supplied geometric mechanism.",
+      "packing_repair": "Original simultaneous placement rarely packs3objects per layer and exhausted100000attempts. Random path now proposes each rectangle size1..16, enumerates legal non-overlapping positions, and samples one uniformly;12size retries per object before restarting scene. Counts remain independently1..3 per layer and all native size/position support remains possible. This changes the proposal distribution toward packable scenes, not the shape mechanism; explicit fixtures unchanged."
+    }
+  }
+}

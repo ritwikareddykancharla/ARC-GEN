@@ -32,6 +32,8 @@ def generate(size=None, prow=None, spacing=None, tcolor=None, lcolor=None,
     colors: A list of colors to use.
   """
 
+  random_mode = size is None
+
   def draw():
     grid, output = common.grids(size, size)
     def put(r, c, color):
@@ -68,7 +70,16 @@ def generate(size=None, prow=None, spacing=None, tcolor=None, lcolor=None,
         if not put(prow - offset, c, color): return None, None
         if not put(prow + offset, c, color): return None, None
         offset += 1
-    # Draw the little pairs.
+    # Draw the little pairs.  Each visible pair must sit inside the region
+    # that its colour floods (tcolor: the triangle above the head; lcolor:
+    # the wedge beyond the head).  Otherwise the label would colour a region
+    # the pair does not touch and leave the pair's own region background.
+    if random_mode:
+      for r, c in [(0, spacing), (0, spacing + 1)]:
+        if common.get_pixel(output, r, c) != tcolor: return None, None
+      if lcolor:
+        for r, c in [(spacing, 0), (spacing + 1, 0)]:
+          if common.get_pixel(output, r, c) != lcolor: return None, None
     grid[0][spacing] = grid[0][spacing + 1] = tcolor
     grid[spacing][0] = grid[spacing + 1][0] = lcolor
     if not put(0, spacing, tcolor) or not put(0, spacing + 1, tcolor):
@@ -84,16 +95,27 @@ def generate(size=None, prow=None, spacing=None, tcolor=None, lcolor=None,
     flip, xpose = common.randint(0, 1), common.randint(0, 1)
     num_colors = common.randint(3, size - 1)
     num_colors = min(num_colors, 7)
-    while True:
-      colors = common.shuffle(list(range(10)))
-      lcolor = colors.pop()
-      if 0 in colors: colors.remove(0)
-      tcolor = colors.pop()
-      colors = colors[:num_colors]
-      prow = common.randint(2, size - 2)
-      spacing = common.randint(1, size - 2)
-      grid, _ = draw()
-      if grid: break
+    # Whether a scene can be drawn depends only on its geometry and on whether
+    # lcolor is 0, because all colours are distinct.  So enumerate the
+    # geometry with placeholder colours instead of using unbounded rejection.
+    # Weights 1:9 match the original chance that lcolor == 0, so the result
+    # equals the original rejection sampler conditioned on validity.
+    tcolor, colors = 2, list(range(3, 3 + num_colors))
+    options = []
+    for lzero in [True, False]:
+      lcolor = 0 if lzero else 1
+      for prow in range(2, size - 1):
+        for spacing in range(1, size - 1):
+          trial, _ = draw()
+          if trial: options.append((1 if lzero else 9, lzero, prow, spacing))
+    pick = common.randint(1, sum(option[0] for option in options))
+    for weight, lzero, prow, spacing in options:
+      pick -= weight
+      if pick <= 0: break
+    palette = common.shuffle(list(range(1, 10)))
+    lcolor = 0 if lzero else palette.pop()
+    tcolor = palette.pop()
+    colors = palette[:num_colors]
 
   grid, output = draw()
   return {"input": grid, "output": output}

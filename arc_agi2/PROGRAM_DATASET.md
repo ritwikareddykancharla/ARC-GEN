@@ -35,7 +35,7 @@ recorded. Passing finite audits does not prove unrestricted generalization.
 
 - 213 native direct-coordinate certificates admitted after fresh audits and
   supplied-fixture checks.
-- 818 admitted factories. Each passed 1,000 fresh pairs, 8,000 augmented pair
+- 820 admitted factories. Each passed 1,000 fresh pairs, 8,000 augmented pair
   checks and 16 supplied-fixture variants. Their audit records retain draft
   limitations and source/constructor hashes. These checks are finite evidence,
   not proof of correctness on every generated input.
@@ -46,7 +46,7 @@ recorded. Passing finite audits does not prove unrestricted generalization.
   counts must be computed as a union, not added.
 - Local exporter test: 18 fresh base episodes, 144 augmented PNG/program/grid
   records. It requested 20 bases and reported a two-episode shortfall.
-- The union currently admits 1037 of 1,120 families; 83 still need direct
+- The union currently admits 1039 of 1,120 families; 81 still need direct
   augmented program admission. Constructor coverage and program coverage are
   different gates.
 - Synthetic labels for `00d62c1b` now fill every enclosed background component,
@@ -896,3 +896,34 @@ Remaining: 70 semantic/context holds, 10 execution failures and 3 missing factor
 Bulk generation and model training have not launched.
 
 All 453 regression tests passed for this checkpoint.
+
+## 1039-family checkpoint
+
+- `52df9849`: preserve covered staircase shapes through explicit shape and
+  layer inference, rather than accepting the draft's blanket rejection of them.
+  Candidate masks include rectangles, diagonals and inward-shaved strips with
+  visible endpoints. Enumerate both layer roles and require one completed
+  output. Original test2 requires actual pixel separation: its same-layer
+  diagonal and rectangle have overlapping bounding boxes. Saved regressions
+  include a recoverable covered staircase and a truly ambiguous hidden corner.
+  Random placement now enumerates legal positions after each proposed size,
+  avoiding simultaneous-packing failures for three objects per layer. Counts
+  remain independently 1..3 and sizes 1..16; the proposal distribution changes
+  toward packable scenes, with explicit fixtures unchanged.
+- `1190bc91`: cast rays from the head of the coloured sequence, then flood
+  connected background regions from their actual adjacent markers. Reject
+  conflicting marker colours in one region. Random placement requires each
+  marker to seed the region its label fills; old explicit calls remain
+  unchanged. Exhaustive canonical-geometry analysis examined 1,540 trials,
+  with 885 legacy-valid scenes: all 870 marker-consistent scenes were exact,
+  while 15 disconnected-marker cases differed and are excluded from random
+  generation. Geometry sampling uses exact enumeration with the original 1:9
+  absent/present side-marker weighting.
+
+Both passed 1,000 fresh pairs, 8,000 augmented pair checks and 16 fixture variants.
+Distinct-input counts were 1,000 and 997. All 40 complete episodes passed, yielding
+320 D4 records with no sampler rejections. Original fixture hashes are unchanged.
+Remaining: 69 semantic/context holds, 9 execution failures and 3 missing factories.
+Bulk generation and model training have not launched.
+
+All 461 regression tests passed for this checkpoint.

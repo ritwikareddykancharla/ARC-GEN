@@ -17,6 +17,102 @@
 import common
 
 
+_MAX_ATTEMPTS = 100000
+
+def _bounds(cells):
+    return (min(r for r,c in cells),max(r for r,c in cells),min(c for r,c in cells),max(c for r,c in cells))
+
+
+def _staircase(cells,box,vertical):
+    r0,r1,c0,c1=box
+    intervals=[]
+    for a in range(r0,r1+1) if vertical else range(c0,c1+1):
+        positions=sorted(c if vertical else r for r,c in cells if (r if vertical else c)==a)
+        if not positions or positions!=list(range(positions[0],positions[-1]+1)):return False
+        intervals.append((positions[0],positions[-1]))
+    lower,upper=(c0,c1) if vertical else (r0,r1)
+    for rows in (intervals,intervals[::-1]):
+        if rows[0]!=(lower,upper):continue
+        if all(nl-l in (0,1) and rr-nr in (0,1) for (l,rr),(nl,nr) in zip(rows,rows[1:])):
+            return True
+    return False
+
+
+def _shape(cells,box):
+    r0,r1,c0,c1=box
+    if len(cells)==(r1-r0+1)*(c1-c0+1):return True
+    if r1-r0==c1-c0 and len(cells)==r1-r0+1:
+        if len({r-c for r,c in cells})==1 or len({r+c for r,c in cells})==1:return True
+    return _staircase(cells,box,True) or _staircase(cells,box,False)
+
+
+def _options(grid,colour,bg):
+    visible=frozenset((r,c) for r,row in enumerate(grid) for c,v in enumerate(row) if v==colour)
+    box=_bounds(visible);r0,r1,c0,c1=box
+    options=set()
+    if _shape(visible,box): options.add((False,visible))
+    candidates=set()
+    corners=[(r0,c0),(r0,c1),(r1,c0),(r1,c1)]
+    if sum(p in visible for p in corners)>=3:
+        candidates.add(frozenset((r,c) for r in range(r0,r1+1) for c in range(c0,c1+1)))
+    for vertical in (True,False):
+        mask=set();valid=True
+        for a in range(r0,r1+1) if vertical else range(c0,c1+1):
+            positions=[c if vertical else r for r,c in visible if (r if vertical else c)==a]
+            if not positions:valid=False;break
+            for b in range(min(positions),max(positions)+1):mask.add((a,b) if vertical else (b,a))
+        if valid and _staircase(mask,box,vertical):candidates.add(frozenset(mask))
+    if r1-r0==c1-c0:
+        if len({r-c for r,c in visible})==1:
+            candidates.add(frozenset((r0+i,c0+i) for i in range(r1-r0+1)))
+        if len({r+c for r,c in visible})==1:
+            candidates.add(frozenset((r0+i,c1-i) for i in range(r1-r0+1)))
+    for cells in candidates:
+        if cells>visible and all(grid[r][c]!=bg for r,c in cells):
+            options.add((True,cells))
+    return box,visible,sorted(options,key=lambda x:(x[0],sorted(x[1])))
+
+
+def _separate(a,b):
+    return not any((r+dr,c+dc) in b for r,c in a for dr in (-1,0,1) for dc in (-1,0,1))
+
+
+def _visible_outputs(grid,bg):
+    colours=sorted({v for row in grid for v in row}-{bg})
+    info={c:_options(grid,c,bg) for c in colours}
+    order=sorted(colours,key=lambda c:len(info[c][2]))
+    chosen={};answers=set();nodes=0
+    def rec(index):
+        nonlocal nodes
+        nodes+=1
+        if nodes>200000:raise RuntimeError('Layer search budget exhausted')
+        if len(answers)>1:return
+        if index==len(order):
+            covered=set()
+            for colour,(bottom,cells) in chosen.items():
+                if not bottom:continue
+                for r,c in cells:
+                    other=grid[r][c]
+                    if other!=colour and chosen[other][0]:return
+                covered.update(cells)
+            for colour,(bottom,cells) in chosen.items():
+                if not bottom and (not cells&covered or not cells-covered):return
+            out=[list(row) for row in grid]
+            for colour,(bottom,cells) in chosen.items():
+                if bottom:
+                    for r,c in cells:out[r][c]=colour
+            answers.add(tuple(map(tuple,out)))
+            return
+        colour=order[index];box,visible,options=info[colour]
+        for bottom,cells in options:
+            if any(bottom==ob and not _separate(cells,other_cells) for oc,(ob,other_cells) in chosen.items()):continue
+            if bottom and any(grid[r][c] in chosen and grid[r][c]!=colour and chosen[grid[r][c]][0] for r,c in cells):continue
+            chosen[colour]=(bottom,cells);rec(index+1);del chosen[colour]
+            if len(answers)>1:return
+    rec(0)
+    return answers
+
+
 def generate(wides=None, talls=None, rows=None, cols=None, colors=None,
              orders=None, shapes=None):
   """Returns input and output grids according to the given parameters.
@@ -65,20 +161,31 @@ def generate(wides=None, talls=None, rows=None, cols=None, colors=None,
 
   if wides is None:
     num_boxes = [common.randint(1, 3), common.randint(1, 3)]
-    while True:
+    for _ in range(_MAX_ATTEMPTS):
       # These are the "pre-shaved" lists.
       pwides, ptalls, prows, pcols, pcolors, porders, pshapes = [], [], [], [], [], [], []
       good = True
       for o in [0, 1]:
-        ws = [common.randint(1, 16) for _ in range(num_boxes[o])]
-        ts = [common.randint(1, 16) for _ in range(num_boxes[o])]
-        rs = [common.randint(0, 16 - tall) for tall in ts]
-        cs = [common.randint(0, 16 - wide) for wide in ws]
+        ws,ts,rs,cs = [],[],[],[]
+        for _object in range(num_boxes[o]):
+          placed = False
+          for _size_try in range(12):
+            w,t = common.randint(1,16),common.randint(1,16)
+            positions = [(r,c) for r in range(17-t) for c in range(17-w)
+                         if not common.overlaps(rs+[r],cs+[c],ws+[w],ts+[t],1)]
+            if not positions: continue
+            r,c = common.sample(positions,1)[0]
+            ws.append(w);ts.append(t);rs.append(r);cs.append(c)
+            placed = True
+            break
+          if not placed: break
+        if len(ws)!=num_boxes[o]:
+          good = False
+          break
         available = [c for c in [0, 1, 2, 3, 4, 5, 6, 8, 9] if c not in pcolors]
         ls = common.sample(available, num_boxes[o])
         os = [o] * len(ws)
         ss = [0 if w != t else common.randint(1, 2) for w, t in zip(ws, ts)]
-        if common.overlaps(rs, cs, ws, ts, 1): good = False
         pwides.extend(ws)
         ptalls.extend(ts)
         prows.extend(rs)
@@ -108,7 +215,14 @@ def generate(wides=None, talls=None, rows=None, cols=None, colors=None,
         orders.extend([o] * len(swides))
         shapes.extend([s] * len(swides))
       grid, output = draw()
-      if grid: break
+      if grid:
+        try:
+          answers = _visible_outputs(grid,7)
+        except RuntimeError:
+          continue
+        if answers == {tuple(map(tuple,output))}: break
+    else:
+      raise RuntimeError("52df9849: no identifiable scene within attempt budget")
 
   grid, output = draw()
   return {"input": grid, "output": output}

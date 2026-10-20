@@ -61,9 +61,12 @@ def main():
     registry=[];taxonomy={}
     for r in rs:
         tid=r['task_id'];native=tid in UPSTREAM_IDS;ready=ej.get(tid,{}).get('ready',False)
+        review_path=report/'standalone'/f'{tid}.json'
+        review=json.loads(review_path.read_text()) if review_path.exists() else None
         status='upstream_fixture_verified' if native and fj.get(tid,{}).get('matches_pair_set') else 'upstream_fixture_mismatch' if native else 'extension_validated' if ready else 'generator_missing'
         record={'task_id':tid,'split':r['split'],'held_out':r['held_out'],'training_eligible':True,'status':status,'upstream':native,'extension':tid in extensions,
                 'standalone_module':f'tasks/task_{tid}.py' if tid in source_ids else None,
+                'standalone_review':{k:review.get(k) for k in ['scope','known_limitations','semantic_review','stress_test']} if review else None,
                 'candidate_tactics':list(r['candidate_tactics']),'explanation':r['explanation'],
                 'fixture':fj.get(tid),'extension_validation':ej.get(tid),'teaching_variant':r['teaching_variant'],
                 'canonical':r['canonical'],'teacher_models':r['teacher_models']}
@@ -89,6 +92,7 @@ def main():
     summary={'total_tasks':len(rs),'upstream_sources':len(set(present)&UPSTREAM_IDS),'upstream_fixture_pass':sum(x['matches_pair_set'] for x in fixtures if x['task_id'] in UPSTREAM_IDS),
        'upstream_fixture_mismatches':[x for x in fixtures if x['task_id'] in UPSTREAM_IDS and not x['matches_pair_set']],
        'new_extensions_pass':sum(x['ready'] and x['task_id'] not in UPSTREAM_IDS for x in exts),
+       'reviewed_standalone_additions':sum(not r['upstream'] and r.get('standalone_review',{}).get('semantic_review',{}).get('status')=='reviewed' for r in registry if r.get('standalone_review')),
        'size_extensions_pass':sum(x['ready'] and x['task_id'] in UPSTREAM_IDS for x in exts),
        'missing_upstream':sum(not r['upstream'] for r in registry),'holdouts':index['holdout_ids'],
        'active_excluded_ids':[],'training_family_target':1120,

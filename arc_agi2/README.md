@@ -72,8 +72,12 @@ The authoring campaign uses three concurrent Claude CLI processes under the user
 
 A zero-error differential check is a bounded agreement test. It does not prove the saved solver is universally correct or that every original mechanism variant is covered.
 
-**22 standalone modules are now reviewed and registered** (the exact list lives in `task_registry.py`). Each passed 1,000 seed checks and exact original train/test fixture reconstruction. The first sixteen used seeds 0..999 (including their 300 author-validation seeds); the next six used independent seeds 20,000..20,999. The regression suite also checks registered source hashes and seeds 10,000..10,019.
+**27 standalone modules are now reviewed and registered** (the exact list lives in `task_registry.py`). Each passed 1,000 seed checks and exact original train/test fixture reconstruction. The first sixteen used seeds 0..999 (including their 300 author-validation seeds); the next eleven used independent seeds 20,000..20,999. The regression suite also checks registered source hashes and seeds 10,000..10,019.
 
-Nineteen conversions replace earlier research constructors with the upstream task-file interface. The total remains 33 new constructive families, with 11 still awaiting standalone conversion/review. Remaining CLI drafts are authored and validated locally. Restricted shape and dimension ranges are documented per file and in `reports/standalone/`; the size-matching builder must respect those ranges.
+Twenty-four conversions replace earlier research constructors with the upstream task-file interface. The total remains 33 new constructive families, with 6 still awaiting standalone conversion/review. Remaining CLI drafts are authored and validated locally. Restricted shape and dimension ranges are documented per file and in `reports/standalone/`; the size-matching builder must respect those ranges.
 
 Independent validation exposed a background-inference failure in the saved `d4c90558` solver: a thick frame can dominate a small grid, causing the checker to interpret the wrong colour as background. The constructor now samples the explicit domain where 0 strictly outnumbers every other colour. The failing examples are retained in `reports/standalone/d4c90558-counterexamples.json`. This restriction is not evidence that the conceptual counting rule fails on denser scenes.
+
+Semantic review also corrected `e872b94a`: its generated walls must partition the background into N+1 connected regions, as every original pair does. Floating paths that merely satisfy the saved wall-count shortcut are excluded. The independent 1,000-seed check produced 998 distinct inputs (two repeats), so unique input count is reported separately from sample count.
+
+New authoring uses **Opus 5.5 via Claude Max CLI**, with three workers. Fable authoring was explicitly stopped; earlier completed artifacts remain archived and retain their original model attribution. API fallback remains disabled.

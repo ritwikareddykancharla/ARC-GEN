@@ -1,0 +1,103 @@
+{
+  "task_id": "981571dc",
+  "ready": true,
+  "samples_requested": 1000,
+  "samples_passed": 1000,
+  "unique_inputs": 1000,
+  "changed_pairs": 1000,
+  "fixture_replays": 0,
+  "shapes": [
+    [
+      30,
+      30,
+      30,
+      30
+    ]
+  ],
+  "fixture_matches": {
+    "canonical": true,
+    "teaching_fixture": true
+  },
+  "original_solver_replay": {
+    "canonical": {
+      "correct": 5,
+      "total": 5,
+      "all_exact": true
+    },
+    "teaching_fixture": {
+      "correct": 5,
+      "total": 5,
+      "all_exact": true
+    }
+  },
+  "errors": [],
+  "sha256": "1a8292dd3140447febb50e39787a11a7171feaa76fc4fc61493b079c824dda28",
+  "status": "reviewed_bounded_validation_passed",
+  "limitations": "Bounded randomized agreement with a saved solver is not proof of semantic completeness.",
+  "candidate_path": "/Users/ritwika/projects/arc-agi2/outputs/research/arcgen-coverage-cli/981571dc/task_981571dc.py",
+  "attempts": 2,
+  "model_usage": {
+    "claude-fable-5-1": {
+      "inputTokens": 2,
+      "outputTokens": 6099,
+      "cacheReadInputTokens": 1225,
+      "cacheCreationInputTokens": 61833,
+      "webSearchRequests": 0,
+      "costUSD": 1.54193625,
+      "contextWindow": 1000000,
+      "maxOutputTokens": 64000,
+      "thinkingTokens": 1243,
+      "canonicalModel": "claude-fable-5-1",
+      "provider": "firstParty",
+      "costBasis": "list"
+    }
+  },
+  "rule": "The 30x30 input is a crop of a latent 32x32 mosaic fully symmetric under the D4 group with axes at 15.5 (y<->31-y, x<->31-x, and transpose). Rectangular patches are erased to colour 0; the output restores each 0 cell from any of its symmetric partners, leaving all non-zero cells unchanged.",
+  "scope": "Supported: random transpose-symmetric 16x16 orbit colourings over palettes of 3..9 colours, 1..6 erased rectangles (1..10 per side) that may overlap/adjoin and may touch the un-mirrored rows/columns 0-1, with rejection of any erasure set where some masked cell has no unmasked D4 image inside the crop. Not supported: grids other than 30x30, mirror axes other than 15.5, mosaics lacking the transpose symmetry, masks that need multi-pass repair from invisible partners, or non-rectangular erasures.",
+  "constraints": [
+    "Latent mosaic is exactly D4-symmetric about (15.5, 15.5) on a 32x32 canvas; only the top-left 30x30 crop is shown.",
+    "Colour 0 appears only in erased cells; mosaic colours are 1..9.",
+    "Every erased cell has at least one unerased symmetric partner inside the 30x30 crop, so the repair is unique and reachable in one pass.",
+    "At least one cell is erased, so no example is an identity mapping.",
+    "The quadrant's lower triangle is ignored so the latent is always transpose-consistent."
+  ],
+  "known_limitations": [
+    "Grid size is intrinsically fixed at 30x30 (crop of a 32x32 symmetric canvas), matching all original fixtures.",
+    "The original fixtures are reproduced from explicit quadrant/mask latents; the previous draft's single typo in train pair 0 row 0 of the quadrant ('...46624428' -> '...46662428') has been corrected.",
+    "Rectangles whose mates are all masked are rejected via bounded retry (500 attempts) with a safe fallback mask, so very large num_masks values may bias toward smaller holes.",
+    "Cells (0,0)-(1,1) and (0,1)/(1,0) have very few in-crop partners, so masks covering both members of such a tiny orbit are rejected rather than repaired."
+  ],
+  "billing": "Claude Max CLI; API credentials excluded; no API fallback",
+  "authored_sha256": "1a8292dd3140447febb50e39787a11a7171feaa76fc4fc61493b079c824dda28",
+  "samples_attempted": 1000,
+  "seed_start": 20000,
+  "seed_end_exclusive": 21000,
+  "semantic_review": {
+    "status": "reviewed",
+    "checks": [
+      "All five original output mosaics verified transpose-symmetric",
+      "Latent D4 orbit colouring then cropped and masked; original outputs not reused",
+      "Every erased cell has an unmasked visible partner; no answer ambiguity",
+      "Fixed 30x30 canvas and offset axes explicitly documented",
+      "Exact original train/test reconstruction",
+      "No archived solver import or file I/O"
+    ],
+    "limitations": [
+      "Grid size is intrinsically fixed at 30x30 (crop of a 32x32 symmetric canvas), matching all original fixtures.",
+      "The original fixtures are reproduced from explicit quadrant/mask latents; the previous draft's single typo in train pair 0 row 0 of the quadrant ('...46624428' -> '...46662428') has been corrected.",
+      "Rectangles whose mates are all masked are rejected via bounded retry (500 attempts) with a safe fallback mask, so very large num_masks values may bias toward smaller holes.",
+      "Cells (0,0)-(1,1) and (0,1)/(1,0) have very few in-crop partners, so masks covering both members of such a tiny orbit are rejected rather than repaired."
+    ]
+  },
+  "stress_test": {
+    "samples_requested": 1000,
+    "samples_passed": 1000,
+    "unique_inputs": 1000,
+    "changed_pairs": 1000,
+    "fixture_replays": 0,
+    "ready": true,
+    "sha256": "1a8292dd3140447febb50e39787a11a7171feaa76fc4fc61493b079c824dda28",
+    "seed_start": 20000,
+    "seed_end_exclusive": 21000
+  }
+}

@@ -9,6 +9,21 @@ from .task_registry import NEW_TASK_IDS
 from .augmentation import apply_episode,settings
 
 class GeneratorTests(unittest.TestCase):
+    def test_wall_outputs_count_actual_background_regions(self):
+        module=importlib.import_module('tasks.task_e872b94a')
+        for seed in range(50000,50100):
+            random.seed(seed)
+            pair=call(module.generate,seconds=3)
+            remaining={(r,c) for r,row in enumerate(pair['input']) for c,v in enumerate(row) if v==0}
+            regions=0
+            while remaining:
+                regions+=1;stack=[remaining.pop()]
+                while stack:
+                    r,c=stack.pop()
+                    for neighbor in [(r+1,c),(r-1,c),(r,c+1),(r,c-1)]:
+                        if neighbor in remaining:
+                            remaining.remove(neighbor);stack.append(neighbor)
+            self.assertEqual(pair['output'],[[0] for _ in range(regions)],seed)
     def test_fixed_canvas_requests_do_not_silently_expand(self):
         for tid in ['cd3c21df','d4c90558']:
             module=importlib.import_module('tasks.task_'+tid)

@@ -1,0 +1,50 @@
+{
+  "task_id": "e7639916",
+  "factory_sha256": "081a076f583f2107c4a910ce6802462b191a3598cf6f674242661891842c55bc",
+  "constructor_sha256": "da95519b53e57a9910d61a4abaa75eb2044606da154842d1b7496f87d7761b67",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 211625981361358,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 7.373896540957503,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The mechanism is to draw the outline of the bounding box around the three marker cells. That mechanism already works the same way under every D4 transform. A rotation or reflection of the grid moves the axis-aligned bounding box of the markers onto the bounding box of the transformed markers, and its perimeter moves with it. So the emitted program needs no axis or direction choice. It works directly in visible coordinates and only specialises the colour roles: background = palette[0], marker = palette[8], outline = palette[1]. The program finds the marker cells, takes their row and column extents, and paints the top and bottom edges, then the left and right edges. Only cells that are still background get colour 1, so the markers on the perimeter keep their colour. Rectangular grids are handled naturally. Markers sitting on a corner or edge of the box are preserved. As a fallback, if no palette[8] cell exists, the program treats every non-background cell as a marker.",
+    "limitations": "The program assumes the episode's palette mapping is applied consistently, so that the visible background is palette[0] and the markers are palette[8]. It does not infer roles from the demonstrations beyond this palette specialisation. I ran no tests. The constructor always places three markers spanning a box of at least 5x5, with one marker on each extreme row and column, so the degenerate cases (a box one cell thick, or no markers) are handled only by the generic fallback. I found no generator defects or tie-break issues. One discrepancy in the rule text: pair 1 lists an 8 at (3,9), but the constructor's latent row before the flip is 4. The visible fixture is consistent with the flipped grid, so this is not a contradiction of the rule.",
+    "independent_source_review": {
+      "verdict": "accept",
+      "mechanism": "The input has three marker cells (palette[8]) on a background (palette[0]). The output paints the axis-aligned bounding-box perimeter of the markers with palette[1]. Markers on the perimeter keep their colour. The emitted solver finds the visible marker extents (min/max row/col) and paints background cells on the top and bottom rows and the left and right columns of that box. Bounding-box perimeters are D4-equivariant, so the solver works directly in augmented visible coordinates and needs no orientation constants or untransform wrapper.",
+      "evidence": [
+        "Constructor: rows=[r, r+randint(1,tall-2), r+tall-1] and cols=[c, c+wide-1, c+randint(1,wide-2)]. The markers are therefore (r,c) at the top-left corner, (mid_r, c+wide-1) on the right edge and (r+tall-1, mid_c) on the bottom edge. min/max of the marker rows is r..r+tall-1 and of the marker cols is c..c+wide-1, which is exactly the rectangle drawn by the loops over cols[0]/cols[1] and rows[0]/rows[2]. The label is therefore fully determined by the visible marker extents. No hidden latent leaks into it: the mid offsets only position markers that are themselves visible.",
+        "Index check: the indexing is intentionally non-sorted. cols[1] is the max column and cols[2] is the middle one. The drawing loops pair rows[0..2] with cols[0..1] correctly, so no mistaken-indexing bug exists.",
+        "The three markers are always distinct cells: the columns c, c+wide-1 and c+1..c+wide-2 are pairwise different. tall and wide are at least 5, and r>=1 with r+tall-1<=height-2 (columns likewise), so the box is never degenerate and never touches the grid border.",
+        "Flip and flop are applied to input and output together, so the visible pair stays consistent. The validate fixtures reproduce the approved fixtures. Pair 1 maps (1,2),(4,9),(6,3) under a vertical flip to (6,2),(3,9),(1,3). Pair 3 maps (1,2),(4,10),(9,4) under flip+flop to (9,10),(6,2),(1,8). Both match the visible inputs.",
+        "Solver: mask=(g==MARKER) and the bbox from np.nonzero. It paints only cells equal to BG, so markers survive. This matches the constructor, where markers are written after the outline and overwrite it.",
+        "Colour roles are specialised from the palette (bg=palette[0], line=palette[1], marker=palette[8]). The line colour is visibly demonstrated in every demo output, since every box is at least 5x5 and has many perimeter cells. No unseen arbitrary association is required.",
+        "Host audit passed: 1000 fresh pairs, 8000 augmented checks and 16 fixture variants, with no sampler rejections."
+      ],
+      "blocking_issues": [],
+      "nonblocking_limits": [
+        "The fallback to mask=(g!=BG) when no marker cell exists is out of domain. The constructor always places three markers, so it is unreachable.",
+        "The solver hard-codes palette roles rather than inferring them from demonstrations. This is valid under a consistent episode palette mapping.",
+        "The rule text's coordinates for pair 1 describe the post-flip visible grid, while the validate() latents are pre-flip. The two are consistent, not contradictory."
+      ],
+      "required_context_checks": [],
+      "task_id": "e7639916",
+      "factory_sha256": "081a076f583f2107c4a910ce6802462b191a3598cf6f674242661891842c55bc",
+      "constructor_sha256": "da95519b53e57a9910d61a4abaa75eb2044606da154842d1b7496f87d7761b67"
+    },
+    "host_review": {
+      "decision": "accept",
+      "resolution": "Reviewed constructor invariants, visible-coordinate solver, fixture agreement and documented out-of-domain branches. Source hashes match passing audit.",
+      "augmentation_evidence": "All eight D4 transforms are checked in audit; d4=7 is its final loop index. Palette is bijective and shared across all episode pairs.",
+      "limitations": "Finite execution/domain evidence, not proof of unrestricted generalization or complete identifiability."
+    }
+  }
+}

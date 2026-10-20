@@ -1,0 +1,53 @@
+{
+  "task_id": "e7b06bea",
+  "factory_sha256": "65c3c8ce0f96e92f3674908b5a15a0b11ddb30844c3147fc01ae0d6f06773462",
+  "constructor_sha256": "fa24177e107a25a2222fd42f86eb15eb802adcf96c30c2c6d22e0b17bc1f9c82",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 123892342046368,
+  "d4": 7,
+  "unique_base_inputs": 986,
+  "seconds": 5.105174583033659,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "Canonical mechanism: a grey bar (colour 5) of length L runs from the top of column 0. A block of k full-length single-colour stripes sits against the right edge. In the output, the stripes are erased and one line is drawn just inside the block, at W-k-1. Along that line, the stripe colours (in left-to-right order) cycle in runs of L.\n\nThe factory tracks two canonical unit vectors through the D4 transform: 'down' (the stripe direction, where the bar starts) and 'right' (from the bar toward the stripes). A horizontal flip negates the column component, and each clockwise rotation maps (dr,dc) to (dc,-dr).\n\nFrom these vectors the factory picks one of two native templates:\n- **Stripes as visible columns.** The block is at the right edge if right=(0,1), otherwise at the left edge.\n- **Stripes as visible rows.** The block is at the bottom if right=(1,0), otherwise at the top.\n\nThe sign constants are specialised as follows:\n- **RS (block edge).** The emitted program scans inward from the block edge, collecting lines that are fully non-background and single-coloured. It stops at the first line that is not.\n- **Colour order.** Colours are ordered along the visible image of canonical +col: ascending index if RS=1, descending otherwise.\n- **Bar line and L.** The bar lies on the opposite edge line. L is the count of palette[5] cells on it, falling back to the non-background count.\n- **Target line.** The new line goes at index (size-k-1) or k, just inside the block.\n- **DS (run origin).** The colour runs start from the visible end where the bar begins, chosen by the sign of 'down'.\n\nBackground and bar colours are the palette constants palette[0] and palette[5]. Stripe colours are read from the pixels. No grid is rotated or recoloured; all indexing is done directly in visible coordinates.",
+    "limitations": "Assumes the constructor's domain:\n- The background is palette[0] and the stripe colours are non-background.\n- Adjacent stripes have distinct colours, as random_colors produces.\n- The bar is strictly shorter than the stripe length, which holds because height >= L*k+1.\n- There is at least a 3-line gap between the bar and the block, so the bar line can never be mistaken for a stripe.\n\nIf no stripes are detected, the input is returned unchanged. Demonstrations are not consulted; orientation and colour roles come from d4/palette constants, and stripe colours and L come from the query pixels. The fixtures are consistent with the uniform rule. No constructor indexing bugs or hidden tie-breaks were identified.",
+    "independent_source_review": {
+      "verdict": "accept",
+      "mechanism": "A bar of palette[5] runs from the canonical top of column 0, with length L. A block of k full-length, single-colour stripes sits against the opposite edge. The output erases the stripes. It then draws one line just inside the block's former position, at canonical column W-k-1. Along that line the stripe colours, in canonical left-to-right order, repeat in runs of L, starting from the bar's end. The factory pushes the canonical 'down' and 'right' unit vectors through D4: first a horizontal flip negates dc, then each clockwise turn maps (dr,dc) to (dc,-dr). The result selects a column template or a row template. Those templates are specialised by RS (which edge holds the block, plus the colour order) and DS (which end the runs start from). The emitted solver indexes visible coordinates directly.",
+      "evidence": [
+        "Constructor: random_colors(k, exclude=[5]) draws from 1..9, so stripe colours are distinct and never 0 or 5. After the palette map, stripe ink is never palette[0] or palette[5]. Counting L as palette[5] cells on the bar line is therefore exact.",
+        "width = k + randint(3,6), so at least two background lines separate the bar line from the block. The inward scan always stops at a background gap line, the bar line is never scanned, and len(stripes) >= W/H is unreachable.",
+        "height = L*k + randint(1,12) > L, so the bar line is never fully non-background. It could not be mistaken for a stripe even if the scan reached it.",
+        "Column template, RS=-1: the block occupies x=0..k-1 and the target is tx=k. That is the mirror of W-k-1, so it is correct. The colours are sorted by descending x, which is the visible image of canonical +col. The bar line is x=W-1.",
+        "DS=-1 uses t = H-1-y, which equals the canonical row index under a vertical reversal. Runs (t//L)%k therefore start at the bar end, matching the constructor's colors[(r//L)%k].",
+        "The row template mirrors this logic with RS=right[0] and DS=down[1]: block at the bottom when RS=1, bar row y=0, target ty=H-k-1 or k.",
+        "No hidden latent determines the label. L, k, and the stripe colours/order are all readable from the query input. Truncation at the grid end follows naturally from the modular cycle.",
+        "There is no whole-grid untransform/retransform. The only specialised constants are BG, BAR, RS, and DS, which are genuine rule colours and orientation constants.",
+        "Host audit passed 1000 fresh pairs, 8000 augmented checks, and 16 fixture variants, with no sampler rejections. This is consistent with the source review, including the factory's flip-then-rotate composition convention."
+      ],
+      "blocking_issues": [],
+      "nonblocking_limits": [
+        "Demonstrations are not consulted. Orientation comes from d4 and the bar/background colours come from palette constants. This is legitimate because the rule is deterministic and spatial, and orientation constants are taught by the demonstrations.",
+        "Two out-of-domain defensive fallbacks exist and are unreachable under the constructor. If no stripes are found, the input is returned unchanged. If no palette[5] cells are found, L falls back to the non-background count and then to 1.",
+        "The factory's D4 composition order (horizontal flip first, then d4%4 clockwise turns) is assumed to match the host's augmentation convention. Source alone cannot confirm this; the passing 8000-check augmented audit supports it.",
+        "Stripe detection requires each stripe line to be single-coloured and non-background, and stops at the first line that fails. It is not robust to noisy or partial stripes, but the constructor never produces those."
+      ],
+      "required_context_checks": [],
+      "task_id": "e7b06bea",
+      "factory_sha256": "65c3c8ce0f96e92f3674908b5a15a0b11ddb30844c3147fc01ae0d6f06773462",
+      "constructor_sha256": "fa24177e107a25a2222fd42f86eb15eb802adcf96c30c2c6d22e0b17bc1f9c82"
+    },
+    "host_review": {
+      "decision": "accept",
+      "resolution": "Reviewed constructor invariants, visible-coordinate solver, fixture agreement and documented out-of-domain branches. Source hashes match passing audit.",
+      "augmentation_evidence": "All eight D4 transforms are checked in audit; d4=7 is its final loop index. Palette is bijective and shared across all episode pairs.",
+      "limitations": "Finite execution/domain evidence, not proof of unrestricted generalization or complete identifiability."
+    }
+  }
+}

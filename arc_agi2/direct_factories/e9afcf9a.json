@@ -1,0 +1,63 @@
+{
+  "task_id": "e9afcf9a",
+  "factory_sha256": "4bf29c0730268f92a6f8c20df019bfbbd9f4179174ef9af8c17f783056f1bc2f",
+  "constructor_sha256": "b209e052a8edc34dd31b13a697d90622d452b62330db275aac9fb615d0228756",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 180499094191789,
+  "d4": 7,
+  "unique_base_inputs": 72,
+  "seconds": 1.5117181669920683,
+  "finite_default_domain": {
+    "exhaustive": true,
+    "cases_checked": 72,
+    "augmented_checks": 1152,
+    "definition": "All ordered distinct pairs of nine nonzero colours at native width 6 and height 2: 72.",
+    "query_distinct_from_demos": true,
+    "scope": "Default native parameter distribution only; finite input count is not inflated by repeated sampling."
+  },
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "In native coordinates, the mechanism reverses every column with an odd index counted from the native left edge. This turns two uniform stripes into an alternating checkerboard. The factory works out where those native columns land after the D4 transform. With an odd number of rotations, native columns become visible rows, so the emitted program reverses the selected rows left to right. Otherwise it reverses the selected columns top to bottom. The factory also decides whether the native index runs forward or backward along the visible axis: it runs backward when exactly one of these holds: the row-reversal is applied, or the rotation count is 2 or 3. The emitted program then selects lines with i or n-1-i odd. This keeps the parity correct for both even and odd widths, so on even widths a reflection correctly moves the swapped lines to the even visible indices. Colours are never named. Cells simply move within their line, so the program works the same under any palette without colour remapping. No normalization wrapper is used, and the demonstrations are not needed.",
+    "limitations": "Possible constructor defect requiring host review: the generator writes output[(r + c) % 2][c], which only covers output rows 0 and 1. For height > 2 its labels would not match a uniform column reversal: rows of 2 and above would stay blank or default, and colours would overwrite each other. Approved fixtures and the default height=2 are consistent with column reversal, which is what is implemented here, following the archived solver. Odd widths are handled by tracking parity from the native left edge. Nothing has been tested by me.",
+    "independent_source_review": {
+      "verdict": "accept",
+      "mechanism": "Native rule: each column with an odd index from the native left edge is reversed vertically. For the generated 2-row grids this swaps the two cells, turning two uniform stripes A/B into the alternating rows ABAB\u2026/BABA\u2026. The emitted solver reverses lines in visible coordinates. For odd quarter-turn counts it reverses rows left-to-right; otherwise it reverses columns top-to-bottom. It picks lines by the parity of i, or of n-1-i when REV = flip XOR (k>=2).",
+      "evidence": [
+        "Constructor: `output[(r + c) % 2][c] = grid[r][c] = colors[r]` with height=2. For column c, r=0 writes A to output[c%2] and r=1 writes B to output[(c+1)%2]. Odd columns therefore get B over A and even columns stay unchanged, which is exactly a vertical reversal of odd columns. All approved fixtures (4/8, 3/9, 6/2) match.",
+        "Labels depend only on the two visible stripe colours and on fixed width 6 and height 2. No hidden latent affects the output.",
+        "unique_base_inputs=72 equals 9*8 ordered distinct colour pairs from common.random_colors(2), which samples from 1..9 without replacement. This confirms that sampling varies only the colours, at the default width=6 and height=2.",
+        "Factory index mapping: a row reversal sends column c to W-1-c. A clockwise turn sends column c' to row c', two turns send it to column W-1-c', and three turns send it to row W-1-c'. So `rev = flip != (k >= 2)` and `axis_rows = k % 2 == 1` are correct. In the flip+k=2 case the two reversals cancel, giving rev=False.",
+        "Reversing a line is independent of its direction, so only the parity of the line index needs remapping. That remapping is handled through n-1-i rather than through a hard-coded even/odd choice, so it stays correct for W=6, where a reflection moves the swapped lines to the even visible indices.",
+        "No colours appear in the emitted code, so the solver is invariant under any palette permutation. There is no untransform/native-solve/retransform wrapper. The solver mutates the visible grid directly.",
+        "Host audit passed: 1000 fresh pairs, 8000 augmented checks covering all D4 variants, and 16 fixture variants. This is consistent with the source-level derivation of the mapping above."
+      ],
+      "blocking_issues": [],
+      "nonblocking_limits": [
+        "Constructor defect: for height>2, `output[(r + c) % 2][c]` writes only output rows 0 and 1, which does not match a column reversal. This is unreachable, because the sampler uses the default height=2, as the 72 unique base inputs confirm. The emitted solver follows the archived column-reversal rule instead of copying the defect, which is correct.",
+        "Odd widths and other heights are never generated. The solver's parity tracking for those cases is not exercised by the audit.",
+        "The phase of the checkerboard in visible coordinates depends on the D4 variant. It is a deterministic spatial orientation constant, taught by the demonstration outputs, which show which visible lines are swapped. It is not an arbitrary colour association.",
+        "The archived rule text has an empty test-output block under 'Applying it to the test'. This is cosmetic only, since the fixture test output is present and correct."
+      ],
+      "required_context_checks": [
+        "Confirm that the host applies the D4 convention assumed by the factory: optional left-right row reversal first, then k clockwise quarter turns. The all-variant audit passing indicates it does.",
+        "Confirm that the episode sampler keeps generate() at the defaults width=6 and height=2, so the height>2 constructor defect stays unreachable.",
+        "No colour-association evidence check is needed. e9afcf9a is not in the list handled by require_colour_evidence, and the rule names no colours."
+      ],
+      "task_id": "e9afcf9a",
+      "factory_sha256": "4bf29c0730268f92a6f8c20df019bfbbd9f4179174ef9af8c17f783056f1bc2f",
+      "constructor_sha256": "b209e052a8edc34dd31b13a697d90622d452b62330db275aac9fb615d0228756"
+    },
+    "host_review": {
+      "decision": "accept",
+      "resolution": "Exhaustive finite default-domain audit covers all 72 ordered colour pairs, 1152 augmented checks. Restrict sampling to documented defaults width=6, height=2; the constructor height>2 branch is not supported.",
+      "augmentation_evidence": "All eight D4 transforms are checked in audit; d4=7 is its final loop index. Palette is bijective and shared across all episode pairs.",
+      "limitations": "Finite execution/domain evidence, not proof of unrestricted generalization or complete identifiability."
+    }
+  }
+}

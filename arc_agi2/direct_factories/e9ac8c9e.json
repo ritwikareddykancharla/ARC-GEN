@@ -1,0 +1,51 @@
+{
+  "task_id": "e9ac8c9e",
+  "factory_sha256": "457b304ae31f3a2b882c210728dfdc24f904cd17ac2247a9c6d5c49633009cb5",
+  "constructor_sha256": "a2597aaf3defee9554c646aa495adbb8ac087779f4afd085483fb64155d80610",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 6492358069256,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 9.236946167075075,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "Each grey (palette[5]) square has one marker diagonally outside each corner; the quadrant of the square adjacent to that corner is filled with the marker colour and the marker is cleared to background (palette[0]). This corner-to-adjacent-quadrant correspondence is invariant under every rotation and reflection: a D4 transform maps corners to corners and their adjacent quadrants along with them. So the emitted program works directly in visible coordinates. It finds 4-connected components of the grey colour, takes each bounding box, splits it at half height and half width, and reads the four diagonal-outside corner cells. Only the grey and background constants depend on the palette. The half-height and half-width are computed separately, so the code also handles rectangular boxes.",
+    "limitations": "Assumes the generator's domain: grey squares with even side length, never touching each other or another square's markers (the generator enforces a spacing margin), and every marker inside the grid. Background is taken as palette[0] rather than inferred. If a marker colour were ever the background colour, its quadrant would simply become background, matching the constructor. No constructor defects or fixture contradictions were found; the fixtures match the uniform rule. This has not been tested.",
+    "independent_source_review": {
+      "verdict": "accept",
+      "mechanism": "Each grey (palette[5]) square has four single-cell markers diagonally outside its corners. Every square is split into equal quadrants, each quadrant is filled with the colour of the marker at its own corner, and all markers are cleared to background (palette[0]). The emitted solver finds 4-connected grey components, takes each bounding box, splits it at half height and half width, reads the four diagonal-outside cells, paints the matching quadrants, and clears those cells. The corner-to-adjacent-quadrant mapping is unchanged by every rotation and reflection, so the solver works directly in visible coordinates. The only palette-dependent constants are GREY and BG.",
+      "evidence": [
+        "Constructor placement: rows and cols are drawn as randint(1, size-w-1), so row-1 >= 0 and row+w <= size-1. All four markers are therefore always inside the grid, and the solver's bounds check is only a defensive guard.",
+        "common.overlaps(rows, cols, widths, widths, 3) rejects any pair that is within 3 cells in both axes. Grey squares can never be 4-adjacent, so each grey component is exactly one square. Each square's marker frame (w+2 cells) stays at least one cell apart from any other square's frame, so markers are never shared and never sit inside another square's quadrants.",
+        "Marker colours come from common.random_colors(4, exclude=[5]), which draws from 1..9. They are never grey or background. They are also distinct within a square, though the rule does not need that.",
+        "Output construction: the constructor starts from a blank output and draws four (w//2)x(w//2) rects in the order top, upper, lower, bottom at TL, TR, BL, BR. Markers therefore come out as background and grey is fully overwritten. The factory reproduces this with slices out[y0:y0+hh, x0:x0+hw], out[y0:y0+hh, x0+hw:x1+1], out[y0+hh:y1+1, x0:x0+hw] and out[y0+hh:y1+1, x0+hw:x1+1], each paired with the correct diagonal marker. The half-open bounds are correct.",
+        "Widths are always even (2*randint(1,3) or [6,2,4]), so quadrants split exactly.",
+        "Every quadrant colour is read from a visible marker. No hidden latent decides the labels, and there are no ties or arbitrary colour lookups. The episode evidence checks list does not include e9ac8c9e, and none is needed.",
+        "The solver reads only from g and writes to out, so the order in which squares are processed cannot affect the result.",
+        "All four approved train fixtures and the test fixture match the rule when traced by hand. The host audit passed 1000 fresh pairs, 8000 augmented checks and 16 fixture variants."
+      ],
+      "blocking_issues": [],
+      "nonblocking_limits": [
+        "The generator has little layout diversity. The 15x15 mode always uses widths [6,2,4], and the 10x10 mode always has a single square. This is a property of the constructor, not a solver defect.",
+        "Background is fixed as palette[0] rather than inferred from the grid. This is consistent with the constructor, which always uses 0 as background.",
+        "The solver assumes the constructor's domain: grey squares are separated, all markers lie in the grid, and grey components are rectangular. Inputs outside that domain, such as touching squares or markers off the grid, are excluded by construction."
+      ],
+      "required_context_checks": [],
+      "task_id": "e9ac8c9e",
+      "factory_sha256": "457b304ae31f3a2b882c210728dfdc24f904cd17ac2247a9c6d5c49633009cb5",
+      "constructor_sha256": "a2597aaf3defee9554c646aa495adbb8ac087779f4afd085483fb64155d80610"
+    },
+    "host_review": {
+      "decision": "accept",
+      "resolution": "Reviewed constructor invariants, visible-coordinate solver, fixture agreement and documented out-of-domain branches. Source hashes match passing audit.",
+      "augmentation_evidence": "All eight D4 transforms are checked in audit; d4=7 is its final loop index. Palette is bijective and shared across all episode pairs.",
+      "limitations": "Finite execution/domain evidence, not proof of unrestricted generalization or complete identifiability."
+    }
+  }
+}

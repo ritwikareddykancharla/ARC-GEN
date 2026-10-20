@@ -1,0 +1,56 @@
+{
+  "task_id": "e87109e9",
+  "factory_sha256": "ea08acced84acdad7abe9c02a6d835e3649ad7167bbfdf4078e88d2507eb4ab5",
+  "constructor_sha256": "7d8e628e7baaa46094faaa5484a3922f317de75fc087e6b14cd2dadcfc2e95d9",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 230866025765537,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 8.803566083079204,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The factory works out where each original direction ends up in the visible grid. It takes the D4 action as a linear map M on direction vectors: a row reversal sends (dy,dx) to (dy,-dx), and each clockwise rotation sends (dy,dx) to (dx,-dy). From M it derives four constants.\n\n- STRIP = M(up) is the side where the legend strip lies.\n- LDIR = M(original left) is the visible side where an 'L' marker sits next to its block of 0s. The 'R' side is the opposite direction.\n- TURN_L and TURN_R are the original left and right turns rewritten for visible directions, as M\u2218turn\u2218M\u207b\u00b9. Under reflections, a left-marker colour therefore makes a clockwise turn on screen.\n- Colour roles are palette constants: frame = palette[5], empty = palette[0], beam = palette[8].\n\nThe emitted program works only in visible coordinates.\n\n1. It reads the legend by scanning every empty-colour cell. A neighbour in direction LDIR or -LDIR that is neither empty nor frame is a marker, which gives the colour\u2192side map.\n2. It cuts off the strip on the STRIP side, using the extreme rows or columns that contain the frame colour. What remains is the canvas.\n3. It takes the background as the canvas's most common colour, and the beam square as the bounding box of the beam colour.\n4. It shoots four beams (up, down, left, right). Each is a window the size of the square that advances one cell at a time and paints the beam colour.\n5. If the next window would leave the grid, the beam stops. If the next window contains a non-background, non-beam colour from the original canvas, the beam turns in place using that colour's visible turn map, or stops if the colour has no legend entry.\n6. Collisions are always tested against the original canvas, so beams pass through each other and through the start square, exactly as in the constructor. A seen-state set plus a step cap guards against loops.",
+    "limitations": "- **Not tested.** I have not run this on the fixtures or on fresh pairs.\n- **Mixed windows are outside the domain.** The constructor rejects scenes where a beam window overlaps two block colours at once (the 'mixed' case). If that ever happened, the emitted program would pick the most frequent colour and break ties by smallest colour value. That tie-break is not part of the puzzle.\n- **Looping scenes are outside the domain.** The constructor also rejects scenes where a beam would loop forever. The emitted program stops a beam on a repeated state or after 4000 steps.\n- **Stopping on unknown colours is implemented but never exercised.** The rule says a beam stops when it hits a colour with no legend entry. The constructor rejects scenes where this happens ('stopped'), so no fresh pair should exercise it.\n- **Assumes a permutation palette.** The frame, empty and beam colours must stay distinct from the canvas and block colours. The background must be the strict majority colour of the canvas, which the constructor's area limit guarantees.\n- **Fixtures.** All three demonstration pairs match the uniform rule, including the case where colour 4's marker is on the right and a down-moving beam turns west. I found no constructor defect.",
+    "independent_source_review": {
+      "verdict": "accept",
+      "mechanism": "Cut off the 5-framed legend strip. Read each colour's marker side, L or R, from the 0-panel neighbours. Find the s\u00d7s beam square of colour 8 on the canvas. Shoot four s-wide window beams. A beam paints 8 on free cells, turns left or right in place according to the legend when its next window overlaps a block colour, and stops at the grid edge. Collisions are always tested against the original canvas.",
+      "evidence": [
+        "No hidden latents. Every input to `_trace` can be read from the input grid: the legend sides are drawn by `_header`, the blocks and square by `_build_body`, and the background is the strict majority because blocks never clip (top\u2208[0,height-bh], left\u2208[0,WIDTH-bw]), never overlap (`_apart` gap 1) and their area with the square is under half the canvas (`area*2 < height*WIDTH`).",
+        "No other colour can be mistaken for a role colour. PALETTE=[1,2,3,4,6,7,9] excludes 0, 5 and 8, so the canvas never contains the empty, frame or beam colour. The solver's `_legend` scan over EMPTY cells and its `_canvas` crop on FRAME rows/columns therefore only ever touch the header.",
+        "Each legend colour gets exactly one side. Every panel is [colour,0,0,0] or [0,0,0,colour] between 5s, so no 0 cell has a non-0/non-5 neighbour on both sides.",
+        "The window logic is orientation-invariant. Windows are s\u00d7s squares, so a D4 map sends windows to windows. Starting from the visible top-left of the 8 bounding box and stepping one cell is equivalent to the native top-left trace. The overlap test (excluding bg and beam) and the edge test (`y+bh>h`, `x+bw>w`) are invariant too.",
+        "Direction constants are rule geometry, not a wrapper. `build_program` uses STRIP=M(up) and LDIR=M(left), and computes TURN_L/TURN_R as M\u2218turn\u2218M\u207b\u00b9, which handles reflections correctly. The emitted solver runs directly in visible coordinates with no untransform/native-solve/retransform.",
+        "Out-of-domain cases are excluded by the sampler. `_sample_scene` rejects `mixed` windows, so the solver's min-colour tie-break never matters. It also rejects `loop` (including a beam boxed in on all four sides, which repeats state after four turns) and `stopped`, so every hit colour is in the legend (blocks are drawn from `colours[1:]`, which is the legend).",
+        "The turn-side mapping is taught by the demonstrations. Both L and R markers appear across the train pairs (pair 2: 2R and 6R; pair 3: 4R and 2R), and both turn directions are visible in the outputs.",
+        "`validate()` latents reproduce the canonical fixtures (legend sides match the headers, e.g. test 3\u2192R). Host audit: 1000 fresh pairs, 8000 augmented checks and 16 fixture variants passed, with no sampler rejections reported."
+      ],
+      "blocking_issues": [],
+      "nonblocking_limits": [
+        "Step caps differ: the constructor stops a beam silently after 2000 steps without flagging a loop, while the solver allows 4000. They would only disagree on a non-repeating beam path longer than 2000 states (out of at most about 2304 possible). That is effectively unreachable with 3\u20134 rectangles, but it is not formally excluded.",
+        "The solver breaks colour ties in mixed windows by smallest colour value, which is not part of the puzzle rule. The constructor excludes mixed windows, so this is never exercised.",
+        "Stopping on a colour missing from the legend is part of the rule but never occurs in generated data, because `stopped` scenes are rejected.",
+        "The solver assumes the input is from this family: a single 8 square, a strict-majority background and a frame colour confined to the strip."
+      ],
+      "required_context_checks": [
+        "No colour-association evidence check is needed for e87109e9; it is not in the `require_colour_evidence` list. Each episode's legend is shown explicitly in its own query input header, so no colour-to-side association has to be learned across examples.",
+        "Rely on the host D4-conflict policy for orientation constants; the spatial left/right turn convention is shown by the demonstrations."
+      ],
+      "task_id": "e87109e9",
+      "factory_sha256": "ea08acced84acdad7abe9c02a6d835e3649ad7167bbfdf4078e88d2507eb4ab5",
+      "constructor_sha256": "1a6bf427eecab908a84fe3b0058463cc2b57380b938deec910397faf8b1a8fbd"
+    },
+    "host_review": {
+      "decision": "accept_after_host_repair",
+      "resolution": "Removed arbitrary 2000-step constructor cap. Trace until boundary/unknown colour/repeated state. Finite state space is window position times four directions; seen-state detection guarantees termination. Default body <=24x24 gives fewer than2305 states, within emitted solver4000 cap. Tests exercise a >2000-cell finite corridor and boxed-in cycles. Re-audit passes 1000 fresh pairs, 8000 augmented checks and16fixture variants.",
+      "reviewed_constructor_sha256": "1a6bf427eecab908a84fe3b0058463cc2b57380b938deec910397faf8b1a8fbd",
+      "repaired_constructor_sha256": "7d8e628e7baaa46094faaa5484a3922f317de75fc087e6b14cd2dadcfc2e95d9",
+      "augmentation_evidence": "All eight D4 transforms and shared bijective palettes checked. Source changes re-audited against original supplied fixtures."
+    }
+  }
+}

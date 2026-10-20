@@ -1,0 +1,63 @@
+{
+  "task_id": "e6de6e8f",
+  "factory_sha256": "ade3bcaf017b84b7f33fd87a0d6c1e88172ea8605a7e8d2a3f9abdb601666047",
+  "constructor_sha256": "6f0348f8acd2588695a325017c1eb96419454ab661b31d79bd4907e21c37b9c7",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 216696640135682,
+  "d4": 7,
+  "unique_base_inputs": 80,
+  "seconds": 4.8101306250318885,
+  "finite_default_domain": {
+    "exhaustive": true,
+    "cases_checked": 80,
+    "augmented_checks": 1280,
+    "definition": "All five-command strings with exactly two straight commands: C(5,2) \u00d7 2^3 = 80.",
+    "query_distinct_from_demos": true,
+    "scope": "Default native parameter distribution only; finite input count is not inflated by repeated sampling."
+  },
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The factory works out where the canonical layout lands in the visible grids under the given D4 transform. It does this by mapping a few anchor points.\n\nFor the input strip it fixes three things. First, the visible axis that the piece slices run along (rows or columns). Second, the visible reading direction, forward or reversed, that matches canonical left-to-right. Third, which of the two cross-strip cells is the canonical top cell (index 0 or -1).\n\nFor the output it fixes four things: the visible canvas shape, the visible cell of the 3 start marker, the visible step vector for canonical 'down', and the visible step vector for canonical 'right'.\n\nThe emitted program uses these as fixed values. It reads the visible slices in the fixed direction and groups consecutive slices that are not background into pieces. A width-1 piece draws two cells straight ahead. A width-2 piece checks whether its first slice (in reading order) has paint on the 'top' side. If it does, it draws the current cell plus the next lateral cell and shifts +1. Otherwise it draws the previous lateral cell plus the current cell and shifts -1. Each 2-wide step advances one forward row.\n\nColours are fixed values: background = palette[0], path = palette[2], start = palette[3]. Pieces are detected as anything that isn't background. Drawing is clipped to the visible canvas, as in the archived solver.",
+    "limitations": "The output canvas size (8x7 canonical) and the start column (3) are fixed by the constructor. They are mapped into the visible frame, not inferred from the demos. The program assumes the constructor's domain: a strip 2 cells thick, pieces of width 1 or 2, and five commands that fill exactly 7 rows. Wider pieces would be treated as 2-wide using only their first slice. Demonstrations are not used. No constructor defects or fixture contradictions were found; all train and test fixtures follow the rule. Nothing has been tested by me.",
+    "independent_source_review": {
+      "verdict": "accept",
+      "mechanism": "The constructor draws 5 commands from {-1,0,1}, with exactly two 0s. Each command is drawn as a piece on a 2x12 strip: a 1-wide bar for 0, a 2-wide L for \u00b11. An L with its top cell on the left (`2 0 / 2 2`) means +1 (step right); an L with its top cell on the right (`0 2 / 2 2`) means -1 (step left). Every piece is followed by a blank separator column. The output is an 8x7 canvas with the 3 at (0,3) and a path traced row by row. A bar paints 2 rows at the current x. A right step paints (x, x+1) and sets x+=1; a left step paints (x-1, x) and sets x-=1. The factory maps the canonical frame into visible coordinates with fixed values: the slice axis, the reading direction, which index is the 'top' cell, the output shape, the start cell, and the forward and lateral step vectors. It then segments the visible slices that are not background and draws the path directly in the visible frame.",
+      "evidence": [
+        "Domain closure: three 3-column pieces plus two 2-column pieces use exactly 12 columns, so the trailing separator write (col+=3 or col+=2 past the end) is never indexed. Rows used: 3x1 + 2x2 = 7, which fills rows 1..7 exactly. The lateral range is 3\u00b13, so it stays within [0,6]. A left step at x=1 writes col 0, and col-1 never goes negative because there are at most three lefts. No wraparound or out-of-range writes are reachable.",
+        "Both L shapes paint both of their columns. With a separator after every piece, grouping consecutive columns that are not background recovers exactly the commands. Labels depend only on visible input commands; there is no hidden latent. The 80 unique base inputs match C(5,2)*2^3.",
+        "Factory input geometry: `along` is the image of canonical +col and `across` is the image of canonical +row. When AXIS=1 the strips are visible columns and `across` is vertical, so TOP=0 when canonical row 0 sits at index 0 and TOP=-1 otherwise. AXIS=0 is the symmetric case. REV reverses the slice order, so `strips[p[0]]` is the canonical first (left) column of the piece, and the top-left check is preserved.",
+        "Factory output geometry: `mp` is affine, so put(y,dx) = S + y*F + dx*L reproduces canonical cell (y, 3+dx) in visible coordinates. OH and OW come from the same mapping.",
+        "Colours are fixed palette roles: bg=palette[0], path=palette[2] (the same role as the input pieces), start=palette[3]. Every demo output exhibits these roles, so this is a legitimate specialization of rule colours.",
+        "The emitted solver acts directly in visible coordinates. There is no whole-grid untransform/solve/retransform wrapper.",
+        "The demonstrations teach each element: bar = straight, both L orientations (pairs 1 and 2 show left and right), and the start marker. The test needs no association that the demos do not show.",
+        "Host audit passed: 1000 fresh pairs, 8000 augmented checks, 16 fixture variants, no sampler rejections."
+      ],
+      "blocking_issues": [],
+      "nonblocking_limits": [
+        "The canvas size (8x7) and start column (3) are fixed constants mapped through D4. They are not inferred from the demonstrations; they are constant across the constructor domain.",
+        "Pieces wider than 2 or strips thicker than 2 are out of domain. A wider piece would be classified by its first slice only. The constructor never produces either case.",
+        "Demonstrations are ignored by the emitted solver. This is acceptable because the rule is fully deterministic given the fixed colour roles and orientation constants.",
+        "Out-of-canvas clipping in put() is a defensive guard and is unreachable in the domain."
+      ],
+      "required_context_checks": [
+        "Confirm that the host's D4 augmentation convention (flip columns for d4>=4, then apply k clockwise quarter-turns) matches the factory's `mp`. The passing augmented audit is consistent with this, but it was only reported for d4=7 in the summary.",
+        "Confirm the palette permutation is applied consistently across demos and query, so that palette[2] and palette[3] are the visible path and start colours in every episode."
+      ],
+      "task_id": "e6de6e8f",
+      "factory_sha256": "ade3bcaf017b84b7f33fd87a0d6c1e88172ea8605a7e8d2a3f9abdb601666047",
+      "constructor_sha256": "6f0348f8acd2588695a325017c1eb96419454ab661b31d79bd4907e21c37b9c7"
+    },
+    "host_review": {
+      "decision": "accept",
+      "resolution": "Exhaustive finite default-domain audit covers all 80 command strings, 1280 augmented checks. Each query command shape must appear in the demos; commands are identified by visible component masks under the shared D4.",
+      "augmentation_evidence": "All eight D4 transforms are checked in audit; d4=7 is its final loop index. Palette is bijective and shared across all episode pairs.",
+      "limitations": "Finite execution/domain evidence, not proof of unrestricted generalization or complete identifiability."
+    }
+  }
+}

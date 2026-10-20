@@ -1,0 +1,51 @@
+{
+  "task_id": "e760a62e",
+  "factory_sha256": "7fbbef4d842c049b82bf41c2bf28aa48869b7cb03767bc03d5d17aca097ef66d",
+  "constructor_sha256": "4cf0aaded2bbe4ffba7b74e0277485cf830ad4c6b9279ee2c7e9fb18b04df6fe",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 199554590699261,
+  "d4": 7,
+  "unique_base_inputs": 989,
+  "seconds": 18.825770290917717,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The emitted program works directly in the visible grid coordinates. It finds the lattice by looking for full rows and full columns of palette[8]. The maximal runs of non-divider rows and columns become row bands and column bands, and each (row band, column band) pair is one cell. This band analysis is symmetric, so leading or trailing partial bands and dividers on the boundary are handled under every D4 transform. Because the mechanism is invariant under all D4 symmetries, d4 needs no specialisation.\n\nEvery pixel that is neither palette[0] (background) nor palette[8] (divider) counts as a marker. Each marker is mapped to its cell.\n\nFor each marker colour:\n- every pair of same-coloured markers sharing a cell row or cell column contributes the inclusive run of cells between them;\n- the marker cells themselves also count as covered by their own colour.\n\nThe cover sets are built from all pairs, which matches the generator's all-(i<j) loop, so three collinear markers span fully.\n\nEach covered cell is then filled completely, excluding divider lines:\n- with its single covering colour, or\n- with palette[6] if two or more distinct colours cover it.\n\nThis reproduces the generator's write-conflict-to-6 rule. That rule is independent of drawing order, because in the generator's domain overlaps can only occur between a horizontal and a vertical bar.\n\nFilling the marker cells also matches the generator's final cell-rect painting, which floods a whole cell with the colour at the marker offset. This is a case the archived solver leaves as a single pixel, but it is unreachable in the generator's domain.\n\nColour roles come from the palette:\n- palette[0] is background;\n- palette[8] is the lattice;\n- palette[6] is the crossing colour;\n- the marker colours, images of 2 and 3, are read from the pixels.",
+    "limitations": "Assumes the palette is injective, so the background, divider and cross colours are distinct, and that the marker colours differ from those three. Assumes every divider is a full line of palette[8] and that no cell row or column is entirely palette[8], which holds in the constructor's domain.\n\nMarker pixels sitting on divider lines are ignored; the generator never produces them.\n\nWhen a marker cell lies inside a different colour's bar, the program yields palette[6]. This matches the generator's conflict logic, but the generator rejects such scenes, so the case never arises.\n\nNo inconsistencies between the fixtures and the uniform rule were found. I did not see any constructor defects that need host review: the generator's sequential conflict handling is order-independent within its accepted domain.\n\nI have not run any tests.",
+    "independent_source_review": {
+      "verdict": "accept",
+      "mechanism": "The lattice is made of full lines of palette[8]. Maximal runs of non-divider rows and columns become cell bands. Every non-background, non-divider pixel is a marker and is mapped to its (row band, column band) cell. For each marker colour, every pair of same-coloured markers that share a cell row or cell column covers the inclusive run of cells between them. Marker cells are also covered by their own colour. Each covered cell is filled entirely: with its colour if exactly one colour covers it, or with palette[6] if two or more do. The solver works directly in visible coordinates. Band detection is symmetric, so leading or trailing partial bands and boundary dividers are handled under every D4 transform. There is no untransform/retransform wrapper.",
+      "evidence": [
+        "Constructor domain: markers sit only in full cells (index < upper = size//(length+1)) at a fixed in-cell offset (row_offset, col_offset < length), never on dividers. Any trailing partial or unused full cell is never marked or painted. The solver treats such bands as ordinary uncovered cells, so their content is unchanged.",
+        "Every generated marker has a same-colour partner. With squish 0 or 1 there are two collinear endpoints, because tall or wide is at least 3. With squish 2 there are four corners, minus one removed or one shifted. A shift changes only one coordinate, so the shifted corner stays aligned with the corner that shares the kept coordinate. A shift onto another marker sets good=False. So the solver's marker-cell self-cover agrees with the generator's final cell-rect painting from output[rr][cc].",
+        "Generator conflict logic: `if output[..] and output[..] != colour: 6`. A 6 is sticky because 6 is never 2 or 3. Two bars of different colours overlapping in the same line must contain an endpoint marker of one inside the other. That marker cell becomes 6 and the scene is rejected by the 'original colors preserved' check. The surviving conflicts are therefore horizontal/vertical crossings at non-marker cells. These are order-independent and equal the solver's `len(cs) > 1 -> CROSS` rule.",
+        "Fixtures: Train 1 crosses at cell (1,3) and Train 2 at (2,1), both giving 6. Train 3 has non-crossing horizontal bars. In the test, column 2 is coloured 3, row 1 and column 0 are coloured 2, and the crossing (1,2) is 6. All agree with the cover-set rule. The archived single-pixel lone-marker case is unreachable.",
+        "No hidden latent beyond the visible input determines the label. Offsets, lengths and shape parameters are all recoverable from the grid. The host audit passed 1000 fresh pairs and 8000 augmented checks (989 unique base inputs)."
+      ],
+      "blocking_issues": [],
+      "nonblocking_limits": [
+        "The solver assumes an injective palette: background, divider and cross colours are distinct from each other and from the marker colours. The constructor guarantees this before augmentation.",
+        "Marker pixels on divider lines are ignored. The constructor never produces them.",
+        "A marker cell lying inside a bar of another colour would yield palette[6] in the solver. The generator rejects such scenes, so this case is out of domain.",
+        "Unused trailing full-size cells (size % (length+1) == length) are treated as normal cells. They are never marked, so this is harmless."
+      ],
+      "required_context_checks": [
+        "The crossing colour palette[6] is a constant novel output colour, and no input reveals it. With expect_pink=0, a sampled demonstration may contain no crossing. episode_evidence_checks has no branch for e760a62e. The host should confirm that every episode whose query answer contains palette[6] includes at least one demonstration output containing palette[6]. Otherwise that query's crossing colour is not inferable from context."
+      ],
+      "task_id": "e760a62e",
+      "factory_sha256": "7fbbef4d842c049b82bf41c2bf28aa48869b7cb03767bc03d5d17aca097ef66d",
+      "constructor_sha256": "4cf0aaded2bbe4ffba7b74e0277485cf830ad4c6b9279ee2c7e9fb18b04df6fe"
+    },
+    "host_review": {
+      "decision": "accept",
+      "resolution": "Added gate deriving crossing cells from visible marker alignment and lattice bands; query crossing requires a demo crossing that exposes the crossing output colour. No query answers enter the check.",
+      "augmentation_evidence": "All eight D4 transforms are checked in audit; d4=7 is its final loop index. Palette is bijective and shared across all episode pairs.",
+      "limitations": "Finite execution/domain evidence, not proof of unrestricted generalization or complete identifiability."
+    }
+  }
+}

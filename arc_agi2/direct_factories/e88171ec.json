@@ -1,0 +1,55 @@
+{
+  "task_id": "e88171ec",
+  "factory_sha256": "a63704e471b56ca7d0d660415772f51ad4b5afde384c7be621e497659b4d37f7",
+  "constructor_sha256": "84547dc74e6b288ae1d180043cc8b455acc80d0d361fca053058ad3f39bd15f6",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 30151783117548,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 4.2995272079715505,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The emitted program finds the largest axis-aligned rectangle made only of the background-hole colour, palette[0]. It keeps that rectangle's one-cell outer ring and paints the interior with palette[8]. Both colours are baked in as constants from the palette.\n\nThe mechanism is the same under every rotation and reflection. A largest all-zero rectangle maps to a largest all-zero rectangle, and its ring and interior map to the ring and interior. So d4 needs no coordinate rewriting, and the program runs directly on the visible grid without any normalization.\n\nThe search uses 2-D prefix sums over all rectangles with both sides at least 4. That minimum holds because the generator's box is 2 to 4 cells per side, so its ring is 4 to 6. For each top-left corner, the scan widens to the right and stops at the first width that is no longer all zero. Grids are at most 24x24, so this is fast.\n\nThe constructor guards the box with forced non-zero pixels beyond its ring on all four sides. Any rectangle that tries to extend the ring by a full side, or by a large enough subset of columns or rows to raise the area, must cover one of those guards. With about 1/6 random zero density, a competing rectangle of equal or larger area is astronomically unlikely.",
+    "limitations": "Exact ties for the largest area are resolved by keeping the first rectangle in row-major scan order of the visible grid. That choice is arbitrary and depends on orientation. Under the constructor's domain such ties need many coincidental random zero cells (for example, about 8 or more aligned extra zeros), so they are practically impossible. If one ever occurs, it is a constructor ambiguity for host review, not an intended rule.\n\nI set the minimum rectangle side to 4 because the generator's box interior is at least 2x2. The archived solver allowed side 3. The two differ only when a random 3xN all-zero strip is larger than the true box, which is again practically impossible.\n\nThe constructor never checks that the planted ring is the unique largest all-zero rectangle; it relies on the four guard pixels plus probability. I found no contradiction with the fixtures by inspection, but I have not run any tests.",
+    "independent_source_review": {
+      "verdict": "accept",
+      "mechanism": "The constructor fills a random grid with a non-zero colour c (not 5 or 8) at density about 5/6, with zeros otherwise and an optional grey (5) sprinkle. It draws a (wide+2)x(tall+2) all-zero ring at (brow-1, bcol-1), with wide and tall each in 2..4, and paints the wide x tall interior 8 in the output. Before drawing the ring, it forces one c-pixel just outside each ring side. The left and right guards sit at columns bcol-2 and bcol+wide+1, in a random interior row. The top and bottom guards sit at rows brow-2 and brow+tall+1, in a random interior column. The emitted solver finds the largest-area all-palette[0] rectangle with both sides at least 4, keeps its one-cell ring, and fills the interior with palette[8].",
+      "evidence": [
+        "Guard placement blocks extensions and shifts of the ring. brow is in [3, size-tall-3] and bcol is in [3, size-wide-3], so every guard is in bounds. Each guard lies in an interior row or column, so any full-side extension and every one-cell shift of the ring must cover a guard. A competitor of equal or greater area must avoid the guards and also include many random cells, each zero with probability about 1/6. Even the cheapest such case needs about 12 or more independent random zeros.",
+        "Factory search is correct. For fixed y0, y1 and x0, the scan breaks at the first x1 whose rectangle is not all zero. That is sound because every wider rectangle contains it. Skipping corners where zl[y0][x0] is 0 is also sound.",
+        "Factory tie-breaking matches the archived solver. The archived solver skips a rectangle when a <= bestA; the factory updates only when a > bestA. Both keep the first strictly-largest rectangle in the same (y0, y1, x0, x1) scan order.",
+        "The minimum side of 4 is safe under the constructor. The archived solver allowed side 3. A 3-row or 3-column strip that avoids the guards and beats a ring of area 16 to 36 would need roughly 12 to 15 independent random zeros, so the two solvers agree in practice.",
+        "Fixtures check out by hand. Pair 1: rows 3-6 x cols 5-8 is all zero and has area 16; no 3+-sided zero rectangle beats it (rows 4-6 x cols 5-9 has area 15; row 4 col 9 and row 7 col 7 are non-zero). Test: rows 12-16 x cols 10-15 is all zero (area 30), while row 13 col 16 and row 17 col 13 are non-zero. The interior is therefore rows 13-15 x cols 11-14, which matches the fixture output.",
+        "Colour handling is sound. ZERO and FILL are genuine rule colours taken from palette[0] and palette[8]. Grey 5 and the background colour are correctly treated as non-zero obstacles, and no learned colour association is needed.",
+        "The solver works directly on the visible grid with no untransform or retransform wrapper. Largest-rectangle selection, the ring and the interior all commute with D4, so no orientation constants are needed.",
+        "The host audit passed: 1000 fresh pairs, 8000 augmented checks, 16 fixture variants and no sampler rejections."
+      ],
+      "blocking_issues": [],
+      "nonblocking_limits": [
+        "The constructor never checks that the planted ring is the unique largest all-zero rectangle; it relies on the four guards plus the low zero density. A competing equal-or-larger rectangle is possible in principle but needs about 12 or more coincidental random zeros, so it is astronomically rare.",
+        "Exact area ties are resolved by first row-major scan position, which depends on orientation. A tie is reachable only through the same rare coincidence. The context policy rejects D4 variants whose query answers conflict.",
+        "The factory's side >= 4 floor differs from the archived side >= 3 floor. The two can diverge only when a 3xN all-zero strip is the strict maximum, which requires many random zeros under this constructor."
+      ],
+      "required_context_checks": [
+        "No colour-association evidence check applies: e88171ec is not in the require_colour_evidence task list, and the rule uses only the hole colour (palette[0]) and the fill colour (palette[8]). All three demonstrations show both.",
+        "Host should keep the D4 conflicting-answer rejection active in case an astronomically rare area tie ever occurs."
+      ],
+      "task_id": "e88171ec",
+      "factory_sha256": "a63704e471b56ca7d0d660415772f51ad4b5afde384c7be621e497659b4d37f7",
+      "constructor_sha256": "87772e7812f5beff579ced7afd6cf2998268500172b600b7f2ee49286d86f12a"
+    },
+    "host_review": {
+      "decision": "accept_after_host_repair",
+      "resolution": "Repaired random constructor after source review: preserve sampled dimensions/box/colour, resample background until the planted ring is the UNIQUE largest zero rectangle among all rectangles with both sides >=3. Reject ties, larger competitors and extensions; do not rely on rarity or first-in-scan tie breaking. Original explicit fixtures unchanged. Five regressions include 3x6 competitors and original fixtures. Re-audit passes 1000 fresh pairs, 8000 augmented checks and 16 fixture variants.",
+      "reviewed_constructor_sha256": "87772e7812f5beff579ced7afd6cf2998268500172b600b7f2ee49286d86f12a",
+      "repaired_constructor_sha256": "84547dc74e6b288ae1d180043cc8b455acc80d0d361fca053058ad3f39bd15f6",
+      "augmentation_evidence": "All eight D4 transforms and shared bijective palettes checked. Source changes re-audited against original supplied fixtures."
+    }
+  }
+}

@@ -35,7 +35,7 @@ recorded. Passing finite audits does not prove unrestricted generalization.
 
 - 213 native direct-coordinate certificates admitted after fresh audits and
   supplied-fixture checks.
-- 671 admitted factories. Each passed 1,000 fresh pairs, 8,000 augmented pair
+- 695 admitted factories. Each passed 1,000 fresh pairs, 8,000 augmented pair
   checks and 16 supplied-fixture variants. Their audit records retain draft
   limitations and source/constructor hashes. These checks are finite evidence,
   not proof of correctness on every generated input.
@@ -46,7 +46,7 @@ recorded. Passing finite audits does not prove unrestricted generalization.
   counts must be computed as a union, not added.
 - Local exporter test: 18 fresh base episodes, 144 augmented PNG/program/grid
   records. It requested 20 bases and reported a two-episode shortfall.
-- The union currently admits 890 of 1,120 families; 230 still need direct
+- The union currently admits 914 of 1,120 families; 206 still need direct
   augmented program admission. Constructor coverage and program coverage are
   different gates.
 - Synthetic labels for `00d62c1b` now fill every enclosed background component,
@@ -222,7 +222,7 @@ HF's default viewer again returned HTTP 200 with 144 preview rows; a returned
 image decoded at 1188×1974 pixels. Scalable archive viewing remains unresolved.
 Full expanded generation and model training have not launched.
 
-## Latest continuation: 890 verified families
+## Earlier continuation: 890 verified families
 
 Eighteen more reviewed factories bring direct program coverage to **890/1,120**
 (671 factory certificates, with overlapping native/manual targets). All 1,120
@@ -249,3 +249,43 @@ The public HF exporter preview remains 144 rows. Expanded generation and model
 training have not launched. Production target remains 1.12M fresh base episodes
 and up to 8.96M augmented rows before deduplication and adaptive reductions,
 with both program and grid in each row.
+
+## Latest continuation: 914 verified program families
+
+Twenty-four more factories bring coverage to **914/1,120** (695 factory
+certificates with overlapping native/manual targets). All 1,120 constructors
+already exist; 206 program targets remain.
+
+New episode checks require demonstrated crossing colours, size-to-colour
+associations, command shapes, and overlay precedence (including transitive
+evidence). These checks consume demo answers and query inputs only. Across 480
+fresh base episodes, 478 passed and two were rejected for missing evidence.
+All **3,824 accepted augmented program/grid records** executed exactly and
+evidence decisions stayed invariant across the eight orientations. Report:
+`reports/episode-evidence-914-audit.json`.
+
+Two constructor repairs preserve supplied fixture outputs:
+
+- `e88171ec` now rejects incidental zero rectangles that tie or beat the intended
+  rectangle, including three-cell-wide competitors. It resamples the background
+  while preserving sampled scene dimensions and intended box geometry.
+- `e87109e9` now terminates rays on an exit, unknown obstacle or repeated state,
+  without a silent 2,000-step cutoff. Finite window-position/direction states
+  guarantee termination. Its standalone certificate was revalidated on 1,000
+  independent seeds, as well as its 1,000-pair/all-D4 program audit.
+
+Both repaired constructors passed 1,000 fresh pairs, 8,000 augmented checks and
+16 fixture variants. Exhaustive audits additionally checked the 80 native
+command-strip inputs (`e6de6e8f`, 1,280 augmented checks) and 72 two-colour inputs
+(`e9afcf9a`, 1,152 checks). These are **pair counts**, not episode counts: an
+episode combines demonstrations and a distinct query. Recombination does not
+create new underlying inputs; report both measures separately.
+
+Remaining work is categorized: 65 source/context holds, 75 failed execution
+audits, seven missing program factories, and 59 pending independent reviews.
+A live Claude CLI retry still returned its subscription limit; no API fallback.
+The public HF preview remains 144 rows. Full generation and training have not
+launched. Target stays 1.12M fresh base episodes and up to 8.96M augmented rows
+before deduplication/adaptive reductions, with program and grid in each row.
+
+Final regression result for this checkpoint: **302 tests passed**.

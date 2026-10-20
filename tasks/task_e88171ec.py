@@ -17,6 +17,37 @@
 import common
 
 
+def _unique_largest_zero_rectangle(grid, expected):
+  """Check all >=3-sided zero rectangles, including incidental background holes.
+
+  Row-span intersections give maximal zero runs. A smaller subrectangle cannot
+  tie or beat the expected area unless its enclosing maximal run does too.
+  """
+  top, bottom, left, right = expected
+  target_area = (bottom - top + 1) * (right - left + 1)
+  found = False
+  width = len(grid[0])
+  for y0 in range(len(grid)):
+    empty = [True] * width
+    for y1 in range(y0, len(grid)):
+      empty = [ok and ink == 0 for ok, ink in zip(empty, grid[y1])]
+      height = y1 - y0 + 1
+      if height < 3:
+        continue
+      start = None
+      for x, ok in enumerate(empty + [False]):
+        if ok and start is None:
+          start = x
+        elif not ok and start is not None:
+          span = x - start
+          if span >= 3 and height * span >= target_area:
+            if (y0, y1, start, x - 1) != expected:
+              return False
+            found = True
+          start = None
+  return found
+
+
 def generate(size=None, wide=None, tall=None, brow=None, bcol=None,
              colors=None):
   """Returns input and output grids according to the given parameters.
@@ -36,18 +67,25 @@ def generate(size=None, wide=None, tall=None, brow=None, bcol=None,
     wide, tall = common.randint(2, 4), common.randint(2, 4)
     brow = common.randint(3, size - tall - 3)
     bcol = common.randint(3, size - wide - 3)
-    colors = [color if common.randint(0, 5) else 0 for _ in range(size * size)]
-    if common.randint(0, 3) == 0:  # Sometimes sprinkle with grey pixels
-      colors = [c if common.randint(0, 9) else 5 for c in colors]
-    # Now, add extra pixels on all sides just to be safe.
-    row, col = common.randint(brow, brow + tall - 1), bcol - 2
-    colors[row * size + col] = color
-    row, col = common.randint(brow, brow + tall - 1), bcol + wide + 1
-    colors[row * size + col] = color
-    row, col = brow - 2, common.randint(bcol, bcol + wide - 1)
-    colors[row * size + col] = color
-    row, col = brow + tall + 1, common.randint(bcol, bcol + wide - 1)
-    colors[row * size + col] = color
+    for _ in range(128):
+      colors = [color if common.randint(0, 5) else 0 for _ in range(size * size)]
+      if common.randint(0, 3) == 0:  # Sometimes sprinkle with grey pixels
+        colors = [c if common.randint(0, 9) else 5 for c in colors]
+      # Now, add extra pixels on all sides just to be safe.
+      row, col = common.randint(brow, brow + tall - 1), bcol - 2
+      colors[row * size + col] = color
+      row, col = common.randint(brow, brow + tall - 1), bcol + wide + 1
+      colors[row * size + col] = color
+      row, col = brow - 2, common.randint(bcol, bcol + wide - 1)
+      colors[row * size + col] = color
+      row, col = brow + tall + 1, common.randint(bcol, bcol + wide - 1)
+      colors[row * size + col] = color
+      pair = generate(size=size, wide=wide, tall=tall, brow=brow,
+                      bcol=bcol, colors=colors)
+      box = (brow - 1, brow + tall, bcol - 1, bcol + wide)
+      if _unique_largest_zero_rectangle(pair["input"], box):
+        return pair
+    raise RuntimeError("Could not sample an unambiguous zero rectangle")
 
   grid, output = common.grids(size, size)
   for i, color in enumerate(colors):

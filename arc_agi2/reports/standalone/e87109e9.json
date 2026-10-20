@@ -94,7 +94,7 @@
     }
   },
   "errors": [],
-  "sha256": "1a6bf427eecab908a84fe3b0058463cc2b57380b938deec910397faf8b1a8fbd",
+  "sha256": "7d8e628e7baaa46094faaa5484a3922f317de75fc087e6b14cd2dadcfc2e95d9",
   "status": "reviewed_bounded_validation_passed",
   "limitations": "Bounded randomized agreement with a saved solver is not proof of semantic completeness.",
   "candidate_path": "/Users/ritwika/projects/arc-agi2/outputs/research/arcgen-coverage-cli/e87109e9/task_e87109e9.py",
@@ -159,8 +159,29 @@
     "changed_pairs": 1000,
     "fixture_replays": 0,
     "ready": true,
+    "sha256": "7d8e628e7baaa46094faaa5484a3922f317de75fc087e6b14cd2dadcfc2e95d9",
+    "seed_start": 20000,
+    "seed_end_exclusive": 21000
+  },
+  "previous_stress_test": {
+    "samples_requested": 1000,
+    "samples_passed": 1000,
+    "unique_inputs": 1000,
+    "changed_pairs": 1000,
+    "fixture_replays": 0,
+    "ready": true,
     "sha256": "1a6bf427eecab908a84fe3b0058463cc2b57380b938deec910397faf8b1a8fbd",
     "seed_start": 20000,
     "seed_end_exclusive": 21000
-  }
+  },
+  "verifier_mode": "archived_pair_solver",
+  "verifier_evidence": {
+    "mode": "archived_pair_solver"
+  },
+  "improved_verifier_fixture_replay": null,
+  "fixture_basis": {
+    "fixture": "canonical",
+    "corrected": false
+  },
+  "host_repair": "Replace arbitrary 2000-step cutoff with finite-state cycle termination; supplied fixtures unchanged. Revalidated1000 independent seeds against saved solver."
 }

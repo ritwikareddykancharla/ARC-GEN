@@ -1,0 +1,55 @@
+{
+  "task_id": "e8593010",
+  "factory_sha256": "a600342245e77b4dbf6d061dc3d1c16c8a492456bcff8899a42c02913518a659",
+  "constructor_sha256": "a41e8da3b762bf8e2055039a7de4275a69558d9bd909b5d615906114c9b6cf40",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 190815187377702,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 5.922215582919307,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The emitted program finds the 4-connected clusters of the object colour palette[0] directly in the visible grid. It recolours each cluster by its size: size 3 becomes palette[1], size 2 becomes palette[2] and size 1 becomes palette[3]. All other cells, including the background palette[5], are left unchanged. The D4 transforms preserve both 4-connectivity and cluster size, so d4 does not change the mechanism. Only the colour constants are specialised through the palette. The rule works on grids of any rectangular shape, and clusters touching the border are handled by bounds checks. Clusters that touch only diagonally stay separate, which pair 3 requires.",
+    "limitations": "Sizes larger than 3 never occur in the constructor's domain. For those, the program follows the archived fallback max(1, 4 - s) and uses palette[1].\n\nConstructor defect for host review: the generator's inner loop `for r, c in pixels` overwrites the outer loop variables r and c. As a result, later placements in the same row use a shifted row index. This only skews where clusters are placed. It does not change the input-to-output rule, and the emitted program does not copy it.\n\nIf a single cell is placed on an existing single cell, the generator overwrites it with the same colour 3, which is harmless.\n\nClusters are never edge-adjacent by construction, so cluster size is never ambiguous. The fixtures are consistent with the uniform rule. No tests have been run.",
+    "independent_source_review": {
+      "verdict": "accept",
+      "mechanism": "Find the 4-connected clusters of the object colour (palette[0]) directly in the visible grid. Recolour each whole cluster by its size: 3 becomes palette[1], 2 becomes palette[2] and 1 becomes palette[3]. Every other cell stays unchanged. D4 transforms preserve 4-adjacency and cluster size, so no coordinate handling is needed. Only colour constants are specialised.",
+      "evidence": [
+        "Constructor labels come from the input: `bitmap[r][c] = 4 - num_pixels` and `output[r][c] = color`. The input masks every non-gray cell to black. The output colour is therefore a deterministic function of the size of the placed cluster.",
+        "Clusters keep their placed size. Every multi-pixel shape (straight line of 1-3, or 2x2 minus one cell via `del pixels[randint(0,3)]`) is 4-connected, so each pixel has an in-cluster 4-neighbour.",
+        "Clusters never touch each other. The overlap test rejects a placement if any 4-neighbour of any new pixel is non-gray. If a new pixel already held colour, its in-cluster neighbour's check would see it. So multi-pixel placements cannot overwrite earlier cells, and no new cluster can edge-touch an existing one.",
+        "The only overwrite case is a single pixel landing on an existing single cell. All its neighbours are gray, so it rewrites colour 3 onto colour 3, which is harmless.",
+        "Diagonal contacts are allowed by the constructor and are taught by fixture pair 3. The factory uses 4-neighbour steps only, which matches.",
+        "Out-of-bounds pixels set `overlaps` and `continue` before any bitmap access. Negative indices cannot occur, so there is no crash or mis-indexing.",
+        "The loop-variable shadowing of r and c is real. The inner `for r, c in pixels` changes the outer `r` for the rest of that row, while `c` is reset each iteration by `range`. This only shifts and suppresses candidate placements, which still pass the same overlap validation. It does not affect labels, and the factory does not copy it.",
+        "Factory palette indices match the constructor colours: obj=0\u2192pal[0], size3\u21921\u2192pal[1], size2\u21922\u2192pal[2], size1\u21923\u2192pal[3]. It operates on visible coordinates with no untransform/retransform wrapper.",
+        "Host audit: 1000 fresh pairs, 8000 augmented checks and 16 fixture variants all passed, with no sampler rejections."
+      ],
+      "blocking_issues": [],
+      "nonblocking_limits": [
+        "The size>3 fallback (SIZE_COLOUR[3]) cannot be reached in the constructor's domain. It matches the archived max(1, 4-s) only for s=3; for s>=4 the archived rule gives 1 \u2192 pal[1], which also matches.",
+        "The size\u2192colour association is arbitrary under palette permutation. It is not formally guaranteed that every size class appearing in the query also appears in the demonstrations. However, the constructor's placement density (~5/6 attempt rate over 100 cells, several clusters of each size per grid) makes a missing size class across all demos vanishingly unlikely. This task is not covered by the episode evidence checks.",
+        "The generator can in principle yield a grid with very few or no clusters. This is harmless to the rule.",
+        "Placement distribution is skewed by the r-shadowing defect. This affects scene statistics only, not correctness."
+      ],
+      "required_context_checks": [
+        "Optionally confirm that, in sampled episodes, every cluster size present in the query input (1, 2, 3) appears at least once in the demonstration outputs, so the size\u2192colour mapping is evidenced. Expected to hold essentially always given constructor density."
+      ],
+      "task_id": "e8593010",
+      "factory_sha256": "a600342245e77b4dbf6d061dc3d1c16c8a492456bcff8899a42c02913518a659",
+      "constructor_sha256": "a41e8da3b762bf8e2055039a7de4275a69558d9bd909b5d615906114c9b6cf40"
+    },
+    "host_review": {
+      "decision": "accept",
+      "resolution": "Added gate requiring each query object size to have a demonstration of its recolour mapping; unchanged objects do not count as evidence.",
+      "augmentation_evidence": "All eight D4 transforms are checked in audit; d4=7 is its final loop index. Palette is bijective and shared across all episode pairs.",
+      "limitations": "Finite execution/domain evidence, not proof of unrestricted generalization or complete identifiability."
+    }
+  }
+}

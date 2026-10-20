@@ -5,6 +5,58 @@ from .program_targets import make_record
 
 
 class ColourEvidenceTests(unittest.TestCase):
+    def test_command_strip_requires_query_command_shapes(self):
+        from tasks import task_e6de6e8f as gen
+        weak = gen.generate(commands=[-1, -1, -1, 0, 0])
+        teacher = gen.generate(commands=[-1, 1, 1, 0, 0])
+        query = gen.generate(commands=[1, 0, 1, 0, 1])
+        for d4 in range(8):
+            pal = [3, 9, 0, 7, 2, 8, 1, 6, 4, 5]
+            a, t, q = apply_episode([weak, teacher, query], d4, pal)
+            with self.assertRaises(MissingColourEvidence):
+                require_colour_evidence('e6de6e8f', [a], [{'input': q['input']}], pal, d4)
+            require_colour_evidence('e6de6e8f', [a, t], [{'input': q['input']}], pal, d4)
+
+    def test_object_size_mapping_is_not_inferred_from_other_sizes(self):
+        weak = {'input': [[0, 5, 0]], 'output': [[3, 5, 3]]}
+        teacher = {'input': [[0, 0, 5]], 'output': [[2, 2, 5]]}
+        query = {'input': [[5, 0, 0]], 'output': [[5, 2, 2]]}
+        for d4 in range(8):
+            pal = [3, 9, 0, 7, 2, 8, 1, 6, 4, 5]
+            a, t, q = apply_episode([weak, teacher, query], d4, pal)
+            with self.assertRaises(MissingColourEvidence):
+                require_colour_evidence('e8593010', [a], [{'input': q['input']}], pal, d4)
+            require_colour_evidence('e8593010', [a, t], [{'input': q['input']}], pal, d4)
+            fake = dict(t, output=t['input'])
+            with self.assertRaises(MissingColourEvidence):
+                require_colour_evidence('e8593010', [a, fake], [{'input': q['input']}], pal, d4)
+
+    def test_lattice_crossing_colour_requires_actual_crossing(self):
+        from tasks import task_e760a62e as gen
+        common = dict(size=10, length=2, row_offset=0, col_offset=1, colors=[2, 2, 3, 3])
+        weak = gen.generate(**common, rows=[0, 0, 2, 2], cols=[0, 2, 0, 2])
+        teacher = gen.generate(**common, rows=[1, 1, 0, 2], cols=[0, 2, 1, 1])
+        for d4 in range(8):
+            pal = [3, 9, 0, 7, 2, 8, 1, 6, 4, 5]
+            a, t = apply_episode([weak, teacher], d4, pal)
+            with self.assertRaises(MissingColourEvidence):
+                require_colour_evidence('e760a62e', [a], [{'input': t['input']}], pal, d4)
+            require_colour_evidence('e760a62e', [a, t], [{'input': t['input']}], pal, d4)
+            require_colour_evidence('e760a62e', [a], [{'input': a['input']}], pal, d4)
+
+    def test_rectangular_overlay_priority_uses_transitive_demo_evidence(self):
+        from tasks import task_e99362f0 as gen
+        def pair(inks):
+            return gen.generate(**{key: [int(colour in inks)]+[0]*19
+                                   for key, colour in (('top', 7), ('upper', 9),
+                                                       ('lower', 2), ('bottom', 8))})
+        for d4 in range(8):
+            pal = [3, 9, 0, 7, 2, 8, 1, 6, 4, 5]
+            a, t, q = apply_episode([pair({2, 9}), pair({9, 7}), pair({2, 7})], d4, pal)
+            with self.assertRaises(MissingColourEvidence):
+                require_colour_evidence('e99362f0', [a], [{'input': q['input']}], pal, d4)
+            require_colour_evidence('e99362f0', [a, t], [{'input': q['input']}], pal, d4)
+
     def test_symmetric_folded_demos_do_not_choose_output_side(self):
         # A truly symmetric output leaves which side to keep unresolved.
         weak = {'input': [[1, 1, 5, 0, 0]], 'output': [[1, 1]]}

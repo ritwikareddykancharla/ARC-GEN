@@ -1,0 +1,56 @@
+{
+  "task_id": "e76a88a6",
+  "factory_sha256": "951c3de7188a7715d0cf2076671a401efe52c09075e03028ec52020c9822f902",
+  "constructor_sha256": "c555052f952aeb8b76e3d7bb3ff40b67c5ab090fcfecaad73e31c08927c97841",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 135683211095198,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 7.862912584096193,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The constructor draws one two-colour sprite and 2-3 same-size solid grey copies. The copies are separated from the sprite and from each other by at least one row or column gap. The output replaces each grey block with the sprite, cell for cell. A D4 transform moves the sprite and every grey block rigidly together. So in visible coordinates every grey block is still exactly the transformed sprite's footprint. Stamping the visible template at each grey component's visible top-left corner therefore gives the transformed answer directly, and no axis or direction needs to be specialised for d4. The palette only changes the role constants: background is palette[0] and grey is palette[5], both baked into the emitted program. The template is the bounding box of all cells that are neither background nor grey. Each 4-connected grey component is found and the template is copied over its bounding box, clipped to the component and the grid. Grey blocks touching the grid border are handled by the bounds checks. Template dimensions are cross-checked against the most common grey-block size. If the sprite bbox is smaller (possible only if a sprite colour equalled background), the window is widened to the grey-block size and clamped inside the grid.",
+    "limitations": "Assumes the sprite colours never include the background colour (original 0) or grey (original 5); the generator excludes grey explicitly. I believe common.random_colors also excludes 0, but this is not verified. If 0 were allowed and a whole edge row or column of the sprite were background, the template position would be ambiguous. The program then takes the window anchored at the sprite's top-left, clamped to the grid; the host should confirm this case cannot arise. Constructor note for host review: the overlap test uses '> height' and '> width', which forces at least a one-cell gap between sprites. That keeps grey blocks as separate 4-connected components, and the program relies on this. There is no hidden tie-break or indexing defect affecting the answer. The demonstrations are not needed and are ignored. No tests were run.",
+    "independent_source_review": {
+      "verdict": "accept",
+      "mechanism": "One two-colour sprite (3x3, 3x4 or 4x3) plus 2-3 solid grey blocks of exactly the same size, separated from each other and from the sprite. In the output every grey block is overwritten cell-for-cell with the sprite, anchored at the block's top-left corner. The emitted solver finds the template as the bounding box of the cells that are neither BG nor GREY. It then stamps that template onto the bounding box of each 4-connected GREY component, working directly in visible coordinates.",
+      "evidence": [
+        "Constructor colours: `common.random_colors(2, exclude=[common.gray()])` samples from `list(range(1, 10))` with 5 removed. Sprite colours therefore never equal 0 (background) or 5 (grey). This settles the open question in the prior limitations: 0 is excluded by construction.",
+        "Because every sprite cell is non-background and non-grey, the `pm` bounding box in the factory equals the full sprite rectangle. So (ph, pw) equals the sprite dimensions.",
+        "Grey blocks are written with the same height and width as the sprite. So every grey bbox equals the sprite size, `sizes.most_common` returns that size, and th, tw = ph, pw. The max/clamp widening branch is a no-op in the constructor's domain.",
+        "Separation: the overlap loop skips a pair only when `abs(rows[j]-rows[i]) > height` or `abs(cols[j]-cols[i]) > width`. Kept placements therefore have a gap of at least one row or one column. Grey blocks cannot be 4-adjacent to each other, so each 4-connected grey component is exactly one block.",
+        "Background: a 10x10 grid with at most 4*12 = 48 sprite or grey cells leaves at least 52 background cells. The factory bakes BG = palette[0] and GREY = palette[5]; these are genuine role constants, and the palette maps the excluded colours consistently.",
+        "D4: the sprite and all grey blocks transform rigidly together. In visible coordinates each block is still the footprint of the visible sprite, and its output content is the visible (transformed) sprite. Stamping at the visible top-left is therefore correct with no orientation specialisation. There is no untransform/retransform wrapper.",
+        "Approved fixtures match the constructor's validate() calls. The archived rule describes the same stamping behaviour.",
+        "No hidden random latent affects the labels. Output depends only on the visible sprite and the grey positions. There are no ties, no colour lookups, and no fixture-specific branches.",
+        "Host audit passed: 1000 fresh pairs, 8000 augmented checks and 16 fixture variants, with no sampler rejections."
+      ],
+      "blocking_issues": [],
+      "nonblocking_limits": [
+        "Demonstrations are ignored. This is acceptable because the rule is fully determined by the query input and needs no colour or shape association evidence. task_id e76a88a6 is not in the episode colour-evidence list, and none is needed.",
+        "The defensive window-widening and clamping path, and the early return when there are no grey components or no pattern, are unreachable under the constructor. They are out-of-domain fallbacks.",
+        "The constructor fixes the grid at 10x10 with sprite dimensions in {3,4} (excluding 4x4). The solver is only verified within this domain.",
+        "The sprite may come out monochrome, since each pixel is chosen independently from the two colours. The solver handles this correctly."
+      ],
+      "required_context_checks": [
+        "Confirm the host D4 augmentation applies a single rigid transform to the whole grid, input and output together, as assumed for top-left anchoring in visible coordinates.",
+        "Confirm the palette augmentation maps colour roles bijectively, so palette[0] and palette[5] remain the background and grey roles and the sprite colours never collide with them."
+      ],
+      "task_id": "e76a88a6",
+      "factory_sha256": "951c3de7188a7715d0cf2076671a401efe52c09075e03028ec52020c9822f902",
+      "constructor_sha256": "c555052f952aeb8b76e3d7bb3ff40b67c5ab090fcfecaad73e31c08927c97841"
+    },
+    "host_review": {
+      "decision": "accept",
+      "resolution": "Reviewed constructor invariants, visible-coordinate solver, fixture agreement and documented out-of-domain branches. Source hashes match passing audit.",
+      "augmentation_evidence": "All eight D4 transforms are checked in audit; d4=7 is its final loop index. Palette is bijective and shared across all episode pairs.",
+      "limitations": "Finite execution/domain evidence, not proof of unrestricted generalization or complete identifiability."
+    }
+  }
+}

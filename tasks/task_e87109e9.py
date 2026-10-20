@@ -85,7 +85,10 @@ def _trace(body, bg, square, legend):
     dy, dx = d
     seen = set()
     turned = False
-    for _ in range(2000):
+    # The state is a window position and one of four directions. Every step
+    # either exits, stops at an unknown colour, or visits a new finite state;
+    # the repeated-state check below terminates cycles without truncating paths.
+    while True:
       state = (y, x, dy, dx)
       if state in seen:
         stats["loop"] = True

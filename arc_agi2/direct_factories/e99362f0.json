@@ -1,0 +1,53 @@
+{
+  "task_id": "e99362f0",
+  "factory_sha256": "acc7c1b6ad709be32c92f6c991fe53f8135f594bab87d72f803a88e13d637ced",
+  "constructor_sha256": "86ae519deedfadddb58a56e249affc736fbe471a1702da62cbcd6ee32cbb8db9",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 202681032550440,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 10.534795874962583,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The generator draws a full divider row and a full divider column, both colour 4, through the centre of a (2h+1)x(2w+1) grid. This splits the grid into four equal h x w panels. Each panel holds one colour (7, 9, 2 or 8) on background 0. The output is the four panels overlaid in local coordinates, painted in the order 2, then 9, then 7, then 8; later colours overwrite earlier ones.\n\nAny D4 transform maps the centre cross to itself and maps each panel onto a panel position. It applies the same local transform to every panel and to the output. So in visible coordinates the mechanism stays the same: a cross of colour palette[4] splits the grid into four equal panels, and they are overlaid with priority palette[2] < palette[9] < palette[7] < palette[8].\n\nThe emitted program works only in visible coordinates and does not use the demonstrations:\n1. It finds the all-divider-colour row and column. If several qualify it takes the one nearest the centre; if none is found it falls back to the centre index.\n2. It crops the four quadrants.\n3. It paints each panel's cells onto a background canvas in the palette-mapped priority order, so colours are identified by value rather than by panel position.\n\nd4 does not change any constant, because the rule has no preferred axis.",
+    "limitations": "The priority order is a fixed palette-mapped constant taken from the generator's paint order; it is not inferred from the demonstrations. Panels are assumed to be equal-sized; if they are not, they are cropped to the common minimum size. Any unexpected colour outside the four known panel colours is painted below all known colours. I found no fixture contradictions and no constructor defects; the archived solver's colour-keyed priority matches the generator's paint order. Not executed or tested by me.",
+    "independent_source_review": {
+      "verdict": "accept",
+      "mechanism": "The input is a (2h+1)x(2w+1) grid with h=5, w=4. A full row (index h) and a full column (index w) of colour 4 cross at the exact centre and split it into four h x w panels. The panels are TL=7, TR=9, BL=2 and BR=8, each on background 0, and each cell is set independently with probability 1/2. The output is the per-cell overlay of the four panels in local coordinates, painted 2, then 9, then 7, then 8, with later colours overwriting earlier ones. So the priority is 2 < 9 < 7 < 8, keyed by colour value. The emitted program finds the all-DIV row and column, crops the four quadrants, and paints each panel's cells onto a BG canvas in ORDER = palette[2,9,7,8]. It works directly on the visible grid.",
+      "evidence": [
+        "Constructor paint order is fixed by source order: the `lower` loop writes output 2, then `upper` writes 9, then `top` writes 7, then `bottom` writes 8. Every write is `output[i // width][i % width]`, the same local coordinate as the panel cell. So the label depends only on the visible input bits and a fixed task-level priority. No hidden random latent affects the label.",
+        "Indexing checks: `top` uses `grid[i//w][i%w]`, `upper` uses `grid[i//w][w+1+i%w]`, `lower` uses `grid[h+1+i//w][i%w]` and `bottom` uses `grid[h+1+i//w][w+1+i%w]`. All four panels sit at the same local offsets, so the overlay is aligned. The comment that labels `bottom` as 'top grid' is a docstring typo only.",
+        "D4 equivariance: H=11 and W=9 are odd and the dividers sit at the exact centres (5 and 4). Every D4 element therefore maps the cross onto itself and each quadrant onto a quadrant. It applies the same local transform to every panel and to the output. Because priority is keyed by colour value, not by panel position, the output transforms consistently. Leaving the D4 constant unused is legitimate, and there is no untransform/solve/retransform wrapper.",
+        "Divider uniqueness: panel cells only take the palette images of colours 0, 2, 7, 8 and 9, never palette[4]. So exactly one all-DIV row and one all-DIV column exist. The nearest-centre tie-break and the `n // 2` fallback are unreachable.",
+        "Quadrant crops `g[:dr,:dc]`, `g[:dr,dc+1:]`, `g[dr+1:,:dc]` and `g[dr+1:,dc+1:]` are all h x w, or w x h after an odd D4. The min-size crop is a no-op, and the `others` set is always empty in-domain.",
+        "The factory paints by colour value across all panels, so empty panels are harmless. The archived `layers[0]` crash on an all-empty input is avoided, and that case is astronomically unlikely anyway.",
+        "Fixture spot checks are consistent with 2<9<7<8. Pair 1 (0,1): TL=7 and BR=8 give 8. Pair 1 (2,0): TR=9 and BL=2 give 9. Pair 2 (2,1): TL=7 and TR=9 give 7.",
+        "Host audit passed: 1000 fresh pairs, 8000 augmented checks and 16 fixture variants, with no sampler rejections."
+      ],
+      "blocking_issues": [],
+      "nonblocking_limits": [
+        "The priority order is a fixed task-level constant baked into the solver. It is not inferred from demonstrations, which is allowed because it is the same in every episode.",
+        "Only fixed sizes are generated (w=4, h=5), as in the original task. The solver's handling of other sizes is unexercised.",
+        "Uneven-panel cropping and painting of unknown colours are defensive behaviours that the constructor excludes."
+      ],
+      "required_context_checks": [
+        "e99362f0 is not in `require_colour_evidence`, unlike the analogous overlay-priority task a68b268e. Direct evidence that 9 beats 2 needs a demo cell with 2 and 9 set and both 7 and 8 off, which happens with probability 1/16 per cell. With two random demos (40 cells), the chance of no such cell is about (15/16)^40 \u2248 7.6%. With three demos (60 cells) it is about 2%. In such an episode the query may still need that comparison: at least one query cell with 2 and 9 on and 7 and 8 off occurs with probability about 72%. The comparison cannot be recovered transitively, because 2 and 9 are the two lowest ranks. The host should decide whether to add a pairwise-precedence evidence check like a68b268e's, using quadrant offsets (0, h+1) by (0, w+1) and the D4-transposed panel shape. This is a context-policy issue, not a source defect."
+      ],
+      "task_id": "e99362f0",
+      "factory_sha256": "acc7c1b6ad709be32c92f6c991fe53f8135f594bab87d72f803a88e13d637ced",
+      "constructor_sha256": "86ae519deedfadddb58a56e249affc736fbe471a1702da62cbcd6ee32cbb8db9"
+    },
+    "host_review": {
+      "decision": "accept",
+      "resolution": "Added rectangular-panel precedence evidence with transitive closure, using demonstrated winners only. Any query overlap requires known pairwise ordering. Shared D4 and palette preserve evidence acceptance.",
+      "augmentation_evidence": "All eight D4 transforms are checked in audit; d4=7 is its final loop index. Palette is bijective and shared across all episode pairs.",
+      "limitations": "Finite execution/domain evidence, not proof of unrestricted generalization or complete identifiability."
+    }
+  }
+}

@@ -1,0 +1,56 @@
+{
+  "task_id": "e98196ab",
+  "factory_sha256": "9c9510b911cf9e4cec68a7e5e10d9fb10a5f2ce23a02f20e513310f3ca5e0837",
+  "constructor_sha256": "e10efc6eeed9d6702539143cb797d4a8aafaa513da4b9aff7bd97f08de309eb6",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 65447997244442,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 5.114851832971908,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The input has a full divider line of colour palette[5] that splits it into two equal halves. The output is the two halves laid on top of each other by translation; neither half is mirrored. Under D4, translation stays translation, so the emitted program works directly in visible coordinates. The divider is a row when d4%4 is even and a column when it is odd. If that axis has no divider, the program checks the other axis. It then takes the cells before the divider and the cells after it, both measured from the start of the grid. One half is copied as the canvas, and the other half's non-background cells (background is palette[0]) fill the canvas's background cells. The canvas half is the image of the original top half. Clockwise rotation sends top to top, right, bottom and left for k=0..3, and the row reversal for d4>=4 keeps it on the same side. So the canvas is the first segment when k is 0 or 3 and the second segment otherwise. This matches the archived solver's top-priority overlay. The result is the output-sized half grid.",
+    "limitations": "1) Fixture note: the rule text says the test input has a top/bottom collision at (3,10) versus (8,10). This is a misreading. Bottom row 8 maps to output row 2, so output (2,10)=6 and (3,10)=7. The test output matches a collision-free union, and nothing in the fixtures contradicts the rule. 2) The constructor gives each pixel position exactly one idx, so top and bottom cells never coincide. The 'original top half wins' priority comes from the archived solver and is never exercised. The demos never determine it, so treat it as an unobservable convention, not a puzzle rule. 3) If a randomly chosen pixel colour equalled the background (assuming common.random_colors allows 0), those pixels would be invisible in both input and output, and the overlay still matches. 4) The generator always makes equal halves (5x11 plus a divider). Halves of unequal size are aligned from the start of each half, which is not D4-equivariant. This is outside the constructor's domain. 5) If no divider is found, the program falls back to the midpoint, which is also outside the constructor's domain.",
+    "independent_source_review": {
+      "verdict": "accept",
+      "mechanism": "The input is two equal 5x11 halves separated by a full divider row of colour 5 (palette[5]). The output is a union overlay by translation: half-row r of the top and half-row r of the bottom (input row r+6) both go to output row r. The constructor writes each sampled pixel to exactly one half and to the same (r,c) in the output: `output[r][c] = grid[r + height + 1 if idx else r][c] = colors[idx]`. Positions are unique, so the halves never collide and the output is exactly their union. The emitted solver finds the divider line in visible coordinates. It splits the grid into the segment before the divider and the segment after it, each indexed from its own start. It copies one segment as the canvas and fills the canvas's BG cells with the other segment's non-BG cells.",
+      "evidence": [
+        "Constructor colours: `common.random_colors(2, exclude=[common.gray()])` samples distinct colours from 1..9 without 5. Pixel colours therefore never equal the background (0) or the divider (5). Under a palette permutation they never equal palette[0] or palette[5]. The prior-notes concern in limitation 3 (a pixel colour of 0) is unreachable.",
+        "Divider uniqueness: only grid row `height` is filled with gray. No other row or column can be entirely DIV because pixel colours exclude gray and the background is 0. `_lines` therefore returns exactly one index on the correct axis, and neither the other-axis fallback nor the midpoint fallback is reached.",
+        "D4 equivariance of the alignment. Take a 180\u00b0 rotation: augmented first-segment row i is original row 10-i (a bottom-half row), and augmented second-segment row i is original row 4-i (a top-half row). Original bottom row 10-i maps to output row 4-i, which is the same output row as top row 4-i. Augmented output row i is original output row 4-i, so the two agree. Column reversal and transposition apply equally to both halves. Translation commutes with D4, so no whole-grid untransform is needed.",
+        "PRIMARY_FIRST changes the result only where both halves are non-BG at the same aligned cell. The constructor never produces such a cell, so a wrong side mapping for some d4 could not change any label in the constructor domain.",
+        "Output shape: `prim.copy()` gives 5x11 on the row axis and 11x5 on the column axis. This matches the rotated 5x11 output.",
+        "Fixtures: test top (3,10)=7. Bottom (8,10)=6 lands on output row 2, not row 3. The fixture output has (2,10)=6 and (3,10)=7. This matches the constructor test call (idx=1, row 2, col 10) and confirms there is no collision.",
+        "No arbitrary colour association is needed: both output colours are copied from visible input cells. The task is not in `require_colour_evidence`, and nothing here needs it.",
+        "The host audit passed 1000 fresh pairs, 8000 augmented checks and 16 fixture variants."
+      ],
+      "blocking_issues": [],
+      "nonblocking_limits": [
+        "The archived rule text wrongly states that the test has a collision at (3,10) versus (8,10). Bottom row 8 maps to output row 2. The fixtures and the constructor show no collision. This is a documentation error, not a label error.",
+        "Top-wins priority (PRIMARY_FIRST) is an unobservable convention. The constructor never makes collisions, so the demos cannot determine it and the labels never depend on it. The k-to-side mapping in the factory comment was not independently checked against the host's D4 convention, because no label depends on it.",
+        "When `random_pixels` returns an empty list, `zip(*pixels)` raises inside the constructor (about 0.8^55, negligible). This is a sampler crash or rejection, not a wrong label.",
+        "The constructor can produce a pair whose bottom half or top half is entirely empty. The overlay is still well defined.",
+        "Unequal halves and missing dividers are handled by start-aligned or midpoint fallbacks that are not D4-equivariant. The constructor never produces either case."
+      ],
+      "required_context_checks": [
+        "Confirm the host D4 sampler keeps palette[0] as background and palette[5] as divider, consistent with the BG and DIV values specialised in the factory.",
+        "Standard context policy only: no colour-association evidence check applies to this task."
+      ],
+      "task_id": "e98196ab",
+      "factory_sha256": "9c9510b911cf9e4cec68a7e5e10d9fb10a5f2ce23a02f20e513310f3ca5e0837",
+      "constructor_sha256": "e10efc6eeed9d6702539143cb797d4a8aafaa513da4b9aff7bd97f08de309eb6"
+    },
+    "host_review": {
+      "decision": "accept",
+      "resolution": "Empty random pixel lists may cause bounded sampler rejection; they do not produce wrong labels. Archive claim of query collision was a prose error; uniform aligned overlay has no collisions in generated domain.",
+      "augmentation_evidence": "All eight D4 transforms are checked in audit; d4=7 is its final loop index. Palette is bijective and shared across all episode pairs.",
+      "limitations": "Finite execution/domain evidence, not proof of unrestricted generalization or complete identifiability."
+    }
+  }
+}

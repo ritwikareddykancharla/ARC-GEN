@@ -25,6 +25,22 @@ def _require_rule_agreement(task_id, demonstrations, queries, variants):
             raise MissingColourEvidence(f'{task_id}: demonstrations leave query rule ambiguous')
 
 
+def _colour_components(g, colour):
+    remaining = {(r, c) for r, row in enumerate(g) for c, ink in enumerate(row)
+                 if ink == colour}
+    while remaining:
+        component = {remaining.pop()}
+        stack = list(component)
+        while stack:
+            r, c = stack.pop()
+            for p in ((r+1, c), (r-1, c), (r, c+1), (r, c-1)):
+                if p in remaining:
+                    remaining.remove(p)
+                    component.add(p)
+                    stack.append(p)
+        yield component
+
+
 def require_colour_evidence(task_id, demonstrations, queries, palette=None, d4=0):
     if task_id not in ('6ea4a07e', '913fb3ed', '494ef9d7', '995c5fa3',
                        'a834deea', 'a9f96cdd', 'a416fc5b', 'a740d043',
@@ -35,13 +51,68 @@ def require_colour_evidence(task_id, demonstrations, queries, palette=None, d4=0
                        'd406998b', 'd2acf2cb', 'cf98881b', 'd511f180',
                        'd631b094', 'd5d6de2d', 'd90796e8', 'd364b489',
                        'dbc1a6ce', 'dc1df850', 'dd6b8c4b', 'dce56571',
-                       'e45ef808', 'e345f17b', 'e3497940'):
+                       'e45ef808', 'e345f17b', 'e3497940',
+                       'e760a62e', 'e8593010', 'e99362f0', 'e6de6e8f'):
         return
     palette = list(range(10)) if palette is None else palette
     bg = palette[0]
     colours = lambda g: {c for row in g for c in row} - {bg}
     required, seen = set(), set()
-    if task_id == 'e45ef808':
+    if task_id == 'e6de6e8f':
+        def commands(g):
+            for cells in _colour_components(g, palette[2]):
+                y0, x0 = min(r for r, c in cells), min(c for r, c in cells)
+                yield frozenset((r-y0, c-x0) for r, c in cells)
+        for demo in demonstrations:
+            seen.update(commands(demo['input']))
+        for query in queries:
+            required.update(commands(query['input']))
+    elif task_id == 'e8593010':
+        for demo in demonstrations:
+            for cells in _colour_components(demo['input'], palette[0]):
+                n = len(cells)
+                if n in (1, 2, 3) and all(demo['output'][r][c] == palette[4-n]
+                                         for r, c in cells):
+                    seen.add(n)
+        for query in queries:
+            required.update(len(cells) for cells in _colour_components(query['input'], palette[0]))
+    elif task_id == 'e760a62e':
+        def crosses(g):
+            def bands(lines):
+                groups, index = {}, -1
+                previous_divider = True
+                for i, line in enumerate(lines):
+                    divider = all(ink == palette[8] for ink in line)
+                    if not divider:
+                        if previous_divider:
+                            index += 1
+                        groups[i] = index
+                    previous_divider = divider
+                return groups
+            rows, cols = bands(g), bands(zip(*g))
+            markers = {}
+            for r, row in enumerate(g):
+                for c, ink in enumerate(row):
+                    if r in rows and c in cols and ink not in (bg, palette[8]):
+                        markers.setdefault(ink, set()).add((rows[r], cols[c]))
+            covered = {}
+            for ink, points in markers.items():
+                for r, c in points:
+                    covered.setdefault((r, c), set()).add(ink)
+                    for y, x in points:
+                        if r == y:
+                            for column in range(min(c, x), max(c, x)+1):
+                                covered.setdefault((r, column), set()).add(ink)
+                        if c == x:
+                            for row in range(min(r, y), max(r, y)+1):
+                                covered.setdefault((row, c), set()).add(ink)
+            return any(len(inks) > 1 for inks in covered.values())
+        if any(crosses(q['input']) for q in queries):
+            required.add('crossing-colour')
+        if any(crosses(d['input']) and any(palette[6] in row for row in d['output'])
+               for d in demonstrations):
+            seen.add('crossing-colour')
+    elif task_id == 'e45ef808':
         def ties(g):
             lines = list(g) if d4 % 2 else list(zip(*g))
             heights = [sum(c == palette[6] for c in line) for line in lines]
@@ -470,14 +541,15 @@ def require_colour_evidence(task_id, demonstrations, queries, palette=None, d4=0
             seen.update(c for row in demo['output'] for c in row if c in legend)
         for query in queries:
             required.update(c for row in query['input'] for c in row if c in legend)
-    elif task_id == 'a68b268e':
+    elif task_id in ('a68b268e', 'e99362f0'):
         # The four panels share a coordinate system. A demonstrated overlap
         # establishes winner > loser; transitive precedence is also evidence.
         edges = set()
         def overlays(g):
-            for r in range(4):
-                for c in range(4):
-                    yield r, c, {g[y+r][x+c] for y in (0, 5) for x in (0, 5)} - {bg}
+            h, w = len(g)//2, len(g[0])//2
+            for r in range(h):
+                for c in range(w):
+                    yield r, c, {g[y+r][x+c] for y in (0, h+1) for x in (0, w+1)} - {bg}
         for demo in demonstrations:
             for r, c, inks in overlays(demo['input']):
                 winner = demo['output'][r][c]

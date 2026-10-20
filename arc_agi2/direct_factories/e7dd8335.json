@@ -1,0 +1,57 @@
+{
+  "task_id": "e7dd8335",
+  "factory_sha256": "eee812b98427172bd3ffa74fe85cf9630e520ff0c0c7ef96b505fae989c811b1",
+  "constructor_sha256": "921e41196be4cfc3e5bf7f6b68b0ccd8949d40e6b4968f29375ec4adbbf2c664",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 208890343429851,
+  "d4": 7,
+  "unique_base_inputs": 999,
+  "seconds": 4.012879958958365,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The constructor builds one figure of colour 1 on a background of 0. The figure always has an even height and is mirror-symmetric top to bottom. In the output, every figure cell in the lower half of the figure's bounding box becomes 2.\n\nUnder D4, a horizontal flip leaves 'down' unchanged. Each clockwise rotation turns 'down' into left, then up, then right. The factory therefore picks the axis and side from d4 % 4 and emits code that works directly on the visible grid:\n- down: recolour rows from y0 + h//2 onward.\n- up: recolour rows up to y1 - h//2.\n- right: recolour columns from x0 + w//2 onward.\n- left: recolour columns up to x1 - w//2.\n\nThe bounding box is computed over all non-background cells, so disconnected pieces count as one figure. The colour roles are constants: background is palette[0], figure is palette[1] and the new colour is palette[2]. Only non-background cells inside the selected half are recoloured.",
+    "limitations": "The background is taken as the constant palette[0] rather than the most common colour. The two agree under this generator, and the constant avoids failures when the figure is large. The generator always produces an even extent along the split axis, so the half-split is exact. If the extent were odd, the emitted program would include the middle line in the recoloured half, matching the archived solver's floor convention mirrored for each orientation. No fixture contradictions and no constructor defects were found. The program assumes the query contains only background and figure colours, as the generator guarantees.",
+    "independent_source_review": {
+      "verdict": "accept",
+      "mechanism": "One foreground figure (colour 1) sits on background 0. The output recolours every foreground cell in the lower half of the figure's row bounding box to colour 2. The constructor builds a top-bottom mirror-symmetric sprite of even height `tall`, with every sprite row covered. It writes row < tall//2 as 1 and the rest as 2, so the visible bounding box is exactly rows brow..brow+tall-1 and the split falls at brow + tall//2. The factory emits a direct visible-coordinate solver. It takes the full bounding box of all non-BG cells and recolours the half on the side given by a DIRECTION constant chosen from d4 % 4.",
+      "evidence": [
+        "Constructor: `tall = 2 * common.randint(2, height // 2 - 1)` forces an even height. The smallest height is 6, which gives height//2-1 = 2 and tall = 4, so the range is never empty. `wide = randint(3, width-1)` needs width >= 4, and the smallest width is 6.",
+        "Constructor rejection loop: `if not covered: good = False` ensures every sprite row holds a pixel. The visible row extent therefore equals `tall`, and the label split `row < tall // 2` can be recovered from the visible input. No hidden latent decides the label.",
+        "Mirror placement `sprite[row][col] = sprite[tall-row-1][col] = 1` keeps coverage symmetric. This does not affect the visible rule.",
+        "The label depends only on row index within the bounding box. The column extent and diagonal connectivity are irrelevant to the label, and the solver correctly ignores x for the down/up branches.",
+        "Factory 'down' branch: `sel[y0 + h//2:, :]` matches the archived `mask[:mid]=False` with `mid = y0 + h//2`.",
+        "Factory 'up' branch: `sel[:y1 - h//2 + 1]` equals rows < y0 + h/2 when h is even, which is the exact mirrored half. The 'left' and 'right' branches are the same on the column axis.",
+        "Only `mask & sel` cells change, so background inside the selected half is preserved. This matches the constructor, which never colours background.",
+        "BG, FG and TARGET are fixed palette roles: palette[0], palette[1] and palette[2]. TARGET appears in every demonstration output because each demonstration's lower half is non-empty. The colour is therefore taught by the episode and is not an arbitrary lookup without evidence.",
+        "All four fixture pairs follow the stated rule. In the test, rows 2\u20137 have h = 6, so rows 5\u20137 become 2, including the left block's lower row and its disconnected pieces. The solver's all-foreground bounding box handles this case.",
+        "There is no whole-grid untransform/solve/retransform wrapper. Specialising the orientation constant for a deterministic spatial rule is allowed.",
+        "The host audit passed 1000 fresh pairs, 8000 augmented checks (consistent with all 8 D4 variants) and 16 fixture variants, with no sampler rejections."
+      ],
+      "blocking_issues": [],
+      "nonblocking_limits": [
+        "Odd extents along the split axis are unreachable from the constructor. The factory's floor/mirrored convention for that case is a defensive choice and not a demonstrated rule.",
+        "Background is the constant palette[0] rather than the most common colour. This is consistent with the constructor and the palette mapping.",
+        "Diversity is moderate: one figure, one colour, grids 6\u201312 per side. This is inherent to the task and is not a defect."
+      ],
+      "required_context_checks": [
+        "Confirm the host D4 convention maps native 'down' to left/up/right for d4 % 4 = 1, 2, 3, and that d4 >= 4 applies the reflection so that it preserves the vertical axis direction before rotation. The rotation direction and flip order cannot be verified from the factory source alone. The passing 8000 augmented checks strongly suggest the convention is consistent.",
+        "Confirm that the context policy rejecting D4 variants with conflicting query answers does not apply here. The figure is mirror-symmetric, but the demonstration outputs fix which half recolours, so no conflict is expected."
+      ],
+      "task_id": "e7dd8335",
+      "factory_sha256": "eee812b98427172bd3ffa74fe85cf9630e520ff0c0c7ef96b505fae989c811b1",
+      "constructor_sha256": "921e41196be4cfc3e5bf7f6b68b0ccd8949d40e6b4968f29375ec4adbbf2c664"
+    },
+    "host_review": {
+      "decision": "accept",
+      "resolution": "Reviewed constructor invariants, visible-coordinate solver, fixture agreement and documented out-of-domain branches. Source hashes match passing audit.",
+      "augmentation_evidence": "All eight D4 transforms are checked in audit; d4=7 is its final loop index. Palette is bijective and shared across all episode pairs.",
+      "limitations": "Finite execution/domain evidence, not proof of unrestricted generalization or complete identifiability."
+    }
+  }
+}

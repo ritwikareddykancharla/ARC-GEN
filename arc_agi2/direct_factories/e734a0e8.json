@@ -1,0 +1,53 @@
+{
+  "task_id": "e734a0e8",
+  "factory_sha256": "0ca1b3ff6906edb80b28dd18352227b2092ad06e3682fd37734872d4f5c9ee3b",
+  "constructor_sha256": "feb6dde6cda158b35beed9b63c58348b0e48be206edf24855471a120a5ea483f",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 83000037502031,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 15.182447124971077,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The emitted program works directly on the visible grid. It specializes two colour roles: the divider/marker colour DIV = palette[0] and the panel background BG = palette[7]. Divider lines are the full rows and full columns made entirely of DIV. The panels are the maximal spans between those lines. The pattern panel is the first panel that contains a colour other than BG and DIV. Every other panel with the same shape that contains a DIV cell (the stray marker dot) is overwritten wholesale by a copy of the pattern panel. Copying a panel is a pure translation between equal-sized panels on a regular lattice. Every D4 transform maps dividers to dividers, panels to panels and the pattern's offset inside its panel consistently, so no axis or direction needs specializing. d4 is accepted but has no effect, and no rotation or colour-unpermutation wrapper is used. Panels without a dot and the pattern panel itself are left untouched.",
+    "limitations": "The constructor calls common.random_color(exclude=[7]) for the motif colour without visibly excluding 0. If that helper can return 0, the motif would share the divider/marker colour and the pattern panel could not be told apart by colour alone. The emitted program then falls back to the unique panel with more than one DIV cell. A single-pixel colour-0 motif at the panel centre would be indistinguishable from a marker dot. That would be a constructor ambiguity requiring host review. Divider detection assumes no full grid row or column is entirely the divider colour except the true dividers. This holds in the generator domain because megasize is at least 3 and the motif occupies one panel. No tests were run.",
+    "independent_source_review": {
+      "verdict": "accept",
+      "mechanism": "The grid is a square lattice of minisize\u00d7minisize panels (3 or 5) separated by full divider lines of colour 0, with megasize 3 or 4 panels per side. Exactly one panel holds a motif in a colour from random_color(exclude=[7]), i.e. 1..9 minus 7, on background 7. Each marked panel (dots value 1) has a single 0 at its centre. In the output, every marked panel is replaced by a copy of the pattern panel; other panels are unchanged. The emitted solver specializes DIV=palette[0] and BG=palette[7]. It finds dividers as rows/columns made entirely of DIV, splits the grid into panels, takes the first panel containing a colour other than BG and DIV as the pattern, and overwrites every other same-shaped panel that contains a DIV cell.",
+      "evidence": [
+        "common.random_color builds colors = list(range(1, 10)) and then removes 7, so the motif colour is never 0 (DIV) and never 7 (BG). The pattern panel is always identified by colour, and the factory's fallback branch (pat is None) is unreachable in the generator domain.",
+        "The constructor's loop `if len(set(dots)) == 3` guarantees exactly one pattern panel (the single 2), at least one dot panel and at least one empty panel. The pattern-loop guard `pixels and diagonally_connected(pixels)` guarantees at least one motif pixel.",
+        "False dividers are impossible. A full row of 0 would need every panel cell in that row to be 0, but each panel holds at most one 0 (its centre dot), megasize \u2265 3 and minisize \u2265 3. The same argument holds for columns.",
+        "The pattern panel never contains 0, because the pattern uses only `color` and 7. Dot panels always contain the centre 0. So `np.any(sub == DIV)` selects exactly the dot==1 panels, and those are exactly the panels whose output the constructor sets to the pattern.",
+        "Dividers sit at (minisize+1)k\u22121. Under a flip, position p maps to size\u22121\u2212p = (minisize+1)(megasize\u2212k)\u22121, so every D4 transform maps the lattice to itself. Panels are equal-sized squares, and replacing a whole panel commutes with D4. The centre dot stays central because minisize is odd. The solver therefore works directly in augmented coordinates with no untransform wrapper, and d4 is correctly unused.",
+        "Replaying validate(): dots '0100010000211001' (megasize 4) and '200010011' / '002010101' (megasize 3) reproduce the approved fixtures' dot and pattern panel positions.",
+        "There is no hidden latent label: the output depends only on the visible pattern panel and the visible marker cells.",
+        "No colour lookup association is involved; the motif colour is copied verbatim. The task is not covered by the episode colour-evidence checks, and none is needed.",
+        "The host audit passed 1000 fresh pairs and 8000 augmented checks, consistent with this source analysis."
+      ],
+      "blocking_issues": [],
+      "nonblocking_limits": [
+        "The prior note says random_color might return 0. This is incorrect: per common.py the range is 1..9, so the colour-0 motif ambiguity it describes cannot arise in the generator domain.",
+        "The 'unique panel with >1 DIV cell' fallback in the factory is dead code under this constructor. It is harmless but untested.",
+        "The archived program infers background as the most common colour, while the factory hardcodes palette[7]. Both are correct in the domain because 7 always dominates the panels.",
+        "The solver assumes a single pattern panel and single-cell markers; inputs outside the constructor domain (multiple motif panels, motif touching DIV colour) are not handled meaningfully."
+      ],
+      "required_context_checks": [],
+      "task_id": "e734a0e8",
+      "factory_sha256": "0ca1b3ff6906edb80b28dd18352227b2092ad06e3682fd37734872d4f5c9ee3b",
+      "constructor_sha256": "feb6dde6cda158b35beed9b63c58348b0e48be206edf24855471a120a5ea483f"
+    },
+    "host_review": {
+      "decision": "accept",
+      "resolution": "Reviewed constructor invariants, visible-coordinate solver, fixture agreement and documented out-of-domain branches. Source hashes match passing audit.",
+      "augmentation_evidence": "All eight D4 transforms are checked in audit; d4=7 is its final loop index. Palette is bijective and shared across all episode pairs.",
+      "limitations": "Finite execution/domain evidence, not proof of unrestricted generalization or complete identifiability."
+    }
+  }
+}

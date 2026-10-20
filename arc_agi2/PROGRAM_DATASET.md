@@ -1590,3 +1590,8 @@ aa300dc3 now learns full-diagonal versus contiguous-run interpretation and visib
 ### Verified program coverage: 1,075 / 1,120
 
 afe3afe9 uses demos to distinguish packing toward the marked colour from clockwise/counterclockwise packing relative to the border. Both native handednesses remain. Independent component decoder checks the vectorized target. Audit: 1,000 unique fresh pairs, 8,000 augmented checks, 16 fixture variants. Full quota: 1,000 bases, 8,000 verified combined records, 515 clockwise-aligned and 485 counterclockwise-aligned queries, 134 context retries, zero shortfalls. Six focused tests and all 596 regression tests passed. 45 program families remain. Expanded bulk generation and training have not launched.
+
+
+### Verified program coverage: 1,077 / 1,120
+
+72ca375d now learns symmetry predicates from demonstrations; transverse-symmetric decoys remain. 3a301edc now requires agreement among demonstrated band-thickness rules; original non-square fixture stays unchanged. Both pass 1,000 fresh pair audits, 8,000 augmented checks and 16 fixture variants. Full-quota assembly produces 1,000 fresh bases each: 8,000 symmetry records (110 transverse-decoy queries) and 7,996 band records (four equivalent variants removed, with independent transform-group checks). No quota shortfalls. All 608 tests pass. 43 program families remain. These local audits are not the expanded published dataset.

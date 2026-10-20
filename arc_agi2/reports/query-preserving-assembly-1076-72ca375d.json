@@ -1,0 +1,90 @@
+{
+  "task_id": "72ca375d",
+  "scope": "Local full-quota production-assembler audit only.1200unique native pool pairs,1000requested fresh bases. Grid pool then combined program/grid make_record on every augmented row; temporary audit rows removed,no public dataset or training launched.",
+  "pool_pairs": 1200,
+  "pool_draws": 1200,
+  "constructor_sha256": "8c30216d3bc4a63ec73203622bf5f645a59bb2223fb8f464c45881f36da2cdf1",
+  "metrics": {
+    "shards": [],
+    "episodes": 8000,
+    "fresh_episodes": 1000,
+    "requested_fresh_episodes": 1000,
+    "spatial_variant_upper_bound": 8000,
+    "symmetric_variants_removed": 0,
+    "variants_per_fresh_episode": {
+      "8": 1000
+    },
+    "query_histograms": {
+      "input": {
+        "height": {
+          "10": 8000
+        },
+        "width": {
+          "10": 8000
+        },
+        "longest": {
+          "10": 8000
+        },
+        "shapes": {
+          "10x10": 8000
+        }
+      },
+      "output": {
+        "height": {
+          "4": 1472,
+          "2": 3328,
+          "3": 2248,
+          "5": 760,
+          "1": 192
+        },
+        "width": {
+          "2": 3328,
+          "4": 1472,
+          "3": 2248,
+          "5": 760,
+          "1": 192
+        },
+        "longest": {
+          "4": 2944,
+          "3": 2384,
+          "5": 1520,
+          "2": 1152
+        },
+        "shapes": {
+          "4x2": 748,
+          "2x4": 748,
+          "3x2": 808,
+          "2x3": 808,
+          "5x2": 760,
+          "2x5": 760,
+          "1x4": 20,
+          "4x1": 20,
+          "3x4": 704,
+          "4x3": 704,
+          "3x3": 704,
+          "2x2": 872,
+          "1x3": 32,
+          "3x1": 32,
+          "2x1": 140,
+          "1x2": 140
+        }
+      }
+    },
+    "relations": {
+      "shrink": 8000
+    },
+    "failures": {
+      "missing_colour_evidence_attempts": 261
+    },
+    "query_context_shortfalls": [],
+    "max_query_reuse_in_fresh_episodes": 1,
+    "max_pair_reuse_in_fresh_episodes": 13,
+    "distinct_inputs_used": 1173
+  },
+  "base_query_types": {
+    "all_predicates_agree": 890,
+    "transverse_symmetric_decoy": 110
+  },
+  "verified_program_grid_records": 8000,
+  "seconds": 26.25916804105509
+}

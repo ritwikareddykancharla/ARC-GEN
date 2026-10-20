@@ -1,0 +1,29 @@
+{
+  "task_id": "72ca375d",
+  "factory_sha256": "d99c93a69adcddce4c3b29fa5db1c4a8959477abf2562d973343cb95e728d941",
+  "constructor_sha256": "8c30216d3bc4a63ec73203622bf5f645a59bb2223fb8f464c45881f36da2cdf1",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "context_retries": 51,
+  "sampler_rejections": [],
+  "audit_scope": "250 fresh queries held fixed while resampling3demo context using visible object symmetry evidence only; no query labels in admission; all four pairs executed under8D4per acceptedepisode.",
+  "unique_base_inputs": 1000,
+  "seconds": 3.8200659579597414,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Host-authored direct program with constructor/source review, source restrictions and execution verification.",
+  "draft_notes": {
+    "author": "host",
+    "explanation": "Enumerate left-right,top-bottom and180degree symmetry of each colour bounding-box mask. Each hypothesis keeps every matching object. Fit only hypotheses whose sole prediction equals every demo output; all remaining query predictions must agree. No hidden D4 axis or scan-order fallback.",
+    "limitations": "Three explicit symmetry predicates. Native sampler targets are symmetric about both axes; canonical fixtures also contain single-axis targets. The program supports both. Ambiguous contexts reject; context resampling keeps query fixed.",
+    "host_review": {
+      "status": "reviewed",
+      "constructor_unchanged": true,
+      "normalization": "common.continuous_creature always starts at(0,0) and excludes negative coordinates, so native predicates use true bounding boxes.",
+      "reason": "Remove rotational tie preference and fixed D4 axis. Retain transverse-symmetric decoys and original single-axis fixtures.",
+      "audit": "1000 unique fresh pairs,8000augmented checks,16fixture variants;51context retries. Six focused tests preserve transverse-symmetric decoys, counterfactual axes, canonical single-axis shapes and reject ties. Full quota1000bases/8000records,110transverse-decoy queries,261context retries,zero shortfalls."
+    }
+  }
+}

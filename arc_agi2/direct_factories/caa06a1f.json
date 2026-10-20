@@ -1,0 +1,23 @@
+{
+  "task_id": "caa06a1f",
+  "factory_sha256": "6708c71613fdfaa2e10113c1d20f7616670799f686b2572291227131c6549b3b",
+  "constructor_sha256": "b573c5a3b37e8da595075b81186add6efe51e274c882ebef31cb9b32928cdd9a",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 126623733591036,
+  "d4": 7,
+  "unique_base_inputs": 991,
+  "seconds": 4.795948707964271,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "In the original orientation, the constructor puts a periodic pattern P(r,c) = colors[(r%2 + c) % k] in the top-left square. The remaining rows and columns are filled with a frame colour b, which is never one of the pattern colours. The output is P(r, c+1) on every cell. That means the pattern, extended periodically, advanced one step along the original column axis.\n\nThe factory pushes the original origin (0,0) and the step (0,1) through the D4 transform. This gives two specialised values:\n- the visible corner opposite the pattern origin, which always holds frame colour because border >= 1;\n- the visible step vector (SY, SX), the direction in which the pattern advances.\n\nThe emitted program works only in visible coordinates:\n1. Read the frame colour f from the specialised opposite corner.\n2. Take the bounding box of the non-f cells. This is the visible pattern rectangle.\n3. Find the smallest vertical and horizontal periods of that tile.\n4. Fill every cell with the tile value at ((y+SY-y0) mod py, (x+SX-x0) mod px).\n\nThe pattern is a true doubly periodic lattice, so its periodic extension in visible axes equals the original infinite pattern. The step vector reproduces the +1 column shift in whatever direction it now points. For the 3-colour case this direction matters: a mirrored or rotated grid needs the reversed or transposed step. Colours and the frame are inferred from pixels, so the palette needs no constants.",
+    "limitations": "Possible defects and items for host review:\n- **Untested code.** I have not run the factory or the emitted programs on the fixtures or on fresh pairs.\n- **Assumes the generator's domain.** The program relies on the generator's guarantees: the frame colour is not a pattern colour, border >= 1, and the pattern square is at least 3 cells wide. With k=3 colours (size >= 12) the square is at least 6 wide, so the smallest observed tile periods equal the true periods. If a tile were too small to show its period, the program would fall back to the tile length.\n- **The rule text has an error.** It says that shifting the 3-colour test pattern by +1 in y gives the same result as shifting by +1 in x. That is false for odd rows, because the pattern repeats every 2 rows: P(r+1,c) != P(r,c+1) when r is odd. The fixtures agree with the generator's x-shift, and this factory follows the generator. The error does not change any label, but the shift direction must be the transformed column direction, which the factory supplies from d4.\n- **Fixture order differs.** The constructor's validate() lists the train pairs in a different order from the approved fixtures. This is harmless.\n- **No other contradictions.** The fixtures otherwise match one uniform rule, and there are no tie-breaks or random hidden choices that affect the answer.",
+    "host_review": "Keep native size-to-colour coupling and all explicit labels. Infer frame from full uniform row/column intersection, read row/column periods, compare four unit shifts against demonstrations and require same-query agreement. Canonical train pairs are checkerboards and do not disambiguate the three-colour canonical query: original fixture remains immutable, flag ambiguity, no grandfathering in training exporter. Generated episodes with a distinguishing three-colour demo are accepted. No generator num_colors hook needed.",
+    "semantic_draft_review": "Opus5.5 subscription CLI reviewed; episode evidence implemented without per-pair narrowing or fixture overrides."
+  }
+}

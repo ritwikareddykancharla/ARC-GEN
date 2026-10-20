@@ -1,0 +1,35 @@
+{
+  "task_id": "caa06a1f",
+  "fixture_sha256": "009dd17da0e9a2159a4e5c5da81cc6fa4a49b9c007572d30d0a6e12bc0035969",
+  "original_labels_changed": false,
+  "canonical_episode_admissible_for_training": false,
+  "fitting_shift_indices": [
+    0,
+    1,
+    2,
+    3
+  ],
+  "directions": [
+    [
+      0,
+      1
+    ],
+    [
+      0,
+      -1
+    ],
+    [
+      1,
+      0
+    ],
+    [
+      -1,
+      0
+    ]
+  ],
+  "distinct_query_predictions": 3,
+  "canonical_label_matches": [
+    0
+  ],
+  "explanation": "Checkerboard demonstrations fit all four unit shifts. The three-colour query has three different predictions. Preserve original benchmark labels; require distinguishing demonstration evidence in synthetic training episodes."
+}

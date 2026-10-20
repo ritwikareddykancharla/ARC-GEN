@@ -1,0 +1,23 @@
+{
+  "task_id": "d56f2372",
+  "factory_sha256": "f4e0fc47e81de8b79aed316ff22aa16b59aefb01a86f73bdac82d256de835976",
+  "constructor_sha256": "175854f4edb21340ba6caa71143763381e110fc3a45eda40375c8a416601251c",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 29123579419529,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 8.44020145793911,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "Mechanism, applied directly in visible coordinates:\n1. Group the non-background cells by colour, not by connected component, because a shape may be split into pieces.\n2. For each colour, take its tight bounding box and keep only that colour's cells. Every other cell becomes the background colour palette[0].\n3. Output the one crop that equals its own mirror image.\n\nHow the mirror axis is chosen from d4:\n- In original coordinates the mirror is left-right, i.e. the columns are reversed.\n- For d4 >= 4, rows are reversed first. This flip commutes with a left-right mirror, so it does not change the axis.\n- Clockwise rotation by k: when k is even the axis stays vertical, so the test reverses columns.\n- When k is odd the axis becomes horizontal, so the test reverses rows (an up-down mirror).\n\nColour handling:\n- The only colour role is the background, specialised as palette[0].\n- Shape colours are read from the pixels. No global colour remapping is done.\n- The output keeps the shape's own colour and uses background for the other cells in the crop.",
+    "limitations": "- **Uniqueness assumption.** The constructor guarantees exactly one candidate that is symmetric about the original vertical axis, and generate() raises an error otherwise. The fallback (largest symmetric candidate, else largest overall, ties broken by lowest colour value) is inherited from the archived solver. It is not a puzzle rule, and it only matters outside the constructor's domain.\n- **Background.** The background is taken as palette[0] rather than inferred. This matches the constructor, where the background is always 0.\n- **Other symmetries.** Symmetry about the other axis, or rotational symmetry, is deliberately ignored, because the constructor does not control those for distractors.\n- **Possible constructor defect for host review.** The fallback in _random_asymmetric always accepts a pattern that is not symmetric. However, nothing stops a distractor from matching the chosen pattern's shape, or from being degenerate. This does not affect the rule.\n- **Fixtures.** The fixtures are consistent with the uniform rule. I found no contradictions.\n- **Testing.** No tests have been run.",
+    "host_review": "Keep native doubly symmetric shapes and original direct factory. Compare unique colour-crop selection under both visible reflection axes. Retain hypotheses fitting demonstrations and defined on every query; require identical predictions. No largest-object or lowest-colour fallback enters the evidence test. No per-pair axis-disambiguation filter.",
+    "semantic_draft_review": "Opus5.5 subscription CLI reviewed; episode evidence implemented without per-pair narrowing or fixture overrides."
+  }
+}

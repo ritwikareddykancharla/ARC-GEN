@@ -1038,3 +1038,36 @@ context holds, 9 execution failures and 3 missing factories. Bulk generation
 and model training have not launched.
 
 All 489 regression tests passed for this checkpoint.
+
+## 1054-family checkpoint
+
+- `d56f2372`: retain doubly symmetric scenes. Compare unique-colour-crop
+  selection on both reflection axes, fitting demonstration outputs. Discard
+  hypotheses with no unique selection on a query; require the remaining
+  predictions to agree. No largest-shape or palette-order tie-break is used
+  to establish episode evidence.
+- `caa06a1f`: infer the frame and visible tile periods, then compare four
+  unit shifts on demonstration outputs and the same query. The original
+  canonical episode is genuinely ambiguous under these hypotheses: all three
+  demos are checkerboards, while the three-colour test has three distinct
+  possible predictions. Its immutable fixture labels are preserved, and the
+  ambiguity is recorded in `caa06a1f-canonical-shift-ambiguity.json`; there is no
+  training-export exemption. Fresh episodes with distinguishing three-colour
+  demonstration evidence pass. Both two- and three-colour scenes remain in
+  the generator, with the original size coupling.
+- `cad67732`: extract diagonal and off-diagonal periods independently of the
+  direct factory. Compare all four combinations of main/anti-axis end-anchor
+  phases. An example on one axis cannot fix the other axis's phase. Queries
+  whose two anchor predictions agree need no distinguishing example. Native
+  synthetic anti-diagonal labels use top-right anchoring; archived opposite-end
+  anchoring differs at nonmultiple sizes. The original fixtures do not expose
+  that difference. A concrete witness is saved in `cad67732-anchor-phase-witness.json`.
+
+No constructor, program-factory source or fixture labels changed. Existing
+certificates match current hashes and each records 1,000 fresh pairs, 8,000 D4
+checks and 16 fixture variants. New complete-episode auditing accepted 56 of 60
+bases, excluded four missing-evidence cases and verified 448 augmented records.
+Remaining: 54 semantic/context holds, 9 execution failures, 3 missing factories.
+Bulk generation and model training have not launched.
+
+All 495 regression tests passed for this checkpoint.

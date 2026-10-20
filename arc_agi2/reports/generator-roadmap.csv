@@ -677,7 +677,7 @@ task_id,split,former_holdout,training_eligible,status,standalone_module,candidat
 9b30e358,training,False,True,upstream_fixture_verified,tasks/task_9b30e358.py,repeat;template;assembly,references/9b30e358.json,10x5->10x5,Expand semantic and boundary-case tests
 9b365c51,training,False,True,upstream_fixture_verified,tasks/task_9b365c51.py,objects;legend;recolour;count,references/9b365c51.json,7x28->7x28,Expand semantic and boundary-case tests
 9b4c17c4,training,False,True,upstream_fixture_verified,tasks/task_9b4c17c4.py,movement;count;layers,references/9b4c17c4.json,9x9->9x9;10x11->10x11,Expand semantic and boundary-case tests
-9b5080bb,training,False,True,generator_missing,,objects;panels;repair;count,references/9b5080bb.json,27x27->27x27,"Construct, validate and review standalone generator"
+9b5080bb,training,False,True,extension_validated,tasks/task_9b5080bb.py,objects;panels;repair;count,references/9b5080bb.json,27x27->27x27,Expand semantic and boundary-case tests
 9ba4a9aa,training,False,True,generator_missing,,topology;paths;crop,references/9ba4a9aa.json,22x22->3x3,"Construct, validate and review standalone generator"
 9bbf930d,evaluation,False,True,generator_missing,,paths;analogy,references/9bbf930d.json,23x21->23x21,"Construct, validate and review standalone generator"
 9bebae7a,training,False,True,generator_missing,,legend;rigid;template;crop;layers,references/9bebae7a.json,11x12->11x12,"Construct, validate and review standalone generator"

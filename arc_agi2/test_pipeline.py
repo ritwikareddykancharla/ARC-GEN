@@ -2042,4 +2042,31 @@ class GeneratorTests(unittest.TestCase):
         p=m.generate(height=30,heights=[6,1,7],markers=[2,3,None])
         self.assertEqual(p['output'],grid(call(solver('9aaea919'),p['input'])))
 
+    def test_panel_defects_reject_none_palette_and_honor_minimum(self):
+        m=importlib.import_module('tasks.task_9b5080bb')
+        for kw in ({'frame':1,'shape_color':2,'panel_colors':[None,3]},
+                   {'panel_colors':[True,3]},{'panel_colors':3}):
+            with self.assertRaises(ValueError):m.generate(**kw)
+        random.seed(77000)
+        p=m.generate(width=8,height=14,frame=0,shape_color=5,panel_colors=[3,7])
+        self.assertEqual((len(p['input']),len(p['input'][0])),(14,8))
+        self.assertEqual(set(v for row in p['input'] for v in row),{0,5,3,7})
+        self.assertEqual(p['output'],grid(call(solver('9b5080bb'),p['input'])))
+
+    def test_panel_defect_bar_can_border_foreign_colour(self):
+        m=importlib.import_module('tasks.task_9b5080bb')
+        p=m.generate(width=30,height=20,frame=0,shape_color=3,
+            panels=[(1,1,1,18,13),(2,1,15,18,14)],
+            shapes=[(3,2,5,6,[(5,2)],[]),(8,18,5,6,[],[(7,20)])])
+        self.assertEqual(p['output'][5][:3],[0,2,2])
+        self.assertEqual(p['output'][7][20],1)
+        self.assertEqual(p['output'][8][20],1)
+        self.assertEqual(sum(a!=b for ra,rb in zip(p['input'],p['output']) for a,b in zip(ra,rb)),4)
+        self.assertEqual(p['output'],grid(call(solver('9b5080bb'),p['input'])))
+        p=m.generate(width=20,height=20,frame=0,shape_color=3,
+            panels=[(1,0,0,20,10),(2,0,10,20,10)],
+            shapes=[(3,2,6,6,[(3,4),(3,5)],[]),(12,12,5,5,[],[(11,14)])])
+        self.assertEqual(p['output'],grid(call(solver('9b5080bb'),p['input'])))
+        self.assertFalse(any(0 in row for row in p['input']))
+
 if __name__=='__main__':unittest.main()

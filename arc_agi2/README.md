@@ -12,11 +12,11 @@ This fork adds a reference-guided generator workflow and an adaptive episode bui
 
 - All **1,120** canonical tasks inventoried with saved Opus/Fable explanations, `transform(grid)` programs, provenance and separately labelled teaching fixtures.
 - **891 existing upstream generators** reproduce the canonical pair sets (pair ordering can differ between releases).
-- **93 new constructive implementations** have passed bounded validation, covering counting, selection, geometry, legends, relational motion, scaling, pattern construction and repair. Standalone conversion and review are tracked separately below.
+- **97 new constructive implementations** have passed bounded validation, covering counting, selection, geometry, legends, relational motion, scaling, pattern construction and repair. Standalone conversion and review are tracked separately below.
 - **Two variable-size extensions**: `0692e18c` (inverse self-tiling) and `00576224` (three-by-three tiling with mirrored middle band).
-- All 95 constructors (93 new families plus two size extensions) passed **300 random differential tests each**, and their reference solvers reproduce all original examples. Outputs are constructed independently from latent parameters, then compared with the saved transform.
+- All 99 constructors (97 new families plus two size extensions) passed **300 random differential tests each**, and their reference solvers reproduce all original examples. Outputs are constructed independently from latent parameters, then compared with the saved transform.
 - **22 additional fixed-size families / 111 size-parameter configurations** passed bounded 12-seed differential tests. Every such generated pair is checked again during generation. This is agreement evidence, not proof of semantic correctness.
-- **136 tasks still need constructive generators**. A saved transform is not itself an input generator. Reference packets and `reports/generator-roadmap.csv` provide the task-by-task backlog.
+- **132 tasks still need constructive generators**. A saved transform is not itself an input generator. Reference packets and `reports/generator-roadmap.csv` provide the task-by-task backlog.
 
 ## Inspect
 
@@ -72,9 +72,9 @@ The authoring campaign uses eight concurrent Claude CLI processes under the user
 
 A zero-error differential check is a bounded agreement test. It does not prove the saved solver is universally correct or that every original mechanism variant is covered.
 
-**87 standalone modules are now reviewed and registered** (the exact list lives in `task_registry.py`). Each passed 1,000 seed checks and exact original train/test fixture reconstruction. The first sixteen used seeds 0..999 (including their 300 author-validation seeds); the next seventy-one used independent seeds 20,000..20,999. The regression suite also checks registered source hashes and seeds 10,000..10,019.
+**91 standalone modules are now reviewed and registered** (the exact list lives in `task_registry.py`). Each passed 1,000 seed checks and exact original train/test fixture reconstruction. The first sixteen used seeds 0..999 (including their 300 author-validation seeds); the next seventy-five used independent seeds 20,000..20,999. The regression suite also checks registered source hashes and seeds 10,000..10,019.
 
-Twenty-four conversions replace earlier research constructors with the upstream task-file interface. The total is now 93 new constructive families, with 6 still awaiting standalone conversion/review. Remaining CLI drafts are authored and validated locally. Restricted shape and dimension ranges are documented per file and in `reports/standalone/`; the size-matching builder must respect those ranges.
+Twenty-four conversions replace earlier research constructors with the upstream task-file interface. The total is now 97 new constructive families, with 6 still awaiting standalone conversion/review. Remaining CLI drafts are authored and validated locally. Restricted shape and dimension ranges are documented per file and in `reports/standalone/`; the size-matching builder must respect those ranges.
 
 Independent validation exposed a background-inference failure in the saved `d4c90558` solver: a thick frame can dominate a small grid, causing the checker to interpret the wrong colour as background. The constructor now samples the explicit domain where 0 strictly outnumbers every other colour. The failing examples are retained in `reports/standalone/d4c90558-counterexamples.json`. This restriction is not evidence that the conceptual counting rule fails on denser scenes.
 
@@ -82,7 +82,7 @@ Semantic review also corrected `e872b94a`: its generated walls must partition th
 
 New authoring uses **Opus 5.5 via Claude Max CLI**, with eight workers. Fable authoring was explicitly stopped; earlier completed artifacts remain archived and retain their original model attribution. API fallback remains disabled.
 
-The first reviewed Opus 5.5 additions, `2ba387bc` and `4c3d4a41`, add two previously missing families rather than converting existing drafts. Both reconstruct all original fixtures and pass 1,000 independent seeds. Remaining missing family count at the current checkpoint: 136.
+The first reviewed Opus 5.5 additions, `2ba387bc` and `4c3d4a41`, add two previously missing families rather than converting existing drafts. Both reconstruct all original fixtures and pass 1,000 independent seeds. Remaining missing family count at the current checkpoint: 132.
 
 
 The next six reviewed Opus additions are `8698868d` (match panels by hole counts), `b5ca7ac4` (directional object stacking), `b0039139` (combine four instruction panels), `c4d067a0` (anchor a scaled legend), `c7f57c3e` (swap decorations across scales), and `da515329` (construct interleaved spirals). All six reconstruct the original fixtures and pass 1,000 independent seed checks. Five produced 1,000 unique inputs; `da515329` produced 982, reflecting its more limited native parameter space. Review fixed ignored parameter overrides, removed a canned fallback, and included diagonal hole contacts present in the originals. The eleven-test regression suite passes. Supported ranges and limitations remain in each task's report.
@@ -120,3 +120,5 @@ Four further reviewed additions bring standalone coverage to 83: `3a25b0d8` (tem
 The exhaustive-expansion regression suite now has **26 passing tests**. It checks the eight-transform partition for every saved base episode, consistent transformations of demonstrations and query answers, symmetry deduplication including demo-order symmetry, separate fresh/expanded accounting, family quotas, and disjoint synthetic splits. No bulk generation or training was launched.
 
 Four more reviewed additions bring standalone coverage to 87: `3e6067c3` (legend-labelled box paths), `409aa875` (pointer targets and collisions), `446ef5d2` (framed jigsaw assembly), and `4a21e3da` (marker-directed corner splitting). Each passed 1,000 independent seeds, exact fixture reconstruction, and 120 additional controlled examples. Host review added exact legend canvas controls, fixed partial jigsaw palette collisions, expanded jigsaw rectangles through side 24, and strengthened explicit geometry checks. Extra tests verify pointer shape-hit precedence, all four jigsaw anchors with colour-count preservation, repeated-label paths and correct two-line quadrant deletion. All 27 regression tests pass. Coverage is **984/1,120**, with **136 missing**.
+
+Four additional reviewed modules bring standalone coverage to 91: `4acc7107` (nearest-partner stacking), `4b6b68e5` (closed-region dot voting), `4c416de3` (corner template stamping), and `4e34c42c` (overlapping connector assembly). Each passed 1,000 independent seeds and 120 targeted examples. Pairing cases distinguish nearest-neighbour choice from size sorting. Voting now includes closed regions with no votes. Corner checks cover asymmetric templates, multiple frames and depth 3 on small canvases. Assembly now mixes strips with procedural two-dimensional trees and fresh connector patterns; a conservative partial-assembly dominance check permits inferior partial overlaps while excluding winning alternatives. Its earlier dense-case failure is preserved in the review report. All 28 regression tests pass. Coverage is **988/1,120**, with **132 missing**.

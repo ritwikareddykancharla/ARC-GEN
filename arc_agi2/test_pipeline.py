@@ -10,6 +10,39 @@ from .task_registry import NEW_TASK_IDS
 from .augmentation import apply_episode,settings,exhaustive_variants
 
 class GeneratorTests(unittest.TestCase):
+    def test_empty_votes_corner_template_and_connector_partial_matches(self):
+        votes=importlib.import_module('tasks.task_4b6b68e5')
+        random.seed(30000)
+        p=votes.generate(width=30,height=30,num_shapes=1,num_closed=1,
+                         num_empty_closed=1,palette=[2,5])
+        # No votes: the closed interior must not acquire any new colour.
+        self.assertTrue(all(z==0 or z==a for ar,zr in zip(p['input'],p['output']) for a,z in zip(ar,zr)))
+        self.assertNotEqual(p['input'],p['output'])  # Exterior dots are erased.
+        self.assertEqual(p['output'],grid(call(solver('4b6b68e5'),p['input'])))
+        with self.assertRaisesRegex(ValueError,'empty closed count'):
+            votes.generate(num_shapes=2,num_closed=1,num_empty_closed=2)
+        corners=importlib.import_module('tasks.task_4c416de3')
+        with self.assertRaisesRegex(ValueError,'decorated template'):
+            corners.generate(width=20,height=20,background=8,frames=[(3,3,14,14)],
+                             template=[(0,0),(1,1),(1,0)],marks=[(3,3,2)],decorated=[])
+        random.seed(30001)
+        p=corners.generate(width=13,height=13,background=8,num_frames=1,depth=3)
+        self.assertEqual(p['output'],grid(call(solver('4c416de3'),p['input'])))
+        assembly=importlib.import_module('tasks.task_4e34c42c')
+        ring=[[1,1,1],[1,2,1],[1,1,1]]
+        # Inferior partial overlaps of the ring's repeated border are valid
+        # distractions; the full intended overlap must win.
+        self.assertTrue(assembly._unique([ring,ring],[(0,0,3,3),(0,0,3,3)],0,3,3))
+        repeated=[row+([1,1] if y==1 else [0,0])+row for y,row in enumerate(ring)]
+        self.assertFalse(assembly._unique([repeated,ring],[(0,0,3,8),(0,0,3,3)],0,3,8))
+        for layout,seed in [('tree',30000),('strip',30060)]:
+            random.seed(seed)
+            p=assembly.generate(width=30,height=30,bg=8,num_motifs=5,num_branches=2,
+                                duplicate=True,transpose=False,layout=layout)
+            self.assertGreater(len(p['output']),3)
+            self.assertGreater(len(p['output'][0]),3)
+            self.assertEqual(p['output'],grid(call(solver('4e34c42c'),p['input'])))
+
     def test_legend_bounds_pointer_precedence_marker_palette_and_connected_shape(self):
         legend=importlib.import_module('tasks.task_3e6067c3')
         random.seed(30000)

@@ -309,18 +309,18 @@ task_id,split,former_holdout,training_eligible,status,standalone_module,candidat
 49d1d64f,training,False,True,upstream_fixture_verified,tasks/task_49d1d64f.py,crop,references/49d1d64f.json,3x2->5x4,Expand semantic and boundary-case tests
 4a1cacc2,training,False,True,upstream_fixture_verified,tasks/task_4a1cacc2.py,template;dynamics,references/4a1cacc2.json,10x10->10x10,Expand semantic and boundary-case tests
 4a21e3da,evaluation,False,True,extension_validated,tasks/task_4a21e3da.py,movement;dynamics;crop,references/4a21e3da.json,20x20->20x20,Expand semantic and boundary-case tests
-4acc7107,training,False,True,generator_missing,,selection;movement;order,references/4acc7107.json,10x10->10x10,"Construct, validate and review standalone generator"
-4b6b68e5,training,False,True,generator_missing,,topology,references/4b6b68e5.json,26x24->26x24,"Construct, validate and review standalone generator"
+4acc7107,training,False,True,extension_validated,tasks/task_4acc7107.py,selection;movement;order,references/4acc7107.json,10x10->10x10,Expand semantic and boundary-case tests
+4b6b68e5,training,False,True,extension_validated,tasks/task_4b6b68e5.py,topology,references/4b6b68e5.json,26x24->26x24,Expand semantic and boundary-case tests
 4be741c5,training,False,True,upstream_fixture_verified,tasks/task_4be741c5.py,order;scale;layers,references/4be741c5.json,14x14->1x4,Expand semantic and boundary-case tests
 4c177718,training,False,True,upstream_fixture_verified,tasks/task_4c177718.py,panels;legend;movement;template;crop;layers,references/4c177718.json,15x15->9x15;15x15->9x15,Expand semantic and boundary-case tests
 4c3d4a41,evaluation,True,True,extension_validated,tasks/task_4c3d4a41.py,selection;movement;template;topology;count;layers,references/4c3d4a41.json,8x20->8x20;8x20->8x20,Expand semantic and boundary-case tests
-4c416de3,evaluation,False,True,generator_missing,,rigid;template,references/4c416de3.json,19x22->19x22,"Construct, validate and review standalone generator"
+4c416de3,evaluation,False,True,extension_validated,tasks/task_4c416de3.py,rigid;template,references/4c416de3.json,19x22->19x22,Expand semantic and boundary-case tests
 4c4377d9,training,False,True,upstream_fixture_verified,tasks/task_4c4377d9.py,rigid;crop;layers,references/4c4377d9.json,3x4->6x4,Expand semantic and boundary-case tests
 4c5c2cf0,training,False,True,upstream_fixture_verified,tasks/task_4c5c2cf0.py,rigid;dynamics;count;crop,references/4c5c2cf0.json,15x15->15x15,Expand semantic and boundary-case tests
 4c7dc4dd,evaluation,True,True,extension_validated,tasks/task_4c7dc4dd.py,selection;rigid;movement;repeat;template;topology;count;assembly;layers;analogy,references/4c7dc4dd.json,30x30->5x5;30x30->6x6,Expand semantic and boundary-case tests
 4cd1b7b2,training,False,True,upstream_fixture_verified,tasks/task_4cd1b7b2.py,selection;topology;assembly,references/4cd1b7b2.json,4x4->4x4,Expand semantic and boundary-case tests
 4df5b0ae,training,False,True,extension_validated,tasks/task_4df5b0ae.py,selection;movement;template;order;crop,references/4df5b0ae.json,10x10->10x10,Expand semantic and boundary-case tests
-4e34c42c,evaluation,False,True,generator_missing,,objects;selection;movement;template;boolean;crop;assembly;layers,references/4e34c42c.json,26x20->14x19;20x20->9x19,"Construct, validate and review standalone generator"
+4e34c42c,evaluation,False,True,extension_validated,tasks/task_4e34c42c.py,objects;selection;movement;template;boolean;crop;assembly;layers,references/4e34c42c.json,26x20->14x19;20x20->9x19,Expand semantic and boundary-case tests
 4e45f183,training,False,True,generator_missing,,panels;crop;layers,references/4e45f183.json,19x19->19x19,"Construct, validate and review standalone generator"
 4e469f39,training,False,True,upstream_fixture_verified,tasks/task_4e469f39.py,topology;crop,references/4e469f39.json,10x10->10x10,Expand semantic and boundary-case tests
 4e7e0eb9,training,False,True,upstream_fixture_verified,tasks/task_4e7e0eb9.py,panels;repeat,references/4e7e0eb9.json,19x29->19x29;29x29->29x29,Expand semantic and boundary-case tests

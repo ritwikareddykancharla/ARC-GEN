@@ -75,7 +75,8 @@ def bundle(source):
     table = symtable.symtable(source, '<solver>', 'exec')
     defined = {s.get_name() for s in table.get_symbols() if s.is_assigned() or s.is_imported() or s.is_namespace()}
     while pending:
-        name = pending.pop()
+        name = min(pending)
+        pending.remove(name)
         if name in defined or name in selected:
             continue
         obj = getattr(helpers, name, None)
@@ -144,7 +145,7 @@ def solve(demonstrations, grid):
 '''
 
 
-def compile_target(task_id, d4=0, palette=None):
+def reference_target(task_id, d4=0, palette=None):
     """Only family identity and augmentation metadata enter target construction."""
     palette = list(range(10)) if palette is None else list(palette)
     if type(d4) is not int or d4 not in range(8) or sorted(palette) != list(range(10)):
@@ -154,6 +155,26 @@ def compile_target(task_id, d4=0, palette=None):
     # Standalone compilation in a fresh namespace; no preloaded project helpers.
     compile(source, '<standalone-target>', 'exec')
     return source, basis
+
+
+def compile_target(task_id, d4=0, palette=None):
+    """Produce direct-coordinate code; missing rewrites cannot fall back to wrappers."""
+    palette = list(range(10)) if palette is None else list(palette)
+    if type(d4) is not int or d4 not in range(8) or sorted(palette) != list(range(10)):
+        raise TargetError('Invalid episode augmentation')
+    from .direct_programs import direct_source
+    source = direct_source(task_id, d4, palette)
+    if source is not None:
+        return source, 'reviewed_direct_coordinate_rewrite'
+    if d4 == 0 and palette == list(range(10)):
+        source, basis = native_program(task_id)
+        class Entry(ast.NodeTransformer):
+            def visit_FunctionDef(self, node):
+                if node.name == '_native_solve':node.name = 'solve'
+                return self.generic_visit(node)
+        tree = Entry().visit(ast.parse(source));ast.fix_missing_locations(tree)
+        return ast.unparse(tree)+'\n', basis
+    raise TargetError('Direct augmented program rewrite required; wrapper targets disabled')
 
 
 @lru_cache(maxsize=2048)
@@ -225,15 +246,18 @@ def make_record(episode, source_repo='', source_revision=''):
     audit_target(task_id, source)
     checked = verify(source, episode)
     challenge = {'train': episode['train'], 'test': episode['test']}
-    prompt = ('PROGRAM\nInfer the shared rule from the demonstrations. Return a standalone Python program defining '
-              'solve(demonstrations, grid), returning the transformed grid as a list of integer rows. '
-              'demonstrations is a list of input/output pairs; grid is one query input. '
-              'Use only Python standard-library modules and NumPy. Include required helpers.\n' + json.dumps(challenge, separators=(',', ':')))
+    prompt = ('Infer the shared rule from the demonstrations. Return a standalone Python program defining '
+              'solve(demonstrations, grid), then the output grids for every test input. '
+              'Use a python code block followed by a json code block with key outputs. '
+              'Include required helpers; Python standard-library modules and NumPy are allowed.\n' + json.dumps(challenge, separators=(',', ':')))
+    output_json = json.dumps({'outputs': episode['solutions']}, separators=(',', ':'))
+    completion = '```python\n' + source.rstrip() + '\n```\n\n```json\n' + output_json + '\n```'
     from .fixture_policy import fixture_basis
     fb = fixture_basis(task_id)
-    return dict(episode_id=episode['episode_id']+'-program', source_episode_id=episode['episode_id'],
-                task_id=task_id, mode='PROGRAM', prompt=prompt, completion=source,
-                messages=[{'role':'user','content':prompt},{'role':'assistant','content':source}],
+    return dict(episode_id=episode['episode_id'], source_episode_id=episode['episode_id'],
+                task_id=task_id, mode='PROGRAM_AND_GRID', prompt=prompt, completion=completion,
+                program=source, output_json=output_json,
+                messages=[{'role':'user','content':prompt},{'role':'assistant','content':completion}],
                 program_sha256=hashlib.sha256(source.encode()).hexdigest(), solver_basis=basis,
                 d4_transform=episode.get('d4_transform',0), color_permutation=episode.get('color_permutation',list(range(10))),
                 source_repo=source_repo, source_revision=source_revision,

@@ -1,7 +1,7 @@
 """Annotate existing generated episodes with execution-verified program targets.
 
-No teacher calls, training or new bulk scene generation. Every published PROGRAM
-row has an aligned GRID row. Inherited episode data remain traceable by revision.
+No teacher calls, training or new bulk scene generation. Each published row holds
+both a direct program and output grid. Storage is PNG/Python/JSONL, not Parquet.
 """
 import argparse
 from concurrent.futures import ProcessPoolExecutor, as_completed
@@ -12,10 +12,10 @@ import os
 from pathlib import Path
 import time
 
-import pyarrow as pa
 import pyarrow.parquet as pq
 from huggingface_hub import HfApi, CommitOperationAdd, hf_hub_download
 from .program_targets import make_record
+from .visual_dataset import write_bundle
 
 SOURCE = 'ritwika96/arc-agi2-arcgen-100k-episodes'
 DEST = 'ritwika96/arc-agi2-program-grid-sft'
@@ -38,31 +38,24 @@ def family(args):
     if limit:
         # Sample across native/augmented halves instead of only the first rows.
         rows = [rows[i*len(rows)//min(limit,len(rows))] for i in range(min(limit,len(rows)))]
-    accepted, grid_rows, rejected = [], [], []
+    accepted, rejected = [], []
+    metadata = root/"episodes"/tid/"metadata.jsonl"
+    if metadata.exists():
+        raise RuntimeError("Refusing to append duplicate rows to an existing image shard; use a fresh output directory")
     errors = Counter()
     start = time.monotonic()
     for row in rows:
         try:
             record = make_record(row, source, revision)
+            write_bundle(record, root)
             accepted.append(record)
-            challenge = {'train':row['train'], 'test':row['test']}
-            prompt = 'GRID\nInfer the shared transformation from the demonstrations. Return only JSON with key outputs and one grid per test input.\n'+json.dumps(challenge,separators=(',',':'))
-            completion = json.dumps({'outputs':row['solutions']},separators=(',',':'))
-            grid_rows.append(dict(episode_id=row['episode_id']+'-grid',source_episode_id=row['episode_id'],task_id=tid,mode='GRID',prompt=prompt,completion=completion,messages=[{'role':'user','content':prompt},{'role':'assistant','content':completion}],source_repo=source,source_revision=revision,verified_program_sha256=record['program_sha256']))
         except Exception as exc:
             reason = type(exc).__name__+': '+str(exc)[:800]
             errors[reason] += 1
             # Keep exact episode identifiers; source labels remain in the source repo.
             rejected.append(dict(episode_id=row.get('episode_id'),task_id=tid,reason=reason))
-    files = []
-    for mode, data in [('program',accepted),('grid',grid_rows)]:
-        if data:
-            path = root/'data'/mode/f'{tid}.parquet'
-            path.parent.mkdir(parents=True,exist_ok=True)
-            temp = path.with_suffix('.tmp')
-            pq.write_table(pa.Table.from_pylist(data),temp,compression='zstd')
-            temp.replace(path)
-            files.append(str(path.relative_to(root)))
+    files = [str(path.relative_to(root)) for folder in (root/'episodes'/tid,root/'programs'/tid)
+             if folder.exists() for path in sorted(folder.glob('*')) if path.is_file()]
     reject_path = root/'rejections'/f'{tid}.json'
     save(reject_path,rejected)
     files.append(str(reject_path.relative_to(root)))
@@ -72,6 +65,9 @@ def family(args):
 
 
 def card(m):
+    images = '\n\n'.join(
+        f'![Episode {Path(path).stem}]({path})' for path in m.get('preview_images', [])[:3]
+    )
     return f'''---
 license: apache-2.0
 task_categories:
@@ -79,56 +75,44 @@ task_categories:
 language:
 - en
 configs:
-- config_name: program
+- config_name: default
+  default: true
   data_files:
   - split: train
-    path: data/program/*.parquet
-- config_name: grid
-  data_files:
-  - split: train
-    path: data/grid/*.parquet
+    path:
+    - episodes/**/*.png
+    - episodes/**/metadata.jsonl
 ---
-# ARC-AGI-2: verified program and grid SFT targets
+# ARC episodes · program + output grid
 
-**Build status: {m['status']}.** {m['program_rows']:,} verified program targets and {m['grid_rows']:,} aligned grid targets, from {m['completed_families']} processed families. This is an incremental dataset; the name does not imply complete family coverage or ten million rows.
+**One episode, one row, both targets together.** The image shows demonstrations and the query answer for human inspection. The same row contains the readable program and output-grid JSON. The assistant completion contains a Python block followed by a JSON block.
 
-The same demonstrations and query input support two output modes:
+**Status: {m['status']} · {m['episode_rows']:,} episodes.** These are converted existing episodes, not the planned million-episode expansion. Missing direct-program variants remain in the repair queue; the builder will not use augmentation wrappers as a fallback.
 
-| Configuration | Assistant target |
-|---|---|
-| `program` | Standalone Python implementing `solve(demonstrations, grid)` |
-| `grid` | JSON containing the query output grid(s) |
+## See the grids
 
-The program can include a reusable `transform(grid)` and its helpers. NumPy and Python standard-library imports are allowed. No project-specific helper imports are needed. Programs are reused across scenes where the rule is the same; they are not separately generated by an LLM for every episode.
+Click an image to open its full-resolution lossless PNG. Each image contains demonstrations and the query answer for human inspection.
 
-## Execution verification
+{images}
 
-Every program is executed in a fresh module namespace for each demonstration and query. All outputs must match exactly, including dimensions. Query answers are used only for offline checks; they do not enter program construction, the prompt, or the solver's arguments. Failures are excluded from both aligned configurations and logged in [reports](reports) and [rejections](rejections). This is bounded execution verification, not a proof of generalization or a security sandbox.
+## Open the files
 
-Geometric and palette augmentations are handled by conjugating the native solver: undo the episode transform, solve, then transform the result back. Demonstration-conditioned families receive the visible demonstration pairs. Original-grid literal copies are flagged for repair instead of being accepted as targets.
+- [PNG episodes](episodes): sharp colour-only cells, demonstrations and query grids.
+- [Python programs](programs): directly readable `.py` files.
+- [Manifest](manifest.json): unique episode count and verification results.
+- [Rejected episodes](rejections): unresolved solver or rewrite failures.
 
-## Source and scope
+No new Parquet files are written by this builder. Small `metadata.jsonl` files associate each PNG with its program and target so the HF image viewer can display them together. Existing legacy files, if present, are excluded from this configuration.
 
-Episodes: [{m['source_repo']}](https://huggingface.co/datasets/{m['source_repo']}) at revision `{m['source_revision']}`.
-Solver/build source: [research ARC-GEN fork](https://github.com/ritwikareddykancharla/ARC-GEN/tree/{m['code_revision']}).
+## Training record
 
-This initial conversion uses existing published episodes; it does not generate the planned expanded corpus. It contains **training data only**. No disjoint validation split is claimed for the older source episodes. Subsequent generation must preserve input-equivalence splits before augmentation. Public benchmark families included here are training families, not unseen-family evaluation.
+The model input is `prompt`, containing demonstration pairs and query inputs. The `completion` is the program followed by the output-grid JSON. The overview image includes the answer and is **for auditing**, not a model input. Each program is executed against every demonstration and query before acceptance, with fresh module state on each call. This is bounded execution verification, not a proof of generalization or a security sandbox.
 
-The model prompt contains demonstration outputs and query inputs, never query answers. `solutions` is offline metadata and must not be concatenated into model prompts. Original benchmark labels remain unchanged. Corrected validation fixtures retain provenance; `e12f9a14` uses a locally reviewed hypothesis when present, not an official correction.
+For augmented episodes, direct programs express the transformed rule in the visible grid coordinates. No undo-transform / native-solver / redo-transform adapter is used. Missing rewrites are rejected explicitly.
 
-The [manifest](manifest.json) reports attempts, exclusions, source revisions, build settings, and progress. Model training is not launched by this dataset job. Saved solver provenance includes earlier Opus/Fable artifacts; this conversion makes no new teacher API calls.
+Source episodes: [{m['source_repo']}](https://huggingface.co/datasets/{m['source_repo']}) at `{m['source_revision']}`. Solver/build revision: `{m['code_revision']}`. This initial conversion is training-only and claims no independent validation split for the older source. Model training has not been launched.
 
-## Using the data
-
-```python
-from datasets import load_dataset
-program = load_dataset("{m['destination']}", "program", split="train")
-# Each row has prompt/completion and messages for SFT.
-```
-
-Grid targets are available in the `grid` configuration. These two configurations are aligned by `source_episode_id`; mixing them does not double the number of unique puzzles.
-
-Upstream ARC-GEN: Google LLC, Apache-2.0. New pipeline and reviewed additions: Ritwika Kancharla. Original ARC data retain their attribution. This is an independent research dataset, not an official ARC release.
+Upstream ARC-GEN: Google LLC, Apache-2.0. New pipeline and reviewed additions: Ritwika Kancharla. Original ARC data retain their attribution; this is an independent research dataset.
 '''
 
 
@@ -143,7 +127,7 @@ def main():
     files=sorted(f for f in api.list_repo_files(a.source,repo_type='dataset',revision=a.revision) if f.startswith('data/') and f.endswith('.parquet'))
     if a.tasks:files=[f for f in files if Path(f).stem in a.tasks]
     if not files:raise ValueError('No source episode shards selected')
-    m=dict(status='verifying_program_targets',source_repo=a.source,source_revision=a.revision,destination=a.destination,code_revision=os.environ.get('ARCGEN_SOURCE_COMMIT','local'),workers=a.workers,source_families=len(files),completed_families=0,program_rows=0,grid_rows=0,rejected_rows=0,attempted_rows=0,failed_families=[],model_training_launched=False,new_teacher_calls=0,limit_per_family=a.limit_per_family)
+    m=dict(status='verifying_program_targets',source_repo=a.source,source_revision=a.revision,destination=a.destination,code_revision=os.environ.get('ARCGEN_SOURCE_COMMIT','local'),workers=a.workers,source_families=len(files),completed_families=0,episode_rows=0,rejected_rows=0,attempted_rows=0,failed_families=[],model_training_launched=False,new_teacher_calls=0,limit_per_family=a.limit_per_family)
     if a.publish:
         if api.whoami()['name']!='ritwika96':raise RuntimeError('Unexpected HF account')
         api.create_repo(a.destination,repo_type='dataset',private=False,exist_ok=True)
@@ -151,11 +135,11 @@ def main():
         save(a.output/'manifest.json',m);(a.output/'README.md').write_text(card(m))
         if a.publish:
             # Don't expose an empty dataset configuration before the first shard.
-            names=['manifest.json',*changed]+(['README.md'] if m['program_rows'] else [])
+            names=['manifest.json',*changed]+(['README.md'] if m['episode_rows'] else [])
             ops=[CommitOperationAdd(path_in_repo=f,path_or_fileobj=str(a.output/f)) for f in names]
             for attempt in range(5):
                 try:
-                    api.create_commit(a.destination,repo_type='dataset',operations=ops,commit_message=f"{m['program_rows']} verified program targets; {m['completed_families']} families")
+                    api.create_commit(a.destination,repo_type='dataset',operations=ops,commit_message=f"{m['episode_rows']} combined program/grid episodes; {m['completed_families']} families")
                     return
                 except Exception:
                     if attempt==4:raise
@@ -166,10 +150,13 @@ def main():
         for future in as_completed(fs):
             remote=fs[future]
             try:
-                report=future.result();m['program_rows']+=report['accepted'];m['grid_rows']+=report['accepted'];m['rejected_rows']+=report['rejected'];m['attempted_rows']+=report['attempted'];changed+=report['files']
+                report=future.result();m['episode_rows']+=report['accepted'];m['rejected_rows']+=report['rejected'];m['attempted_rows']+=report['attempted'];changed+=report['files']
+                pngs = [f for f in report['files'] if f.endswith('.png')]
+                if pngs and len(m.setdefault('preview_images', [])) < 3:
+                    m['preview_images'].append(pngs[0])
             except Exception as exc:m['failed_families'].append(dict(file=remote,error=repr(exc)))
             m['completed_families']+=1
-            print(json.dumps({k:m[k] for k in ['completed_families','program_rows','rejected_rows']}),flush=True)
+            print(json.dumps({k:m[k] for k in ['completed_families','episode_rows','rejected_rows']}),flush=True)
             if len(changed)>=24 or time.monotonic()-last>30:
                 publish(changed);changed=[];last=time.monotonic()
     m['status']='conversion_complete_with_exclusions' if m['rejected_rows'] or m['failed_families'] else 'conversion_complete'

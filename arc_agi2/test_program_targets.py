@@ -14,7 +14,7 @@ class ProgramTargets(unittest.TestCase):
             solutions=[transformed(p['output'],d4,palette) for p in task['test']])
 
     def test_standalone_and_all_augmentations(self):
-        for tid in ('0692e18c','00dbd492','78332cb0','de493100','e12f9a14'):
+        for tid in ('0692e18c','00dbd492','00576224','f18ec8cc'):
             for d4 in range(8):
                 palette=[3,9,0,7,2,8,1,6,4,5]
                 ep=self.episode(tid,d4,palette)
@@ -33,7 +33,11 @@ class ProgramTargets(unittest.TestCase):
         self.assertEqual(source,source2)
         with self.assertRaisesRegex(TargetError,'not exact'):
             make_record(altered)
-        self.assertEqual(record['completion'],source)
+        self.assertEqual(record['program'],source)
+        self.assertIn('```python',record['completion'])
+        self.assertIn('```json',record['completion'])
+        self.assertEqual(record['episode_id'],ep['episode_id'])
+        self.assertEqual(record['mode'],'PROGRAM_AND_GRID')
         self.assertNotIn('solutions',record['prompt'])
 
     def test_contextual_programs_are_self_contained(self):
@@ -47,6 +51,10 @@ class ProgramTargets(unittest.TestCase):
         tid='0692e18c';a=reference(tid)['canonical']['test'][0]['output']
         with self.assertRaisesRegex(TargetError,'Literal original grid'):
             audit_target(tid,'def solve(demos, grid):\n    return '+repr(a))
+
+    def test_unreviewed_augmentation_cannot_fall_back_to_wrapper(self):
+        with self.assertRaisesRegex(TargetError, 'rewrite required'):
+            compile_target('e12f9a14',1)
 
     def test_no_state_retained_between_pairs(self):
         ep=self.episode('0692e18c')

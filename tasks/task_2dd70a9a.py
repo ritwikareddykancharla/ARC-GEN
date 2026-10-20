@@ -15,6 +15,64 @@
 """Generator."""
 
 import common
+from collections import defaultdict, deque
+
+
+def _unique_slide_path(grid):
+  """Check that exactly one successful route connects the two colour markers.
+
+  A segment continues through empty cells until blocked. Turns occur only
+  there; entry and exit must follow each two-cell marker's axis. Cycles and
+  competing successful routes are rejected rather than tie-broken by order.
+  """
+  h, w = len(grid), len(grid[0])
+  green = [(r, c) for r in range(h) for c in range(w) if grid[r][c] == 3]
+  red = {(r, c) for r in range(h) for c in range(w) if grid[r][c] == 2}
+  if len(green) != 2 or len(red) != 2: return False
+  horizontal = ((0, 1), (0, -1))
+  vertical = ((1, 0), (-1, 0))
+  gaxis = horizontal if green[0][0] == green[1][0] else vertical
+  raxis = horizontal if len({r for r, c in red}) == 1 else vertical
+
+  def empty(r, c):
+    return 0 <= r < h and 0 <= c < w and grid[r][c] == 0
+
+  starts = []
+  for dr, dc in gaxis:
+    r, c = max(green, key=lambda p: p[0] * dr + p[1] * dc)
+    if empty(r + dr, c + dc): starts.append((r + dr, c + dc, dr, dc))
+  todo, graph, parents, terminals = deque(starts), {}, defaultdict(set), set()
+  while todo:
+    state = todo.popleft()
+    if state in graph: continue
+    r, c, dr, dc = state
+    while empty(r + dr, c + dc): r, c = r + dr, c + dc
+    graph[state] = set()
+    if (dr, dc) in raxis and (r + dr, c + dc) in red:
+      terminals.add(state)
+      continue
+    for yr, xc in (vertical if dr == 0 else horizontal):
+      if empty(r + yr, c + xc):
+        nxt = (r + yr, c + xc, yr, xc)
+        graph[state].add(nxt)
+        parents[nxt].add(state)
+        todo.append(nxt)
+  viable, todo = set(terminals), deque(terminals)
+  while todo:
+    for parent in parents[todo.popleft()]:
+      if parent not in viable:
+        viable.add(parent)
+        todo.append(parent)
+  successful_starts = [s for s in starts if s in viable]
+  if len(successful_starts) != 1: return False
+  current, visited = successful_starts[0], set()
+  while current not in terminals:
+    if current in visited: return False
+    visited.add(current)
+    choices = graph[current] & viable
+    if len(choices) != 1: return False
+    current = next(iter(choices))
+  return True
 
 
 def generate(size=None, rows=None, cols=None, colors=None, flip=None,
@@ -86,14 +144,22 @@ def generate(size=None, rows=None, cols=None, colors=None, flip=None,
       rows.append(mid1)
       cols.append(col + width - 2)
       colors.append(common.cyan())
-    # Prepend some static (will get overridden by the path).
-    xrows, xcols, xcolors = [], [], []
-    for r in range(size):
-      for c in range(size):
-        if common.randint(0, 4): continue
-        xrows.append(r)
-        xcols.append(c)
-        xcolors.append(common.cyan())
+    # Preserve the intended path but reject noise that permits another route.
+    for _ in range(256):
+      xrows, xcols, xcolors = [], [], []
+      candidate = common.grid(size, size)
+      for r in range(size):
+        for c in range(size):
+          if common.randint(0, 4): continue
+          xrows.append(r)
+          xcols.append(c)
+          xcolors.append(common.cyan())
+          candidate[r][c] = common.cyan()
+      for r, c, color in zip(rows, cols, colors):
+        candidate[r][c] = 0 if color == common.blue() else color
+      if _unique_slide_path(candidate): break
+    else:
+      raise ValueError("Could not sample a unique sliding route")
     rows, cols, colors = xrows + rows, xcols + cols, xcolors + colors
     # Finally, flip and/or transpose.
     flip, xpose = common.randint(0, 1), common.randint(0, 1)

@@ -1,0 +1,29 @@
+{
+  "task_id": "2dd70a9a",
+  "factory_sha256": "9369a8a1454ee73928edc9ce9b0d9520abddd040044ce16d348b774cdaad364f",
+  "constructor_sha256": "5d43c4d4d54cdd01df888e515b609eae9be2275a848ccbc41f7540c7bb76e953",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 107545591266313,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 4.755317291012034,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The emitted program works directly in the visible grid coordinates and does not rotate anything. It finds the green segment (palette[3]) and the red segment (palette[2]). The background is the most common colour. From each end of the green segment it starts a slide outward along that segment's own axis. The search is a BFS over (start cell, direction). Each leg slides through background cells until the next cell is out of the grid or non-background, and only then turns 90 degrees. The search stops when a leg moving along the red segment's axis is blocked by a red cell. The legs of that fewest-legs route are painted palette[3]. The mechanism looks the same from every orientation. The only orientation-specific part is the BFS tie-break order. To preserve it, the factory maps the native direction orders ([right, left] and [down, up]) through the D4 transform: a horizontal flip negates dx for indices >= 4, and each clockwise rotation maps (dy,dx) to (dx,-dy). It then emits these as constants HORD (visible horizontal order) and VORD (visible vertical order). These constants set both the order of the two start ends and the order of turns. As a result, among equal-length routes the emitted program picks the same one the native solver would pick on the canonical grid. Colour roles are fixed as palette constants; there is no grid-wide recolouring. The approved fixtures agree with this uniform rule (checked by hand, not run).",
+    "limitations": "No tests have been run; the fixtures were only traced by hand. The background is the most common colour; if two colours tie for most common, the pick depends on scan order (not possible in the generator's domain). A single-cell green or red object would be treated as horizontal in visible coordinates, which could differ from the native axis convention under odd rotations; the generator always makes 2-cell segments, so this does not arise. If no route exists, the grid is returned unchanged, matching the native solver.",
+    "host_review": "Read constructor and emitted sliding search. Counterexample had two successful routes from opposite ends of green. Added input-only directed state graph and backward reachability check; accepted successful subgraph must be a single terminating route. Bounded retries change obstacle noise only, preserving U/S geometry and endpoints. All supplied fixtures unchanged; fresh audit confirms intended painted path.",
+    "repair_verification": {
+      "fresh_pairs": 1000,
+      "augmented_pair_checks": 8000,
+      "fixture_variants": 16,
+      "regression_module": "arc_agi2.test_visible_evidence",
+      "additional_cli_review_claimed": false
+    }
+  }
+}

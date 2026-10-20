@@ -1,0 +1,30 @@
+{
+  "task_id": "3af2c5a8",
+  "factory_sha256": "6d291555f6838efec38bcde4f28806f0e644deedb4b21cd9e24144f8a81b3f06",
+  "constructor_sha256": "770f7f982e8e6d926ab4eac5d98bdd3ec4ceb8c1f0a391a700d8f17fbb1f7273",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 235027661041187,
+  "d4": 7,
+  "unique_base_inputs": 985,
+  "seconds": 1.0211476249387488,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Host-authored direct program with constructor/source review, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "Replaced incorrect claim that mirror expansion commutes with every D4. The original input quadrant moves under augmentation. Host-authored factory explicitly specializes visible source indices for the correct corner and mirrors across both output seams. No untransform/retransform wrapper. Same direct geometric mechanism as62c24649, now verified on this rectangular family.",
+    "limitations": "Requires the demonstrated quadrant orientation. Shared augmented demonstrations disambiguate orientation; no colour assumptions.",
+    "host_review": "Replaced incorrect claim that mirror expansion commutes with every D4. The original input quadrant moves under augmentation. Host-authored factory explicitly specializes visible source indices for the correct corner and mirrors across both output seams. No untransform/retransform wrapper. Same direct geometric mechanism as62c24649, now verified on this rectangular family.",
+    "repair_verification": {
+      "fresh_pairs": 1000,
+      "augmented_pair_checks": 8000,
+      "fixture_variants": 16,
+      "regression_module": "arc_agi2.test_visible_evidence",
+      "additional_cli_review_claimed": false
+    },
+    "author": "host"
+  }
+}

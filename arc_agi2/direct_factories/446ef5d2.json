@@ -1,0 +1,29 @@
+{
+  "task_id": "446ef5d2",
+  "factory_sha256": "27b472191c4b35ef706d6217263f116af125155c5daa695336038ae4e0577eab",
+  "constructor_sha256": "17a7b631f4c4ee48a5e7a36a8aa9ff58d409534da0fa46afa605ad208df62f71",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 253643016777856,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 9.639429500093684,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The emitted program runs the generator's mechanism directly in visible coordinates.\n\nRoles are read from the pixels, so any palette works:\n- The background is the most common colour.\n- The marker is the non-background colour with exactly 3 cells inside a 2x2 box.\n- The frame is the most common fragment colour.\n- The fragments are the 4-connected components of the remaining non-background cells.\n\nThe empty cell of the marker's 2x2 box is one corner of the rectangle. The rectangle extends away from the marker in both visible directions (dy, dx), so reflections and rotations are handled geometrically.\n\nFor each factorisation h x w of the total fragment area that fits in the grid at that anchor, the program runs a translation-only exact-cover search with these rules:\n- It fills the first empty cell in a fixed scan order.\n- The piece covering that cell is placed by its own first cell in the same order.\n- Pieces may not overlap.\n- Every cell on the rectangle's border must be frame colour.\n- Larger pieces are tried first.\n- Each factorisation has a node budget.\n\nThe factory uses d4 only to choose the scan order. It maps the original 'down' and 'right' unit vectors through the D4 transform: a reflection negates 'right', and each clockwise rotation sends (dr,dc) to (dc,-dr). It then sorts cells by (D\u00b7p, R\u00b7p). This makes the visible search follow the original reading order, so the search tree, and therefore the node count, matches what the generator's uniqueness check bounded (at most 60000 nodes for a full enumeration). The generator guarantees that the framed tiling is unique across all fitting factorisations, so the first tiling found is the correct answer.\n\nThe output is a background-filled grid with the pieces stamped at their tiled positions. This removes the marker and the original fragment positions. All four approved fixtures follow this uniform rule; no contradictions were found.",
+    "limitations": "Fresh generated scenes have checked unique painting. Some original fixture tilings are ambiguous under framing alone: preserve archived input-order tie convention, specialized coherently across D4; no claim of uniqueness for those fixtures. Exact search remains budgeted and every episode must pass execution verification.",
+    "host_review": "Read exact-cover constructor uniqueness filter and full factory. For fresh scenes, all valid framed tilings agree; constructor rejects ambiguity and exhausted proof budget. A supplied fixture admits multiple framed arrangements under these constraints. Preserve archived deterministic choice across D4 by specializing factorization order, component tie order, cell scan and anchor order together. Earlier factory specialized only cell scan. This correction preserves all original labels; it does not claim original fixture uniqueness.",
+    "repair_verification": {
+      "fresh_pairs": 1000,
+      "augmented_pair_checks": 8000,
+      "fixture_variants": 16,
+      "regression_module": "arc_agi2.test_visible_evidence",
+      "additional_cli_review_claimed": false
+    }
+  }
+}

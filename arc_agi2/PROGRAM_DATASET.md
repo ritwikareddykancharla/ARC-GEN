@@ -35,7 +35,7 @@ recorded. Passing finite audits does not prove unrestricted generalization.
 
 - 213 native direct-coordinate certificates admitted after fresh audits and
   supplied-fixture checks.
-- 706 admitted factories. Each passed 1,000 fresh pairs, 8,000 augmented pair
+- 711 admitted factories. Each passed 1,000 fresh pairs, 8,000 augmented pair
   checks and 16 supplied-fixture variants. Their audit records retain draft
   limitations and source/constructor hashes. These checks are finite evidence,
   not proof of correctness on every generated input.
@@ -46,7 +46,7 @@ recorded. Passing finite audits does not prove unrestricted generalization.
   counts must be computed as a union, not added.
 - Local exporter test: 18 fresh base episodes, 144 augmented PNG/program/grid
   records. It requested 20 bases and reported a two-episode shortfall.
-- The union currently admits 925 of 1,120 families; 195 still need direct
+- The union currently admits 930 of 1,120 families; 190 still need direct
   augmented program admission. Constructor coverage and program coverage are
   different gates.
 - Synthetic labels for `00d62c1b` now fill every enclosed background component,
@@ -334,3 +334,29 @@ The production target remains 1,000 fresh episodes per family before augmentatio
 Full dataset generation and training remain unlaunched while coverage is incomplete.
 
 Regression validation for this checkpoint: **316 tests passed**.
+
+## Visible-evidence checkpoint: 930 verified program families
+
+Five additional factories bring coverage to **930/1,120**, with **190 remaining**
+and 711 factory certificates.
+
+- `2dd70a9a`: reject random obstacle scenes with competing successful sliding routes. The check uses an input-only state graph, backward reachability and a single terminating route. U/S geometry is retained; only obstacle noise is resampled.
+- `342dd610`: reject overlapping source dots whose overwritten colour would otherwise leave an invisible output target.
+- `3af2c5a8`: specialize the mirrored expansion's input corner correctly under D4. The previous implementation incorrectly assumed full D4 commutation.
+- `446ef5d2`: preserve exact-cover factorization and component tie ordering across D4, in addition to the cell scan. Fresh scenes have verified unique paintings; some supplied fixtures permit multiple framed arrangements, for which the archived deterministic ordering is retained.
+- `5ecac7f7`: distinguish full separator lines from separator-coloured content within a panel. The latter occurs in a supplied fixture and must remain eligible when identifying the middle strip.
+
+Each family passed 1,000 fresh pairs / 8,000 augmented pair checks / 16 supplied
+fixture variants. The complete-episode audit passed 100 base episodes / 800
+augmented program-and-grid records, with zero errors. Evidence is recorded in
+`reports/episode-evidence-930-audit.json`. All 322 regression tests passed.
+
+A separate investigation of `d753a70b` found that its first demonstration uses
+a one-column offset for a growing bottom-edge diamond, while random generation
+uses concentric growth. A ten-cell concentric alternative was prepared locally
+for investigation only. No fixture labels were changed, and the family remains
+on hold pending a justified rule or approved teaching correction.
+
+The production setting remains 1,000 fresh episodes per family before shared
+rotations/reflections/colour augmentation. Bulk generation and training have not
+been launched.

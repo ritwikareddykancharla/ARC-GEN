@@ -1,0 +1,29 @@
+{
+  "task_id": "5ecac7f7",
+  "factory_sha256": "09e7a92143552bf681b51fa3533d8a961d7983751cd0010b1eebcb46f540a41a",
+  "constructor_sha256": "63834faea684d4e40c6e689b064e6f5a08dd95c9e3c76d6d615fa4642136b5f6",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 173173710595076,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 2.5514747500419617,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "In the generator, the input is three equal panels of side `size`, separated by two full lines of colour 6 on a background of 7. Each panel is cut into three strips across the panel axis, and each strip holds one connected shape of a single colour. The first strip's shape always reaches the strip's far edge, the middle strip's shape spans every one of its lines, and the last strip's shape always touches its near edge. Adjacent strips always have different colours. So, scanning the lines of a panel in order, the non-empty lines form exactly three colour runs with no gaps between them.\n\nThe output is built from these lines of the input, copied whole:\n- panel 0, from its start through the end of its first run;\n- panel 1, its middle run;\n- panel 2, from the start of its last run through its end.\n\nThis is a direct line selection (the generator's `color_map`). It also covers the case where the middle strip does not sit at the same local offset as its output position, a case the archived 'k-th object at the same local position' heuristic would mishandle.\n\nThis selection rule reads the same whether the panel axis is traversed forwards or backwards. So under D4 only the axis matters: rotations by an odd number of quarter turns stack the panels vertically, making the separators full rows and the selected bands rows. The factory chooses columns or rows from `d4`. It uses `palette[7]` as the background constant and `palette[6]` as the separator constant. Separators are found as full lines of the separator colour that split the grid into three equal panels. If that fails, it falls back to the geometry `size = (L - 2) // 3`.",
+    "limitations": "- **Panel axis comes only from `d4`.** It is not re-inferred from the grid shape, so it relies on the host applying D4 as described.\n- **One colour per line is assumed.** Each panel line is taken to hold a single shape colour, as the generator guarantees. If a line ever held more than one, the most frequent colour is used.\n- **Shapes are assumed column-contiguous.** This holds whether the generator checks 4- or 8-connectivity.\n- **The fixtures agree with the rule.** They are consistent with the generator's uniform line-selection rule; no contradictions were found by manual tracing of train pair 1 and test 3.\n- **Untested.** No automated tests were run.",
+    "host_review": "Read constructor and full factory. Separator colour6 also occurs as shape content in a supplied fixture. Ignoring it globally deletes a run and changes the middle-strip choice under axis reversal. Exclude only background from colour detection; identify separator lines by their full-line geometry and panel bounds. Every fresh/native fixture and all D4 palettes passed.",
+    "repair_verification": {
+      "fresh_pairs": 1000,
+      "augmented_pair_checks": 8000,
+      "fixture_variants": 16,
+      "regression_module": "arc_agi2.test_visible_evidence",
+      "additional_cli_review_claimed": false
+    }
+  }
+}

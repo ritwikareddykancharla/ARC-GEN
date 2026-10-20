@@ -31,6 +31,9 @@ def generate(size=None, rows=None, cols=None, colors=None):
     grid, output = common.grids(size, size, 8)
     for row, col, color in zip(rows, cols, colors):
       r, c = row, col
+      # Output destinations may differ even when two source dots coincide.
+      # Reject an overwritten source rather than keeping its invisible target.
+      if grid[r][c] != 8: return None, None
       grid[r][c] = color
       if color == 1: r, c = r + 0, c + 1
       if color == 2: r, c = r + 0, c - 2

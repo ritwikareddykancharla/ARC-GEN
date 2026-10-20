@@ -12,11 +12,11 @@ This fork adds a reference-guided generator workflow and an adaptive episode bui
 
 - All **1,120** canonical tasks inventoried with saved Opus/Fable explanations, `transform(grid)` programs, provenance and separately labelled teaching fixtures.
 - **891 existing upstream generators** reproduce the canonical pair sets (pair ordering can differ between releases).
-- **33 new constructive implementations** have passed bounded validation: the original three plus 30 additional counting, selection, geometry, legend, relational-motion and repair constructors. Standalone conversion and review are tracked separately below.
+- **35 new constructive implementations** have passed bounded validation: the original three plus 30 additional counting, selection, geometry, legend, relational-motion and repair constructors. Standalone conversion and review are tracked separately below.
 - **Two variable-size extensions**: `0692e18c` (inverse self-tiling) and `00576224` (three-by-three tiling with mirrored middle band).
-- All 35 research constructors (33 new families plus two size extensions) passed **300 random differential tests each**, and their reference solvers reproduce all original examples. Outputs are constructed independently from latent parameters, then compared with the saved transform.
+- All 37 research constructors (35 new families plus two size extensions) passed **300 random differential tests each**, and their reference solvers reproduce all original examples. Outputs are constructed independently from latent parameters, then compared with the saved transform.
 - **22 additional fixed-size families / 111 size-parameter configurations** passed bounded 12-seed differential tests. Every such generated pair is checked again during generation. This is agreement evidence, not proof of semantic correctness.
-- **196 tasks still need constructive generators**. A saved transform is not itself an input generator. Reference packets and `reports/generator-roadmap.csv` provide the task-by-task backlog.
+- **194 tasks still need constructive generators**. A saved transform is not itself an input generator. Reference packets and `reports/generator-roadmap.csv` provide the task-by-task backlog.
 
 ## Inspect
 
@@ -72,12 +72,14 @@ The authoring campaign uses three concurrent Claude CLI processes under the user
 
 A zero-error differential check is a bounded agreement test. It does not prove the saved solver is universally correct or that every original mechanism variant is covered.
 
-**27 standalone modules are now reviewed and registered** (the exact list lives in `task_registry.py`). Each passed 1,000 seed checks and exact original train/test fixture reconstruction. The first sixteen used seeds 0..999 (including their 300 author-validation seeds); the next eleven used independent seeds 20,000..20,999. The regression suite also checks registered source hashes and seeds 10,000..10,019.
+**29 standalone modules are now reviewed and registered** (the exact list lives in `task_registry.py`). Each passed 1,000 seed checks and exact original train/test fixture reconstruction. The first sixteen used seeds 0..999 (including their 300 author-validation seeds); the next thirteen used independent seeds 20,000..20,999. The regression suite also checks registered source hashes and seeds 10,000..10,019.
 
-Twenty-four conversions replace earlier research constructors with the upstream task-file interface. The total remains 33 new constructive families, with 6 still awaiting standalone conversion/review. Remaining CLI drafts are authored and validated locally. Restricted shape and dimension ranges are documented per file and in `reports/standalone/`; the size-matching builder must respect those ranges.
+Twenty-four conversions replace earlier research constructors with the upstream task-file interface. The total is now 35 new constructive families, with 6 still awaiting standalone conversion/review. Remaining CLI drafts are authored and validated locally. Restricted shape and dimension ranges are documented per file and in `reports/standalone/`; the size-matching builder must respect those ranges.
 
 Independent validation exposed a background-inference failure in the saved `d4c90558` solver: a thick frame can dominate a small grid, causing the checker to interpret the wrong colour as background. The constructor now samples the explicit domain where 0 strictly outnumbers every other colour. The failing examples are retained in `reports/standalone/d4c90558-counterexamples.json`. This restriction is not evidence that the conceptual counting rule fails on denser scenes.
 
 Semantic review also corrected `e872b94a`: its generated walls must partition the background into N+1 connected regions, as every original pair does. Floating paths that merely satisfy the saved wall-count shortcut are excluded. The independent 1,000-seed check produced 998 distinct inputs (two repeats), so unique input count is reported separately from sample count.
 
 New authoring uses **Opus 5.5 via Claude Max CLI**, with three workers. Fable authoring was explicitly stopped; earlier completed artifacts remain archived and retain their original model attribution. API fallback remains disabled.
+
+The first reviewed Opus 5.5 additions, `2ba387bc` and `4c3d4a41`, add two previously missing families rather than converting existing drafts. Both reconstruct all original fixtures and pass 1,000 independent seeds. Remaining missing family count: 194.

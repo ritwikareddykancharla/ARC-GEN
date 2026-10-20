@@ -1,0 +1,217 @@
+{
+  "task_id": "4c3d4a41",
+  "ready": true,
+  "samples_requested": 1000,
+  "samples_attempted": 1000,
+  "samples_passed": 1000,
+  "seed_start": 20000,
+  "seed_end_exclusive": 21000,
+  "unique_inputs": 1000,
+  "changed_pairs": 1000,
+  "fixture_replays": 0,
+  "shapes": [
+    [
+      7,
+      16,
+      7,
+      16
+    ],
+    [
+      7,
+      20,
+      7,
+      20
+    ],
+    [
+      7,
+      24,
+      7,
+      24
+    ],
+    [
+      7,
+      28,
+      7,
+      28
+    ],
+    [
+      8,
+      16,
+      8,
+      16
+    ],
+    [
+      8,
+      20,
+      8,
+      20
+    ],
+    [
+      8,
+      24,
+      8,
+      24
+    ],
+    [
+      8,
+      28,
+      8,
+      28
+    ],
+    [
+      9,
+      16,
+      9,
+      16
+    ],
+    [
+      9,
+      20,
+      9,
+      20
+    ],
+    [
+      9,
+      24,
+      9,
+      24
+    ],
+    [
+      9,
+      28,
+      9,
+      28
+    ],
+    [
+      10,
+      16,
+      10,
+      16
+    ],
+    [
+      10,
+      20,
+      10,
+      20
+    ],
+    [
+      10,
+      24,
+      10,
+      24
+    ],
+    [
+      10,
+      28,
+      10,
+      28
+    ],
+    [
+      11,
+      16,
+      11,
+      16
+    ],
+    [
+      11,
+      20,
+      11,
+      20
+    ],
+    [
+      11,
+      24,
+      11,
+      24
+    ],
+    [
+      11,
+      28,
+      11,
+      28
+    ]
+  ],
+  "fixture_matches": {
+    "canonical": true,
+    "teaching_fixture": true
+  },
+  "original_solver_replay": {
+    "canonical": {
+      "correct": 4,
+      "total": 4,
+      "all_exact": true
+    },
+    "teaching_fixture": {
+      "correct": 4,
+      "total": 4,
+      "all_exact": true
+    }
+  },
+  "errors": [],
+  "sha256": "d87ca713689b03a9c1248b7615c9ba36301b7f74e0f4d78853896c5919132ac5",
+  "status": "reviewed_bounded_validation_passed",
+  "limitations": "Bounded randomized agreement with a saved solver is not proof of semantic completeness.",
+  "candidate_path": "/Users/ritwika/projects/arc-agi2/outputs/research/arcgen-coverage-cli/4c3d4a41/task_4c3d4a41.py",
+  "attempts": 1,
+  "model_usage": {
+    "claude-opus-5-5": {
+      "inputTokens": 2,
+      "outputTokens": 6184,
+      "cacheReadInputTokens": 0,
+      "cacheCreationInputTokens": 11516,
+      "webSearchRequests": 0,
+      "costUSD": 0.215816,
+      "contextWindow": 1000000,
+      "maxOutputTokens": 128000,
+      "thinkingTokens": 3332,
+      "canonicalModel": "claude-opus-5-5",
+      "provider": "firstParty",
+      "costBasis": "list"
+    }
+  },
+  "rule": "Erase the grey comb on the left and re-stamp it inside the grey frame (same rows, shifted so teeth align with the coloured columns). In each tooth column, stack the column's colour directly on top of the tooth, truncated to the space between the frame ceiling and the tooth, and fill any remaining space above with grey.",
+  "scope": "Supports K=3..6 teeth/columns (width 4K+4) and comb base row B=4..8 (height B+3), random tooth heights (top rows 2..B-1), random grey head lengths, stack lengths 1..B-1 and distinct non-grey stack colours, producing both truncated stacks and grey-padded stacks. Does not vary background (0), grey (5), the frame's top-right placement, the comb starting at column 1, the 2-column tooth spacing, or the left opening at rows B-1..B.",
+  "constraints": [
+    "Comb is one 4-connected grey object (base row B plus teeth) separated from the frame by an empty column",
+    "Frame is the largest grey object; column grey heads attach to the frame ceiling",
+    "Coloured columns sit at frame_left+2+2i, separated by empty columns, so stacks never touch each other",
+    "Each column has grey head g>=0 and colour stack n>=1 with g+n <= B-1 so stacks stay above the comb base row",
+    "Stack colours are distinct and never 0 or 5",
+    "Tooth tops in 2..B-1 so every tooth has height >=2 and space >=1",
+    "Output always differs from input because the comb moves"
+  ],
+  "known_limitations": [
+    "Layout family is fixed: comb on left at column 1, frame flush top-right, teeth spacing 2",
+    "Frame interior always has the same structure (one empty column at each side of the coloured columns)",
+    "Tooth heights never reach the frame ceiling (space is always at least 1)"
+  ],
+  "billing": "Claude Max CLI; API credentials excluded; no API fallback",
+  "authored_sha256": "d87ca713689b03a9c1248b7615c9ba36301b7f74e0f4d78853896c5919132ac5",
+  "semantic_review": {
+    "status": "reviewed",
+    "checks": [
+      "Comb and frame constructed from tooth and column parameters",
+      "Output translates comb and seats colour stacks above teeth with explicit truncation and grey padding",
+      "Tooth count, base row, tooth heights, grey heads and colour counts vary",
+      "Grid geometry and spacing constraints documented",
+      "Exact original train/test reconstruction",
+      "No archived solver import or file I/O"
+    ],
+    "limitations": [
+      "Layout family is fixed: comb on left at column 1, frame flush top-right, teeth spacing 2",
+      "Frame interior always has the same structure (one empty column at each side of the coloured columns)",
+      "Tooth heights never reach the frame ceiling (space is always at least 1)"
+    ]
+  },
+  "stress_test": {
+    "samples_requested": 1000,
+    "samples_passed": 1000,
+    "unique_inputs": 1000,
+    "changed_pairs": 1000,
+    "fixture_replays": 0,
+    "ready": true,
+    "sha256": "d87ca713689b03a9c1248b7615c9ba36301b7f74e0f4d78853896c5919132ac5",
+    "seed_start": 20000,
+    "seed_end_exclusive": 21000
+  }
+}

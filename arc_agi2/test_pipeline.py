@@ -194,6 +194,44 @@ class GeneratorTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError,'both copy positions'):
             damaged.generate(intact_pos=(0,0))
 
+    def test_irregular_regions_stacking_and_overlap_precedence(self):
+        regions=importlib.import_module('tasks.task_21897d95')
+        canvas=[[2]*6+[3]*6 for _ in range(8)]
+        p=regions.generate(canvas=canvas,markers=[(2,4,'R',1),(5,7,'L',1)])
+        self.assertEqual(p['output'],[[3]*6+[2]*6 for _ in range(8)])
+        for seed in [0,1,2,20085,20388]:
+            random.seed(seed)
+            canvas,markers,lshape=regions._random_scene(24,30,6,4,False,True)
+            _,groups=regions._components(canvas)
+            self.assertEqual(len(groups),6)
+            self.assertEqual(len(markers),4)
+            self.assertTrue(any(len(c)!=(max(y for y,x in c)-min(y for y,x in c)+1)*
+                                (max(x for y,x in c)-min(x for y,x in c)+1) for c in groups))
+            p=regions.generate(canvas=canvas,markers=markers,lshape=lshape)
+            self.assertEqual(p['output'],grid(call(solver('21897d95'),p['input'])))
+        stack=importlib.import_module('tasks.task_25c199f5')
+        for size,count in [(4,3),(5,3),(9,3),(6,4),(14,2)]:
+            random.seed(size+count)
+            p=stack.generate(size=size,num_panels=count)
+            self.assertEqual((len(p['input']),len(p['input'][0])),(size,count*size+count-1))
+            self.assertEqual((len(p['output']),len(p['output'][0])),(size,size))
+            self.assertEqual(p['output'],grid(call(solver('25c199f5'),p['input'])))
+        with self.assertRaisesRegex(ValueError,'30 columns'):
+            stack.generate(size=9,num_panels=4)
+        stamps=importlib.import_module('tasks.task_247ef758')
+        # Canonical overlap at (5,9) must keep the higher legend's colour 4.
+        p=stamps.validate()['train'][0]
+        self.assertEqual(p['output'][5][9],4)
+        random.seed(0)
+        p=stamps.generate(height=30,legend_width=5,frame_width=24)
+        self.assertEqual((len(p['input']),len(p['input'][0])),(30,30))
+        self.assertEqual(p['output'],grid(call(solver('247ef758'),p['input'])))
+        ladder=importlib.import_module('tasks.task_221dfab4')
+        for side in ['top','bottom','left','right']:
+            random.seed(0)
+            p=ladder.generate(width=30,height=24,color=2,side=side)
+            self.assertEqual(p['output'],grid(call(solver('221dfab4'),p['input'])))
+
     def test_registered_standalone_sources_and_fixtures(self):
         # Validate the registered files, not only the older research registry.
         for tid in NEW_TASK_IDS:

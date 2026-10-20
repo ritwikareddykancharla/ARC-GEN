@@ -1,0 +1,193 @@
+{
+  "task_id": "25c199f5",
+  "ready": true,
+  "samples_requested": 1000,
+  "samples_attempted": 1000,
+  "samples_passed": 1000,
+  "seed_start": 20000,
+  "seed_end_exclusive": 21000,
+  "unique_inputs": 1000,
+  "changed_pairs": 1000,
+  "fixture_replays": 0,
+  "shapes": [
+    [
+      4,
+      14,
+      4,
+      4
+    ],
+    [
+      5,
+      17,
+      5,
+      5
+    ],
+    [
+      6,
+      20,
+      6,
+      6
+    ],
+    [
+      7,
+      23,
+      7,
+      7
+    ],
+    [
+      8,
+      26,
+      8,
+      8
+    ],
+    [
+      9,
+      29,
+      9,
+      9
+    ]
+  ],
+  "fixture_matches": {
+    "canonical": true,
+    "teaching_fixture": true
+  },
+  "original_solver_replay": {
+    "canonical": {
+      "correct": 7,
+      "total": 7,
+      "all_exact": true
+    },
+    "teaching_fixture": {
+      "correct": 7,
+      "total": 7,
+      "all_exact": true
+    }
+  },
+  "errors": [],
+  "sha256": "b1fdda440349bb9a034adfefeec518ec2e9c9b448aec728296419f6be65f4cc1",
+  "status": "reviewed_bounded_validation_passed",
+  "limitations": "Bounded randomized agreement with a saved solver is not proof of semantic completeness.",
+  "candidate_path": "/Users/ritwika/projects/arc-agi2/outputs/research/arcgen-coverage-cli/25c199f5/task_25c199f5.py",
+  "attempts": 1,
+  "model_usage": {
+    "claude-opus-5-5": {
+      "inputTokens": 2,
+      "outputTokens": 7836,
+      "cacheReadInputTokens": 1225,
+      "cacheCreationInputTokens": 6696,
+      "webSearchRequests": 0,
+      "costUSD": 0.21054099999999998,
+      "contextWindow": 1000000,
+      "maxOutputTokens": 128000,
+      "thinkingTokens": 3446,
+      "canonicalModel": "claude-opus-5-5",
+      "provider": "firstParty",
+      "costBasis": "list"
+    }
+  },
+  "rule": "Read ordered separated panels. Drop each panel's rigid piece into an empty panel-sized canvas, keeping its columns and entering at row zero, until further descent hits the floor or earlier pieces. Original fixtures contain three 5x5 panels.",
+  "scope": "Default random scenes use three square panels of side 4..9, with 5 weighted twice. Optional counts 2..4 and sizes 4..14 are supported when total width count*size+count-1 <=30. Original three-panel 5x5 fixtures are unchanged; other dimensions/counts are explicitly synthetic extrapolations. Background 7, separator 6 and alternating piece colours 1/5 remain fixed. Shapes include bars, rectangles, rings, T/L/plus shapes and small random connected polyominoes. Entry collisions are excluded in random scenes.",
+  "constraints": [
+    "Every piece lies inside one input panel and is nonempty.",
+    "Consecutive random pieces alternate colours 1 and 5.",
+    "Each random piece enters the output at row zero without collision.",
+    "The concatenated grid has at most 30 columns.",
+    "Background 7 is strictly the most frequent input colour."
+  ],
+  "known_limitations": [
+    "Size and panel-count extensions are mechanism extrapolations, not additional original examples.",
+    "Only rigid vertical falls are generated: no sideways movement, rotations or line clearing.",
+    "Background, separator and alternating palette are fixed.",
+    "Random polyominoes are small; large arbitrary free-form pieces are not sampled.",
+    "Bounded rejection raises without a canned fallback. Explicit fixtures retain the saved solver's entry-overlap semantics; random scenes exclude overlap."
+  ],
+  "billing": "Claude Max CLI; API credentials excluded; no API fallback",
+  "authored_sha256": "760e1abe6442f27ce4998a29649789e7624576cb499c47061e5781e4936d28ee",
+  "stress_test": {
+    "task_id": "25c199f5",
+    "ready": true,
+    "samples_requested": 1000,
+    "samples_attempted": 1000,
+    "samples_passed": 1000,
+    "seed_start": 20000,
+    "seed_end_exclusive": 21000,
+    "unique_inputs": 1000,
+    "changed_pairs": 1000,
+    "fixture_replays": 0,
+    "shapes": [
+      [
+        4,
+        14,
+        4,
+        4
+      ],
+      [
+        5,
+        17,
+        5,
+        5
+      ],
+      [
+        6,
+        20,
+        6,
+        6
+      ],
+      [
+        7,
+        23,
+        7,
+        7
+      ],
+      [
+        8,
+        26,
+        8,
+        8
+      ],
+      [
+        9,
+        29,
+        9,
+        9
+      ]
+    ],
+    "fixture_matches": {
+      "canonical": true,
+      "teaching_fixture": true
+    },
+    "original_solver_replay": {
+      "canonical": {
+        "correct": 7,
+        "total": 7,
+        "all_exact": true
+      },
+      "teaching_fixture": {
+        "correct": 7,
+        "total": 7,
+        "all_exact": true
+      }
+    },
+    "errors": [],
+    "sha256": "b1fdda440349bb9a034adfefeec518ec2e9c9b448aec728296419f6be65f4cc1",
+    "status": "validated_candidate_needs_semantic_review",
+    "limitations": "Bounded randomized agreement with a saved solver is not proof of semantic completeness."
+  },
+  "semantic_review": {
+    "status": "reviewed",
+    "checks": [
+      "Each piece enters at the top, retains its columns and falls rigidly onto floor/earlier pieces",
+      "Random entry collisions rejected; background remains the most frequent input colour",
+      "Original three 5x5 panel fixtures preserved; larger panels/counts are labelled synthetic extrapolations",
+      "Requested size/count must fit 30 columns; no deterministic stack fallback",
+      "1000 independent seeds 20000..20999 checked against saved solver"
+    ],
+    "limitations": [
+      "Size and panel-count extensions are mechanism extrapolations, not additional original examples.",
+      "Only rigid vertical falls are generated: no sideways movement, rotations or line clearing.",
+      "Background, separator and alternating palette are fixed.",
+      "Random polyominoes are small; large arbitrary free-form pieces are not sampled.",
+      "Bounded rejection raises without a canned fallback. Explicit fixtures retain the saved solver's entry-overlap semantics; random scenes exclude overlap."
+    ]
+  }
+}

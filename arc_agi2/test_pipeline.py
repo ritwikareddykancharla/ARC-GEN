@@ -11,6 +11,33 @@ from .fixture_policy import fixture_basis
 from .augmentation import apply_episode,settings,exhaustive_variants
 
 class GeneratorTests(unittest.TestCase):
+    def test_motif_counting_glyph_and_beam_controls(self):
+        motif=importlib.import_module('tasks.task_5833af48')
+        with self.assertRaises(ValueError):
+            motif.generate(scale=1.5)
+        counter=importlib.import_module('tasks.task_58490d8a')
+        with self.assertRaises(ValueError):
+            counter._sprite([[1,0,0],[0,0,1]])
+        glyph=importlib.import_module('tasks.task_58f5dbd5')
+        with self.assertRaises(ValueError):
+            glyph._parse('111/.z./111')
+        cases=[
+            ('5833af48',dict(height=30,width=30,color=7,scale=3)),
+            ('58490d8a',dict(height=30,width=30,background=7,legend=[2,4],
+                             counts=[8,1],num_distractors=1,sprite_mode='procedural')),
+            ('58f5dbd5',dict(height=30,width=30,bg=8,rows=3,cols=2,
+                             num_distractors=2,side='bottom')),
+            ('5961cc34',dict(height=30,width=30,n_hits=4,n_distractors=2,direction='left')),
+        ]
+        for tid,kwargs in cases:
+            random.seed(30000)
+            module=importlib.import_module('tasks.task_'+tid)
+            p=call(module.generate,seconds=20,**kwargs)
+            self.assertEqual((len(p['input']),len(p['input'][0])),(30,30))
+            self.assertEqual(p['output'],grid(call(solver(tid),p['input'])),tid)
+            if tid=='58f5dbd5':
+                self.assertEqual((len(p['output']),len(p['output'][0])),(19,13))
+
     def test_long_walk_large_mover_and_marker_line_controls(self):
         walk=importlib.import_module('tasks.task_5545f144')
         arrow=[(0,0),(-1,-1),(-1,1)]

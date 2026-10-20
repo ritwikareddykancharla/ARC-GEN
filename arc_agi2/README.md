@@ -12,11 +12,11 @@ This fork adds a reference-guided generator workflow and an adaptive episode bui
 
 - All **1,120** canonical tasks inventoried with saved Opus/Fable explanations, `transform(grid)` programs, provenance and separately labelled teaching fixtures.
 - **891 existing upstream generators** reproduce the canonical pair sets (pair ordering can differ between releases).
-- **105 new constructive implementations** have passed bounded validation, covering counting, selection, geometry, legends, relational motion, scaling, pattern construction and repair. Standalone conversion and review are tracked separately below.
+- **109 new constructive implementations** have passed bounded validation, covering counting, selection, geometry, legends, relational motion, scaling, pattern construction and repair. Standalone conversion and review are tracked separately below.
 - **Two variable-size extensions**: `0692e18c` (inverse self-tiling) and `00576224` (three-by-three tiling with mirrored middle band).
-- All 107 constructors (105 new families plus two size extensions) passed **300 random differential tests each**. Of these, 106 reproduce all original examples; `581f7754` uses the explicitly approved, hash-pinned eight-cell teaching correction. Its unchanged canonical replay is reported separately as 4/5, versus 5/5 on the teaching copy. Outputs are constructed independently from latent parameters, then compared with the saved transform.
+- All 111 constructors (109 new families plus two size extensions) passed **300 random differential tests each**. Of these, 110 reproduce all original examples; `581f7754` uses the explicitly approved, hash-pinned eight-cell teaching correction. Its unchanged canonical replay is reported separately as 4/5, versus 5/5 on the teaching copy. Outputs are constructed independently from latent parameters, then compared with the saved transform.
 - **22 additional fixed-size families / 111 size-parameter configurations** passed bounded 12-seed differential tests. Every such generated pair is checked again during generation. This is agreement evidence, not proof of semantic correctness.
-- **124 tasks still need constructive generators**. A saved transform is not itself an input generator. Reference packets and `reports/generator-roadmap.csv` provide the task-by-task backlog.
+- **120 tasks still need constructive generators**. A saved transform is not itself an input generator. Reference packets and `reports/generator-roadmap.csv` provide the task-by-task backlog.
 
 ## Inspect
 
@@ -30,7 +30,7 @@ Install Python 3.12+, numpy, pyarrow and huggingface-hub. From the repository ro
 
 ```sh
 python -m unittest arc_agi2.test_pipeline -v
-python -m arc_agi2.audit --workers 4
+python -m arc_agi2.audit --workers 8
 python -m arc_agi2.validate_parameters
 ARCGEN_WORKERS=32 python -m arc_agi2.build_million
 ```
@@ -72,9 +72,9 @@ The authoring campaign uses eight concurrent Claude CLI processes under the user
 
 A zero-error differential check is a bounded agreement test. It does not prove the saved solver is universally correct or that every original mechanism variant is covered.
 
-**99 standalone modules are now reviewed and registered** (the exact list lives in `task_registry.py`). Each passed 1,000 seed checks and exact reconstruction of its approved validation fixture: canonical for 98 modules, the labelled teaching copy for `581f7754`. The first sixteen used seeds 0..999 (including their 300 author-validation seeds); the next eighty-three used independent seeds 20,000..20,999. The regression suite also checks registered source hashes and seeds 10,000..10,019.
+**103 standalone modules are now reviewed and registered** (the exact list lives in `task_registry.py`). Each passed 1,000 seed checks and exact reconstruction of its approved validation fixture: canonical for 102 modules, the labelled teaching copy for `581f7754`. The first sixteen used seeds 0..999 (including their 300 author-validation seeds); the next eighty-seven used independent seeds 20,000..20,999. The regression suite also checks registered source hashes and seeds 10,000..10,019.
 
-Twenty-four conversions replace earlier research constructors with the upstream task-file interface. The total is now 105 new constructive families, with 6 still awaiting standalone conversion/review. Remaining CLI drafts are authored and validated locally. Restricted shape and dimension ranges are documented per file and in `reports/standalone/`; the size-matching builder must respect those ranges.
+Twenty-four conversions replace earlier research constructors with the upstream task-file interface. The total is now 109 new constructive families, with 6 still awaiting standalone conversion/review. Remaining CLI drafts are authored and validated locally. Restricted shape and dimension ranges are documented per file and in `reports/standalone/`; the size-matching builder must respect those ranges.
 
 Independent validation exposed a background-inference failure in the saved `d4c90558` solver: a thick frame can dominate a small grid, causing the checker to interpret the wrong colour as background. The constructor now samples the explicit domain where 0 strictly outnumbers every other colour. The failing examples are retained in `reports/standalone/d4c90558-counterexamples.json`. This restriction is not evidence that the conceptual counting rule fails on denser scenes.
 
@@ -82,7 +82,7 @@ Semantic review also corrected `e872b94a`: its generated walls must partition th
 
 Authoring used **Opus 5.5 via Claude Max CLI**, ultimately with sixteen workers; the subsequent 24-worker review pass has completed all 145 candidates. Host integration and an eight-worker coverage audit continue. Fable authoring was explicitly stopped; earlier completed artifacts remain archived and retain their original model attribution. API fallback remains disabled.
 
-The first reviewed Opus 5.5 additions, `2ba387bc` and `4c3d4a41`, add two previously missing families rather than converting existing drafts. Both reconstruct all original fixtures and pass 1,000 independent seeds. Remaining missing family count at the current checkpoint: 124.
+The first reviewed Opus 5.5 additions, `2ba387bc` and `4c3d4a41`, add two previously missing families rather than converting existing drafts. Both reconstruct all original fixtures and pass 1,000 independent seeds. Remaining missing family count at the current checkpoint: 120.
 
 
 The next six reviewed Opus additions are `8698868d` (match panels by hole counts), `b5ca7ac4` (directional object stacking), `b0039139` (combine four instruction panels), `c4d067a0` (anchor a scaled legend), `c7f57c3e` (swap decorations across scales), and `da515329` (construct interleaved spirals). All six reconstruct the original fixtures and pass 1,000 independent seed checks. Five produced 1,000 unique inputs; `da515329` produced 982, reflecting its more limited native parameter space. Review fixed ignored parameter overrides, removed a canned fallback, and included diagonal hole contacts present in the originals. The eleven-test regression suite passes. Supported ranges and limitations remain in each task's report.
@@ -128,3 +128,5 @@ Four further reviewed modules bring standalone coverage to 95: `4e45f183` (panel
 Four further reviewed modules bring standalone coverage to 99: `54dc2872` (L-corner target alignment), `5545f144` (dot-eating animation), `5623160b` (objects pushed away from anchors), and `581f7754` (edge-marker alignment). Each passed 1,000 independent seeds and 120 targeted cases. Added exact long-path and large-mover controls; checks include 12-step walks, 19/24-cell movers, all directions, multi-key shapes and clipping. The saved `5545f144` prose omits two final test moves; generator validation follows the executable rule and canonical answer. All 32 regression tests pass. Coverage is **996/1,120**, with **124 missing**.
 
 `fixture_policy.py` pins the original and approved corrected versions of `581f7754`. Canonical data is never overwritten; the gallery shows the changed demonstration outputs separately, and future episodes carry correction provenance outside the model prompt. Unapproved curated packets cannot silently replace canonical fixtures. The bulk-generation and training gates remain in force.
+
+Four further reviewed modules bring standalone coverage to 103: `5833af48` (motif/pattern composition), `58490d8a` (legend-based object counts), `58f5dbd5` (negative glyph stamping), and `5961cc34` (beam relays). Each passed 1,000 independent seeds, exact canonical fixtures and 120 targeted cases. Requested 30x30 canvases are preserved. Counting now samples fresh procedural masks, including diagonal connectivity; glyph checks cover all four sides and disconnected/eight-cell masks. Beam checks cover exact zero through four hits with distractors. Documented native restrictions remain explicit. All 33 regression tests pass. Coverage is **1,000/1,120**, with **120 missing**. Bulk generation and model training remain stopped.

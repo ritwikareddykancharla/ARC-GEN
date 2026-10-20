@@ -63,6 +63,11 @@ def _hole_count(cells):
 
 
 def require_colour_evidence(task_id, demonstrations, queries, palette=None, d4=0):
+    if task_id == 'a1aa0c1e':
+        from .ladder_evidence import require_ladder_evidence
+        require_ladder_evidence(demonstrations, queries,
+                                list(range(10)) if palette is None else palette, d4)
+        return
     if task_id == 'a680ac02':
         from .frame_spacing_evidence import require_spacing_evidence
         require_spacing_evidence(demonstrations, queries,

@@ -1,0 +1,30 @@
+{
+  "task_id": "a1aa0c1e",
+  "factory_sha256": "c64a12a5f16fb0353ca581bde271398580fddff9d2163897582613530bbb32d1",
+  "constructor_sha256": "756ed9634cfec4f85ca0f62979cba217440c644b0935d175802d02bcbbec0e2e",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "context_retries": 5,
+  "sampler_rejections": [],
+  "audit_scope": "250 fresh queries held fixed while resampling3demo context using visible ladder evidence only; no query labels in admission; all four pairs executed under8D4per acceptedepisode.",
+  "unique_base_inputs": 1000,
+  "seconds": 4.5875242500333115,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "author": "host-revised Opus CLI draft",
+    "explanation": "Read contiguous ladder lengths and rung counts from the three level colours. Compare two rules against every demonstration: length rank (native) and rung count (archived interpretation). Reject contradictory or query-ambiguous contexts; never default to rank. Climber position follows which ladders reach the next level. Emit output in visible coordinates using D4-specialized affine cell placement, without inverse-grid wrappers.",
+    "limitations": "Native21x21domain with four differently coloured levels, three ladders, one climber and a complete bottom ladder. Output layout and semantic colours are specialized by episode augmentation. Evidence distinguishes rank from rungs only, not all possible ARC rules. Native all-equal lengths are3,4,5; worker examples6/7cannot fit native row constraints.",
+    "host_review": {
+      "status": "reviewed",
+      "constructor_unchanged": true,
+      "reason": "A reachable length1stub has no rung but receives positive rank encoding. Example lengths[1,6,7] givesrank[1,2,3] andrungs[0,3,3]. Preserve such queries and teach the correct rule in demos.",
+      "source_changes": "Removed default rank when rules conflict or query predictions differ. Explicitbackground/floor/markerroles; require4levels and uniqueclimbercolour; no fallback fabricatedgrid orcolour.",
+      "independent_gate": "Locate full level lines and floor from visible input; collect per-colour off-level coordinates to recover length and alternating2/3cell rung structure. Gate never receives query answers.",
+      "audit": "Fresh1000unique/8000augmented/16fixtures contextual audit,5demo retries.6targetedtests includingall1818nativegap/lengthconfigurations. Fullquota1000bases8000records,628queries require rule evidence,30demo retries,0shortfalls.578regressiontests passed."
+    }
+  }
+}

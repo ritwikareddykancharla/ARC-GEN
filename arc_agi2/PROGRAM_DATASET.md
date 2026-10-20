@@ -1531,3 +1531,47 @@ Reports: `reports/a680ac02-demonstrated-spacing-evidence.json`,
 `reports/query-preserving-assembly-1071-a680ac02.json`.
 Remaining: 37 semantic/context holds, 9 execution failures and 3 missing
 factories. Expanded dataset publication, SFT and RLVR remain outstanding.
+
+
+## Coverage checkpoint: 1,072 families
+
+Added `a1aa0c1e` without changing its constructor or benchmark labels. Its native
+encoding ranks ladder lengths; counting visible rungs is a different rule that
+happens to fit the original fixtures. A reachable [1,6,7] length configuration
+has rank encoding [1,2,3] versus rung counts [0,3,3]. The new program fits both
+modes to all demonstration outputs and requires their query predictions to agree.
+It no longer defaults to rank when context is insufficient or contradictory.
+
+The independent evidence decoder finds full level lines and the floor directly
+in the visible input, then collects off-level colour coordinates. It validates
+contiguous ladder lanes and alternating two-cell rails/three-cell rungs. Query
+answers never enter context selection. The target emits cells directly in the
+augmented coordinate system with affine placement, without inverse-grid wrappers.
+
+Validation:
+
+- Contextual execution audit: 1,000 unique pairs, 8,000 augmented checks,
+  16 fixture variants and five demonstration retries, keeping queries fixed.
+- Six targeted tests cover all 1,818 native start-row/gap/length combinations
+  with fixed allowed colours/columns, plus D4 and palette checks on absent,
+  one-cell, even-length, partial and equal-length ladders. Other colours and
+  columns are sampled in the random audit. Equal native lengths can be 3,4,5;
+  the earlier worker examples 6 and 7 cannot fit the native row constraints.
+- Counterfactual demonstrations change the selected mode for the same query;
+  weak or contradictory contexts fail closed, and query-answer poisoning cannot
+  change admission.
+- Independent episode audit: 20/20 contexts and 160 verified augmented records.
+- Full-quota assembler: 1,200 unique pool pairs produce 1,000/1,000 bases and
+  8,000 verified combined records. There are 30 demonstration retries, zero
+  shortfalls and maximum pair reuse 10. Of the queries, 628 need rule evidence
+  and 372 have agreeing predictions. Overlapping category counts are: 446 with
+  an absent ladder, 186 with a one-cell stub, 785 with a positive even length,
+  and 22 with all equal lengths. No hard-case restriction was introduced.
+- Full regression: 578 tests passed.
+
+Reports: `reports/a1aa0c1e-demonstrated-ladder-evidence.json`,
+`reports/episode-evidence-1072-audit.json`, and
+`reports/query-preserving-assembly-1072-a1aa0c1e.json`.
+These were temporary local audit records, not expanded dataset publication.
+Remaining: 36 semantic/context holds, 9 execution failures and 3 missing
+factories. Expanded dataset publication, SFT and RLVR remain outstanding.

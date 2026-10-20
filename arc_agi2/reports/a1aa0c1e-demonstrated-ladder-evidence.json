@@ -1,0 +1,107 @@
+{
+  "task_id": "a1aa0c1e",
+  "constructor_unchanged": true,
+  "benchmark_labels_changed": false,
+  "hypotheses": [
+    "ladder-length rank",
+    "visible rung count capped at3"
+  ],
+  "source": "D4-specialized direct affine output placement; no inverse-grid wrapper. Uses all demonstrations to select mode, and requires agreement on query predictions.",
+  "independent_gate": "Find full lines and floor by visible colour; collect coordinates for each level colour outside its line. Contiguous lanes and alternating2/3cell structure give lengths andrungs. Only output layout transformed. No query answer supplied.",
+  "reachable_counterexample": {
+    "task_id": "a1aa0c1e",
+    "native_reachable_counterexample": {
+      "colors": [
+        1,
+        2,
+        3,
+        9
+      ],
+      "rows": [
+        1,
+        5,
+        12,
+        20
+      ],
+      "cols": [
+        2,
+        10,
+        16,
+        4
+      ],
+      "lengths": [
+        1,
+        6,
+        7
+      ]
+    },
+    "native_output": [
+      [
+        1,
+        0,
+        0,
+        9,
+        0
+      ],
+      [
+        2,
+        2,
+        0,
+        9,
+        5
+      ],
+      [
+        3,
+        3,
+        3,
+        9,
+        0
+      ]
+    ],
+    "rank_counts": [
+      1,
+      2,
+      3
+    ],
+    "rung_counts": [
+      0,
+      3,
+      3
+    ],
+    "all_equal_lengths_possible_under_native_row_gap_constraints": [
+      3,
+      4,
+      5
+    ],
+    "correction_to_worker_diagnosis": "All-equal6or7is not reachable in native21x21sampling: total row gaps would exceed19. Native all-equal lengths are3,4,5;length3 distinguishes rankfromrungs. Preserve reachable evenpartialandlength1stubcases.",
+    "next": "Keep native labels. Teachrankversusrungcountwithdemonstration evidence; do not narrowtheconstructororclaimunreachableexamples."
+  },
+  "targeted_tests": 6,
+  "test_module": "arc_agi2.test_ladder_evidence",
+  "exhaustive_scope": "All1818native start-row/gap/length combinations,withfixedallowedcoloursandcolumns. Thisisnotexhaustiveovercolourorcolumnchoices;randomauditcoversadditionalcases.",
+  "execution_audit": {
+    "task_id": "a1aa0c1e",
+    "factory_sha256": "c64a12a5f16fb0353ca581bde271398580fddff9d2163897582613530bbb32d1",
+    "constructor_sha256": "756ed9634cfec4f85ca0f62979cba217440c644b0935d175802d02bcbbec0e2e",
+    "passed": true,
+    "fresh_pairs_checked": 1000,
+    "augmented_pair_checks": 8000,
+    "fixture_variants_checked": 16,
+    "context_retries": 5,
+    "sampler_rejections": [],
+    "audit_scope": "250 fresh queries held fixed while resampling3demo context using visible ladder evidence only; no query labels in admission; all four pairs executed under8D4per acceptedepisode.",
+    "unique_base_inputs": 1000,
+    "seconds": 4.5875242500333115
+  },
+  "assembly_report": "query-preserving-assembly-1072-a1aa0c1e.json",
+  "query_categories": {
+    "requires_rule_evidence": 628,
+    "rules_agree": 372,
+    "absent_ladder": 446,
+    "one_cell_stub": 186,
+    "even_positive_length": 785,
+    "all_equal_lengths": 22
+  },
+  "category_note": "Lastfourcategorycounts overlap; firsttwopartition1000queries.",
+  "bounded_scope": "Evidence resolves these two modes, not every possible ARC rule. Native21x21domain and originalfixtures certified."
+}

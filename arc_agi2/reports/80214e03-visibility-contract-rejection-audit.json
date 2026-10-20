@@ -1,0 +1,20 @@
+{
+  "task_id": "80214e03",
+  "raw_random_draws": 10000,
+  "entire_erased_band_rejections": 0,
+  "accepted_band_shapes": {
+    "2x2": 1112,
+    "3x3": 1142,
+    "4x4": 1105,
+    "2x3": 1147,
+    "4x3": 1117,
+    "2x4": 1150,
+    "4x2": 1065,
+    "3x4": 1051,
+    "3x2": 1111
+  },
+  "contract": "Each latent row/column band retains at least one observed nonbackground pixel; individual erased blocks and partial erasures remain permitted.",
+  "observed_rejection_rate": 0.0,
+  "seconds": 1.3503917079651728,
+  "not_the_same_as_phantom_ambiguity_rate": "452/1000 earlier probe counted plausible alternative hidden-band layouts, not actually sampled entirely erased bands."
+}

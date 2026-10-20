@@ -1,0 +1,27 @@
+{
+  "task_id": "782b5218",
+  "factory_sha256": "ffdaac5ae6905938e218104661d3ce8f39622ad5a7c27adfa3a028b26f437c23",
+  "constructor_sha256": "b90ba728d65911f7c15633d7721ed7559c8bae78d3d24fdd676e7a5cf520f6a3",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "context_retries": 0,
+  "sampler_rejections": [],
+  "audit_scope": "250 fresh queries held fixed while resampling3demo context using visible barrier edge evidence only; no query labels in admission; all four pairs executed under8D4per acceptedepisode.",
+  "unique_base_inputs": 1000,
+  "seconds": 9.540576833998784,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "Learn the cleared edge from all four visible edge hypotheses using exact demonstration outputs. Flood every non-wall cell reachable from that edge and clear it; paint every remaining non-wall region with the unique scatter colour. Require all surviving hypotheses to agree on query. Factory ignores d4 and rejects missing or multiple scatter colours, absent/no-fit demos and ambiguous query predictions. No fallback to an augmentation-derived edge or arbitrary colour.",
+    "mechanism_proof": "Every native column has a contiguous one/two-cell barrier run, or is clipped entirely below the board. Consecutive drawn cells differ by at most1row, including tile joins. Adjacent barrier intervals therefore overlap or diagonally touch, preventing any four-neighbour crossing between above/below sets. Each nonempty above segment reaches the top. A wholly bottom-clipped column has no below segment, and adjacent visible runs reach the bottom. Hence the native directional per-column fill equals all components not touching the cleared top edge, including multiple sealed pockets. Top clipping is rejected by the constructor.",
+    "exhaustive_validation": "Enumerated all4920length1..4/startrow2..7/optionalverticalstep/horizontalstep parameter scenes. Original gap/top predicates admit2624scenes (1616unique visible wall profiles), including2bottom-clipped scenes. All2624native labels equal both independently scanned profiles and connected-region labels. Scatter placement does not affect this geometric identity.",
+    "archived_solver_discrepancy": "The old bottom-left-component anchor misses other lower pockets when the barrier briefly exits the board. The reachable clipped witness is retained unchanged and matches the native labels; native generator is not narrowed or relabelled.",
+    "evidence_gate": "Independent coordinate-set component enumeration in arc_agi2.barrier_edge_evidence.require_barrier_edge_evidence; source uses NumPy mask plus edge-seeded flood. A separate interval-profile implementation and exhaustive constructor-parameter replay establish semantic agreement.",
+    "tests": "Six tests pass: originalfixtures,clippedpockets,counterfactualclearedbottom,noarbitraryscattercolour,nofitfallback,ambiguousedge rejection. Fresh audit1000uniquepairs/8000D4checks/16fixturevariants,0contextretries.",
+    "limitations": "Random native outputs remain10x10. Explicit arbitrary colors inputs outside connected barrier profile domain can have different literal column-scan labels; emitted program applies the stated connected-region rule. Native rare random background absence may make original generator throw; none occurred in this audit.",
+    "native_constructor_unchanged": true
+  }
+}

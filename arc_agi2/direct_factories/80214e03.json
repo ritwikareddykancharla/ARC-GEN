@@ -1,0 +1,42 @@
+{
+  "task_id": "80214e03",
+  "factory_sha256": "a92d660312a2b96beb43db12550a7f9c73fb8acdff557051ad53131aff4ebb72",
+  "constructor_sha256": "49afde9109004be45d32bab2d9eeb5543a5a99a03df4e005a34bd5b1459ed4ea",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "context_retries": 0,
+  "sampler_rejections": [],
+  "query_identifiability_rejections": [
+    {
+      "seed": 80200069,
+      "reason": "Unobservable individual block"
+    }
+  ],
+  "demo_identifiability_rejections": 8,
+  "audit_scope": "Observable-band synthetic contract; ambiguous queries rejected from visible input alone; otherwise query held fixed during3demo resampling; no query labels in gate.",
+  "unique_base_inputs": 1000,
+  "seconds": 29.655889124958776,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "Synthetic visibility contract: every latent row band and column band retains at least one nonbackground input pixel. Random generator resamples only when an entire band is erased. Existing explicit fixtures are unchanged. Under this contract the source enumerates every compatible2..4band layout,including fully erased individual blocks. Unknown blocks or rival grids cause rejection; no greedy/majority fallback. All retained mosaic grids agree. Mirror axis is learned from demonstrations and query predictions must agree; factory ignores d4.",
+    "explicit_domain_change": "The former unrestricted punching domain admits the canonical test input with both3-column and4-column labels. Its alternative fourth band is completely erased, so input cannot reveal that label. This is a real identical-input/different-output witness, not merely poor performance. The new documented observable-band contract removes only these unobservable latent dimensions. No grid dimensions, band counts, widths, colours, partial erasure patterns, or same-colour neighbours are otherwise restricted. Individual erased blocks remain possible and are rejected by visible identifiability gating when they create unresolved colour choices.",
+    "visibility_rejection_rate": "0entire-erased-band draws among10000raw random samples. This is distinct from452/1000old inputs admitting hypothetical phantom-band alternatives. Under the new contract9903/10000fresh scenes have unique visible block grids;97/10000have a compatible layout with an erased individual block and are rejected without looking at query labels.",
+    "full_erased_block_handling": "Unknown blocks are included in enumeration. Every unknown cell has at most4adjacent cells and9possible nonbackground colours; assigning different colours from neighbours satisfies all adjacent-band nonidentity conditions and leaves multiple choices. Thus any such compatible layout proves ambiguity. A native-valid all-bands-visible twin witness is saved for seed80200069.",
+    "independent_gate": "arc_agi2.mosaic_band_evidence uses exhaustive Cartesian products of band lengths and independent block-set checks. Source uses recursive cuts pruned by monochrome interval extents. Both deduplicate only equivalent visible-line assignments and include unknown cells. Gate needs demonstration outputs and query inputs only.",
+    "tests": "6tests pass. 1000unique admitted native pairs verified under8D4:8000pairchecks plus16fixturevariants. 1intrinsically ambiguous query and8ambiguous demo draws excluded by input-only gate;0context retries;0sampler failures. Native explicit fixtures unchanged; correct program learns either row or column mirror from demos.",
+    "limitations": "Coverage is for the documented observable-band synthetic contract, not every draw the old unrestricted punching process could theoretically emit. Explicit legacy calls remain reproducible and can still intentionally construct excluded ambiguity witnesses. Band lengths3..8include original fixture height8; random sampler still uses3..6,counts2..4,totalextent<=16,origins1..2,margins1..6.",
+    "constructor_changed": true,
+    "constructor_change_scope": "Random draws retry only entirely erased latent bands; no output label edits.",
+    "reports": [
+      "canonical-test-erased-band-witness.json",
+      "observable-band-internal-erasure-twins.json",
+      "visibility-contract-rejection-audit.json",
+      "visible-band-identifiability-rate.json",
+      "host-audit.json"
+    ]
+  }
+}

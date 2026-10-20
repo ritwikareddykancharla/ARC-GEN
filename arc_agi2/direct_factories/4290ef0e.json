@@ -1,0 +1,25 @@
+{
+  "task_id": "4290ef0e",
+  "factory_sha256": "e12260f77b9307fef3cdf9e68436c1d5b9ff4696a691e688fc27d01e5eb975d0",
+  "constructor_sha256": "6c31e5f6e77d507df5d98e214d9946cdbb64caaae3dd5ad9f3f625e6200f965d",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "evidence_rejections": 0,
+  "audit_scope": "1000 unchanged native draws, independent bracket-coordinate gate and ring-distance direct program on each draw under all8D4 and permuted colours; no guess or ambiguous-scene resampling.",
+  "unique_base_inputs": 1000,
+  "seconds": 87.44672699994408,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Host-authored direct program with constructor/source review, source restrictions and execution verification.",
+  "draft_notes": {
+    "author": "host",
+    "explanation": "Enumerate exact clipped corner-bracket frames for every foreground colour. Every noncentral frame must have at least2 visible corner brackets; centres may be anywhere including outside the grid. Enumerate both complete radius assignments0..m-1 and1..m simultaneously, allowing either a visible or background-coloured centre. Render ALL feasible assignments and require exactly1 distinct output across their union. There is no ordered relaxation, hidden-cell cost, lexicographic output choice, first solution or arbitrary capped search. NumPy-free source uses ring-distance counts; independent gate constructs four explicit coordinate-set brackets, clips them and requires exact equality to visible colour cells.",
+    "domain_assumptions": "Distinct frame colours; nonoverlapping visible frames; consecutive odd sizes; arm lengths1 for radius0,2 for radius1,2..radius thereafter; at least2 visible brackets for every noncentral frame. These are native random-constructor rules. We extend uniformly to arbitrary off-grid centres and an optional background-coloured centre to preserve every canonical fixture. The background must be the unique most frequent colour; the native13x13minimum grid and6-frame maximum imply background\u226564cells while each frame\u226436.",
+    "constructor_review": "Native task_4290ef0e.py remains unchanged. All four canonical pairs satisfy the same broad class and each has exactly one answer across both size-start possibilities, including train3 with col=-1,row=height centres and the query with row=height and invisible background centre.",
+    "limitations": "Arbitrary explicit parameters can violate the declared visibility/no-overlap/arm domain and can be unidentifiable. Saved identical-input witness differs by a single visible outer corner versus a central point; the outer-corner interpretation violates the two-visible-bracket requirement. We do not claim uniqueness among arbitrary renderings that bypass native sampling guards. Such limitations are explicit rather than resolved through centred-first heuristics.",
+    "validation": "Six unit tests: original fixtures across all8D4 and palette; hidden-background centre retained; off-grid centres retained; query-label poisoning; invalid demonstrations/background ties reject; emitted code has no orientation/palette oracle or fallback. Native unchanged1000sample audit recorded separately."
+  }
+}

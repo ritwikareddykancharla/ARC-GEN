@@ -1600,3 +1600,12 @@ afe3afe9 uses demos to distinguish packing toward the marked colour from clockwi
 ### Verified program coverage: 1,085 / 1,120
 
 Eight families added: d9fac9be, abbfd121, 94be5b80, 93b4f4b3, 4852f2fa, 6cf79266, 3345333e, 891232d6. Each passes 1,000 fresh native pair checks, 8,000 augmented checks and 16 fixture variants. Direct programs reject unresolved visible ambiguities; demo-dependent conventions use demonstration answers only. Native constructors remain unchanged except a valid-draw-preserving empty-shape guard in 93b4f4b3. All 654 regression tests pass. The ring, wallpaper, legend and gallery full-quota audits each retain 1,000 bases / 8,000 combined program-grid records under explicitly audit-only local partitions. No production data or SFT launch. 35 verified-program families remain.
+
+
+### Verified program coverage: 1,093 / 1,120
+
+Eight families added: 22425bda, 337b420f, 4290ef0e, 447fd412, 6e4f6532, 782b5218, 7e2bad24, 80214e03. Each passes 1,000 fresh pair checks, 8,000 augmented checks and 16 fixture variants. Independent visible-evidence gates reject unresolved interpretations; queries with insufficient demonstration evidence are retained while the context is resampled. Exact-cover stamping requires all solutions to agree. Clipped/off-grid frame centres and mirror-end grazing/piercing are retained.
+
+The 80214e03 synthetic domain now explicitly requires every latent mosaic row/column band to remain partly visible, eliminating completely hidden bands. Individual erased blocks remain possible, with ambiguous inputs rejected by an independent gate. This is a documented generator validity change, not proof that the original unconstrained family was identifiable. A 10,000-draw probe observed no whole-band resampling and 97 other ambiguous reconstructions; all original fixtures remain unchanged.
+
+All 703 regression tests pass. 27 program families remain. This is verification coverage, not a claim that the requested 1,000-episode-per-family expanded corpus is already generated or published. Production generation and SFT have not launched.

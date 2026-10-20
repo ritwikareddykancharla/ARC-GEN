@@ -1,0 +1,25 @@
+{
+  "task_id": "447fd412",
+  "factory_sha256": "6000b57c5d93c7cd3771751dc0c816ac0af89b4bc90abb4a473d866b978204b8",
+  "constructor_sha256": "27b38ef7504d21854fa4d78f147b2ab92a8572fab52ad4f60e18621c04eff8a7",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 197463344600310,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 6.573653000057675,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Host-authored direct program with constructor/source review, source restrictions and execution verification.",
+  "draft_notes": {
+    "author": "host",
+    "mechanism": "Enumerate placements that exactly cover target marker components with scaled template marker blocks. Enumerate complete target partitions; stamp only if all covers produce the same output.",
+    "review": "Opus5.5CLI v3 algorithm/proof; host removed unchanged-input and common-stamp-intersection fallbacks. Missing or incomplete searches reject. All original fixtures plus adjacent-merged markers, single markers, separated pairs, clipping and reversed candidate order pass focused tests.",
+    "constructor_change": null,
+    "limitations": "Search limits200000nodes/512solutions explicitly reject; no scan-order selected answer. Marker blocks must be fully visible; blue shape may be clipped as original fixture.",
+    "audit": "1000unique fresh pairs,8000augchecks,16fixtures;6focusedtests. Original constructor independently produces expected labels."
+  }
+}

@@ -1,0 +1,34 @@
+{
+  "task_id": "6e4f6532",
+  "factory_sha256": "f0156e3ea151b6a3ea13b03d0c02aeb664674e302426ab18004634fb9d81294c",
+  "constructor_sha256": "7612ae5562dfc3306f418eef0a42a837ca1d7f350d674b13ef0b3daabfc406d5",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "context_retries": 838,
+  "sampler_rejections": [],
+  "query_rule_disagreement": 141,
+  "audit_scope": "Native constructor unchanged. 250 fresh queries held fixed; resample three demonstrations until all surviving marker-priority hypotheses agree. Twenty-four direction orders and any/all-outward-ray rules. No query labels in gate; no hidden D4 priority.",
+  "unique_base_inputs": 1000,
+  "native_pair_draws": 3514,
+  "seconds": 165.1116976250196,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "author": "host parallel coverage worker",
+    "explanation": "Parse border-connected monochrome walls, body/core ships and remaining core-shape targets. Enumerate all eight visible rigid orientations and translate each core onto the matching target. Evaluate26 marker interpretations: all24 orderings of the four possible outward rays, plus any-ray and all-rays readings. Rank each docking by matched-marker count, then proper rotation over reflection. Retain every tied placement; a hypothesis must yield a unique whole-grid output matching every demonstration. For the fixed query all surviving hypotheses must yield the same unique output. D4 metadata never selects a hidden ray priority.",
+    "limitations": "Native constructor unchanged, including multi-neighbour concave markers. Three demonstrations may not identify a query-sensitive ray convention; episode assembly must resample the demonstration context while preserving the query, or report a context shortfall. The26 candidate readings cover the native priority and symmetric alternatives, not every imaginable marker interpretation. Proper rotation over reflection follows the constructor mechanism; all ties within the same score/parity remain unresolved. Background must have a unique visible maximum count; native random constructor enforces this.",
+    "host_review": {
+      "status": "reviewed",
+      "constructor_unchanged": true,
+      "reason": "Do not adopt v2 constructor rejection of priority-sensitive scenes. Infer ray interpretation from visible demonstration pairs instead. Keep all tied placements and reject unresolved queries, not native hard cases.",
+      "independent_gate": "arc_agi2.ship_docking_evidence.require_docking_evidence(demonstrations,queries,palette)",
+      "gate_implementation": "Set-based components, relative ship coordinates, repeated quarter-turn/reflection maps and ray-path enumeration. Target uses boolean masks, absolute affine coordinates and stepwise ray casts.",
+      "tests": "Six tests pass: native priority-sensitive query retained with informative demos; weak canonical context rejected for the same query; counterfactual demonstration interpretation changes answer; independent gate/source predictions agree across D4; canonical fixture outputs preserved; absent/conflicting demos rejected. Query outputs may be removed or poisoned without changing gate admission.",
+      "retained_counterexamples": "marker-priority-counterexamples.json stores13 of20 seeded native scenes with candidate disagreement. unresolved-context-examples.json records the first five resampled ambiguous contexts.",
+      "audit": "Passed1000 unique accepted fresh native pairs,8000 D4/palette pair checks,16 original fixture variants. All250 queries stayed fixed;141 had disagreement across marker interpretations. Resampling3-demo contexts took838 retries and3514 native pair draws, withzero sampler rejections or query shortfalls. Runtime165.11s."
+    }
+  }
+}

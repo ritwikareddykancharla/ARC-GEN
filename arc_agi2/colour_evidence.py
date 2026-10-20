@@ -63,6 +63,41 @@ def _hole_count(cells):
 
 
 def require_colour_evidence(task_id, demonstrations, queries, palette=None, d4=0):
+    if task_id == '7e2bad24':
+        from .beam_endpoint_evidence import require_endpoint_evidence
+        require_endpoint_evidence(demonstrations, queries,
+                    list(range(10)) if palette is None else palette)
+        return
+    if task_id == '80214e03':
+        from .mosaic_band_evidence import require_mosaic_band_evidence
+        require_mosaic_band_evidence(demonstrations, queries,
+                    list(range(10)) if palette is None else palette)
+        return
+    if task_id == '337b420f':
+        from .panel_collision_evidence import require_collision_evidence
+        require_collision_evidence(demonstrations, queries,
+                    list(range(10)) if palette is None else palette)
+        return
+    if task_id == '4290ef0e':
+        from .corner_frames_evidence import require_corner_frame_evidence
+        require_corner_frame_evidence(demonstrations, queries,
+                    list(range(10)) if palette is None else palette)
+        return
+    if task_id == '782b5218':
+        from .barrier_edge_evidence import require_barrier_edge_evidence
+        require_barrier_edge_evidence(demonstrations, queries,
+                    list(range(10)) if palette is None else palette)
+        return
+    if task_id == '22425bda':
+        from .chained_lines_evidence import require_chained_lines_evidence
+        require_chained_lines_evidence(demonstrations, queries,
+                    list(range(10)) if palette is None else palette)
+        return
+    if task_id == '6e4f6532':
+        from .ship_docking_evidence import require_docking_evidence
+        require_docking_evidence(demonstrations, queries,
+                    list(range(10)) if palette is None else palette)
+        return
     if task_id == '891232d6':
         from .obstacle_path_evidence import require_obstacle_path_evidence
         require_obstacle_path_evidence(demonstrations, queries,

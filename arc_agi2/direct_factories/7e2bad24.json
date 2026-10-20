@@ -1,0 +1,35 @@
+{
+  "task_id": "7e2bad24",
+  "factory_sha256": "122fe26edde63d5fab8f04cb4956922f68e68cdcb9ed9275598617925384e7a4",
+  "constructor_sha256": "ef1dd4b8df2b8fecb704fdb4c862f62c42560c832daa4271fd247f03606ecad8",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "context_retries": 78,
+  "sampler_rejections": [],
+  "query_rule_disagreement": 102,
+  "audit_scope": "Native constructor unchanged. 250 fresh queries held fixed; resample three demonstrations until all surviving endpoint hypotheses agree. Four endpoint conventions fitted to demos and visible prefix bends. No query labels or D4 fallback.",
+  "unique_base_inputs": 1000,
+  "native_pair_draws": 1234,
+  "seconds": 23.267507957993075,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "author": "Claude CLI four-reading proposal, host strict inference and independent replay",
+    "explanation": "Trace the diagonal beam in visible coordinates. Determine parallel wall axis from mirror/glass line geometry. Candidate endpoint conventions are side contact (native constructor), either side or diagonal contact, diagonal-target contact with local corner reflection, and diagonal-target contact reflecting across the wall axis. A candidate must reproduce every demo output and each visible beam-prefix bend, including the query prefix. Return only if surviving candidates agree on the complete query grid. No no-survivor, documented-rule or axis fallback.",
+    "limitations": "Four explicit candidate conventions, not a proof that every imaginable rule is excluded. The native side-contact rule can overwrite a mirror endpoint (piercing) or reflect beside its end (grazing). We preserve and label that behavior; physical terminology alone does not prove the intended endpoint convention. Three demonstrations may be insufficient, requiring informative-context resampling while preserving the query. Input must show a diagonal monotone beam chain from a unique border tail and parallel walls.",
+    "diagnosis": "The native constructor is deterministic. The dispute is between plausible endpoint interpretations compatible with weak demonstrations, not two labels emitted by identical native calls. The v3 suggestion to reject pierces/grazes in the generator was not applied. A direct source should learn the endpoint reading from visible examples rather than hardcode a documented interpretation or use a D4-selected convention.",
+    "host_review": {
+      "status": "reviewed",
+      "constructor_unchanged": true,
+      "source_changes": "Require nonempty well-formed demonstrations, valid visible chain and unambiguous wall axis. Remove arbitrary rule fallback, no-survivor reset and malformed-demo skipping. All query-incompatible prefix hypotheses are eliminated by input evidence only.",
+      "independent_gate": "arc_agi2.beam_endpoint_evidence.require_endpoint_evidence(demonstrations,queries,palette)",
+      "independence": "Gate uses coordinate dictionaries, orders the monotone prefix along the wall axis, determines its border tail, and replays the whole trajectory. Emitted target traverses a diagonal-neighbour graph and extends both visible endpoints with NumPy grid operations.",
+      "tests": "Seven tests: weak-context rejection of pierce/graze; informative native demo preserves both; visible query-prefix bend disambiguates weak context; counterfactual demonstrated endpoint rule changes output; independent predictions agree across D4; all original fixtures; absent/invalid demos reject. Query labels may be omitted or poisoned without changing admission.",
+      "audit": "1000 unique fresh accepted native pairs,8000augmented pair checks,16 original fixture variants. All250 queries preserved,102 endpoint-sensitive,78 three-demo context retries,1234 native pair draws,zero sampler rejections.",
+      "counterexamples": "endpoint-mechanism-witnesses.json, visible-prefix-witness.json, unresolved-context-examples.json"
+    }
+  }
+}

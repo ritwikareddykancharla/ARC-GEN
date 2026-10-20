@@ -1,0 +1,26 @@
+{
+  "task_id": "22425bda",
+  "factory_sha256": "86fd477913bc9a99da58974ecdd9f2c891704c95e85fc60687989ad55ab6d4c4",
+  "constructor_sha256": "757faa4e6af91fc6b3df0e6a34200536b7623eec6e88af1381710e70d542f62d",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "context_retries": 0,
+  "sampler_rejections": [],
+  "audit_scope": "250 query-fixed episodes,3 independent native demos each, all4 pairs checked under8D4 and shuffled palette; native generator unchanged.",
+  "unique_base_inputs": 999,
+  "seconds": 12.704641291988082,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Host-authored direct program with constructor/source review, source restrictions and execution verification.",
+  "draft_notes": {
+    "author": "host",
+    "explanation": "Declared chained-overpainting mechanism, never a fallback for arbitrary painting. Generated NumPy program reconstructs candidate full rows/columns/diagonals and visible precedence constraints. Enumerates all consistent topological orders requiring each consecutive pair to cross exactly once. Independent coordinate-set gate literally repaints all candidate histories, enforcing previous-colour coverage during each step and exact final input equality. Demonstrations infer output row/column orientation and reversal; emitted program never uses D4 orientation. All surviving answers must agree, otherwise reject.",
+    "domain_assumption": "Lines are drawn as a chain: every new line covers exactly one pixel of the immediately previous colour. This is explicit in unchanged native draw() for both ambiguity modes. Demonstrations are consistent with it but do not logically prove it among arbitrary alternative task rules.",
+    "constructor_review": "Native allow_ambiguous=False forbids overwriting consecutive crossing cells. Consequently every consecutive precedence remains visible, fixing the complete chain order. Each full line retains at least2 visible pixels, fixing its line geometry. The explicit allow_ambiguous=True domain can contain residual ties, which the gate rejects.",
+    "canonical_evidence": "The unchanged canonical query has4 exact unconstrained repainting orders and1 chained history:5,4,0,9,1,3. No fixture-specific tie-break is used. The same history law applies to every native draw and all demos.",
+    "limitations": "Not a uniqueness proof among arbitrary ARC rules. Explicit allow_ambiguous=True constructor inputs can still have multiple chain histories: tests show identical inputs with orders2,3,4 and3,2,4 at a triple crossing. These are rejected, including under every D4/palette transform. No lexicographic selection, limited-order truncation, pure-paint fallback, majority-background fallback or query-label access remains.",
+    "validation": "Six unit tests pass, including canonical4-versus1history proof, residual native ambiguity, demo-learned output convention, rejection of nonchain demo labels, query-label poisoning and missing demos."
+  }
+}

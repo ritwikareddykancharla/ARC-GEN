@@ -17,7 +17,7 @@
 import common
 
 
-def generate(width=None, height=None, brow=None, bcol=None, wides=None,
+def _generate(width=None, height=None, brow=None, bcol=None, wides=None,
              talls=None, colors=None, prows=None, pcols=None):
   """Returns input and output grids according to the given parameters.
 
@@ -75,7 +75,33 @@ def generate(width=None, height=None, brow=None, bcol=None, wides=None,
         grid[brow + sum(talls[:row]) + r][bcol + sum(wides[:col]) + c] = color
   for prow, pcol in zip(prows, pcols):
     grid[brow + prow][bcol + pcol] = 0
-  return {"input": grid, "output": output}
+  visible = True
+  for r in range(len(talls)):
+    top = brow + sum(talls[:r])
+    if not any(grid[y][x] for y in range(top, top + talls[r])
+               for x in range(bcol, bcol + sum(wides))):
+      visible = False
+  for c in range(len(wides)):
+    left = bcol + sum(wides[:c])
+    if not any(grid[y][x] for y in range(brow, brow + sum(talls))
+               for x in range(left, left + wides[c])):
+      visible = False
+  return {"input": grid, "output": output}, visible
+
+
+def generate(width=None, height=None, brow=None, bcol=None, wides=None,
+             talls=None, colors=None, prows=None, pcols=None):
+  """Generate a mosaic; random draws retain evidence of every latent band.
+
+  Entirely erased row or column bands are unobservable hidden labels. Resample
+  only those random draws. Individual erased blocks and all partial erasures
+  remain possible. Explicit fixtures are returned unchanged for compatibility.
+  """
+  while True:
+    pair, visible = _generate(width, height, brow, bcol, wides, talls,
+                              colors, prows, pcols)
+    if wides is not None or visible:
+      return pair
 
 
 def validate():

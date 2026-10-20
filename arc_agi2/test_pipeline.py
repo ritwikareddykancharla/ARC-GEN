@@ -11,6 +11,46 @@ from .fixture_policy import fixture_basis
 from .augmentation import apply_episode,settings,exhaustive_variants
 
 class GeneratorTests(unittest.TestCase):
+    def test_fresh_hole_shapes_long_snakes_and_proximity_counts(self):
+        holes=importlib.import_module('tasks.task_67e490f4')
+        random.seed(30000)
+        bank=holes._shape_bank('procedural')
+        original={holes._canon(holes._cells(p)) for p in holes._LIB}
+        keys={holes._canon(holes._cells(p)) for p in bank}
+        self.assertEqual(len(keys),10)
+        self.assertFalse(keys & original)
+        p=holes.generate(width=30,height=30,shape_mode='procedural',allow_unmatched=True)
+        self.assertEqual(p['output'],grid(call(solver('67e490f4'),p['input'])))
+        snake=importlib.import_module('tasks.task_696d4842')
+        random.seed(30000)
+        observed=[];render=snake._render
+        def capture(*args):
+            observed.append(args[2])
+            return render(*args)
+        with patch.object(snake,'_render',side_effect=capture):
+            p=snake.generate(height=30,width=30,num_paths=2,extension=12,num_segments=4)
+        self.assertEqual(len(observed[-1]),2)
+        for path in observed[-1]:
+            self.assertEqual(path['n'],12)
+            self.assertEqual(len(path['segments']),4)
+        self.assertEqual(p['output'],grid(call(solver('696d4842'),p['input'])))
+        proximity=importlib.import_module('tasks.task_6df30ad6')
+        # Two markers cannot be assigned three or four distinct colours.
+        for seed in range(20):
+            random.seed(seed)
+            p=proximity.generate(width=20,height=20,num_markers=2)
+            self.assertEqual(sum(v not in (0,5) for row in p['input'] for v in row),2)
+            self.assertEqual(p['output'],grid(call(solver('6df30ad6'),p['input'])))
+        random.seed(30060)
+        p=proximity.generate(width=30,height=30,shape_cells=100,num_colors=8,
+                             num_markers=32,target_color=7)
+        self.assertEqual(sum(v==5 for row in p['input'] for v in row),100)
+        self.assertEqual(sum(v==7 for row in p['output'] for v in row),100)
+        self.assertEqual(p['output'],grid(call(solver('6df30ad6'),p['input'])))
+        midline=importlib.import_module('tasks.task_66ac4c3b')
+        with self.assertRaises(ValueError):
+            midline.generate(period=2.5)
+
     def test_large_equal_area_shapes_and_panel_device_controls(self):
         comparison=importlib.import_module('tasks.task_6165ea8f')
         random.seed(30000)

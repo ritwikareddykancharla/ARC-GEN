@@ -1,0 +1,1259 @@
+{
+  "task_id": "6df30ad6",
+  "ready": true,
+  "samples_requested": 1000,
+  "samples_attempted": 1000,
+  "samples_passed": 1000,
+  "seed_start": 20000,
+  "seed_end_exclusive": 21000,
+  "unique_inputs": 1000,
+  "changed_pairs": 1000,
+  "fixture_replays": 0,
+  "shapes": [
+    [
+      7,
+      7,
+      7,
+      7
+    ],
+    [
+      7,
+      10,
+      7,
+      10
+    ],
+    [
+      7,
+      11,
+      7,
+      11
+    ],
+    [
+      7,
+      12,
+      7,
+      12
+    ],
+    [
+      7,
+      13,
+      7,
+      13
+    ],
+    [
+      7,
+      14,
+      7,
+      14
+    ],
+    [
+      7,
+      15,
+      7,
+      15
+    ],
+    [
+      7,
+      16,
+      7,
+      16
+    ],
+    [
+      8,
+      7,
+      8,
+      7
+    ],
+    [
+      8,
+      8,
+      8,
+      8
+    ],
+    [
+      8,
+      9,
+      8,
+      9
+    ],
+    [
+      8,
+      10,
+      8,
+      10
+    ],
+    [
+      8,
+      11,
+      8,
+      11
+    ],
+    [
+      8,
+      12,
+      8,
+      12
+    ],
+    [
+      8,
+      13,
+      8,
+      13
+    ],
+    [
+      8,
+      14,
+      8,
+      14
+    ],
+    [
+      8,
+      15,
+      8,
+      15
+    ],
+    [
+      8,
+      16,
+      8,
+      16
+    ],
+    [
+      9,
+      7,
+      9,
+      7
+    ],
+    [
+      9,
+      8,
+      9,
+      8
+    ],
+    [
+      9,
+      9,
+      9,
+      9
+    ],
+    [
+      9,
+      10,
+      9,
+      10
+    ],
+    [
+      9,
+      11,
+      9,
+      11
+    ],
+    [
+      9,
+      13,
+      9,
+      13
+    ],
+    [
+      9,
+      14,
+      9,
+      14
+    ],
+    [
+      9,
+      15,
+      9,
+      15
+    ],
+    [
+      9,
+      16,
+      9,
+      16
+    ],
+    [
+      10,
+      7,
+      10,
+      7
+    ],
+    [
+      10,
+      8,
+      10,
+      8
+    ],
+    [
+      10,
+      9,
+      10,
+      9
+    ],
+    [
+      10,
+      10,
+      10,
+      10
+    ],
+    [
+      10,
+      11,
+      10,
+      11
+    ],
+    [
+      10,
+      12,
+      10,
+      12
+    ],
+    [
+      10,
+      13,
+      10,
+      13
+    ],
+    [
+      10,
+      14,
+      10,
+      14
+    ],
+    [
+      10,
+      15,
+      10,
+      15
+    ],
+    [
+      10,
+      16,
+      10,
+      16
+    ],
+    [
+      11,
+      7,
+      11,
+      7
+    ],
+    [
+      11,
+      8,
+      11,
+      8
+    ],
+    [
+      11,
+      9,
+      11,
+      9
+    ],
+    [
+      11,
+      10,
+      11,
+      10
+    ],
+    [
+      11,
+      11,
+      11,
+      11
+    ],
+    [
+      11,
+      12,
+      11,
+      12
+    ],
+    [
+      11,
+      13,
+      11,
+      13
+    ],
+    [
+      11,
+      14,
+      11,
+      14
+    ],
+    [
+      11,
+      15,
+      11,
+      15
+    ],
+    [
+      12,
+      7,
+      12,
+      7
+    ],
+    [
+      12,
+      8,
+      12,
+      8
+    ],
+    [
+      12,
+      9,
+      12,
+      9
+    ],
+    [
+      12,
+      10,
+      12,
+      10
+    ],
+    [
+      12,
+      11,
+      12,
+      11
+    ],
+    [
+      12,
+      12,
+      12,
+      12
+    ],
+    [
+      12,
+      13,
+      12,
+      13
+    ],
+    [
+      12,
+      14,
+      12,
+      14
+    ],
+    [
+      12,
+      15,
+      12,
+      15
+    ],
+    [
+      12,
+      16,
+      12,
+      16
+    ],
+    [
+      13,
+      7,
+      13,
+      7
+    ],
+    [
+      13,
+      8,
+      13,
+      8
+    ],
+    [
+      13,
+      9,
+      13,
+      9
+    ],
+    [
+      13,
+      10,
+      13,
+      10
+    ],
+    [
+      13,
+      11,
+      13,
+      11
+    ],
+    [
+      13,
+      12,
+      13,
+      12
+    ],
+    [
+      13,
+      13,
+      13,
+      13
+    ],
+    [
+      13,
+      15,
+      13,
+      15
+    ],
+    [
+      13,
+      16,
+      13,
+      16
+    ],
+    [
+      14,
+      7,
+      14,
+      7
+    ],
+    [
+      14,
+      8,
+      14,
+      8
+    ],
+    [
+      14,
+      9,
+      14,
+      9
+    ],
+    [
+      14,
+      10,
+      14,
+      10
+    ],
+    [
+      14,
+      11,
+      14,
+      11
+    ],
+    [
+      14,
+      12,
+      14,
+      12
+    ],
+    [
+      14,
+      13,
+      14,
+      13
+    ],
+    [
+      14,
+      14,
+      14,
+      14
+    ],
+    [
+      14,
+      15,
+      14,
+      15
+    ],
+    [
+      14,
+      16,
+      14,
+      16
+    ],
+    [
+      15,
+      7,
+      15,
+      7
+    ],
+    [
+      15,
+      9,
+      15,
+      9
+    ],
+    [
+      15,
+      10,
+      15,
+      10
+    ],
+    [
+      15,
+      11,
+      15,
+      11
+    ],
+    [
+      15,
+      12,
+      15,
+      12
+    ],
+    [
+      15,
+      13,
+      15,
+      13
+    ],
+    [
+      15,
+      14,
+      15,
+      14
+    ],
+    [
+      15,
+      15,
+      15,
+      15
+    ],
+    [
+      15,
+      16,
+      15,
+      16
+    ],
+    [
+      16,
+      7,
+      16,
+      7
+    ],
+    [
+      16,
+      8,
+      16,
+      8
+    ],
+    [
+      16,
+      10,
+      16,
+      10
+    ],
+    [
+      16,
+      11,
+      16,
+      11
+    ],
+    [
+      16,
+      12,
+      16,
+      12
+    ],
+    [
+      16,
+      14,
+      16,
+      14
+    ],
+    [
+      16,
+      15,
+      16,
+      15
+    ],
+    [
+      16,
+      16,
+      16,
+      16
+    ]
+  ],
+  "fixture_matches": {
+    "canonical": true,
+    "teaching_fixture": true
+  },
+  "original_solver_replay": {
+    "canonical": {
+      "correct": 6,
+      "total": 6,
+      "all_exact": true
+    },
+    "teaching_fixture": {
+      "correct": 6,
+      "total": 6,
+      "all_exact": true
+    }
+  },
+  "errors": [],
+  "sha256": "8641ec9d81911f5fca83e1dfdd8360bd52de33e556eb4a9830bc289b5341c1f0",
+  "status": "reviewed_bounded_validation_passed",
+  "limitations": "Bounded randomized agreement with a saved solver is not proof of semantic completeness.",
+  "candidate_path": "/Users/ritwika/projects/arc-agi2/outputs/research/arcgen-coverage-cli/host-reviewed/6df30ad6/task_6df30ad6.py",
+  "attempts": 1,
+  "model_usage": {
+    "claude-opus-5-5": {
+      "inputTokens": 2,
+      "outputTokens": 11902,
+      "cacheReadInputTokens": 1682,
+      "cacheCreationInputTokens": 13244,
+      "webSearchRequests": 0,
+      "costUSD": 0.3443364,
+      "contextWindow": 1000000,
+      "maxOutputTokens": 128000,
+      "thinkingTokens": 4735,
+      "canonicalModel": "claude-opus-5-5",
+      "provider": "firstParty",
+      "costBasis": "list"
+    }
+  },
+  "rule": "Erase every single-pixel marker. Recolour the large grey (5) shape, cell for cell, with the colour of the marker at the smallest Chebyshev distance to any shape cell.",
+  "scope": "Recolour a connected grey shape using the nearest marker colour under Chebyshev distance, then erase markers.",
+  "constraints": [
+    "Read source and canonical tie behaviour against saved proximity mechanism.",
+    "Fixed two-marker requests selecting too many colours. Added exact random shape area up to 100 cells and explicit connectivity/palette/singleton checks.",
+    "Canonical diagonal marker adjacency is preserved: markers are four-connected singletons, not necessarily eight-separated in explicit scenes.",
+    "120 independent 30x30 scenes each used eight colours and 32 markers, with 60 shapes of 64 cells and 60 of 100 cells.",
+    "Independent distance ranking and output reconstruction matched; target colour was not most frequent in 68 scenes."
+  ],
+  "known_limitations": [
+    "Background is zero, shape grey, and default dimensions favour native 10x10 or 7..16 grids; explicit sides extend to 30.",
+    "Random nearest distances are 1..3 and ties between different colours are excluded.",
+    "Row-major tie resolution reproduces the known tied fixture but is not established as a universal semantic rule; random samples avoid that ambiguity.",
+    "Exact larger shapes use connected growth in a box up to 12x12; no multiple target shapes or multi-cell markers."
+  ],
+  "billing": "Claude Max CLI; API credentials excluded; no API fallback",
+  "fixture_basis": {
+    "fixture": "canonical",
+    "corrected": false
+  },
+  "authored_sha256": "2c936b6d263d4a326a0429b406d40aef207f38ab245b77a10c477775ade009b0",
+  "stress_test": {
+    "task_id": "6df30ad6",
+    "ready": true,
+    "samples_requested": 1000,
+    "samples_attempted": 1000,
+    "samples_passed": 1000,
+    "seed_start": 20000,
+    "seed_end_exclusive": 21000,
+    "fixture_basis": {
+      "fixture": "canonical",
+      "corrected": false
+    },
+    "unique_inputs": 1000,
+    "changed_pairs": 1000,
+    "fixture_replays": 0,
+    "shapes": [
+      [
+        7,
+        7,
+        7,
+        7
+      ],
+      [
+        7,
+        10,
+        7,
+        10
+      ],
+      [
+        7,
+        11,
+        7,
+        11
+      ],
+      [
+        7,
+        12,
+        7,
+        12
+      ],
+      [
+        7,
+        13,
+        7,
+        13
+      ],
+      [
+        7,
+        14,
+        7,
+        14
+      ],
+      [
+        7,
+        15,
+        7,
+        15
+      ],
+      [
+        7,
+        16,
+        7,
+        16
+      ],
+      [
+        8,
+        7,
+        8,
+        7
+      ],
+      [
+        8,
+        8,
+        8,
+        8
+      ],
+      [
+        8,
+        9,
+        8,
+        9
+      ],
+      [
+        8,
+        10,
+        8,
+        10
+      ],
+      [
+        8,
+        11,
+        8,
+        11
+      ],
+      [
+        8,
+        12,
+        8,
+        12
+      ],
+      [
+        8,
+        13,
+        8,
+        13
+      ],
+      [
+        8,
+        14,
+        8,
+        14
+      ],
+      [
+        8,
+        15,
+        8,
+        15
+      ],
+      [
+        8,
+        16,
+        8,
+        16
+      ],
+      [
+        9,
+        7,
+        9,
+        7
+      ],
+      [
+        9,
+        8,
+        9,
+        8
+      ],
+      [
+        9,
+        9,
+        9,
+        9
+      ],
+      [
+        9,
+        10,
+        9,
+        10
+      ],
+      [
+        9,
+        11,
+        9,
+        11
+      ],
+      [
+        9,
+        13,
+        9,
+        13
+      ],
+      [
+        9,
+        14,
+        9,
+        14
+      ],
+      [
+        9,
+        15,
+        9,
+        15
+      ],
+      [
+        9,
+        16,
+        9,
+        16
+      ],
+      [
+        10,
+        7,
+        10,
+        7
+      ],
+      [
+        10,
+        8,
+        10,
+        8
+      ],
+      [
+        10,
+        9,
+        10,
+        9
+      ],
+      [
+        10,
+        10,
+        10,
+        10
+      ],
+      [
+        10,
+        11,
+        10,
+        11
+      ],
+      [
+        10,
+        12,
+        10,
+        12
+      ],
+      [
+        10,
+        13,
+        10,
+        13
+      ],
+      [
+        10,
+        14,
+        10,
+        14
+      ],
+      [
+        10,
+        15,
+        10,
+        15
+      ],
+      [
+        10,
+        16,
+        10,
+        16
+      ],
+      [
+        11,
+        7,
+        11,
+        7
+      ],
+      [
+        11,
+        8,
+        11,
+        8
+      ],
+      [
+        11,
+        9,
+        11,
+        9
+      ],
+      [
+        11,
+        10,
+        11,
+        10
+      ],
+      [
+        11,
+        11,
+        11,
+        11
+      ],
+      [
+        11,
+        12,
+        11,
+        12
+      ],
+      [
+        11,
+        13,
+        11,
+        13
+      ],
+      [
+        11,
+        14,
+        11,
+        14
+      ],
+      [
+        11,
+        15,
+        11,
+        15
+      ],
+      [
+        12,
+        7,
+        12,
+        7
+      ],
+      [
+        12,
+        8,
+        12,
+        8
+      ],
+      [
+        12,
+        9,
+        12,
+        9
+      ],
+      [
+        12,
+        10,
+        12,
+        10
+      ],
+      [
+        12,
+        11,
+        12,
+        11
+      ],
+      [
+        12,
+        12,
+        12,
+        12
+      ],
+      [
+        12,
+        13,
+        12,
+        13
+      ],
+      [
+        12,
+        14,
+        12,
+        14
+      ],
+      [
+        12,
+        15,
+        12,
+        15
+      ],
+      [
+        12,
+        16,
+        12,
+        16
+      ],
+      [
+        13,
+        7,
+        13,
+        7
+      ],
+      [
+        13,
+        8,
+        13,
+        8
+      ],
+      [
+        13,
+        9,
+        13,
+        9
+      ],
+      [
+        13,
+        10,
+        13,
+        10
+      ],
+      [
+        13,
+        11,
+        13,
+        11
+      ],
+      [
+        13,
+        12,
+        13,
+        12
+      ],
+      [
+        13,
+        13,
+        13,
+        13
+      ],
+      [
+        13,
+        15,
+        13,
+        15
+      ],
+      [
+        13,
+        16,
+        13,
+        16
+      ],
+      [
+        14,
+        7,
+        14,
+        7
+      ],
+      [
+        14,
+        8,
+        14,
+        8
+      ],
+      [
+        14,
+        9,
+        14,
+        9
+      ],
+      [
+        14,
+        10,
+        14,
+        10
+      ],
+      [
+        14,
+        11,
+        14,
+        11
+      ],
+      [
+        14,
+        12,
+        14,
+        12
+      ],
+      [
+        14,
+        13,
+        14,
+        13
+      ],
+      [
+        14,
+        14,
+        14,
+        14
+      ],
+      [
+        14,
+        15,
+        14,
+        15
+      ],
+      [
+        14,
+        16,
+        14,
+        16
+      ],
+      [
+        15,
+        7,
+        15,
+        7
+      ],
+      [
+        15,
+        9,
+        15,
+        9
+      ],
+      [
+        15,
+        10,
+        15,
+        10
+      ],
+      [
+        15,
+        11,
+        15,
+        11
+      ],
+      [
+        15,
+        12,
+        15,
+        12
+      ],
+      [
+        15,
+        13,
+        15,
+        13
+      ],
+      [
+        15,
+        14,
+        15,
+        14
+      ],
+      [
+        15,
+        15,
+        15,
+        15
+      ],
+      [
+        15,
+        16,
+        15,
+        16
+      ],
+      [
+        16,
+        7,
+        16,
+        7
+      ],
+      [
+        16,
+        8,
+        16,
+        8
+      ],
+      [
+        16,
+        10,
+        16,
+        10
+      ],
+      [
+        16,
+        11,
+        16,
+        11
+      ],
+      [
+        16,
+        12,
+        16,
+        12
+      ],
+      [
+        16,
+        14,
+        16,
+        14
+      ],
+      [
+        16,
+        15,
+        16,
+        15
+      ],
+      [
+        16,
+        16,
+        16,
+        16
+      ]
+    ],
+    "fixture_matches": {
+      "canonical": true,
+      "teaching_fixture": true
+    },
+    "original_solver_replay": {
+      "canonical": {
+        "correct": 6,
+        "total": 6,
+        "all_exact": true
+      },
+      "teaching_fixture": {
+        "correct": 6,
+        "total": 6,
+        "all_exact": true
+      }
+    },
+    "errors": [],
+    "sha256": "8641ec9d81911f5fca83e1dfdd8360bd52de33e556eb4a9830bc289b5341c1f0",
+    "status": "validated_candidate_needs_semantic_review",
+    "limitations": "Bounded randomized agreement with a saved solver is not proof of semantic completeness."
+  },
+  "authored_scope": "Supported: a black background with one grey 4-connected shape (blob, rectangle or line of 3 to about 20 cells) and 2-4 marker colours by default (up to 8 on request). Markers are isolated single pixels, and the minimum distance is 1, 2 or 3, including diagonal contact with the shape. Grids are 10x10 half the time; otherwise each side is drawn from 7..16 as a synthetic extension, and any side from 5 to 30 may be requested. Explicit shape plus markers reproduces the fixtures. Explicit shape alone gets random markers. Not supported: multiple grey shapes, multi-pixel markers, non-black backgrounds, a shape colour other than 5, and ties in random scenes.",
+  "authored_constraints": [
+    "The shape is 4-connected, grey (5), and strictly larger than any marker (at least 3 cells in random scenes).",
+    "Markers use colours from {1,2,3,4,6,7,8,9} and never touch the shape orthogonally. Diagonal contact is allowed.",
+    "Markers never touch each other, even diagonally, so each marker is its own single-pixel object.",
+    "In random scenes, every marker at the minimum distance has the target colour, and all other markers are strictly farther away.",
+    "Each of the num_colors-1 distractor colours appears at least once, so a distractor is always present.",
+    "The output always differs from the input, because the target colour is never 5 and at least one marker is erased.",
+    "Explicit-marker ties are resolved by the first nearest marker in row-major order, matching canonical train pair 3."
+  ],
+  "semantic_review": {
+    "status": "reviewed",
+    "checks": [
+      "Read source and canonical tie behaviour against saved proximity mechanism.",
+      "Fixed two-marker requests selecting too many colours. Added exact random shape area up to 100 cells and explicit connectivity/palette/singleton checks.",
+      "Canonical diagonal marker adjacency is preserved: markers are four-connected singletons, not necessarily eight-separated in explicit scenes.",
+      "120 independent 30x30 scenes each used eight colours and 32 markers, with 60 shapes of 64 cells and 60 of 100 cells.",
+      "Independent distance ranking and output reconstruction matched; target colour was not most frequent in 68 scenes.",
+      "1000 independent seeds 20000..20999; approved validation fixtures reconstructed exactly; canonical replay reported separately"
+    ],
+    "limitations": [
+      "Background is zero, shape grey, and default dimensions favour native 10x10 or 7..16 grids; explicit sides extend to 30.",
+      "Random nearest distances are 1..3 and ties between different colours are excluded.",
+      "Row-major tie resolution reproduces the known tied fixture but is not established as a universal semantic rule; random samples avoid that ambiguity.",
+      "Exact larger shapes use connected growth in a box up to 12x12; no multiple target shapes or multi-cell markers."
+    ]
+  },
+  "diversity_audit": {
+    "samples": 120,
+    "seed_range": [
+      30000,
+      30119
+    ],
+    "metrics": {
+      "target_not_most_frequent": 68,
+      "64_cell_shapes": 60,
+      "nearest_distance_3": 50,
+      "nearest_distance_2": 35,
+      "nearest_distance_1": 35,
+      "100_cell_shapes": 60
+    },
+    "seconds": 0.7238950729370117,
+    "passed": true
+  }
+}

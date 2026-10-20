@@ -14,7 +14,7 @@ from pathlib import Path
 import numpy as np
 import pyarrow as pa
 import pyarrow.parquet as pq
-from huggingface_hub import HfApi,CommitOperationAdd
+from huggingface_hub import HfApi,CommitOperationAdd,snapshot_download
 from .runtime import BASE,reference,solver,call,grid
 from .generators.extended import GENERATORS,generate
 from .audit import relation
@@ -214,6 +214,22 @@ Three demonstration pairs and one query per episode, with generator-produced out
 - Fresh input pool, no duplicated full native episodes, no identical inputs inside an episode. Palette and D4 changes are shared across each episode and stored.
 - Input equivalence classes under palette renaming and D4 are assigned to one split before episode construction, including across families. Existing 20 held-out task families are excluded entirely. Validation is within-generator generalization; the original held-out tasks measure unseen families.
 
+## Generator examples
+
+These are exact saved **local validation episodes**, not a sample from a finished million-episode build.
+
+Sequential colour substitutions:
+
+![Sequential legend example](assets/e4888269.png)
+
+Legend-based room selection:
+
+![Room removal example](assets/d59b0160.png)
+
+Quantity-controlled dimensions and pattern composition:
+
+![Quadrant composition example](assets/f931b4a8.png)
+
 ## Audit and reproducibility
 
 [Manifest](manifest.json), [pool reports](pool_reports), [episode reports](episode_reports), [allocation targets](allocation.json). Master seed {SEED}. Published partial shards are complete episodes; failed families and shortfalls remain visible. No model training or LLM calls occur in this job.
@@ -224,14 +240,17 @@ ARC-GEN upstream code is Copyright Google LLC, Apache-2.0. This is an independen
 '''
 
 def main():
-    ap=argparse.ArgumentParser();ap.add_argument('--local',action='store_true');ap.add_argument('--tasks',nargs='*');args=ap.parse_args()
+    ap=argparse.ArgumentParser();ap.add_argument('--local',action='store_true');ap.add_argument('--tasks',nargs='*');ap.add_argument('--resume',action='store_true');args=ap.parse_args()
     for d in ['pools','pool_reports','episode_reports','data/train','data/validation']: (OUT/d).mkdir(parents=True,exist_ok=True)
     inv=json.loads((BASE/'reports/inventory.json').read_text());pv=json.loads((BASE/'reports/parameter-validation.json').read_text())
     eligible=[r['task_id'] for r in inv['tasks'] if not r['held_out'] and r['status'] in ['upstream_fixture_verified','extension_validated']]
     if args.tasks:
         assert set(args.tasks)<=set(eligible);eligible=args.tasks
     api=None if args.local else HfApi()
-    if api:assert api.whoami()['name']=='ritwika96'
+    if api:
+        assert api.whoami()['name']=='ritwika96'
+        if args.resume:
+            snapshot_download(REPO,repo_type='dataset',local_dir=OUT,allow_patterns=['pools/*.parquet','pool_reports/*.json'])
     m={'status':'generating_pair_pools','target_train_episodes':TARGET,'target_validation_episodes':VAL_TARGET,
        'source_commit':os.environ.get('ARCGEN_SOURCE_COMMIT','local'),'seed':SEED,'workers':WORKERS,
        'task_ids':eligible,'excluded_holdout_ids':inv['summary']['holdouts'],'holdout_overlap':[],

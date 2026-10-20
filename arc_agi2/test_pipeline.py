@@ -1121,4 +1121,45 @@ class GeneratorTests(unittest.TestCase):
             self.assertEqual(sum(r.count(fill) for r in p['input']),
                              sum(r.count(fill) for r in p['output']))
 
+    def test_graph_route_ambiguity_is_rejected(self):
+        m=importlib.import_module('tasks.task_7b0280bc')
+        # Two equal endpoint routes through opposite sides of the diamond.
+        kwargs=dict(width=12,height=12,background=0,line_color=1,node_color=2,end_color=4,
+                    blocks=[[0,5,2],[5,0,2],[5,10,2],[10,5,2],[0,0,2]],ends=[0,3],
+                    strokes=[[[2,4],[3,3],[4,2]],[[2,7],[3,8],[4,9]],
+                             [[7,2],[8,3],[9,4]],[[7,9],[8,8],[9,7]],[[2,0],[3,0]]])
+        with self.assertRaisesRegex(ValueError,'unique shortest'):m.generate(**kwargs)
+        for options in ({'background':True},{'width':20.0},{'thickness':True}):
+            with self.assertRaises(ValueError):m.generate(**options)
+        random.seed(50000)
+        pair=m.generate(width=30,height=30,block_size=3,thickness=2,extra_links=2)
+        self.assertEqual(pair['output'],grid(call(solver('7b0280bc'),pair['input'])))
+
+    def test_path_order_and_strict_controls(self):
+        m=importlib.import_module('tasks.task_7b5033c1')
+        pair=m.generate(width=16,height=16,background=2,start=[2,1],
+                        moves='RRRDDRDDDLDDDRRRDDRRRUUR',
+                        runs=[(1,5),(3,3),(8,6),(4,6),(1,3),(3,2)])
+        self.assertEqual(pair['output'],[[v] for v,n in [(1,5),(3,3),(8,6),(4,6),(1,3),(3,2)] for _ in range(n)])
+        self.assertEqual(pair['output'],grid(call(solver('7b5033c1'),pair['input'])))
+        for options in ({'width':True},{'runs':[(1.9,3)]},{'start':[1.5,2]},
+                        {'consistent_ends':'yes'},{'moves':['R'],'start':[0,0]}):
+            with self.assertRaises(ValueError):m.generate(**options)
+        random.seed(50000)
+        pair=m.generate(width=8,height=8,length=30)
+        self.assertEqual(len(pair['output']),30)
+        self.assertEqual(pair['output'],grid(call(solver('7b5033c1'),pair['input'])))
+
+    def test_assembly_large_output_and_impossible_controls(self):
+        m=importlib.import_module('tasks.task_7b3084d4')
+        for options in ({'width':5,'height':5},{'colors':{1,2,3}},{'square':[1,2,3,4]}):
+            with self.assertRaises(ValueError):m.generate(**options)
+        random.seed(50000)
+        pair=m.generate(size=14,width=20,height=20)
+        self.assertEqual((len(pair['input']),len(pair['input'][0])),(20,20))
+        self.assertEqual((len(pair['output']),len(pair['output'][0])),(14,14))
+        self.assertEqual(pair['output'],grid(call(solver('7b3084d4'),pair['input'])))
+        pair=m.generate(size=5,width=30,height=12,colors=[9,1,2])
+        self.assertEqual([pair['output'][0][-1],pair['output'][-1][0],pair['output'][-1][-1]],[9,1,2])
+
 if __name__=='__main__':unittest.main()

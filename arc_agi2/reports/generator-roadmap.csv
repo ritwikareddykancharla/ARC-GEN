@@ -513,9 +513,9 @@ task_id,split,former_holdout,training_eligible,status,standalone_module,candidat
 7953d61e,training,False,True,upstream_fixture_verified,tasks/task_7953d61e.py,rigid;template;crop,references/7953d61e.json,4x4->8x8,Expand semantic and boundary-case tests
 79cce52d,training,False,True,upstream_fixture_verified,tasks/task_79cce52d.py,movement;crop,references/79cce52d.json,7x7->6x6,Expand semantic and boundary-case tests
 7acdf6d3,training,False,True,extension_validated,tasks/task_7acdf6d3.py,objects;topology;dynamics;count,references/7acdf6d3.json,15x15->15x15,Expand semantic and boundary-case tests
-7b0280bc,evaluation,False,True,generator_missing,,objects;selection;recolour;paths;assembly,references/7b0280bc.json,30x30->30x30,"Construct, validate and review standalone generator"
-7b3084d4,evaluation,False,True,generator_missing,,rigid;repeat;count;order;crop;assembly,references/7b3084d4.json,20x20->14x14,"Construct, validate and review standalone generator"
-7b5033c1,evaluation,False,True,generator_missing,,paths;count;order,references/7b5033c1.json,16x16->25x1,"Construct, validate and review standalone generator"
+7b0280bc,evaluation,False,True,extension_validated,tasks/task_7b0280bc.py,objects;selection;recolour;paths;assembly,references/7b0280bc.json,30x30->30x30,Expand semantic and boundary-case tests
+7b3084d4,evaluation,False,True,extension_validated,tasks/task_7b3084d4.py,rigid;repeat;count;order;crop;assembly,references/7b3084d4.json,20x20->14x14,Expand semantic and boundary-case tests
+7b5033c1,evaluation,False,True,extension_validated,tasks/task_7b5033c1.py,paths;count;order,references/7b5033c1.json,16x16->25x1,Expand semantic and boundary-case tests
 7b6016b9,training,False,True,upstream_fixture_verified,tasks/task_7b6016b9.py,objects;recolour;topology,references/7b6016b9.json,22x25->22x25,Expand semantic and boundary-case tests
 7b7f7511,training,False,True,upstream_fixture_verified,tasks/task_7b7f7511.py,repeat;crop,references/7b7f7511.json,8x3->4x3,Expand semantic and boundary-case tests
 7b80bb43,evaluation,False,True,generator_missing,,rays,references/7b80bb43.json,29x17->29x17,"Construct, validate and review standalone generator"

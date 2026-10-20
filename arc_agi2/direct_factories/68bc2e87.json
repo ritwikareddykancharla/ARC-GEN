@@ -1,0 +1,32 @@
+{
+  "task_id": "68bc2e87",
+  "factory_sha256": "59e8fae785154f497329a60ac6fbe9fc312e42608272b7e8c35f07e80d9d15e6",
+  "constructor_sha256": "7e2254465312ae8a77c95f05837c151e194e26d37698dd3118ac75004c2b58ff",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 260252040420492,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 4.147588166990317,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Host-authored direct program with constructor/source review, source restrictions and execution verification.",
+  "draft_notes": {
+    "author": "host",
+    "previous_draft_notes": {
+      "explanation": "The emitted program works directly in visible coordinates. For each non-background colour it takes the bounding box of that colour's cells. Because at least three corners stay visible, this box is the real rectangle outline under any D4 transform. Any other non-background colour seen on that outline lies above it. The program then topologically sorts this 'above' relation, bottom layer first. Ties and cycles are broken by the original colour value (the inverse palette rank), which reproduces the archived solver's choice under the palette. The background is the constant palette[8]. The D4 transform only changes how the output strip is laid out, and the row flip does nothing to an Nx1 column. With k=d4%4: k=0 gives a column, bottom layer at the top. k=1 gives a single row, top layer first from left to right. k=2 gives a column, top layer at the top. k=3 gives a single row, bottom layer first from left to right.",
+      "limitations": "Like the archived solver, this relies on overlap evidence that is still visible. The generator can paint over a crossing that recorded the order between two consecutive layers, so the order may be under-determined. In that case the program falls back to the archived tie-break by original colour value, which may differ from the generator's true drawing order. No contradictions with the fixtures were found. None of this was executed or tested."
+    },
+    "explanation": "Recover each rectangle outline from at least three visible corners. Visible overpainting yields precedence edges. Enumerate bottom-to-top sequences satisfying both these edges and physical intersection of each consecutive pair of outlines. Require a unique sequence; never choose using colour rank. Emit that order in the output-strip orientation prescribed by shared D4.",
+    "host_review": "Full constructor/source reviewed. The generator explicitly requires each new outline to cover a pixel of the previously drawn colour, hence consecutive outlines must intersect even when later shapes hide that crossing. The saved failed scene has a unique such chain [7,2,6,9], whereas a plain topological sort guessed wrongly. Separate original-generator probe1000seeds found983 uniquely inferred correct orders and17 ambiguous inputs; one supports two valid explicit latent renderings [4,3,1,7] and [3,4,1,7] with identical pixels. Random generation now rejects non-unique visible chains while explicit original fixtures remain unchanged. Fresh1000pairs/8000D4/16fixtures,1000uniqueinputs,no sampler rejection. All8D4/nonidentitypalette tests confirm no inverse-palette priority.",
+    "limitations": [
+      "The consecutive-overlap convention is part of this generator family, not a universal rule for arbitrary overlapping rectangles.",
+      "At least three visible corners are required to recover exact outlines.",
+      "The visible constraints are sufficient but may reject cases where only additional construction bookkeeping would single out a latent order. This does not invent evidence from hidden state.",
+      "Original explicit latent calls still permit the saved ambiguous pair; unique inference is guaranteed only for random accepted scenes and original fixtures."
+    ]
+  }
+}

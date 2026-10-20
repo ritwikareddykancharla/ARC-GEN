@@ -1,0 +1,46 @@
+{
+  "task_id": "f8cc533f",
+  "factory_sha256": "d17cc4c5ead923265fbf376bfdaaa171f298fc9fd3741d15abe2bb19b432a1ff",
+  "constructor_sha256": "165e64f19b37d8e30e4e7f765aceb54ec1982496c234ff6f1b1d52194b2781ae",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 138608090043017,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 8.210893124924041,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Host-authored direct program with constructor/source review, source restrictions and execution verification.",
+  "draft_notes": {
+    "author": "host",
+    "explanation": "Exact shared-pattern completion in visible coordinates replaces independent symmetrisation and lexicographic placement guesses. Enumerate intrinsic square sizes up to7 and all in-bounds placements containing each colour. A candidate common mask is the union of raw observed masks, must be D4 symmetric with a full bounding box, and must add pixels to every damaged copy. Candidate windows have the native one-cell gap. Minimise common template population (equivalent to total added pixels), then side length. All tied outputs must agree; budget exhaustion or distinct tied outputs raises instead of guessing. D4 and palette invariance follow from the candidate space and coordinate-free score. Background must be uniquely most frequent.",
+    "host_review": "Host reproduced the original d4=1 failure: separately symmetrised narrow fragment invents a missing pixel and makes an incorrect placement tie. Raw-mask union selects the correct placement. Also constructed two legal latent layouts with identical input and different output; the new solver rejects their tied outputs. Random constructor still paints labels from its independently sampled latent pattern, then rejects ambiguous, unsupported or nonmatching minimum-completion inputs. Explicit benchmark reconstruction unchanged. 1000 original-generator pairs all matched the new program in a separate probe; changed constructor passed1000fresh/8000augmented/16fixture checks,1000uniqueinputs,no sampler rejection. Regression checks cover saved failure all8D4/two palettes, real ambiguity all8D4 and exhausted search.",
+    "limitations": [
+      "Native motif side length is5..7; intrinsic full bbox may be smaller. Solver searches at most7; this is not an unrestricted symmetry-completion solver.",
+      "Random sampler now excludes ambiguous and non-minimal latent completions. Explicit latent mode preserves original replay and can still construct the saved rejected ambiguity.",
+      "Search budget100000 states is a rejection boundary, not permission to select the first answer.",
+      "Pure source logic is shared by construction admission and emitted program, but expected output is independently drawn from latent masks; finite execution audits do not establish completeness on all possible ARC inputs."
+    ],
+    "previous_draft_notes": {
+      "explanation": "The emitted program works directly on the visible grid and does not use d4 or palette constants. Every role is inferred from pixels. The background is the most common colour. Each other colour is one damaged copy of a shared pattern that is symmetric under both mirrors.\n\nS is the largest bounding-box side over all figures. For each colour, the program scans every in-bounds SxS window that contains the colour's bounding box. It symmetrises the colour mask in that window (horizontal mirror, vertical mirror, and both). It keeps all windows that tie for the fewest added cells, which is the archived criterion.\n\nThe archived solver broke ties by taking the first window in row-major scan order. That choice depends on orientation, so it would not survive rotations and reflections. It is replaced here by criteria that do not depend on orientation:\n1. Choose the joint placement that gives the smallest shared template (the OR of the symmetrised masks). With the true placement this equals the generator pattern.\n2. Then prefer windows best centred on each bounding box.\n\nAll combinations are enumerated when there are at most 4096. Otherwise the program uses coordinate descent. The shared template is then stamped into each chosen window in that colour. Only original-background cells are painted, consistent with an add-only completion.\n\nThe set {H mirror, V mirror, both} is closed under D4 conjugation, and the min-add, template-size and centring criteria are all D4- and palette-invariant. So the program needs no specialisation by axis or direction. Bounding boxes, windows and grid bounds are handled for any rectangular H x W.",
+      "limitations": "Untested by me.\n\nCriteria that differ from the archived solver:\n- When windows tie on fewest added cells, the joint choice can differ from the archived first-in-scan pick. I believe the archived pick was an orientation-dependent hidden tie-break, which I report as a constructor/reference defect for host review.\n- If ties remain after template size and centring offset (e.g. two windows equally off-centre with identical template size), a final lexicographic (row, col) fallback is used, which is not D4-invariant. In those cases the visible data does not determine the answer.\n- Painting only background cells means overlapping stamps never overwrite another colour. The archived solver could overwrite. This can only matter when a chosen window overlaps another figure.\n\nConstructor-related notes for host review:\n- The method assumes no symmetrised mask adds cells outside the true pattern. The constructor checks only that the union of surviving cells in the true windows reconstructs the pattern. It does not check that minimum-add window selection recovers the true windows, so some fresh scenes may be unsolvable by any placement heuristic.\n- If several colours tie for the background count (pathological), the background is chosen by smallest colour value."
+    },
+    "host_audit": {
+      "task_id": "f8cc533f",
+      "factory_sha256": "d17cc4c5ead923265fbf376bfdaaa171f298fc9fd3741d15abe2bb19b432a1ff",
+      "constructor_sha256": "165e64f19b37d8e30e4e7f765aceb54ec1982496c234ff6f1b1d52194b2781ae",
+      "passed": true,
+      "fresh_pairs_checked": 1000,
+      "augmented_pair_checks": 8000,
+      "fixture_variants_checked": 16,
+      "sampler_rejections": [],
+      "seed": 138608090043017,
+      "d4": 7,
+      "unique_base_inputs": 1000,
+      "seconds": 8.210893124924041
+    }
+  }
+}

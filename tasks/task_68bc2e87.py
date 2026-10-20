@@ -12,9 +12,46 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""Generator."""
+"""Rectangle layers with a unique visibly inferable consecutive-overlap order.
+
+Random scenes retain the original construction, with an additional ambiguity
+check. Explicit replay preserves original fixtures and latent examples.
+"""
 
 import common
+
+
+def _visible_layer_order(grid, background=8):
+    """Infer the unique bottom-to-top chain from visible rectangle evidence.
+
+    Three visible corners recover each outline. Visible overwritten cells
+    constrain precedence, and consecutive layers must have intersecting
+    outlines. Enumerate the compatible chains; never break ties by colour.
+    """
+    colours = sorted({v for row in grid for v in row} - {background})
+    outlines = {}
+    below = {c:set() for c in colours}
+    for c in colours:
+        cells = [(r,x) for r,row in enumerate(grid) for x,v in enumerate(row) if v==c]
+        y0,y1 = min(r for r,x in cells),max(r for r,x in cells)
+        x0,x1 = min(x for r,x in cells),max(x for r,x in cells)
+        outline={(r,x) for r in range(y0,y1+1) for x in range(x0,x1+1) if r in (y0,y1) or x in (x0,x1)}
+        outlines[c]=outline
+        for r,x in outline:
+            v=grid[r][x]
+            if v!=background and v!=c:below[v].add(c)
+    solutions=[]
+    def search(order,remaining):
+        if len(solutions)>1:return
+        if not remaining:
+            solutions.append(order);return
+        for c in sorted(remaining):
+            if below[c] & remaining:continue
+            if order and not outlines[order[-1]] & outlines[c]:continue
+            search(order+[c],remaining-{c})
+    search([],set(colours))
+    if len(solutions)!=1:raise ValueError('layer sequence is not uniquely evidenced')
+    return solutions[0]
 
 
 def generate(wides=None, talls=None, brows=None, bcols=None, colors=None):
@@ -62,7 +99,13 @@ def generate(wides=None, talls=None, brows=None, bcols=None, colors=None):
       brows = [common.randint(0, 18 - t) for t in talls]
       bcols = [common.randint(0, 19 - w) for w in wides]
       grid, _ = draw()
-      if grid: break
+      if grid:
+        try:
+          order = _visible_layer_order(grid)
+        except ValueError:
+          continue
+        if order == colors:
+          break
 
   grid, output = draw()
   return {"input": grid, "output": output}

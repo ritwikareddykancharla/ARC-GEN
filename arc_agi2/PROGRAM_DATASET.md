@@ -35,7 +35,7 @@ recorded. Passing finite audits does not prove unrestricted generalization.
 
 - 213 native direct-coordinate certificates admitted after fresh audits and
   supplied-fixture checks.
-- 797 admitted factories. Each passed 1,000 fresh pairs, 8,000 augmented pair
+- 800 admitted factories. Each passed 1,000 fresh pairs, 8,000 augmented pair
   checks and 16 supplied-fixture variants. Their audit records retain draft
   limitations and source/constructor hashes. These checks are finite evidence,
   not proof of correctness on every generated input.
@@ -46,7 +46,7 @@ recorded. Passing finite audits does not prove unrestricted generalization.
   counts must be computed as a union, not added.
 - Local exporter test: 18 fresh base episodes, 144 augmented PNG/program/grid
   records. It requested 20 bases and reported a two-episode shortfall.
-- The union currently admits 1016 of 1,120 families; 104 still need direct
+- The union currently admits 1019 of 1,120 families; 101 still need direct
   augmented program admission. Constructor coverage and program coverage are
   different gates.
 - Synthetic labels for `00d62c1b` now fill every enclosed background component,
@@ -666,3 +666,32 @@ missing evidence, and verified 616 augmented records. All 393 regression tests
 passed. See `reports/episode-evidence-1016-audit.json` and the two saved
 counterexamples. Remaining: 68 semantic/context holds, 33 execution failures,
 and three missing factories. Bulk generation and training remain unlaunched.
+
+## 1019-family checkpoint
+
+Three prior execution failures were repaired. `f8cc533f` now searches shared
+D4-symmetric templates using the union of raw surviving pixels, replacing
+independent per-fragment symmetrisation and scan-order alignment guesses. The
+unique minimum-addition completion must match the independently drawn latent
+answer. Equal-score different outputs and search exhaustion are rejected. The
+search retains the native maximum motif size of seven; it is not an unrestricted
+symmetry solver. A real identical-input/two-output placement collision is saved.
+
+`95755ff2` uses diamond geometry to identify interior cells. A wall-coloured
+obstacle at the first interior cell now stops the ray, instead of being skipped
+by colour-based flood filling. Wall-coloured legends still work.
+
+`68bc2e87` combines visible overlap precedence with the generator's consecutive
+outline-intersection constraint. Its unique chain replaces arbitrary colour
+priority. Original-generator probes found 983 uniquely inferred correct inputs
+and 17 ambiguous cases; a saved input has two constructor-accepted layer orders.
+Random generation rejects ambiguous chains; original explicit fixtures remain
+unchanged. All original fixture hashes for the two changed generators match.
+
+Each program passed 1,000 fresh pairs and 8,000 augmented pair checks, with
+1,000 unique inputs and no sampler rejections. The complete-episode audit
+accepted all 60 bases and verified 480 D4 records. All 402 tests pass. See
+`reports/episode-evidence-1019-audit.json` and the saved counterexamples.
+
+Remaining: 68 semantic/context holds, 30 execution failures and three missing
+factories. Bulk generation and model training remain unlaunched.

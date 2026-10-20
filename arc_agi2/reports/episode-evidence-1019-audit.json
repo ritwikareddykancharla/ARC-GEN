@@ -1,0 +1,71 @@
+{
+  "checked_at": 1792526989.866546,
+  "reports": [
+    {
+      "task_id": "f8cc533f",
+      "sampled_episodes": 20,
+      "accepted_episodes": 20,
+      "missing_evidence_episodes": 0,
+      "verified_augmented_records": 160,
+      "sampler_rejections": [],
+      "errors": [],
+      "passed": true
+    },
+    {
+      "task_id": "95755ff2",
+      "sampled_episodes": 20,
+      "accepted_episodes": 20,
+      "missing_evidence_episodes": 0,
+      "verified_augmented_records": 160,
+      "sampler_rejections": [],
+      "errors": [],
+      "passed": true
+    },
+    {
+      "task_id": "68bc2e87",
+      "sampled_episodes": 20,
+      "accepted_episodes": 20,
+      "missing_evidence_episodes": 0,
+      "verified_augmented_records": 160,
+      "sampler_rejections": [],
+      "errors": [],
+      "passed": true
+    }
+  ],
+  "summary": {
+    "families": 3,
+    "sampled_base_episodes": 60,
+    "accepted_base_episodes": 60,
+    "excluded_missing_evidence": 0,
+    "verified_augmented_records": 480,
+    "errors": 0
+  },
+  "regression_tests": 402,
+  "production_generation": false,
+  "source_hashes": {
+    "arc_agi2/colour_evidence.py": "86f181eba1ea40597313b56183819264ee31721e125c277566b7244e71b59012",
+    "common.py": "879eb61e360e4a47ee1d569408e8c66114ac068794721fe1de1b59aaa476586a",
+    "tasks/task_f8cc533f.py": "165e64f19b37d8e30e4e7f765aceb54ec1982496c234ff6f1b1d52194b2781ae",
+    "arc_agi2/direct_factories/task_f8cc533f.py": "d17cc4c5ead923265fbf376bfdaaa171f298fc9fd3741d15abe2bb19b432a1ff",
+    "tasks/task_95755ff2.py": "b2e0afc04e4de12dabeb96c4a62389cda992eb9b400fb48088eb6581016f8efe",
+    "arc_agi2/direct_factories/task_95755ff2.py": "7485e5061dcfdc202cd3a1d227cb569db0d007343c1891bd6e6af50ef39f2741",
+    "tasks/task_68bc2e87.py": "7e2254465312ae8a77c95f05837c151e194e26d37698dd3118ac75004c2b58ff",
+    "arc_agi2/direct_factories/task_68bc2e87.py": "59e8fae785154f497329a60ac6fbe9fc312e42608272b7e8c35f07e80d9d15e6"
+  },
+  "original_generator_probes": {
+    "f8cc533f": {
+      "summary": {
+        "fixture_checks": 40,
+        "exact": 1000
+      },
+      "seconds": 1.6581017971038818
+    },
+    "68bc2e87": {
+      "stats": {
+        "exact": 983,
+        "ambiguous": 17
+      },
+      "seconds": 0.8806169033050537
+    }
+  }
+}

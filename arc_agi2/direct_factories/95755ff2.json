@@ -1,0 +1,44 @@
+{
+  "task_id": "95755ff2",
+  "factory_sha256": "7485e5061dcfdc202cd3a1d227cb569db0d007343c1891bd6e6af50ef39f2741",
+  "constructor_sha256": "b2e0afc04e4de12dabeb96c4a62389cda992eb9b400fb48088eb6581016f8efe",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 174222832947079,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 1.7519070419948548,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Host-authored direct program with constructor/source review, source restrictions and execution verification.",
+  "draft_notes": {
+    "author": "host",
+    "explanation": "Read border legend cells and cast perpendicular rays into the native centred diamond. Identify the interior geometrically by Manhattan radius, including dust pixels regardless of their colour. Skip only four geometric vertices. Each ray paints background cells and stops on the first non-background interior cell. This handles wall-coloured legends and wall-coloured dust, with shared palette background only.",
+    "host_review": "Host read complete constructor. Its 11x11 diamond has vertices at edge midpoints, and top/bottom legend halves become other edges under native flop/transpose. Exact interior ranges match abs(r-5)+abs(c-5)<5. Reproduced failure with first interior dust at(2,6) colour2 and top legend4: old flood-fill excluded dust from interior and incorrectly resumed filling below it. Geometric interior stops at that cell. Source sampling uses one dust colour excluded from legend palettes, but the rule works without colour-based obstacle assumptions. Constructor unchanged; original fixtures and all fresh checks pass.",
+    "limitations": [
+      "Supports the native single centred diamond with vertices at the grid edge midpoints, not arbitrary off-centre outlines.",
+      "No query-answer feedback or hidden per-colour priority is used."
+    ],
+    "previous_draft_notes": {
+      "explanation": "Mechanism, in visible coordinates: a diamond outline of the wall colour palette[2] encloses an interior. Legend cells sit along grid edges. Each legend cell shoots a ray inward, perpendicular to its edge. Once the ray enters the interior, it paints background cells (palette[0]) with the legend colour. It stops at the first non-background interior cell (dust) or when it leaves the interior. Dust that has the wall colour also stops it.\n\nHow the interior is found: flood-fill from the border through non-wall cells. The interior is every non-wall cell that this fill does not reach.\n\nWhy d4 is not used: the generator already flops and transposes each pair independently at random. So the program must handle legends on any edge, and it processes all four edges in their visible directions (top goes down, bottom goes up, left goes right, right goes left). The rule is therefore D4-equivariant without any rotation wrapper. d4 is accepted but unneeded. Palette roles are baked in as constants.\n\nFix over the archived solver: the generator draws legend colours from all colours except the dust colour, so a legend colour can equal the wall colour 2. The archived solver skips every wall-coloured border cell, so it would miss those fills; by my estimate this affects a majority of fresh scenes (untested). The emitted program tells the diamond vertex apart from a wall-coloured legend cell by geometry. At the vertex, both inward-diagonal neighbours are diamond wall. At any legend cell, at least one inward diagonal is an outside or tip-interior cell that is never wall; dust is never placed in the tip rows or the centre column. Corner cells are always treated as legend cells. Their rays never reach the interior, so this matches the generator.",
+      "limitations": "Constructor defects to report for host review:\n\n1. Legend colours may equal the wall colour 2, so in the visible grid such a legend cell is indistinguishable by colour from the diamond. I resolve this with the diamond-vertex geometry test. The archived program does not resolve it and would mismatch generator outputs in those cases.\n\n2. A legend colour of 0 is indistinguishable from an empty border cell. It paints nothing, so the output is still consistent.\n\n3. If the dust colour is 2, dust acts as a wall. Rays stop there, which matches the generator's break on non-zero.\n\nOther notes:\n\n- The program assumes the generator's domain: one diamond whose vertices touch the midpoint of each edge, and legends only on border cells. Scenes outside that domain, such as legends adjacent to a vertex whose diagonal holds wall-coloured dust in some other construction, are not guaranteed.\n- Approved fixtures are consistent with the uniform rule; no contradictions found.\n- No tests were run."
+    },
+    "host_audit": {
+      "task_id": "95755ff2",
+      "factory_sha256": "7485e5061dcfdc202cd3a1d227cb569db0d007343c1891bd6e6af50ef39f2741",
+      "constructor_sha256": "b2e0afc04e4de12dabeb96c4a62389cda992eb9b400fb48088eb6581016f8efe",
+      "passed": true,
+      "fresh_pairs_checked": 1000,
+      "augmented_pair_checks": 8000,
+      "fixture_variants_checked": 16,
+      "sampler_rejections": [],
+      "seed": 174222832947079,
+      "d4": 7,
+      "unique_base_inputs": 1000,
+      "seconds": 1.7519070419948548
+    }
+  }
+}

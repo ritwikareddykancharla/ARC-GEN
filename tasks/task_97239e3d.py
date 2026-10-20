@@ -17,6 +17,36 @@
 import common
 
 
+def _snapped_rects(prows, pcols, colors):
+  """Returns the snapped rectangle for every colour (same rule as draw)."""
+  rects = {}
+  for color in set(colors):
+    rows = [r for r, hue in zip(prows, colors) if hue == color]
+    cols = [c for c, hue in zip(pcols, colors) if hue == color]
+    min_row, max_row = min(rows), max(rows)
+    min_col, max_col = min(cols), max(cols)
+    if (min_row + 3) % 4 == 0: min_row -= 1
+    if (max_row + 1) % 4 == 0: max_row += 1
+    if (min_col + 3) % 4 == 0: min_col -= 1
+    if (max_col + 1) % 4 == 0: max_col += 1
+    rects[color] = (min_row, max_row, min_col, max_col)
+  return rects
+
+
+def _shares_center(prows, pcols, colors):
+  """True if two colours' rectangles contain a common ring centre."""
+  rects = _snapped_rects(prows, pcols, colors)
+  centers = {}
+  for color, (r0, r1, c0, c1) in rects.items():
+    centers[color] = set((r, c) for r in range(r0 + 2, r1, 4)
+                         for c in range(c0 + 2, c1, 4))
+  keys = list(centers)
+  for i in range(len(keys)):
+    for j in range(i):
+      if centers[keys[i]] & centers[keys[j]]: return True
+  return False
+
+
 def generate(prows=None, pcols=None, colors=None):
   """Returns input and output grids according to the given parameters.
 
@@ -61,7 +91,8 @@ def generate(prows=None, pcols=None, colors=None):
 
   if prows is None:
     hues = common.random_colors(common.randint(1, 2), exclude=[8])
-    while True:
+    found = False
+    for _ in range(1000):
       prows, pcols, colors = [], [], []
       for hue in hues:
         wide, tall = common.randint(1, 3), common.randint(1, 3)
@@ -89,7 +120,14 @@ def generate(prows=None, pcols=None, colors=None):
               pcols.append(4 * j + 2)
               colors.append(hue)
       grid, _ = draw()
-      if grid: break
+      if not grid: continue
+      # Reject nested rectangles: shared centres would be painted in the
+      # hidden set(colors) order, which is not a visible rule.
+      if _shares_center(prows, pcols, colors): continue
+      found = True
+      break
+    if not found:
+      raise RuntimeError("Failed to sample an unambiguous scene")
 
   grid, output = draw()
   return {"input": grid, "output": output}

@@ -35,7 +35,7 @@ recorded. Passing finite audits does not prove unrestricted generalization.
 
 - 213 native direct-coordinate certificates admitted after fresh audits and
   supplied-fixture checks.
-- 801 admitted factories. Each passed 1,000 fresh pairs, 8,000 augmented pair
+- 805 admitted factories. Each passed 1,000 fresh pairs, 8,000 augmented pair
   checks and 16 supplied-fixture variants. Their audit records retain draft
   limitations and source/constructor hashes. These checks are finite evidence,
   not proof of correctness on every generated input.
@@ -46,7 +46,7 @@ recorded. Passing finite audits does not prove unrestricted generalization.
   counts must be computed as a union, not added.
 - Local exporter test: 18 fresh base episodes, 144 augmented PNG/program/grid
   records. It requested 20 bases and reported a two-episode shortfall.
-- The union currently admits 1020 of 1,120 families; 100 still need direct
+- The union currently admits 1024 of 1,120 families; 96 still need direct
   augmented program admission. Constructor coverage and program coverage are
   different gates.
 - Synthetic labels for `00d62c1b` now fill every enclosed background component,
@@ -714,3 +714,35 @@ counterexample and `reports/episode-evidence-1020-audit.json`.
 
 Remaining: 68 semantic/context holds, 29 execution failures and three missing
 factories. Bulk generation and model training remain unlaunched.
+
+## 1024-family checkpoint
+
+Four more execution failures were repaired and admitted. `8698868d` now
+recognizes isolated pixels inside the panel block as panel material rather than
+extra loose shapes. The generator is unchanged.
+
+`7b6016b9` had synthetic scenes where line extensions enclosed a pocket outside
+the declared rectangles, but latent box-based labels still called it open.
+Random generation now requires labels to agree with visible border connectivity;
+inconsistent scenes are rejected, not relabelled. Explicit fixtures are unchanged.
+
+`83b6b474` had ambiguous ring assemblies despite its heuristic legality check.
+The random sampler now exhaustively counts translation-only tilings and requires
+exactly one. The emitted program also rejects ambiguity instead of choosing a
+reading-order solution. Original fixture assemblies are unique and unchanged.
+
+`97239e3d` now restores the lattice underneath input markers before painting
+rectangles. Random sampling excludes shared-centre rectangles whose labels
+depended on hidden native-colour iteration order. Explicit fixture calls remain
+unchanged. All sampling loops modified here have finite rejection bounds.
+
+Each family passed 1,000 fresh pairs, 8,000 D4/palette checks and 16 fixture
+variants, with no sampler failures. The first three had 1,000 distinct inputs;
+`97239e3d` had 975. These are verification pairs, not production episode counts.
+The complete-episode check accepted 80 bases and verified all 640 D4 records.
+Counterexamples, source hashes and episode results are saved in `reports/`.
+
+Remaining: 68 semantic/context holds, 25 execution failures and three missing
+factories. Bulk generation and training remain unlaunched.
+
+All 415 regression tests passed at the 1024-family checkpoint.

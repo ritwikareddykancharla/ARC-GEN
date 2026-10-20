@@ -17,6 +17,66 @@
 import common
 
 
+def _ring_coords(outsize, length):
+  side = outsize - 1
+  coords = []
+  for i in range(length):
+    row, col = 0, 0
+    if i >= 0 and i < side: row, col = 0, i
+    if i >= side and i < 2 * side: row, col = i - side, outsize - 1
+    if i >= 2 * side and i < 3 * side: row, col = outsize - 1, 3 * side - i
+    if i >= 3 * side and i < 4 * side: row, col = 4 * side - i, 0
+    coords.append((row, col))
+  return coords
+
+
+def count_tilings(outsize, border, limit=2):
+  """Counts (up to limit) exact covers of the output ring by the stamps.
+
+  Stamps may only be translated. The search is exhaustive and independent of
+  any solver's tie-break: the first uncovered ring cell in reading order must
+  be the reading-order-first cell of whichever stamp covers it, so anchoring
+  every unused stamp there enumerates every exact cover exactly once.
+  """
+  coords = _ring_coords(outsize, len(border))
+  shapes = {}
+  for (row, col), color in zip(coords, border):
+    shapes.setdefault(color, []).append((row, col))
+  pieces = []
+  for color in sorted(shapes):
+    cells = sorted(shapes[color])
+    r0, c0 = cells[0]
+    pieces.append([(r - r0, c - c0) for r, c in cells])
+  ring = sorted(set(coords))
+  ringset = set(ring)
+  covered = set()
+  used = [False] * len(pieces)
+  count = [0]
+
+  def search():
+    if count[0] >= limit: return
+    free = None
+    for cell in ring:
+      if cell not in covered:
+        free = cell
+        break
+    if free is None:
+      if all(used): count[0] += 1
+      return
+    for i, rel in enumerate(pieces):
+      if used[i]: continue
+      cells = [(free[0] + dr, free[1] + dc) for dr, dc in rel]
+      if all(c in ringset and c not in covered for c in cells):
+        covered.update(cells)
+        used[i] = True
+        search()
+        covered.difference_update(cells)
+        used[i] = False
+
+  search()
+  return count[0]
+
+
 def generate(outsize=None, insize=None, border=None, brows=None, bcols=None,
              colors=None, bgcolor=None):
   """Returns input and output grids according to the given parameters.
@@ -68,7 +128,8 @@ def generate(outsize=None, insize=None, border=None, brows=None, bcols=None,
         if cols[dot][0] == cols[vert][0]: return False
       for horiz in horiz_colors:
         if rows[dot][0] == rows[horiz][0]: return False
-    # As far as I know, the above checks are sufficient (but I may be wrong!)
+    # The heuristics above are not sufficient on their own; the exhaustive
+    # count_tilings() uniqueness check is applied in the random branch.
     return True
 
   def sub_draw(thegrid, row_offset=0, col_offset=0, thecolor=-1):
@@ -95,31 +156,43 @@ def generate(outsize=None, insize=None, border=None, brows=None, bcols=None,
     return grid, output
 
   if insize is None:
-    base = common.randint(2, 3)
-    outsize = 2 * base
-    insize = 2 * (base + common.randint(1, base * (base + 1) // 2))
-    segments = common.randint(4, 5)
-    bgcolor = common.random_color()
-    colors = common.random_colors(segments, exclude=[bgcolor])
-    border_length = 4 * (outsize - 1)
-    # First, find a border with a "deterministic" rearrangement.
-    while True:
-      lengths = [common.randint(1, outsize + 1) for _ in range(segments)]
-      if sum(lengths) != border_length: continue
-      border = [-1] * border_length
-      offset = common.randint(0, border_length - 1)
-      for color, length in zip(colors, lengths):
-        for _ in range(length):
-          border[offset] = color
-          offset = (offset + 1) % border_length
-      if check_legal(): break
-    # Second, find a positioning within the input grid that is contained and
-    # non-overlapping.
-    while True:
-      brows = [common.randint(-outsize, insize) for _ in range(segments)]
-      bcols = [common.randint(-outsize, insize) for _ in range(segments)]
-      grid, _ = draw()
-      if grid: break
+    found = False
+    for _ in range(50):
+      base = common.randint(2, 3)
+      outsize = 2 * base
+      insize = 2 * (base + common.randint(1, base * (base + 1) // 2))
+      segments = common.randint(4, 5)
+      bgcolor = common.random_color()
+      colors = common.random_colors(segments, exclude=[bgcolor])
+      border_length = 4 * (outsize - 1)
+      # First, find a border whose rearrangement is provably unique.
+      border_ok = False
+      for _ in range(20000):
+        lengths = [common.randint(1, outsize + 1) for _ in range(segments)]
+        if sum(lengths) != border_length: continue
+        border = [-1] * border_length
+        offset = common.randint(0, border_length - 1)
+        for color, length in zip(colors, lengths):
+          for _ in range(length):
+            border[offset] = color
+            offset = (offset + 1) % border_length
+        if not check_legal(): continue
+        if count_tilings(outsize, border, limit=2) != 1: continue
+        border_ok = True
+        break
+      if not border_ok: continue
+      # Second, find a positioning within the input grid that is contained and
+      # non-overlapping.
+      for _ in range(200000):
+        brows = [common.randint(-outsize, insize) for _ in range(segments)]
+        bcols = [common.randint(-outsize, insize) for _ in range(segments)]
+        grid, _ = draw()
+        if grid:
+          found = True
+          break
+      if found: break
+    if not found:
+      raise RuntimeError("83b6b474: bounded sampling failed to find a scene")
 
   grid, output = draw()
   return {"input": grid, "output": output}

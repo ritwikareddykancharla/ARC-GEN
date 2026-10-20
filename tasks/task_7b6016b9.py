@@ -17,6 +17,35 @@
 import common
 
 
+_MAX_ATTEMPTS = 20000
+
+
+def _labels_match_connectivity(grid, output, width, height):
+  """True iff every black input cell is green exactly when border-connected."""
+  black = common.black()
+  seen = [[False] * width for _ in range(height)]
+  stack = []
+  for r in range(height):
+    for c in range(width):
+      if r in (0, height - 1) or c in (0, width - 1):
+        if grid[r][c] == black and not seen[r][c]:
+          seen[r][c] = True
+          stack.append((r, c))
+  while stack:
+    r, c = stack.pop()
+    for nr, nc in ((r - 1, c), (r + 1, c), (r, c - 1), (r, c + 1)):
+      if 0 <= nr < height and 0 <= nc < width and not seen[nr][nc]:
+        if grid[nr][nc] == black:
+          seen[nr][nc] = True
+          stack.append((nr, nc))
+  for r in range(height):
+    for c in range(width):
+      if grid[r][c] != black: continue
+      want = common.green() if seen[r][c] else common.red()
+      if output[r][c] != want: return False
+  return True
+
+
 def generate(width=None, height=None, rows=None, cols=None, wides=None,
              talls=None, lowerrows=None, lowercols=None, upperrows=None,
              uppercols=None, color=None, flip=None, xpose=None):
@@ -70,7 +99,10 @@ def generate(width=None, height=None, rows=None, cols=None, wides=None,
     return legal
 
   if width is None:
-    while True:  # Keep trying this until we get a grid with no intersections.
+    found = False
+    # Keep trying until we get a grid with no intersections whose box-based
+    # labels agree with the visible enclosure (connectivity) rule.
+    for _ in range(_MAX_ATTEMPTS):
       width, height = common.randint(20, 25), common.randint(20, 25)
       wide0 = common.randint(6 * width // 15, 7 * width // 15)
       tall0 = common.randint(6 * height // 15, 7 * height // 15)
@@ -124,7 +156,12 @@ def generate(width=None, height=None, rows=None, cols=None, wides=None,
         uppercols.append(c + w - 1)
       grid = common.grid(width, height)
       output = common.grid(width, height, common.green())
-      if draw(grid, output): break
+      if not draw(grid, output): continue
+      if not _labels_match_connectivity(grid, output, width, height): continue
+      found = True
+      break
+    if not found:
+      raise RuntimeError("No consistent scene found within attempt budget")
     color = common.random_color(exclude=[common.red(), common.green()])
     flip, xpose = common.randint(0, 1), common.randint(0, 1)
 

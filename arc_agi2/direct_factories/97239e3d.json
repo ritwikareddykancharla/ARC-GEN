@@ -1,0 +1,28 @@
+{
+  "task_id": "97239e3d",
+  "factory_sha256": "4510d4cbef1ea55d0f581ff9bf72e2dda1d4c2194f1159bb1002e5e58610f06c",
+  "constructor_sha256": "8ce169acc13babb635530cf8e47181e7112828ad39078a92fb022b03c67e4e26",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 260117188822524,
+  "d4": 7,
+  "unique_base_inputs": 975,
+  "seconds": 3.7293283749604598,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "diagnosis": "The counterexample fails on train pairs 2 and 3. In both, a marker sits on a ring cell, not on a gutter. Pair 2 has colour 8 (from original 5) at (1,7). Pair 3 has colour 3 at (3,5). Both cells are corner cells of a 3x3 ring. The constructor produces this when a bumped corner and a row swap combine, giving the point (4*bottom-1, 4*left+1).\n\nThe constructor writes markers only into the input. It builds the output from a clean lattice plus the drawn rectangles, so the ring cell under such a marker is the ring colour again in the label. The failed program, like the archived solver, started from a copy of the input. It therefore left the stray marker pixel on the ring.\n\nNo approved fixture places a marker on a ring cell, so the fixtures never exposed this. The rectangle geometry, snapping and centre filling were otherwise correct.\n\nThe repair is a mechanism change, not a special case. Every marker pixel is first erased: it becomes the ring colour if its lattice position is a ring cell, otherwise background. Then the snapped outlines and the centres inside each rectangle are painted. This reproduces the constructor's output model: clean lattice plus rectangles.\n\nThis covers every marker the constructor can place:\n- Gutter markers always lie on their own colour's outline.\n- Centre markers always lie inside their own rectangle.\n- Ring-corner markers are restored to ring.",
+    "constructor_issue": "**Nested rectangles use a hidden tie-break (needs host review).** draw() only rejects outline collisions, so one colour's snapped rectangle can lie strictly inside another's. The only way this happens is a 3x3-cell outer rectangle with a 1x1 inner one. The ring centres they share are then painted in Python's set(colors) iteration order. That order is a hash-slot order of the original colour numbers, roughly ascending with 8 first, and the palette permutation makes it invisible. The label in that case comes from a hidden latent, not from a visible rule.\n\n**Proposed constructor repair.** Random sampling now also rejects scenes where two colours' rectangles share any ring centre. The check compares the snapped rectangles directly, independent of any solver. The sampling loop is now bounded at 1000 attempts and raises if it is exhausted. The explicit fixture parameters, draw(), validate(), and all fixture inputs and outputs are unchanged.\n\n**Distribution change.** Nested configurations (3x3 outer plus 1x1 inner) are removed from fresh samples. Everything else keeps the same distribution, apart from rejection reweighting.\n\nThe ring-corner marker behaviour is not a defect. It is consistent and visible: rings are always intact in outputs.",
+    "explanation": "Constants: BG = palette[0] and RING = palette[8]. Everything else is inferred in visible coordinates, with no normalisation or rotation.\n\n1. **Lattice phase.** The gutter residue mod 4 is found per axis as the residue containing no RING cell. It is 0 under every D4 transform on the 17x17 domain, but is still measured.\n2. **Marker cells.** Any colour other than BG or RING is a marker. Each marker pixel is erased in the output. It becomes RING if its position is a ring cell, meaning both offsets from the phase are non-zero and not both equal to 2. Otherwise it becomes BG.\n3. **Rectangles.** For each marker colour, take the bounding box of its pixels. Snap the low edges down and the high edges up to gutter lines, clamped to the grid.\n4. **Painting.**\n   - Paint all rectangle outlines in their colour. Outlines lie on gutter lines only.\n   - Then fill every ring centre strictly inside each rectangle with its colour.\n   - Rectangles are processed from larger to smaller area, so a nested inner colour wins the shared centres. Valid constructor scenes never contain that case.\n   - Interior gutters and rings are never changed.",
+    "limitations": "**Nested rectangles.** With the original constructor, nested rectangles have hidden-order labels. This program uses an inner-wins choice there, which can disagree with the label unless the proposed rejection repair is applied.\n\n**Assumptions.**\n- The scene follows the constructor's 4-periodic ring lattice with gutters on phase-aligned lines.\n- Marker colours differ from palette[0] and palette[8].\n\n**Testing.** I have not run any tests. The reasoning was checked by hand against the counterexample and the approved fixtures.",
+    "host_review": {
+      "fixture_sha256": "5d1bb8fdbae96f83249b9ad32c14c316a71f8183258d2db341a9cd9e055f6be7",
+      "fixtures_unchanged": true,
+      "review": "Reviewed visible mechanism and reproduced saved counterexamples. Original fixture calls and labels unchanged. Host fresh audit and complete-episode audit recorded separately."
+    }
+  }
+}

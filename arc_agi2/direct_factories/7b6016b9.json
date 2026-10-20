@@ -1,0 +1,28 @@
+{
+  "task_id": "7b6016b9",
+  "factory_sha256": "3b145c8e10cb8f0ca6672365a63a162c6b53cb507afec0e092bddc4490634e61",
+  "constructor_sha256": "a867483a4f09e43a2f683cc360d05ac42f9b560f78bb7aad82ee85000ebb4fc3",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 79823784484117,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 20.829923041979782,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "diagnosis": "The failing check is index 1, the second demonstration pair of the counterexample episode (d4=0, palette [9,5,0,2,7,3,4,1,6,8]). In that pair the background is 9, the open colour is palette[3]=2, the enclosed colour is palette[2]=0, and the lines are colour 6. Look at cells (16,5..9) together with (17,5) and (17,6). This pocket is walled on every side by line cells: the row-15 line above, column 4 on the left, column 10 on the right, and the row-17 segment at cols 7..17 below. The two cells (17,5) and (17,6) are closed off by (17,4), (17,7) and the row-18 segment at cols 1..6. No path leads from this pocket to the border. The visible connectivity rule (and the archived solver) therefore gives it the enclosed colour 0. The constructor's label gives it the open colour 2. The cause is that the generator never computes connectivity. It paints red only the interiors of its declared boxes and paints every other black cell green. Random line extensions can close a pocket outside every box, and that pocket is then mislabelled as open. The failed factory computed the correct connectivity answer. The label is what is wrong. This is the constructor defect the previous candidate flagged as possible, and here it actually occurs.",
+    "constructor_issue": "The synthetic label rule (red = interior of a declared box, green = everything else) is not the visible mechanism (red = 4-connected background component that does not touch the border). The two disagree whenever the randomly extended lines enclose an extra pocket outside the boxes, as in demonstration 2 of the host counterexample. No program can be right on both those labels and the canonical fixtures under one visible rule, because the latent box list is not visible. All four canonical fixtures (3 train, 1 test) agree with the connectivity rule, so the fixtures are not contradicted and are left untouched. The proposed constructor repair changes only the random-sampling branch. After a scene passes the existing intersection check, it is also checked for consistency. The check flood-fills the background from the border and requires every black input cell to be labelled green exactly when it is reachable and red exactly when it is not. Scenes that fail are rejected and resampled. Labels are never rewritten, and the explicit-parameter path used by validate() is unchanged. Sampling is now bounded at 20000 attempts, after which it raises RuntimeError. The original loop was unbounded.",
+    "explanation": "The mechanism is enclosure by connectivity. Border contact and 4-adjacency are both invariant under every D4 transform, so the emitted program works directly in visible coordinates and needs no axis choice. The colour roles are palette constants: background = palette[0], open fill = palette[3] (originally green), enclosed fill = palette[2] (originally red). Each 4-connected background component is found by BFS. A component that touches any border row or column gets the open fill. A fully walled component gets the enclosed fill. Line cells are copied through unchanged. This is the same logic as the archived solver. The factory is functionally identical to the failed candidate, because the failure came from a mislabelled synthetic pair, not from the program. The real fix is in the constructor: random scenes are kept only when their box-derived labels agree with border-connectivity.",
+    "limitations": "Neither the factory nor the constructor repair has been run by me. Both require host execution and review. With the constructor as it stands, the factory will keep failing on any sampled scene whose lines close a pocket outside the declared boxes, since such labels contradict the visible rule. The constructor repair removes those scenes from the random distribution. This is a distribution change: scenes with extra line-enclosed pockets outside the boxes no longer appear. The extra rejection rate is unmeasured. Sampling is now bounded at 20000 attempts and raises RuntimeError if the budget is exhausted. The explicit-parameter path and the validate() fixtures, inputs and outputs, are unchanged. The program assumes the line colour is never palette[0], palette[2] or palette[3]. random_color draws from 1..9 and excludes red and green, so this holds in the constructor's domain. The demonstrations are not consulted, because the colour roles are fixed by the palette.",
+    "host_review": {
+      "fixture_sha256": "e21acd95f6e6b2f605aacdec4bbbe403808359eea0ad80c53e5747681ca67242",
+      "fixtures_unchanged": true,
+      "review": "Reviewed visible mechanism and reproduced saved counterexamples. Original fixture calls and labels unchanged. Host fresh audit and complete-episode audit recorded separately."
+    }
+  }
+}

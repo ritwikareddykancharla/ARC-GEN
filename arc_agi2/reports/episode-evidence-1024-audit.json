@@ -1,0 +1,67 @@
+{
+  "checked_at": 1792527552.7048051,
+  "reports": [
+    {
+      "task_id": "8698868d",
+      "sampled_episodes": 20,
+      "accepted_episodes": 20,
+      "missing_evidence_episodes": 0,
+      "verified_augmented_records": 160,
+      "sampler_rejections": [],
+      "errors": [],
+      "passed": true
+    },
+    {
+      "task_id": "7b6016b9",
+      "sampled_episodes": 20,
+      "accepted_episodes": 20,
+      "missing_evidence_episodes": 0,
+      "verified_augmented_records": 160,
+      "sampler_rejections": [],
+      "errors": [],
+      "passed": true
+    },
+    {
+      "task_id": "83b6b474",
+      "sampled_episodes": 20,
+      "accepted_episodes": 20,
+      "missing_evidence_episodes": 0,
+      "verified_augmented_records": 160,
+      "sampler_rejections": [],
+      "errors": [],
+      "passed": true
+    },
+    {
+      "task_id": "97239e3d",
+      "sampled_episodes": 20,
+      "accepted_episodes": 20,
+      "missing_evidence_episodes": 0,
+      "verified_augmented_records": 160,
+      "sampler_rejections": [],
+      "errors": [],
+      "passed": true
+    }
+  ],
+  "summary": {
+    "families": 4,
+    "sampled_base_episodes": 80,
+    "accepted_base_episodes": 80,
+    "excluded_missing_evidence": 0,
+    "verified_augmented_records": 640,
+    "errors": 0
+  },
+  "production_generation": false,
+  "source_hashes": {
+    "common.py": "879eb61e360e4a47ee1d569408e8c66114ac068794721fe1de1b59aaa476586a",
+    "arc_agi2/colour_evidence.py": "86f181eba1ea40597313b56183819264ee31721e125c277566b7244e71b59012",
+    "tasks/task_8698868d.py": "eb370d6a620ad7209f5061fa4c5e1c31579aef4f968d887e2909016b6e3aa8cd",
+    "arc_agi2/direct_factories/task_8698868d.py": "00ce209737f388ec606d42370e55bb78f382ea593f8735d06a193f3dda2386f1",
+    "tasks/task_7b6016b9.py": "a867483a4f09e43a2f683cc360d05ac42f9b560f78bb7aad82ee85000ebb4fc3",
+    "arc_agi2/direct_factories/task_7b6016b9.py": "3b145c8e10cb8f0ca6672365a63a162c6b53cb507afec0e092bddc4490634e61",
+    "tasks/task_83b6b474.py": "9943d9e2968a2c6b9d596ada411fece15134782b09f0899afbf70e5600967f38",
+    "arc_agi2/direct_factories/task_83b6b474.py": "241f2593e9166b4f5daa1799217e52696ab5a68947bad6a57307c0af0ce26487",
+    "tasks/task_97239e3d.py": "8ce169acc13babb635530cf8e47181e7112828ad39078a92fb022b03c67e4e26",
+    "arc_agi2/direct_factories/task_97239e3d.py": "4510d4cbef1ea55d0f581ff9bf72e2dda1d4c2194f1159bb1002e5e58610f06c"
+  },
+  "regression_tests": 415
+}

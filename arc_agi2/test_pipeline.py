@@ -2700,4 +2700,29 @@ class GeneratorTests(unittest.TestCase):
         self.assertTrue(m._search(types,lambda cost:cost>1,lambda cost:False))
         self.assertFalse(m._has_costlier_diff(types,1,[[1]*4 for _ in range(3)]))
 
+    def test_funnel_long_final_boundary_run_continues_literal_pattern(self):
+        m=importlib.import_module('tasks.task_b9e38dc0')
+        kw=dict(width=15,height=12,rotation=0,bg=0,wall=5,seed=4,top=3,
+                spans=[[5,9],[6,9],[6,9],[6,9]],seeds=[[3,7]])
+        p=m.generate(**kw)
+        self.assertEqual([x for x,v in enumerate(p['output'][7]) if v==4],[9])
+        self.assertFalse(any(4 in row for row in p['output'][8:]))
+        self.assertEqual(p['output'],grid(call(solver('b9e38dc0'),p['input'])))
+        with self.assertRaisesRegex(ValueError,'exactly 2 fields'):
+            m.generate(**dict(kw,seeds=[[3,7,0]]))
+
+    def test_band_fixed_masks_reject_impossible_layout_before_render(self):
+        m=importlib.import_module('tasks.task_c4d1a9ae')
+        with patch.object(m,'_shrink_to_fit',side_effect=AssertionError('render reached')):
+            with self.assertRaisesRegex(ValueError,'no layout'):
+                m.generate(masks=['111 111 110']*2,margins=[0,0])
+
+    def test_band_dense_fixed_masks_choose_required_margin(self):
+        m=importlib.import_module('tasks.task_c4d1a9ae')
+        for seed in range(20):
+            random.seed(seed)
+            p=m.generate(masks=['11 11 10']*2,gaps=[1],bg=0,colors=[2,3])
+            self.assertGreater(len(p['input'][0]),5)
+            self.assertEqual(p['output'],grid(call(solver('c4d1a9ae'),p['input'])))
+
 if __name__=='__main__':unittest.main()

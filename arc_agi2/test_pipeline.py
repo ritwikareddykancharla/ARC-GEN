@@ -2435,4 +2435,62 @@ class GeneratorTests(unittest.TestCase):
         self.assertNotEqual(p['input'],p['output'])
         self.assertEqual(p['output'],grid(call(solver('a47bf94d'),p['input'])))
 
+    def test_comb_maze_maximum_walls_has_one_shortest_path(self):
+        from collections import deque
+        m=importlib.import_module('tasks.task_b15fca0b')
+        for transpose in (False,True):
+            random.seed(90000)
+            pair=m.generate(height=3,num_walls=14,transpose=transpose)
+            g=pair['input'];h,w=len(g),len(g[0])
+            ends=[(r,c) for r in range(h) for c in range(w) if g[r][c]==2]
+            start,end=ends
+            distance={start:0};ways={start:1};queue=deque([start])
+            while queue:
+                r,c=queue.popleft()
+                for dr,dc in ((1,0),(-1,0),(0,1),(0,-1)):
+                    q=(r+dr,c+dc)
+                    if not(0<=q[0]<h and 0<=q[1]<w) or g[q[0]][q[1]]==1:
+                        continue
+                    if q not in distance:
+                        distance[q]=distance[r,c]+1
+                        ways[q]=ways[r,c]
+                        queue.append(q)
+                    elif distance[q]==distance[r,c]+1:
+                        ways[q]+=ways[r,c]
+            self.assertEqual(ways[end],1)
+            self.assertEqual(sum(row.count(4) for row in pair['output']),distance[end]-1)
+            self.assertEqual(pair['output'],grid(call(solver('b15fca0b'),g)))
+
+    def test_comb_maze_rejects_equal_length_alternative_routes(self):
+        m=importlib.import_module('tasks.task_b15fca0b')
+        with self.assertRaises(ValueError):
+            m.generate(height=9,lane_widths=[1,1],
+                       walls=[(1,[(0,0),(8,8)])],start=(4,0),end=(4,0))
+        for bad in ({'num_walls':True},{'transpose':1},{'height':3.0}):
+            with self.assertRaises(ValueError):m.generate(**bad)
+
+    def test_glyph_matching_retries_never_drop_same_size_distractor(self):
+        m=importlib.import_module('tasks.task_b20f7c8b')
+        flags=[]
+        def fail_placement(*args):
+            flags.append(args[-1])
+            return None
+        with patch.object(m,'_sample_scene',fail_placement):
+            with self.assertRaises(ValueError):m.generate(height=18,width=22)
+        self.assertGreater(len(flags),60)
+        self.assertTrue(all(flags))
+
+    def test_glyph_matching_small_default_and_binary_validation(self):
+        m=importlib.import_module('tasks.task_b20f7c8b')
+        for side in ('left','right'):
+            random.seed(91000)
+            p=m.generate(height=12,width=18,legend_side=side)
+            cols=range(6) if side=='left' else range(12,18)
+            colours={row[c] for row in p['input'] for c in cols}-{8}
+            self.assertGreaterEqual(len(colours),2)
+            self.assertEqual(p['output'],grid(call(solver('b20f7c8b'),p['input'])))
+        with self.assertRaises(ValueError):
+            m.generate(glyphs=[[3,1,1,[[1,0,1],[0,True,0],[1,0,1]]]],
+                       boxes=[[1,1,3,None]])
+
 if __name__=='__main__':unittest.main()

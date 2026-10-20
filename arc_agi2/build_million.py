@@ -17,6 +17,7 @@ import pyarrow.parquet as pq
 from huggingface_hub import HfApi,CommitOperationAdd,snapshot_download
 from .runtime import BASE,reference,solver,call,grid
 from .generators.registry import GENERATORS,generate
+from .task_registry import NEW_TASK_IDS
 from .audit import relation,UPSTREAM_IDS
 from .augmentation import transformed, settings as augmentation_settings, apply_episode
 
@@ -53,22 +54,37 @@ def input_stats(g):
     c=Counter(v for row in g for v in row)
     return {'height':len(g),'width':len(g[0]),'colours':len(c),'dominant_fraction':max(c.values())/sum(c.values())}
 
+def pool_signature(tid,configs):
+    # Invalidate cached pools after constructor, verifier, policy or selection changes.
+    files=[Path(__file__),BASE/'runtime.py',BASE/'helpers.py',BASE/'training_policy.json',
+           BASE/'references'/f'{tid}.json',BASE.parent/'common.py',BASE/'task_registry.py']
+    files+=sorted((BASE/'generators').glob('*.py'))
+    native=BASE.parent/'tasks'/f'task_{tid}.py'
+    if native.exists():files.append(native)
+    hashes={str(p.relative_to(BASE.parent)):hashlib.sha256(p.read_bytes()).hexdigest() for p in files}
+    return digest({'source_hashes':hashes,'approved_parameters':configs,'reviewed_standalone':tid in NEW_TASK_IDS})
+
 def make_pool(tid):
     start=time.monotonic();rng=random.Random(seed(tid,'pool'));r=reference(tid)
     assert tid not in POLICY['excluded_task_ids']
     report_path=OUT/'pool_reports'/f'{tid}.json';file=OUT/'pools'/f'{tid}.parquet'
+    configs=json.loads((BASE/'reports/parameter-validation.json').read_text()).get(tid,{}).get('approved',[])
+    signature=pool_signature(tid,configs)
     if file.exists() and report_path.exists():
         old=json.loads(report_path.read_text())
-        if old.get('complete') and old.get('seed')==SEED:return old
+        if (old.get('complete') and old.get('seed')==SEED and old.get('source_signature')==signature
+                and old.get('requested_pool_size')==POOL_SIZE
+                and old.get('sha256')==hashlib.sha256(file.read_bytes()).hexdigest()):return old
     existing=(BASE.parent/'tasks'/f'task_{tid}.py').exists()
     native=importlib.import_module('tasks.task_'+tid).generate if existing else None
     refs=solver(tid) if tid in GENERATORS or tid not in UPSTREAM_IDS else None
-    configs=json.loads((BASE/'reports/parameter-validation.json').read_text()).get(tid,{}).get('approved',[])
     if configs and refs is None:refs=solver(tid)
     rows=[];seen={};canonical=set();reject=Counter();stale=0;trials=0
     while len(rows)<POOL_SIZE and time.monotonic()-start<FAMILY_SECONDS and trials<POOL_SIZE*40:
-        trials+=1;s=seed(tid,'pair',trials);random.seed(s);kw={};mode='default' if tid in UPSTREAM_IDS else 'standalone_constructor'
-        if tid in GENERATORS and (native is None or rng.random()<.6):mode='extension'
+        trials+=1;s=seed(tid,'pair',trials);random.seed(s);np.random.seed(s % (2**32));kw={};mode='default' if tid in UPSTREAM_IDS else 'standalone_constructor'
+        if tid in NEW_TASK_IDS:
+            pass  # Reviewed standalone replaces, rather than mixes with, its archived draft.
+        elif tid in GENERATORS and (native is None or rng.random()<.6):mode='extension'
         elif configs and rng.random()<.6:kw=rng.choice(configs)['parameters'];mode='parameter_override'
         try:
             p=call(generate,tid,s,seconds=2) if mode=='extension' else call(native,seconds=2,**kw)
@@ -90,7 +106,7 @@ def make_pool(tid):
     file.parent.mkdir(parents=True,exist_ok=True)
     pq.write_table(pa.Table.from_pylist(rows),file,compression='zstd')
     assert pq.read_table(file).to_pylist()==rows
-    report={'task_id':tid,'seed':SEED,'complete':True,'pairs':len(rows),'distinct_canonical_inputs':len(canonical),
+    report={'task_id':tid,'seed':SEED,'source_signature':signature,'requested_pool_size':POOL_SIZE,'complete':True,'pairs':len(rows),'distinct_canonical_inputs':len(canonical),
        'train_strata':counts(rows,'train'),'validation_strata':counts(rows,'validation'),
        'train_canonical':len({r['canonical_input_hash'] for r in rows if r['split']=='train'}),
        'validation_canonical':len({r['canonical_input_hash'] for r in rows if r['split']=='validation'}),
@@ -251,6 +267,9 @@ def require_build_ready(inv):
     require_complete_coverage(inv)
     if POLICY.get('planned_dataset',{}).get('bulk_builder_expansion_pending'):
         raise RuntimeError('Coverage is complete but exhaustive eight-variant episode expansion is still pending; no bulk launch.')
+    pending=[r['task_id'] for r in inv['tasks'] if r['status']=='extension_validated' and r['task_id'] not in NEW_TASK_IDS]
+    if pending:
+        raise RuntimeError(f'{len(pending)} families still need reviewed standalone task files before bulk generation.')
 
 def main():
     ap=argparse.ArgumentParser();ap.add_argument('--local',action='store_true');ap.add_argument('--tasks',nargs='*');ap.add_argument('--resume',action='store_true');args=ap.parse_args()

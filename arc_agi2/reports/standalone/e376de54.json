@@ -1,0 +1,222 @@
+{
+  "task_id": "e376de54",
+  "ready": true,
+  "samples_requested": 1000,
+  "samples_attempted": 1000,
+  "samples_passed": 1000,
+  "seed_start": 20000,
+  "seed_end_exclusive": 21000,
+  "unique_inputs": 1000,
+  "changed_pairs": 1000,
+  "fixture_replays": 0,
+  "shapes": [
+    [
+      10,
+      10,
+      10,
+      10
+    ],
+    [
+      11,
+      11,
+      11,
+      11
+    ],
+    [
+      12,
+      12,
+      12,
+      12
+    ],
+    [
+      13,
+      13,
+      13,
+      13
+    ],
+    [
+      14,
+      14,
+      14,
+      14
+    ],
+    [
+      15,
+      15,
+      15,
+      15
+    ],
+    [
+      16,
+      16,
+      16,
+      16
+    ],
+    [
+      17,
+      17,
+      17,
+      17
+    ],
+    [
+      18,
+      18,
+      18,
+      18
+    ],
+    [
+      19,
+      19,
+      19,
+      19
+    ],
+    [
+      20,
+      20,
+      20,
+      20
+    ],
+    [
+      21,
+      21,
+      21,
+      21
+    ],
+    [
+      22,
+      22,
+      22,
+      22
+    ],
+    [
+      23,
+      23,
+      23,
+      23
+    ],
+    [
+      24,
+      24,
+      24,
+      24
+    ],
+    [
+      25,
+      25,
+      25,
+      25
+    ],
+    [
+      26,
+      26,
+      26,
+      26
+    ],
+    [
+      27,
+      27,
+      27,
+      27
+    ],
+    [
+      28,
+      28,
+      28,
+      28
+    ],
+    [
+      29,
+      29,
+      29,
+      29
+    ],
+    [
+      30,
+      30,
+      30,
+      30
+    ]
+  ],
+  "fixture_matches": {
+    "canonical": true,
+    "teaching_fixture": true
+  },
+  "original_solver_replay": {
+    "canonical": {
+      "correct": 4,
+      "total": 4,
+      "all_exact": true
+    },
+    "teaching_fixture": {
+      "correct": 4,
+      "total": 4,
+      "all_exact": true
+    }
+  },
+  "errors": [],
+  "sha256": "f6536417beda29ee977d86f99f5a3f15923b1c9f385ff6d1a2ec5a4f899f10b4",
+  "status": "reviewed_bounded_validation_passed",
+  "limitations": "Bounded randomized agreement with a saved solver is not proof of semantic completeness.",
+  "candidate_path": "/Users/ritwika/projects/arc-agi2/outputs/research/arcgen-coverage-cli/e376de54/task_e376de54.py",
+  "attempts": 1,
+  "model_usage": {
+    "claude-opus-5-5": {
+      "inputTokens": 2,
+      "outputTokens": 12875,
+      "cacheReadInputTokens": 1225,
+      "cacheCreationInputTokens": 15060,
+      "webSearchRequests": 0,
+      "costUSD": 0.37823300000000004,
+      "contextWindow": 1000000,
+      "maxOutputTokens": 128000,
+      "thinkingTokens": 8890,
+      "canonicalModel": "claude-opus-5-5",
+      "provider": "firstParty",
+      "costBasis": "list"
+    }
+  },
+  "rule": "Parallel straight segments share one aligned end on a common anchor line. Order the segments across their direction and take the middle one's length as the target. Redraw every segment from its anchored end at the target length: cut cells become background and missing cells are drawn in the segment's colour.",
+  "scope": "Square grid side sampled 10..30, background any ARC colour; 3 or 5 parallel non-touching segments in four orientations, either aligned end anchored, contiguous colour groups. Output equalizes to the spatially middle segment. Original fixtures use 16x16 and background 7.",
+  "constraints": [
+    "Segment count is odd (3 or 5), so the middle segment is unique.",
+    "Neighbouring anchor offsets differ by at least 2. For diagonals this means line sums differ by at least 4, so no two segments are 8-connected.",
+    "All anchors lie on one line perpendicular to the segments, and segments run from the anchor in the same direction.",
+    "Each segment fits in the grid at both its input length and the target length (room >= max(len, target)).",
+    "Lengths are at least 2, so the longest segment fixes the direction. The lengths are not all equal, so only the anchored end is aligned and the output differs from the input."
+  ],
+  "known_limitations": [
+    "The main-diagonal (down-right) orientation and right/bottom-anchored horizontal/vertical scenes extend beyond the orientations seen in the fixtures. The same rule is applied to them.",
+    "Equal lengths among non-middle segments are allowed, as in fixture pair 3. Ties at the target length are allowed when at least one segment differs.",
+    "A colour may be 0 (black) or any non-background colour; colour groups are contiguous across the perpendicular order, as in the fixtures.",
+    "Grid sides other than 16 and backgrounds other than 7 extend beyond canonical examples; rectangular canvases and even segment counts are not sampled."
+  ],
+  "billing": "Claude Max CLI; API credentials excluded; no API fallback",
+  "authored_sha256": "4c1e2911beb6cbc01993a4fbb33ef98320b4f7a8241da58cd4c292a615a75b67",
+  "semantic_review": {
+    "status": "reviewed",
+    "checks": [
+      "Geometric middle segment sets target length; colour and spatial order need not match",
+      "Aligned end preserved for all four orientations and both directions",
+      "Native grid sides vary 10..30; background varies without changing the rule",
+      "Segment separation prevents accidental connected-component merging",
+      "1000 independent seeds 20000..20999 checked against saved solver"
+    ],
+    "limitations": [
+      "The main-diagonal (down-right) orientation and right/bottom-anchored horizontal/vertical scenes extend beyond the orientations seen in the fixtures. The same rule is applied to them.",
+      "Equal lengths among non-middle segments are allowed, as in fixture pair 3. Ties at the target length are allowed when at least one segment differs.",
+      "A colour may be 0 (black) or any non-background colour; colour groups are contiguous across the perpendicular order, as in the fixtures.",
+      "Grid sides other than 16 and backgrounds other than 7 extend beyond canonical examples; rectangular canvases and even segment counts are not sampled."
+    ]
+  },
+  "stress_test": {
+    "samples_requested": 1000,
+    "samples_passed": 1000,
+    "unique_inputs": 1000,
+    "changed_pairs": 1000,
+    "fixture_replays": 0,
+    "ready": true,
+    "sha256": "f6536417beda29ee977d86f99f5a3f15923b1c9f385ff6d1a2ec5a4f899f10b4",
+    "seed_start": 20000,
+    "seed_end_exclusive": 21000
+  }
+}

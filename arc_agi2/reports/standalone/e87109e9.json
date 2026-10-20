@@ -1,0 +1,166 @@
+{
+  "task_id": "e87109e9",
+  "ready": true,
+  "samples_requested": 1000,
+  "samples_attempted": 1000,
+  "samples_passed": 1000,
+  "seed_start": 20000,
+  "seed_end_exclusive": 21000,
+  "unique_inputs": 1000,
+  "changed_pairs": 1000,
+  "fixture_replays": 0,
+  "shapes": [
+    [
+      20,
+      24,
+      14,
+      24
+    ],
+    [
+      21,
+      24,
+      15,
+      24
+    ],
+    [
+      22,
+      24,
+      16,
+      24
+    ],
+    [
+      23,
+      24,
+      17,
+      24
+    ],
+    [
+      24,
+      24,
+      18,
+      24
+    ],
+    [
+      25,
+      24,
+      19,
+      24
+    ],
+    [
+      26,
+      24,
+      20,
+      24
+    ],
+    [
+      27,
+      24,
+      21,
+      24
+    ],
+    [
+      28,
+      24,
+      22,
+      24
+    ],
+    [
+      29,
+      24,
+      23,
+      24
+    ],
+    [
+      30,
+      24,
+      24,
+      24
+    ]
+  ],
+  "fixture_matches": {
+    "canonical": true,
+    "teaching_fixture": true
+  },
+  "original_solver_replay": {
+    "canonical": {
+      "correct": 4,
+      "total": 4,
+      "all_exact": true
+    },
+    "teaching_fixture": {
+      "correct": 4,
+      "total": 4,
+      "all_exact": true
+    }
+  },
+  "errors": [],
+  "sha256": "1a6bf427eecab908a84fe3b0058463cc2b57380b938deec910397faf8b1a8fbd",
+  "status": "reviewed_bounded_validation_passed",
+  "limitations": "Bounded randomized agreement with a saved solver is not proof of semantic completeness.",
+  "candidate_path": "/Users/ritwika/projects/arc-agi2/outputs/research/arcgen-coverage-cli/e87109e9/task_e87109e9.py",
+  "attempts": 1,
+  "model_usage": {
+    "claude-opus-5-5": {
+      "inputTokens": 2,
+      "outputTokens": 14272,
+      "cacheReadInputTokens": 1225,
+      "cacheCreationInputTokens": 29551,
+      "webSearchRequests": 0,
+      "costUSD": 0.522101,
+      "contextWindow": 1000000,
+      "maxOutputTokens": 128000,
+      "thinkingTokens": 9480,
+      "canonicalModel": "claude-opus-5-5",
+      "provider": "firstParty",
+      "costBasis": "list"
+    }
+  },
+  "rule": "Drop the 6-row legend strip and keep the canvas. From the s x s 8 square, shoot beams of width s up, down, left and right, painting 8. When a beam's next position would overlap a coloured block, it turns in place: left if that colour's legend marker sits left of its 0s, right otherwise. A beam stops at the grid edge, or at a colour not in the legend. Collisions are tested against the original canvas.",
+  "scope": "Supported: the fixed width of 24 (four 6-column legend panels); canvas height 14-24; a sampled background colour; four sampled legend colours with random order and random L/R sides; square size 2 or 3 placed inside the canvas; 3-4 distinct-colour solid rectangles, often snapped to edges, that may partially overlap beam lanes; multi-turn paths, including beams crossing each other. Deliberately not supported in random mode: canvas blocks with colours outside the legend (beam stopping), beam windows overlapping two colours, looping paths, and touching blocks. These are absent from the examples or ambiguous, although the explicit fixture path does allow touching blocks (as in the test input).",
+  "constraints": [
+    "The background, the legend colours, 0, 5 and 8 are all distinct.",
+    "Block colours are distinct and drawn from the legend.",
+    "In random mode, blocks are separated by at least 1 cell from each other and from the 8 square.",
+    "The 8 square is at least 2 cells from the canvas edges.",
+    "The background covers more than half of the canvas, so it is the majority colour.",
+    "No blocking window contains more than one non-background colour, which avoids most-common ties.",
+    "No beam enters a state cycle, and every beam ends at the grid edge.",
+    "At least 2 turns in total, spread over at least 2 beams.",
+    "The output always differs from the input in shape because the strip is removed."
+  ],
+  "known_limitations": [
+    "The width is fixed at 24 and the legend always has exactly 4 panels of 4x3 zeros, matching all examples.",
+    "Stopping at a non-legend colour is implemented in the trace but never sampled.",
+    "Blocks are axis-aligned solid rectangles only.",
+    "Bounded construction raises on exhaustion instead of returning a canned fallback; supported scalar overrides are honored."
+  ],
+  "billing": "Claude Max CLI; API credentials excluded; no API fallback",
+  "authored_sha256": "d0f0bfa7a2220eb997bd607b253a4675364ab403426c8df4d484156bc3b816e7",
+  "semantic_review": {
+    "status": "reviewed",
+    "checks": [
+      "Legend side controls left/right relative turns of a beam with source-square width",
+      "Collisions read original objects so crossing beams do not block one another",
+      "At least two beams turn; ambiguous mixed-colour collisions and loops rejected",
+      "Fixed requested height and background honored; unverified fallback removed",
+      "1000 independent seeds 20000..20999 checked against saved solver"
+    ],
+    "limitations": [
+      "The width is fixed at 24 and the legend always has exactly 4 panels of 4x3 zeros, matching all examples.",
+      "Stopping at a non-legend colour is implemented in the trace but never sampled.",
+      "Blocks are axis-aligned solid rectangles only.",
+      "Bounded construction raises on exhaustion instead of returning a canned fallback; supported scalar overrides are honored."
+    ]
+  },
+  "stress_test": {
+    "samples_requested": 1000,
+    "samples_passed": 1000,
+    "unique_inputs": 1000,
+    "changed_pairs": 1000,
+    "fixture_replays": 0,
+    "ready": true,
+    "sha256": "1a6bf427eecab908a84fe3b0058463cc2b57380b938deec910397faf8b1a8fbd",
+    "seed_start": 20000,
+    "seed_end_exclusive": 21000
+  }
+}

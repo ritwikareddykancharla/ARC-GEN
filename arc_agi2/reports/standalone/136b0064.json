@@ -1,0 +1,671 @@
+{
+  "task_id": "136b0064",
+  "ready": true,
+  "samples_requested": 1000,
+  "samples_attempted": 1000,
+  "samples_passed": 1000,
+  "seed_start": 20000,
+  "seed_end_exclusive": 21000,
+  "unique_inputs": 1000,
+  "changed_pairs": 1000,
+  "fixture_replays": 0,
+  "shapes": [
+    [
+      7,
+      15,
+      7,
+      7
+    ],
+    [
+      7,
+      16,
+      7,
+      8
+    ],
+    [
+      7,
+      17,
+      7,
+      9
+    ],
+    [
+      7,
+      18,
+      7,
+      10
+    ],
+    [
+      7,
+      19,
+      7,
+      11
+    ],
+    [
+      7,
+      20,
+      7,
+      12
+    ],
+    [
+      7,
+      21,
+      7,
+      13
+    ],
+    [
+      7,
+      22,
+      7,
+      14
+    ],
+    [
+      7,
+      23,
+      7,
+      15
+    ],
+    [
+      7,
+      24,
+      7,
+      16
+    ],
+    [
+      7,
+      25,
+      7,
+      17
+    ],
+    [
+      7,
+      26,
+      7,
+      18
+    ],
+    [
+      7,
+      27,
+      7,
+      19
+    ],
+    [
+      7,
+      28,
+      7,
+      20
+    ],
+    [
+      7,
+      29,
+      7,
+      21
+    ],
+    [
+      7,
+      30,
+      7,
+      22
+    ],
+    [
+      11,
+      15,
+      11,
+      7
+    ],
+    [
+      11,
+      16,
+      11,
+      8
+    ],
+    [
+      11,
+      17,
+      11,
+      9
+    ],
+    [
+      11,
+      18,
+      11,
+      10
+    ],
+    [
+      11,
+      19,
+      11,
+      11
+    ],
+    [
+      11,
+      20,
+      11,
+      12
+    ],
+    [
+      11,
+      21,
+      11,
+      13
+    ],
+    [
+      11,
+      22,
+      11,
+      14
+    ],
+    [
+      11,
+      23,
+      11,
+      15
+    ],
+    [
+      11,
+      24,
+      11,
+      16
+    ],
+    [
+      11,
+      25,
+      11,
+      17
+    ],
+    [
+      11,
+      26,
+      11,
+      18
+    ],
+    [
+      11,
+      27,
+      11,
+      19
+    ],
+    [
+      11,
+      28,
+      11,
+      20
+    ],
+    [
+      11,
+      29,
+      11,
+      21
+    ],
+    [
+      11,
+      30,
+      11,
+      22
+    ],
+    [
+      15,
+      15,
+      15,
+      7
+    ],
+    [
+      15,
+      16,
+      15,
+      8
+    ],
+    [
+      15,
+      17,
+      15,
+      9
+    ],
+    [
+      15,
+      18,
+      15,
+      10
+    ],
+    [
+      15,
+      19,
+      15,
+      11
+    ],
+    [
+      15,
+      20,
+      15,
+      12
+    ],
+    [
+      15,
+      21,
+      15,
+      13
+    ],
+    [
+      15,
+      22,
+      15,
+      14
+    ],
+    [
+      15,
+      23,
+      15,
+      15
+    ],
+    [
+      15,
+      24,
+      15,
+      16
+    ],
+    [
+      15,
+      25,
+      15,
+      17
+    ],
+    [
+      15,
+      26,
+      15,
+      18
+    ],
+    [
+      15,
+      27,
+      15,
+      19
+    ],
+    [
+      15,
+      28,
+      15,
+      20
+    ],
+    [
+      15,
+      29,
+      15,
+      21
+    ],
+    [
+      15,
+      30,
+      15,
+      22
+    ],
+    [
+      19,
+      15,
+      19,
+      7
+    ],
+    [
+      19,
+      16,
+      19,
+      8
+    ],
+    [
+      19,
+      17,
+      19,
+      9
+    ],
+    [
+      19,
+      18,
+      19,
+      10
+    ],
+    [
+      19,
+      19,
+      19,
+      11
+    ],
+    [
+      19,
+      20,
+      19,
+      12
+    ],
+    [
+      19,
+      21,
+      19,
+      13
+    ],
+    [
+      19,
+      22,
+      19,
+      14
+    ],
+    [
+      19,
+      23,
+      19,
+      15
+    ],
+    [
+      19,
+      24,
+      19,
+      16
+    ],
+    [
+      19,
+      25,
+      19,
+      17
+    ],
+    [
+      19,
+      26,
+      19,
+      18
+    ],
+    [
+      19,
+      27,
+      19,
+      19
+    ],
+    [
+      19,
+      28,
+      19,
+      20
+    ],
+    [
+      19,
+      29,
+      19,
+      21
+    ],
+    [
+      19,
+      30,
+      19,
+      22
+    ],
+    [
+      23,
+      15,
+      23,
+      7
+    ],
+    [
+      23,
+      16,
+      23,
+      8
+    ],
+    [
+      23,
+      17,
+      23,
+      9
+    ],
+    [
+      23,
+      18,
+      23,
+      10
+    ],
+    [
+      23,
+      19,
+      23,
+      11
+    ],
+    [
+      23,
+      20,
+      23,
+      12
+    ],
+    [
+      23,
+      21,
+      23,
+      13
+    ],
+    [
+      23,
+      22,
+      23,
+      14
+    ],
+    [
+      23,
+      23,
+      23,
+      15
+    ],
+    [
+      23,
+      24,
+      23,
+      16
+    ],
+    [
+      23,
+      25,
+      23,
+      17
+    ],
+    [
+      23,
+      26,
+      23,
+      18
+    ],
+    [
+      23,
+      27,
+      23,
+      19
+    ],
+    [
+      23,
+      28,
+      23,
+      20
+    ],
+    [
+      23,
+      29,
+      23,
+      21
+    ],
+    [
+      23,
+      30,
+      23,
+      22
+    ],
+    [
+      27,
+      15,
+      27,
+      7
+    ],
+    [
+      27,
+      16,
+      27,
+      8
+    ],
+    [
+      27,
+      17,
+      27,
+      9
+    ],
+    [
+      27,
+      18,
+      27,
+      10
+    ],
+    [
+      27,
+      19,
+      27,
+      11
+    ],
+    [
+      27,
+      20,
+      27,
+      12
+    ],
+    [
+      27,
+      21,
+      27,
+      13
+    ],
+    [
+      27,
+      22,
+      27,
+      14
+    ],
+    [
+      27,
+      23,
+      27,
+      15
+    ],
+    [
+      27,
+      24,
+      27,
+      16
+    ],
+    [
+      27,
+      25,
+      27,
+      17
+    ],
+    [
+      27,
+      26,
+      27,
+      18
+    ],
+    [
+      27,
+      27,
+      27,
+      19
+    ],
+    [
+      27,
+      28,
+      27,
+      20
+    ],
+    [
+      27,
+      29,
+      27,
+      21
+    ],
+    [
+      27,
+      30,
+      27,
+      22
+    ]
+  ],
+  "fixture_matches": {
+    "canonical": true,
+    "teaching_fixture": true
+  },
+  "original_solver_replay": {
+    "canonical": {
+      "correct": 4,
+      "total": 4,
+      "all_exact": true
+    },
+    "teaching_fixture": {
+      "correct": 4,
+      "total": 4,
+      "all_exact": true
+    }
+  },
+  "errors": [],
+  "sha256": "ae970723f4315c2c45ec15a874836b8f7b244f7e021cf84c8c818b3ff6e2102f",
+  "status": "reviewed_bounded_validation_passed",
+  "limitations": "Bounded randomized agreement with a saved solver is not proof of semantic completeness.",
+  "candidate_path": "/Users/ritwika/projects/arc-agi2/outputs/research/arcgen-coverage-cli/136b0064/task_136b0064.py",
+  "attempts": 1,
+  "model_usage": {
+    "claude-opus-5-5": {
+      "inputTokens": 2,
+      "outputTokens": 4872,
+      "cacheReadInputTokens": 1225,
+      "cacheCreationInputTokens": 9145,
+      "webSearchRequests": 0,
+      "costUSD": 0.17085299999999998,
+      "contextWindow": 1000000,
+      "maxOutputTokens": 128000,
+      "thinkingTokens": 1903,
+      "canonicalModel": "claude-opus-5-5",
+      "provider": "firstParty",
+      "costBasis": "list"
+    }
+  },
+  "rule": "Read the 3x3 glyphs left of the yellow divider: left column top to bottom, then right column top to bottom. Starting from the grey marker in the right panel, each glyph adds a segment of its own colour. Colour 1 steps down and goes right 3 cells, colour 2 steps down and goes left 2, colour 3 steps down and goes left 4, and colour 6 goes straight down 2. Horizontal segments start in the current column. The output is the 7-wide right panel with this path drawn.",
+  "scope": "Two complete columns of 3x3 glyphs with 2..7 rows; fixed glyph meanings and divider; output width sampled 7..22, input width 15..30. Original fixtures retain width 7. Marker position and legal program sequence vary; no clipping is sampled.",
+  "constraints": [
+    "The divider is colour 4 in column 7, and the glyph columns are x 0-2 and x 4-6.",
+    "Glyphs sit at rows 4*i to 4*i+2, separated by blank rows and the blank column 3, so each glyph is its own diagonally connected object.",
+    "There is exactly one marker 5, in row 0 of the right panel.",
+    "Every horizontal segment stays within columns 0-6.",
+    "The total rows used (glyph count plus the number of 6 glyphs) is at most height-1, so the path is never clipped.",
+    "Every sample draws a path, so no sample is an identity."
+  ],
+  "known_limitations": [
+    "Both glyph columns always have the same number of glyphs.",
+    "The glyph shape for each colour is fixed, as in the original task.",
+    "Output widths above 7 extend beyond the original fixture widths while preserving glyph instructions and layout."
+  ],
+  "billing": "Claude Max CLI; API credentials excluded; no API fallback",
+  "authored_sha256": "4173e78cf18fe15099267f76e3c4d9ddc6c547401bb700eb323d987d39e14d74",
+  "semantic_review": {
+    "status": "reviewed",
+    "checks": [
+      "Glyphs read left column then right, with colour-dependent segment directions and lengths",
+      "Output width varies 7..22; input width 15..30; both glyph columns stay complete",
+      "Sequence sampled with bounds and vertical-step budget",
+      "Original fixtures retain output width 7",
+      "1000 independent seeds 20000..20999 checked against saved solver"
+    ],
+    "limitations": [
+      "Both glyph columns always have the same number of glyphs.",
+      "The glyph shape for each colour is fixed, as in the original task.",
+      "Output widths above 7 extend beyond the original fixture widths while preserving glyph instructions and layout."
+    ]
+  },
+  "stress_test": {
+    "samples_requested": 1000,
+    "samples_passed": 1000,
+    "unique_inputs": 1000,
+    "changed_pairs": 1000,
+    "fixture_replays": 0,
+    "ready": true,
+    "sha256": "ae970723f4315c2c45ec15a874836b8f7b244f7e021cf84c8c818b3ff6e2102f",
+    "seed_start": 20000,
+    "seed_end_exclusive": 21000
+  }
+}

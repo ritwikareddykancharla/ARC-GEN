@@ -1,6 +1,7 @@
 import hashlib,importlib,json,random,tempfile,unittest
 from collections import Counter
 from pathlib import Path
+from unittest.mock import patch
 import pyarrow.parquet as pq
 from . import build_million as b
 from .generators.registry import GENERATORS,generate
@@ -62,6 +63,39 @@ class GeneratorTests(unittest.TestCase):
             diagonal |= any(abs(r-y)==abs(c-x)==1 for i,(r,c) in enumerate(cells) for y,x in cells[i+1:])
         self.assertTrue(diagonal,'native examples must include diagonally touching holes')
 
+    def test_extended_canvas_sizes_and_analogy_identifiability(self):
+        lines=importlib.import_module('tasks.task_e376de54')
+        glyphs=importlib.import_module('tasks.task_136b0064')
+        beams=importlib.import_module('tasks.task_e87109e9')
+        templates=importlib.import_module('tasks.task_edb79dae')
+        analogy=importlib.import_module('tasks.task_4c7dc4dd')
+        for size in (10,16,30):
+            for seed in range(5):
+                random.seed(seed)
+                p=call(lambda:lines.generate(size=size,background=9),seconds=3)
+                self.assertEqual((len(p['input']),len(p['input'][0])),(size,size))
+                self.assertEqual(p['output'],grid(call(solver('e376de54'),p['input'])))
+        for width in (7,14,22):
+            for rows in (2,7):
+                random.seed(width+rows)
+                p=glyphs.generate(canvas_width=width,rows=rows,start=width-1)
+                self.assertEqual((len(p['input']),len(p['input'][0])),(4*rows-1,width+8))
+                self.assertEqual(len(p['output'][0]),width)
+                self.assertEqual(p['output'],grid(call(solver('136b0064'),p['input'])))
+        for height in (14,24):
+            random.seed(height)
+            p=call(lambda:beams.generate(height=height,bg=9),seconds=3)
+            self.assertEqual(len(p['input']),height+6)
+            self.assertEqual(len(p['output']),height)
+        random.seed(0)
+        p=call(lambda:templates.generate(width=28,height=30,k=3,bg=8),seconds=3)
+        self.assertEqual((len(p['input']),len(p['input'][0])),(30,28))
+        # Both mirror and gap-filling preserve this example; it cannot identify a rule.
+        same=[[1]*4 for _ in range(4)]
+        self.assertIsNone(analogy._example_rule(same,same,2))
+        with self.assertRaisesRegex(ValueError,'cannot fit'):
+            analogy.generate(width=10,height=10)
+
     def test_registered_standalone_sources_and_fixtures(self):
         # Validate the registered files, not only the older research registry.
         for tid in NEW_TASK_IDS:
@@ -102,6 +136,9 @@ class GeneratorTests(unittest.TestCase):
         b.require_complete_coverage(all_ready)
         with self.assertRaisesRegex(RuntimeError,'eight-variant'):
             b.require_build_ready(all_ready)
+        with patch.dict(b.POLICY['planned_dataset'],bulk_builder_expansion_pending=False):
+            with self.assertRaisesRegex(RuntimeError,'reviewed standalone'):
+                b.require_build_ready(all_ready)
     def test_default_augmentation_preserves_native_colours(self):
         rng=random.Random(42);seen=set()
         for _ in range(1000):
@@ -125,6 +162,30 @@ class GeneratorTests(unittest.TestCase):
         alloc,stats=b.allocate(rs,'train',100,{'15|same_shape':1,'30|same_shape':1})
         self.assertEqual(sum(alloc['a'].values()),10)
         self.assertEqual(stats['shortfall_by_stratum']['30|same_shape'],50)
+    def test_reviewed_constructors_replace_drafts_and_invalidate_old_pools(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root=Path(directory);(root/'pools').mkdir();(root/'pool_reports').mkdir()
+            tid='e872b94a';file=root/'pools'/f'{tid}.parquet'
+            file.write_bytes(b'obsolete cached pool')
+            (root/'pool_reports'/f'{tid}.json').write_text(json.dumps({'complete':True,'seed':b.SEED}))
+            with patch.object(b,'OUT',root),patch.object(b,'POOL_SIZE',8),patch.object(b,'FAMILY_SECONDS',30):
+                with patch.object(b,'generate',side_effect=AssertionError('archived draft selected')) as draft:
+                    report=b.make_pool(tid)
+                    draft.assert_not_called()
+                self.assertEqual(report['modes'],{'standalone_constructor':8})
+                self.assertEqual(report['pairs'],8)
+                self.assertTrue(report['source_signature'])
+                module=importlib.import_module('tasks.task_'+tid)
+                with patch.object(module,'generate',side_effect=AssertionError('valid pool should be cached')) as constructor:
+                    self.assertEqual(b.make_pool(tid),report)
+                    constructor.assert_not_called()
+                # A tampered source signature forces regeneration even at the same seed.
+                stored={**report,'source_signature':'old-source'}
+                (root/'pool_reports'/f'{tid}.json').write_text(json.dumps(stored))
+                refreshed=b.make_pool(tid)
+                self.assertEqual(refreshed['source_signature'],report['source_signature'])
+                self.assertEqual(refreshed['modes'],{'standalone_constructor':8})
+
     def test_episode_contract_and_disjoint_splits(self):
         with tempfile.TemporaryDirectory() as directory:
             previous=b.OUT;b.OUT=Path(directory);(b.OUT/'pools').mkdir()

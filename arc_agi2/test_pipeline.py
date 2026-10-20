@@ -96,6 +96,33 @@ class GeneratorTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError,'cannot fit'):
             analogy.generate(width=10,height=10)
 
+    def test_object_batch_boundaries_and_pattern_precedence(self):
+        for tid,kwargs in [
+            ('14754a24',dict(width=30,height=24)),
+            ('17829a00',dict(width=30,height=24)),
+            ('18419cfa',dict(width=18,height=24)),
+            ('1acc24af',dict(width=30,height=24)),
+            ('1ae2feb7',dict(width=30,height=24,pattern_side='right')),
+            ('1b59e163',dict(width=30,height=24))]:
+            module=importlib.import_module('tasks.task_'+tid)
+            for seed in range(5):
+                random.seed(seed)
+                p=call(lambda:module.generate(**kwargs),seconds=3)
+                self.assertEqual((len(p['input']),len(p['input'][0])),(kwargs['height'],kwargs['width']),tid)
+                self.assertEqual(p['output'],grid(call(solver(tid),p['input'])),tid)
+                if tid=='1acc24af':
+                    self.assertEqual({v for row in p['output'] for v in row},{0,1,2,5})
+        pattern=importlib.import_module('tasks.task_1ae2feb7')
+        p=pattern.generate(15,5,5,4,5,'left',[(2,0,[(2,2),(3,3)])])
+        self.assertEqual(p['output'][2][6:],[2,0,2,3,2,0,2,0,2])
+        frames=importlib.import_module('tasks.task_18419cfa')
+        with patch.object(frames,'_place',return_value=None):
+            with self.assertRaisesRegex(RuntimeError,'requested canvas'):
+                frames.generate(width=18,height=24)
+        stamp=importlib.import_module('tasks.task_1b59e163')
+        with self.assertRaisesRegex(ValueError,'background 4'):
+            stamp.generate(background=1)
+
     def test_registered_standalone_sources_and_fixtures(self):
         # Validate the registered files, not only the older research registry.
         for tid in NEW_TASK_IDS:

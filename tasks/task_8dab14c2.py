@@ -17,6 +17,72 @@
 import common
 
 
+def _explain(grid, r0, r1, c0, c1, corner, tv, th):
+  """Output implied by one candidate clean L, or None if it cannot explain."""
+  height, width = len(grid), len(grid[0])
+  clean = [[False] * width for _ in range(height)]
+  if corner in (0, 2): vcols = range(c0, c0 + tv)
+  else: vcols = range(c1 - tv + 1, c1 + 1)
+  if corner in (0, 1): hrows = range(r0, r0 + th)
+  else: hrows = range(r1 - th + 1, r1 + 1)
+  for r in range(r0, r1 + 1):
+    for c in vcols: clean[r][c] = True
+  for r in hrows:
+    for c in range(c0, c1 + 1): clean[r][c] = True
+  def inside(r, c):
+    return 0 <= r < height and 0 <= c < width and clean[r][c]
+  dirs = [(-1, 0), (1, 0), (0, -1), (0, 1)]
+  defects, rows, cols = [], set(), set()
+  for r in range(height):
+    for c in range(width):
+      if clean[r][c] == (grid[r][c] == 1): continue
+      if clean[r][c]:
+        outs = [d for d in dirs if not inside(r + d[0], c + d[1])]
+        if len(outs) != 1: return None
+        d, bump = (-outs[0][0], -outs[0][1]), False
+      else:
+        ins = [d for d in dirs if inside(r + d[0], c + d[1])]
+        if len(ins) != 1: return None
+        d, bump = ins[0], True
+      if d[0]:
+        if c in cols: return None
+        cols.add(c)
+      else:
+        if r in rows: return None
+        rows.add(r)
+      defects.append((r, c, d, bump))
+  cells = {(r, c) for r, c, _, _ in defects}
+  output = [row[:] for row in grid]
+  edits = {}
+  for r, c, (dr, dc), bump in defects:
+    rr, cc = (r + dr, c + dc) if bump else (r, c)
+    while inside(rr + dr, cc + dc): rr, cc = rr + dr, cc + dc
+    if not bump: rr, cc = rr + dr, cc + dc
+    if not (0 <= rr < height and 0 <= cc < width): return None
+    if (rr, cc) in cells: return None
+    value = 8 if bump else 1
+    if (rr,cc) in edits and edits[rr,cc] != value: return None
+    edits[rr,cc] = value
+    output[rr][cc] = value
+  for color in [1, 8]:
+    pixels = [(r, c) for r in range(height) for c in range(width)
+              if output[r][c] == color]
+    if not pixels or not common.connected(pixels): return None
+  return output
+
+
+def _unambiguous(grid, output):
+  """Every clean L that can explain the input must imply the same output."""
+  height, width = len(grid), len(grid[0])
+  outputs = []
+  for corner in range(4):
+    for tv in range(3, 7):
+      for th in range(3, 7):
+        result = _explain(grid, 2, height - 3, 2, width - 3, corner, tv, th)
+        if result is not None: outputs.append(result)
+  return bool(outputs) and all(o == output for o in outputs)
+
+
 def generate(width=None, height=None, length=None, depth=None, flip=None,
              flop=None, prows=None, pcols=None):
   """Returns input and output grids according to the given parameters.
@@ -94,38 +160,45 @@ def generate(width=None, height=None, length=None, depth=None, flip=None,
     return grid, output
 
   if width is None:
-    width, height = common.randint(12, 18), common.randint(12, 18)
-    length, depth = common.randint(3, 6), common.randint(3, 6)
-    flip, flop = common.randint(0, 1), common.randint(0, 1)
-    ub = 7
-    while True:
-      prows, pcols = [], []
-      for row in range(2, height - 2):  # Left of L
-        if common.randint(0, ub): continue
-        prows.append(row)
-        pcols.append(common.randint(1, 2))
-      for col in range(2, width - 2):  # Bottom of L
-        if common.randint(0, ub): continue
-        pcols.append(col)
-        prows.append(common.randint(1, 2))
-      for row in range(2, depth + 2):  # Right of L
-        if common.randint(0, ub): continue
-        prows.append(row)
-        pcols.append(width - common.randint(2, 3))
-      for col in range(length + 2, width - 2):  # Shelf of L
-        if common.randint(0, ub): continue
-        pcols.append(col)
-        prows.append(depth + common.randint(1, 2))
-      for row in range(depth + 2, height - 2):  # Wall of L
-        if common.randint(0, ub): continue
-        prows.append(row)
-        pcols.append(length + common.randint(1, 2))
-      for col in range(2, length + 2):  # Top of L
-        if common.randint(0, ub): continue
-        pcols.append(col)
-        prows.append(height - common.randint(2, 3))
-      grid, _ = draw()
-      if grid: break
+    found = False
+    for _ in range(200):
+      width, height = common.randint(12, 18), common.randint(12, 18)
+      length, depth = common.randint(3, 6), common.randint(3, 6)
+      flip, flop = common.randint(0, 1), common.randint(0, 1)
+      ub = 7
+      for _ in range(500):
+        prows, pcols = [], []
+        for row in range(2, height - 2):  # Left of L
+          if common.randint(0, ub): continue
+          prows.append(row)
+          pcols.append(common.randint(1, 2))
+        for col in range(2, width - 2):  # Bottom of L
+          if common.randint(0, ub): continue
+          pcols.append(col)
+          prows.append(common.randint(1, 2))
+        for row in range(2, depth + 2):  # Right of L
+          if common.randint(0, ub): continue
+          prows.append(row)
+          pcols.append(width - common.randint(2, 3))
+        for col in range(length + 2, width - 2):  # Shelf of L
+          if common.randint(0, ub): continue
+          pcols.append(col)
+          prows.append(depth + common.randint(1, 2))
+        for row in range(depth + 2, height - 2):  # Wall of L
+          if common.randint(0, ub): continue
+          prows.append(row)
+          pcols.append(length + common.randint(1, 2))
+        for col in range(2, length + 2):  # Top of L
+          if common.randint(0, ub): continue
+          pcols.append(col)
+          prows.append(height - common.randint(2, 3))
+        grid, output = draw()
+        if grid and _unambiguous(grid, output):
+          found = True
+          break
+      if found: break
+    if not found:
+      raise RuntimeError("Could not sample an unambiguous scene.")
 
   grid, output = draw()
   return {"input": grid, "output": output}

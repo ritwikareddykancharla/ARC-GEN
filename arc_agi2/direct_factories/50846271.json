@@ -1,0 +1,29 @@
+{
+  "task_id": "50846271",
+  "factory_sha256": "948de365f0487228ed2de1ea82cb6403ca6b08bb80e3ea0a52a6eb7b5aa5d56d",
+  "constructor_sha256": "472500fcacaba4dce80063048929a46451ec7a235e3b48c4a3ca94a426960654",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 131094733305901,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 9.375767749967054,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "Exact cover over all visible centres and all shared arm lengths. Deduplicate solutions by completed cell set before early exit; search all lengths, reject distinct-output ambiguity. Removed shortest-arm, fewest-cross and red-centre preferences and arbitrary scan-order fallback. Budget exhaustion is explicit. Paint centres only once in random generation. Preserve explicit fixtures and clipped crosses.",
+    "limitations": "Random samples require a unique output under the non-touching cross model. Fully hidden crosses are not recoverable and are rejected through label comparison. Search is bounded at 60000 nodes per length and raises on exhaustion. Every exported episode still requires exact verification.",
+    "diagnosis": "The host failure is [false, true, false, true] on a d4=0 episode with palette 0\u21924, 2\u21928, 5\u21929, 8\u21923. The failed factory added only a row-major tie key, which is irrelevant to both failures. There are two independent causes.\n\n**(1) Demonstration 3: wrong centre from the archived search.** The red cells are (8,3), (8,6) and (8,7), a bare row. The true centre (8,5) is hidden grey, so its column contains no red. The archived centre search only tries columns that hold red cells. It therefore picked (8,6) with L=3, painting the wrong cells. The new search allows any in-grid centre. With L=2, (8,5) is the only valid explanation: L=3 is excluded by the black cells at (8,2) and (8,8). So this pair is now solved.\n\n**(2) Demonstration 1: the label cannot be recovered from the input.** The red cells are (4,4), (5,4), (7,4), (8,4) and (6,2). The label draws L=3 around (6,4). No red cell lies at distance 3 from the centre, however. An L=2 cross at (6,4) covers every red cell using only red or grey cells, and so does the L=3 cross. Both are perfectly consistent with the input, but they give different outputs. No visible rule can pick the label, so this is a constructor defect, not a solver bug.\n\nThe new program is not tuned to this case. It applies a generic smallest-L rule and would still output L=2 here. The repaired constructor would reject this scene.",
+    "constructor_issue": "Original random branch double-painted cross centres, forcing them hidden. It also allowed ambiguous arm lengths/centres. Sampling now paints each cell once and validates unique visible completion against independent latent labels.",
+    "original_cli_draft_notes": "/Users/ritwika/projects/arc-agi2/outputs/research/arcgen-coverage-cli/direct-program-rewrites/execution-repairs-v2/50846271/notes.json",
+    "host_review": {
+      "fixture_sha256": "ac823da921929db50aaf8075ea3bbf7047d3ef377ef690fc75b10c2cdbdef9b2",
+      "fixtures_unchanged": true,
+      "review": "Exact cover over all visible centres and all shared arm lengths. Deduplicate solutions by completed cell set before early exit; search all lengths, reject distinct-output ambiguity. Removed shortest-arm, fewest-cross and red-centre preferences and arbitrary scan-order fallback. Budget exhaustion is explicit. Paint centres only once in random generation. Preserve explicit fixtures and clipped crosses."
+    }
+  }
+}

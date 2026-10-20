@@ -1,0 +1,56 @@
+{
+  "checked_at": 1792529520.601702,
+  "reports": [
+    {
+      "task_id": "50846271",
+      "sampled_episodes": 20,
+      "accepted_episodes": 20,
+      "missing_evidence_episodes": 0,
+      "verified_augmented_records": 160,
+      "sampler_rejections": [],
+      "errors": [],
+      "passed": true
+    },
+    {
+      "task_id": "8dab14c2",
+      "sampled_episodes": 20,
+      "accepted_episodes": 20,
+      "missing_evidence_episodes": 0,
+      "verified_augmented_records": 160,
+      "sampler_rejections": [],
+      "errors": [],
+      "passed": true
+    },
+    {
+      "task_id": "90f3ed37",
+      "sampled_episodes": 20,
+      "accepted_episodes": 20,
+      "missing_evidence_episodes": 0,
+      "verified_augmented_records": 160,
+      "sampler_rejections": [],
+      "errors": [],
+      "passed": true
+    }
+  ],
+  "summary": {
+    "families": 3,
+    "sampled_base_episodes": 60,
+    "accepted_base_episodes": 60,
+    "excluded_missing_evidence": 0,
+    "sampler_rejections": 0,
+    "verified_augmented_records": 480,
+    "errors": 0
+  },
+  "production_generation": false,
+  "source_hashes": {
+    "common.py": "879eb61e360e4a47ee1d569408e8c66114ac068794721fe1de1b59aaa476586a",
+    "arc_agi2/colour_evidence.py": "86f181eba1ea40597313b56183819264ee31721e125c277566b7244e71b59012",
+    "tasks/task_50846271.py": "472500fcacaba4dce80063048929a46451ec7a235e3b48c4a3ca94a426960654",
+    "arc_agi2/direct_factories/task_50846271.py": "948de365f0487228ed2de1ea82cb6403ca6b08bb80e3ea0a52a6eb7b5aa5d56d",
+    "tasks/task_8dab14c2.py": "6fb46f6329d34ff0148f4ec334f947cd11c80e48d57abd1fea76d319091db7a0",
+    "arc_agi2/direct_factories/task_8dab14c2.py": "a1fb28a6ba3344c304385db75756cbc7d8e5ae38fa9150cae4115f22d5fdbc6a",
+    "tasks/task_90f3ed37.py": "423505accfe3768e27411bc5a21a37e34a9b51ca278f7851f24b5b40076b21ff",
+    "arc_agi2/direct_factories/task_90f3ed37.py": "fc493ff3e5eb38c1febecfb611a52acbf1ecf6a453f7db9ed13f480d88b84673"
+  },
+  "regression_tests": 453
+}

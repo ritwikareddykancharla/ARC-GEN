@@ -1,0 +1,30 @@
+{
+  "task_id": "90f3ed37",
+  "factory_sha256": "fc493ff3e5eb38c1febecfb611a52acbf1ecf6a453f7db9ed13f480d88b84673",
+  "constructor_sha256": "423505accfe3768e27411bc5a21a37e34a9b51ca278f7851f24b5b40076b21ff",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 168242094513052,
+  "d4": 7,
+  "unique_base_inputs": 990,
+  "seconds": 5.6231279170606285,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "Enumerate visible A-repeat/B/C-repeat explanations and require unique continuation output. Removed majority-vote and unchanged-grid fallbacks. Constructor retains original renderer and explicit fixture values, rejects hidden-phase ambiguity. Factory emits concrete growth/stacking edge coordinate expressions; no whole-grid inverse transforms or palette wrappers. Host fixture check found a false reference split at col8 with a single visible C column. Native reference cols are bounded by pre-sampling awide1..2 times1..2, so col<=4; the earlier claim that every relaxed parse was a valid latent was wrong. Enforce this bound in both checker and program. Short-band fixture cols remain unconstrained beyond tile alignment, including3. No fixture labels changed.",
+    "limitations": "Native motif width1..2, occupied band span1..3, separated bands and tile-aligned A/B boundaries. Rejection sampling1000draws; acceptance requires all visible parses produce the independently drawn label. Direction/palette specialized consistently with episode augmentation. Broader arbitrary tile grammars are outside the current family. Reference boundary col<=4 follows native sampler, not arbitrary suffix-length voting. Explicit references outside this domain are outside admitted scope.",
+    "diagnosis": "The host counterexample is train pair 0 of the episode. In canonical colours, the reference occupies rows 2-3: columns 0-2 fill both rows, then columns alternate between {lower} and {both}. Each short band is a 2x2 block at columns 0-1.\n\nTwo generator latents with identical sampling probability render this exact input:\n(a) A = full column, B = full column, C = [{lower},{both}], reference col=2, shorts col=1. Here the shorts continue lower, both, lower, \u2026 This is the label.\n(b) A = full column, B = full column, C = [{both},{lower}], reference col=1, shorts col=1. Here the shorts continue both, lower, \u2026\n\nBoth latents have the same pixel counts, pool sizes and a 1/2 chance of col. The failed factory's likelihood scores were therefore exactly tied, and it kept the first-enumerated parse (E0=2, i.e. reading (b)). The archived token-suffix solver also yields (b).\n\nThe label is decided only by a hidden randint (the reference's col). This is not a factory bug that a special case could fix.",
+    "constructor_issue": "Invisible B/C boundaries can hide which phase begins the repeated continuation. Original random scenes can share inputs but differ in outputs; reject ambiguous phases rather than select by parse count.",
+    "original_cli_draft_notes": "/Users/ritwika/projects/arc-agi2/outputs/research/arcgen-coverage-cli/direct-program-rewrites/execution-repairs-v2/90f3ed37/notes.json",
+    "host_review": {
+      "fixture_sha256": "0cdb5078c300e70e954f4be1e642e6022b69cdba97402b154b5bb2921898d2bf",
+      "fixtures_unchanged": true,
+      "review": "Enumerate visible A-repeat/B/C-repeat explanations and require unique continuation output. Removed majority-vote and unchanged-grid fallbacks. Constructor retains original renderer and explicit fixture values, rejects hidden-phase ambiguity. Factory emits concrete growth/stacking edge coordinate expressions; no whole-grid inverse transforms or palette wrappers.",
+      "fixture_boundary_fix": "Host fixture check found a false reference split at col8 with a single visible C column. Native reference cols are bounded by pre-sampling awide1..2 times1..2, so col<=4; the earlier claim that every relaxed parse was a valid latent was wrong. Enforce this bound in both checker and program. Short-band fixture cols remain unconstrained beyond tile alignment, including3. No fixture labels changed."
+    }
+  }
+}

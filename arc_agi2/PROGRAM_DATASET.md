@@ -35,7 +35,7 @@ recorded. Passing finite audits does not prove unrestricted generalization.
 
 - 213 native direct-coordinate certificates admitted after fresh audits and
   supplied-fixture checks.
-- 815 admitted factories. Each passed 1,000 fresh pairs, 8,000 augmented pair
+- 818 admitted factories. Each passed 1,000 fresh pairs, 8,000 augmented pair
   checks and 16 supplied-fixture variants. Their audit records retain draft
   limitations and source/constructor hashes. These checks are finite evidence,
   not proof of correctness on every generated input.
@@ -46,7 +46,7 @@ recorded. Passing finite audits does not prove unrestricted generalization.
   counts must be computed as a union, not added.
 - Local exporter test: 18 fresh base episodes, 144 augmented PNG/program/grid
   records. It requested 20 bases and reported a two-episode shortfall.
-- The union currently admits 1034 of 1,120 families; 86 still need direct
+- The union currently admits 1037 of 1,120 families; 83 still need direct
   augmented program admission. Constructor coverage and program coverage are
   different gates.
 - Synthetic labels for `00d62c1b` now fill every enclosed background component,
@@ -867,3 +867,32 @@ factories. Parallel CLI drafts still need host review and execution checks.
 Bulk generation and model training have not launched.
 
 All 442 regression tests passed for this checkpoint.
+
+## 1037-family checkpoint
+
+- `50846271`: exact covers allow hidden centres and clipped arms, comparing
+  outputs across all shared arm lengths. The program no longer prefers the
+  shortest arms or first centre. Solutions are deduplicated by completed cells
+  before stopping the search. Random generation paints each centre once, fixing
+  the accidental second paint that forced it grey. A saved identical-input
+  witness demonstrates ambiguous length-two versus length-three crosses.
+- `8dab14c2`: reconstruct the clean L and evaluate all valid defect patterns,
+  including adjacent bumps and notches. Reject conflicting destination writes
+  and distinct-output explanations; remove local-neighbour and colour-frequency
+  fallbacks. Three different completions of one sampled input are saved as an
+  ambiguity witness. Native margin-two and thickness-three-to-six scope remains
+  explicit.
+- `90f3ed37`: compare all supported motif parses rather than voting by parse
+  count. A native reference boundary is at most four columns from the anchor
+  (pre-sampling A width1..2 times1..2). The draft's unrestricted boundary admitted
+  a false split at column8 of the original zigzag fixture; correcting that
+  hypothesis space preserved all fixture labels. A saved pair of valid latent
+  phases demonstrates identical inputs with different continuation outputs.
+
+Each family passed 1,000 fresh pairs, 8,000 augmented pair checks and 16 fixture
+variants. Distinct input counts were 1,000, 1,000 and 990, respectively. All 60
+complete episodes passed, producing 480 D4 records without sampler rejections.
+Remaining: 70 semantic/context holds, 10 execution failures and 3 missing factories.
+Bulk generation and model training have not launched.
+
+All 453 regression tests passed for this checkpoint.

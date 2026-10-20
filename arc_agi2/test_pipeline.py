@@ -11,6 +11,39 @@ from .fixture_policy import fixture_basis
 from .augmentation import apply_episode,settings,exhaustive_variants
 
 class GeneratorTests(unittest.TestCase):
+    def test_panel_frame_mirror_and_exact_tiling_controls(self):
+        panel=importlib.import_module('tasks.task_5a719d11')
+        with self.assertRaises(ValueError):
+            panel.generate(panel_width=7.5)
+        frame=importlib.import_module('tasks.task_5adee1b2')
+        with self.assertRaisesRegex(ValueError,'disjoint'):
+            frame.generate(height=20,width=20,legend=[(2,3)],
+                shapes=[(3,3,2,['##','##']),(3,5,2,['##','##'])])
+        mirror=importlib.import_module('tasks.task_5b692c0f')
+        with self.assertRaisesRegex(ValueError,'intact side'):
+            mirror.generate(height=12,width=12,shapes=[
+                dict(top=2,left=2,vertical=True,axis=4,side=-1,
+                     rows=['11411','11414','11411'])])
+        tiling=importlib.import_module('tasks.task_5dbc8537')
+        with self.assertRaises(ValueError):
+            tiling.generate(num_pieces=2)
+        random.seed(30000)
+        observed=[]
+        sample=tiling._sample_scene
+        def capture(*args,**kwargs):
+            scene=sample(*args,**kwargs)
+            if scene is not None:observed.append(scene)
+            return scene
+        with patch.object(tiling,'_sample_scene',side_effect=capture):
+            p=tiling.generate(width=30,height=30,side='right',extent=9,
+                              background=0,frame=8,num_pieces=12)
+        self.assertEqual(len(observed[-1][-1]),12)
+        self.assertEqual((len(p['output']),len(p['output'][0])),(30,9))
+        self.assertEqual(p['output'],grid(call(solver('5dbc8537'),p['input'])))
+        # Identical geometric tiles with different paint admit two answers.
+        self.assertFalse(tiling._unique_fill({(0,0),(0,1)},[[[2]],[[3]]]))
+        self.assertTrue(tiling._unique_fill({(0,0),(0,1)},[[[2]],[[2]]]))
+
     def test_motif_counting_glyph_and_beam_controls(self):
         motif=importlib.import_module('tasks.task_5833af48')
         with self.assertRaises(ValueError):

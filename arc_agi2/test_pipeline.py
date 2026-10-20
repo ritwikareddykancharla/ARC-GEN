@@ -10,6 +10,46 @@ from .task_registry import NEW_TASK_IDS
 from .augmentation import apply_episode,settings
 
 class GeneratorTests(unittest.TestCase):
+    def test_template_controls_dead_end_rooms_nearest_key_and_arch_cups(self):
+        template=importlib.import_module('tasks.task_3a25b0d8')
+        with self.assertRaisesRegex(ValueError,'Both sprites'):
+            template.generate(template_sprite=['1'])
+        with self.assertRaisesRegex(ValueError,'supplied together'):
+            template.generate(t_heights=[2,2])
+        with self.assertRaisesRegex(ValueError,'both positions'):
+            template.generate(tpos=(0,0),width=30,height=30)
+        random.seed(30000)
+        p=template.generate(width=30,height=30,counts=[2,2,1],colors=[1,2,None,3,1],bg=7,line=8,symmetric=False)
+        self.assertEqual(set(v for row in p['output'] for v in row),{1,2,3,7,8})
+        self.assertEqual(p['output'],grid(call(solver('3a25b0d8'),p['input'])))
+        rooms=importlib.import_module('tasks.task_3ad05f52')
+        random.seed(30000)
+        h,w,col,structures,path,doors,extra=rooms._sample_scene(4,30,24,'double',True)
+        self.assertTrue(extra)
+        p=rooms.generate(height=h,width=w,colour=col,structures=structures,path=path,doors=doors,extra_doors=extra)
+        self.assertTrue(all(p['input'][r][c]==p['output'][r][c]==0 for r,c in extra))
+        self.assertEqual(p['output'],grid(call(solver('3ad05f52'),p['input'])))
+        with patch.object(rooms,'_sample_double',return_value=None):
+            with self.assertRaisesRegex(RuntimeError,'requested room path'):
+                rooms.generate(layout_mode='double')
+        key=importlib.import_module('tasks.task_3d588dc9')
+        p=key.generate(height=20,width=25,triangles=[(8,0,3,3,'L',5)],keys=[(8,6,3,3,'U'),(8,17,3,3,'D')])
+        self.assertEqual(p['output'][6][7],7)
+        self.assertEqual([row[6] for row in p['output'][8:11]],[6,6,6])
+        self.assertEqual([row[17:20] for row in p['output'][8:13]],[row[17:20] for row in p['input'][8:13]])
+        cups=importlib.import_module('tasks.task_3dc255db')
+        random.seed(30001)
+        h,w,containers,distractors=cups._sample_scene(24,30,3,'arch',5)
+        self.assertEqual(len(containers),3)
+        p=cups.generate(height=h,width=w,containers=containers,distractors=distractors)
+        for c in containers:
+            self.assertEqual(len(c['markers']),5)
+            self.assertTrue(all(p['output'][r][col]==0 for r,col in c['markers']))
+            self.assertTrue(all(p['output'][r][col]==c['colour'] for r,col in c['cells']))
+        self.assertEqual(p['output'],grid(call(solver('3dc255db'),p['input'])))
+        with self.assertRaisesRegex(ValueError,'require containers'):
+            cups.generate(distractors=[])
+
     def test_stream_clusters_rectangular_panels_and_diagonal_contact(self):
         stream=importlib.import_module('tasks.task_36a08778')
         random.seed(30001)

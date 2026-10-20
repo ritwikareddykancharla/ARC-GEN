@@ -3,10 +3,39 @@ from collections import Counter
 from pathlib import Path
 import pyarrow.parquet as pq
 from . import build_million as b
-from .generators.extended import GENERATORS,generate
+from .generators.registry import GENERATORS,generate
 from .runtime import solver,call,grid,check_reference
+from .augmentation import apply_episode,settings
 
 class GeneratorTests(unittest.TestCase):
+    def test_colour_cycles_are_simultaneous_and_episode_wide(self):
+        palette=[1,2,0,3,4,5,6,7,8,9]
+        self.assertEqual(b.transformed([[0,1,2]],0,palette),[[1,2,0]])
+        pairs=[{'input':[[0,1,2],[3,4,5]],'output':[[2,0]]},
+               {'input':[[1],[2]],'output':[[0,2,1]]}]
+        for d in range(8):
+            result=apply_episode(pairs,d,palette)
+            inverse_palette=[palette.index(i) for i in range(10)]
+            inverse_d=next(i for i in range(8) if b.transformed(b.transformed(pairs[0]['input'],d,list(range(10))),i,list(range(10)))==pairs[0]['input'])
+            self.assertEqual(apply_episode(result,inverse_d,inverse_palette),pairs)
+            # Originals must not be mutated.
+            self.assertEqual(pairs[0]['input'],[[0,1,2],[3,4,5]])
+    def test_all_public_tasks_eligible_and_bulk_guard(self):
+        inv={'tasks':[{'task_id':'former_holdout','held_out':True,'status':'extension_validated'},
+                      {'task_id':'missing','held_out':False,'status':'generator_missing'}]}
+        self.assertEqual(b.eligible_tasks(inv),['former_holdout'])
+        with self.assertRaisesRegex(RuntimeError,'Coverage first'):
+            b.require_complete_coverage(inv)
+        all_ready={'tasks':[{'task_id':str(i),'held_out':True,'status':'extension_validated'} for i in range(1120)]}
+        b.require_complete_coverage(all_ready)
+        with self.assertRaisesRegex(RuntimeError,'eight-variant'):
+            b.require_build_ready(all_ready)
+    def test_default_augmentation_preserves_native_colours(self):
+        rng=random.Random(42);seen=set()
+        for _ in range(1000):
+            d,p=settings(rng,'example',b.POLICY);seen.add(d)
+            self.assertEqual(p,list(range(10)))
+        self.assertEqual(seen,set(range(8)))
     def test_original_and_independent_construction(self):
         for tid in GENERATORS:
             self.assertTrue(check_reference(tid)['canonical']['all_exact'],tid)

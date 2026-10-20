@@ -3,8 +3,9 @@ import argparse,concurrent.futures as cf,csv,hashlib,importlib,json,random,sys,t
 from collections import Counter
 from pathlib import Path
 from .runtime import BASE,reference,solver,check_reference,call,grid,pairs
-from .generators.extended import GENERATORS,generate
+from .generators.registry import GENERATORS,generate
 ROOT=BASE.parent
+UPSTREAM_IDS=set(json.loads((BASE/'upstream_task_ids.json').read_text()))
 
 def key(x):return json.dumps(x,sort_keys=True,separators=(',',':'))
 def fixture_check(tid):
@@ -16,9 +17,13 @@ def fixture_check(tid):
     except Exception as e:return {'task_id':tid,'matches_pair_set':False,'error':repr(e)}
 def extension_check(tid):
     f=solver(tid);shapes=Counter();errors=[];n=300
+    standalone=(ROOT/'tasks'/f'task_{tid}.py').exists() and tid not in UPSTREAM_IDS
+    constructor=importlib.import_module('tasks.task_'+tid).generate if standalone else None
     for seed in range(n):
         try:
-            p=generate(tid,seed);grid(p['input']);grid(p['output'])
+            random.seed(seed)
+            p=call(constructor,seconds=3) if standalone else generate(tid,seed)
+            grid(p['input']);grid(p['output'])
             assert grid(call(f,p['input']))==p['output'],'reference mismatch'
             shapes[f"{len(p['input'])}x{len(p['input'][0])}->{len(p['output'])}x{len(p['output'][0])}"]+=1
         except Exception as e:errors.append({'seed':seed,'error':str(e)})
@@ -49,14 +54,16 @@ def main():
     index=json.loads((BASE/'reference_index.json').read_text());rs=[reference(r['task_id']) for r in index['tasks']]
     source_ids={p.stem[5:] for p in (ROOT/'tasks').glob('task_*.py')}
     present=sorted(source_ids & {r['task_id'] for r in rs})
+    extensions=sorted(set(GENERATORS)|(set(present)-UPSTREAM_IDS))
     with cf.ProcessPoolExecutor(max_workers=args.workers) as pool:
-        fixtures=list(pool.map(fixture_check,present));exts=list(pool.map(extension_check,GENERATORS))
+        fixtures=list(pool.map(fixture_check,present));exts=list(pool.map(extension_check,extensions))
     fj={r['task_id']:r for r in fixtures};ej={r['task_id']:r for r in exts}
     registry=[];taxonomy={}
     for r in rs:
-        tid=r['task_id'];native=tid in source_ids;ready=ej.get(tid,{}).get('ready',False)
-        status='upstream_fixture_verified' if fj.get(tid,{}).get('matches_pair_set') else 'upstream_fixture_mismatch' if native else 'extension_validated' if ready else 'generator_missing'
-        record={'task_id':tid,'split':r['split'],'held_out':r['held_out'],'status':status,'upstream':native,'extension':tid in GENERATORS,
+        tid=r['task_id'];native=tid in UPSTREAM_IDS;ready=ej.get(tid,{}).get('ready',False)
+        status='upstream_fixture_verified' if native and fj.get(tid,{}).get('matches_pair_set') else 'upstream_fixture_mismatch' if native else 'extension_validated' if ready else 'generator_missing'
+        record={'task_id':tid,'split':r['split'],'held_out':r['held_out'],'training_eligible':True,'status':status,'upstream':native,'extension':tid in extensions,
+                'standalone_module':f'tasks/task_{tid}.py' if tid in source_ids else None,
                 'candidate_tactics':list(r['candidate_tactics']),'explanation':r['explanation'],
                 'fixture':fj.get(tid),'extension_validation':ej.get(tid),'teaching_variant':r['teaching_variant'],
                 'canonical':r['canonical'],'teacher_models':r['teacher_models']}
@@ -79,17 +86,26 @@ def main():
             for batch in pq.ParquetFile(file).iter_batches(columns=['test','solutions']):
                 for row in batch.to_pylist():q.extend({'input':t['input'],'output':s} for t,s in zip(row['test'],row['solutions']))
         hist['generated_queries']=summarise(q)
-    summary={'total_tasks':len(rs),'upstream_sources':len(present),'upstream_fixture_pass':sum(x['matches_pair_set'] for x in fixtures),
-       'upstream_fixture_mismatches':[x for x in fixtures if not x['matches_pair_set']],
-       'new_extensions_pass':sum(x['ready'] and x['task_id'] not in source_ids for x in exts),
-       'size_extensions_pass':sum(x['ready'] and x['task_id'] in source_ids for x in exts),
+    summary={'total_tasks':len(rs),'upstream_sources':len(set(present)&UPSTREAM_IDS),'upstream_fixture_pass':sum(x['matches_pair_set'] for x in fixtures if x['task_id'] in UPSTREAM_IDS),
+       'upstream_fixture_mismatches':[x for x in fixtures if x['task_id'] in UPSTREAM_IDS and not x['matches_pair_set']],
+       'new_extensions_pass':sum(x['ready'] and x['task_id'] not in UPSTREAM_IDS for x in exts),
+       'size_extensions_pass':sum(x['ready'] and x['task_id'] in UPSTREAM_IDS for x in exts),
        'missing_upstream':sum(not r['upstream'] for r in registry),'holdouts':index['holdout_ids'],
+       'active_excluded_ids':[],'training_family_target':1120,
        'status_counts':dict(Counter(r['status'] for r in registry)),
        'meaning':'Task-ID/source coverage is distinct from semantic coverage. Tactic tags are overlapping lexical candidates. Original fixtures are preserved unchanged.'}
     result={'summary':summary,'histograms':hist,'taxonomy':taxonomy,'tasks':registry,
       'generated_snapshot':'b0cdaf735fe3a0fa6f5e4f3713f98a75a146b298' if args.generated_dir else None}
     (report/'inventory.json').write_text(json.dumps(result,separators=(',',':'))+'\n')
     (report/'extension-validation.json').write_text(json.dumps(exts,indent=2)+'\n')
+    with (report/'generator-roadmap.csv').open('w') as f:
+        w=csv.writer(f,lineterminator='\n')
+        w.writerow(['task_id','split','former_holdout','training_eligible','status','standalone_module','candidate_tactics','reference_file','query_shapes','required_next_step'])
+        for r in registry:
+            shape=';'.join(f"{len(p['input'])}x{len(p['input'][0])}->{len(p['output'])}x{len(p['output'][0])}" for p in r['canonical']['test'])
+            next_step='Construct, validate and review standalone generator' if r['status']=='generator_missing' else 'Expand semantic and boundary-case tests'
+            w.writerow([r['task_id'],r['split'],r['held_out'],True,r['status'],r['standalone_module'],
+                        ';'.join(r['candidate_tactics']),f"references/{r['task_id']}.json",shape,next_step])
     with (report/'exact-size-histograms.csv').open('w') as f:
         w=csv.writer(f,lineterminator="\n");w.writerow(['source','grid','axis','size','count','percentage'])
         for name,histogram in hist.items():

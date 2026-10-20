@@ -16,8 +16,11 @@ import pyarrow as pa
 import pyarrow.parquet as pq
 from huggingface_hub import HfApi,CommitOperationAdd,snapshot_download
 from .runtime import BASE,reference,solver,call,grid
-from .generators.extended import GENERATORS,generate
-from .audit import relation
+from .generators.registry import GENERATORS,generate
+from .audit import relation,UPSTREAM_IDS
+from .augmentation import transformed, settings as augmentation_settings, apply_episode
+
+POLICY=json.loads((BASE/'training_policy.json').read_text())
 
 SEED=20261021
 REPO='ritwika96/arc-agi2-arcgen-1m-episodes'
@@ -33,11 +36,6 @@ def digest(x):return hashlib.sha256(compact(x).encode()).hexdigest()
 def seed(*parts):return int(digest([SEED,*parts])[:15],16)
 def dump(path,x):
     path.parent.mkdir(parents=True,exist_ok=True);tmp=path.with_suffix('.tmp');tmp.write_text(json.dumps(x,indent=2)+'\n');tmp.replace(path)
-def transformed(g,d4,palette):
-    a=[r[:] for r in g]
-    if d4>=4:a=[r[::-1] for r in a]
-    for _ in range(d4%4):a=[list(r) for r in zip(*a[::-1])]
-    return [[palette[c] for c in row] for row in a]
 def canonical_input(g):
     # Group all palette permutations / D4 variants in the SAME data split.
     versions=[]
@@ -57,19 +55,19 @@ def input_stats(g):
 
 def make_pool(tid):
     start=time.monotonic();rng=random.Random(seed(tid,'pool'));r=reference(tid)
-    assert not r['held_out']
+    assert tid not in POLICY['excluded_task_ids']
     report_path=OUT/'pool_reports'/f'{tid}.json';file=OUT/'pools'/f'{tid}.parquet'
     if file.exists() and report_path.exists():
         old=json.loads(report_path.read_text())
         if old.get('complete') and old.get('seed')==SEED:return old
     existing=(BASE.parent/'tasks'/f'task_{tid}.py').exists()
     native=importlib.import_module('tasks.task_'+tid).generate if existing else None
-    refs=solver(tid) if tid in GENERATORS else None
+    refs=solver(tid) if tid in GENERATORS or tid not in UPSTREAM_IDS else None
     configs=json.loads((BASE/'reports/parameter-validation.json').read_text()).get(tid,{}).get('approved',[])
     if configs and refs is None:refs=solver(tid)
     rows=[];seen={};canonical=set();reject=Counter();stale=0;trials=0
     while len(rows)<POOL_SIZE and time.monotonic()-start<FAMILY_SECONDS and trials<POOL_SIZE*40:
-        trials+=1;s=seed(tid,'pair',trials);random.seed(s);kw={};mode='default'
+        trials+=1;s=seed(tid,'pair',trials);random.seed(s);kw={};mode='default' if tid in UPSTREAM_IDS else 'standalone_constructor'
         if tid in GENERATORS and (native is None or rng.random()<.6):mode='extension'
         elif configs and rng.random()<.6:kw=rng.choice(configs)['parameters'];mode='parameter_override'
         try:
@@ -147,9 +145,8 @@ def make_episodes(arg):
                     # Identical full episode hash ignores demo order and augmentation.
                     basehash=digest([sorted(p['input_hash'] for p in demos),q['input_hash']])
                     if basehash in all_hashes:continue
-                    d4=rng.randrange(8) if rng.random()<.5 else 0;palette=list(range(10))
-                    if d4 or rng.random()<.5:rng.shuffle(palette)
-                    transformed_pairs=[{z:transformed(p[z],d4,palette) for z in ['input','output']} for p in four]
+                    d4,palette=augmentation_settings(rng,tid,POLICY)
+                    transformed_pairs=apply_episode(four,d4,palette)
                     train=transformed_pairs[:3];query=transformed_pairs[-1]
                     challenge={'train':train,'test':[{'input':query['input']}]}
                     prompt='Infer the shared transformation from the demonstrations. Return only JSON with key outputs and one grid per test input.\n'+compact(challenge)
@@ -211,8 +208,8 @@ Three demonstration pairs and one query per episode, with generator-produced out
 - Adaptive quotas: at most two episodes per unique canonical input in the pair pool, with a 5,000-episode family ceiling. Families with little variation receive fewer examples.
 - Target query longest-side distribution at each integer size 1–30 jointly with output expansion/shrinkage/same-shape, measured on all 1,120 public tasks. Exact height, width and rectangular-shape histograms are reported separately. Unsupported targets become explicit shortfalls; difficulty is not proven equal by dimensions.
 - Size overrides require original replay and differential seed checks. Every overridden/extended pair is checked against its saved teacher solver. Default upstream generators have fixture checks, not full semantic proofs.
-- Fresh input pool, no duplicated full native episodes, no identical inputs inside an episode. Palette and D4 changes are shared across each episode and stored.
-- Input equivalence classes under palette renaming and D4 are assigned to one split before episode construction, including across families. Existing 20 held-out task families are excluded entirely. Validation is within-generator generalization; the original held-out tasks measure unseen families.
+- Fresh input pool, no duplicated full native episodes, no identical inputs inside an episode. 25% native orientation, 75% sampled nonidentity D4. Colours are generated natively; extra palette permutation is opt-in per family. All augmentation is shared across each episode and stored.
+- Input equivalence classes under palette renaming and D4 are assigned to one split before episode construction, including across families. All 1,120 public task families, including the former 20 holdouts, are training-eligible after generator validation. Synthetic validation measures new-input generalization within known families.
 
 ## Generator examples
 
@@ -234,16 +231,34 @@ Quantity-controlled dimensions and pattern composition:
 
 [Manifest](manifest.json), [pool reports](pool_reports), [episode reports](episode_reports), [allocation targets](allocation.json). Master seed {SEED}. Published partial shards are complete episodes; failed families and shortfalls remain visible. No model training or LLM calls occur in this job.
 
-The reference packets include saved Opus/Fable solutions; they guide input construction and validation but are not exposed in episode prompts. Public evaluation tasks used in generation are training data for subsequent models, not independent evaluation. The held-out list is in the manifest.
+The reference packets include saved Opus/Fable solutions; they guide input construction and validation but are not exposed in episode prompts. Public evaluation tasks used in generation are training data for subsequent models, not independent evaluation. The historical holdout list is retained as provenance only; the active exclusion list is empty.
 
 ARC-GEN upstream code is Copyright Google LLC, Apache-2.0. This is an independent derivative. Original benchmark grids remain unchanged.
 '''
+
+def eligible_tasks(inv):
+    return [r['task_id'] for r in inv['tasks'] if r['task_id'] not in POLICY['excluded_task_ids']
+            and r['status'] in ['upstream_fixture_verified','extension_validated']]
+
+def require_complete_coverage(inv):
+    ids={r['task_id'] for r in inv['tasks']}
+    missing=sorted(ids-set(eligible_tasks(inv)))
+    if len(ids)!=POLICY['required_task_count'] or missing:
+        raise RuntimeError(f"Coverage first: {len(eligible_tasks(inv))}/{POLICY['required_task_count']} validated; "
+                           f"{len(missing)} missing. Bulk generation remains disabled. Use --local for bounded tests.")
+
+def require_build_ready(inv):
+    require_complete_coverage(inv)
+    if POLICY.get('planned_dataset',{}).get('bulk_builder_expansion_pending'):
+        raise RuntimeError('Coverage is complete but exhaustive eight-variant episode expansion is still pending; no bulk launch.')
 
 def main():
     ap=argparse.ArgumentParser();ap.add_argument('--local',action='store_true');ap.add_argument('--tasks',nargs='*');ap.add_argument('--resume',action='store_true');args=ap.parse_args()
     for d in ['pools','pool_reports','episode_reports','data/train','data/validation']: (OUT/d).mkdir(parents=True,exist_ok=True)
     inv=json.loads((BASE/'reports/inventory.json').read_text());pv=json.loads((BASE/'reports/parameter-validation.json').read_text())
-    eligible=[r['task_id'] for r in inv['tasks'] if not r['held_out'] and r['status'] in ['upstream_fixture_verified','extension_validated']]
+    eligible=eligible_tasks(inv)
+    if not args.local:
+        require_build_ready(inv)
     if args.tasks:
         assert set(args.tasks)<=set(eligible);eligible=args.tasks
     api=None if args.local else HfApi()
@@ -253,9 +268,10 @@ def main():
             snapshot_download(REPO,repo_type='dataset',local_dir=OUT,allow_patterns=['pools/*.parquet','pool_reports/*.json'])
     m={'status':'generating_pair_pools','target_train_episodes':TARGET,'target_validation_episodes':VAL_TARGET,
        'source_commit':os.environ.get('ARCGEN_SOURCE_COMMIT','local'),'seed':SEED,'workers':WORKERS,
-       'task_ids':eligible,'excluded_holdout_ids':inv['summary']['holdouts'],'holdout_overlap':[],
+       'task_ids':eligible,'excluded_task_ids':POLICY['excluded_task_ids'],
+       'former_holdout_ids':inv['summary']['holdouts'],'training_policy':POLICY,
        'completed_pools':0,'train_episodes':0,'validation_episodes':0,'errors':[],'model_training_launched':False}
-    assert not set(eligible)&set(m['excluded_holdout_ids'])
+    assert not set(eligible)&set(m['excluded_task_ids'])
     def publish(files=()):
         dump(OUT/'manifest.json',m);(OUT/'README.md').write_text(card(m))
         if api:

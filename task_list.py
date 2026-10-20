@@ -920,7 +920,7 @@ from tasks import task_ff72ca3e
 
 def task_list():
   """Tasks."""
-  return {
+  result = {
       "007bbfb7": [task_007bbfb7.generate, task_007bbfb7.validate],  # fractal
       "00d62c1b": [task_00d62c1b.generate, task_00d62c1b.validate],  # honeypots
       "017c7c7b": [task_017c7c7b.generate, task_017c7c7b.validate],  # beanstalk
@@ -1823,3 +1823,8 @@ def task_list():
       "ff2825db": [task_ff2825db.generate, task_ff2825db.validate],
       "ff72ca3e": [task_ff72ca3e.generate, task_ff72ca3e.validate],
   }
+
+  # Reviewed ARC-AGI-2 additions in this research fork.
+  from arc_agi2.task_registry import additions
+  result.update(additions())
+  return result

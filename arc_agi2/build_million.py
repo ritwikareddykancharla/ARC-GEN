@@ -11,6 +11,7 @@ Shortfalls are reported explicitly, never padded with duplicate episodes.
 """
 import argparse,concurrent.futures as cf,hashlib,importlib,json,math,os,random,time
 from collections import Counter,defaultdict
+from functools import lru_cache
 from pathlib import Path
 import numpy as np
 import pyarrow as pa
@@ -24,6 +25,17 @@ from .audit import relation,UPSTREAM_IDS
 from .augmentation import transformed, exhaustive_variants
 from .contextual import CONTEXTUAL_TASK_IDS, verify_shared_picture_episode
 from .motif_context import MissingMotifEvidence, solve_demonstrated_motifs
+from .program_targets import compile_target, audit_target
+
+LEGEND_TASK_IDS = frozenset(('27a28665', '9110e3c5', 'd4469b4b'))
+
+@lru_cache(maxsize=3)
+def legend_solver(tid):
+    source, _ = compile_target(tid)
+    audit_target(tid, source)
+    namespace = {}
+    exec(source, namespace)
+    return namespace['solve']
 
 POLICY=json.loads((BASE/'training_policy.json').read_text())
 
@@ -94,7 +106,7 @@ def picture_episode(module, tid, sample_seed):
 
 def pool_signature(tid,configs):
     # Invalidate cached pools after constructor, verifier, policy or selection changes.
-    files=[Path(__file__),BASE/'runtime.py',BASE/'verified_rules.py',BASE/'contextual.py',BASE/'motif_context.py',BASE/'fixture_policy.py',BASE/'helpers.py',BASE/'training_policy.json',
+    files=[Path(__file__),BASE/'runtime.py',BASE/'verified_rules.py',BASE/'contextual.py',BASE/'motif_context.py',BASE/'program_targets.py',BASE/'direct_programs.py',BASE/'fixture_policy.py',BASE/'helpers.py',BASE/'training_policy.json',
            BASE/'references'/f'{tid}.json',BASE.parent/'common.py',BASE/'task_registry.py']
     files+=sorted((BASE/'generators').glob('*.py'))
     native=BASE.parent/'tasks'/f'task_{tid}.py'
@@ -168,7 +180,8 @@ def allocate(reports,split,target,desired):
     # Fresh episode quotas, before augmentation. Small pools get fewer examples.
     ceiling=POLICY['planned_dataset']['fresh_episodes_per_family']
     capacity={r['task_id']:min(ceiling,r[split+'_context_episodes'] if r.get('contextual') else
-                              2*r[split+'_canonical']) for r in reports if r[split+'_canonical']>=4}
+                              2*r[split+'_canonical']) for r in reports
+              if r[split+'_canonical'] >= (1 if r['task_id']=='27a28665' else 4)}
     support={r['task_id']:r[split+'_strata'] for r in reports if r['task_id'] in capacity}
     budgets={};keys=sorted(desired);total=sum(desired.values())
     for k in keys:budgets[k]=int(target*desired[k]/total)
@@ -209,7 +222,7 @@ def make_episodes(arg):
         try:
             for k,n in quota.items():
                 candidates=bins[k][:];rng.shuffle(candidates)
-                if len(rows)<4 or canonical_total<4 or not candidates:
+                if len(rows)<4 or canonical_total<(1 if tid=='27a28665' else 4) or not candidates:
                     failures['insufficient_distinct_inputs']+=n;continue
                 for j in range(n):
                     accepted=False
@@ -235,7 +248,19 @@ def make_episodes(arg):
                                 continue
                             if predicted!=q['output']:
                                 raise ValueError('Demonstration-derived motif output disagrees')
-                        if len({p['canonical_input_hash'] for p in four})<4:continue
+                        if tid in LEGEND_TASK_IDS:
+                            try:
+                                predicted = call(legend_solver(tid), demos, q['input'], seconds=3)
+                            except ValueError:
+                                failures['missing_or_ambiguous_legend_attempts'] += 1
+                                continue
+                            if predicted != q['output']:
+                                raise ValueError('Demonstration-derived legend output disagrees')
+                        # A mask legend must show the same mask in another ink
+                        # colour. Exact inputs stay distinct and equivalence
+                        # classes still never cross the training/validation split.
+                        uniqueness = 'input_hash' if tid=='27a28665' else 'canonical_input_hash'
+                        if len({p[uniqueness] for p in four})<4:continue
                         if all(p['input']==p['output'] for p in four):continue
                         basehash=digest([sorted(p['input_hash'] for p in demos),q['input_hash']])
                         if basehash in all_hashes:continue
@@ -324,10 +349,11 @@ Three demonstration pairs and one query per episode, with generator-produced out
 - Adaptive fresh quotas: at most two episodes per unique canonical input in the pair pool, with a {POLICY['planned_dataset']['fresh_episodes_per_family']:,}-episode family ceiling before augmentation. Families with little variation receive fewer examples.
 - Target query longest-side distribution at each integer size 1–30 jointly with output expansion/shrinkage/same-shape, measured on all 1,120 public tasks. Exact height, width and rectangular-shape histograms are reported separately. Unsupported targets become explicit shortfalls; difficulty is not proven equal by dimensions.
 - Size overrides require original replay and differential seed checks. Overridden/extended pairs use saved teacher solvers with documented verifier improvements: `78332cb0` checks the unique complete panel chain because the archived greedy program fails on valid panel permutations. `de493100` uses a dimension-aware reflection-orbit verifier for labelled even-sized crop extensions; its archived program hardcodes the original coordinate 31. Episode-shared picture family `269e22fb` uses an independent verifier conditioned on a demonstration output, since its archived solver contains only the original picture. Original teacher programs and benchmark data remain unchanged. Default upstream generators have fixture checks, not full semantic proofs.
-- Fresh input pool, no duplicated full native episodes, no equivalent inputs inside an episode. Every fresh episode expands into all eight D4 transforms. Symmetric identical episodes are stored once, with every represented transform recorded in `equivalent_d4`; fresh and augmented counts remain separate. Colours are generated natively; extra palette permutation is opt-in per family. One transformation applies consistently to all demonstration inputs/outputs and the query input/output.
+- Fresh input pool, no duplicated full native episodes, and no repeated exact inputs inside an episode. Inputs must also be inequivalent under D4/palette except in mask-legend family `27a28665`, where the same mask in another ink colour supplies necessary evidence. Every fresh episode expands into all eight D4 transforms. Symmetric identical episodes are stored once, with every represented transform recorded in `equivalent_d4`; fresh and augmented counts remain separate. Colours are generated natively; extra palette permutation is opt-in per family. One transformation applies consistently to all demonstration inputs/outputs and the query input/output.
 - Input equivalence classes under palette renaming and D4 are assigned to one split before episode construction, including across families. All 1,120 public task families, including the former 20 holdouts, are training-eligible after generator validation. Synthetic validation measures new-input generalization within known families.
 - For `269e22fb`, each fresh picture is shared by its three demonstrations and query. These pairs are stored together and never mixed with a different picture. The picture equivalence class and every crop belong to the same deterministic split. Fresh-episode capacity is limited to the number of complete context bundles, rather than multiplying the number of queries.
 - For `98c475bf`, a query marker colour must have its full motif demonstrated in the selected inputs or outputs. An independent context solver learns those templates from the demonstrations and verifies the query before augmentation. Missing-evidence attempts are rejected and counted; query answers never supply the templates.
+- For `27a28665`, `9110e3c5`, and `d4469b4b`, the query's legend key must be demonstrated. Fixed canonical answer tables are not substituted for missing evidence. Repeated equivalent masks in `27a28665` stay within the same data split and its small capacity is reported explicitly.
 
 ## Generator examples
 

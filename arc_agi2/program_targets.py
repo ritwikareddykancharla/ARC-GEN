@@ -23,6 +23,14 @@ class TargetError(ValueError):
 
 
 class Clean(ast.NodeTransformer):
+    def generic_visit(self, node):
+        node = super().generic_visit(node)
+        # A block containing only a tracing call still needs a valid suite
+        # after emit() is removed (e.g. `if drew: emit(...)`).
+        if isinstance(getattr(node, 'body', None), list) and not node.body and not isinstance(node, ast.Module):
+            node.body = [ast.Pass()]
+        return node
+
     def visit_Expr(self, node):
         if isinstance(node.value, ast.Call) and isinstance(node.value.func, ast.Name) and node.value.func.id == 'emit':
             return None
@@ -115,7 +123,8 @@ def native_program(task_id):
         basis = 'reviewed_verifier_override'
     else:
         source = reference(task_id)['code']
-        source += '\ndef _native_solve(demonstrations, query):\n    return transform(query)\n'
+        argument = 'np.asarray(query)' if task_id in ('0d87d2a6', 'c1d99e64') else 'query'
+        source += '\ndef _native_solve(demonstrations, query):\n    return transform(' + argument + ')\n'
         basis = 'saved_teacher_transform'
     return bundle(source), basis
 

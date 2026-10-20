@@ -2,7 +2,7 @@ import copy
 import unittest
 from .augmentation import transformed
 from .runtime import reference
-from .program_targets import compile_target, audit_target, verify, make_record, TargetError
+from .program_targets import compile_target, audit_target, verify, make_record, TargetError, clean
 
 class ProgramTargets(unittest.TestCase):
     def episode(self, tid, d4=0, palette=None):
@@ -14,7 +14,8 @@ class ProgramTargets(unittest.TestCase):
             solutions=[transformed(p['output'],d4,palette) for p in task['test']])
 
     def test_standalone_and_all_augmentations(self):
-        for tid in ('0692e18c','00dbd492','00576224','f18ec8cc'):
+        for tid in ('0692e18c','00dbd492','00576224','f18ec8cc','b74ca5d1','a6f40cea',
+                    '27a28665','9110e3c5','d4469b4b'):
             for d4 in range(8):
                 palette=[3,9,0,7,2,8,1,6,4,5]
                 ep=self.episode(tid,d4,palette)
@@ -22,6 +23,71 @@ class ProgramTargets(unittest.TestCase):
                 audit_target(tid,source)
                 self.assertTrue(verify(source,ep)['all_exact'],(tid,d4))
                 self.assertNotIn('arc_agi2',source)
+
+    def test_trace_only_blocks_stay_executable(self):
+        source = clean('def transform(grid):\n    if grid:\n        emit(grid)\n    for row in grid:\n        emit(row)\n    return grid\n')
+        ns = {}
+        exec(source, ns)
+        self.assertEqual(ns['transform']([[1, 2]]), [[1, 2]])
+        self.assertEqual(ns['transform']([]), [])
+        self.assertNotIn('emit', source)
+
+    def test_legend_targets_follow_demonstrations_not_fixed_answers(self):
+        for tid in ('27a28665', '9110e3c5', 'd4469b4b'):
+            ep = self.episode(tid)
+            source, _ = compile_target(tid)
+            ns = {}
+            exec(source, ns)
+            query = ep['test'][0]['input']
+            key = ns['legend_key'](query)
+            demos = copy.deepcopy(ep['train'])
+            for pair in demos:
+                if ns['legend_key'](pair['input']) == key:
+                    pair['output'] = [[9, 4], [2, 7]]
+            self.assertEqual(ns['solve'](demos, query), [[9, 4], [2, 7]])
+            missing = [p for p in demos if ns['legend_key'](p['input']) != key]
+            with self.assertRaisesRegex(ValueError, 'absent'):
+                ns['solve'](missing, query)
+
+    def test_archived_numpy_input_contract_is_preserved(self):
+        for tid in ('0d87d2a6', 'c1d99e64'):
+            source, _ = compile_target(tid)
+            self.assertTrue(verify(source, self.episode(tid))['all_exact'])
+
+    def test_mask_legend_episode_builder_requires_demonstrated_key(self):
+        import tempfile
+        from pathlib import Path
+        from unittest.mock import patch
+        from tasks import task_27a28665 as generator
+        from . import build_million as b
+        rows = []
+        for idx in (1, 2, 3, 6):
+            for colour in range(1, 10):
+                pair = generator.generate(idx=idx, color=colour)
+                canonical = b.canonical_input(pair['input'])
+                split = 'validation' if int(canonical[:8],16)%20==0 else 'train'
+                rows.append(dict(task_id='27a28665', **pair, seed=idx*10+colour,
+                    parameters='{}', generator_mode='default',
+                    input_hash=b.digest(pair['input']), canonical_input_hash=canonical,
+                    split=split, stratum=b.stratum(pair)))
+        with tempfile.TemporaryDirectory() as directory, patch.object(b, 'OUT', Path(directory)):
+            file = b.OUT/'pools/27a28665.parquet'
+            file.parent.mkdir()
+            # One input per legend key cannot teach any held-out key.
+            sparse = [r for r in rows if r['seed']%10==1]
+            b.pq.write_table(b.pa.Table.from_pylist(sparse), file)
+            report = b.make_episodes(('27a28665', {'train':{'3|shrink':2}}))
+            self.assertEqual(report['splits']['train']['fresh_episodes'], 0)
+            # Repeated masks in different inks supply the needed evidence.
+            b.pq.write_table(b.pa.Table.from_pylist(rows), file)
+            report = b.make_episodes(('27a28665', {'train':{'3|shrink':2}}))
+            self.assertEqual(report['splits']['train']['fresh_episodes'], 2)
+            generated = b.pq.read_table(b.OUT/'data/train/27a28665.parquet').to_pylist()
+            for episode in generated:
+                self.assertEqual(len(set(episode['base_input_hashes'])), 4)
+                self.assertTrue(all(int(h[:8],16)%20!=0 for h in episode['canonical_input_hashes']))
+                source, _ = compile_target('27a28665',episode['d4_transform'],episode['color_permutation'])
+                self.assertTrue(verify(source,episode)['all_exact'])
 
     def test_query_labels_do_not_construct_program(self):
         ep=self.episode('0692e18c')

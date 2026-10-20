@@ -1162,4 +1162,53 @@ class GeneratorTests(unittest.TestCase):
         pair=m.generate(size=5,width=30,height=12,colors=[9,1,2])
         self.assertEqual([pair['output'][0][-1],pair['output'][-1][0],pair['output'][-1][-1]],[9,1,2])
 
+    def test_rectangle_blob_decoys_and_packing_bound(self):
+        m=importlib.import_module('tasks.task_7bb29440')
+        with self.assertRaises(ValueError):m.generate(width=10,height=10,num_rects=5)
+        with self.assertRaises(ValueError):m.generate(width=12,height=12,num_rects=2.0,rects=[])
+        with self.assertRaises(ValueError):m.generate(width=12,height=12,rects=[5,6])
+        for seed in range(12):
+            random.seed(seed)
+            for mode,count in [('sep',3),('run3',4)]:
+                cells=set(m._place_specials(6,6,count,mode))
+                remaining=set(cells);components=0
+                while remaining:
+                    components+=1;todo=[remaining.pop()]
+                    for r,c in todo:
+                        for dr in [-1,0,1]:
+                            for dc in [-1,0,1]:
+                                q=(r+dr,c+dc)
+                                if q in remaining:remaining.remove(q);todo.append(q)
+                self.assertEqual(components,count if mode=='sep' else count-2)
+        random.seed(60000)
+        pair=m.generate(width=30,height=30,num_rects=7)
+        self.assertEqual(pair['output'],grid(call(solver('7bb29440'),pair['input'])))
+
+    def test_one_shape_three_band_nest_and_stamp_collisions(self):
+        m=importlib.import_module('tasks.task_7c66cb00')
+        for height in [18,19]:
+            with self.assertRaises(ValueError):m.generate(height=height,num_bands=3,num_shapes=1)
+        for height in [20,30]:
+            random.seed(60000)
+            pair=m.generate(width=24,height=height,num_bands=3,num_shapes=1)
+            self.assertEqual(pair['output'],grid(call(solver('7c66cb00'),pair['input'])))
+        with self.assertRaisesRegex(ValueError,'overlap'):
+            m.generate(width=12,height=20,background=0,bands=[(8,3,2,5),(13,3,3,6)],
+                       shapes=[(0,1,['22']),(3,1,['22']),(0,6,['33'])])
+        with self.assertRaises(ValueError):m.generate(background=True)
+
+    def test_mirror_occlusion_preserves_occupied_input(self):
+        m=importlib.import_module('tasks.task_7ed72f31')
+        pair=m.generate(width=15,height=14,background=0,objects=[
+            {'mirror':['v',5,4,8],'color':3,'cells':[[6,1],[6,2],[6,3],[6,4]]},
+            {'mirror':['p',6,10],'color':4,'cells':[[6,9],[7,9]]}])
+        self.assertEqual(pair['output'],grid(call(solver('7ed72f31'),pair['input'])))
+        self.assertEqual(pair['output'][6][6:10],[3,3,3,4])
+        self.assertEqual(pair['output'][5][11],4)
+        self.assertEqual(pair['output'][6][11],4)
+        with self.assertRaises(ValueError):
+            m.generate(width=3,height=3,background=0,objects=[{'mirror':['p',1,1],
+                       'color':4,'cells':[[0,0],[0,1],[0,2],[1,0],[1,2]]}])
+        with self.assertRaises(ValueError):m.generate(background=True)
+
 if __name__=='__main__':unittest.main()

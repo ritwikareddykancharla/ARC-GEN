@@ -591,7 +591,7 @@ task_id,split,former_holdout,training_eligible,status,standalone_module,candidat
 8a6d367c,training,False,True,generator_missing,,panels;legend;topology;crop;scale;instructions,references/8a6d367c.json,27x21->14x18,"Construct, validate and review standalone generator"
 8abad3cf,training,False,True,upstream_fixture_verified,tasks/task_8abad3cf.py,selection;movement;template;count;order;crop,references/8abad3cf.json,5x10->4x9,Expand semantic and boundary-case tests
 8b28cd80,training,False,True,upstream_fixture_verified,tasks/task_8b28cd80.py,recolour;repeat;rays;count;scale;layers,references/8b28cd80.json,3x3->9x9;3x3->9x9,Expand semantic and boundary-case tests
-8b7bacbf,evaluation,False,True,generator_missing,,objects;topology;paths;layers,references/8b7bacbf.json,30x30->30x30;22x26->22x26,"Construct, validate and review standalone generator"
+8b7bacbf,evaluation,False,True,extension_validated,tasks/task_8b7bacbf.py,objects;topology;paths;layers,references/8b7bacbf.json,30x30->30x30;22x26->22x26,Expand semantic and boundary-case tests
 8b9c3697,evaluation,False,True,generator_missing,,movement;template;paths;dynamics;crop;assembly,references/8b9c3697.json,23x27->23x27,"Construct, validate and review standalone generator"
 8ba14f53,training,False,True,upstream_fixture_verified,tasks/task_8ba14f53.py,topology;count;crop,references/8ba14f53.json,4x9->3x3,Expand semantic and boundary-case tests
 8be77c9e,training,False,True,upstream_fixture_verified,tasks/task_8be77c9e.py,rigid;dynamics;crop;layers,references/8be77c9e.json,3x3->6x3,Expand semantic and boundary-case tests
@@ -840,7 +840,7 @@ be03b35f,training,False,True,upstream_fixture_verified,tasks/task_be03b35f.py,ri
 be94b721,training,False,True,upstream_fixture_verified,tasks/task_be94b721.py,objects;selection;topology;crop,references/be94b721.json,9x9->4x3,Expand semantic and boundary-case tests
 beb8660c,training,False,True,upstream_fixture_verified,tasks/task_beb8660c.py,selection;movement;dynamics;crop;layers,references/beb8660c.json,11x8->11x8,Expand semantic and boundary-case tests
 bf32578f,training,False,True,generator_missing,,rigid;topology;crop,references/bf32578f.json,8x8->8x8,"Construct, validate and review standalone generator"
-bf45cf4b,evaluation,False,True,generator_missing,,objects;repeat;template;crop,references/bf45cf4b.json,14x13->25x25,"Construct, validate and review standalone generator"
+bf45cf4b,evaluation,False,True,extension_validated,tasks/task_bf45cf4b.py,objects;repeat;template;crop,references/bf45cf4b.json,14x13->25x25,Expand semantic and boundary-case tests
 bf699163,training,False,True,upstream_fixture_verified,tasks/task_bf699163.py,topology;dynamics;crop;layers,references/bf699163.json,13x14->3x3,Expand semantic and boundary-case tests
 bf89d739,training,False,True,upstream_fixture_verified,tasks/task_bf89d739.py,paths,references/bf89d739.json,14x17->14x17,Expand semantic and boundary-case tests
 c074846d,training,False,True,upstream_fixture_verified,tasks/task_c074846d.py,recolour;rigid;dynamics;count,references/c074846d.json,9x11->9x11;9x9->9x9,Expand semantic and boundary-case tests

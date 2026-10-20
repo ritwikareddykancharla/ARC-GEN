@@ -11,6 +11,75 @@ from .fixture_policy import fixture_basis
 from .augmentation import apply_episode,settings,exhaustive_variants
 
 class GeneratorTests(unittest.TestCase):
+    def test_stencil_partial_masks_respect_output_bounds(self):
+        stamps=importlib.import_module('tasks.task_bf45cf4b')
+        mask=[[1,1],[1,0],[1,1],[0,1],[1,1],[1,0],[1,1]]
+        for candidate in (mask,list(map(list,zip(*mask)))):
+            for seed in range(5):
+                random.seed(46000+seed)
+                p=stamps.generate(mask=candidate)
+                self.assertLessEqual(len(p['output']),30)
+                self.assertLessEqual(len(p['output'][0]),30)
+                self.assertEqual(p['output'],grid(call(solver('bf45cf4b'),p['input'])))
+        for candidate in ([[1,1]]*11,[[1]*11]*2):
+            with self.assertRaisesRegex(ValueError,'mask too large'):
+                stamps.generate(mask=candidate)
+
+    def test_stencil_tile_identification_keeps_valid_islands(self):
+        stamps=importlib.import_module('tasks.task_bf45cf4b')
+        tile=[[5]*7]+[[5]+[0]*5+[5] for _ in range(5)]+[[5]*7]
+        for r in range(2,5):
+            for c in range(2,5):tile[r][c]=6+(r+c)%2
+        with self.assertRaisesRegex(ValueError,'identifiable'):
+            stamps.generate(width=12,height=12,background=0,tile=tile,
+                            mask=[[1,0],[0,1]],stencil_color=1)
+        tile=[[0]*7 for _ in range(7)]
+        for r in range(7):
+            for c in range(7):
+                if r in (0,6) or c in (0,6):tile[r][c]=5+(r+c)%2
+        tile[3][3]=7
+        p=stamps.generate(width=20,height=20,background=0,tile=tile,
+                         mask=[[1,0],[0,1]],stencil_color=1)
+        self.assertEqual(p['output'][3][3],7)
+        self.assertEqual(p['output'][10][10],7)
+        self.assertEqual(p['output'],grid(call(solver('bf45cf4b'),p['input'])))
+        p=stamps.generate(width=10,height=10,background=0,tile=[[1,2]],
+                         mask=[[1,0,1]],stencil_color=3)
+        self.assertEqual(p['output'],[[1,2,0,0,1,2]])
+
+    def test_ring_replay_checks_visible_marker_witnesses(self):
+        import copy
+        rings=importlib.import_module('tasks.task_8b7bacbf')
+        with self.assertRaisesRegex(ValueError,'visible marker path'):
+            rings.generate(input_grid=[[0,2,0],[2,0,2],[0,2,0]],
+                           fills=[(1,1,4)])
+        original=rings.generate
+        calls=[]
+        def capture(*args,**kwargs):
+            calls.append(copy.deepcopy(kwargs))
+            return original(*args,**kwargs)
+        with patch.object(rings,'generate',side_effect=capture):
+            rings.validate()
+        kw=copy.deepcopy(calls[0])
+        kw['fills']=kw['fills'][1:]
+        with self.assertRaisesRegex(ValueError,'omit'):
+            original(**kw)
+        kw=copy.deepcopy(calls[0])
+        kw['fills']=kw['fills']+[kw['fills'][0]]
+        with self.assertRaisesRegex(ValueError,'only once'):
+            original(**kw)
+
+    def test_orthogonal_strip_can_cross_diagonal_route(self):
+        rings=importlib.import_module('tasks.task_8b7bacbf')
+        body={(r,r) for r in range(2,20)}
+        site=[(r,10) for r in range(8,13)]
+        local={(r,r) for r in range(8,13)}
+        self.assertTrue(rings._site_ok(site,local,body,(2,2),set(),set(),30,30))
+        # Remote contact is still forbidden; only the local crossing stretch
+        # may touch the strip, and only its central cell may be overwritten.
+        self.assertFalse(rings._site_ok(site,local,body|{(8,11)},(2,2),
+                                       set(),set(),30,30))
+
     def test_line_repairs_reject_unjustified_explicit_edits(self):
         lines=importlib.import_module('tasks.task_7b80bb43')
         base=dict(width=10,height=10,background=0,color=5)

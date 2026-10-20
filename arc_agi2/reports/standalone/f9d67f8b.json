@@ -1,0 +1,276 @@
+{
+  "task_id": "f9d67f8b",
+  "ready": true,
+  "samples_requested": 1000,
+  "samples_attempted": 1000,
+  "samples_passed": 1000,
+  "verifier_mode": "archived_pair_solver",
+  "verifier_evidence": {
+    "mode": "archived_pair_solver"
+  },
+  "improved_verifier_fixture_replay": null,
+  "seed_start": 20000,
+  "seed_end_exclusive": 21000,
+  "fixture_basis": {
+    "fixture": "canonical",
+    "corrected": false
+  },
+  "unique_inputs": 1000,
+  "changed_pairs": 1000,
+  "fixture_replays": 0,
+  "shapes": [
+    [
+      16,
+      16,
+      16,
+      16
+    ],
+    [
+      18,
+      18,
+      18,
+      18
+    ],
+    [
+      20,
+      20,
+      20,
+      20
+    ],
+    [
+      22,
+      22,
+      22,
+      22
+    ],
+    [
+      24,
+      24,
+      24,
+      24
+    ],
+    [
+      26,
+      26,
+      26,
+      26
+    ],
+    [
+      28,
+      28,
+      28,
+      28
+    ],
+    [
+      30,
+      30,
+      30,
+      30
+    ]
+  ],
+  "fixture_matches": {
+    "canonical": true,
+    "teaching_fixture": true
+  },
+  "original_solver_replay": {
+    "canonical": {
+      "correct": 5,
+      "total": 5,
+      "all_exact": true
+    },
+    "teaching_fixture": {
+      "correct": 5,
+      "total": 5,
+      "all_exact": true
+    }
+  },
+  "errors": [],
+  "sha256": "763425a769d0ece0ec55cd48341bbe4a1bc10dc7cfacd484877c4e073e970588",
+  "status": "reviewed_bounded_validation_passed",
+  "limitations": "Bounded randomized agreement with a saved solver is not proof of semantic completeness.",
+  "candidate_path": "/Users/ritwika/projects/arc-agi2/outputs/research/arcgen-coverage-cli/host-reviewed/f9d67f8b/task_f9d67f8b.py",
+  "attempts": 1,
+  "model_usage": {
+    "claude-opus-5-5": {
+      "inputTokens": 2,
+      "outputTokens": 21080,
+      "cacheReadInputTokens": 1892,
+      "cacheCreationInputTokens": 71174,
+      "webSearchRequests": 0,
+      "costUSD": 0.9913784000000001,
+      "contextWindow": 1000000,
+      "maxOutputTokens": 128000,
+      "thinkingTokens": 8801,
+      "canonicalModel": "claude-opus-5-5",
+      "provider": "firstParty",
+      "costBasis": "list"
+    }
+  },
+  "rule": "The square mosaic is mirror symmetric about off-centre axes: column x mirrors to S+1-x and row y to S+1-y (31-x and 31-y at native size 30). Colour-9 blobs hide cells. Step 1 fills each 9 from any visible horizontal, vertical or point mirror partner. Step 2 fills any remaining 9 from its transpose partner (x,y) or that partner's mirror images, read on the step-1 canvas. Those partners must agree on exactly one value.",
+  "scope": "Supported: even square sizes 16..30. Native 30 is sampled 60% of the time; the other sizes are synthetic extensions keeping the same two-cell off-centre crop. Pure H/V repair scenes (about 65% of default draws), and diagonal-fallback scenes from four latent occluder families. These are edge blocks straddling the seam (native test case), shadow (the plain transpose is hidden in the input but restored in step 1), interior four-fold orbits, and a corner-strip probe. H/V distractor rectangles include three-of-four mirror orbits that force point-mirror recovery. Explicit quadrant/masks/size/palette/diagonal/family controls are honoured or rejected with ValueError. Not supported: odd sizes, non-square grids, occluder colours other than 9, mosaics with no hidden-cell recoverability, and scenes where a nearer-centre axis stays consistent.",
+  "constraints": [
+    "Reviewed off-centre axes, partial transpose symmetry and staged mask restoration",
+    "Shadow family documentation corrected: transpose is restored in step one; it does not falsely claim a uniquely required mirrored transpose",
+    "All four fallback families remain labelled synthetic where unsupported by canonical demonstrations",
+    "1000 independent seeds 20000..20999 pass; native uniqueness count 1000",
+    "100 additional seeds 61000..61099 pass; all change output; 30 successful parameter controls and 8 expected invalid rejections",
+    "Original canonical fixture replay exact; no query-specific output lookup used"
+  ],
+  "known_limitations": [
+    "Only one native example (the test) exercises the diagonal fallback. The left-edge, shadow, orbit, strip and non-30 variants are synthetic extensions consistent with the archived rule, not native coverage.",
+    "The strip family is a minimal corner probe with exactly one fallback cell, (0,1) or (1,0). No richer corner case is possible, because (0,0) and (1,1) are their own transposes.",
+    "Axis refutation is achieved by rejection sampling, not by planting. With 2-colour palettes at size 16 the success rate is believed high but has not been measured.",
+    "Overlapping distractor rectangles merge into irregular blobs, as in native train 2. This is intended.",
+    "Fixture quadrants were transcribed from canonical outputs. They are reconstructed only through explicit generate(quadrant=..., masks=...) calls.",
+    "Bounded solver agreement and control checks do not prove complete coverage of every interpretation of the task."
+  ],
+  "billing": "Claude Max CLI; API credentials excluded; no API fallback",
+  "review_candidate_sha256": "763425a769d0ece0ec55cd48341bbe4a1bc10dc7cfacd484877c4e073e970588",
+  "authored_sha256": "763425a769d0ece0ec55cd48341bbe4a1bc10dc7cfacd484877c4e073e970588",
+  "stress_test": {
+    "task_id": "f9d67f8b",
+    "ready": true,
+    "samples_requested": 1000,
+    "samples_attempted": 1000,
+    "samples_passed": 1000,
+    "verifier_mode": "archived_pair_solver",
+    "verifier_evidence": {
+      "mode": "archived_pair_solver"
+    },
+    "improved_verifier_fixture_replay": null,
+    "seed_start": 20000,
+    "seed_end_exclusive": 21000,
+    "fixture_basis": {
+      "fixture": "canonical",
+      "corrected": false
+    },
+    "unique_inputs": 1000,
+    "changed_pairs": 1000,
+    "fixture_replays": 0,
+    "shapes": [
+      [
+        16,
+        16,
+        16,
+        16
+      ],
+      [
+        18,
+        18,
+        18,
+        18
+      ],
+      [
+        20,
+        20,
+        20,
+        20
+      ],
+      [
+        22,
+        22,
+        22,
+        22
+      ],
+      [
+        24,
+        24,
+        24,
+        24
+      ],
+      [
+        26,
+        26,
+        26,
+        26
+      ],
+      [
+        28,
+        28,
+        28,
+        28
+      ],
+      [
+        30,
+        30,
+        30,
+        30
+      ]
+    ],
+    "fixture_matches": {
+      "canonical": true,
+      "teaching_fixture": true
+    },
+    "original_solver_replay": {
+      "canonical": {
+        "correct": 5,
+        "total": 5,
+        "all_exact": true
+      },
+      "teaching_fixture": {
+        "correct": 5,
+        "total": 5,
+        "all_exact": true
+      }
+    },
+    "errors": [],
+    "sha256": "763425a769d0ece0ec55cd48341bbe4a1bc10dc7cfacd484877c4e073e970588",
+    "status": "validated_candidate_needs_semantic_review",
+    "limitations": "Bounded randomized agreement with a saved solver is not proof of semantic completeness.",
+    "review_candidate_sha256": "763425a769d0ece0ec55cd48341bbe4a1bc10dc7cfacd484877c4e073e970588"
+  },
+  "authored_scope": "Supported: even square sizes 16..30. Native 30 is sampled 60% of the time; the other sizes are synthetic extensions keeping the same two-cell off-centre crop. Pure H/V repair scenes (about 65% of default draws), and diagonal-fallback scenes from four latent occluder families. These are edge blocks straddling the seam (native test case), shadow (the plain transpose is hidden in the input but restored in step 1), interior four-fold orbits, and a corner-strip probe. H/V distractor rectangles include three-of-four mirror orbits that force point-mirror recovery. Explicit quadrant/masks/size/palette/diagonal/family controls are honoured or rejected with ValueError. Not supported: odd sizes, non-square grids, occluder colours other than 9, mosaics with no hidden-cell recoverability, and scenes where a nearer-centre axis stays consistent.",
+  "authored_constraints": [
+    "Output equals the rendering of the latent quadrant and contains only colours 1..8; input differs only at cells set to 9.",
+    "Every hidden cell is either H/V/point-mirror recoverable from a visible cell, or has at least one diagonal partner known on the step-1 canvas.",
+    "All known diagonal partners of fallback cells agree with the true colour; this is enforced by equalising the quadrant transpose pair each fallback cell reads.",
+    "Axes size/2 and size/2-1 (centre and tie-winning candidate) are refuted by visible cells both vertically and horizontally, so the rule picks axis size/2+1.",
+    "In diagonal mode at least one hidden cell needs the fallback; with diagonal=False none does.",
+    "Hidden cell count is between 3 and size*size/4; all mask rectangles lie in bounds.",
+    "Bounded retries: 400 attempts, then ValueError."
+  ],
+  "semantic_review": {
+    "status": "reviewed",
+    "checks": [
+      "Reviewed off-centre axes, partial transpose symmetry and staged mask restoration",
+      "Shadow family documentation corrected: transpose is restored in step one; it does not falsely claim a uniquely required mirrored transpose",
+      "All four fallback families remain labelled synthetic where unsupported by canonical demonstrations",
+      "1000 independent seeds 20000..20999 pass; native uniqueness count 1000",
+      "100 additional seeds 61000..61099 pass; all change output; 30 successful parameter controls and 8 expected invalid rejections",
+      "Original canonical fixture replay exact; no query-specific output lookup used",
+      "1000 independent seeds 20000..20999; approved validation fixtures reconstructed exactly; canonical replay reported separately"
+    ],
+    "limitations": [
+      "Only one native example (the test) exercises the diagonal fallback. The left-edge, shadow, orbit, strip and non-30 variants are synthetic extensions consistent with the archived rule, not native coverage.",
+      "The strip family is a minimal corner probe with exactly one fallback cell, (0,1) or (1,0). No richer corner case is possible, because (0,0) and (1,1) are their own transposes.",
+      "Axis refutation is achieved by rejection sampling, not by planting. With 2-colour palettes at size 16 the success rate is believed high but has not been measured.",
+      "Overlapping distractor rectangles merge into irregular blobs, as in native train 2. This is intended.",
+      "Fixture quadrants were transcribed from canonical outputs. They are reconstructed only through explicit generate(quadrant=..., masks=...) calls.",
+      "Bounded solver agreement and control checks do not prove complete coverage of every interpretation of the task."
+    ]
+  },
+  "diversity_audit": {
+    "task_id": "f9d67f8b",
+    "source_sha256": "763425a769d0ece0ec55cd48341bbe4a1bc10dc7cfacd484877c4e073e970588",
+    "fresh_seed_start": 61000,
+    "fresh_cases": 100,
+    "changed_cases": 100,
+    "shapes": {
+      "30x30->30x30": 66,
+      "26x26->26x26": 3,
+      "20x20->20x20": 2,
+      "24x24->24x24": 5,
+      "22x22->22x22": 9,
+      "16x16->16x16": 5,
+      "18x18->18x18": 6,
+      "28x28->28x28": 4
+    },
+    "additional_oracle": "archived independent solver",
+    "parameter_counts": {
+      "success": 30,
+      "rejected": 8
+    },
+    "independent_stress_cases": 1000,
+    "unique_stress_inputs": 1000
+  }
+}

@@ -2842,4 +2842,19 @@ class GeneratorTests(unittest.TestCase):
         self.assertEqual(p['output'],grid(call(solver('dd6b8c4b'),p['input'])))
         with self.assertRaises(ValueError):m.generate(layout='open',chokepoint=True)
 
+    def test_area_winner_preserved_on_narrow_canvas(self):
+        m=importlib.import_module('tasks.task_df978a02')
+        for winner in ('up','down','left','right'):
+            random.seed(71100)
+            p=m.generate(height=8,width=30,winner=winner)
+            self.assertEqual(p['output'],grid(call(solver('df978a02'),p['input'])))
+
+    def test_wallpaper_minimum_grid_and_true_mask_colour(self):
+        m=importlib.import_module('tasks.task_ea959feb')
+        random.seed(71000)
+        p=m.generate(height=4,width=4)
+        self.assertEqual(p['output'],grid(call(solver('ea959feb'),p['input'])))
+        self.assertTrue(any(a!=b for ar,br in zip(p['input'],p['output']) for a,b in zip(ar,br)))
+        self.assertTrue(any(a==b==1 for ar,br in zip(p['input'],p['output']) for a,b in zip(ar,br)))
+
 if __name__=='__main__':unittest.main()

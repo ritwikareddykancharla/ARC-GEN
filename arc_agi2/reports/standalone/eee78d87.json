@@ -1,0 +1,621 @@
+{
+  "task_id": "eee78d87",
+  "ready": true,
+  "samples_requested": 1000,
+  "samples_attempted": 1000,
+  "samples_passed": 1000,
+  "verifier_mode": "archived_pair_solver",
+  "verifier_evidence": {
+    "mode": "archived_pair_solver"
+  },
+  "improved_verifier_fixture_replay": null,
+  "seed_start": 20000,
+  "seed_end_exclusive": 21000,
+  "fixture_basis": {
+    "fixture": "canonical",
+    "corrected": false
+  },
+  "unique_inputs": 867,
+  "changed_pairs": 1000,
+  "fixture_replays": 1,
+  "shapes": [
+    [
+      5,
+      5,
+      16,
+      16
+    ],
+    [
+      5,
+      6,
+      16,
+      16
+    ],
+    [
+      5,
+      7,
+      16,
+      16
+    ],
+    [
+      5,
+      8,
+      16,
+      16
+    ],
+    [
+      5,
+      9,
+      16,
+      16
+    ],
+    [
+      5,
+      10,
+      16,
+      16
+    ],
+    [
+      6,
+      5,
+      16,
+      16
+    ],
+    [
+      6,
+      6,
+      16,
+      16
+    ],
+    [
+      6,
+      7,
+      16,
+      16
+    ],
+    [
+      6,
+      8,
+      16,
+      16
+    ],
+    [
+      6,
+      9,
+      16,
+      16
+    ],
+    [
+      6,
+      10,
+      16,
+      16
+    ],
+    [
+      7,
+      5,
+      16,
+      16
+    ],
+    [
+      7,
+      6,
+      16,
+      16
+    ],
+    [
+      7,
+      7,
+      16,
+      16
+    ],
+    [
+      7,
+      8,
+      16,
+      16
+    ],
+    [
+      7,
+      9,
+      16,
+      16
+    ],
+    [
+      7,
+      10,
+      16,
+      16
+    ],
+    [
+      8,
+      5,
+      16,
+      16
+    ],
+    [
+      8,
+      6,
+      16,
+      16
+    ],
+    [
+      8,
+      7,
+      16,
+      16
+    ],
+    [
+      8,
+      8,
+      16,
+      16
+    ],
+    [
+      8,
+      9,
+      16,
+      16
+    ],
+    [
+      8,
+      10,
+      16,
+      16
+    ],
+    [
+      9,
+      5,
+      16,
+      16
+    ],
+    [
+      9,
+      6,
+      16,
+      16
+    ],
+    [
+      9,
+      7,
+      16,
+      16
+    ],
+    [
+      9,
+      8,
+      16,
+      16
+    ],
+    [
+      9,
+      9,
+      16,
+      16
+    ],
+    [
+      9,
+      10,
+      16,
+      16
+    ],
+    [
+      10,
+      5,
+      16,
+      16
+    ],
+    [
+      10,
+      6,
+      16,
+      16
+    ],
+    [
+      10,
+      7,
+      16,
+      16
+    ],
+    [
+      10,
+      8,
+      16,
+      16
+    ],
+    [
+      10,
+      9,
+      16,
+      16
+    ],
+    [
+      10,
+      10,
+      16,
+      16
+    ]
+  ],
+  "fixture_matches": {
+    "canonical": true,
+    "teaching_fixture": true
+  },
+  "original_solver_replay": {
+    "canonical": {
+      "correct": 4,
+      "total": 4,
+      "all_exact": true
+    },
+    "teaching_fixture": {
+      "correct": 4,
+      "total": 4,
+      "all_exact": true
+    }
+  },
+  "errors": [],
+  "sha256": "36c94618ee0accc4d9e325ad31426683c45d291e55932e19a6b955bda11d7165",
+  "status": "reviewed_bounded_validation_passed",
+  "limitations": "Bounded randomized agreement with a saved solver is not proof of semantic completeness.",
+  "candidate_path": "/Users/ritwika/projects/arc-agi2/outputs/research/arcgen-coverage-cli/host-reviewed/eee78d87/task_eee78d87.py",
+  "attempts": 1,
+  "model_usage": {
+    "claude-opus-5-5": {
+      "inputTokens": 2,
+      "outputTokens": 7430,
+      "cacheReadInputTokens": 1892,
+      "cacheCreationInputTokens": 16329,
+      "webSearchRequests": 0,
+      "costUSD": 0.27961840000000004,
+      "contextWindow": 1000000,
+      "maxOutputTokens": 128000,
+      "thinkingTokens": 2149,
+      "canonicalModel": "claude-opus-5-5",
+      "provider": "firstParty",
+      "costBasis": "list"
+    }
+  },
+  "rule": "Background 7 with one single-colour, doubly-symmetric 3x3 symbol. The output is a fixed 16x16 lattice. Indices that are 0 mod 3 are lines (L) and all others are blocks (B). LL/LB/BL/BB take 0 if the symbol's centre/middle-left/top-middle/corner cell is filled, otherwise 7. Every 0 in rows 5..10 and columns 5..10 then becomes 9.",
+  "scope": "Supported: all 10 doubly-symmetric symbols with a full 3x3 bounding box, any symbol position, symbol colours 1-6 and 8, and input sides 5..30. Random sides are 5..10, with 6x6 favoured; anything other than 6x6 is a synthetic extension. Optional attested_only=True restricts sampling to the fixture-attested family (top != corner). Not supported: asymmetric symbols, multiple symbols, other background colours, and output sizes other than 16x16. The task fixes those, and the reference reads only four symbol cells.",
+  "constraints": [
+    "Independent four-bit symbol-to-lattice renderer agrees on 100 fresh cases",
+    "Ten possible output grids are a true finite-family restriction; attested_only control separates canonical-attested symbols from cell-wise extrapolation; adaptive generation must not pretend outputs are all unique",
+    "1000 independent seeds 20000..20999 pass; native uniqueness count 867",
+    "100 additional seeds 61000..61099 pass; all change output; 21 successful parameter controls and 7 expected invalid rejections",
+    "Original canonical fixture replay exact; no query-specific output lookup used"
+  ],
+  "known_limitations": [
+    "Only 10 distinct outputs exist; input diversity comes from colour, position and size.",
+    "Symbols with both corner and top filled (4 of 10) follow the cell-wise rule from the verified explanation, but no fixture attests them.",
+    "Non-6x6 inputs and colours 4, 5 and 8 are synthetic extensions.",
+    "Bounded solver agreement and control checks do not prove complete coverage of every interpretation of the task."
+  ],
+  "billing": "Claude Max CLI; API credentials excluded; no API fallback",
+  "review_candidate_sha256": "36c94618ee0accc4d9e325ad31426683c45d291e55932e19a6b955bda11d7165",
+  "authored_sha256": "36c94618ee0accc4d9e325ad31426683c45d291e55932e19a6b955bda11d7165",
+  "stress_test": {
+    "task_id": "eee78d87",
+    "ready": true,
+    "samples_requested": 1000,
+    "samples_attempted": 1000,
+    "samples_passed": 1000,
+    "verifier_mode": "archived_pair_solver",
+    "verifier_evidence": {
+      "mode": "archived_pair_solver"
+    },
+    "improved_verifier_fixture_replay": null,
+    "seed_start": 20000,
+    "seed_end_exclusive": 21000,
+    "fixture_basis": {
+      "fixture": "canonical",
+      "corrected": false
+    },
+    "unique_inputs": 867,
+    "changed_pairs": 1000,
+    "fixture_replays": 1,
+    "shapes": [
+      [
+        5,
+        5,
+        16,
+        16
+      ],
+      [
+        5,
+        6,
+        16,
+        16
+      ],
+      [
+        5,
+        7,
+        16,
+        16
+      ],
+      [
+        5,
+        8,
+        16,
+        16
+      ],
+      [
+        5,
+        9,
+        16,
+        16
+      ],
+      [
+        5,
+        10,
+        16,
+        16
+      ],
+      [
+        6,
+        5,
+        16,
+        16
+      ],
+      [
+        6,
+        6,
+        16,
+        16
+      ],
+      [
+        6,
+        7,
+        16,
+        16
+      ],
+      [
+        6,
+        8,
+        16,
+        16
+      ],
+      [
+        6,
+        9,
+        16,
+        16
+      ],
+      [
+        6,
+        10,
+        16,
+        16
+      ],
+      [
+        7,
+        5,
+        16,
+        16
+      ],
+      [
+        7,
+        6,
+        16,
+        16
+      ],
+      [
+        7,
+        7,
+        16,
+        16
+      ],
+      [
+        7,
+        8,
+        16,
+        16
+      ],
+      [
+        7,
+        9,
+        16,
+        16
+      ],
+      [
+        7,
+        10,
+        16,
+        16
+      ],
+      [
+        8,
+        5,
+        16,
+        16
+      ],
+      [
+        8,
+        6,
+        16,
+        16
+      ],
+      [
+        8,
+        7,
+        16,
+        16
+      ],
+      [
+        8,
+        8,
+        16,
+        16
+      ],
+      [
+        8,
+        9,
+        16,
+        16
+      ],
+      [
+        8,
+        10,
+        16,
+        16
+      ],
+      [
+        9,
+        5,
+        16,
+        16
+      ],
+      [
+        9,
+        6,
+        16,
+        16
+      ],
+      [
+        9,
+        7,
+        16,
+        16
+      ],
+      [
+        9,
+        8,
+        16,
+        16
+      ],
+      [
+        9,
+        9,
+        16,
+        16
+      ],
+      [
+        9,
+        10,
+        16,
+        16
+      ],
+      [
+        10,
+        5,
+        16,
+        16
+      ],
+      [
+        10,
+        6,
+        16,
+        16
+      ],
+      [
+        10,
+        7,
+        16,
+        16
+      ],
+      [
+        10,
+        8,
+        16,
+        16
+      ],
+      [
+        10,
+        9,
+        16,
+        16
+      ],
+      [
+        10,
+        10,
+        16,
+        16
+      ]
+    ],
+    "fixture_matches": {
+      "canonical": true,
+      "teaching_fixture": true
+    },
+    "original_solver_replay": {
+      "canonical": {
+        "correct": 4,
+        "total": 4,
+        "all_exact": true
+      },
+      "teaching_fixture": {
+        "correct": 4,
+        "total": 4,
+        "all_exact": true
+      }
+    },
+    "errors": [],
+    "sha256": "36c94618ee0accc4d9e325ad31426683c45d291e55932e19a6b955bda11d7165",
+    "status": "validated_candidate_needs_semantic_review",
+    "limitations": "Bounded randomized agreement with a saved solver is not proof of semantic completeness.",
+    "review_candidate_sha256": "36c94618ee0accc4d9e325ad31426683c45d291e55932e19a6b955bda11d7165"
+  },
+  "authored_scope": "Supported: all 10 doubly-symmetric symbols with a full 3x3 bounding box, any symbol position, symbol colours 1-6 and 8, and input sides 5..30. Random sides are 5..10, with 6x6 favoured; anything other than 6x6 is a synthetic extension. Optional attested_only=True restricts sampling to the fixture-attested family (top != corner). Not supported: asymmetric symbols, multiple symbols, other background colours, and output sizes other than 16x16. The task fixes those, and the reference reads only four symbol cells.",
+  "authored_constraints": [
+    "Exactly one non-background object, and its bounding box is exactly 3x3 (corner or top filled, and corner or left filled).",
+    "The symbol is mirror-symmetric horizontally and vertically, so the four controlling cells define it unambiguously.",
+    "The symbol colour is never 0, 7 or 9, so it cannot collide with the background or the output palette.",
+    "The symbol always lies fully inside the input. Input sides are 5..30, so 7 stays the majority background colour even for the full-square symbol.",
+    "The output is always 16x16 and differs from the input, so no sample is an identity mapping."
+  ],
+  "semantic_review": {
+    "status": "reviewed",
+    "checks": [
+      "Independent four-bit symbol-to-lattice renderer agrees on 100 fresh cases",
+      "Ten possible output grids are a true finite-family restriction; attested_only control separates canonical-attested symbols from cell-wise extrapolation; adaptive generation must not pretend outputs are all unique",
+      "1000 independent seeds 20000..20999 pass; native uniqueness count 867",
+      "100 additional seeds 61000..61099 pass; all change output; 21 successful parameter controls and 7 expected invalid rejections",
+      "Original canonical fixture replay exact; no query-specific output lookup used",
+      "1000 independent seeds 20000..20999; approved validation fixtures reconstructed exactly; canonical replay reported separately"
+    ],
+    "limitations": [
+      "Only 10 distinct outputs exist; input diversity comes from colour, position and size.",
+      "Symbols with both corner and top filled (4 of 10) follow the cell-wise rule from the verified explanation, but no fixture attests them.",
+      "Non-6x6 inputs and colours 4, 5 and 8 are synthetic extensions.",
+      "Bounded solver agreement and control checks do not prove complete coverage of every interpretation of the task."
+    ]
+  },
+  "diversity_audit": {
+    "task_id": "eee78d87",
+    "source_sha256": "36c94618ee0accc4d9e325ad31426683c45d291e55932e19a6b955bda11d7165",
+    "fresh_seed_start": 61000,
+    "fresh_cases": 100,
+    "changed_cases": 100,
+    "shapes": {
+      "8x6->16x16": 3,
+      "5x8->16x16": 1,
+      "6x6->16x16": 62,
+      "5x9->16x16": 1,
+      "6x10->16x16": 2,
+      "9x6->16x16": 2,
+      "9x7->16x16": 1,
+      "7x7->16x16": 1,
+      "6x8->16x16": 1,
+      "10x9->16x16": 1,
+      "8x8->16x16": 3,
+      "10x6->16x16": 2,
+      "10x8->16x16": 3,
+      "5x10->16x16": 2,
+      "7x10->16x16": 2,
+      "5x5->16x16": 2,
+      "7x5->16x16": 2,
+      "6x5->16x16": 1,
+      "7x9->16x16": 2,
+      "8x9->16x16": 1,
+      "6x7->16x16": 1,
+      "10x5->16x16": 1,
+      "7x8->16x16": 1,
+      "6x9->16x16": 1,
+      "9x9->16x16": 1
+    },
+    "additional_oracle": "input-only geometry",
+    "parameter_counts": {
+      "success": 21,
+      "rejected": 7
+    },
+    "independent_stress_cases": 1000,
+    "unique_stress_inputs": 867
+  }
+}

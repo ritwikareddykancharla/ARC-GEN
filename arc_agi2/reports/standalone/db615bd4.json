@@ -1,0 +1,1134 @@
+{
+  "task_id": "db615bd4",
+  "ready": true,
+  "samples_requested": 1000,
+  "samples_attempted": 1000,
+  "samples_passed": 1000,
+  "verifier_mode": "archived_pair_solver",
+  "verifier_evidence": {
+    "mode": "archived_pair_solver"
+  },
+  "improved_verifier_fixture_replay": null,
+  "seed_start": 20000,
+  "seed_end_exclusive": 21000,
+  "fixture_basis": {
+    "fixture": "canonical",
+    "corrected": false
+  },
+  "unique_inputs": 1000,
+  "changed_pairs": 1000,
+  "fixture_replays": 0,
+  "shapes": [
+    [
+      13,
+      17,
+      13,
+      17
+    ],
+    [
+      13,
+      19,
+      13,
+      19
+    ],
+    [
+      13,
+      21,
+      13,
+      21
+    ],
+    [
+      13,
+      27,
+      13,
+      27
+    ],
+    [
+      13,
+      29,
+      13,
+      29
+    ],
+    [
+      15,
+      13,
+      15,
+      13
+    ],
+    [
+      15,
+      15,
+      15,
+      15
+    ],
+    [
+      15,
+      17,
+      15,
+      17
+    ],
+    [
+      15,
+      19,
+      15,
+      19
+    ],
+    [
+      15,
+      21,
+      15,
+      21
+    ],
+    [
+      15,
+      23,
+      15,
+      23
+    ],
+    [
+      15,
+      25,
+      15,
+      25
+    ],
+    [
+      15,
+      27,
+      15,
+      27
+    ],
+    [
+      15,
+      29,
+      15,
+      29
+    ],
+    [
+      17,
+      15,
+      17,
+      15
+    ],
+    [
+      17,
+      17,
+      17,
+      17
+    ],
+    [
+      17,
+      19,
+      17,
+      19
+    ],
+    [
+      17,
+      21,
+      17,
+      21
+    ],
+    [
+      17,
+      23,
+      17,
+      23
+    ],
+    [
+      17,
+      25,
+      17,
+      25
+    ],
+    [
+      17,
+      27,
+      17,
+      27
+    ],
+    [
+      17,
+      29,
+      17,
+      29
+    ],
+    [
+      19,
+      13,
+      19,
+      13
+    ],
+    [
+      19,
+      15,
+      19,
+      15
+    ],
+    [
+      19,
+      17,
+      19,
+      17
+    ],
+    [
+      19,
+      19,
+      19,
+      19
+    ],
+    [
+      19,
+      21,
+      19,
+      21
+    ],
+    [
+      19,
+      23,
+      19,
+      23
+    ],
+    [
+      19,
+      25,
+      19,
+      25
+    ],
+    [
+      19,
+      27,
+      19,
+      27
+    ],
+    [
+      19,
+      29,
+      19,
+      29
+    ],
+    [
+      21,
+      13,
+      21,
+      13
+    ],
+    [
+      21,
+      15,
+      21,
+      15
+    ],
+    [
+      21,
+      17,
+      21,
+      17
+    ],
+    [
+      21,
+      19,
+      21,
+      19
+    ],
+    [
+      21,
+      21,
+      21,
+      21
+    ],
+    [
+      21,
+      23,
+      21,
+      23
+    ],
+    [
+      21,
+      25,
+      21,
+      25
+    ],
+    [
+      21,
+      27,
+      21,
+      27
+    ],
+    [
+      21,
+      29,
+      21,
+      29
+    ],
+    [
+      23,
+      13,
+      23,
+      13
+    ],
+    [
+      23,
+      15,
+      23,
+      15
+    ],
+    [
+      23,
+      17,
+      23,
+      17
+    ],
+    [
+      23,
+      19,
+      23,
+      19
+    ],
+    [
+      23,
+      21,
+      23,
+      21
+    ],
+    [
+      23,
+      23,
+      23,
+      23
+    ],
+    [
+      23,
+      25,
+      23,
+      25
+    ],
+    [
+      23,
+      27,
+      23,
+      27
+    ],
+    [
+      23,
+      29,
+      23,
+      29
+    ],
+    [
+      25,
+      13,
+      25,
+      13
+    ],
+    [
+      25,
+      15,
+      25,
+      15
+    ],
+    [
+      25,
+      17,
+      25,
+      17
+    ],
+    [
+      25,
+      19,
+      25,
+      19
+    ],
+    [
+      25,
+      21,
+      25,
+      21
+    ],
+    [
+      25,
+      23,
+      25,
+      23
+    ],
+    [
+      25,
+      25,
+      25,
+      25
+    ],
+    [
+      25,
+      27,
+      25,
+      27
+    ],
+    [
+      25,
+      29,
+      25,
+      29
+    ],
+    [
+      27,
+      13,
+      27,
+      13
+    ],
+    [
+      27,
+      15,
+      27,
+      15
+    ],
+    [
+      27,
+      17,
+      27,
+      17
+    ],
+    [
+      27,
+      19,
+      27,
+      19
+    ],
+    [
+      27,
+      21,
+      27,
+      21
+    ],
+    [
+      27,
+      23,
+      27,
+      23
+    ],
+    [
+      27,
+      25,
+      27,
+      25
+    ],
+    [
+      27,
+      27,
+      27,
+      27
+    ],
+    [
+      27,
+      29,
+      27,
+      29
+    ],
+    [
+      29,
+      13,
+      29,
+      13
+    ],
+    [
+      29,
+      15,
+      29,
+      15
+    ],
+    [
+      29,
+      17,
+      29,
+      17
+    ],
+    [
+      29,
+      19,
+      29,
+      19
+    ],
+    [
+      29,
+      21,
+      29,
+      21
+    ],
+    [
+      29,
+      23,
+      29,
+      23
+    ],
+    [
+      29,
+      25,
+      29,
+      25
+    ],
+    [
+      29,
+      27,
+      29,
+      27
+    ],
+    [
+      29,
+      29,
+      29,
+      29
+    ]
+  ],
+  "fixture_matches": {
+    "canonical": true,
+    "teaching_fixture": true
+  },
+  "original_solver_replay": {
+    "canonical": {
+      "correct": 4,
+      "total": 4,
+      "all_exact": true
+    },
+    "teaching_fixture": {
+      "correct": 4,
+      "total": 4,
+      "all_exact": true
+    }
+  },
+  "errors": [],
+  "sha256": "d4492f8cd1c60bf87b2f992b87412836acea84409a373886e93c9b2e91d0444e",
+  "status": "reviewed_bounded_validation_passed",
+  "limitations": "Bounded randomized agreement with a saved solver is not proof of semantic completeness.",
+  "candidate_path": "/Users/ritwika/projects/arc-agi2/outputs/research/arcgen-coverage-cli/host-reviewed/db615bd4/task_db615bd4.py",
+  "attempts": 1,
+  "model_usage": {
+    "claude-opus-5-5": {
+      "inputTokens": 2,
+      "outputTokens": 19318,
+      "cacheReadInputTokens": 1892,
+      "cacheCreationInputTokens": 49637,
+      "webSearchRequests": 0,
+      "costUSD": 0.7838423999999999,
+      "contextWindow": 1000000,
+      "maxOutputTokens": 128000,
+      "thinkingTokens": 5164,
+      "canonicalModel": "claude-opus-5-5",
+      "provider": "firstParty",
+      "costBasis": "list"
+    }
+  },
+  "rule": "A lattice of dots sits at every (odd, odd) cell on a background. Some lattice dots in a frame colour outline a rectangle. Loose pieces are full point-grids on (even, even) cells outside the frame. In the output the frame becomes solid lines, its interior is cleared, and each piece is removed. Each piece's filled bounding box is then packed inside the frame: in a row if the interior is wider than tall, otherwise in a column. Blocks keep the pieces' input order along that axis, with one background cell between neighbours. The group is centred on the packing axis and each block is centred on the cross axis.",
+  "scope": "Odd grid sides from 11 to 29. Random mode samples 13..29; the fixtures are 25x25, so other sizes are synthetic extensions. Both packing orientations are supported. Pieces number 1..7 (default 2..4), with 1..3 points along the packing axis. Cross thickness is 2 or 3 points, which is attested; 1 point is a low-weight synthetic option, and mixed thicknesses are opt-in synthetic. The packing margin defaults to 1 (attested); 2..4 is opt-in synthetic. The cross margin is 1..3 (attested), with 4 opt-in. Layouts: the attested layout is a band on the high cross side; low-side bands, mixed-side bands and 'beyond' layouts are labelled synthetic extensions. A layout control can restrict sampling to any of these. Deliberately not supported: square interiors (orientation ambiguous), non-rectangular or sparse pieces, pieces overlapping each other along the packing axis, pieces on odd cells, and blocks that would not fit with a margin of at least 1.",
+  "constraints": [
+    "Reviewed analytical packing feasibility and configuration fallback; internal invariant failures remain errors",
+    "Input packing-axis order, distinct piece colours, nonsquare interior, centred packing and colour dominance preserved; alternate layouts and mixed thickness remain labelled extensions",
+    "1000 independent seeds 20000..20999 pass; native uniqueness count 1000",
+    "100 additional seeds 61000..61099 pass; all change output; 25 successful parameter controls and 11 expected invalid rejections",
+    "Original canonical fixture replay exact; no query-specific output lookup used"
+  ],
+  "known_limitations": [
+    "The fixtures are all 25x25 with every piece in a high-side band; other sizes and layouts are synthetic extensions.",
+    "Mixed cross thickness and pack_margin > 1 are not attested; their centring behaviour is inferred from the reference rule.",
+    "Explicit mode permits pieces touching the grid border (the reference handles this), while random mode never generates it.",
+    "Tight fixed controls (e.g. 11x11 grids) rely on bounded rejection; a ValueError is possible if 200 layout attempts all fail the colour-dominance check, though analysis suggests the margin is adequate.",
+    "The order distractor is best-effort: up to 8 resamples, falling back to agreeing order when the cross ranges are too narrow.",
+    "Bounded solver agreement and control checks do not prove complete coverage of every interpretation of the task."
+  ],
+  "billing": "Claude Max CLI; API credentials excluded; no API fallback",
+  "review_candidate_sha256": "d4492f8cd1c60bf87b2f992b87412836acea84409a373886e93c9b2e91d0444e",
+  "authored_sha256": "d4492f8cd1c60bf87b2f992b87412836acea84409a373886e93c9b2e91d0444e",
+  "stress_test": {
+    "task_id": "db615bd4",
+    "ready": true,
+    "samples_requested": 1000,
+    "samples_attempted": 1000,
+    "samples_passed": 1000,
+    "verifier_mode": "archived_pair_solver",
+    "verifier_evidence": {
+      "mode": "archived_pair_solver"
+    },
+    "improved_verifier_fixture_replay": null,
+    "seed_start": 20000,
+    "seed_end_exclusive": 21000,
+    "fixture_basis": {
+      "fixture": "canonical",
+      "corrected": false
+    },
+    "unique_inputs": 1000,
+    "changed_pairs": 1000,
+    "fixture_replays": 0,
+    "shapes": [
+      [
+        13,
+        17,
+        13,
+        17
+      ],
+      [
+        13,
+        19,
+        13,
+        19
+      ],
+      [
+        13,
+        21,
+        13,
+        21
+      ],
+      [
+        13,
+        27,
+        13,
+        27
+      ],
+      [
+        13,
+        29,
+        13,
+        29
+      ],
+      [
+        15,
+        13,
+        15,
+        13
+      ],
+      [
+        15,
+        15,
+        15,
+        15
+      ],
+      [
+        15,
+        17,
+        15,
+        17
+      ],
+      [
+        15,
+        19,
+        15,
+        19
+      ],
+      [
+        15,
+        21,
+        15,
+        21
+      ],
+      [
+        15,
+        23,
+        15,
+        23
+      ],
+      [
+        15,
+        25,
+        15,
+        25
+      ],
+      [
+        15,
+        27,
+        15,
+        27
+      ],
+      [
+        15,
+        29,
+        15,
+        29
+      ],
+      [
+        17,
+        15,
+        17,
+        15
+      ],
+      [
+        17,
+        17,
+        17,
+        17
+      ],
+      [
+        17,
+        19,
+        17,
+        19
+      ],
+      [
+        17,
+        21,
+        17,
+        21
+      ],
+      [
+        17,
+        23,
+        17,
+        23
+      ],
+      [
+        17,
+        25,
+        17,
+        25
+      ],
+      [
+        17,
+        27,
+        17,
+        27
+      ],
+      [
+        17,
+        29,
+        17,
+        29
+      ],
+      [
+        19,
+        13,
+        19,
+        13
+      ],
+      [
+        19,
+        15,
+        19,
+        15
+      ],
+      [
+        19,
+        17,
+        19,
+        17
+      ],
+      [
+        19,
+        19,
+        19,
+        19
+      ],
+      [
+        19,
+        21,
+        19,
+        21
+      ],
+      [
+        19,
+        23,
+        19,
+        23
+      ],
+      [
+        19,
+        25,
+        19,
+        25
+      ],
+      [
+        19,
+        27,
+        19,
+        27
+      ],
+      [
+        19,
+        29,
+        19,
+        29
+      ],
+      [
+        21,
+        13,
+        21,
+        13
+      ],
+      [
+        21,
+        15,
+        21,
+        15
+      ],
+      [
+        21,
+        17,
+        21,
+        17
+      ],
+      [
+        21,
+        19,
+        21,
+        19
+      ],
+      [
+        21,
+        21,
+        21,
+        21
+      ],
+      [
+        21,
+        23,
+        21,
+        23
+      ],
+      [
+        21,
+        25,
+        21,
+        25
+      ],
+      [
+        21,
+        27,
+        21,
+        27
+      ],
+      [
+        21,
+        29,
+        21,
+        29
+      ],
+      [
+        23,
+        13,
+        23,
+        13
+      ],
+      [
+        23,
+        15,
+        23,
+        15
+      ],
+      [
+        23,
+        17,
+        23,
+        17
+      ],
+      [
+        23,
+        19,
+        23,
+        19
+      ],
+      [
+        23,
+        21,
+        23,
+        21
+      ],
+      [
+        23,
+        23,
+        23,
+        23
+      ],
+      [
+        23,
+        25,
+        23,
+        25
+      ],
+      [
+        23,
+        27,
+        23,
+        27
+      ],
+      [
+        23,
+        29,
+        23,
+        29
+      ],
+      [
+        25,
+        13,
+        25,
+        13
+      ],
+      [
+        25,
+        15,
+        25,
+        15
+      ],
+      [
+        25,
+        17,
+        25,
+        17
+      ],
+      [
+        25,
+        19,
+        25,
+        19
+      ],
+      [
+        25,
+        21,
+        25,
+        21
+      ],
+      [
+        25,
+        23,
+        25,
+        23
+      ],
+      [
+        25,
+        25,
+        25,
+        25
+      ],
+      [
+        25,
+        27,
+        25,
+        27
+      ],
+      [
+        25,
+        29,
+        25,
+        29
+      ],
+      [
+        27,
+        13,
+        27,
+        13
+      ],
+      [
+        27,
+        15,
+        27,
+        15
+      ],
+      [
+        27,
+        17,
+        27,
+        17
+      ],
+      [
+        27,
+        19,
+        27,
+        19
+      ],
+      [
+        27,
+        21,
+        27,
+        21
+      ],
+      [
+        27,
+        23,
+        27,
+        23
+      ],
+      [
+        27,
+        25,
+        27,
+        25
+      ],
+      [
+        27,
+        27,
+        27,
+        27
+      ],
+      [
+        27,
+        29,
+        27,
+        29
+      ],
+      [
+        29,
+        13,
+        29,
+        13
+      ],
+      [
+        29,
+        15,
+        29,
+        15
+      ],
+      [
+        29,
+        17,
+        29,
+        17
+      ],
+      [
+        29,
+        19,
+        29,
+        19
+      ],
+      [
+        29,
+        21,
+        29,
+        21
+      ],
+      [
+        29,
+        23,
+        29,
+        23
+      ],
+      [
+        29,
+        25,
+        29,
+        25
+      ],
+      [
+        29,
+        27,
+        29,
+        27
+      ],
+      [
+        29,
+        29,
+        29,
+        29
+      ]
+    ],
+    "fixture_matches": {
+      "canonical": true,
+      "teaching_fixture": true
+    },
+    "original_solver_replay": {
+      "canonical": {
+        "correct": 4,
+        "total": 4,
+        "all_exact": true
+      },
+      "teaching_fixture": {
+        "correct": 4,
+        "total": 4,
+        "all_exact": true
+      }
+    },
+    "errors": [],
+    "sha256": "d4492f8cd1c60bf87b2f992b87412836acea84409a373886e93c9b2e91d0444e",
+    "status": "validated_candidate_needs_semantic_review",
+    "limitations": "Bounded randomized agreement with a saved solver is not proof of semantic completeness.",
+    "review_candidate_sha256": "d4492f8cd1c60bf87b2f992b87412836acea84409a373886e93c9b2e91d0444e"
+  },
+  "authored_scope": "Odd grid sides from 11 to 29. Random mode samples 13..29; the fixtures are 25x25, so other sizes are synthetic extensions. Both packing orientations are supported. Pieces number 1..7 (default 2..4), with 1..3 points along the packing axis. Cross thickness is 2 or 3 points, which is attested; 1 point is a low-weight synthetic option, and mixed thicknesses are opt-in synthetic. The packing margin defaults to 1 (attested); 2..4 is opt-in synthetic. The cross margin is 1..3 (attested), with 4 opt-in. Layouts: the attested layout is a band on the high cross side; low-side bands, mixed-side bands and 'beyond' layouts are labelled synthetic extensions. A layout control can restrict sampling to any of these. Deliberately not supported: square interiors (orientation ambiguous), non-rectangular or sparse pieces, pieces overlapping each other along the packing axis, pieces on odd cells, and blocks that would not fit with a margin of at least 1.",
+  "authored_constraints": [
+    "Grid sides are odd, so the lattice is symmetric and the frame corners land on odd coordinates.",
+    "Frame interior extents are odd and never square; ic < ia fixes the orientation.",
+    "Piece intervals along the packing axis are pairwise disjoint, so the packing order is unambiguous.",
+    "Pieces never touch the frame (including diagonally) and, in random mode, never touch the grid border.",
+    "Background colour is strictly the most common; the dot colour is strictly the most common of the rest; all colours are distinct.",
+    "Pieces occupy only even-even cells, so the frame colour is the unique non-dot colour on odd-odd cells.",
+    "Centring is exact: the along slack is 2*pack_margin, and the cross slack ic-bc is even."
+  ],
+  "semantic_review": {
+    "status": "reviewed",
+    "checks": [
+      "Reviewed analytical packing feasibility and configuration fallback; internal invariant failures remain errors",
+      "Input packing-axis order, distinct piece colours, nonsquare interior, centred packing and colour dominance preserved; alternate layouts and mixed thickness remain labelled extensions",
+      "1000 independent seeds 20000..20999 pass; native uniqueness count 1000",
+      "100 additional seeds 61000..61099 pass; all change output; 25 successful parameter controls and 11 expected invalid rejections",
+      "Original canonical fixture replay exact; no query-specific output lookup used",
+      "1000 independent seeds 20000..20999; approved validation fixtures reconstructed exactly; canonical replay reported separately"
+    ],
+    "limitations": [
+      "The fixtures are all 25x25 with every piece in a high-side band; other sizes and layouts are synthetic extensions.",
+      "Mixed cross thickness and pack_margin > 1 are not attested; their centring behaviour is inferred from the reference rule.",
+      "Explicit mode permits pieces touching the grid border (the reference handles this), while random mode never generates it.",
+      "Tight fixed controls (e.g. 11x11 grids) rely on bounded rejection; a ValueError is possible if 200 layout attempts all fail the colour-dominance check, though analysis suggests the margin is adequate.",
+      "The order distractor is best-effort: up to 8 resamples, falling back to agreeing order when the cross ranges are too narrow.",
+      "Bounded solver agreement and control checks do not prove complete coverage of every interpretation of the task."
+    ]
+  },
+  "diversity_audit": {
+    "task_id": "db615bd4",
+    "source_sha256": "d4492f8cd1c60bf87b2f992b87412836acea84409a373886e93c9b2e91d0444e",
+    "fresh_seed_start": 61000,
+    "fresh_cases": 100,
+    "changed_cases": 100,
+    "shapes": {
+      "25x21->25x21": 2,
+      "29x23->29x23": 4,
+      "27x21->27x21": 5,
+      "25x15->25x15": 3,
+      "23x13->23x13": 1,
+      "23x23->23x23": 3,
+      "17x27->17x27": 4,
+      "29x29->29x29": 2,
+      "27x27->27x27": 4,
+      "27x13->27x13": 1,
+      "29x17->29x17": 1,
+      "23x21->23x21": 1,
+      "27x29->27x29": 5,
+      "17x21->17x21": 2,
+      "19x19->19x19": 1,
+      "17x17->17x17": 1,
+      "27x25->27x25": 2,
+      "25x17->25x17": 3,
+      "21x29->21x29": 2,
+      "21x23->21x23": 3,
+      "15x19->15x19": 1,
+      "17x29->17x29": 1,
+      "23x15->23x15": 1,
+      "21x25->21x25": 1,
+      "25x29->25x29": 5,
+      "19x27->19x27": 1,
+      "23x19->23x19": 2,
+      "27x23->27x23": 3,
+      "19x21->19x21": 1,
+      "23x17->23x17": 3,
+      "15x15->15x15": 1,
+      "29x25->29x25": 1,
+      "15x27->15x27": 1,
+      "25x19->25x19": 3,
+      "23x25->23x25": 3,
+      "15x17->15x17": 1,
+      "25x23->25x23": 3,
+      "29x27->29x27": 2,
+      "29x15->29x15": 2,
+      "17x15->17x15": 1,
+      "21x21->21x21": 1,
+      "23x27->23x27": 1,
+      "15x23->15x23": 2,
+      "19x29->19x29": 1,
+      "21x15->21x15": 1,
+      "15x25->15x25": 1,
+      "17x23->17x23": 1,
+      "23x29->23x29": 1,
+      "21x27->21x27": 1,
+      "17x25->17x25": 1,
+      "25x25->25x25": 1,
+      "29x21->29x21": 1
+    },
+    "additional_oracle": "archived independent solver",
+    "parameter_counts": {
+      "success": 25,
+      "rejected": 11
+    },
+    "independent_stress_cases": 1000,
+    "unique_stress_inputs": 1000
+  }
+}

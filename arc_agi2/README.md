@@ -2,7 +2,7 @@
 >
 > Target after coverage: **1,120 × 1,000 = 1,120,000 fresh episodes**, then all eight D4 transforms, **up to 8,960,000 episodes** before symmetry deduplication and adaptive family shortfalls. The builder now emits every D4 variant, deduplicates symmetric episodes, and reports fresh and augmented counts separately. Its full-coverage and reviewed-standalone guards still block bulk use.
 >
-> Next model-training stage, as clarified by the user: **full-parameter SFT on query output grids on the user’s 8 × H200 GPUs**, using demonstration/query inputs, without hints or reasoning targets. Mastery-based family sampling is a proposed SFT curriculum and must be evaluated using free-generated exact grids.
+> Next model-training stage, as clarified by the user: **full-parameter SFT with separate program and grid output modes on the user’s 8 × H200 GPUs**, followed by a proposed execution-verified RL stage. The user revised the earlier grid-only plan on 2026-10-20. Mastery-based family sampling is a proposed SFT curriculum and must be evaluated using free-generated exact grids.
 >
 > Colours are sampled by native generators. Extra episode-wide colour permutation is opt-in, not mandatory. Rotations/reflections always transform all demonstration and query grids consistently. Native solver validation occurs before augmentation: the augmented rule is `T f T^-1`, not necessarily the original direction-specific rule.
 
@@ -14,11 +14,11 @@ This fork adds a reference-guided generator workflow and an adaptive episode bui
 
 - All **1,120** canonical tasks inventoried with saved Opus/Fable explanations, `transform(grid)` programs, provenance and separately labelled teaching fixtures.
 - **891 existing upstream generators** reproduce the canonical pair sets (pair ordering can differ between releases).
-- **201 new constructive implementations** have passed bounded validation, covering counting, selection, geometry, legends, relational motion, scaling, pattern construction and repair. Standalone conversion and review are tracked separately below.
+- **212 new constructive implementations** have passed bounded validation, covering counting, selection, geometry, legends, relational motion, scaling, pattern construction and repair. Standalone conversion and review are tracked separately below.
 - **Two variable-size extensions**: `0692e18c` (inverse self-tiling) and `00576224` (three-by-three tiling with mirrored middle band).
-- All 203 constructors (201 new families plus two size extensions) passed **300 bounded randomized checks each**: 200 use the archived pair solver, `78332cb0` uses the documented complete-chain verifier, `de493100` uses the dimension-aware reflection verifier, and `269e22fb` uses a demonstration-conditioned episode verifier. Of these, 202 reproduce all original examples; `581f7754` uses the explicitly approved, hash-pinned eight-cell teaching correction. Its unchanged canonical replay is reported separately as 4/5, versus 5/5 on the teaching copy. Outputs are constructed independently from latent parameters. New pictures in `269e22fb` are compared with an independent contextual verifier; its original fixtures still match the archived fixed-picture transform.
+- All 214 constructors (212 new families plus two size extensions) passed **300 bounded randomized checks each**: 211 use the archived pair solver, `78332cb0` uses the documented complete-chain verifier, `de493100` uses the dimension-aware reflection verifier, and `269e22fb` uses a demonstration-conditioned episode verifier. Of these, 213 reproduce all original examples; `581f7754` uses the explicitly approved, hash-pinned eight-cell teaching correction. Its unchanged canonical replay is reported separately as 4/5, versus 5/5 on the teaching copy. Outputs are constructed independently from latent parameters. New pictures in `269e22fb` are compared with an independent contextual verifier; its original fixtures still match the archived fixed-picture transform.
 - **22 additional fixed-size families / 111 size-parameter configurations** passed bounded 12-seed differential tests. Every such generated pair is checked again during generation. This is agreement evidence, not proof of semantic correctness.
-- **28 tasks still need constructive generators**. A saved transform is not itself an input generator. Reference packets and `reports/generator-roadmap.csv` provide the task-by-task backlog.
+- **17 tasks still need constructive generators**. A saved transform is not itself an input generator. Reference packets and `reports/generator-roadmap.csv` provide the task-by-task backlog.
 
 ## Inspect
 
@@ -58,7 +58,7 @@ Research extensions currently cover restricted constructive subfamilies. They do
 
 ## Current model training plan
 
-Use the user's eight H200 GPUs for full-parameter grid-only SFT. The main candidate is a pretrained 4B Qwen; compare a larger checkpoint before committing the full training budget. No model is launched by this repository. Tinker and rank-128 LoRA were earlier proposals and are superseded for this run. No hint, reasoning or Python-program target is included. If only a multimodal model's language component is used, report that component explicitly and verify all intended parameters receive gradients.
+Use the user's eight H200 GPUs for full-parameter SFT with separate program and grid output modes. The main candidate is a pretrained 4B Qwen; compare a larger checkpoint before committing the full training budget. No model is launched by this repository. Tinker and rank-128 LoRA were earlier proposals and are superseded for this run. No hint or prose reasoning target is required. Program targets must be validated against fresh generated pairs and conjugated consistently with episode augmentations. The proposed later RLVR reward comes from exact execution checks, not an LLM judge. If only a multimodal model's language component is used, report that component explicitly and verify all intended parameters receive gradients.
 
 ## Provenance and licensing
 
@@ -74,7 +74,7 @@ The authoring campaign uses eight concurrent Claude CLI processes under the user
 
 A zero-error differential check is a bounded agreement test. It does not prove the saved solver is universally correct or that every original mechanism variant is covered.
 
-**195 standalone modules are now reviewed and registered** (the exact list lives in `task_registry.py`). Each passed 1,000 seed checks and exact reconstruction of its approved validation fixture: canonical for 194 modules, the labelled teaching copy for `581f7754`. The first sixteen used seeds 0..999 (including their 300 author-validation seeds); the next one hundred and seventy-nine used independent seeds 20,000..20,999. The regression suite also checks registered source hashes and seeds 10,000..10,019.
+**206 standalone modules are now reviewed and registered** (the exact list lives in `task_registry.py`). Each passed 1,000 seed checks and exact reconstruction of its approved validation fixture: canonical for 205 modules, the labelled teaching copy for `581f7754`. The first sixteen used seeds 0..999 (including their 300 author-validation seeds); the next one hundred and ninety used independent seeds 20,000..20,999. The regression suite also checks registered source hashes and seeds 10,000..10,019.
 
 Twenty-four conversions replace earlier research constructors with the upstream task-file interface. The total is now 188 new constructive families, with 6 still awaiting standalone conversion/review. Remaining CLI drafts are authored and validated locally. Restricted shape and dimension ranges are documented per file and in `reports/standalone/`; the size-matching builder must respect those ranges.
 

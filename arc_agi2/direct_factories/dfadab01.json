@@ -1,0 +1,23 @@
+{
+  "task_id": "dfadab01",
+  "factory_sha256": "2fd483f65b1be2c2897e0f8d2d0a32d98053f4e671f94d83e8e4412ed345761e",
+  "constructor_sha256": "906d54f78baa41a4019d21d8a1d544868323133d82efaca00e5682d35038711e",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 170160933486257,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 17.155084916972555,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The factory applies the D4 transform directly to each 4x4 motif: it reverses the rows first when d4>=4, then rotates clockwise d4%4 times. It recolours each motif using palette constants: the marker colours palette[2,3,5,8] map to the motif colours palette[4,1,6,7]. It tracks where the canonical top-left anchor cell (0,0) of a motif lands, which gives the visible corner of the stamp box that the marker occupies. It also tracks where the canonical bottom-right cell (3,3) lands, which gives the visible diagonal direction (KDY, KDX) at which a legend's key marker sits.\n\nThe emitted program works in visible coordinates:\n1. It uses background palette[0].\n2. It finds same-colour 8-connected components.\n3. Each multi-cell component is a legend. Its cells are ignored, and so is the non-background cell just diagonally past the corresponding visible bbox corner (the key).\n4. Starting from a blank background canvas, every remaining single-pixel marker of a known colour gets its transformed motif, positioned so the marker sits at the anchor corner and clipped on all sides.\n\nThe pair-2 ring-corner 3 has a different colour from the ring's palette[1] colour, so it stays a separate single-pixel component. It is stamped normally, which reproduces the ring.",
+    "limitations": "Assumes the palette is a bijection, so motif colours, marker colours and the background stay distinct. Uses palette[0] as the background rather than inferring it, which is consistent with the constructor's majority-0 guarantee. Demonstrations are not consulted: the motif table and orientation come from the constants for d4 and palette. Untested by me. No fixture contradictions or constructor defects were found; the fixtures match the uniform stamp-and-erase-legend rule.",
+    "host_review": "Keep native constructor and original direct factory; reject CLI fallback-table change as unnecessary. New independent evidence checker learns actual coloured/blank motif cells from demo outputs and visible demo/query legends, without fixed motif table or query answers. Compare all four anchor corners; reject conflicting evidence, unexplained paint, unknown query-visible cells, or disagreeing predictions. Allow clipped queries when their visible subset is established, including blank-only clipped ring corners. Preserve ring-corner ordinary marker, legends, irregular layouts and native sizes.",
+    "semantic_draft_review": "Opus5.5 subscription CLI reviewed; no constructor narrowing or guessed fallback required."
+  }
+}

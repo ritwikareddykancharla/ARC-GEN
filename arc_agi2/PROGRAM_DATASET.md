@@ -1012,3 +1012,29 @@ three lacking evidence, verifying 456 augmented records with no execution errors
 or sampler rejections. All 481 regression tests passed. Remaining: 59 semantic/
 context holds, 9 execution failures and 3 missing factories. Bulk generation and
 training have not launched.
+
+## 1051-family checkpoint
+
+- `dfadab01`: learn actual coloured and blank motif cells from demonstrated
+  outputs and visible legends, without consulting the fixed motif lookup table
+  or query answers. Evaluate all four anchor corners; remove hypotheses with
+  conflicting observations, unexplained output paint, or incompatible legend
+  keys. Every surviving hypothesis must know all query-visible cells and predict
+  the same query output. A clipped query can pass with only partial motif
+  evidence, even when all exposed cells are blank. Full queries cannot borrow
+  unseen pattern cells or output colours from the factory constants. Retain
+  visible query legends, the ring-corner ordinary marker and irregular layouts.
+- `e3721c99`: require demonstrated erasure when a query has a grey blob whose
+  hole count matches no interior key. Identify border-touching dividers
+  structurally, including L dividers. Preserve zero-distractor scenes and queries
+  that need no erasure; no changes to object counts or size feasibility.
+
+Original constructors and direct factories are unchanged. Their current hashes
+match certificates containing 1,000 fresh pairs, 8,000 D4 pair checks and 16
+fixture variants per family. New complete-episode auditing accepted 38 of 40
+bases and excluded two missing-evidence cases, verifying all 304 augmented
+records with no sampler rejections or execution errors. Remaining: 57 semantic/
+context holds, 9 execution failures and 3 missing factories. Bulk generation
+and model training have not launched.
+
+All 489 regression tests passed for this checkpoint.

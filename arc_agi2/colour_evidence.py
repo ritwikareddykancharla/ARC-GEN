@@ -63,6 +63,11 @@ def _hole_count(cells):
 
 
 def require_colour_evidence(task_id, demonstrations, queries, palette=None, d4=0):
+    if task_id == 'dfadab01':
+        from .motif_evidence import require_motif_evidence
+        require_motif_evidence(demonstrations, queries,
+                               list(range(10)) if palette is None else palette)
+        return
     if task_id in ('ac605cbb', 'dc2e9a9d', 'db93a21d'):
         from .spatial_evidence import require_spatial_evidence
         require_spatial_evidence(task_id, demonstrations, queries,
@@ -85,13 +90,27 @@ def require_colour_evidence(task_id, demonstrations, queries, palette=None, d4=0
                        'fea12743', 'ff28f65a', 'eee78d87', 'f28a3cbb', 'f8be4b64',
                        '37d3e8b2', 'ba9d41b8', 'd2abd087', 'e39e9282',
                        'b0c4d837', 'e133d23d', 'b27ca6d3', 'd94c3b52',
-                       'ae3edfdc', 'e509e548', 'e5790162'):
+                       'ae3edfdc', 'e509e548', 'e5790162', 'e3721c99'):
         return
     palette = list(range(10)) if palette is None else palette
     bg = palette[0]
     colours = lambda g: {c for row in g for c in row} - {bg}
     required, seen = set(), set()
-    if task_id == 'ae3edfdc':
+    if task_id == 'e3721c99':
+        def unmatched(g):
+            key_holes = set()
+            for ink in {v for row in g for v in row} - {bg, palette[5]}:
+                for cells in _colour_components(g, ink):
+                    if any(r in (0, len(g)-1) or c in (0, len(g[0])-1) for r, c in cells):
+                        continue  # border-touching divider, including L layouts
+                    key_holes.add(_hole_count(cells))
+            return [cells for cells in _colour_components(g, palette[5])
+                    if _hole_count(cells) not in key_holes]
+        if any(unmatched(q['input']) for q in queries): required.add('unmatched-blob-erasure')
+        if any(any(all(d['output'][r][c] == bg for r, c in cells)
+                   for cells in unmatched(d['input'])) for d in demonstrations):
+            seen.add('unmatched-blob-erasure')
+    elif task_id == 'ae3edfdc':
         for satellite, centre in ((palette[7], palette[1]), (palette[3], palette[2])):
             if any(satellite in row for q in queries for row in q['input']):
                 required.add(satellite)

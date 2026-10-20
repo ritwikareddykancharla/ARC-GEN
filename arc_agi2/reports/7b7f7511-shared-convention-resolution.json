@@ -1,0 +1,35 @@
+{
+  "task_id": "7b7f7511",
+  "status": "resolved_shared_episode_convention",
+  "native_constructor_changed": false,
+  "benchmark_labels_changed": false,
+  "rule": "Both2x4and4x2answers are retained for doubly repeating4x4inputs. An episode chooses its tie convention before query sampling; demos and query use it consistently. Every pair has replayable native explicit parameters.",
+  "curriculum": "Every tenth pool sampling attempt forces an ambiguous query; other attempts sample native dimensions and colours. The same shared convention resolves any incidental ambiguous pairs. This intentionally changes episode correlations and critical-case frequency, while preserving native input/label support.",
+  "test_scope": "Six tests, including all256two-by-two patterns over4colours withbothnative labels andallD4, opposite informative demonstrations forsamequery, weak/conflictingcontext rejection,100episodes replay/split checks, canonical fixtures andnon-square repeatedtiles.",
+  "split": "Canonical-input-based deterministic split. Four different equivalence classes per episode. Demos selected by query input ambiguity and split only, never the query answer.",
+  "execution_audit": {
+    "task_id": "7b7f7511",
+    "factory_sha256": "c23f41971ef79b9c87d4c2a9bdce5f8e15f2141764ace1f2d41e63a335e92181",
+    "constructor_sha256": "ccccd2c1dddd14c1e7a456c4eecc4b1e4f31875a8a0bcac65959ddfb21186dd1",
+    "passed": true,
+    "fresh_pairs_checked": 1000,
+    "augmented_pair_checks": 8000,
+    "fixture_variants_checked": 16,
+    "sampler_rejections": [],
+    "native_replays": 1000,
+    "audit_scope": "250shared-convention episodes.10percent forced ambiguous queries,remaining native-distribution queries. Convention selected before query. Every pair replayed through unchanged native explicit constructor; all4pairs verified under8D4. No query answer selects context or program.",
+    "unique_base_inputs": 998,
+    "episode_axes": {
+      "1": 135,
+      "0": 115
+    },
+    "query_types": {
+      "ambiguous": 25,
+      "unambiguous": 225
+    },
+    "seconds": 0.6254440000047907
+  },
+  "full_quota_report": "query-preserving-assembly-1070-7b7f7511.json",
+  "historical_collision_report": "7b7f7511-latent-collision.json",
+  "scope_note": "The historical report correctly diagnoses independent per-pair latents. New assembly removes that inconsistency at episode construction; it does not claim independent hidden choices are inferable."
+}

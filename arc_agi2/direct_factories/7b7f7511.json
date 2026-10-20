@@ -1,0 +1,38 @@
+{
+  "task_id": "7b7f7511",
+  "factory_sha256": "c23f41971ef79b9c87d4c2a9bdce5f8e15f2141764ace1f2d41e63a335e92181",
+  "constructor_sha256": "ccccd2c1dddd14c1e7a456c4eecc4b1e4f31875a8a0bcac65959ddfb21186dd1",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "native_replays": 1000,
+  "audit_scope": "250shared-convention episodes.10percent forced ambiguous queries,remaining native-distribution queries. Convention selected before query. Every pair replayed through unchanged native explicit constructor; all4pairs verified under8D4. No query answer selects context or program.",
+  "unique_base_inputs": 998,
+  "episode_axes": {
+    "1": 135,
+    "0": 115
+  },
+  "query_types": {
+    "ambiguous": 25,
+    "unambiguous": 225
+  },
+  "seconds": 0.6254440000047907,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Host-authored direct program with constructor/source review, source restrictions and execution verification.",
+  "draft_notes": {
+    "author": "host",
+    "explanation": "Inputs contain two copies of a tile with sides2..4. Enumerate matching vertical/horizontal half-tile interpretations. Usually one qualifies; both can qualify for4x4double repeats. Fit two shared tie conventions to complete demonstration pairs and require surviving query predictions to agree. No D4-derived tie constant or majority vote.",
+    "limitations": "Independent native per-pair latent axes have a true label collision; an arbitrary random group is not guaranteed to be a valid teaching episode. New episode construction chooses one tie axis before sampling query and uses it consistently. All pairs replay through unchanged native explicit generate; original fixtures unchanged.10percent of pool sample attempts deliberately exercise ambiguous queries; remaining attempts use native dimensional/colour sampling with shared tie resolution. This changes episode correlations intentionally, not native input/label support.",
+    "host_review": {
+      "status": "reviewed",
+      "constructor_unchanged": true,
+      "policy": "Episode-shared tie axis selected before query. All ambiguous pairs are constructed with that axis using native explicit parameters; criticalquery gets a distinct-input-class teaching example. Program never receives episode axis or query answer.",
+      "split": "Every pair assigned by deterministic canonical-input hash, matching existing split policy. Every4pair episode has4different canonical classes.",
+      "audit": "1000native replays,998unique inputs,8000augmented pair checks,16fixture variants passed;25ambiguous and225unambiguous queries,115row-tie and135column-tie episodes.",
+      "full_quota": "Actual pool builder produced1200unique queries;1116train. Assembler1000bases/8000verifiedrecords,105ambiguous895unambiguous queries,493rowties507colties,0failures0shortfalls,maxpairreuse2,maxqueryreuse1.4000pairs replayed through native constructor."
+    }
+  }
+}

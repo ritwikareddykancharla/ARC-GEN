@@ -1439,3 +1439,56 @@ conventions and informative demonstrations, not blanket removal of the cases.
 
 Remaining: 39 semantic/context holds, 9 execution failures and 3 missing
 factories. Expanded bulk publication and model training remain pending coverage.
+
+
+## Coverage checkpoint: 1,070 families
+
+Resolved `7b7f7511` by constructing consistent episodes, preserving both native
+answers for doubly repeating 4x4 inputs. The shared convention is chosen before
+query sampling. All ambiguous pairs in that episode use it, and an ambiguous
+query receives an informative demonstration from a different input-equivalence
+class. Every pair stores exact parameters that replay through the original
+native constructor. Original `generate()`, `validate()` and benchmark labels
+remain unchanged. No query answer is used to choose the convention or context.
+
+The direct program enumerates valid repeated tiles with sides 2–4. It fits both
+tie conventions to all demonstrations and rejects the query if their predictions
+still differ. There is no fixed D4-derived tie direction or demonstration-majority
+fallback. Unambiguous square inputs and doubly repeating non-square inputs stay
+supported. Existing independently sampled ambiguous episodes without sufficient
+context remain invalid; the historical collision report is still correct.
+
+The production pool builder stores complete context bundles for this family.
+Every tenth sampling attempt explicitly exercises the rare ambiguous query;
+the remainder uses the native dimensions and colour distribution with the shared
+tie convention. This intentionally changes episode correlations and critical-case
+frequency, not native input/label support. Canonical-input split isolation and
+four distinct input-equivalence classes per episode remain enforced. There are
+no approved size-override configurations being displaced for this family.
+
+Validation:
+
+- 250 contextual episodes: 1,000 native pair replays, 998 distinct inputs,
+  8,000 augmented pair checks and 16 unchanged fixture variants; 25 ambiguous
+  and 225 unambiguous queries. Both conventions represented.
+- Six targeted tests include all 256 two-by-two patterns over four colours,
+  both native labels and all D4 orientations; opposite informative demonstrations
+  for the same query; weak/conflicting context rejection; split isolation and
+  native replay; original fixtures and non-square repetition.
+- Independent record audit: 20/20 contexts, including 10 forced ambiguous queries,
+  160 verified augmented records. Poisoned query answers do not affect admission.
+- Actual production pool generation: 1,200 unique queries, 1,116 training and
+  84 validation context bundles. Only one duplicate-input draw rejected.
+- Actual full-quota assembler: 1,000/1,000 bases, 8,000 verified combined records,
+  105 ambiguous queries and 895 unambiguous queries, 493 row-tie episodes and
+  507 column-tie episodes. Zero failures or shortfalls; maximum pair reuse 2,
+  maximum query reuse 1. All 4,000 base pair occurrences replayed natively.
+- Full regression: 567 tests passed.
+
+Reports: `reports/7b7f7511-shared-convention-resolution.json`,
+`reports/episode-evidence-1070-audit.json`, and
+`reports/query-preserving-assembly-1070-7b7f7511.json`.
+These were temporary local audit records, not bulk dataset publication.
+
+Remaining: 38 semantic/context holds, 9 execution failures and 3 missing
+factories. Expanded dataset publication, SFT and RLVR remain outstanding.

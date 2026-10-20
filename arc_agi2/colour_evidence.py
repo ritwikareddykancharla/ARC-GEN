@@ -63,6 +63,10 @@ def _hole_count(cells):
 
 
 def require_colour_evidence(task_id, demonstrations, queries, palette=None, d4=0):
+    if task_id == '7b7f7511':
+        from .repeat_tile_context import require_repeat_evidence
+        require_repeat_evidence(demonstrations, queries)
+        return
     if task_id == 'c35c1b4c':
         from .central_mirror_evidence import require_central_mirror_evidence
         require_central_mirror_evidence(demonstrations, queries)

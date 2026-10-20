@@ -29,6 +29,8 @@ from .colour_evidence import MissingColourEvidence, require_colour_evidence
 from .program_targets import compile_target, audit_target, make_record, TargetError
 from .visual_shards import VisualShardWriter
 
+STORED_CONTEXT_TASK_IDS = CONTEXTUAL_TASK_IDS | {'7b7f7511'}
+
 LEGEND_TASK_IDS = frozenset(('27a28665', '9110e3c5', 'd4469b4b'))
 
 @lru_cache(maxsize=3)
@@ -113,7 +115,7 @@ def picture_episode(module, tid, sample_seed):
 
 def pool_signature(tid,configs):
     # Invalidate cached pools after constructor, verifier, policy or selection changes.
-    files=[Path(__file__),BASE/'runtime.py',BASE/'verified_rules.py',BASE/'joint_fragments.py',BASE/'contextual.py',BASE/'motif_context.py',BASE/'program_targets.py',BASE/'direct_programs.py',BASE/'fixture_policy.py',BASE/'helpers.py',BASE/'training_policy.json',
+    files=[Path(__file__),BASE/'runtime.py',BASE/'verified_rules.py',BASE/'joint_fragments.py',BASE/'contextual.py',BASE/'motif_context.py',BASE/'repeat_tile_context.py',BASE/'program_targets.py',BASE/'direct_programs.py',BASE/'fixture_policy.py',BASE/'helpers.py',BASE/'training_policy.json',
            BASE/'references'/f'{tid}.json',BASE.parent/'common.py',BASE/'task_registry.py']
     files+=sorted((BASE/'generators').glob('*.py'))
     native=BASE.parent/'tasks'/f'task_{tid}.py'
@@ -146,7 +148,16 @@ def make_pool(tid):
         elif configs and rng.random()<.6:kw=rng.choice(configs)['parameters'];mode='parameter_override'
         contextual=None
         try:
-            if tid in CONTEXTUAL_TASK_IDS:
+            if tid == '7b7f7511':
+                from .repeat_tile_context import generate_episode
+                # Give rare native ambiguity cases explicit curriculum coverage.
+                four,context_id=generate_episode(s,canonical_input,digest,
+                                                force_ambiguous_query=trials%10==0)
+                for pair in four:pair['stratum']=stratum(pair)
+                contextual=dict(four[-1],context_pairs=four[:3],context_id=context_id)
+                p={k:four[-1][k] for k in ['input','output']}
+                mode='episode_shared_repeat_axis'
+            elif tid in CONTEXTUAL_TASK_IDS:
                 four,context_id=picture_episode(native_module,tid,s)
                 contextual=dict(four[-1],context_pairs=four[:3],context_id=context_id)
                 p={k:four[-1][k] for k in ['input','output']}
@@ -154,12 +165,14 @@ def make_pool(tid):
             else:
                 p=call(generate,tid,s,seconds=2) if mode=='extension' else call(native,seconds=2,**kw)
                 p={k:grid(p[k]) for k in ['input','output']}
-            if tid not in CONTEXTUAL_TASK_IDS and mode!='default' and grid(call(refs,p['input'],seconds=2))!=p['output']:
+            if tid not in STORED_CONTEXT_TASK_IDS and mode!='default' and grid(call(refs,p['input'],seconds=2))!=p['output']:
                 reject['reference_disagreement']+=1;continue
         except Exception as e:reject[type(e).__name__]+=1;continue
         ih,oh=digest(p['input']),digest(p['output'])
         if ih in seen:
-            reject['duplicate_input' if seen[ih]==oh else 'conflicting_label']+=1;stale+=1
+            reason=('duplicate_input' if seen[ih]==oh else
+                    'duplicate_query_input_other_context' if tid=='7b7f7511' else 'conflicting_label')
+            reject[reason]+=1;stale+=1
             if stale>=max(200,len(rows)*3):break
             continue
         stale=0;seen[ih]=oh;c=canonical_input(p['input']);canonical.add(c)
@@ -176,9 +189,9 @@ def make_pool(tid):
        'train_strata':counts(rows,'train'),'validation_strata':counts(rows,'validation'),
        'train_canonical':len({r['canonical_input_hash'] for r in rows if r['split']=='train'}),
        'validation_canonical':len({r['canonical_input_hash'] for r in rows if r['split']=='validation'}),
-       'contextual':tid in CONTEXTUAL_TASK_IDS,
-       'train_context_episodes':sum(r['split']=='train' for r in rows) if tid in CONTEXTUAL_TASK_IDS else 0,
-       'validation_context_episodes':sum(r['split']=='validation' for r in rows) if tid in CONTEXTUAL_TASK_IDS else 0,
+       'contextual':tid in STORED_CONTEXT_TASK_IDS,
+       'train_context_episodes':sum(r['split']=='train' for r in rows) if tid in STORED_CONTEXT_TASK_IDS else 0,
+       'validation_context_episodes':sum(r['split']=='validation' for r in rows) if tid in STORED_CONTEXT_TASK_IDS else 0,
        'modes':dict(Counter(r['generator_mode'] for r in rows)),'rejections':dict(reject),'seconds':time.monotonic()-start,
        'sha256':hashlib.sha256(file.read_bytes()).hexdigest()}
     dump(report_path,report);return report
@@ -248,12 +261,15 @@ def make_episodes(arg):
                     if q is None:
                         failures['query_reuse_exhausted']+=1
                         continue
-                    context_attempts=1 if tid in CONTEXTUAL_TASK_IDS else 50
+                    context_attempts=1 if tid in STORED_CONTEXT_TASK_IDS else 50
                     for retry in range(context_attempts):
-                        if tid in CONTEXTUAL_TASK_IDS:
+                        if tid in STORED_CONTEXT_TASK_IDS:
                             demos=q['context_pairs']
                             if len(demos)!=3 or any(p['split']!=split for p in demos):
-                                raise ValueError('Invalid stored shared-picture context')
+                                raise ValueError('Invalid stored episode context')
+                            if tid == '7b7f7511' and any(pair_uses[p['input_hash']]>=32 for p in demos):
+                                failures['stored_context_reuse_exhausted']+=1
+                                break
                         else:
                             ds=[p for p in rows if p['input_hash']!=q['input_hash'] and pair_uses[p['input_hash']]<32]
                             if len(ds)<3:break

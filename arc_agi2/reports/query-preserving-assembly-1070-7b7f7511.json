@@ -1,0 +1,136 @@
+{
+  "task_id": "7b7f7511",
+  "scope": "Actual make_pool with shared convention then full-quota make_episodes; local temporary records removed. No publication or training.",
+  "pool_report": {
+    "task_id": "7b7f7511",
+    "seed": 20261021,
+    "source_signature": "29cca0f4d5d4069b423a7eb4ce5625d3273e1429963833a868dc90ef871430d2",
+    "requested_pool_size": 1200,
+    "complete": true,
+    "pairs": 1200,
+    "distinct_canonical_inputs": 817,
+    "train_strata": {
+      "4|shrink": 439,
+      "6|shrink": 330,
+      "8|shrink": 347
+    },
+    "validation_strata": {
+      "4|shrink": 42,
+      "8|shrink": 25,
+      "6|shrink": 17
+    },
+    "train_canonical": 769,
+    "validation_canonical": 48,
+    "contextual": true,
+    "train_context_episodes": 1116,
+    "validation_context_episodes": 84,
+    "modes": {
+      "episode_shared_repeat_axis": 1200
+    },
+    "rejections": {
+      "duplicate_input": 1
+    },
+    "seconds": 0.6843447500141338,
+    "sha256": "405d242181f9e8d640d80ea12ba9d0269dd78489d750bb31749988e0e2a7bac6"
+  },
+  "metrics": {
+    "shards": [],
+    "episodes": 8000,
+    "fresh_episodes": 1000,
+    "requested_fresh_episodes": 1000,
+    "spatial_variant_upper_bound": 8000,
+    "symmetric_variants_removed": 0,
+    "variants_per_fresh_episode": {
+      "8": 1000
+    },
+    "query_histograms": {
+      "input": {
+        "height": {
+          "2": 1108,
+          "4": 3280,
+          "3": 1184,
+          "6": 1184,
+          "8": 1244
+        },
+        "width": {
+          "4": 3280,
+          "2": 1108,
+          "3": 1184,
+          "6": 1184,
+          "8": 1244
+        },
+        "longest": {
+          "4": 3144,
+          "6": 2368,
+          "8": 2488
+        },
+        "shapes": {
+          "2x4": 296,
+          "4x2": 296,
+          "3x4": 384,
+          "4x3": 384,
+          "4x4": 1784,
+          "6x4": 384,
+          "4x6": 384,
+          "6x3": 400,
+          "3x6": 400,
+          "2x6": 400,
+          "6x2": 400,
+          "2x8": 412,
+          "8x2": 412,
+          "8x3": 400,
+          "3x8": 400,
+          "8x4": 432,
+          "4x8": 432
+        }
+      },
+      "output": {
+        "height": {
+          "2": 2680,
+          "3": 2368,
+          "4": 2952
+        },
+        "width": {
+          "2": 2680,
+          "3": 2368,
+          "4": 2952
+        },
+        "longest": {
+          "2": 592,
+          "3": 2368,
+          "4": 5040
+        },
+        "shapes": {
+          "2x2": 592,
+          "3x2": 784,
+          "2x3": 784,
+          "4x2": 1304,
+          "2x4": 1304,
+          "3x4": 784,
+          "4x3": 784,
+          "3x3": 800,
+          "4x4": 864
+        }
+      }
+    },
+    "relations": {
+      "shrink": 8000
+    },
+    "failures": {},
+    "query_context_shortfalls": [],
+    "max_query_reuse_in_fresh_episodes": 1,
+    "max_pair_reuse_in_fresh_episodes": 2,
+    "distinct_inputs_used": 3966
+  },
+  "verified_program_grid_records": 8000,
+  "explicit_native_pair_replays": 4000,
+  "base_episode_axes": {
+    "0": 493,
+    "1": 507
+  },
+  "base_query_types": {
+    "unambiguous": 895,
+    "ambiguous": 105
+  },
+  "seconds": 4.180729957995936
+}

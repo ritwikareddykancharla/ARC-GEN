@@ -2822,4 +2822,24 @@ class GeneratorTests(unittest.TestCase):
                    dict(explicit,oranges=[{2,4}]),{'num_oranges':np.bool_(True)}):
             with self.assertRaises(ValueError):m.generate(**kw)
 
+    def test_frame_partial_controls_keep_eight_candidates(self):
+        m=importlib.import_module('tasks.task_da6e95e5')
+        random.seed(81725)
+        p=m.generate(num_frames=8,shape_height=3,shape_width=3)
+        self.assertEqual(p['output'],grid(call(solver('da6e95e5'),p['input'])))
+        self.assertEqual(len(p['output']),3)
+        self.assertEqual(len(p['output'][0]),3)
+        with self.assertRaises(ValueError):m.generate(height=6,width=6)
+
+    def test_tank_minimum_canvas_capacity_and_passable_items(self):
+        m=importlib.import_module('tasks.task_dd6b8c4b')
+        random.seed(101736)
+        p=m.generate(height=7,width=7,layout='open',overflow=True,num_nines=40)
+        self.assertEqual(sum(row.count(9) for row in p['input']),40)
+        self.assertEqual(p['output'],grid(call(solver('dd6b8c4b'),p['input'])))
+        random.seed(91698)
+        p=m.generate(height=30,width=30,layout='framed',chokepoint=True)
+        self.assertEqual(p['output'],grid(call(solver('dd6b8c4b'),p['input'])))
+        with self.assertRaises(ValueError):m.generate(layout='open',chokepoint=True)
+
 if __name__=='__main__':unittest.main()

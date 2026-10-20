@@ -1,0 +1,52 @@
+{
+  "task_id": "cdecee7f",
+  "factory_sha256": "afc22bc614171473b301038af8ead67643cc5b2c3884963585dac5a877540931",
+  "constructor_sha256": "d4074226fd9e34cb1120705dec4597b1e401a43570cd0a1d5947ac35cd28f3af",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 151672011842096,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 2.1358142499811947,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "Original mechanism: the input has isolated single pixels on a background of 0. Each pixel sits in a different column. The pixels are sorted by column, left to right. Their colours then fill a 3x3 grid in snake order: row 0 runs left to right, row 1 runs right to left, row 2 runs left to right. Unused cells stay background. The factory works out how the transform moves the original column axis. It does this by pushing the probe points (0,0), (0,1) and (1,0) through the D4 map. The result tells it which visible axis (row or column) is the sorting axis, which direction is ascending, and the same for the tie-break axis. It also pushes the nine snake-order output slots through the same D4 map on a 3x3 grid. The emitted program uses these as constants. It collects the non-background pixels in visible coordinates and sorts them along the visible sorting axis and direction. It then writes their colours into the precomputed visible slot positions. The background is the constant palette[0]. No grid rotation, inverse transform or colour un-permutation is done at solve time.",
+    "limitations": "The output is always 3x3, matching the constructor; at most 9 pixels are placed. The generator always gives pixels distinct original columns, so the secondary sort key (original row, as in the archived solver) never matters within the domain. If a tie on both keys ever happened, the order would fall back to colour value; that cannot occur in the domain. The background is assumed to be palette[0], which holds because the constructor's canvas is 0 and pixel colours are non-zero. Demonstrations are not used. No constructor defects were found, and the fixtures match the uniform rule.",
+    "independent_source_review": {
+      "verdict": "accept",
+      "mechanism": "The input is a 10x10 canvas with background 0 and 6-9 non-zero pixels, each in a distinct column. The pixels are sorted by original column. Their colours fill a 3x3 grid in snake order: row 0 runs left to right, row 1 right to left, row 2 left to right. Remaining cells stay background. The factory pushes probe points through a D4 map to find the visible sort axis and direction. It also pushes the nine snake slots through the same D4 map on a 3x3 grid. The emitted solver sorts visible pixels by that axis and sign and writes their colours into the precomputed visible slots.",
+      "evidence": [
+        "Constructor: `cols = common.sample(range(size), len(colors)); cols.sort()`. Columns are distinct and colours are listed in column order, so the label depends only on visible pixel positions and colours. Random `rows` affect placement only, not the output order.",
+        "Constructor output: `output[idx // minisize][idx % minisize] = color` followed by `output[1] = output[1][::-1]`. This reverses only row 1. Fixture pair 3 row 2 `[5,1,3]` matches the left-to-right third row, so this is the genuine rule, not a bug.",
+        "Constructor colours come from `common.random_color()`, which returns values in range(1,10). Pixels are therefore never background. Repeated colours are harmless because the output is the colour sequence. At most 9 pixels exist, so `pix[:9]` never truncates.",
+        "Factory `fwd`: the optional column flip is followed by clockwise steps `(r,c,H,W) -> (c, H-1-r, W, H)`. The tuple RHS uses the old H, so this is a correct clockwise quarter-turn with swapped dimensions. The same map is used for the input probes and the 3x3 output slots.",
+        "Factory `axis_sign(o, px)`: the difference between fwd(0,0) and fwd(0,1) is non-zero on exactly one axis. That gives the visible axis and sign corresponding to original +column. Sorting by `PRIMARY_SIGN * pos[PRIMARY_AXIS]` reproduces the original column order, and distinct original columns give strictly distinct keys.",
+        "Slots are the D4 images of the snake positions (row 1 reversed via `c = 2 - c`) under the same transform the host applies to outputs.",
+        "The solver operates directly on visible coordinates with specialised axis/sign/slot constants. There is no whole-grid untransform, native solve or retransform wrapper.",
+        "`BG = palette[0]` matches the constructor's 0 canvas and 0 padding.",
+        "Host audit: passed with 1000 fresh pairs, 8000 augmented checks (consistent with all 8 D4 variants), 16 fixture variants and no sampler rejections."
+      ],
+      "blocking_issues": [],
+      "nonblocking_limits": [
+        "The secondary sort key (original row) and the final colour-value tie-break are unreachable, because the constructor guarantees distinct columns.",
+        "Demonstrations are ignored. The snake orientation and sort axis are deterministic spatial constants taught consistently by every demo, which is allowed.",
+        "The output is fixed at 3x3 and capped at 9 pixels, matching the constructor domain.",
+        "The constructor does not enforce pixel isolation (adjacent pixels are possible). The solver treats every non-background cell as a pixel, so this does not affect correctness.",
+        "The archived rule text contains a self-corrected arithmetic slip for the test middle row. The fixture and constructor agree on `[4,5,3]`."
+      ],
+      "required_context_checks": [
+        "None task-specific. cdecee7f is not in the colour-evidence list, and no arbitrary colour or shape lookup is involved.",
+        "Standard check only: confirm that the D4 conflict policy rejects variants with identical visible demos and query inputs but conflicting answers."
+      ],
+      "task_id": "cdecee7f",
+      "factory_sha256": "afc22bc614171473b301038af8ead67643cc5b2c3884963585dac5a877540931",
+      "constructor_sha256": "d4074226fd9e34cb1120705dec4597b1e401a43570cd0a1d5947ac35cd28f3af"
+    },
+    "host_review": "Read mechanism, evidence, limitations and context requirements. Host reflects columns before clockwise rotation, tests all eight D4 indices, and applies a shared palette permutation after generation. Fixture audit verifies all train/test supplied pairs at every tested orientation/palette, not one pair per variant. Per-episode execution verification and conflicting-context rejection remain required."
+  }
+}

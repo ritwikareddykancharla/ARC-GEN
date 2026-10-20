@@ -1,0 +1,55 @@
+{
+  "task_id": "cbebaa4b",
+  "factory_sha256": "ef214966afe24093fbaa1ebaaa6fe7bb704b31a8a9aa4d37000857fa78d370d0",
+  "constructor_sha256": "41ce54cc0fd11fee7f4e163c4aacf8ba78c2646f3f11861b8b3d805998dc90e0",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 127443805239644,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 30.30960849998519,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The emitted program performs the connector-assembly mechanism directly on the visible grid. Translations stay translations under every D4 transform, and the placement rule depends only on cell positions. Because of that, no axis or direction constants need specialising. Rows, columns and shift vectors are used exactly as they appear in the visible grid, and d4 is accepted but has no effect on the result. The colour roles are fixed through the palette: background = palette[0], red connector = palette[2], and yellow anchor = palette[4].\n\nThe procedure is:\n1. Find the pieces as 4-connected components of cells that are neither background nor red.\n2. Give each red cell to the body at the smallest Manhattan distance.\n3. Take the anchor to be the largest component made entirely of the anchor colour. Its reds form the initial set of open sockets.\n4. Run a backtracking assembly that uses the generator's own validity rule. A placement must be in bounds. Its body must not overlap occupied cells, open sockets or closed sockets. Its reds must not overlap occupied or closed cells. At least one red must land on an open socket. Matched reds close their sockets, and the piece's other reds become new open sockets.\n5. Search order. The search branches on the open socket with the fewest valid covers, as in the constructor's uniqueness search. It forward-checks for open sockets that have no cover. It prunes when fewer reds remain than open sockets. It collapses pieces that are identical in shape and colour. It tries placements that match more sockets first. Failed states are memoised by occupancy, sockets and the multiset of remaining piece kinds.\n6. Render on a background canvas. The anchor and every piece body are stamped at their shifts, then all reds are stamped, so connectors that meet merge into a single cell.\n\nThe generator rejects any scene where its exhaustive search finds more than one rendered complete assembly. So under the constructor's domain, the first complete assembly found is the unique answer, whatever the D4 transform does to the search's tie-breaking order.",
+    "limitations": "This analysis was not executed; it was reasoned by hand.\n\n- **No search budget.** Unlike the generator, the program has no node budget. A pathological off-domain scene could therefore run slowly.\n- **Ownership ties.** When a red cell is equally close to two bodies, the program assigns it to the first body found instead of raising an error. The constructor's Chebyshev-2 scatter rules such ties out.\n- **No assembly found.** In that case the program raises ValueError.\n- **No anchor.** The program also raises ValueError when no all-anchor-colour component exists.\n- **Demonstrations unused.** The program does not read the demonstrations. The roles come from the palette constants.\n- **Constructor notes for host review.**\n  - Uniqueness rests on the constructor's exhaustive check, which compares only the final rendered output.\n  - In replay mode the explicit `pieces` scenes, including the fixtures, are rendered without re-validation.\n  - The archived solver computes normals that it never uses.\n  - No contradictions were found between the fixtures and the uniform rule. This was checked by hand against the stated shifts for the demonstrations only, not executed.",
+    "independent_source_review": {
+      "verdict": "accept",
+      "mechanism": "The rule is connector assembly by pure translation. Pieces are the 4-connected non-background, non-red components. Each red cell belongs to the nearest body. The anchor is the largest all-yellow (palette[4]) component, and it stays fixed. Each other piece is translated so that at least one of its reds lands on an open socket. A placement is valid only if it is in bounds, its body is disjoint from occupied cells, open sockets and closed sockets, and its reds are disjoint from occupied and closed cells. Matched reds close their sockets and the piece's other reds become new open sockets. The output is the complete assembly with every socket closed: bodies are stamped first, then reds, so matched reds merge into one cell. The emitted solver runs this search directly on visible coordinates, with only the bg, red and anchor colours specialised from the palette.",
+      "evidence": [
+        "The constructor grows the assembly in output coordinates. `_assembly_unique` runs `_complete_renders` with limit=2 and MAX_NODES. Any overflow is rejected (`if overflow: return False`), and the scene is accepted only if `renders == {want}`. So the output is proven unique under the stated placement rule. It is not decided by a hidden latent.",
+        "The uniqueness search is translation invariant, as claimed. `moved(i,dy,dx)` produces absolute placements, and these are the same whichever input position `_scatter` later picks. Bounds are checked against the same height and width.",
+        "The pruning in `_complete_renders` is sound. Covering socket s needs a placement whose mark lands on s. The validity sets (occ, and opened\u222aclosed) only grow along a branch. So a placement that is invalid now stays invalid later, and an uncovered socket correctly kills the branch.",
+        "The factory solver's validity test matches the constructor's search exactly: same bounds test, same body and mark disjointness, the same most-constrained-socket branching, the same remaining-reds bound and the same identical-kind collapsing. The solver adds memoisation keyed on (occ, opened, closed, multiset of remaining kinds). The future of the search depends only on these, and identical kinds give identical absolute placements through the representative-index shifts, so the memo is sound.",
+        "Rendering is consistent between the two. The solver stamps all bodies and then all reds. Constructor `_render` writes bodies to grid_out and then the reds from `out_marks`.",
+        "`_scatter` dilates every placed piece's body and marks by Chebyshev distance 1 and requires new piece cells to avoid that zone. Each red is Manhattan distance 1 from its own body and at least 2 from any other body. So nearest-body ownership is unambiguous, and input components equal the latent bodies.",
+        "Non-anchor colours come from PALETTE (1,3,5,6,7,8,9), which excludes 4. The anchor is the only all-yellow component, so the solver's `max(anchors, ...)` is unambiguous in-domain.",
+        "The anchor spec uses out shift (0,0), and the solver fixes the anchor at (0,0). This is consistent.",
+        "D4 handling: the placement rule uses positions and translations only, which commute with every D4 transform. The solver has no whole-grid untransform/retransform wrapper.",
+        "No arbitrary colour lookup is involved. The roles bg, red and yellow are constant across the demos and are shown in both demonstrations. The episode_evidence_checks list does not include cbebaa4b, and none is needed.",
+        "Host audit: 1000 fresh pairs, 8000 augmented checks and 16 fixture variants all passed, with no sampler rejections."
+      ],
+      "blocking_issues": [],
+      "nonblocking_limits": [
+        "Uniqueness is positional only, and normals are unused. This matches the archived rule, but the task is defined as 'unique under this placement grammar', not under every possible human reading.",
+        "Explicit `pieces` replay, which includes the canonical fixtures, is rendered without re-validation. Fixture correctness rests on the host fixture-variant checks, not on constructor guards.",
+        "On an ownership tie the solver silently assigns the red to the first body, where the archived program raises. The constructor excludes ties through Chebyshev-2 scatter.",
+        "The solver has no node budget. The constructor bounds in-domain search cost at 5000 nodes under the same branching, and memoisation only reduces work, but pathological off-domain inputs could run slowly.",
+        "The distribution is restricted. Pieces close exactly 1 or 2 sockets, leaves open none, the anchor is a yellow rectangle, and the greedy-safety and leaf-uniqueness prefilters narrow scene variety. These are scope limits, not correctness defects.",
+        "`_scatter` forbids each piece's exact latent position, so every non-anchor piece moves. This is consistent with the fixtures."
+      ],
+      "required_context_checks": [
+        "Confirm that the host's 16 fixture variants cover all four canonical pairs (2 train + 2 test) under D4 and colour augmentation, because replay mode does not validate them.",
+        "Confirm that the context policy for D4-conflicting query answers was applied. Positional uniqueness makes conflicts unexpected, but the policy should still have been exercised."
+      ],
+      "task_id": "cbebaa4b",
+      "factory_sha256": "ef214966afe24093fbaa1ebaaa6fe7bb704b31a8a9aa4d37000857fa78d370d0",
+      "constructor_sha256": "41ce54cc0fd11fee7f4e163c4aacf8ba78c2646f3f11861b8b3d805998dc90e0"
+    },
+    "host_review": "Read mechanism, evidence, limitations and context requirements. Host reflects columns before clockwise rotation, tests all eight D4 indices, and applies a shared palette permutation after generation. Fixture audit verifies all train/test supplied pairs at every tested orientation/palette, not one pair per variant. Per-episode execution verification and conflicting-context rejection remain required."
+  }
+}

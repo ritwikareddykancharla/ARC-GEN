@@ -1,0 +1,50 @@
+{
+  "task_id": "da515329",
+  "factory_sha256": "2d48de3e37132405733189ef517746b267aa53d8da229f036b49074d100f1032",
+  "constructor_sha256": "dfd60c663160b481148dc6e4e70c2ae45e6604613d8631aad89bfebf412f1664",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 93850372339636,
+  "d4": 7,
+  "unique_base_inputs": 988,
+  "seconds": 16.0298683749279,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The emitted program draws the spirals directly in the visible grid. It finds the plus as the cells that differ from palette[0], and draws in palette[8]. If palette[8] is absent, it falls back to the colour of the observed plus. The centre is the rounded mean of the plus cells, which is exact because the plus is symmetric. L is the number of plus cells divided by 4, and L' = max(L, 2).\n\nFrom each of the four arms, a turtle walks L' cells outward. It then repeats the unit [turn, walk a=4k+2; turn, walk L'-2; counter-turn, walk L'], clipping cells outside the grid, until a > 2(H+W)+10.\n\nRotations keep the handedness of the drawing, so the main turn stays clockwise in (row, col) terms when d4 < 4. For d4 >= 4, the initial row reversal is a reflection, which flips the handedness. The emitted code then uses counter-clockwise for the main turns and clockwise for the jog correction. The four starting directions form a set that is unchanged by every D4 element, and the stopping limit is symmetric in H and W. As a result, the drawn set is exactly the D4 image of the constructor's drawing, including boundary clipping and rectangular grids.",
+    "limitations": "Background and foreground are assumed to be the palette images of 0 and 8, as the constructor fixes those colours. The input must contain exactly one plus with four equal arms (L = 1 to 4) that fits inside the grid. The demonstrations are not needed and are ignored. No constructor defects were found: the fixtures match the turtle rule uniformly, and there are no random tie-breaks. This factory has not been run or tested.",
+    "independent_source_review": {
+      "verdict": "accept",
+      "mechanism": "The input is a single hollow plus of colour 8 on background 0, with four equal arms of length L (1..4), centred anywhere it fits on a 10..30 grid that may be square or rectangular. From the centre, each arm runs a turtle: walk L'=max(L,2) cells, then repeat [clockwise turn, walk 4k+2; clockwise turn, walk L'-2; counter-clockwise turn, walk L'] until a > 2(H+W)+10. Cells outside the grid are clipped. The emitted solver redraws this directly in visible coordinates. It specializes only the turning handedness: clockwise main turns for rotations (d4<4) and counter-clockwise for reflections (d4>=4), with the jog counter-turn flipped to match.",
+      "evidence": [
+        "Every output latent is recoverable from the visible input. Height and width are the grid shape. The centre cy,cx is the exact mean of the plus cells, because the plus is symmetric. L = count/4. No random latent affects the output beyond what the input shows.",
+        "validate() rebuilds all four canonical fixtures from (H,W,cy,cx,L) = (12,12,4,5,1), (22,22,9,9,3), (16,16,7,6,2) and (26,26,12,10,4). fixture_basis is canonical with corrected=false, so the L=4 jog formula is confirmed by the real test answer and is not extrapolated.",
+        "Sampled L stays within {1,2,3,4}, which is exactly the set covered by the fixtures. The L=1 case (L'=max(L,2)) is taught by train pair 1.",
+        "Factory D4 handling is sound. The start-direction set {up,right,down,left} is invariant under all of D4. lim=2(H+W)+10 is symmetric under transposition. Rotations preserve the clockwise sense in (row,col) and reflections reverse it, so swapping _cw and _ccw in both turn types under MIRROR reproduces the image of the constructor drawing, including clipping on rectangular grids.",
+        "There is no untransform/native-solve/retransform wrapper. The solver walks the turtle directly on the visible grid using palette[8]. The fallback to the observed ink colour is defensive only.",
+        "The turtle has no ties or order-dependent overwrites that matter. All writes use the same colour, so the drawing order of the four spirals does not affect the result.",
+        "The stopping limit is far larger than needed: the spiral radius grows about 2 per lap while a reaches 2(H+W)+10, so every in-grid cell the spiral would reach gets drawn regardless of an off-centre position.",
+        "Host audit passed: 1000 fresh pairs, 8000 augmented checks, 16 fixture variants, no sampler rejections."
+      ],
+      "blocking_issues": [],
+      "nonblocking_limits": [
+        "Rectangular grids and arbitrary off-centre placements go beyond the square originals. The rule is a deterministic local turtle, so this is a legitimate generalization, not a label ambiguity.",
+        "The solver ignores the demonstrations. The handedness is a deterministic spatial orientation constant, which the demos would reveal under any D4 view, so no colour or shape association evidence is needed.",
+        "The solver assumes exactly one well-formed plus with equal arms, as the constructor guarantees. Inputs with other ink are out of domain.",
+        "The MIRROR = d4>=4 convention depends on the host's D4 indexing, where indices 4..7 are reflections. The passing augmented audit, which includes d4=7, is consistent with this, but I checked it by inference rather than against the host's indexing."
+      ],
+      "required_context_checks": [
+        "No colour-evidence check applies: da515329 is not in the require_colour_evidence task list, and the rule uses only fixed palette[0] and palette[8].",
+        "The standard D4-conflict rejection is sufficient. The visible input determines the answer uniquely within each D4 view."
+      ],
+      "task_id": "da515329",
+      "factory_sha256": "2d48de3e37132405733189ef517746b267aa53d8da229f036b49074d100f1032",
+      "constructor_sha256": "dfd60c663160b481148dc6e4e70c2ae45e6604613d8631aad89bfebf412f1664"
+    },
+    "host_review": "Read complete independent review, source mechanism, limitations and context requirements. All eight D4 indices tested per fresh pair, all supplied fixture pairs checked in16 orientation/palette variants. Per-episode execution and evidence checks required. "
+  }
+}

@@ -1,0 +1,48 @@
+{
+  "task_id": "c1d99e64",
+  "factory_sha256": "b465181ca8349bdc46bd5837547314fab11098f0a5cc7b342f5c099f2c310fad",
+  "constructor_sha256": "2401ef8c18743d40646a217141386f2325829e19e3dc7bdf1c0d969e174fea83",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 9311606844595,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 4.019258207990788,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "Every row or column that is entirely the line colour (original 0, shown as palette[0]) is recoloured to the new colour (original 2, shown as palette[2]). Nothing else changes. The rule treats rows and columns the same way, so every D4 transform keeps the mechanism intact: the program checks the visible rows and visible columns directly. The palette only fixes the two constants. The background colour is never needed.",
+    "limitations": "Constructor defect for host review: the noise check runs before the lines are drawn. It requires every row and column of the static to contain two colours. After the line columns are painted black, a row that is not a line can still become entirely black if all of its non-black cells fell in line columns. The same applies to columns. The generator would leave that row black, but the visible rule (and the archived solver) would recolour it. This is rare, and it is a generator ambiguity, not a rule the program should copy. Also, if the background were black the static loop could never finish, so in practice the background is never palette[0]. The approved fixtures are consistent with the uniform rule. The factory has not been executed or tested by me.",
+    "independent_source_review": {
+      "verdict": "accept",
+      "mechanism": "Any row or column made entirely of the line colour (palette[0]) is recoloured to the new colour (palette[2]). Every other cell, including line-coloured noise touching a line, stays unchanged. The emitted solver finds full rows and full columns directly in the visible augmented grid and paints them. Rows and columns are treated symmetrically, so every D4 variant only changes which lines are rows and which are columns. No untransform, native solve and retransform wrapper is used.",
+      "evidence": [
+        "Constructor: `output[r][c] = common.red() if r in rows or c in cols`. Lines are drawn as `common.black()` over every cell of the chosen rows and columns. The label is therefore 'full black lines become red', matching the factory's LINE=palette[0], NEW=palette[2].",
+        "Background: `common.random_color(exclude=[common.red()])` draws from 1..9 minus 2. Under any palette it is never palette[0] or palette[2]. The input therefore never contains NEW, and a background row can never be mistaken for a line.",
+        "Legality loop: before lines are drawn, every row and column of the static must contain at least two colours. This stops all-black static rows or columns from appearing by chance in the static itself, with one exception noted under limits.",
+        "Factory: `full_rows`/`full_cols` are computed from the unmodified `g` and written to `out`. A crossing cell is painted NEW twice, which is consistent. Lines at grid edges are also handled, although the constructor only places lines in 1..H-2 and 1..W-2.",
+        "Fixtures: pair 1 has columns 4 and 10, pair 2 has row 8 and column 8, pair 3 has rows 2 and 12 and column 1, and the test has rows 2, 12 and 20 and columns 6 and 21. These match the uniform rule. Partial 0 runs, such as row 10 of pair 1 and (6,0) in pair 3, stay 0.",
+        "Colours 0 and 2 are constant across all demonstrations, so specialising LINE and NEW from the palette is taught by the demos. The background varies and is not used.",
+        "Host audit passed: 1000 fresh pairs, 8000 augmented checks and 16 fixture variants, with no sampler rejections."
+      ],
+      "blocking_issues": [],
+      "nonblocking_limits": [
+        "Constructor defect (confirmed by reading the source): the two-colour legality check runs before the lines are painted. A non-line row whose non-black static cells all fall in chosen line columns becomes entirely black after painting. It is absent from `rows`, so the label leaves it black, while the visible rule and the factory recolour it. The same applies to columns. This is reachable but rare: per row the probability is roughly 0.2^(W-k) with W>=10 and k<=3, about 1e-5, so about 1e-4 to 1e-3 per sample at most. The factory correctly does not copy this bug. Such samples are mislabelled by the constructor, not failures of the rule.",
+        "The archived `transform` indexes `grid[y, :]` on the raw argument. This works only because `_native_solve` passes an ndarray. It is irrelevant to the factory.",
+        "The factory has not been executed by the reviewer. Correctness relies on the source reading and the supplied host audit."
+      ],
+      "required_context_checks": [
+        "Host should treat any future mismatch where a generated input contains an all-palette[0] row or column absent from the constructor's `rows`/`cols` as a constructor-label defect. Such samples should be rejected or filtered, not used to fit the solver.",
+        "Confirm that no D4 or palette variant maps the background onto palette[0] or palette[2]. The source shows this is excluded by `random_color(exclude=[red])` and by the legality loop, which can never finish with a black background."
+      ],
+      "task_id": "c1d99e64",
+      "factory_sha256": "b465181ca8349bdc46bd5837547314fab11098f0a5cc7b342f5c099f2c310fad",
+      "constructor_sha256": "82a0c5af70dbb13e4b690eb7ecc10b2fc80f89fb7cfcf1dc7521df8b25163ead"
+    },
+    "host_review": "Read source review mechanism, evidence, limitations and context requirements. Host audit covers all eight D4 indices per fresh pair; d4=7 in report is only the final loop index. All supplied fixture pairs checked under 16 orientation/palette variants. Emitted programs operate in displayed coordinates. Per-episode verification and context-evidence checks are mandatory. Repaired synthetic constructor after source review: after painting requested lines, reject noise whose full-line sets differ from requested rows/columns. Dimensions and line counts stay fixed during retries; explicit fixtures unchanged. Adversarial regression reproduces the pre-paint-noise bug. Re-audit of updated constructor passes 1000/8000/16. Episode gate requires demonstrated new line colour."
+  }
+}

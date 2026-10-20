@@ -1,0 +1,48 @@
+{
+  "task_id": "db118e2a",
+  "factory_sha256": "dd830ab172f193ad4bc2596df2522363c5c67558dff23eecf16beaf50e62f34a",
+  "constructor_sha256": "112bc44956d53610a0ec58c3290ff3123bbf774fe0a9536db614747ac31b6b7e",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 6674068853549,
+  "d4": 7,
+  "unique_base_inputs": 997,
+  "seconds": 5.828240750008263,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "How the program works:\n\n1. **Colours.** The background is read from the visible corner cell. That cell holds palette[7], and palette[7] is also kept as a fallback constant. The frame colour is read from a border cell (grid[0][1]). The square border is D4-symmetric, so this read is valid in every orientation.\n\n2. **Motif.** The program finds the non-background cells of the interior (the grid minus its outer ring) and crops their bounding box. Because this happens in visible coordinates, the motif's content automatically appears in the transformed orientation.\n\n3. **Small boxes.** A crop smaller than 3x3 is placed inside the 3x3 slot as follows:\n   - It must fit a 3x3 window that lies inside the interior. This mirrors the constructor's placement domain: brow in 0..H-5, bcol in 0..W-5.\n   - A single cell is preferred in the centre. This matches the constructor's 'just a pixel' case, which uses pattern[4].\n   - A length-2 extent that is still ambiguous falls back to the archived solver's (3-L)//2 convention, meaning the native low side. The factory maps that side through the D4 transform, so it becomes a fixed visible side.\n\n4. **Output layout.** The output is a 15x15 canvas in the background colour. It holds two 5x5 frames with background corners, frame colour on the 3 middle cells of each side, and the motif in the 3x3 interior.\n   - Natively the frames sit on the main diagonal, at (2,2) and (8,8).\n   - The factory computes their visible top-left positions by mapping the frame blocks through d4. Odd rotations and the pure flip put them on the anti-diagonal: (2,8) and (8,2).\n\nNo grid is rotated and no colours are permuted at runtime.",
+    "limitations": "1. **Possible placement ambiguity (constructor review needed).**\n   - The 3x3 pattern window can contain background-coloured rows or columns at its edge. Whether this happens depends on what common.conway_sprite returns, which I could not inspect.\n   - If it does, the motif's offset inside the output 3x3 slot cannot always be recovered from the input. A length-2 extent that fits two feasible windows is ambiguous.\n   - The emitted program resolves the case in two steps. First it applies the visible geometric feasibility constraint. Then it applies the archived solver's low-side convention, transported through D4. That convention is a solver choice, not a visible rule.\n   - The single-pixel case is fully determined: the pixel always goes in the centre.\n\n2. **Background-coloured motif cells.** These are treated as empty, exactly as in the archived solver. This is consistent with the constructor, which fills unused pattern cells with 7.\n\n3. **Frame colour inside the motif.** Motif cells may share the frame colour (the test case does). They are still included in the crop, because only the outer ring is excluded.\n\n4. **Fixtures.** I found no contradiction between the approved fixtures and the uniform rule. No tests have been run.",
+    "independent_source_review": {
+      "verdict": "accept",
+      "mechanism": "The input is a hollow rectangle of frame colour with background (palette[7]) corners, and a 3x3 pattern window sits fully inside the interior. The output is a 15x15 background canvas holding two 5x5 rounded frames (frame colour on the 3 middle cells of each side, background corners), each containing the 3x3 pattern. Natively the frames sit at (2,2) and (8,8). The emitted solver reads bg from g[0,0] and the frame colour from g[0,1]. It crops the bounding box of non-bg interior cells in visible coordinates, places the crop in a 3x3 motif, and stamps it into frame positions that the factory precomputes through d4.",
+      "evidence": [
+        "Constructor: grid=common.grid(w,h,7); hollow_rect border in `color`; corners reset to 7. brow\u2208[0,h-5] and bcol\u2208[0,w-5], so pattern rows brow+1..brow+3 \u2264 h-2 and the 3x3 window always lies strictly inside the interior. The only non-7 interior cells are pattern cells.",
+        "common.conway_sprite starts from all 9 cells and skips any deletion where `rows.count(r) <= 1 or cols.count(c) <= 1`. Every row 0..2 and column 0..2 therefore keeps at least one cell. Subset colours exclude 7, so the non-bg bounding box in the sprite branch is always exactly 3x3.",
+        "In the 'just a pixel' branch only pattern[4] (the centre) is set. In interior coords the pixel is at s=brow+1. _place with L=1 tries p=1 first: t=brow\u22650 and t+3=brow+3\u2264h-2 always hold, so the pixel is centred. This matches output[4][4] and output[10][10]. The column axis works the same way.",
+        "So the bbox is either 3x3 (offset 0) or a centred 1x1. The length-2 ambiguous branch flagged in prior limitations is unreachable from this constructor. The output is a deterministic function of the visible input, with no hidden latent.",
+        "The border, rounded-frame shape, and corner cells are all D4-symmetric. g[0][0] is a corner (bg) and g[0][1] is a border cell (frame colour) in every orientation, and w,h\u22655. The crop is done on the visible interior, so the motif appears already transformed. FRAMES are computed by mapping each native 5x5 block's opposite corners through fwd and taking the min, which gives the visible block top-left. No whole-grid untransform/solve/retransform is used.",
+        "Pattern cells may equal the frame colour, as in the test case. Only the outer ring is excluded, so they are correctly kept. bg is taken from the corner, not the mode (the test mode is 8).",
+        "Host audit passed 1000 fresh pairs, 8000 augmented checks and 16 fixture variants, with no sampler rejections. This is consistent with the source analysis."
+      ],
+      "blocking_issues": [],
+      "nonblocking_limits": [
+        "The _place length-2 branch uses a transported native-low convention, not a visibly taught rule. It is unreachable under this constructor because conway_sprite guarantees full row/column coverage.",
+        "The defensive fallbacks (empty interior, W<3 or H<3, BG_DEFAULT) are out of domain, since the constructor guarantees w,h\u22655 and a non-empty motif.",
+        "A background-coloured motif cell is indistinguishable from empty. This matches the constructor, which fills unused cells with 7, and the sprite branch's bbox is unaffected.",
+        "The task identity is a single deterministic structural rule with no arbitrary colour or shape lookup. The colour-evidence checks do not cover db118e2a, and none are needed."
+      ],
+      "required_context_checks": [
+        "Confirm that the host's D4-conflict rejection is active for this task, as stated in context_policy. No task-specific colour-evidence check is required."
+      ],
+      "task_id": "db118e2a",
+      "factory_sha256": "dd830ab172f193ad4bc2596df2522363c5c67558dff23eecf16beaf50e62f34a",
+      "constructor_sha256": "112bc44956d53610a0ec58c3290ff3123bbf774fe0a9536db614747ac31b6b7e"
+    },
+    "host_review": "Read complete independent review, source mechanism, limitations and context requirements. All eight D4 indices tested per fresh pair, all supplied fixture pairs checked in16 orientation/palette variants. Per-episode execution and evidence checks required. "
+  }
+}

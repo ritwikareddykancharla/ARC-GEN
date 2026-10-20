@@ -1,0 +1,51 @@
+{
+  "task_id": "cf98881b",
+  "factory_sha256": "1575997ff779e9cdac3f6444857ef85e14bf2caab7ca37fe7961643a8c73472f",
+  "constructor_sha256": "5775a5f0b4cdf8dcf843f57b7779777b6f99b74e72df2cf5f5c1d29eeb997a16",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 36079668588476,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 4.542683208012022,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "Original mechanism: the input holds three equal panels side by side. Two full columns of colour 2 separate them. In order, the panels hold colours 4, 9 and 1 on background 0. The output overlays the panels. Each cell takes the first non-background value, scanning from the leftmost panel to the rightmost.\n\nUnder D4 every panel sub-block gets the same transform as the output, so overlaying the visible panels cell by cell yields the transformed answer directly. Only two things change with d4:\n- The separator orientation.\n- Which end of the grid holds the highest-priority panel.\n\nThe factory tracks the original 'left' side of panel 0 as follows:\n- A row reversal makes it 'right'.\n- Each clockwise rotation maps L->T->R->B->L.\n\nIf the side is L or R, the separators are full columns; if it is T or B, they are full rows. The priority runs from the start (L/T) or from the end (R/B). The separator colour palette[2] and the background palette[0] are fixed as constants.\n\nThe emitted program works on the visible grid:\n1. It finds the full separator lines of the SEP colour along the chosen axis.\n2. It extracts the panels and orders them by priority.\n3. It paints from the lowest-priority panel to the highest, so the highest-priority non-background value wins.\n\nAll-background columns are not mistaken for separators, because only lines made entirely of the separator colour are cut.",
+    "limitations": "This assumes the constructor's domain:\n- Exactly the stated panel/separator layout, with equal-size panels.\n- The separator colour palette[2] never appears inside the panels. This holds because the panels only contain palette[4], palette[9], palette[1] and the background.\n\nIf panel sizes ever differed, the program crops to the smallest common shape rather than failing. Demonstrations are not consulted, since all roles are fixed by d4 and palette. The fixtures are consistent with the uniform rule, and I found no constructor defects. The generator's hard-coded '5 * idx' offset is only correct for size=4, but the default and all fixtures use size=4.",
+    "independent_source_review": {
+      "verdict": "accept",
+      "mechanism": "The input is three equal 4x4 panels separated by two full lines of the separator colour (palette[2]). Panel 0 holds palette[4], panel 1 holds palette[9] and panel 2 holds palette[1], all on background palette[0]. Each output cell takes the first non-background value in positional order panel0 > panel1 > panel2. The emitted solver specialises SEP, BG, the separator axis and the priority end from d4. It cuts only at lines made entirely of SEP, orders the panels by the side that panel 0 maps to, and paints from lowest to highest priority directly in visible coordinates.",
+      "evidence": [
+        "Separators: the constructor places them via `for c in range(size, 3*size+2, size+1)` with size=4, giving columns 4 and 9 that are full red. Pixels go to `grid[r][5*idx + c]`, so the panels sit at columns 0-3, 5-8 and 10-13.",
+        "Priority: the output loop `for i in range(len(colors)-1, -1, -1)` paints idx 2, then 1, then 0. Idx 0 (the leftmost panel, colour 4) is written last and wins, so priority is 4 > 9 > 1 from left to right.",
+        "Archived rule agrees: first non-zero value scanning left (4), then middle (9), then right (1).",
+        "Fixture spot-check, train pair 1, row 3: the panels give [0,4,4,4], [0,9,0,0] and [1,1,1,1], and the overlay is [1,4,4,4], which matches. In row 1, cell (1,2) has 4-panel 0, 9-panel 9 and 1-panel 0, giving 9, which matches.",
+        "Separator safety: panel inks are colours (4,9,1) and the separator is red (2). Under palette mapping these are pal[4], pal[9], pal[1] and pal[2], all distinct. A line equal to SEP can therefore only be a true separator.",
+        "All-background columns or rows are never cut, unlike the archived program's failure mode. All-background panels still keep their width 4.",
+        "Overlay commutes with D4: the per-cell overlay commutes with any transform applied identically to the panels and the output. Only the separator axis and the priority end change.",
+        "D4 bookkeeping: side starts at L, or at R when d4 >= 4, then rotates clockwise k = d4 % 4 times. The host reports 8000 augmented pair checks and 16 fixture variants passed, consistent with the host's D4 convention.",
+        "Visible coordinates: the solver does no whole-grid untransform or retransform. It cuts along AXIS and reverses the panel order when the priority end is R or B.",
+        "No hidden latent decides the labels: each panel has a single fixed ink and the priority is positional, so no ties can arise.",
+        "Context evidence: cf98881b is not in the colour-evidence task list. The priority is spatial and is demonstrated in every pair, which share the same augmentation."
+      ],
+      "blocking_issues": [],
+      "nonblocking_limits": [
+        "Generator offset `5 * idx` is correct only for size=4. The default and all fixtures use size=4, so this is out of domain for the emitted program.",
+        "The crop-to-min-shape and the `if not pans` fallbacks are defensive. They are unreachable because the constructor always yields three equal panels.",
+        "The solver does not consult demonstrations. Roles come entirely from d4 and palette, which is acceptable because the rule is deterministic and spatial."
+      ],
+      "required_context_checks": [
+        "Confirm the host's D4 index convention: d4 >= 4 means a horizontal mirror applied before k clockwise quarter-turns, matching the factory's L->T->R->B mapping. The host audit passing across all augmented checks suggests it does."
+      ],
+      "task_id": "cf98881b",
+      "factory_sha256": "1575997ff779e9cdac3f6444857ef85e14bf2caab7ca37fe7961643a8c73472f",
+      "constructor_sha256": "5775a5f0b4cdf8dcf843f57b7779777b6f99b74e72df2cf5f5c1d29eeb997a16"
+    },
+    "host_review": "Read mechanism, evidence, limitations and context requirements. Host reflects columns before clockwise rotation, tests all eight D4 indices, and applies a shared palette permutation after generation. Fixture audit verifies all train/test supplied pairs at every tested orientation/palette, not one pair per variant. Per-episode execution verification and conflicting-context rejection remain required. Added all-six-priority same-query agreement check; non-overlap demos do not teach a priority used only in query. Query answers are never read by this check."
+  }
+}

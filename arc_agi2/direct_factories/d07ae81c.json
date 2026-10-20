@@ -1,0 +1,49 @@
+{
+  "task_id": "d07ae81c",
+  "factory_sha256": "fa6cf2e789a4fb66a282e32c421debb717dd58c81b83b1146ba9a5e00c6f91a1",
+  "constructor_sha256": "04ff514c125cb18f3bcb34db2433d70d1a1f3ccf171545f6ddb59767984d15ad",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 104195031818287,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 11.833186457981355,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The emitted solver works directly on the visible query grid.\n\n1. **Region colours.** The two most frequent colours are the region colours. In the generator's domain, the background and stripe colours each cover at least about 17 cells. Each seed colour appears at most twice, so this choice is always correct.\n2. **Seeds.** Every other pixel is a seed.\n3. **Seed's underlying region.** The archived solver used an 8-neighbour majority vote. That vote can be wrong when a seed sits on a background cell next to a stripe crossing (5 stripe neighbours against 3 background ones). Instead, the program reconstructs the constructor's actual layout: full-length stripes of colour S drawn over a field of colour B.\n   - It tries each region colour as S.\n   - A cell is predicted to be S if its row or its column is entirely S, counting seeds as wildcards. Otherwise it is predicted to be B.\n   - It keeps the hypothesis with zero mismatches on non-seed cells.\n   - When there are only horizontal stripes or only vertical stripes, both hypotheses give identical predictions, so the choice does not matter.\n   - This gives the exact pre-seed colour under each seed.\n4. **Mapping.** Each underlying region colour maps to the seed colour found on it.\n5. **Drawing.** From every seed, the program walks the four diagonals to the grid border. Each non-seed cell on a ray is recoloured to the mapped colour for that cell's region colour. Seeds keep their own colour; the generator would assign them the same value anyway.\n\n**Why no specialization is needed.** Diagonals map to diagonals and rows/columns map to columns/rows under every D4 transform. Colour roles come from pixel counts. So the factory returns the same direct-coordinate program for every (d4, palette). Nothing is rotated back or un-permuted.\n\nThis matches all three train fixtures and the test fixture: pair 1 gives 1\u21922 and 3\u21928, pair 2 gives 2\u21924 and 8\u21921, pair 3 gives 6\u21923 and 1\u21928, and the test gives 8\u21924 and 3\u21921.",
+    "limitations": "**Defect in the archived solver (needs host review).** The archived solver infers each seed's region by an 8-neighbour majority vote. This mislabels seeds placed on a background corner cell that touches a stripe crossing. In fresh generated scenes this can swap the colour mapping. The factory does not reproduce this; it uses stripe reconstruction instead. The neighbour vote is kept only as a fallback when the stripe model fits no hypothesis exactly, which should not happen within the constructor's domain.\n\n**Possible generator hang (not a label problem).** The generator can create a layout with no stripes at all. It then loops forever, because every seed sees the same colour. Such scenes are never emitted, so the solver assumes both region colours have a seed.\n\n**Out-of-domain inputs.** For conflicting seeds of different colours on the same region, the program picks the most common colour; ties use Counter insertion order. This case is outside the generator's domain.\n\n**Other notes.** Demonstrations are not used, because each pair in this family has independently random colours. No contradictions were found between the fixtures and the uniform rule.",
+    "independent_source_review": {
+      "verdict": "accept",
+      "mechanism": "Two region colours form an underlying field B with full-length stripes S. The constructor draws `brows` and `bcols` in `bgcolors[1]` over `bgcolors[0]`. Isolated seed pixels sit on this layout; a seed on B has colour colors[0], and a seed on S has colour colors[1]. In the output, both full diagonals through every seed are recoloured according to the underlying pre-seed cell: B becomes colors[0] and S becomes colors[1]. Every other cell is unchanged. The emitted solver finds the two most frequent colours, rebuilds the stripe layout exactly to recover the colour under each seed, builds the region-to-seed-colour mapping from those seeds, and walks the four diagonal rays from every seed in visible coordinates.",
+      "evidence": [
+        "Labels come only from visible structure. In the constructor, `output[r][c] = colors[0] if grid[r][c] == bgcolors[0] else colors[1]` is evaluated before seeds are written into `grid`, so it depends on the visible underlying cell. The seed colour is assigned by the same expression, so the region-to-seed mapping is recoverable from the query alone. No hidden latent decides the answer.",
+        "Region colours are always the two most frequent colours. The bg1 stripes cover at least 2x10 cells. Rows and columns 0 and 1 are never stripes because the start offsets satisfy `randint(2,7)` \u2265 2, and the later gaps are \u2265 4. So bg0 covers well over 4 cells (about 25 at minimum for 10x10). There are at most 3 seeds, at most 2 of any one colour.",
+        "Stripe reconstruction in `_underlying` is exact. Under the true S=bg1 hypothesis, every row in `brows` and every column in `bcols` is all S once seeds are treated as wildcards. Every non-stripe row contains bg0 at the two adjacent cells in columns 0 and 1, and `remove_diagonal_neighbors` forbids king-adjacent seeds, so seeds cannot cover both. Columns behave the same way. Hence mism=0 and `pred` equals the true underlying colour, including at seed cells.",
+        "Hypothesis choice does not matter. If both stripe directions exist, the wrong hypothesis predicts all-B and has mismatches. If only one direction exists, both hypotheses give identical predictions everywhere. The case with no stripes cannot be emitted because `draw` would return False.",
+        "Seed cells are handled correctly. The constructor sets output at any seed lying on any seed's diagonal to mapping(underlying), which equals that seed's own colour. The solver leaves seed cells unchanged, which gives the same result.",
+        "Rays match. The constructor's condition `r+c==row+col or r-c==row-col` describes the same cells as the solver's four rays walked to the border.",
+        "The solver is valid under all augmentations. Diagonals and the full row/column stripe logic are closed under D4. Colour roles come from counts and tie-break on colour value, not from any fixed background, so a palette permutation that produces colour 0 is harmless. There is no untransform/retransform wrapper.",
+        "Host audit agrees: 1000 fresh pairs, 8000 augmented checks, and 16 fixture variants all passed."
+      ],
+      "blocking_issues": [],
+      "nonblocking_limits": [
+        "The archived program and the rule text infer a seed's region by an 8-neighbour majority vote. This mislabels a seed on a bg0 cell that is diagonally inside a stripe crossing (3 bg0 neighbours vs 5 bg1). The factory correctly follows the constructor, which labels by the underlying cell, rather than copying this archived defect. The rule wording is therefore slightly imprecise for such corner cases.",
+        "The `_neigh_major` fallback when no hypothesis reaches zero mismatch, and the Counter tie-break for conflicting seed colours, are unreachable within the constructor domain.",
+        "The constructor can loop forever when it draws no stripes. No such scene is emitted, so this does not affect labels.",
+        "Demonstrations are ignored. This is appropriate because the mapping is fully determined by the query's own seeds; no cross-pair colour lookup is involved."
+      ],
+      "required_context_checks": [
+        "None task-specific. d07ae81c is not in the list of colour-evidence tasks, and the mapping is query-internal. The standard D4 answer-conflict rejection policy applies."
+      ],
+      "task_id": "d07ae81c",
+      "factory_sha256": "fa6cf2e789a4fb66a282e32c421debb717dd58c81b83b1146ba9a5e00c6f91a1",
+      "constructor_sha256": "04ff514c125cb18f3bcb34db2433d70d1a1f3ccf171545f6ddb59767984d15ad"
+    },
+    "host_review": "Read source review mechanism, evidence, limitations and context requirements. Host audit covers all eight D4 indices per fresh pair; d4=7 in report is only the final loop index. All supplied fixture pairs checked under 16 orientation/palette variants. Emitted programs operate in displayed coordinates. Per-episode verification and context-evidence checks are mandatory. "
+  }
+}

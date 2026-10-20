@@ -1,0 +1,47 @@
+{
+  "task_id": "d2acf2cb",
+  "factory_sha256": "b70bb868964b7c0ec209f705e627e45228ae63fef6836465f2af3cc6bc768e05",
+  "constructor_sha256": "b9011f954412f54fc3236af40f136dca5c6c73536a291d0de7e3f5fe480fad3e",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 184474286998412,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 2.3750209170393646,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The rule draws a line between two marker cells on opposite borders. A top-bottom pair must share a column, and a left-right pair must share a row. Every cell strictly between the two markers is toggled: background 0 swaps with 8, and foreground 6 swaps with 7. Toggling covers both cases in the generator: switch=True, where the line already holds 7/8 and returns to 0/6, and switch=False, where it goes forward.\n\nThe emitted program works in the visible grid. It scans every column for marker values on both the top and bottom rows, and every row for marker values on both the left and right columns. Then it toggles the interior cells of each line it found. Checking both orientations directly means no rotation logic is needed. After a D4 transform, a horizontal line in the original is simply found as a vertical line in the visible grid, and vice versa. Reflections keep facing pairs facing, and the interior span is symmetric.\n\nColour roles are specialised from the palette. The marker is palette[4], and the toggle map is {palette[0] <-> palette[8], palette[6] <-> palette[7]}. All other colours are never touched, and grid colours are never permuted wholesale. Marker detection reads the original input, so the order in which lines are processed cannot affect which pairs are detected.",
+    "limitations": "The program assumes the constructor's domain. In that domain, every line runs in one direction only, so lines never cross. Marker coordinates satisfy 1 <= val <= dim-2, so corners are never markers and a marker on one edge cannot be mistaken for half of a perpendicular pair. If perpendicular lines did cross, the shared cell would be toggled twice and end up unchanged. The generator never produces that case. Two markers on the same edge, such as two 4s in the top row, never form a line, which matches the fixtures. I found no fixture inconsistency and no generator tie-break or indexing defect that affects the visible rule. The demonstrations are not needed and are ignored, because the rule is fully determined by the query input.",
+    "independent_source_review": {
+      "verdict": "accept",
+      "mechanism": "Each matched pair of 4-markers sits on opposite borders, in the same column (top/bottom) or the same row (left/right). Every cell strictly between the two markers is toggled 0\u21948 and 6\u21947. The constructor's hidden `switch` latent only decides whether the line is drawn into the input or the output. Toggling covers both cases, so the answer is fully determined by the visible input.",
+      "evidence": [
+        "Constructor: vals start at -1 + randint(2,4), so the first val is 1..3. The loop breaks when val+1 >= dim, with dim = width if cdir else height, so 1 <= val <= dim-2. That axis choice is correct: cdir=1 indexes columns with width, and cdir=0 indexes rows with height. Since dim >= 6 and the first val is <= 3, at least one line always exists.",
+        "Markers are written to both grid and output at the border endpoints. Line edits run only over interior indices 1..dim-2 of `thegrid`. Corners and the two perpendicular edges never receive a 4. So the visible scan (both ends == MARK) finds exactly the generated lines and no spurious perpendicular pairs. Two 4s on the same edge never qualify.",
+        "Interior colours are only 0/6. The line becomes 7 if nonzero, else 8. For switch=True the input holds 7/8 and the output holds 0/6, and the involutive TOGGLE map yields the output in both cases. Input lines are never mixed, and nothing depends on the hidden latent beyond what is visible.",
+        "Lines are all in one orientation and spaced at least 2 apart, so cells are never toggled twice. The factory's duplicate-cell fallback is out of domain.",
+        "Factory: MARK = pal[4] and TOGGLE = {pal0\u2194pal8, pal6\u2194pal7}. Both orientations are scanned directly on the visible array, which handles transposition and non-square shapes under D4. There is no untransform/retransform wrapper. Marker detection reads `src`, so processing order does not matter.",
+        "Fixtures are consistent with the constructor's validate() parameters. For example, test row 1 [0,6,0,0,0,6,6,6,0] with lines at columns 1, 5 and 7 becomes [0,7,0,0,0,7,6,7,0], which matches.",
+        "The host audit passed: 1000 fresh pairs, 8000 augmented checks, 16 fixture variants, and no sampler rejections."
+      ],
+      "blocking_issues": [],
+      "nonblocking_limits": [
+        "Crossing perpendicular lines would double-toggle the shared cell, and markers at corners would be ambiguous. Neither is reachable from the constructor.",
+        "The solver ignores demonstrations. This is acceptable because the toggle colour pairs and the marker role are fixed rule colours, shown in every demo."
+      ],
+      "required_context_checks": [
+        "Confirm the host palette sampling keeps pal[0], pal[4], pal[6], pal[7] and pal[8] distinct, so the TOGGLE dict and MARK do not collide.",
+        "No colour-association episode check applies. d2acf2cb is not in require_colour_evidence's task list, and the rule has no arbitrary lookup."
+      ],
+      "task_id": "d2acf2cb",
+      "factory_sha256": "b70bb868964b7c0ec209f705e627e45228ae63fef6836465f2af3cc6bc768e05",
+      "constructor_sha256": "b9011f954412f54fc3236af40f136dca5c6c73536a291d0de7e3f5fe480fad3e"
+    },
+    "host_review": "Read source review mechanism, evidence, limitations and context requirements. Host audit covers all eight D4 indices per fresh pair; d4=7 in report is only the final loop index. All supplied fixture pairs checked under 16 orientation/palette variants. Emitted programs operate in displayed coordinates. Per-episode verification and context-evidence checks are mandatory. Added evidence per involutive colour pair along marked lines; observed forward mapping also teaches reverse. All-D4 test rejects unseen alternate mapping."
+  }
+}

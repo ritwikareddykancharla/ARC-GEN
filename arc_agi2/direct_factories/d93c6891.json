@@ -1,0 +1,50 @@
+{
+  "task_id": "d93c6891",
+  "factory_sha256": "70fbde534a067aa9b71e706211a7b0c4043deefb62dd99b55b1cb764fff0f272",
+  "constructor_sha256": "fe19c0682588bd6a14537c7d18fa112a1b1bdc51a6fea4c0cb168f9a2afd0d6f",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 137851666856649,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 10.216959458077326,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "Colour roles are fixed as palette constants: board = palette[4], strip = palette[5], block = palette[7]. The background is whatever colour remains.\n\nThe emitted program works directly in the visible grid. It does not rotate anything back:\n1. The board is the bounding box of all board, strip and block cells.\n2. Every strip cell is repainted as board.\n3. For each 4-connected block component, it adds up the sizes of the strip components that are orthogonally adjacent to that block. This is the poured count.\n4. If the count is positive, it finds the side of the visible board bounding box that the block's bounding box rests on.\n5. It paints whole layers parallel to that side, starting at the side and moving inward, until the count is used up.\n\nThe resting side is detected from the pixels for each block. Because of this, any rotation or reflection automatically turns the canonical directions into the visible ones: a top block becomes a left, right or bottom block, and the layers turn with it. So d4 does not need to be specialized.\n\nThe generator guarantees the following:\n- The yellow rectangle is exactly the board bounding box.\n- Each block has offset >= 1 and offset + wide <= side - 1, and its depth is at most 6 while the board side is at least 8. So a block touches exactly one board side.\n- An 8-neighbourhood id check keeps strips and blocks of different groups from touching. So each strip touches only its own block. Its left and right strips may merge into one component, which still gives the same sum.\n- left + right = gtall * wide, so the count always fills a whole number of layers.\n- Blocks with no strips (gtall = 0) stay 7. Blocks with tall = 0 are not drawn at all.",
+    "limitations": "Two behaviours only matter outside the generator's domain, so neither can be reached on generated scenes:\n- If a block touched several board sides, the program picks the side with the most contact cells, then the first in the order top, bottom, left, right. If a block touched no side, it picks the nearest side.\n- If a poured count were not a whole number of layers, the program would fill the last partial layer completely, the same as the archived solver.\n\nThe program assumes the palette is a permutation, so the board, strip and block colours differ from the background and from each other. Demonstrations are not used, because the roles come from the palette constants. I found no fixture that contradicts the rule. In the constructor I found no tie-break or indexing defect that changes the visible answer.",
+    "independent_source_review": {
+      "verdict": "accept",
+      "mechanism": "The board is a rectangle of colour palette[4]. Strip cells (palette[5]) are repainted as board. For each 4-connected block of palette[7], the solver adds up the sizes of the strip components orthogonally adjacent to that block, giving n. It then paints ceil(n / layer length) whole layers with the strip colour. The layers are parallel to the side of the visible board bounding box that the block rests on, and filling starts at that side. The resting side is found from pixels in augmented coordinates, so no whole-grid untransform is used.",
+      "evidence": [
+        "Board bounding box: common.rect places the yellow rectangle at (yrow, ycol). Every 5 and 7 cell lies inside it, so the bounding box of {4, 5, 7} is exactly the board. The background is the only other colour, and the palette is a permutation, so it stays distinct.",
+        "A block touches exactly one side. ywidth and yheight are each max(..., 8) >= 8, and talls is at most 6, so a block never reaches the opposite side. Offsets satisfy offset >= 1 and offset + wide <= side - 1, so a block never reaches either perpendicular side. I checked the placement for all four indices (top, right, bottom, left). The parameter lists are sampled in the order ywidth, yheight, ywidth, yheight, which matches i = 0..3 using the horizontal or vertical extent.",
+        "Each strip is orthogonally adjacent to its own block. The start cells are (0, offset+wide) and (0, offset-1) for the top block; (offset+wide, ywidth-1) and (offset-1, ywidth-1) for the right block; (yheight-1, ywidth-wide-offset-1) and (yheight-1, ywidth-offset) for the bottom block; and (yheight-wide-offset-1, 0) and (yheight-offset, 0) for the left block. Each is orthogonally adjacent to its block's edge row or column. next_left and next_right walk the rim in opposite directions. I checked them at each corner and they are consistent.",
+        "Groups cannot mix. draw_left and draw_right refuse to write onto any cell that is not 4, and they require the cell after a strip's end to be 4. The 8-neighbourhood id check rejects any contact between different groups, including diagonal contact.",
+        "A later block can overwrite an earlier strip or block. Blocks 1 and 2 have offset >= 1 and block 3 sits away from the corner, so they never cover the first row or column of an earlier group. Any overwrite is therefore partial. The surviving cells with the old id then touch the new id, and the scene is rejected. So a mismatch between the input and the output label cannot survive.",
+        "The left and right strips of one block may merge into a single component. They belong to the same group, so the sum still equals left + right = gtall * wide.",
+        "Labels: the output paints gtall full layers starting at the resting edge. The layer length equals the block's extent along that edge, so n / layer length = gtall exactly, and the solver fills exactly gtall layers. The case gtall = 0 means no strips, so the block stays 7 and the solver skips it because n = 0. The case tall = 0 means no block is drawn and left = right = 0, so there is no effect.",
+        "No hidden latent decides the label. Everything comes from visible sizes and adjacency. There are no ties: there is exactly one candidate side, and every count fills whole layers.",
+        "The canonical fixture outputs match the rule, including the test case: the top block gets 10 cells (5 layers of 2), the right block gets 6 (3 columns of 2), the bottom block gets 8 (2 rows of 4), and the left block is unstrapped.",
+        "Host audit: 1000 fresh pairs, 8000 augmented checks, and 16 fixture variants all passed, with no sampler rejections."
+      ],
+      "blocking_issues": [],
+      "nonblocking_limits": [
+        "Two fallbacks cannot be reached by the generator: the multi-side or no-side choice (most contact cells, then nearest side), and filling the last layer completely when the count is a partial layer. The constructor excludes both, so neither affects generated scenes.",
+        "Strips can wrap around board corners and be long (up to 36 cells). Counting by component size handles this correctly. This is noted only as a source of complexity, not as a defect.",
+        "Colour roles are fixed by palette constants rather than inferred from demonstrations. This is valid because the roles are genuine rule colours under a palette permutation."
+      ],
+      "required_context_checks": [
+        "None specific: d93c6891 is not one of the tasks in require_colour_evidence. The rule is a deterministic count-and-fill with no arbitrary colour lookup, so the general D4 conflicting-answer policy is enough."
+      ],
+      "task_id": "d93c6891",
+      "factory_sha256": "70fbde534a067aa9b71e706211a7b0c4043deefb62dd99b55b1cb764fff0f272",
+      "constructor_sha256": "fe19c0682588bd6a14537c7d18fa112a1b1bdc51a6fea4c0cb168f9a2afd0d6f"
+    },
+    "host_review": "Read complete independent review, source mechanism, limitations and context requirements. All eight D4 indices tested per fresh pair, all supplied fixture pairs checked in16 orientation/palette variants. Per-episode execution and evidence checks required. "
+  }
+}

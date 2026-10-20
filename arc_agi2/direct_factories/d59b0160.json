@@ -1,0 +1,48 @@
+{
+  "task_id": "d59b0160",
+  "factory_sha256": "8eed74b8e1c12bf3650ea7fb4dd7a0ef6fa0b862e2821c7b8659aeba7ea4e793",
+  "constructor_sha256": "d7f879147cf9641f0808a8c23d65487c4d74f9fb810f5325155eac0621419f7c",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 201214156574944,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 13.235922624939121,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The rule is to erase every rectangle whose dot colours include all of the legend's colours, and keep the rest. This rule is symmetric under D4, and the parts are located by colour, so the emitted program works directly in the visible coordinates.\n\nThe factory fixes two constants from the palette:\n- **Background:** BG = palette[7].\n- **Frame:** FRAME = palette[3].\n\nThe emitted program then works as follows:\n1. **Find the legend box.** It takes the bounding box of all FRAME cells. Whatever the D4 transform, this is the 4x4 corner block, made of the 3x3 legend plus its L-shaped frame, in whichever corner it ended up.\n2. **Read the legend colours.** These are the colours inside the box, excluding FRAME and BG.\n3. **Find the rectangles.** It finds the 4-connected components of non-BG cells and skips any component that touches the legend box.\n4. **Erase matches.** A component is painted BG if its colour set is a superset of the legend set.\n\nThe fill colour (palette[0]) appears in the rectangles' colour sets. That causes no harm, because the generator never uses fill colour 0 as a legend colour.\n\nThere is no rotation, normalization or colour un-permutation. Because the frame is found from its bounding box, it works for every corner position and for rectangular grids.",
+    "limitations": "- **Separation by background.** The program relies on the constructor's guarantee that rectangles have a one-cell background margin from each other and from the 4x4 legend corner. The `_fits` margin check enforces this, so each 4-connected non-background component is exactly one rectangle.\n- **No frame cells.** If no frame-colour cell exists (outside the generator's domain), the input is returned unchanged.\n- **Frame colour outside the frame.** It assumes the frame colour never appears outside the frame. The generator's dot palette excludes 3, so this holds.\n- **Fixtures.** The supplied fixtures follow the rule uniformly; I found no contradictions and no constructor defects to report.\n- **Not tested.** I have not run the factory on the fixtures or on fresh generated pairs.",
+    "independent_source_review": {
+      "verdict": "accept",
+      "mechanism": "A 3x3 legend sits in a corner and is closed off by an L-shaped frame of colour 3. Every 4-connected non-background component outside the legend box whose colour set contains every legend colour is painted background. All other components are left unchanged. The emitted solver specializes BG=palette[7] and FRAME=palette[3]. It takes the legend box as the bounding box of the FRAME cells in visible coordinates, so it handles any D4 corner and non-square grids without an untransform wrapper.",
+      "evidence": [
+        "Labels come from visible content only. The constructor's generate() sets `erased = legend_set <= _rect_colours(cells)`, where legend_set is recomputed from the rendered legend. The hidden `erase` flag only steers colour sampling and never sets the label directly.",
+        "Erased rectangles get base=list(legend_set). Kept rectangles get `random.sample(legend_set, k)` with k <= n_legend-1, plus extras from extras_pool, which excludes all legend colours. So the hidden flag and the visible superset test always agree.",
+        "_fill_rect realizes every requested colour. n_dots >= len(colours) and the first len(order) spots each get a distinct colour. Since `room = area-1-len(base)` and area >= 6, len(colours) <= area-1, so the min() clamp never drops a colour.",
+        "Separation: _fits checks a one-cell margin against `taken`, which covers the rectangles placed so far and the 4x4 corner block. Rectangles therefore never touch each other or the frame/legend, so each 4-connected non-BG component is exactly one rectangle and the legend+frame forms its own component(s) inside the box.",
+        "The solver's colour set includes the fill colour (palette[0]). This is harmless because PALETTE=[1,2,4,5,6,8,9] keeps 0, 3 and 7 out of the legend.",
+        "The FRAME colour appears only in row 3 and column 3 of the 4x4 corner, so the bounding box of FRAME cells is exactly that corner under every D4 transform. The legend read then subtracts FRAME and BG.",
+        "The canonical fixtures are built through generate() with explicit rects, so they bypass _fits. Checked by hand, they still keep the one-cell background separation, e.g. in the test: col 9 between (0,6) and (1,10)/(5,10), col 2 between (5,0) and (6,3), and row 4 under the frame. Fixture outputs match the superset rule.",
+        "No arbitrary colour association is involved because the legend is read from the query grid itself. The task is not among those gated by episode_evidence_checks, and none is needed.",
+        "The host audit passed: 1000 fresh pairs, 8000 augmented checks, 16 fixture variants, no sampler rejections."
+      ],
+      "blocking_issues": [],
+      "nonblocking_limits": [
+        "The solver returns the input unchanged if no FRAME cell exists. The constructor always draws the frame, so this branch is out of domain.",
+        "Correctness depends on the constructor's one-cell background margin. Rectangles that touch would merge into a single component, but the generator excludes this.",
+        "Fixture rectangles are passed explicitly and are not checked by _fits. Their separation was verified by inspection only.",
+        "Legend position and size, and the BG, frame and fill roles, are fixed task properties. They vary only through palette and D4 augmentation."
+      ],
+      "required_context_checks": [],
+      "task_id": "d59b0160",
+      "factory_sha256": "8eed74b8e1c12bf3650ea7fb4dd7a0ef6fa0b862e2821c7b8659aeba7ea4e793",
+      "constructor_sha256": "d7f879147cf9641f0808a8c23d65487c4d74f9fb810f5325155eac0621419f7c"
+    },
+    "host_review": "Read complete independent review, source mechanism, limitations and context requirements. All eight D4 indices tested per fresh pair, all supplied fixture pairs checked in16 orientation/palette variants. Per-episode execution and evidence checks required. "
+  }
+}

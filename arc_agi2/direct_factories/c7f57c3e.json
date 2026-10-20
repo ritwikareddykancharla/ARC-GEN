@@ -1,0 +1,51 @@
+{
+  "task_id": "c7f57c3e",
+  "factory_sha256": "916dfc3f952b55f1a6e788e8ea38c2964f1713d716277ca36648be34557c88ad",
+  "constructor_sha256": "72f226854a9ef35ee343dee90e25c85512905914ce0002aff60d7d48b4aa197d",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 36187980765275,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 13.143062124960124,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The emitted solver works directly in visible coordinates. The frame colour is the constant palette[1], and the background is the most common colour (the constructor keeps non-background cells under half the grid). A figure is an 8-connected group of non-background cells that contains at least one frame cell. In every frame shape and attachment kind, the decoration cells touch the frame or the centre orthogonally or diagonally. Figure boxes are always separated by a gap of at least one cell, so figures never merge.\n\nFor each figure, the solver takes the frame bounding box and computes a per-axis scale: frame height divided by the smallest frame height, and the same for width. Every scene has a unit-scale figure, so this division is exact. The decoration template is the set of non-frame cells, measured from the frame box's top-left corner in frame units. Floor division handles attachments at negative offsets, such as above or left.\n\nThere must be exactly two distinct templates. The solver erases all decoration cells to background, then stamps the other group's template onto each figure at that figure's own (sy, sx) scale. Everything is anchored to the frame box with per-axis scaling, so rotations and reflections need no direction constant. A stem below in one orientation shows up as a stem left, right or above, and that offset is measured and redrawn in place. Rotations swap which axis is wider for rectangular frames, and per-axis scaling handles that too. Colour roles beyond the frame are inferred from pixels.",
+    "limitations": "- The solver assumes the constructor's domain: one frame shape per scene, exactly two decoration templates, at least one unit-scale figure, figures separated by at least one background cell, and a background that covers most of the grid.\n- The odd-one-out count asymmetry is never needed: with exactly two templates the swap is symmetric, so there is no tie-break.\n- If a scene broke these assumptions (for example, figures touching diagonally, or more than two templates), the solver returns the input unchanged.\n- The demonstrations are not consulted, because the frame colour role comes from palette[1].\n- No constructor defects or fixture contradictions were found. The canonical fixtures are consistent with the uniform swap rule, including the 3x scale and the centre colour travelling with the template in the test pair.\n- Nothing has been executed; this is untested pending host verification.",
+    "independent_source_review": {
+      "verdict": "accept",
+      "mechanism": "Each figure is a colour-1 frame (one shared shape per scene) plus non-frame decoration cells. The decoration is measured in frame units relative to the frame's bounding-box top-left, using per-axis scale = frame extent // smallest frame extent. Exactly two distinct templates occur. The output erases all decorations and stamps the other group's template onto every figure at that figure's own scale. The emitted solver does this directly in visible coordinates: background by majority, 8-connected non-background components that contain the frame colour, a per-axis scale, a floor-division template key, and a symmetric swap via other[t].",
+      "evidence": [
+        "Template correctness: `template_cells` never puts a decoration key on a frame cell. Centre cells are interior; above/below/left/right/base/cap offsets fall at rows -1, -2, h, h+1 or cols -1, w. So the dict the solver extracts (`t[((a-y0)//sy, (b-x0)//sx)] = v`) exactly equals the stamped dict, and every s\u00d7s block maps to one key with one colour.",
+        "Frame bbox anchoring: every SHAPES frame touches row 0, col 0, row h-1 and col w-1, so the frame bbox top-left is the template origin. Negative offsets for above/left/cap are handled by Python floor division.",
+        "Scale exactness: `_random_scene` forces `1 in scales`, so minh=h and minw=w. Each frame bbox is h*s \u00d7 w*s, which gives sy=sx=s exactly. Under D4 transposition, per-axis min/scale still works, because all figures share the shape and rotate together.",
+        "Connectivity: for every shape/kind pair, the decoration reaches the frame 8-adjacently. Examples: X centre is diagonal to the corners; X above (-1,1) is diagonal to (0,0); the base row is adjacent to the stem. Scaled X frame blocks are joined through the centre block. Every template includes a centre, which matches the stated non-support of centre-less templates.",
+        "Separation: `_box` takes the union of both templates' extents, and placement requires a gap of at least one cell (`bx[0] > o[1] + 1` etc.). So components never merge in input or output, and swapped stamps stay in-grid and off other figures.",
+        "Colours: decoration colours come from `palette = [c not in (FRAME, bg)]`, so decoration cells can never be read as frame or background. `2*nonbg >= h*w` is rejected, so the majority-colour background is unambiguous on the input.",
+        "Two templates: `odd_t == com_t` is rejected, and n>=3 with one odd figure gives exactly two keys in the Counter. The swap is symmetric, so neither `list(cnt.keys())` order nor the archived most_common order creates a tie problem.",
+        "Fixture reconstruction spot-checked: in pair 1 the tplus at (1,12) with below_base (8,8) matches input rows 1\u20134. In the test, the wplus at (14,2,3) puts its above cells at rows 11\u201313 cols 5\u201310 (colour 2), and the output has below cells at rows 23\u201325 cols 5\u201310 (colour 4), matching the canonical fixtures.",
+        "No whole-grid untransform wrapper is used. The only specialised constant is FRAME = palette[1], a genuine rule colour that stays invariant in every demonstration.",
+        "Host audit: 1000 fresh pairs, 8000 augmented checks and 16 fixture variants passed, with no sampler rejections."
+      ],
+      "blocking_issues": [],
+      "nonblocking_limits": [
+        "The solver returns the input unchanged if the number of distinct templates is not 2 or no frame exists. This is out-of-domain for the constructor and so not reachable.",
+        "Demonstrations are not consulted. The frame colour comes from palette[1], which is legitimate rule-colour specialisation because frames are visibly invariant in every demo.",
+        "The solver relies on constructor guarantees not re-verified at runtime: one frame shape per scene, at least one unit-scale figure, one-cell box gaps, and background covering more than half the input.",
+        "Constructor scope is limited to five frame shapes, six attachment kinds, scales 1\u20133 and at most two non-unit figures. This is a stated scope, not a defect."
+      ],
+      "required_context_checks": [
+        "None task-specific: c7f57c3e is not in the episode_evidence_checks list. No arbitrary colour or shape lookup is involved, because the decoration colours are copied from the visible input templates and the swap is deterministic. The general D4-conflict rejection policy suffices."
+      ],
+      "task_id": "c7f57c3e",
+      "factory_sha256": "916dfc3f952b55f1a6e788e8ea38c2964f1713d716277ca36648be34557c88ad",
+      "constructor_sha256": "72f226854a9ef35ee343dee90e25c85512905914ce0002aff60d7d48b4aa197d"
+    },
+    "host_review": "Read mechanism, evidence, limitations and context requirements. Host reflects columns before clockwise rotation, tests all eight D4 indices, and applies a shared palette permutation after generation. Fixture audit verifies all train/test supplied pairs at every tested orientation/palette, not one pair per variant. Per-episode execution verification and conflicting-context rejection remain required."
+  }
+}

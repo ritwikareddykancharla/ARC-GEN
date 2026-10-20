@@ -1,0 +1,47 @@
+{
+  "task_id": "ca8de6ea",
+  "factory_sha256": "24f6bb6659009214d5c93cd11220b8ce858e48ac15513c89c52b4c939effdf1d",
+  "constructor_sha256": "97956be7d75541d1dc634dab84905176d3418e57fadda7302b1add3d3763edb8",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 191550460851735,
+  "d4": 7,
+  "unique_base_inputs": 968,
+  "seconds": 1.4931904170662165,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The native rule packs the nine pixels of a 5x5 X into a solid 3x3 block. The four outer corners go to the output corners and the centre stays the centre. The inner diagonal ring (1,1),(1,3),(3,3),(3,1) turns 45 degrees onto the edge midpoints: top, right, bottom and left. The factory applies the episode's D4 transform separately to each source coordinate on the 5x5 grid and to each target coordinate on the 3x3 grid. It then emits a fixed copy table that works directly in visible coordinates. No grid is rotated or un-permuted at runtime. Colours are copied pixel by pixel, so the palette needs no handling except to set the canvas background constant BG = palette[0]. That constant is never visible, because all nine output cells are overwritten. The rotation convention is: a clockwise turn maps (r,c) to (c, n-1-r), and a row reversal maps (r,c) to (r, n-1-c).",
+    "limitations": "Assumes the constructor's domain: a 5x5 input with the X at fixed positions and a 3x3 output. Inputs of any other size are outside the domain and are not handled. There is an ambiguity, not a defect. The constructor always gives the main-diagonal pair (1,1)/(3,3) one colour and the anti-diagonal pair (1,3)/(3,1) another. Several source-to-edge assignments therefore produce identical outputs. I use the archived solver's 45-degree mapping, which matches the constructor exactly on every generated scene. The fixtures are consistent with this uniform rule. No constructor indexing bugs or hidden tie-breaks were found. No tests were run.",
+    "independent_source_review": {
+      "verdict": "accept",
+      "mechanism": "A fixed pixel-copy table packs the nine-pixel X of a 5x5 input into a solid 3x3 block. The four outer corners go to the output corners and the input centre (2,2) goes to the output centre. The inner diagonal cells go to the edge midpoints: (1,1) to top, (1,3) to right, (3,3) to bottom and (3,1) to left. The factory applies the episode's D4 transform to each source coordinate (n=5) and each target coordinate (n=3), then emits a static MAP in visible coordinates.",
+      "evidence": [
+        "Constructor assignments: colors[0] goes to in(0,0),(4,4) and out(0,0),(2,2). colors[1] goes to in(1,1),(3,3) and out(0,1),(2,1). colors[2] goes to in(0,4),(4,0) and out(0,2),(2,0). colors[4] goes to in(1,3),(3,1) and out(1,0),(1,2). colors[3] goes to in(2,2) and out(1,1). Every entry of the factory's src dict reads an input cell that holds the same colour index as its target output cell.",
+        "D4 correctness follows from how the table is built, not from any geometric equivariance. The augmented output at tf3(o) is the native output at o. That equals the native input at src(o), which is the augmented input at tf5(src(o)). So the emitted pair (tf3(o), tf5(src(o))) is correct for every d4, as long as the same tf convention is used for both grids. It is.",
+        "No hidden latent. Every output cell is a direct copy of a visible input cell. colors are 5 distinct samples from 1..9 (common.random_colors uses random.sample), so there is no tie. Repeated colours would not matter anyway, because cells are copied by position.",
+        "The palette is handled correctly. Colours are copied verbatim. BG = palette[0] is only the initial fill, and all nine cells are always overwritten because the src dict has 9 distinct targets covering the 3x3 grid.",
+        "The solver works directly in augmented visible coordinates. There is no whole-grid untransform, native solve or retransform at runtime.",
+        "All four approved fixtures (3 train and 1 test) match the constructor's validate() colour lists under this mapping. Example: train 1 has colors [6,2,7,3,4], giving output [[6,2,7],[4,3,4],[7,2,6]].",
+        "Host audit passed: 1000 fresh pairs, 8000 augmented checks and 16 fixture variants, with no sampler rejections."
+      ],
+      "blocking_issues": [],
+      "nonblocking_limits": [
+        "The choice of which inner-diagonal cell feeds which edge midpoint is not identifiable from the data. The constructor always gives (1,1) and (3,3) the same colour, and likewise (1,3) and (3,1). So several assignments give identical outputs across the whole constructor domain. The chosen 45-degree mapping is consistent and is not a defect.",
+        "The domain is fixed: a 5x5 input with the X at fixed positions and a 3x3 output. Other sizes are out of scope, and the constructor never produces them.",
+        "The scene space is small (9P5 = 15120 colour assignments). This explains 968 unique inputs out of 1000 samples, and it reflects the task's inherent simplicity, not a generator fault."
+      ],
+      "required_context_checks": [
+        "None task-specific. ca8de6ea is not in the colour-evidence list, and the rule is purely positional with no arbitrary colour or shape lookups. The standard policy of rejecting D4 variants with conflicting answers is sufficient."
+      ],
+      "task_id": "ca8de6ea",
+      "factory_sha256": "24f6bb6659009214d5c93cd11220b8ce858e48ac15513c89c52b4c939effdf1d",
+      "constructor_sha256": "97956be7d75541d1dc634dab84905176d3418e57fadda7302b1add3d3763edb8"
+    },
+    "host_review": "Read mechanism, evidence, limitations and context requirements. Host reflects columns before clockwise rotation, tests all eight D4 indices, and applies a shared palette permutation after generation. Fixture audit verifies all train/test supplied pairs at every tested orientation/palette, not one pair per variant. Per-episode execution verification and conflicting-context rejection remain required."
+  }
+}

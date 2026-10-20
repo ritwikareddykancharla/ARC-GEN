@@ -1,0 +1,49 @@
+{
+  "task_id": "d0f5fe59",
+  "factory_sha256": "42ce4bfe5c56c511ebba92f35d12fe0a1224a668e62029896d4b696b90ad83f2",
+  "constructor_sha256": "d1a36ecf52b3b656a6449d8ee8eae51f580e2efbaa85cf4e9c37bb0832c899b6",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 196101015889313,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 3.948811624897644,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The generator places several non-touching, 4-connected cyan sprites on a black grid. The output is an N x N grid, where N is the number of sprites, with cyan on the main diagonal and black elsewhere.\n\nIn visible coordinates, the emitted program counts the 4-connected components of non-background cells. The background is the constant palette[0]. It then builds an N x N canvas of palette[0] and paints one palette[8] cell per object along a diagonal.\n\nThe D4 transform only affects which diagonal is used, because the output is square. A row reversal maps the main diagonal to the anti-diagonal, and each clockwise quarter turn swaps the two again. So the factory picks the anti-diagonal exactly when (d4 >= 4) XOR (d4 % 4 is odd), and the main diagonal otherwise.\n\nThe input's object count is invariant under D4, so no coordinate remapping of the input is needed. The program never normalizes or rotates grids. Colour roles are fixed constants: palette[0] is the background and palette[8] is the object/diagonal colour.",
+    "limitations": "- The program assumes the constructor's domain: sprites are internally 4-connected and separated by the overlap padding, so the 4-connected component count equals the sprite count. If sprites touched, they would merge; the archived solver has the same behaviour.\n- The program relies on the palette constants rather than inferring colours from the demos. This is exact under the stated episode-wide palette mapping.\n- The generator always produces at least one sprite, so the N = 0 case (which would return an empty grid) never occurs.\n- I found no fixture contradictions or constructor tie-break defects. The output depends only on the object count.\n- I have not run any tests.",
+    "independent_source_review": {
+      "verdict": "accept",
+      "mechanism": "The constructor places num_sprites cyan (8) sprites on a black (0) grid. Each sprite is a 4-connected creature built by continuous_creature inside its own length x length box, with length 3 or 4. common.overlaps with spacing=1 rejects any placement where boxes are not separated by at least one full row or column. The output is common.grid(len(brows), len(bcols)), which is N x N, with output[i][i] = cyan, i.e. an identity in colour 8. The emitted program counts 4-connected non-BG components in the visible grid, builds an N x N canvas of BG, and paints FG on the main diagonal or the anti-diagonal according to a single D4-derived constant ANTI.",
+      "evidence": [
+        "continuous_creature grows only from queued 4-neighbours of already chosen pixels, clipped to the box. Each sprite is therefore internally 4-connected. Sizes are 4-6 in a 3x3 box and 6-8 in a 4x4 box, both of which fit.",
+        "overlaps(brows, bcols, lengths, lengths, 1) leaves at least one empty row or column between any two sprite boxes. Sprites cannot touch, even diagonally, so the 4-connected component count equals num_sprites exactly.",
+        "num_sprites >= (w+h)//10 >= 1 because w+h >= 16, so N = 0 is unreachable. The archived 'objs[0] if objs else 8' fallback and the factory's empty-output path are out of domain.",
+        "The output label depends only on len(brows). No hidden latent beyond the visible sprite count affects it. There is no tie-breaking and no fixed answer.",
+        "Object count is invariant under D4, so the solver correctly applies the count directly to visible input without any coordinate remapping.",
+        "D4 acts on the square output only by keeping the main diagonal or swapping it to the anti-diagonal. Rot90/270 swap it. A row or column reversal swaps it, while transpose and anti-transpose would preserve it. The factory's XOR (d4>=4) != (rot odd) is correct under a flip-then-rotate convention whose base flip is an axis reversal. The host audit checked all 8 variants (8000 augmented checks) and passed, which is consistent with the host's convention.",
+        "The solver has no untransform/native-solve/retransform wrapper. It is a direct visible-coordinate count plus a specialized diagonal orientation constant, which is allowed as a deterministic spatial orientation taught by the demonstrations.",
+        "Colours are fixed palette[0] (background) and palette[8] (sprites/diagonal). The constructor uses only these two colours, and both are visible in every demonstration. This is not an arbitrary lookup association.",
+        "Fixtures agree with the constructor and the rule: 3, 4 and 2 objects give 3x3, 4x4 and 2x2 identity outputs, and the test has 5 objects giving a 5x5 identity."
+      ],
+      "blocking_issues": [],
+      "nonblocking_limits": [
+        "Small grids allow N = 1 (when w+h < 20). A 1x1 output carries no diagonal-orientation information. An episode whose demonstrations all have N = 1 would not visibly teach main vs anti-diagonal for an N >= 2 query. This is rare, and it is an episode-identifiability concern rather than a solver/constructor defect.",
+        "The ANTI formula's correctness depends on the host's D4 indexing convention (which reflection is d4 = 4). This is confirmed only by the host audit, not by the source alone.",
+        "The solver assumes the constructor domain of non-touching, internally 4-connected sprites. Touching sprites would merge, and the archived program behaves the same way."
+      ],
+      "required_context_checks": [
+        "Confirm that episodes are rejected or flagged if every demonstration output is 1x1 while the query has N >= 2. In that case the diagonal orientation under odd-parity D4 variants is not taught by the visible demonstrations."
+      ],
+      "task_id": "d0f5fe59",
+      "factory_sha256": "42ce4bfe5c56c511ebba92f35d12fe0a1224a668e62029896d4b696b90ad83f2",
+      "constructor_sha256": "d1a36ecf52b3b656a6449d8ee8eae51f580e2efbaa85cf4e9c37bb0832c899b6"
+    },
+    "host_review": "Read source review mechanism, evidence, limitations and context requirements. Host audit covers all eight D4 indices per fresh pair; d4=7 in report is only the final loop index. All supplied fixture pairs checked under 16 orientation/palette variants. Emitted programs operate in displayed coordinates. Per-episode verification and context-evidence checks are mandatory. Added multi-object-demo evidence for multi-object query to teach diagonal orientation. Query answers not consumed."
+  }
+}

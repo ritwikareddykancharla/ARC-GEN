@@ -1,0 +1,48 @@
+{
+  "task_id": "cce03e0d",
+  "factory_sha256": "0b62b72388c06c81d2f324544fbaec862779f19b87df0387bc446d2db67ed909",
+  "constructor_sha256": "4b2ed363b01a2e00b277be49ae997d65c9e2eda6b9ce204d0f3af60410920dbf",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 251034140861326,
+  "d4": 7,
+  "unique_base_inputs": 913,
+  "seconds": 1.5487912079552189,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The output is the input's size squared in each direction. It is divided into an h-by-w array of blocks, each h-by-w. Block (i,j) holds an exact copy of the input when input cell (i,j) is red. Otherwise the block is background. Red is original colour 2 and background is original colour 0. Under the palette map these become the constants palette[2] and palette[0], and the emitted program uses those constants directly.\n\nThe mechanism is self-similar, so it is equivariant under every D4 transform of a square grid. A rotation or reflection of the input moves the red cell (i,j) to its transformed position. The block grid and the contents inside each block undergo the same transform, so the stamping rule is written once in visible coordinates. The canvas is filled with the mapped background colour. Each copied block keeps its own background cells, which already carry the mapped background colour, so the result matches the transformed and recoloured output exactly.\n\nNo tie-breaking is involved. Overlapping writes cannot happen because the blocks are disjoint.",
+    "limitations": "The constructor produces only 3x3 square inputs with 9x9 outputs. For a hypothetical rectangular h-by-w input, the program follows the archived generalisation: an (h*h)-by-(w*w) canvas with h-by-w blocks. That case lies outside the generator's domain. The red and background roles are fixed from the palette and are not inferred from the demonstrations. This is valid because the palette is applied uniformly across the episode. No constructor defects or fixture contradictions were found: all approved fixtures agree with the uniform rule. These conclusions come from reading the code and fixtures only; I have not run the factory or the emitted program on anything.",
+    "independent_source_review": {
+      "verdict": "accept",
+      "mechanism": "Self-similar block stamping. The output is (h*h)x(w*w), which is 9x9 in the constructor's domain. It is an h-by-w array of h-by-w blocks. Block (i,j) is an exact copy of the input when input[i][j] is the trigger colour (palette[2], originally red). Every other block is background (palette[0]).",
+      "evidence": [
+        "Constructor: `output[r*size+rr][c*size+cc] = colorcolor` runs only when `color == common.red()`. It stamps every listed pixel of the input into block (r,c). The input background is 0 and the output canvas is 0, so stamping the non-zero pixels is the same as copying the whole input block. The inner loop reads the full rows/cols/colors lists, not the partially built `grid`, so loop order cannot truncate a copy.",
+        "common.red() returns internal_colors[2]. That is 2 unless set_colors is called, and the constructor never calls it. `common.grid(w,h)` builds a 0-filled canvas, and with square size the w/h argument order does not matter.",
+        "Sampled inputs are 3x3 with 2\u20138 pixels coloured 1 or 2, and 0 elsewhere. Blocks never overlap, so there are no write conflicts and no ties. The output depends only on the visible input, with no hidden random latent.",
+        "Approved fixtures check out. Pair 1: 2s at (0,2) and (2,0), copies in those blocks. Pair 2: the single 2 at (1,0). Pair 3: 2s at (0,0), (0,2), (1,1) and (2,0). Test: 2s at (0,1), (0,2), (1,0) and (2,1), and the outputs match. These agree with the archived transform.",
+        "Factory: `out = np.full((h*h, w*w), BG)` followed by `out[i*h:(i+1)*h, j*w:(j+1)*w] = g` wherever `g[i,j] == RED`. This acts directly on the visible grid, with no untransform/solve/retransform wrapper. RED = palette[2] and BG = palette[0] are genuine rule colours specialised by the palette.",
+        "D4 equivariance holds. A flip maps index 3i+a to 8-(3i+a) = 3(2-i)+(2-a), and a transpose swaps (3i+a, 3j+b) to (3j+b, 3i+a). Each D4 element therefore moves block (i,j) to the transformed cell position and transforms the block contents the same way. The visible-coordinate rule then reproduces the augmented output exactly.",
+        "Copied blocks carry the input's own palette[0] cells and the canvas is filled with palette[0], so a non-zero mapped background is handled correctly.",
+        "Host audit passed: 1000 fresh pairs, 8000 augmented checks and 16 fixture variants, with no sampler rejections."
+      ],
+      "blocking_issues": [],
+      "nonblocking_limits": [
+        "The domain is limited to 3x3 square inputs. The rectangular (h*h)x(w*w) generalisation follows the archived program but is never exercised by the constructor.",
+        "The trigger colour is fixed as palette[2] rather than inferred from demonstrations. This is valid under a uniform episode palette. A sampled demo whose pixels are all colour 1 has an all-background output and reveals nothing about which colour triggers. A rough estimate is that about 7% of individual random demos lack red, which comes from averaging 2^-k over k=2..8. In a random multi-demo episode, every demo lacking red is rare, roughly 3e-4 for three demos, but it is not excluded.",
+        "Not covered by episode_evidence_checks: cce03e0d is not in require_colour_evidence's task list, so no episode-level check guarantees that a demonstration shows the trigger colour."
+      ],
+      "required_context_checks": [
+        "Confirm that episode assembly uses the canonical fixtures as demonstrations, or that at least one demonstration contains a palette[2] cell producing a stamped block. Otherwise, a query containing palette[2] could rest on an undemonstrated trigger-colour association, because all-blue demos would give all-background outputs."
+      ],
+      "task_id": "cce03e0d",
+      "factory_sha256": "0b62b72388c06c81d2f324544fbaec862779f19b87df0387bc446d2db67ed909",
+      "constructor_sha256": "4b2ed363b01a2e00b277be49ae997d65c9e2eda6b9ce204d0f3af60410920dbf"
+    },
+    "host_review": "Read mechanism, evidence, limitations and context requirements. Host reflects columns before clockwise rotation, tests all eight D4 indices, and applies a shared palette permutation after generation. Fixture audit verifies all train/test supplied pairs at every tested orientation/palette, not one pair per variant. Per-episode execution verification and conflicting-context rejection remain required. Added input/demo-only evidence gate for query-required ordering, substitution, or trigger association; regression tests include rejection and acceptance."
+  }
+}

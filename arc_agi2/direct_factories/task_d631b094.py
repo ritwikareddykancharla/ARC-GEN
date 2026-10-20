@@ -1,0 +1,23 @@
+def build_program(d4, palette):
+    bg = int(palette[0])
+    vertical = ((int(d4) % 4) % 2) == 1
+    lines = []
+    lines.append('import numpy as np')
+    lines.append('')
+    lines.append('BG = %d' % bg)
+    lines.append('VERTICAL = %s' % ('True' if vertical else 'False'))
+    lines.append('')
+    lines.append('def solve(demonstrations, grid):')
+    lines.append('    g = np.array(grid, dtype=int)')
+    lines.append('    mask = g != BG')
+    lines.append('    n = int(mask.sum())')
+    lines.append('    if n == 0:')
+    lines.append('        return [[BG]]')
+    lines.append('    vals, counts = np.unique(g[mask], return_counts=True)')
+    lines.append('    best = int(counts.max())')
+    lines.append('    colour = int(min(int(v) for v, c in zip(vals, counts) if int(c) == best))')
+    lines.append('    if VERTICAL:')
+    lines.append('        return [[colour] for _ in range(n)]')
+    lines.append('    return [[colour] * n]')
+    lines.append('')
+    return '\n'.join(lines)

@@ -5,6 +5,190 @@ from .program_targets import make_record
 
 
 class ColourEvidenceTests(unittest.TestCase):
+    def test_missing_recolour_and_construction_evidence(self):
+        cases = [
+            ('dc1df850',
+             {'input': [[0, 3, 0]], 'output': [[0, 3, 0]]},
+             {'input': [[0, 2, 0]], 'output': [[1, 2, 1]]}),
+            ('dbc1a6ce',
+             {'input': [[1, 0, 0]], 'output': [[1, 0, 0]]},
+             {'input': [[1, 0, 1]], 'output': [[1, 8, 1]]}),
+            ('d511f180',
+             {'input': [[1, 1]], 'output': [[1, 1]]},
+             {'input': [[5, 8]], 'output': [[8, 5]]}),
+            ('d631b094',
+             {'input': [[1, 0, 0]], 'output': [[1]]},
+             {'input': [[1, 0, 1]], 'output': [[1, 1]]}),
+            ('d5d6de2d',
+             {'input': [[2, 2], [2, 2]], 'output': [[0, 0], [0, 0]]},
+             {'input': [[2, 2, 2], [2, 0, 2], [2, 2, 2]],
+              'output': [[0, 0, 0], [0, 3, 0], [0, 0, 0]]}),
+            ('d90796e8',
+             {'input': [[2, 0, 3]], 'output': [[2, 0, 3]]},
+             {'input': [[2, 3, 0]], 'output': [[0, 8, 0]]}),
+            ('d364b489',
+             {'input': [[1, 0], [0, 0]], 'output': [[1, 6], [8, 0]]},
+             {'input': [[0, 0, 0], [0, 1, 0], [0, 0, 0]],
+              'output': [[0, 2, 0], [7, 1, 6], [0, 8, 0]]}),
+        ]
+        for tid, weak, teacher in cases:
+            for d4 in range(8):
+                with self.subTest(task_id=tid, d4=d4):
+                    pal = [3, 9, 0, 7, 2, 8, 1, 6, 4, 5]
+                    a, t = apply_episode([weak, teacher], d4, pal)
+                    with self.assertRaises(MissingColourEvidence):
+                        require_colour_evidence(tid, [a], [{'input': t['input']}], pal, d4)
+                    require_colour_evidence(tid, [a, t], [{'input': t['input']}], pal, d4)
+
+    def test_identity_drip_demos_do_not_teach_direction(self):
+        same = {'input': [[1, 1], [1, 1]], 'output': [[1, 1], [1, 1]]}
+        teacher = {'input': [[1, 0], [0, 2], [0, 0]],
+                   'output': [[1, 0], [1, 2], [1, 2]]}
+        for d4 in range(8):
+            pal = [3, 9, 0, 7, 2, 8, 1, 6, 4, 5]
+            a, t = apply_episode([same, teacher], d4, pal)
+            with self.assertRaises(MissingColourEvidence):
+                require_colour_evidence('d037b0a7', [a], [{'input': t['input']}], pal, d4)
+            require_colour_evidence('d037b0a7', [a, t], [{'input': t['input']}], pal, d4)
+            require_colour_evidence('d037b0a7', [a], [{'input': a['input']}], pal, d4)
+
+    def test_centre_pixel_does_not_teach_row_or_column(self):
+        same = {'input': [[0, 0, 0], [0, 1, 0], [0, 0, 0]],
+                'output': [[0, 0, 0], [0, 1, 0], [0, 0, 0]]}
+        teacher = {'input': [[0, 2, 0], [3, 1, 0], [0, 0, 0]],
+                   'output': [[0, 2, 0], [0, 1, 0], [0, 0, 0]]}
+        for d4 in range(8):
+            pal = [3, 9, 0, 7, 2, 8, 1, 6, 4, 5]
+            a, t = apply_episode([same, teacher], d4, pal)
+            with self.assertRaises(MissingColourEvidence):
+                require_colour_evidence('d23f8c26', [a], [{'input': t['input']}], pal, d4)
+            require_colour_evidence('d23f8c26', [a, t], [{'input': t['input']}], pal, d4)
+
+    def test_overlay_without_overlap_does_not_teach_precedence(self):
+        def pair(overlap):
+            g = [[0]*14 for _ in range(4)]
+            out = [[0]*4 for _ in range(4)]
+            for r in range(4):
+                g[r][4] = g[r][9] = 2
+            for i, colour in enumerate((4, 9, 1)):
+                c = 0 if overlap else i
+                g[0][5*i+c] = colour
+                if out[0][c] == 0:
+                    out[0][c] = colour
+            return {'input': g, 'output': out}
+        for d4 in range(8):
+            pal = [3, 9, 0, 7, 2, 8, 1, 6, 4, 5]
+            a, t = apply_episode([pair(False), pair(True)], d4, pal)
+            with self.assertRaises(MissingColourEvidence):
+                require_colour_evidence('cf98881b', [a], [{'input': t['input']}], pal, d4)
+            require_colour_evidence('cf98881b', [a, t], [{'input': t['input']}], pal, d4)
+            require_colour_evidence('cf98881b', [a], [{'input': a['input']}], pal, d4)
+
+    def test_odd_strip_does_not_teach_even_parity_anchor(self):
+        def pair(w):
+            g = [[0]*w, [5]*w, [0]*w]
+            out = [row[:] for row in g]
+            out[1] = [3 if (w-1-c) % 2 == 0 else 5 for c in range(w)]
+            return {'input': g, 'output': out}
+        for d4 in range(8):
+            pal = [3, 9, 0, 7, 2, 8, 1, 6, 4, 5]
+            a, t = apply_episode([pair(11), pair(10)], d4, pal)
+            with self.assertRaises(MissingColourEvidence):
+                require_colour_evidence('d406998b', [a], [{'input': t['input']}], pal, d4)
+            require_colour_evidence('d406998b', [a, t], [{'input': t['input']}], pal, d4)
+
+    def test_line_toggle_requires_each_colour_pair(self):
+        empty = {'input': [[0, 4, 0], [0, 0, 0], [0, 4, 0]],
+                 'output': [[0, 4, 0], [0, 8, 0], [0, 4, 0]]}
+        teacher = {'input': [[0, 4, 0], [0, 6, 0], [0, 4, 0]],
+                   'output': [[0, 4, 0], [0, 7, 0], [0, 4, 0]]}
+        reverse = {'input': teacher['output'], 'output': teacher['input']}
+        for d4 in range(8):
+            pal = [3, 9, 0, 7, 2, 8, 1, 6, 4, 5]
+            a, t, q = apply_episode([empty, teacher, reverse], d4, pal)
+            with self.assertRaises(MissingColourEvidence):
+                require_colour_evidence('d2acf2cb', [a], [{'input': q['input']}], pal, d4)
+            require_colour_evidence('d2acf2cb', [a, t], [{'input': q['input']}], pal, d4)
+
+    def test_even_count_tie_needs_evidence_on_same_visible_axis(self):
+        from tasks import task_c61be7dc as gen
+        odd = gen.generate(border=2, mid=3, rows=[0, 1, 2], cols=[0, 0, 0], xpose=False)
+        horizontal = gen.generate(border=2, mid=3, rows=[0, 1, 2], cols=[1, 1, 1], xpose=False)
+        vertical = gen.generate(border=2, mid=3, rows=[0, 1, 2], cols=[1, 1, 1], xpose=True)
+        for d4 in range(8):
+            pal = [3, 9, 0, 7, 2, 8, 1, 6, 4, 5]
+            a, t, v = apply_episode([odd, horizontal, vertical], d4, pal)
+            with self.assertRaises(MissingColourEvidence):
+                require_colour_evidence('c61be7dc', [a, v], [{'input': t['input']}], pal, d4)
+            require_colour_evidence('c61be7dc', [a, v, t], [{'input': t['input']}], pal, d4)
+            require_colour_evidence('c61be7dc', [a], [{'input': a['input']}], pal, d4)
+
+    def test_one_object_does_not_teach_diagonal_orientation(self):
+        one = {'input': [[8, 0, 0]], 'output': [[8]]}
+        two = {'input': [[8, 0, 8]], 'output': [[8, 0], [0, 8]]}
+        for d4 in range(8):
+            pal = [3, 9, 0, 7, 2, 8, 1, 6, 4, 5]
+            a, t = apply_episode([one, two], d4, pal)
+            with self.assertRaises(MissingColourEvidence):
+                require_colour_evidence('d0f5fe59', [a], [{'input': t['input']}], pal, d4)
+            require_colour_evidence('d0f5fe59', [a, t], [{'input': t['input']}], pal, d4)
+
+    def test_mirror_side_ambiguity_uses_same_query_input(self):
+        symmetric = {'input': [[7, 0, 7], [0, 7, 0]],
+                     'output': [[7, 0, 7, 7, 0, 7], [0, 7, 0, 0, 7, 0]]}
+        asymmetric = {'input': [[7, 0, 0], [0, 7, 0]],
+                      'output': [[7, 0, 0, 0, 0, 7], [0, 7, 0, 0, 7, 0]]}
+        for d4 in range(8):
+            pal = [3, 9, 0, 7, 2, 8, 1, 6, 4, 5]
+            a, t = apply_episode([symmetric, asymmetric], d4, pal)
+            with self.assertRaises(MissingColourEvidence):
+                require_colour_evidence('c9e6f938', [a], [{'input': t['input']}], pal, d4)
+            require_colour_evidence('c9e6f938', [a, t], [{'input': t['input']}], pal, d4)
+            # Ambiguous rule is harmless if all surviving rules give this query
+            # the same answer; do not unnecessarily discard that episode.
+            require_colour_evidence('c9e6f938', [a], [{'input': a['input']}], pal, d4)
+
+    def test_blank_stamp_outputs_do_not_teach_trigger(self):
+        blue = {'input': [[1]], 'output': [[0]]}
+        red = {'input': [[2]], 'output': [[2]]}
+        with self.assertRaises(MissingColourEvidence):
+            require_colour_evidence('cce03e0d', [blue], [{'input': [[2]]}])
+        require_colour_evidence('cce03e0d', [blue, red], [{'input': [[2]]}])
+
+    def test_identity_demos_do_not_teach_substitution(self):
+        for task, src, dst in (('c8f0f002', 7, 5), ('b1948b0a', 6, 2)):
+            plain = {'input': [[1, 0]], 'output': [[1, 0]]}
+            teacher = {'input': [[src, 0]], 'output': [[dst, 0]]}
+            for d4 in range(8):
+                pal = [3, 9, 0, 7, 2, 8, 1, 6, 4, 5]
+                a, t = apply_episode([plain, teacher], d4, pal)
+                q = {'input': t['input']}
+                with self.assertRaises(MissingColourEvidence):
+                    require_colour_evidence(task, [a], [q], pal, d4)
+                require_colour_evidence(task, [a, t], [q], pal, d4)
+
+    def test_complete_count_lines_do_not_teach_within_line_order(self):
+        from tasks import task_c8b7cc0f as gen
+        def pair(n):
+            cells = [(r, c) for r in range(2, 5) for c in range(2, 5)][:n]
+            return gen.generate(size=7, rows=[r for r, c in cells],
+                                cols=[c for r, c in cells], wide=5, tall=5,
+                                brow=1, bcol=1, color=8)
+        for d4 in range(8):
+            pal = [3, 9, 0, 7, 2, 8, 1, 6, 4, 5]
+            a, b, teacher, query = apply_episode([pair(3), pair(6), pair(4), pair(5)], d4, pal)
+            with self.assertRaises(MissingColourEvidence):
+                require_colour_evidence('c8b7cc0f', [a, b], [{'input': query['input']}], pal, d4)
+            require_colour_evidence('c8b7cc0f', [a, b, teacher],
+                                    [{'input': query['input']}], pal, d4)
+
+    def test_full_line_fill_needs_visible_demo_colour(self):
+        a = {'input': [[0, 1], [1, 0]], 'output': [[0, 1], [1, 0]]}
+        teacher = {'input': [[0, 0], [1, 0]], 'output': [[2, 2], [1, 2]]}
+        with self.assertRaises(MissingColourEvidence):
+            require_colour_evidence('c1d99e64', [a], [{'input': teacher['input']}])
+        require_colour_evidence('c1d99e64', [a, teacher], [{'input': teacher['input']}])
+
     def test_each_frame_size_needs_its_own_fill_mapping(self):
         def pair(side, offset=0):
             g = [[0]*(side+2) for _ in range(side+2)]

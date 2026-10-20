@@ -10,6 +10,8 @@ from tasks import task_855e0971 as strata
 from tasks import task_6ffe8f07 as rays
 from tasks import task_69889d6e as staircase
 from tasks import task_b2862040 as holes
+from tasks import task_c1d99e64 as full_lines
+from tasks import task_db7260a4 as water
 from .runtime import reference, call, grid
 
 
@@ -35,7 +37,8 @@ class ReviewedConstructorRepairs(unittest.TestCase):
         for tid, module in (('6ca952ad', falling), ('7039b2d7', panels),
                             ('78e78cff', leaking), ('780d0b14', patches),
                             ('855e0971', strata), ('6ffe8f07', rays),
-                            ('69889d6e', staircase), ('b2862040', holes)):
+                            ('69889d6e', staircase), ('b2862040', holes),
+                            ('c1d99e64', full_lines), ('db7260a4', water)):
             for split, examples in module.validate().items():
                 self.assertCountEqual(examples, reference(tid)['canonical'][split])
 
@@ -48,6 +51,19 @@ class ReviewedConstructorRepairs(unittest.TestCase):
                     pair = call(strata.generate, seconds=3)
                     grid(pair['input'])
                     grid(pair['output'])
+        finally:
+            random.setstate(state)
+
+    def test_drop_validation_does_not_move_initial_drop(self):
+        # The first simulation previously mutated pcol. The second simulation
+        # then started from the wrong column and returned (None, None).
+        state = random.getstate()
+        try:
+            random.seed(239)
+            pair = water.generate()
+            grid(pair['input'])
+            grid(pair['output'])
+            self.assertEqual(sum(c == 1 for c in pair['input'][0]), 1)
         finally:
             random.setstate(state)
 
@@ -121,3 +137,24 @@ class ReviewedConstructorRepairs(unittest.TestCase):
                 self.assertEqual(holes.generate(), holes._render(*good))
                 self.assertEqual([args.args for args in sample.call_args_list],
                                  [(2,), (2,)])
+
+    def test_painted_line_cannot_create_an_unlabelled_noise_line(self):
+        good = [(r+c) % 2 for r in range(10) for c in range(10)]
+        bad = good[:]
+        bad[:10] = [0, 1]+[0]*8
+        # Both fields pass the old pre-paint two-colour test.
+        for field in (bad, good):
+            self.assertTrue(all(len(set(field[r*10:r*10+10])) == 2 for r in range(10)))
+            self.assertTrue(all(len({field[r*10+c] for r in range(10)}) == 2 for c in range(10)))
+        with patch.object(full_lines.common, 'randint',
+                          side_effect=[10, 10, 1, 1]+bad+good):
+            with patch.object(full_lines.common, 'sample', side_effect=[[3], [1]]) as sample:
+                with patch.object(full_lines.common, 'random_color', return_value=1):
+                    pair = full_lines.generate()
+        # The first field was discarded; count and geometry were not resampled.
+        self.assertEqual(sample.call_count, 2)
+        self.assertEqual(pair['input'][0], [0, 0, 0, 1, 0, 1, 0, 1, 0, 1])
+        for r in range(10):
+            for c in range(10):
+                self.assertEqual(pair['output'][r][c],
+                                 2 if r == 3 or c == 1 else good[r*10+c])

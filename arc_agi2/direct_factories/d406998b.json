@@ -1,0 +1,51 @@
+{
+  "task_id": "d406998b",
+  "factory_sha256": "2efc46878e515ad535193d342ef4f52d831ca5d51c0034c7db3fc89d23d26643",
+  "constructor_sha256": "333f4e4880e8fbfa1d6491d24e4119e0c70c42a5f0fc75e9a9026a6bf0588f8e",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 244518818453717,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 3.5403024998959154,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "In the generator, the grid has 3 rows and W columns, with one grey (5) cell per column. A grey cell turns green (3) when (W-1-c) is even, so parity is counted from the right edge.\n\nThe factory tracks where that column axis and its right-edge anchor end up under the D4 transform (an optional row reversal, then k clockwise rotations):\n- No flip: k=0 gives columns anchored at the right; k=1 gives rows anchored at the bottom; k=2 gives columns anchored at the left; k=3 gives rows anchored at the top.\n- With flip: k=0 gives columns anchored at the left; k=1 gives rows anchored at the top; k=2 gives columns anchored at the right; k=3 gives rows anchored at the bottom.\n\nThe emitted program walks the visible strip axis directly. At every index whose distance from the anchored end is even, it recolours cells equal to palette[5] to palette[3]. All other cells are left unchanged. The program does no rotation, normalisation or colour unpermutation.",
+    "limitations": "Colour roles are taken from fixed palette constants: grey is palette[5] and green is palette[3]. Roles are not inferred from the demos. The axis comes from d4 rather than from grid shape, so square or ambiguous shapes are handled the same way. If the strip length is odd, both ends have the same parity, so the anchor choice does not matter in that case. No constructor defects or fixture contradictions were found: the fixtures match the rule c%2 != W%2 (equivalent to (W-1-c) even). The archived solver recolours any non-background cell, while this program recolours only grey cells. These are equivalent within the generator's domain.",
+    "independent_source_review": {
+      "verdict": "accept",
+      "mechanism": "Each input is a 3xW strip with exactly one grey cell per column (W from 10 to 20). In native coordinates, a grey cell in column c becomes green when (W-1-c) is even, so parity is anchored at the right edge. The constructor expression `c % 2 != width % 2` is algebraically equivalent to that condition. The emitted solver works on visible coordinates. It picks the strip axis (columns or rows) and the anchored end from d4 constants. It then walks indices along that axis, and at every index whose distance from the anchor is even it recolours cells equal to palette[5] to palette[3]. There is no whole-grid untransform or retransform.",
+      "evidence": [
+        "Constructor: `output[r][c] = green if c % 2 != width % 2 else gray`. For even W, odd c gives W-1-c even. For odd W, even c gives W-1-c even. So the label depends only on visible width and column index, with no hidden latent.",
+        "Fixtures match the rule. Width 13 changes the even columns. Widths 12, 14 and 10 change the odd columns. Test width 17 changes the even columns (0..16), matching the supplied output.",
+        "D4 mapping checked by hand with 'row reversal' read as a left-right flip of each row, then k clockwise rotations. Clockwise rotation sends (r,c) to (c, H-1-r).",
+        "No flip: k=0 gives columns with the right anchor (from_end=True). k=1 gives rows with the bottom anchor (True). k=2 gives columns with the left anchor (False). k=3 gives rows with the top anchor (False).",
+        "With flip: k=0 is left (False), k=1 is top (False), k=2 is right (True), k=3 is bottom (True). All eight cases match `from_end = k in (0,1)` without flip and `k in (2,3)` with flip.",
+        "This flip reading is confirmed by the host audit: 8000 augmented checks over 1000 base pairs, with about half of the widths even. If flip were an up-down reversal, the anchor side would be wrong for every flipped variant with even width.",
+        "Axis selection is safe because the grid is never square (3 by 10..20). AXIS=1 iterates `g[:, i]` and AXIS=0 iterates `g[i, :]`, each with n set to the correct dimension.",
+        "Colour roles palette[5]\u2192palette[3] are genuine fixed rule colours, not an arbitrary lookup. The task is not in the colour-evidence check list.",
+        "Host audit passed: 1000 fresh pairs, 8000 augmented checks, 16 fixture variants, no sampler rejections."
+      ],
+      "blocking_issues": [],
+      "nonblocking_limits": [
+        "Only cells equal to palette[5] are recoloured. The archived solver recolours any non-background cell. The two agree in-domain because every non-background input cell is grey.",
+        "The axis and anchor come from d4 constants rather than being inferred from shape or demos. This is allowed as a specialised spatial constant.",
+        "For odd strip length both ends have the same parity, so the anchor only matters for even widths.",
+        "In a fresh episode where every demonstration has odd width, the right-edge anchor (versus a left anchor) is not visibly taught for an even-width query. Widths are 10..20 with 5 odd values out of 11, so this happens with non-trivial probability. It is an episode identifiability limit, not a solver or constructor defect.",
+        "The canonical fixtures include both odd and even widths, so they are unaffected."
+      ],
+      "required_context_checks": [
+        "Optionally confirm whether the host's episode policy requires at least one even-width demonstration whenever the query has even width. Without one, the anchor side (and so the parity offset) is not shown by the demos."
+      ],
+      "task_id": "d406998b",
+      "factory_sha256": "2efc46878e515ad535193d342ef4f52d831ca5d51c0034c7db3fc89d23d26643",
+      "constructor_sha256": "333f4e4880e8fbfa1d6491d24e4119e0c70c42a5f0fc75e9a9026a6bf0588f8e"
+    },
+    "host_review": "Read source review mechanism, evidence, limitations and context requirements. Host audit covers all eight D4 indices per fresh pair; d4=7 in report is only the final loop index. All supplied fixture pairs checked under 16 orientation/palette variants. Emitted programs operate in displayed coordinates. Per-episode verification and context-evidence checks are mandatory. Added even-strip demonstration requirement for even query; all-odd demonstrations cannot identify parity anchor. All-D4 regression passes."
+  }
+}

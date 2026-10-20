@@ -1,0 +1,51 @@
+{
+  "task_id": "d687bc17",
+  "factory_sha256": "4d60cb8ff69fd9d85319255b1eddb27c4309e7af4a3ceb726a37d94699864e81",
+  "constructor_sha256": "c1b6557b4428cf3444ee61af5a184da18878dad21a4fc5fcc06d9fb14eccd123",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 102048796678377,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 5.477649208041839,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The rule treats the four frame sides the same way, so it already works for any rotation or reflection. The program therefore reads each side colour straight from the visible grid: the top row, bottom row, left column and right column, skipping corners and taking the majority non-background value. It does not use d4 to hard-code which side is which. Under any D4 transform the sides swap places, but each one is still an edge of the visible grid, and a dot still moves toward the visible side of its colour. Dots heading for the top or bottom keep their column; dots heading for the left or right keep their row. The background and corner colour is the constant palette[0], since original colour 0 maps to it. The program clears the interior to that background, then scans every non-background interior dot in reading order. A dot is placed in the interior cell next to the side whose colour it matches. A dot that matches no side is erased. There is no wrapper, no inverse rotation and no colour un-permutation.",
+    "limitations": "This assumes the constructor's domain: four distinct, non-background side colours, corners equal to the background, grids at least 3x3, and dots strictly inside the frame. In the constructor, dots that share a side colour sit in distinct columns (top/bottom) or distinct rows (left/right). That means their target cells never collide, so the order of placement only matters for degenerate inputs outside the domain. A garbage pixel can overwrite a coloured dot inside the generator's bitmap before the input is formed, but that is already reflected in the visible input and needs no special handling. I found no contradiction between the fixtures and the rule, and no constructor defect that affects the visible answer. Demonstrations are not needed and are ignored. No tests have been run.",
+    "independent_source_review": {
+      "verdict": "accept",
+      "mechanism": "A one-cell frame has four distinct side colours, all non-zero, and background corners. Each interior dot that matches a side colour is moved to the interior cell next to that side. Top and bottom keep the dot's column, at row 1 or H-2. Left and right keep the dot's row, at column 1 or W-2. Dots whose colour matches no side are erased. The emitted solver reads the side colours directly from the visible top row, bottom row, left column and right column, excluding corners. It then clears the interior to palette[0] and places each matched dot in visible coordinates.",
+      "evidence": [
+        "Constructor frame layout: edgecolors[0] fills row 0, edgecolors[2] fills row height-1, edgecolors[3] fills column 0 and edgecolors[1] fills column width-1. The corners are never written, so they stay 0.",
+        "Output targets in the constructor: edgecolors[0] goes to output[1][col], edgecolors[1] to output[row][width-2], edgecolors[2] to output[height-2][col] and edgecolors[3] to output[row][1]. The factory maps these the same way: top to (1,x), right to (y,W-2), bottom to (H-2,x), left to (y,1).",
+        "edgecolors = common.random_colors(4) samples without replacement from 1..9, so the side colours are distinct and non-zero. The constructor's independent `if` checks and the factory's `elif` chain are therefore equivalent.",
+        "Garbage pixels use random_color(exclude=edgecolors), so they never match a side and are always erased. This agrees with the factory's fall-through, which places nothing.",
+        "Labels are computed from the final visible bitmap: rows, cols and colors are rebuilt from bitmap after all overwrites. So when a later pixel overwrites an earlier one in the same cell, the hidden earlier pixel cannot affect the output.",
+        "Dot positions satisfy rows in [2,H-3] and cols in [2,W-3]: top/bottom dots use randint(2,H-3) and sample(range(2,W-2)), left/right dots use sample(range(2,H-2)) and randint(2,W-3), and garbage uses randint(2,H-3) and randint(2,W-3). As a result, target cells on different sides never coincide. Top (1,c\u22652) cannot meet left (r\u22652,1). Bottom (H-2,\u00b7) cannot meet right (r\u2264H-3,\u00b7). Rows 1 and H-2 differ because H\u226510.",
+        "Same-colour dots for top/bottom sample distinct columns, and same-colour dots for left/right sample distinct rows. Targets therefore never collide, and scan order does not matter.",
+        "The factory's majority-vote _side over the non-corner cells of each side is exact, because every non-corner side cell holds that side's colour.",
+        "Under D4, frame sides map to frame sides and the movement axes map consistently. Colour remapping is uniform, so BG=palette[0] is correct. There is no inverse-transform wrapper and the solver does not use d4.",
+        "The approved fixtures match the validate() calls: pair 1 has edgecolors [1,4,7,2] and the test has [4,2,8,1]. The listed outputs agree with the rule.",
+        "The host audit passed: 1000 fresh pairs, 8000 augmented checks and 16 fixture variants, with no sampler rejections."
+      ],
+      "blocking_issues": [],
+      "nonblocking_limits": [
+        "The H<3 or W<3 early return and the None side handling are defensive branches outside the constructor domain, where H and W are both 10..20.",
+        "Behaviour on inputs with repeated side colours or non-uniform sides is unspecified. These cases are excluded by the constructor.",
+        "The archived program samples the middle cell of each side, while the factory uses a majority vote. The two are equivalent within the domain."
+      ],
+      "required_context_checks": [
+        "None task-specific. The colour-to-side association can be read from the visible frame of the query itself rather than being an arbitrary lookup, and d4687bc17 is correctly absent from the episode_evidence_checks list. Only the generic D4-consistency policy applies."
+      ],
+      "task_id": "d687bc17",
+      "factory_sha256": "4d60cb8ff69fd9d85319255b1eddb27c4309e7af4a3ceb726a37d94699864e81",
+      "constructor_sha256": "c1b6557b4428cf3444ee61af5a184da18878dad21a4fc5fcc06d9fb14eccd123"
+    },
+    "host_review": "Read complete independent review, source mechanism, limitations and context requirements. All eight D4 indices tested per fresh pair, all supplied fixture pairs checked in16 orientation/palette variants. Per-episode execution and evidence checks required. "
+  }
+}

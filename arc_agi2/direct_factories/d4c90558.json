@@ -1,0 +1,61 @@
+{
+  "task_id": "d4c90558",
+  "factory_sha256": "084d14cc3501b9f6c676b6bbc91203b5f072a15f89630351f1a4b249250c8700",
+  "constructor_sha256": "13d76e2372a5340643a90d335c2305ab1853d29571d252eaeb7f780e62facac3",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 181214465823696,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 12.538062708103098,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The emitted program uses two fixed colours: background is palette[0] and the grey marker is palette[5]. Every other colour present is treated as a frame. For each frame colour it takes the bounding box of that colour and counts the grey cells inside it. Bounding boxes and counts do not change under D4, so no coordinate change is needed for this step. The frames are then sorted by count, smallest first.\n\nThe output layout is rewritten directly in visible coordinates. The factory works out where the canonical layout lands under the given D4: one row per frame (smallest at the top), with bars starting at column 0. From that it picks three settings:\n- whether frames are stacked along rows or columns,\n- whether the smallest count comes first or last along that axis,\n- whether bars grow from the start or the end of the other axis.\n\nThe resulting table covers all eight cases. Identity gives rows, top-down, bars from the left. One clockwise turn gives columns, right-to-left, bars from the top. A half turn gives rows, bottom-up, bars from the right. Three clockwise turns give columns, left-to-right, bars from the bottom. The reflected versions are: rows, top-down, bars from the right; columns, right-to-left, bars from the bottom; rows, bottom-up, bars from the left; and the transpose, which gives columns, left-to-right, bars from the top.\n\nThe output canvas is filled with background. Its size along the stacking axis is the number of frames, and along the bar axis it is the largest count. Each frame's bar is painted directly at its computed position.",
+    "limitations": "Background and marker are fixed constants (palette[0] and palette[5]), as the constructor intends. The archived solver instead picks background by frequency; the constructor's guarantee that background is the most common colour makes the two agree.\n\nThe constructor guarantees distinct counts. If two counts were ever equal, the program orders them by original colour index, recovered through the inverse palette, to stay consistent with the archived sort. That order cannot be seen in the grid, so tied counts are outside the domain and should be reviewed by the host rather than treated as a rule.\n\nFrames are assumed to be separated by background, as the constructor's 1-cell gap ensures. That way each colour's bounding box holds only its own grey cells.\n\nI found no contradictions in the fixtures. The prose rule estimates the test's 8-frame count as 'about 9', but it actually holds exactly 8 grey cells, which matches the fixture output width of 8.",
+    "independent_source_review": {
+      "verdict": "accept",
+      "mechanism": "For each visible non-background, non-grey colour, the solver takes that colour's bounding box and counts the GREY cells (palette[5]) inside it. It sorts frames by count, ascending. It builds an F x M canvas of BG (palette[0]), where F is the number of frames and M is the largest count. Each frame gets one bar whose length equals its count. The factory picks the stacking axis, whether the stack is reversed, and whether bars grow from the end of their axis, so the canonical layout (rows top-down, bars left-aligned) is drawn directly in augmented visible coordinates. There is no whole-grid untransform or retransform.",
+      "evidence": [
+        "Separation: `_overlaps` with gap=1 rejects any box where r0 <= s1+1 and c0 <= d1+1 (and the symmetric conditions). Placed boxes are therefore separated by at least one background cell along some axis.",
+        "Bounding boxes: every side has thickness >= 1, so each colour's bounding box is exactly its frame box. No other frame's grey cells can fall inside it.",
+        "Grey placement: greys are sampled only from interior cells, which `_draw_frame` never paints. Frame colours come from [1,2,3,4,6,7,8,9] via `random.sample`, so they are distinct and never 0 or 5.",
+        "Distinct counts: frames are processed in ascending interior size, and the minimum interior is 3x3=9. With at most 5 frames, cap = min(cells,12) >= 9 while at most 4 counts are already used, so `options` is never empty. Counts are distinct and >= 1, so there are no ties and M >= 1.",
+        "Background check: `background_pixels > max(frame_pixels + [grey_pixels])` makes 0 strictly the most common colour. The archived solver's frequency-based background therefore agrees with the factory's fixed BG=palette[0].",
+        "D4 table (reflection = left-right mirror, followed by k clockwise turns, matching the (True,0) entry). Checked by mapping cell (i,j) of an F x M grid:",
+        "(F,0) maps (i,j) to (i,j): row, not reversed, bars from start.",
+        "(F,1) maps to (j,F-1-i): col, reversed, bars from start.",
+        "(F,2) maps to (F-1-i,M-1-j): row, reversed, bars from end.",
+        "(F,3) maps to (M-1-j,i): col, not reversed, bars from end.",
+        "(T,0) maps to (i,M-1-j): row, not reversed, bars from end.",
+        "(T,1) maps to (M-1-j,F-1-i): col, reversed, bars from end.",
+        "(T,2) maps to (F-1-i,j): row, reversed, bars from start.",
+        "(T,3) maps to (j,i): col, not reversed, bars from start.",
+        "All eight table entries are internally consistent. Output shape is (F,M) for the row axis and (M,F) for the column axis, as expected.",
+        "Invariance: bounding-box grey counts do not change under D4 or palette permutation, so counting in visible coordinates is valid.",
+        "Fixture spot check: in the test, the 6-frame box (2,0)-(8,11) with thickness (2,2,2,4) has an interior of rows 4-6, cols 2-7. Its greys at (4,6), (5,2), (5,4), (6,6) match the input. The validate() specs reproduce the canonical fixtures.",
+        "Host audit: passed on 1000 fresh pairs and 8000 augmented checks, which covers all 8 D4 variants per pair."
+      ],
+      "blocking_issues": [],
+      "nonblocking_limits": [
+        "The tie-break via RANK (inverse palette, original colour index) cannot be seen in the grid. It is only reachable if counts tie, which the constructor excludes.",
+        "The F==0 fallback `[[BG]]` and the `n <= 0` skip are out-of-domain defensive paths that the constructor never produces.",
+        "BG and GREY are fixed palette constants rather than inferred. This is consistent with the constructor's fixed 0 and 5. Grey's role and the layout orientation are taught by the visible demonstrations.",
+        "The archived prose estimates the test 8-frame count as 'about 9'. It is actually 8, which matches the fixture output width of 8. This is a prose error only, not a label error.",
+        "The sampled domain is 2..5 frames with counts up to 12. Demonstrations show at most 4 frames and counts up to 8, so the generator extrapolates in size but not in mechanism."
+      ],
+      "required_context_checks": [
+        "Confirm the host's D4 index convention: d4>=4 means a left-right mirror applied before k clockwise quarter-turns. The table is internally correct under that convention, and the 8000 augmented host checks passing implies it matches.",
+        "Confirm the palette is a bijection on 0..9, so that palette[0] and palette[5] cannot coincide with any frame colour."
+      ],
+      "task_id": "d4c90558",
+      "factory_sha256": "084d14cc3501b9f6c676b6bbc91203b5f072a15f89630351f1a4b249250c8700",
+      "constructor_sha256": "13d76e2372a5340643a90d335c2305ab1853d29571d252eaeb7f780e62facac3"
+    },
+    "host_review": "Read source review mechanism, evidence, limitations and context requirements. Host audit covers all eight D4 indices per fresh pair; d4=7 in report is only the final loop index. All supplied fixture pairs checked under 16 orientation/palette variants. Emitted programs operate in displayed coordinates. Per-episode verification and context-evidence checks are mandatory. "
+  }
+}

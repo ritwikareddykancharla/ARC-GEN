@@ -1,0 +1,49 @@
+{
+  "task_id": "c8f0f002",
+  "factory_sha256": "6a62b045b364a7ac0eaa9b67ab714c2e7f525574db7a12698bc8d44f1e74c25f",
+  "constructor_sha256": "afd6eb34f85cc5c6b815b0a37ee47efcada1ef8333d62cb310cde93b43147001",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 79374140286011,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 1.1259850419592112,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The constructor builds a 3 x W grid (W from 4 to 6) out of colours {1, 7, 8}. The output replaces every 7 with 5 and leaves every other cell unchanged. This is a pure per-cell colour substitution: no cell moves, and shape, position and background play no role. The D4 transform therefore permutes cells but cannot change which cells are recoloured, so the same substitution applies directly in visible coordinates for every d4, and no direction or axis needs specialising. The palette maps original colour c to palette[c] everywhere. The emitted program therefore hard-codes SRC = palette[7] and DST = palette[5]. It copies the visible query grid, scans its rows, and sets every SRC cell to DST. Grids are 3xW natively and become Wx3 under odd rotations; the row scan handles any rectangular shape. Only the two specialised constants are used, with no unpermuting of other colours.",
+    "limitations": "The rule is a fixed substitution, so the emitted program ignores the demonstrations rather than inferring the colour roles from them. This is correct under the stated episode-wide palette mapping, assuming the palette is a permutation (palette[5] differs from palette[1] and palette[8], and colour 5 never appears in generated inputs). If palette[7] == palette[5], the output equals the input, which is consistent. No constructor defects were found: the fixtures match the uniform rule 7 -> 5 exactly. The archived solver's per-row check is cosmetic and has been preserved as a row scan.",
+    "independent_source_review": {
+      "verdict": "accept",
+      "mechanism": "This is a per-cell colour substitution. The constructor fills a 3 x W grid (W from 4 to 6) with colours drawn uniformly from (1, 7, 8). The output is built by `color if color != common.orange() else common.gray()`, so every 7 becomes 5 and all other cells are unchanged. The factory sets SRC = palette[7] and DST = palette[5]. The emitted solve copies the visible query grid and replaces every SRC cell with DST, row by row.",
+      "evidence": [
+        "Constructor output expression: `new_row.append(color if color != common.orange() else common.gray())`. In common.py the defaults are orange() = internal_colors[7] = 7 and gray() = internal_colors[5] = 5. No latent is drawn other than width and the per-cell idxs, and both are fully visible in the input.",
+        "The output depends only on each cell's own colour. There are no positional or object rules, ties, hidden latents or index arithmetic that could go wrong. Row slicing `idxs[r*width:(r+1)*width]` is correct.",
+        "All approved train and test fixtures match the 7->5 substitution exactly. The validate() train order differs from the approved fixture order, but the pairs are the same and order is immaterial.",
+        "The emitted solver works directly in augmented visible coordinates. A D4 transform only permutes cells, and a cellwise recolour commutes with it, so there is no untransform/retransform wrapper and the d4 value is correctly unused. The row loop handles both 3xW and Wx3 shapes.",
+        "The palette is applied consistently: only the two genuine rule colours are specialised, and no other colours are unpermuted.",
+        "Host audit passed: 1000 fresh pairs, 8000 augmented checks and 16 fixture variants, with no sampler rejections."
+      ],
+      "blocking_issues": [],
+      "nonblocking_limits": [
+        "The emitted program ignores the demonstrations and hard-codes the 7->5 roles. This is acceptable because the substitution is fixed across the task, not an episode-varying lookup.",
+        "Demonstrations could in principle contain no 7 cells, leaving the substitution untaught. Each cell is 7 with probability 1/3 and each grid has 12 to 18 cells, so one demo lacks a 7 with probability at most about 0.8%. All demos lacking 7 at once is negligible.",
+        "The `g.ndim != 2` fallback is defensive and out of domain. The constructor never produces such input.",
+        "The archived rule text has an empty slot where the test result grid should appear. This is cosmetic, and the approved test output itself is correct.",
+        "The constructor passes literal input colours (1, 7, 8) but derives output colours through internal_colors. This is consistent only if the host applies the palette after generation rather than through set_colors. The host audit agreement suggests post-hoc mapping, but this was not verified from source."
+      ],
+      "required_context_checks": [
+        "Optionally confirm that at least one demonstration contains a palette[7] cell, so the SRC->DST substitution is visibly taught. Task c8f0f002 is not covered by require_colour_evidence, and the probability of missing evidence is negligible.",
+        "Confirm the palette is a permutation (palette[5] distinct from palette[1] and palette[8]) and that colour 5 never appears in generated inputs. The constructor's input colours (1, 7, 8) guarantee the second condition."
+      ],
+      "task_id": "c8f0f002",
+      "factory_sha256": "6a62b045b364a7ac0eaa9b67ab714c2e7f525574db7a12698bc8d44f1e74c25f",
+      "constructor_sha256": "afd6eb34f85cc5c6b815b0a37ee47efcada1ef8333d62cb310cde93b43147001"
+    },
+    "host_review": "Read mechanism, evidence, limitations and context requirements. Host reflects columns before clockwise rotation, tests all eight D4 indices, and applies a shared palette permutation after generation. Fixture audit verifies all train/test supplied pairs at every tested orientation/palette, not one pair per variant. Per-episode execution verification and conflicting-context rejection remain required. Added input/demo-only evidence gate for query-required ordering, substitution, or trigger association; regression tests include rejection and acceptance."
+  }
+}

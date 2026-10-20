@@ -1,0 +1,48 @@
+{
+  "task_id": "d23f8c26",
+  "factory_sha256": "e531326f662a56c2d652001ccf75cff04ba92527dfead88e54abf560b1bd41de",
+  "constructor_sha256": "3200ef95637f002c7f3f7604daf907b75b54970fe95c546b83e5dab7436f957f",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 247644073408803,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 1.7887320410227403,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "In the original task, the output keeps the centre column of the input (x = width//2). Every other cell becomes background colour 0. Reversing each row (d4>=4) maps an odd-width grid's centre column onto itself. Each clockwise rotation swaps the roles of rows and columns. So when d4%4 is 0 or 2 the emitted program keeps the centre column, and when d4%4 is 1 or 3 it keeps the centre row (y = height//2). In both cases the program acts directly in visible coordinates. The background is the constant palette[0], which is the image of the generator's literal 0. The kept cells are copied unchanged, so their colours carry the palette mapping automatically. No other colour logic is needed. The demonstrations are not needed and are ignored.",
+    "limitations": "The generator only makes square grids with odd side length (3, 5, 7 or 9), so the centre line is always unique. If a grid had even length, the program would use the floor index (length//2) as a convention; the constructor never produces such grids. The archived solver chose the background as the most common colour. The generator always uses 0 as background, and in rare small grids some other colour could be more frequent than 0. This program therefore uses palette[0], which follows the generator, and does not reproduce the archived heuristic. No fixture contradicts the uniform rule. No tests have been run.",
+    "independent_source_review": {
+      "verdict": "accept",
+      "mechanism": "The constructor builds a random odd-sided square grid (size = 2*randint(1,4)+1, so 3, 5, 7 or 9). Each cell is either the literal 0 or common.random_color(), which returns a colour from 1..9. The output is a blank grid of 0s with only the centre column copied: `if c == size // 2: output[r][c] = colors[r*size+c]`. The emitted program keeps the centre column when d4%4 is 0 or 2 and the centre row when d4%4 is 1 or 3. It fills every other cell with BG = palette[0] and copies the kept cells unchanged.",
+      "evidence": [
+        "Constructor: grid and output start as common.grids(size, size), which is all 0. Only c == size//2 is copied into the output, and no other cell or colour is involved. The label depends only on visible input cells and the grid size, not on any hidden random latent.",
+        "All three train fixtures and the test fixture match the centre-column rule exactly, including P3, where the other 8 at (4,1) is erased. This confirms the rule is positional and not colour-based.",
+        "The grid is always square with odd side, so the centre index size//2 is unique. Every D4 transform maps the centre column to either the centre column or the centre row. Reflections keep the centre line fixed, and quarter-turns swap row and column. The factory's k = d4 % 4 parity split matches this regardless of which reflection axis the d4>=4 variants use.",
+        "The solver works directly in visible coordinates. It reads h and w from the augmented grid, indexes g[r][c] with c = w//2 or r = h//2, and has no untransform/solve/retransform wrapper.",
+        "The background is palette[0], the image of the constructor's literal 0. random_color() never returns 0, so 0 is unambiguously the erase colour. Demonstration outputs show the erased cells as palette[0], so the background is taught by the demonstrations.",
+        "Kept cells are copied verbatim, so the palette permutation passes through without any colour lookup table. This task is not in the colour-evidence check list and needs no arbitrary colour association.",
+        "The archived solver uses most-common-colour as background. The factory deliberately departs from this in favour of the constructor's literal 0. This is correct: the constructor's output background is always 0, even when another colour outnumbers 0 in a small grid.",
+        "Host audit passed: 1000 fresh pairs, 8000 augmented checks and 16 fixture variants, with no sampler rejections."
+      ],
+      "blocking_issues": [],
+      "nonblocking_limits": [
+        "The row-versus-column orientation is a constant chosen by d4 and taught through the demonstrations. In the rare case where every demonstration's centre column and centre row are both entirely background, the demonstrations would not visibly distinguish the orientation. The context policy's conflicting-D4 rejection is meant to cover this. It is an episode-identifiability matter, not a source bug.",
+        "Even-length or non-square grids are out of domain. The solver would fall back to the floor index len//2, but the constructor never produces such grids.",
+        "The solver ignores the demonstrations by design. The background and axis are specialised per augmentation."
+      ],
+      "required_context_checks": [
+        "Confirm the episode-level D4 conflict check rejects any sampled episode whose demonstrations do not disambiguate centre row from centre column. That happens when every demonstration has background-only cells on both centre lines and the query has a non-background cell on either line."
+      ],
+      "task_id": "d23f8c26",
+      "factory_sha256": "e531326f662a56c2d652001ccf75cff04ba92527dfead88e54abf560b1bd41de",
+      "constructor_sha256": "3200ef95637f002c7f3f7604daf907b75b54970fe95c546b83e5dab7436f957f"
+    },
+    "host_review": "Read source review mechanism, evidence, limitations and context requirements. Host audit covers all eight D4 indices per fresh pair; d4=7 in report is only the final loop index. All supplied fixture pairs checked under 16 orientation/palette variants. Emitted programs operate in displayed coordinates. Per-episode verification and context-evidence checks are mandatory. Added centre-row versus centre-column rule agreement on same query input; reject centre-pixel-only demos when query needs axis choice. All-D4 regression passes."
+  }
+}

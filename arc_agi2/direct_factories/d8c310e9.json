@@ -1,0 +1,48 @@
+{
+  "task_id": "d8c310e9",
+  "factory_sha256": "d77259d8b1458906d9e8be8d3109236106ba179c177fd78e8e98ace33a85596a",
+  "constructor_sha256": "ef40cc1547cc66d98bf63e4319666d4ea45ea7b8d0649de188dc5308dab93652",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 55577723134198,
+  "d4": 7,
+  "unique_base_inputs": 998,
+  "seconds": 3.459555250010453,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "In the native task, a frieze of stacked bars sits against the left edge. Its columns are periodic, and the output continues that periodicity to the right edge.\n\nUnder D4 the anchor edge moves. A reflection first sends 'left' to 'right'. Each clockwise rotation then moves the anchor one step along left -> top -> right -> bottom. The factory works out this visible anchor side from d4. The emitted program indexes the slices perpendicular to the extension axis directly in visible coordinates: columns from the left or right, or rows from the top or bottom. It never rotates the grid.\n\nThe background colour is the constant palette[0]. It is not taken as the most frequent colour, because a large single-colour frieze could outnumber the background.\n\nThe mechanism is the same as the archived solver:\n1. Let L be one past the farthest non-background slice from the anchor.\n2. The period p is the smallest shift such that every slice t in [p, L) equals slice t-p. If no shift works, p = L.\n3. Every slice t >= L is filled from the output's slice t-p. Copying from the output lets the pattern run past 2L.",
+    "limitations": "Constructor ambiguity for host review: when flip=1, the true period is 2*len(lengths), but only 3*len(lengths)+k columns are visible. That is less than twice the period, so the Fine-Wilf guarantee does not always hold. A smaller shift could match the visible columns and still differ from the hidden mirrored continuation. In that case the minimal-period rule (shared with the archived solver) would disagree with the generator's latent pattern. This is an under-determination defect in the constructor, not a rule to imitate. For flip=0, at least two full periods are visible, so the minimal period is always correct.\n\nThe program assumes palette[0] is the background. It also assumes the frieze touches the anchor edge, as the generator guarantees. Demonstrations are not used, because the orientation and background are fixed by d4 and the palette.",
+    "independent_source_review": {
+      "verdict": "accept",
+      "mechanism": "The input is a periodic frieze of bottom-anchored stacked bars against one edge. Let L be one past the farthest non-background slice. The period p is the smallest shift such that slice t equals slice t-p for every t in [p, L); if no shift works, p = L. Each slice t >= L is then copied from output slice t-p, so the pattern runs to the far edge. The emitted program fixes the visible anchor side from d4 and the background from palette[0]. It indexes columns or rows directly in visible coordinates (_line/_put with w-1-t or h-1-t) and never rotates the whole grid.",
+      "evidence": [
+        "Constructor draw(): for every copy, every dc gets at least one cell at row height-1, using colours from random_colors, which are always 1..9. So every column of the frieze is non-background, and W equals visible. The loop guarantees grid != output, so visible < width and some extension always happens.",
+        "With flip=0, the latent period is n = len(lengths) (3 or 4). visible >= 2n, so the minimal visible period divides correctly into the true pattern by the usual Fine-Wilf argument.",
+        "With flip=1, the latent column sequence repeats A followed by reverse(A), period 2n, and visible >= 3n. I checked every q < 2n by hand at the minimal visible length (n=3, V=9; n=4, V=12). Any q that matches the visible slices forces either all columns equal (true period 1) or A to be a palindrome (true period n). Longer visible prefixes only add constraints. So the minimal visible period always reproduces the constructor's hidden continuation. The ambiguity in prior_notes.limitations does not appear reachable.",
+        "Equality is between whole columns. Coincidental equalities between distinct dc columns only add constraints, so the implication still holds.",
+        "The factory's side mapping is: rotation steps left->top->right->bottom; a reflection (d4>=4) starts from 'right'. Host audit checked 8000 augmented pairs across all 8 D4 variants and passed. A wrong orientation constant would fail those checks.",
+        "The solver logic matches the archived transform: same minimal-period search, same copy-from-output fill. The only change is that background is the palette[0] constant instead of the most frequent colour. The constructor always uses 0 as background, so this is sound and more robust.",
+        "Using no demonstrations is acceptable. The rule has no arbitrary colour or shape associations; only the orientation and background constants come from d4 and the palette."
+      ],
+      "blocking_issues": [],
+      "nonblocking_limits": [
+        "prior_notes.limitations claims a flip=1 under-determination defect. My symbolic check over n in {3,4}, k >= 0 finds no reachable counterexample, so this concern looks overstated rather than a live label conflict. This is a by-hand case analysis, not an exhaustive execution.",
+        "The program relies on palette[0] being the background and on the frieze touching the d4-derived anchor edge. Both are guaranteed by the constructor, but the program does not infer them from the grid.",
+        "The fallback p = L, used when no shorter period matches, is out of domain for this constructor because visible >= 2 periods (flip=0) or >= 1.5 periods with mirror structure (flip=1)."
+      ],
+      "required_context_checks": [
+        "Confirm that the host's d4 convention (index 0-3 clockwise rotations, 4-7 reflection then rotation) matches the factory's side table. The passing 8000 augmented checks suggest it does.",
+        "No colour-association evidence check applies: d8c310e9 is not in require_colour_evidence's task list, and the rule needs no lookup."
+      ],
+      "task_id": "d8c310e9",
+      "factory_sha256": "d77259d8b1458906d9e8be8d3109236106ba179c177fd78e8e98ace33a85596a",
+      "constructor_sha256": "ef40cc1547cc66d98bf63e4319666d4ea45ea7b8d0649de188dc5308dab93652"
+    },
+    "host_review": "Read complete independent review, source mechanism, limitations and context requirements. All eight D4 indices tested per fresh pair, all supplied fixture pairs checked in16 orientation/palette variants. Per-episode execution and evidence checks required. Independently exhaustively checked all283 abstract column equality assignments for n3/4 at minimum visible prefix. Minimal period predicts repeated cycle; saved period-symbol-check.json."
+  }
+}

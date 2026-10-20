@@ -1,0 +1,48 @@
+{
+  "task_id": "ce22a75a",
+  "factory_sha256": "3404ab711e5b6cad43fd054c9d07e8c126b48235b28e2a55c86680089989dbee",
+  "constructor_sha256": "0439c3b437aca818d761b3bd1702bf591896e827243f2f3ab71cd7a386926a86",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 66183570996614,
+  "d4": 7,
+  "unique_base_inputs": 451,
+  "seconds": 2.300769458990544,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The constructor builds a 9x9 grid divided into a 3x3 lattice of 3x3 blocks. For each chosen block it places one grey pixel at the block's centre (3r+1, 3c+1) in the input. In the output it fills that whole block with blue on a black background, and the grey pixel is overwritten. In visible coordinates this means: every seed cell becomes the centre of a 3x3 square of the fill colour, and all other cells become background. A centred 3x3 stamp does not change under any rotation or reflection. The D4 transform also maps block centres {1,4,7} back onto block centres in the square grid, so no direction needs rewriting. Colour roles are fixed as constants: seed = palette[5], fill = palette[1], background = palette[0]. The program starts from a background canvas and stamps a clipped 3x3 square of the fill colour around every seed cell. Overlapping stamps simply merge. It handles rectangular grids and boundary seeds by clipping. The roles are explicit constants, so a most-common-colour heuristic is not needed.",
+    "limitations": "The roles are fixed from the palette instead of being inferred from the demonstrations. Any input cell that is not the seed colour is treated as background, and the whole output is reset to palette[0]. That matches the constructor, whose inputs contain only background and grey. In the constructor's domain, stamps never overlap, because seeds sit at distinct block centres, and clipping never triggers. The more general clipping and merging behaviour goes beyond what the generator produces. I found no constructor defects or fixture contradictions. The approved train and test fixtures agree with this rule.",
+    "independent_source_review": {
+      "verdict": "accept",
+      "mechanism": "The constructor uses a 9x9 grid made of a 3x3 lattice of 3x3 blocks. random_pixels(3,3) picks a non-empty set of blocks (it retries until at least one is chosen). For each chosen block (r,c), the input gets grey (palette[5]) at (3r+1, 3c+1), and the output fills rows 3r..3r+2 and columns 3c..3c+2 with blue (palette[1]). Every other cell is background (palette[0]). The emitted solver starts from a BG canvas and, for every cell equal to SEED, stamps a clipped 3x3 FILL square centred on that cell. It works directly in visible coordinates.",
+      "evidence": [
+        "Constructor: `grid[size*r+1][size*c+1] = gray()` and `output[size*r+rr][size*c+cc] = blue()` for rr,cc in range(3). The block is exactly the 3x3 square centred on the grey cell, so the 'centred 3x3 stamp' rule reproduces it exactly.",
+        "The output depends only on the visible grey positions. No hidden latent affects the label: rows/cols are fully revealed by the grey cells.",
+        "D4 invariance: block centres {1,4,7} map to {7,4,1} under x -> 8-x and under transposition, so the centres stay centres. A centred 3x3 square is symmetric under all of D4. The solver therefore needs no orientation constant and contains no untransform/retransform wrapper.",
+        "Colour roles: seed = palette[5] and fill = palette[1] are constant across the episode. Every demonstration contains at least one seed (generation retries until pixels is non-empty), so every demo visibly shows the seed -> fill association. This is not an untaught lookup.",
+        "Fixtures: validate() train [rows 0,1,2 / cols 0,1,2] and [rows 0,1,2,2 / cols 1,1,1,2], and test [rows 0,1,1,2 / cols 2,0,2,0]. These match the approved train pairs (in swapped order) and the approved test output.",
+        "There are no ties or ambiguity. Stamps occupy disjoint lattice blocks in the constructor domain, so the merge order is irrelevant.",
+        "Host audit passed: 1000 fresh pairs, 8000 augmented checks, 16 fixture variants, and no sampler rejections."
+      ],
+      "blocking_issues": [],
+      "nonblocking_limits": [
+        "The solver fixes BG/SEED/FILL from the palette rather than inferring them from the demos. This is acceptable because the colour roles are constant in the generator and are visibly demonstrated in every pair.",
+        "Non-seed, non-background input colours are silently treated as background. Such colours never occur in the constructor domain.",
+        "Clipping at grid edges and merging of overlapping stamps are untested by the constructor, because seeds always sit at interior block centres of disjoint blocks. This behaviour is a harmless generalisation.",
+        "common.grid uses a literal 0 for the background rather than internal_colors[0]. Correctness therefore assumes the host remaps the palette after generation. The passing augmented audit is consistent with that assumption."
+      ],
+      "required_context_checks": [
+        "Confirm the host applies the palette permutation to the constructor's canonical colours after generation, so that canonical 0/1/5 correspond to palette[0]/palette[1]/palette[5] as the factory assumes."
+      ],
+      "task_id": "ce22a75a",
+      "factory_sha256": "3404ab711e5b6cad43fd054c9d07e8c126b48235b28e2a55c86680089989dbee",
+      "constructor_sha256": "0439c3b437aca818d761b3bd1702bf591896e827243f2f3ab71cd7a386926a86"
+    },
+    "host_review": "Read mechanism, evidence, limitations and context requirements. Host reflects columns before clockwise rotation, tests all eight D4 indices, and applies a shared palette permutation after generation. Fixture audit verifies all train/test supplied pairs at every tested orientation/palette, not one pair per variant. Per-episode execution verification and conflicting-context rejection remain required."
+  }
+}

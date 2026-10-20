@@ -1,0 +1,46 @@
+{
+  "task_id": "d10ecb37",
+  "factory_sha256": "876649499212561ac4975e0ca37bec4b4f14f4607a0d1e56d8fb25180fd9b0af",
+  "constructor_sha256": "0b5cc4c6f437756c6679cc52606eeeda3f652c684b5261a066442eb0630fb9a7",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 16613501940896,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 1.5556989160832018,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The native rule crops the 2x2 block at the input's top-left corner. Cropping commutes with D4 transforms, so after the transform the output is the 2x2 block at whichever visible corner the original top-left corner moved to. Track that corner in the clockwise order [TL, TR, BR, BL]. A row reversal (d4>=4) moves TL to TR, which is one step in that order. Each clockwise rotation advances the corner one more step. The emitted program crops the 2x2 block directly at that visible corner: rows from the top or the bottom (h-2), and columns from the left or the right (w-2). Cell values are copied unchanged, so the palette does not matter and no colour mapping is needed.",
+    "limitations": "The palette is irrelevant because the output copies input pixels verbatim. Demonstrations are not used, since the corner is fixed by d4. The constructor always produces grids that are at least 4x4, so the 2x2 crop is always in bounds. No constructor defects or fixture contradictions were found. Untested by me; host verification is pending.",
+    "independent_source_review": {
+      "verdict": "accept",
+      "mechanism": "The native rule copies the input's top-left 2x2 block into the output. Under an augmentation, that block becomes the 2x2 block at whichever visible corner the original top-left corner moved to. The factory picks this corner from d4 using the clockwise order [TL, TR, BR, BL]. A reflection (d4>=4) starts one step along, at TR. Each further unit of d4 advances one more step. The emitted solver then slices g[r0:r0+2, c0:c0+2] directly in visible coordinates: r0 is h-2 if FROM_BOTTOM else 0, and c0 is w-2 if FROM_RIGHT else 0. Cell values are copied unchanged.",
+      "evidence": [
+        "In the constructor, output[r][c] = colors[r*width+c] for r<2 and c<2. That is exactly the top-left 2x2 crop. The label is a pure function of the visible input and depends on no hidden latent.",
+        "In the random path, size is 2*randint(2,3), which is 4 or 6. Width and height are size*randint(1,2), so the smallest possible input is 4x4. The crop is therefore always in bounds, and the max(h-2,0) and max(w-2,0) guards are defensive code the constructor never reaches.",
+        "All four fixtures (three train, one test, including the 4x8 test) have output equal to input[:2][:2]. I found no fixture-specific branch.",
+        "The emitted solver uses no whole-grid untransform/solve/retransform wrapper. It specializes only the corner constants FROM_BOTTOM and FROM_RIGHT. These are orientation constants taught by the demonstrations, because every demonstration shows which visible corner is copied.",
+        "Colour handling is not a concern. No colour association is involved, the palette is ignored, and d10ecb37 is not in the colour-evidence check list.",
+        "Host audit passed 1000 fresh pairs, 8000 augmented checks and 16 fixture variants, with no sampler rejections."
+      ],
+      "blocking_issues": [],
+      "nonblocking_limits": [
+        "The mapping from d4 to corner assumes a particular D4 convention: a horizontal flip for d4>=4, followed by clockwise quarter-turns. Composing in the other order (rotate first, then flip) would swap TR and BL for odd d4. I cannot verify the host's convention from source. The passing 8000-check augmented audit is the evidence that the convention matches.",
+        "The random constructor fills cells i.i.d. from 3\u20134 colours rather than building the repeating tiles seen in the fixtures. This does not affect the rule's correctness, but the synthetic inputs are less structured than the originals.",
+        "The solver ignores the demonstrations. This is acceptable because the corner is a deterministic orientation constant, and any episode is consistent with it."
+      ],
+      "required_context_checks": [
+        "Confirm that the host's D4 indexing composes the reflection before the clockwise rotation, so that it matches the factory's start=1 plus d4%4 step logic. The augmented audit already supports this."
+      ],
+      "task_id": "d10ecb37",
+      "factory_sha256": "876649499212561ac4975e0ca37bec4b4f14f4607a0d1e56d8fb25180fd9b0af",
+      "constructor_sha256": "0b5cc4c6f437756c6679cc52606eeeda3f652c684b5261a066442eb0630fb9a7"
+    },
+    "host_review": "Read source review mechanism, evidence, limitations and context requirements. Host audit covers all eight D4 indices per fresh pair; d4=7 in report is only the final loop index. All supplied fixture pairs checked under 16 orientation/palette variants. Emitted programs operate in displayed coordinates. Per-episode verification and context-evidence checks are mandatory. "
+  }
+}

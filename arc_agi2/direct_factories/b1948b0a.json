@@ -1,0 +1,47 @@
+{
+  "task_id": "b1948b0a",
+  "factory_sha256": "7d9d8ed986aa2f664bcf729e3a03568c8fc7208a48eddb12804da7625bd1df51",
+  "constructor_sha256": "3fad7225ba4b67f4a9b383d64f3bc5c41b0508733dbdbe990cfb7b7afa82331e",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 104557261312958,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 1.326997832977213,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The constructor fills the input canvas with pink (6) and the output canvas with red (2). It then copies the same orange (7) pixels into both grids. The visible mechanism is therefore a pure per-cell substitution: every cell of colour 6 becomes 2, and every other cell is unchanged. The fixtures agree: in all train and test pairs every 6 becomes 2 and every 7 stays. This holds whether 6 is the majority colour or not. A per-cell substitution commutes with any rotation or reflection, so d4 does not affect the mechanism and the emitted program needs no axis or direction logic. Colour roles are fixed as the constants palette[6] (source) and palette[2] (target). The emitted program rewrites cells of the source colour to the target colour directly in the visible coordinates. It never renormalises the grid. It handles any rectangular grid size and objects touching the boundary, because no geometry is involved.",
+    "limitations": "The program assumes the palette is injective, as a colour permutation is. Under that assumption, palette[7] (the pixel colour) never collides with palette[6] or palette[2]. A pre-existing cell of colour palette[2] in the input would be kept unchanged, but the generator never produces one. Constructor notes for host review, none of which affect the intended rule: (1) the random branch picks width and height from 4 to 6, while validate() uses height and width 3. The fixtures therefore include 3-row and 3-column grids, and the solver handles any size. (2) If common.random_pixels ever returned an empty list, `rows, cols = zip(*pixels)` would raise an error. That is a latent generator defect, not a puzzle rule. I found no contradictions between the fixtures and the uniform rule. The demonstrations are not needed, so the program ignores them.",
+    "independent_source_review": {
+      "verdict": "accept",
+      "mechanism": "The constructor fills the input canvas with pink(6) and the output canvas with red(2). It then writes the same orange(7) pixels into both grids at identical positions. The rule is a pure per-cell substitution: 6\u21922, everything else unchanged. The emitted solver specialises SRC=palette[6] and DST=palette[2] and rewrites cell by cell in the visible grid.",
+      "evidence": [
+        "Constructor: `grid = common.grid(width, height, common.pink())`, `output = common.grid(width, height, common.red())`, then `output[r][c] = grid[r][c] = common.orange()`. Every non-orange input cell is 6 and the matching output cell is 2. Orange cells are identical in both grids.",
+        "The output depends only on per-cell input colour. There is no hidden random latent beyond the pixel positions, and those are fully visible in the input.",
+        "Approved fixtures match validate(). Example: train (w=4, h=3) has 7s at (0,2),(1,2),(1,3),(2,0),(2,1),(2,3), which matches fixture [[6,6,7,6],[6,6,7,7],[7,7,6,7]]. All fixture pairs map every 6 to 2 and keep every 7.",
+        "Factory solver: `[DST if int(v) == SRC else int(v) for v in row]` works directly on the augmented visible grid. Per-cell recolouring commutes with every D4 transform, so it needs no axis logic and has no untransform/retransform wrapper.",
+        "palette[6], palette[2] and palette[7] are distinct under an injective palette permutation, so SRC/DST cannot collide with the pixel colour.",
+        "Host audit passed: 1000 fresh pairs, 8000 augmented checks, 16 fixture variants, no sampler rejections."
+      ],
+      "blocking_issues": [],
+      "nonblocking_limits": [
+        "If common.random_pixels returns an empty list, `rows, cols = zip(*pixels)` raises. This is a latent generator defect, not a reachable label error.",
+        "With prob 0.5, random_pixels can select every cell, giving an all-orange grid with no 6 and an identity output. This is valid under the rule. If it happened in every demonstration, the 6\u21922 target colour would not be shown in context. The chance is negligible (\u22640.5^16 per grid), and such a query would also be identity.",
+        "The random branch draws sizes 4\u20136, but the validate fixtures use 3-row and 3-column grids. The solver is size-agnostic, so this does not matter.",
+        "The factory comment calls SRC the 'background colour'. Functionally SRC is the canvas colour, which may be the minority; the code does not depend on majority status."
+      ],
+      "required_context_checks": [
+        "None task-specific: the 6\u21922 mapping is shown by every demonstration that contains canvas cells, and b1948b0a is not in the colour-evidence check list."
+      ],
+      "task_id": "b1948b0a",
+      "factory_sha256": "7d9d8ed986aa2f664bcf729e3a03568c8fc7208a48eddb12804da7625bd1df51",
+      "constructor_sha256": "3fad7225ba4b67f4a9b383d64f3bc5c41b0508733dbdbe990cfb7b7afa82331e"
+    },
+    "host_review": "Read mechanism, evidence, limitations and context requirements. Host reflects columns before clockwise rotation, tests all eight D4 indices, and applies a shared palette permutation after generation. Fixture audit verifies all train/test supplied pairs at every tested orientation/palette, not one pair per variant. Per-episode execution verification and conflicting-context rejection remain required. Added input/demo-only evidence gate for query-required ordering, substitution, or trigger association; regression tests include rejection and acceptance."
+  }
+}

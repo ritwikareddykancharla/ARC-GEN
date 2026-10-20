@@ -1,0 +1,50 @@
+{
+  "task_id": "d6ad076f",
+  "factory_sha256": "b2b6faf40d818c6a39d301c1e684c50ea552fd1cfd155f825426e9f89795578d",
+  "constructor_sha256": "67833a5710b1f55958802550a4998cfad5df41ddd2e89e02e0d593b4bada9a7f",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 173167421242030,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 3.7875526669668034,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The constructor draws two solid rectangles of different colours, never cyan, on a background of colour 0. One rectangle is short and the other is long. The short one's extent along the non-separation axis lies strictly inside the long one's extent. The output adds a cyan (8) bridge. Along the separation axis the bridge spans exactly the empty strip between the rectangles. Along the other axis it spans the shared range, which is the short block's extent, with one cell trimmed from each end. The constructor then applies a gravity rotation. The emitted program works directly in the visible coordinates and does not use d4. It finds the two rectangle colours as the two largest non-background, non-fill colour classes and takes each one's bounding box. It decides the separation axis from the pixels: whichever axis has disjoint ranges. It then stamps the bridge in the visible orientation. Swapping the axes under rotation and reversing directions under reflection happen automatically, because left/right and top/bottom are worked out from the actual box positions. The colour roles are specialized from the palette: background is palette[0] and the bridge colour is palette[8]. The rectangle colours are taken from the pixels, so no global colour remapping is needed. The emitted program matches all approved fixtures: it gives 9, 6 and 20 bridge cells on train and the y2-5 x4-6 block on test.",
+    "limitations": "The program assumes the constructor's domain: exactly two solid single-colour rectangles, separated along exactly one axis by a non-empty strip, and neither one uses the bridge colour palette[8]. If both axes are disjoint (diagonal placement) or the boxes overlap on both axes, the input is returned unchanged; the generator never produces these cases. The bridge only overwrites background cells inside the computed rectangle, and the generator always leaves that rectangle empty. The program does not use the demonstrations, because the background and bridge colours are fixed by the palette mapping. I found no contradictions between the fixtures and the rule, and no constructor indexing defects that affect the visible rule. common.apply_gravity was not supplied, but it is applied identically to input and output, so the rule is unaffected.",
+    "independent_source_review": {
+      "verdict": "accept",
+      "mechanism": "There are two solid, distinct, non-cyan rectangles on background palette[0]. They are separated along one axis by an empty strip. The output fills that strip with palette[8]. Along the separation axis the fill covers exactly the strip between the rectangles. Along the other axis it covers the shared range of the two rectangles, trimmed by one cell at each end. The emitted solver computes this directly from the visible pixels: it takes the bounding box of each of the two largest non-BG, non-FILL colour classes, picks the axis on which their ranges are disjoint, and fills the bridge rectangle.",
+      "evidence": [
+        "Constructor ranges: lengths[0] is 4..6 and lengths[1] is lengths[0]+2..9. col1 is 0..size-lengths[1]-1 and col0 is col1+1..col1+lengths[1]-lengths[0]. So the short block's column extent always lies inside the long block's extent; the short block may touch the long block's right end. The shared range is therefore always the short block's extent.",
+        "The constructor draws cyan over rows gaps[0]+thicks[0] .. size-gaps[1]-thicks[1]-1 and columns cols[0]+1 .. cols[0]+lengths[0]-2. This is exactly the strip between the blocks, crossed with the short block's extent trimmed by 1 at each end. It equals the solver's max(x0)+1 .. min(x1)-1.",
+        "Gaps are 0..1 when the thickness is below 4 and 0 when it is 4, so thickness plus gap is at most 4 for each block. The strip is therefore at least 10-8 = 2 rows. The bridge width is lengths[0]-2, which is at least 2. The fill rectangle is never empty.",
+        "random_colors(2, exclude=[cyan]) gives two distinct colours from 1..9, never 8. So _boxes sees exactly two classes, and neither is BG or FILL. A size tie only affects the order of the two boxes, and the computation is symmetric in that order.",
+        "apply_gravity (supplied in common.py) flips rows when gravity>=2 and transposes when gravity is odd. The same transform is applied to input and output. The solver finds left/right or top/bottom from actual box positions, so it handles every visible D4 orientation without un-transforming the grid.",
+        "Rows are disjoint and columns overlap in the base orientation, and transposes swap these. So exactly one of the solver's two branches applies. The diagonal or overlapping fallback is unreachable.",
+        "validate() fixtures match the approved fixtures. For example, thicks [3,3], gaps [1,0], cols [1,0], lengths [4,6], gravity 0 produces the colour-2/colour-7 pair with the bridge at rows 4-6, cols 2-3.",
+        "The bridge colour palette[8] and background palette[0] are fixed rule roles, and the bridge colour is visible in every demonstration output. The rectangle colours are read from the pixels. No arbitrary colour association is involved, and d6ad076f is not on the colour-evidence check list.",
+        "Host audit passed: 1000 fresh pairs, 8000 augmented checks and 16 fixture variants."
+      ],
+      "blocking_issues": [],
+      "nonblocking_limits": [
+        "The solver assumes exactly two single-colour rectangles. It returns the input unchanged for diagonal or overlapping layouts, which the constructor never produces.",
+        "It fills only background cells inside the bridge rectangle. In-domain the region is always empty, so this has no effect.",
+        "The constructor's code comments mislabel the blocks ('long block' marks the cyan bridge, 'bridge' marks the second rectangle). This does not change the semantics.",
+        "The prior notes say apply_gravity was not supplied, but it is in common.py. It confirms D4-consistent application to both grids, so this note is harmless."
+      ],
+      "required_context_checks": [
+        "No colour-association evidence check is required: the fill and background roles are fixed rule colours, and the fill colour appears in every demonstration output."
+      ],
+      "task_id": "d6ad076f",
+      "factory_sha256": "b2b6faf40d818c6a39d301c1e684c50ea552fd1cfd155f825426e9f89795578d",
+      "constructor_sha256": "67833a5710b1f55958802550a4998cfad5df41ddd2e89e02e0d593b4bada9a7f"
+    },
+    "host_review": "Read complete independent review, source mechanism, limitations and context requirements. All eight D4 indices tested per fresh pair, all supplied fixture pairs checked in16 orientation/palette variants. Per-episode execution and evidence checks required. "
+  }
+}

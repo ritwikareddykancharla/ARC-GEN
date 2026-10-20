@@ -1,0 +1,50 @@
+{
+  "task_id": "d255d7a7",
+  "factory_sha256": "3757fbc54d2e0082a051dc85204deafb8574a2cb76214e028cc11217d5fa3155",
+  "constructor_sha256": "ec5ed80a98ea5f5ac348b2c5c9c2fbd26e453e820c8d874c1ad3c219957b30ba",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 116656155163486,
+  "d4": 7,
+  "unique_base_inputs": 984,
+  "seconds": 11.066446666955017,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "Colour roles are fixed as constants: background = palette[7] and pipe = palette[0]. The pixel colour palette[9] only matters as head contents, which are copied verbatim.\n\nThe emitted program works directly in visible coordinates:\n1. It finds 4-connected components of the pipe colour. Each one is a pipe: a 3-wide head plus a 1-wide shaft.\n2. A pipe whose bounding box is exactly 3 rows tall and longer than 3 is horizontal. The head columns are the pipe-coloured cells in the top row of the box.\n3. A pipe whose box is exactly 3 columns wide and taller than 3 is vertical. The head rows are the pipe-coloured cells in the left column of the box.\n4. The head box is copied with its 9/7 contents and erased to background, together with every shaft cell.\n5. It is pasted unchanged at whichever end of the bounding box it did not occupy, so its outer edge lands where the shaft ended.\n\nAll erasures happen before any paste. Pixels outside head boxes are untouched.\n\nThe generator randomises flop and transpose independently for every pair, and the host's D4 transform composes with that. So within one episode the pipe axis and direction vary between grids. For that reason the program infers axis and direction from each grid's own pixels instead of fixing them from d4. Both axis branches are written out explicitly, with no grid transposition, rotation or colour unpermutation.\n\nI traced this rule by hand against all three train pairs and the test fixture, and it matches them (no code was run). I found no fixture contradicting the uniform rule.",
+    "limitations": "Assumes the generator's domain:\n- Pipes do not touch each other. Gripper rows are spaced 4 to 6 apart, so this holds.\n- Every pipe's shaft is longer than its 3-cell head. Grid size is at least 8, so this holds.\n- Free 9-pixels never sit inside a head box or at a paste destination. The generator shifts pixel rows away from rows adjacent to grippers, and destinations lie at the far edge, so this holds.\n\nA component whose bounding box is 3x3, or is not 3 thick on either axis, is left untouched. Such components cannot occur in this generator.\n\nNo constructor defects were found. The only implicit tie-break is the head's direction, which is fully determined by which end of the bounding box holds the head walls.\n\nd4 is accepted but deliberately not used, because orientation is inferred per grid. The palette is assumed to be a full 10-entry colour map.",
+    "independent_source_review": {
+      "verdict": "accept",
+      "mechanism": "Each 4-connected component of the pipe colour (palette[0]) is a 3x3 head plus a 1-wide shaft running to the grid edge. The program erases the head box (with its contents) and the shaft to background (palette[7]). It then pastes the original head box, unchanged in orientation, at the opposite end of the component's bounding box, so the head's back wall lands where the shaft ended. 9-pixels outside head boxes stay where they are.",
+      "evidence": [
+        "Constructor, input: rows grow-1 and grow+1, cols 0..2 are 0, and row grow, cols 2..size-1 is the shaft. Output: rows grow\u00b11, cols size-3..size-1 are 0 and output[grow][size-1]=0. This is a pure translation of the 3x3 head to the far end with the same orientation.",
+        "Constructor pixels: grid[prow][0..length-1]=9. When prow is in grows, the output column is size-3+col, so head contents travel with the head. Otherwise the 9s stay put. The emitted program copies g[r0+dy][a+dx] verbatim, which reproduces this exactly.",
+        "Pixel-row adjustment: `if prow-1 in grows or prow+1 in grows: prow += 1` maps grow-1 to grow (a head interior) and grow+1 to grow+2. With grip spacing of at least 4, grow+3 is never another grip, so the single check suffices. Free 9s therefore never lie in head wall rows. They sit in cols 0..1, far from the destination cols size-3.. (size \u2265 8).",
+        "Grip spacing randint(4,6) leaves at least one background row between neighbouring pipes, so components never merge. The grow+1<size bound keeps heads in range. size \u2265 8 makes the bounding-box long side greater than 3, so the h==3/w>3 and w==3/h>3 branches always classify the pipe.",
+        "The top row (horizontal case) or left column (vertical case) of the bounding box holds only head-wall cells, so hcols/hrows recovers the head extent under any flop/transpose/D4. Placement `na = far end if a==c0 else c0` picks the opposite end correctly.",
+        "All erasures run before any paste, and destinations lie inside the same pipe's own bounding box, so pipes cannot interfere with each other.",
+        "The solver works directly on the visible grid with explicit horizontal and vertical branches. There is no whole-grid untransform or retransform. d4 is unused because orientation is inferred per grid. Fixing colours via palette[0] and palette[7] is legitimate rule-colour specialisation.",
+        "Fixture trace: test heads at rows 0..2 (e.g. cols 1..3 holding [0,7,0],[0,7,0],[0,0,0]) reappear unchanged at rows 17..19. The free 9s at (0,0) and (0,4) stay. Train pair 2's free 9 at (7,4) also stays. This is consistent with the program.",
+        "Host audit passed: 1000 fresh pairs, 8000 augmented checks, 16 fixture variants, no sampler rejections."
+      ],
+      "blocking_issues": [],
+      "nonblocking_limits": [
+        "Components with a 3x3 bounding box, or with no side exactly 3 thick, are skipped. The constructor cannot produce them.",
+        "Assumes pipes never touch and that free 9s never lie in head or destination boxes. Both are guaranteed by the grip spacing and the prow adjustment.",
+        "The palette is assumed to be a full 10-entry map. Shorter palettes are padded with identity entries.",
+        "Head contents are copied verbatim, so the solver never relies on the colour palette[9]. Any non-pipe colour inside a head box would also travel."
+      ],
+      "required_context_checks": [
+        "None task-specific: the rule is a deterministic spatial transform with no arbitrary colour or shape lookup. d255d7a7 is not in the episode_evidence_checks list, which is appropriate. The standard D4 conflicting-answer check suffices."
+      ],
+      "task_id": "d255d7a7",
+      "factory_sha256": "3757fbc54d2e0082a051dc85204deafb8574a2cb76214e028cc11217d5fa3155",
+      "constructor_sha256": "ec5ed80a98ea5f5ac348b2c5c9c2fbd26e453e820c8d874c1ad3c219957b30ba"
+    },
+    "host_review": "Read source review mechanism, evidence, limitations and context requirements. Host audit covers all eight D4 indices per fresh pair; d4=7 in report is only the final loop index. All supplied fixture pairs checked under 16 orientation/palette variants. Emitted programs operate in displayed coordinates. Per-episode verification and context-evidence checks are mandatory. "
+  }
+}

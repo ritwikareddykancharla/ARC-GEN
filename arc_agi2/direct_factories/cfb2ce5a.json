@@ -1,0 +1,48 @@
+{
+  "task_id": "cfb2ce5a",
+  "factory_sha256": "a2b2a2c906480c16f307b667942389fa46cb068358b2bc06900df61493edc380",
+  "constructor_sha256": "75f1acd5532a00836cd61386386492736d4e296de0610c3a1ed4cd9d1cbb1bb2",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 255810583481509,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 3.6505279160337523,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The constructor uses a 10x10 grid with a one-cell background border. Its 8x8 interior splits into four 4x4 quadrants. One quadrant holds the two-colour pattern block. Each of the other three quadrants is the pattern reflected across the central row axis, the central column axis, or both. Each of those quadrants also has its own colour substitution.\n\nUnder D4, this fold structure keeps its form: the block simply sits in a different corner of the interior. The factory traces an interior cell of the original block (2,2) through the D4 transform (reverse each row if d4>=4, then rotate clockwise d4%4 times). This tells it which row half and column half hold the block in visible coordinates. The background is fixed as palette[0].\n\nThe emitted solver works directly on the visible grid:\n- Every interior cell (r,c) maps to its template cell. The row stays r if r is in the block's row half, otherwise it becomes H-1-r. The column is handled the same way.\n- For each non-block quadrant, every non-background cell (a seed) records mapping[template colour] = seed colour.\n- Each quadrant cell is then filled with mapping.get(template colour, BG). The block and border are copied unchanged.\n\nThe block is located by position, not by colour frequency. So the solver still works when a pattern colour is the background (palette[0]) or when seed colours repeat pattern colours. In both cases the archived 'two most frequent colours + bbox' heuristic can fail. Seeds whose colour is the background are invisible, and leaving those cells as background reproduces the generator exactly. The constructor guarantees that every quadrant shows one seed for each pattern value, so every non-background quadrant colour gets mapped.",
+    "limitations": "The block quadrant is fixed from d4 rather than inferred, which matches the constructor's domain: fixed 10x10, block always at the original top-left interior quadrant. The solver also assumes even dimensions and the one-cell border. Grids outside this layout are not handled.\n\nThe generator allows colors[0] or colors[1] to be 0, so a pattern colour can equal the background. It also allows quadrant colours to be 0, so seeds can be invisible. The position-based approach handles both consistently, but the archived frequency/bbox solver would fail in some of these cases. The host should be aware of this; it is a robustness gap in the archive, not a label defect.\n\nNo contradictions were found in the fixtures. Pair 2's bottom-right quadrant (colours 5 and 0) and the test's bottom-right quadrant (colours 0 and 3) are consistent with unmapped values becoming background. This factory has not been executed or tested.",
+    "independent_source_review": {
+      "verdict": "accept",
+      "mechanism": "A two-colour 4x4 block sits in one corner quadrant of the 8x8 interior of a 10x10 grid with a one-cell border. Each of the other three quadrants is the block reflected across the central row axis, the central column axis, or both. Each quadrant is recoloured by its own seeds: the template colour at a seed's cell becomes that seed's colour throughout the quadrant. A template colour with no visible seed becomes background. The emitted solver fixes the block quadrant (BLOCK_TOP, BLOCK_LEFT) from d4. For every interior cell it reads the template directly in visible coordinates via src_row(r) = r or H-1-r and src_col(c) = c or W-1-c. It builds mapping[template] = seed from the non-background quadrant cells and fills each cell with mapping.get(template, BG).",
+      "evidence": [
+        "Constructor placement: block at (i//4+1, i%4+1); top-right at column 8-i%4 = 9-(i%4+1); bottom-left at row 8-i//4; bottom-right uses both. These are exactly reflections about the central axes of a 10x10 grid, so the solver's H-1-r and W-1-c inversions match.",
+        "Under any D4 transform the three non-block quadrants are still related to the block by reflection across the axis or axes separating them. The solver uses only the visible quadrant halves and per-axis reflection, so it acts natively in augmented coordinates. There is no whole-grid untransform wrapper.",
+        "Factory traces the interior cell (2,2) using the step (r,c)->(c,h-1-r), which is a clockwise rotation, after an optional row reversal. It derives top/left from the result. The host audit passed 8000 augmented checks, including all 8 D4 variants per base pair, which is consistent with the orientation convention matching.",
+        "The shown pairs are sampled with pattern[pair[0]] != pattern[pair[1]], and colors[0] != colors[1] (common.sample draws without replacement). So each quadrant's two seeds sit on different template colours, and the mapping never conflicts.",
+        "Seed colour 0 (invisible) matches the constructor output colours[p+k] = 0 through the mapping.get(t, BG) default. Block colour 0 gives template key 0, which maps correctly to a visible seed colour or defaults to BG.",
+        "Block and border cells are copied unchanged from the input. The constructor output equals the input there because seeds lie only in non-block quadrants.",
+        "Unmapped-to-background is demonstrated by train pair 2: the bottom-right colours are (5, 0), so only seed 5 is visible and the other template colour stays 0. The seed-to-colour association is read from the query input itself, not an arbitrary lookup, so no extra colour-evidence check is needed (cfb2ce5a is not in the episode-evidence list)."
+      ],
+      "blocking_issues": [],
+      "nonblocking_limits": [
+        "The block quadrant is a d4-derived constant, not inferred. This is a legitimate orientation constant, since every demonstration in an episode places the block in the same visible corner. The solver does not handle other layouts or sizes, and the constructor never produces them.",
+        "The constructor can draw a block colour equal to background (colors[0] or colors[1] = 0). Background cells inside the block then act as a template colour, and a seed placed at such a cell recolours the background-template cells. The solver reproduces the constructor exactly, but such episodes are harder for a human to read. The archived frequency/bbox program can also mislocate the block or mis-pick colours in these cases and when seed colours repeat. That is an archive robustness gap, not a label defect.",
+        "Colour pairs may overlap across quadrants (only at least 7 distinct of 8 are required). The solver is position-based and unaffected."
+      ],
+      "required_context_checks": [
+        "Confirm that the host's D4 convention (row reversal for d4>=4, then clockwise quarter-turns) matches the factory's tracing. The passing audit across 8 variants per pair suggests it does.",
+        "Confirm that palette[0] is the background under the palette augmentation, so BG = palette[0] corresponds to constructor colour 0."
+      ],
+      "task_id": "cfb2ce5a",
+      "factory_sha256": "a2b2a2c906480c16f307b667942389fa46cb068358b2bc06900df61493edc380",
+      "constructor_sha256": "75f1acd5532a00836cd61386386492736d4e296de0610c3a1ed4cd9d1cbb1bb2"
+    },
+    "host_review": "Read source review mechanism, evidence, limitations and context requirements. Host audit covers all eight D4 indices per fresh pair; d4=7 in report is only the final loop index. All supplied fixture pairs checked under 16 orientation/palette variants. Emitted programs operate in displayed coordinates. Per-episode verification and context-evidence checks are mandatory. "
+  }
+}

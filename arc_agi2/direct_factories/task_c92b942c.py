@@ -1,0 +1,52 @@
+def build_program(d4, palette):
+    pal = list(palette)
+    bg = int(pal[0])
+    line_col = int(pal[1])
+    diag_col = int(pal[3])
+    # Original mechanism: seed rows (direction (0,1)) become line colour 1;
+    # diagonal marks at -/+ (1,1) from every tiled seed.
+    vl = (0, 1)
+    vd = (1, 1)
+    def flip(v):
+        return (v[0], -v[1])
+    def rot(v):
+        return (v[1], -v[0])
+    if d4 >= 4:
+        vl = flip(vl)
+        vd = flip(vd)
+    for _ in range(d4 % 4):
+        vl = rot(vl)
+        vd = rot(vd)
+    horiz = (vl[0] == 0)
+    dr, dc = int(vd[0]), int(vd[1])
+    lines = []
+    lines.append('import numpy as np')
+    lines.append('')
+    lines.append('BG = %d' % bg)
+    lines.append('LINE = %d' % line_col)
+    lines.append('DIAG = %d' % diag_col)
+    lines.append('HORIZ = %s' % ('True' if horiz else 'False'))
+    lines.append('DR = %d' % dr)
+    lines.append('DC = %d' % dc)
+    lines.append('')
+    lines.append('def solve(demonstrations, grid):')
+    lines.append('    g = np.array(grid, dtype=int)')
+    lines.append('    out = np.tile(g, (3, 3))')
+    lines.append('    OH, OW = out.shape')
+    lines.append('    ys, xs = np.nonzero(out != BG)')
+    lines.append('    seeds = [(int(y), int(x)) for y, x in zip(ys, xs)]')
+    lines.append('    if HORIZ:')
+    lines.append('        for y in sorted(set(y for y, _ in seeds)):')
+    lines.append('            row = out[y, :]')
+    lines.append('            row[row == BG] = LINE')
+    lines.append('    else:')
+    lines.append('        for x in sorted(set(x for _, x in seeds)):')
+    lines.append('            col = out[:, x]')
+    lines.append('            col[col == BG] = LINE')
+    lines.append('    for y, x in seeds:')
+    lines.append('        for s in (-1, 1):')
+    lines.append('            ny, nx = y + s * DR, x + s * DC')
+    lines.append('            if 0 <= ny < OH and 0 <= nx < OW and out[ny, nx] == BG:')
+    lines.append('                out[ny, nx] = DIAG')
+    lines.append('    return [[int(v) for v in r] for r in out]')
+    return '\n'.join(lines) + '\n'

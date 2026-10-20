@@ -1,0 +1,52 @@
+{
+  "task_id": "db7260a4",
+  "factory_sha256": "ef00e3d06d01e7fcb78bd8ca5714edc0413403489efafbbddf6aa4fabb2bf96b",
+  "constructor_sha256": "2b7b5f71b890a644394904ef8dcd7e66537629f269f5423ec5fbbb5f55a4efef",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 4652903714384,
+  "d4": 7,
+  "unique_base_inputs": 502,
+  "seconds": 3.0891131249954924,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The factory works out where the original 'down' vector (1,0) ends up under the D4 transform. A row flip negates the column component, and each clockwise rotation maps (dr,dc) to (dc,-dr). It bakes that visible gravity vector into the emitted program, along with the colour constants palette[0] (background), palette[1] (drop/water) and palette[2] (wall).\n\nThe emitted solve() reproduces the generator's actual mechanism directly in visible coordinates:\n1. Locate the drop, preferring a water cell on the border opposite gravity, and erase it.\n2. Move the drop along gravity until the next cell is a wall or lies outside the grid.\n3. If it leaves the grid, flood the whole border line on the gravity side (the visible 'bottom row').\n4. Otherwise, scan both directions perpendicular to gravity along the landing line, stopping at walls or the border. Collect the cells whose gravity-neighbour is in bounds and not a wall (holes in the floor).\n5. If there is a hole, jump to it and resume falling.\n6. If there is no hole, perform the generator's basin fill. Walk line by line against gravity from the landing cell. On each line, fill perpendicular spans from the landing coordinate up to the nearest walls. Stop at the first line that contains no non-background input cell, or at the grid edge.\n\nOn the canonical fixtures this gives:\n- The cup interiors in pairs 1, 4 and 5.\n- The bottom-row floods in pairs 2 and 3.\n- The test case: drain through the gap at (4,6), then fill rows 6\u20137, columns 3\u20137.",
+    "limitations": "Not executed by me; the host must verify it.\n\nConstructor notes for host review:\n- The generator rejects scenes with more than one hole on the landing line. The emitted program falls back to the nearest hole, preferring the positive perpendicular direction on a tie. The archived solver instead takes the first hole found scanning left. Neither choice is a defined puzzle rule, and such scenes are outside the domain.\n- The generator's fill stops at the first all-zero input row (the drop counts as non-zero). If that row were never found, it would index row -1, which wraps to the bottom row. That wrap is an indexing artefact. The emitted program stops at the grid edge instead and does not reproduce it.\n- The generator's basin fill is row-wise between the nearest walls. In-domain this always equals the archived solver's enclosed flood-fill rectangle, but the two could differ on out-of-domain shapes (for example, posts of unequal height). The program follows the generator.\n- The generator never actually produces drops landing on a post top, because those cases are rejected as multi-hole.\n\nThe fixtures are consistent with a single uniform rule; I found no contradictions.",
+    "independent_source_review": {
+      "verdict": "accept",
+      "mechanism": "The emitted solve() replays the constructor's draw() simulation directly in visible coordinates, using a gravity vector (GR,GC) baked in by the factory. Steps: locate and erase the drop; fall along gravity until the next cell is a wall or off-grid. Off-grid floods the whole gravity-side border line. Otherwise scan the landing line perpendicular to gravity (LR,LC = GC,GR) in both directions, stopping at walls or the border, and collect cells whose gravity-neighbour is in bounds and not a wall. Any hole means jump there and keep falling. No hole means a line-by-line fill against gravity: each line gets a perpendicular span from the fixed landing coordinate out to the nearest walls, stopping at the first line that is all background in the input.",
+      "evidence": [
+        "Hole test is equivalent. check_for_holes uses grid[row+1][c]==0 with row+1<=9 and only colours 0/2 below row 0. The factory uses inb(gravity-neighbour) and not wall, which is the same in-domain. The landing cell itself is never a hole (wall below), so the factory starting at k=1 is harmless.",
+        "Hole jump is equivalent. The constructor sets pcol=hole and then prow+=1 into an empty cell. The factory moves to (r, hole) and re-falls, so both reach the same next landing or the bottom.",
+        "Fill is equivalent. The constructor's fill(row,col) keeps col fixed and decrements row while sum(grid[row])!=0, filling right and left until output==2 or the grid end. The factory keeps cc fixed (GC=0 for vertical gravity), tests line_nonempty against BG on the input (which includes the drop, as in the constructor), and stops at a wall or out of bounds.",
+        "The row -1 wrap cannot happen in-domain. Row 1 never contains walls: vertical lines start at row 2 or 3 and floors sit at rows 4, 6 or 8. So the constructor's fill always stops at row 1 or lower, and the factory's edge stop never diverges.",
+        "Row 9 never holds walls (lowest floor is row 8), so the bottom-row flood is reached exactly when the drop exits the grid. This matches the factory's off-grid branch with out[H-1,:] for GR=1.",
+        "Ties cannot reach the factory. Landings with more than one hole make draw() return None and the sampler resamples. The factory's nearest-hole ordering is only a defensive out-of-domain choice. Post-top landings always produce multiple holes and are excluded.",
+        "Gravity derivation is consistent. The flip negates dc, which is 0 for (1,0), so it has no effect. A clockwise rotation maps (dr,dc) to (dc,-dr), so down becomes left. The factory emits only constants (GR, GC, BG, WATER, WALL); there is no untransform/solve/retransform wrapper.",
+        "The output depends only on the visible input (walls, drop position). No hidden latent affects the label. The colour roles (bg/drop/wall) are structural and taught by every demonstration.",
+        "Host audit passed: 1000 fresh pairs, 8000 augmented pair checks, 16 fixture variants."
+      ],
+      "blocking_issues": [],
+      "nonblocking_limits": [
+        "The program reproduces the constructor's row-wise between-walls fill rather than the archived solver's enclosed flood-fill. These coincide in-domain because posts in a group share rows and floors lie only at post bottoms. They could differ on out-of-domain unequal-height shapes.",
+        "The nearest-hole tie-break, preferring the positive perpendicular direction, is arbitrary but unreachable from the constructor.",
+        "The drop selection prefers a water cell on the border opposite gravity. Only one water cell ever exists in-domain, so this is defensive only.",
+        "The host reported 9 sampler rejections ('Invalid ARC grid'). I cannot identify a source path in the constructor that produces malformed grids. The cause is presumably a host-side filter and should be confirmed, but it does not affect the emitted labels."
+      ],
+      "required_context_checks": [
+        "Confirm the host's D4 convention: index d4>=4 applies a left-right flip, then (d4%4) clockwise quarter-turns. This makes visible gravity (1,0)->(0,-1)->(-1,0)->(0,1). The passing 8000 augmented checks suggest it matches, but the audit summary lists only d4=7.",
+        "Confirm the palette mapping order: palette[0]=background, palette[1]=drop/water, palette[2]=wall.",
+        "Optionally confirm that the 'Invalid ARC grid' sampler rejections are unrelated to the label logic."
+      ],
+      "task_id": "db7260a4",
+      "factory_sha256": "ef00e3d06d01e7fcb78bd8ca5714edc0413403489efafbbddf6aa4fabb2bf96b",
+      "constructor_sha256": "7d8a992ecd77e4b931db7d299d363c45e7736438894000a8a6597b782f86fdb7"
+    },
+    "host_review": "Read source review mechanism/evidence/limitations and context requirements. Every D4 orientation tested per fresh pair; per-episode verification required. Resolved9 invalid sampler returns: dry-run draw mutated nonlocal initial pcol, so final draw started from a different location. Reproduced with random seed239. draw now accepts a local initial pcol. Canonical fixtures unchanged; repaired constructor passes1000 fresh/8000 augmented/16 fixture variants with zero sampler rejections."
+  }
+}

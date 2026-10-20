@@ -1,0 +1,47 @@
+{
+  "task_id": "c8b7cc0f",
+  "factory_sha256": "aef09a825aeb48fd55f4f8a5dd6237240c22fc1605be8cb35195173a8374d408",
+  "constructor_sha256": "308b9d1a5dc6217ef117bee8eb90403b59248c9c830be25b9f10f8bf6a0e35a3",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 154643135616386,
+  "d4": 7,
+  "unique_base_inputs": 999,
+  "seconds": 4.297066166065633,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The frame is the only object in the original frame colour 1, so the emitted program uses the constant FC = palette[1]. Dots are drawn before the rectangle, which keeps the frame unbroken. That means the bounding box of all FC cells is exactly the frame box, and this holds under any D4 transform.\n\nThe background is BG = palette[0]. The dot colour is inferred from the pixels: it is the colour that is neither BG nor FC. In the generator's domain there is exactly one such colour. A defensive tie-break picks the candidate with the most interior cells, then the most total cells.\n\nThe count is the number of dot cells strictly inside the frame box (rows y0+1..y1-1, cols x0+1..x1-1). Interior membership is preserved by D4.\n\nThe 3x3 output fill order is rewritten in visible coordinates. The original order is row-major from the top-left. The factory maps each canonical slot through the episode's D4: first mirror the column (c -> 2-c) when d4>=4, then rotate clockwise d4%4 times ((r,c) -> (c, 2-r)). It embeds the resulting ordered slot list as a constant. For example, d4=1 fills the right column top-to-bottom, then the middle column, and so on. The first n slots of that order are filled with the dot colour and the rest stay BG.\n\nThere is no normalization, inverse rotation, or palette unpermutation of the grid.",
+    "limitations": "- **Fill order depends on d4.** The order comes from the factory's d4 parameter rather than being inferred from the demonstrations. This is correct for the stated episode-wide transform.\n- **Dot colour equal to background.** If the generator's random_color could ever return 0 (i.e. the dot colour equals the background), no distinct dot colour exists. The program then returns an all-BG 3x3, which matches the canonical output in that case anyway.\n- **No constructor defects found.** The count is filtered to 3..6 by the generator. The frame is drawn over dots, so a dot can never sit on the border. The approved fixtures agree with the uniform rule, and the test uses dot colour 2 consistently with the colour-inference approach.\n- **Untested.** I have not executed the factory or the emitted program.",
+    "independent_source_review": {
+      "verdict": "accept",
+      "mechanism": "The generator draws scattered single-cell dots in one colour, chosen from 2..9 because random_color excludes 1 and only returns values in 1..9. It then draws an unbroken colour-1 hollow rectangle over them. The output is a 3x3 grid in which the first N canonical row-major slots hold the dot colour, where N is the number of dots strictly inside the frame. N is filtered to 3..6. The emitted solver works directly in visible coordinates. It takes the bounding box of FC = palette[1] cells as the frame box and counts the single non-BG/non-FC colour in g[y0+1:y1, x0+1:x1]. It then fills the first N slots of a constant ORDER, which is the canonical row-major order pushed through the episode's D4 mapping.",
+      "evidence": [
+        "Constructor draw(): dots are placed first, then common.hollow_rect(grid, wide, tall, brow, bcol, 1) overwrites the border. The frame is therefore always complete. brow <= size - tall and bcol <= size - wide keep it fully in-bounds, so the bbox of colour-1 cells equals the frame box exactly.",
+        "Colour 1 never appears outside the frame, because color = common.random_color(exclude=[1]). The solver's bbox over g == FC is therefore exact under any D4 transform.",
+        "The constructor's count loop is range(brow+1, brow+tall-1) x range(bcol+1, bcol+wide-1). This matches the solver's inner slice y0+1:y1, x0+1:x1 on the inclusive bbox. Interior membership is D4-invariant.",
+        "The label depends only on the visible interior dot count. There is no hidden latent. Rejection only filters count to 3..6 and does not change the labelling rule.",
+        "Exactly one candidate colour exists in-domain. count >= 3 guarantees the dot colour is present, and the dot colour is never 0 or 1. The tie-break key is purely defensive.",
+        "ORDER construction maps canonical (r,c) by mirroring c -> 2-c when d4 >= 4, then rotating (r,c) -> (c, 2-r) d4%4 times. This is an output-slot orientation constant. It is not a whole-grid untransform wrapper, and the host's 8000 augmented checks are consistent with the host's D4 convention.",
+        "The approved fixtures match the rule: train counts are 5, 3 and 4; the test has 4 interior 2s, giving 222/200/000."
+      ],
+      "blocking_issues": [],
+      "nonblocking_limits": [
+        "Fill orientation is a factory constant from d4, not inferred from the demos. This is allowed as a deterministic spatial orientation taught by the demonstrations. However, when every demo has count 3, the demos show only which full row or column fills first, not its direction. D4 pairs sharing that first line (for example identity and horizontal mirror) are then indistinguishable. A query with count >= 4 would have conflicting answers in that case, and only the host's D4-conflict rejection resolves it.",
+        "The prior-note limitation about the dot colour possibly being 0 is moot. common.random_color draws from 1..9 and excludes 1, so the dot colour is never 0.",
+        "The solver relies on FC = palette[1] being used only by the frame. This holds in the constructor's domain, but the solver is not a general frame detector."
+      ],
+      "required_context_checks": [
+        "Confirm that the D4-conflict rejection policy is applied to this task. It is needed for episodes whose demos all have interior count 3, because those leave the fill direction within the first line ambiguous while the query count is >= 4."
+      ],
+      "task_id": "c8b7cc0f",
+      "factory_sha256": "aef09a825aeb48fd55f4f8a5dd6237240c22fc1605be8cb35195173a8374d408",
+      "constructor_sha256": "308b9d1a5dc6217ef117bee8eb90403b59248c9c830be25b9f10f8bf6a0e35a3"
+    },
+    "host_review": "Read mechanism, evidence, limitations and context requirements. Host reflects columns before clockwise rotation, tests all eight D4 indices, and applies a shared palette permutation after generation. Fixture audit verifies all train/test supplied pairs at every tested orientation/palette, not one pair per variant. Per-episode execution verification and conflicting-context rejection remain required. Added input/demo-only evidence gate for query-required ordering, substitution, or trigger association; regression tests include rejection and acceptance."
+  }
+}

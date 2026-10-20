@@ -1,0 +1,49 @@
+{
+  "task_id": "d282b262",
+  "factory_sha256": "d3589cca95940a2b457fe2643adc6f3652fadaafe7bc36060cf26b333488fe54",
+  "constructor_sha256": "73afb505f93807df009563185057fe3e670c7d2b42402ed3f59bf3eff5a78e57",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 178373278693389,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 8.763924167025834,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "Original rule: every multicolour checkerboard square slides toward the right border; squares are settled starting with the one nearest that border, each stopping at the border or against an already-settled square occupying a cell in one of its rows. The factory computes the visible push direction from d4: start with (dy,dx)=(0,1) (right); for d4>=4 the row reversal turns it into (0,-1); each clockwise rotation maps (dy,dx)->(dx,-dy) (right->down->left->up). Background is the constant palette[0] (the generator always uses colour 0 as background). The emitted program finds 4-connected non-background components (squares never touch, so each is one object), sorts them by their leading edge along the push direction (descending), and for each one advances step by step in the visible direction while every shifted cell stays in bounds and lands on still-empty canvas, then paints it with its original colours. This is equivalent to the generator's per-row 'lengths' stacking: row-sharing squares have disjoint extents along the push axis, so leading-edge ordering matches the generator's left-column ordering for every interacting pair, and gaps the generator treats as filled are unreachable by later squares because they must hit the blocker in the shared row first.",
+    "limitations": "Assumes background is palette[0] and objects are non-touching (guaranteed by the generator's padded non-overlap check). Works on rectangular grids of any size. The generator's rule text mentions only 2x2/3x3 but the constructor produces sizes 2..5; both are handled. No constructor defects or fixture contradictions found; ordering ties between equal leading edges only occur for non-interacting squares and do not affect the result.",
+    "independent_source_review": {
+      "verdict": "accept",
+      "mechanism": "Every non-touching two-colour checkerboard square slides toward one visible border. Squares are settled starting with the one nearest that border. Each stops at the border or against an already-settled square that shares at least one row (or column, for vertical pushes). The emitted solver finds 4-connected non-background components and sorts them by leading edge along (DY,DX), largest first. It advances each component one step at a time while every shifted cell stays in bounds and lands on empty output canvas, then paints it with its original colours.",
+      "evidence": [
+        "Constructor ordering: `entries = sorted(entries, reverse=True)` sorts on the (bcol, ...) tuple, so the box with the largest left column is placed first. Boxes that share a row cannot have equal bcol, because the padded non-overlap check (`padded = s+1`, `common.overlaps(..., padded, padded, 0)`) forces disjoint x extents with a gap of at least one cell. The tie-breaking fields (size, brow, colours) therefore only order boxes that share no rows.",
+        "Constructor stacking: `max_length = max(lengths[r])` over the box's rows, then `lengths[r] = max_length + size` and `bcol = 15 - max_length - size`. lengths[r] equals 15 minus the leftmost occupied column in row r. Some cells it treats as filled may actually be empty, for example in a box row that had a shorter prior length. A later box cannot reach those cells. It starts strictly left of every earlier box in any shared row (boxes only move right, and inputs do not overlap), so it hits the leftmost occupied cell in that row first. The solver's cell-by-cell collision test therefore gives the same stop column.",
+        "Ordering equivalence: the solver sorts by leading edge (max x\u00b7DX + y\u00b7DY) instead of left column. For row-sharing pairs the x extents are disjoint, so both keys order the pair the same way. Pairs that share no rows never affect each other's placement. Both orders are linear extensions of the same precedence relation, so by induction every box gets the same final position.",
+        "Object extraction: `common.random_colors(2)` samples two distinct colours from 1..9, so background 0 never appears inside a square. The one-cell padding excludes orthogonal and diagonal contact. Each square is therefore exactly one 4-connected non-BG component, and BG = palette[0] is correct.",
+        "Validate fixtures: train pair 2 passes `sizes` with 5 entries but `brows`/`bcols`/colours with 4. `zip` truncates this to 4 boxes, which matches the approved fixture. The other fixtures reproduce the approved outputs when the stacking rule is traced by hand.",
+        "Direct coordinates: the factory specialises only the push direction (DY,DX) from d4 and the background constant. It has no untransform/retransform wrapper. Bounds checks cover all four directions, and the grid is square (15\u00d715), so D4 variants keep their shape.",
+        "Host audit: passed on 1000 fresh pairs, 8000 augmented checks and 16 fixture variants, with no sampler rejections. This supports the d4\u2192direction mapping convention."
+      ],
+      "blocking_issues": [],
+      "nonblocking_limits": [
+        "The rule text says squares are 2\u00d72 or 3\u00d73 and calls the test's 5\u00d75 block '3\u00d75'. The constructor actually draws sizes 2..5. The solver is size-agnostic.",
+        "The rule text's test walkthrough contradicts itself about the 2\u00d72 blocks at rows 9\u201310 and 13\u201314. The constructor-produced test output is consistent with the stacking rule, so only the prose is affected.",
+        "The solver assumes the background is palette[0] and that squares do not touch. The constructor guarantees both. Touching inputs are out of domain.",
+        "Leading-edge ties between components break by component reading order. This only happens for non-interacting squares, so the result is unaffected."
+      ],
+      "required_context_checks": [
+        "The episode evidence check does not list this task. None is needed: the rule is a deterministic spatial push with no arbitrary colour lookup. Its only orientation constant, the push direction, is taught by every demonstration, since all squares visibly move toward one border.",
+        "Confirm the host's context policy rejects D4 variants with identical visible demos but conflicting answers. This cannot occur here because every demo with at least one square shows the direction."
+      ],
+      "task_id": "d282b262",
+      "factory_sha256": "d3589cca95940a2b457fe2643adc6f3652fadaafe7bc36060cf26b333488fe54",
+      "constructor_sha256": "73afb505f93807df009563185057fe3e670c7d2b42402ed3f59bf3eff5a78e57"
+    },
+    "host_review": "Read source review mechanism, evidence, limitations and context requirements. Host audit covers all eight D4 indices per fresh pair; d4=7 in report is only the final loop index. All supplied fixture pairs checked under 16 orientation/palette variants. Emitted programs operate in displayed coordinates. Per-episode verification and context-evidence checks are mandatory. "
+  }
+}

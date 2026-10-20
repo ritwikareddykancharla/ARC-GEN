@@ -1,0 +1,50 @@
+{
+  "task_id": "d35bdbdc",
+  "factory_sha256": "c35c1373c86e2f5d620b5c1b062c9782ed7be6901d38d959c6e6e0aac4b8d36e",
+  "constructor_sha256": "e6503cc9a5a525207603181fb1e488600ba9a128a11138c81adfb211af7d6ac3",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 82929590958724,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 15.810073415981606,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The emitted program reimplements the reference mechanism directly on the visible grid.\n\n1. **Badge detection.** A cell is a badge centre when it has at least 3 in-grid orthogonal neighbours, all of one colour (the ring). Neither the ring nor the centre may be the background or grey. The cell's clipped 3x3 box may contain only background, ring or centre colour. The badge mask is the non-background cells of that box, which covers full rings, pluses and edge-clipped badges.\n2. **Path ends.** A grey cell is an end when it has exactly one counted grey neighbour. A diagonal neighbour is counted only when no orthogonal grey cell bridges the two cells. Exactly two ends are required.\n3. **Selection at each end.** Candidates are eligible badges (centre colour equals some ring colour) whose mask touches the end in Chebyshev distance 1. Only those whose centre is at the minimum squared Euclidean distance are kept.\n4. **Pair and output.** Exactly one unordered pair of distinct badges, one from each end, must result. All badge masks are erased to background and the grey path is kept. Each selected badge is then restored, and its centre becomes the centre colour of the unique badge whose ring colour equals its old centre.\n\n**Why d4 needs no rewrite.** Every geometric predicate is invariant under all eight D4 transforms: orthogonal arms, square boxes, the Chebyshev touch, squared Euclidean distance, and the symmetric diagonal-bridging rule. No direction, axis or ordering tie-break exists that could change, so the visible-coordinate program is the same for every d4.\n\n**Palette handling.** The palette is handled by specialising the only two fixed colour roles: BG = palette[0] and GREY = palette[5]. Ring and centre colours are inferred from pixels, so no colours are unpermuted.",
+    "limitations": "- **Hard failures are kept.** Like the reference program, the emitted program raises an error when the constructor's guarantees fail: not exactly two path ends, no eligible candidate at an end, a non-unique pair, or a pointer that does not name exactly one ring. It does not guess in these cases. The constructor rejects such scenes, so they should not occur in its domain.\n- **Palette assumption.** The palette is assumed to be a permutation, so that palette[0] and palette[5] are distinct and badge colours never coincide with them.\n- **Demonstrations are unused.** They are not needed because the roles come from the palette constants.\n- **Constructor review.** I found no constructor defect and no fixture contradiction. The orientation-independent tie handling (the distinct-pair rule) is an explicit, visible part of the rule, not a hidden random tie-break.\n- **Untested.** I have run no tests.",
+    "independent_source_review": {
+      "verdict": "accept",
+      "mechanism": "Badges are detected from pixels: a cell is a centre when it has at least 3 in-grid orthogonal arms of one colour, neither ring nor centre is BG or GREY, and its clipped 3x3 box holds only BG, ring or centre colour. The badge mask is the non-BG cells of that box. The grey path's two ends are cells with exactly one counted grey neighbour; a diagonal counts only when no orthogonal grey cell bridges it. At each end the candidates are eligible badges (centre colour equals some ring colour) whose mask is at Chebyshev distance 1 from the end. Only those at minimum squared Euclidean centre distance are kept. Exactly one unordered pair of distinct badges, one from each end, must result. All badge masks are erased and the path is kept. The two selected badges are restored, and each centre becomes the centre colour of the unique badge whose ring colour equals the old centre.",
+      "evidence": [
+        "Constructor labels come from the latent scene in _render, but generate always runs _check_scene first. That check (a) requires _detect(grid) == set(centres), and _detect has the same predicate as the solver's _badges, so the solver's nodes are exactly the latent badges. (b) It recomputes ends with the same _counted rule the solver uses. (c) It recomputes the selected pair with _nearest/_pairs using the eligibility filter, matching the solver's picks and pairs logic. So the selected pair is visible, not a hidden latent.",
+        "Mask equivalence: the solver's mask is the non-BG cells of the box. The constructor's _mask (it includes the centre, since dr=dc=0 is not skipped) is the badge's ring and centre cells. These are equal because: the path avoids every badge box (forbidden set and _check_scene); no badge mask may intrude into another box (masks[i] in boxes[j] check); _spaced keeps corner-touching boxes disjoint; and plus corners are black.",
+        "Eligibility is the same in both: constructor eligible = ctrs[i] in rings, solver nd[1] in rings, where the rings come from detected nodes (identical sets). Donor uniqueness follows from distinct ring colours. Selected badges always point at another badge's ring (_colours chooses j != i).",
+        "Ties are decided by a visible rule, not a hidden latent: the distinct-pair condition plus the uniqueness check in _walk and _check_scene. Geometry and eligibility modes are both checked against the visible scene; by_geometry == elig leads to a retry. No fixture-specific switch exists. The canonical fixtures are rebuilt through the same explicit path with assertions for selection mode.",
+        "Self-coloured distractor centres are restricted by _self_ok, and any spurious centre is still caught by _detect. In fixture test 1 the green plus with centre 3 is handled correctly.",
+        "The factory specialises only BG = palette[0] and GREY = palette[5]. Ring and centre colours are read from pixels, and the pointer rule is equivariant under colour permutation. Every geometric predicate (orthogonal arms, square box, Chebyshev touch, squared Euclidean distance, symmetric diagonal bridging) is D4-invariant. Pair handling only uses set membership, and the restoration order is irrelevant because masks are disjoint. There is no untransform/solve/retransform wrapper; the solver acts directly in visible coordinates.",
+        "d35bdbdc is not in the colour-evidence task list. That is appropriate: the pointer is resolved from the query's own pixels (centre colour names a ring present in the same grid), not from an arbitrary lookup that needs demonstration evidence.",
+        "Host audit passed: 1000 fresh pairs, 8000 augmented checks, 16 fixture variants, no sampler rejections."
+      ],
+      "blocking_issues": [],
+      "nonblocking_limits": [
+        "In random generation, a ValueError raised inside _check_scene (for example an unexpected spurious centre) propagates out of generate instead of triggering a retry. The construction appears to prevent this, and the audit saw no rejections, but it is a robustness gap rather than a guarantee.",
+        "The solver raises on out-of-domain inputs (not exactly two ends, no eligible candidate, non-unique pair, ambiguous donor). The constructor excludes all of these.",
+        "The solver assumes the palette is a permutation, so BG and GREY are distinct and never badge colours.",
+        "The synthetic 10..16 sizes, 3..8 badges and the eligibility-mode distractor construction extend beyond the ARC data, but they keep the same visible rule."
+      ],
+      "required_context_checks": [
+        "Confirm that the host's augmented checks apply the palette permutation to both demonstrations and query, so that palette[0] and palette[5] are the visible background and grey.",
+        "Optionally confirm that the D4 fixture variants include the eligibility-mode query (test 3) and the tied distinct-pair query (test 2), since these exercise the tie and eligibility logic."
+      ],
+      "task_id": "d35bdbdc",
+      "factory_sha256": "c35c1373c86e2f5d620b5c1b062c9782ed7be6901d38d959c6e6e0aac4b8d36e",
+      "constructor_sha256": "e6503cc9a5a525207603181fb1e488600ba9a128a11138c81adfb211af7d6ac3"
+    },
+    "host_review": "Read source review mechanism, evidence, limitations and context requirements. Host audit covers all eight D4 indices per fresh pair; d4=7 in report is only the final loop index. All supplied fixture pairs checked under 16 orientation/palette variants. Emitted programs operate in displayed coordinates. Per-episode verification and context-evidence checks are mandatory. "
+  }
+}

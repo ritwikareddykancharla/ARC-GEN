@@ -1,0 +1,47 @@
+{
+  "task_id": "db3e9e38",
+  "factory_sha256": "e2d66891bc50a7a1305fcd32039247dfa0382e5e2be10cd1d130a048e7ce27e1",
+  "constructor_sha256": "514f25f99f31949177729107499400030c9d82c639e2dd887772f4990f5b948d",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 231114948184675,
+  "d4": 7,
+  "unique_base_inputs": 415,
+  "seconds": 2.832376082893461,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "Canonical rule: one line of colour 7 hangs from the top edge with length L. At perpendicular distance d (1 to L-1) on each side, the output adds a parallel segment of length L-d. Each segment starts at the line's anchored end, the end touching the grid edge. Segment colour is 7 when d is even and 8 when d is odd. Positions outside the grid are skipped.\n\nHow the factory specialises the program:\n- It fixes the line colour as palette[7] and the alternate colour as palette[8].\n- From d4 % 4 it picks the line orientation and which end is anchored. Rotating clockwise sends the top edge to the right, bottom and left edges for k = 1, 2, 3. So the line is vertical for even k and horizontal for odd k. The anchor is at the minimum index for k in {0, 3} and at the maximum index for k in {1, 2}.\n- Row reversal (d4 >= 4) only mirrors positions across the line. The staircase is symmetric, so reversal needs no special handling.\n\nWhat the emitted program does, all in visible coordinates:\n1. Finds the line pixels.\n2. Measures the line's extent along its axis.\n3. Draws the shrinking, alternating parallel segments on both perpendicular sides, starting from the anchored end.\n\nThe anchored end is taken from the line itself, matching the archived solver, rather than from a fixed grid edge.",
+    "limitations": "- Assumes exactly one straight line of colour palette[7], as the generator always produces.\n- Assumes palette[7] and palette[8] are distinct from the background. This holds under a palette permutation.\n- If no line pixel is found, the program returns the input unchanged.\n- No constructor defects or fixture contradictions were found. The colour parity rule c%2==col%2 is equivalent to d being even.",
+    "independent_source_review": {
+      "verdict": "accept",
+      "mechanism": "There is a single straight line of palette[7] with length L, anchored at one grid edge. At each perpendicular distance d from 1 to L-1, on both sides, the output adds a parallel segment of length L-d. Each segment starts at the line's anchored end. Segments at even d use the line colour and segments at odd d use palette[8]. Segments that fall outside the grid are clipped.",
+      "evidence": [
+        "Constructor: the line occupies rows 0..length-1 at column col. On the right side, `for c in range(col, width): for r in range(length-(c-col))` draws a segment of length L-d anchored at row 0. The left side is symmetric. Because `c%2==col%2` holds exactly when d is even, even d gets orange (the line colour) and odd d gets cyan. Clipping is implicit because c only ranges over in-grid columns. When d >= L, the range is empty, so d runs from 1 to L-1. This matches the emitted `for d in range(1, L)`.",
+        "Sampler bounds: col is drawn from randint(2, width-3), which with width >= 5 always gives at least two columns on each side. length is drawn from randint(3, height-1), so L >= 3 and the line never reaches the far edge. Every sampled pair therefore has a d=1 segment on both sides, and the ALT colour is always visible in the demonstrations. The colour association is demonstrated, not hidden.",
+        "Emitted solver: it finds `argwhere(g==LINE)`. The constructor input contains only the line, so this set is unambiguous. `perp` is taken from the first pixel's cross-axis coordinate. The extent `lo..hi` gives L. The segment start is `a0 = lo` or `hi-n+1`, which anchors at the line's own end, as the archived program does with y0. The solver draws at `perp\u00b1d` with a bounds check. All of this happens in visible coordinates, with no untransform/retransform wrapper.",
+        "D4 specialisation: VERT = (k even) and ANCHOR_START = (k in {0,3}) are orientation constants for the genuine rule direction. The host passed 8000 augmented checks across all 8 D4 variants plus 16 fixture variants. This empirically confirms the factory's claim that the d4>=4 reflection only mirrors across the line under the host's convention. A wrong anchor for reflected variants would have produced mismatches.",
+        "Archived program and fixtures: both canonical train pairs and the test pair match the constructor formula. I spot-checked pair 1: column 6 at d=4 has length 1 and colour 7, and column 5 at d=3 has length 2 and colour 8."
+      ],
+      "blocking_issues": [],
+      "nonblocking_limits": [
+        "The parameter space is small: there were 415 unique base inputs in 1000 draws. This reflects the original task's simplicity, not a defect.",
+        "ANCHOR_START is a d4-derived constant rather than inferred from which line end touches the edge. This is equivalent within the constructor domain, because the line always starts at an edge and never reaches the opposite one (L <= height-1).",
+        "The solver assumes LINE and ALT differ from the background and that only line pixels have colour LINE. Both are guaranteed by the constructor under a palette permutation.",
+        "Returning the input unchanged when no line is found is an out-of-domain fallback. The constructor never reaches it."
+      ],
+      "required_context_checks": [
+        "Confirm that the host's d4>=4 convention matches the passing audit. This is already evidenced by 8000 augmented checks passing at seed 231114948184675.",
+        "No colour-evidence check is needed for db3e9e38. It is not in the require_colour_evidence list, and the ALT colour palette[8] appears in every demonstration output because L >= 3 and col >= 2."
+      ],
+      "task_id": "db3e9e38",
+      "factory_sha256": "e2d66891bc50a7a1305fcd32039247dfa0382e5e2be10cd1d130a048e7ce27e1",
+      "constructor_sha256": "514f25f99f31949177729107499400030c9d82c639e2dd887772f4990f5b948d"
+    },
+    "host_review": "Read complete independent review, source mechanism, limitations and context requirements. All eight D4 indices tested per fresh pair, all supplied fixture pairs checked in16 orientation/palette variants. Per-episode execution and evidence checks required. "
+  }
+}

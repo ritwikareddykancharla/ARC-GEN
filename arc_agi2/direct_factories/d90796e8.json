@@ -1,0 +1,51 @@
+{
+  "task_id": "d90796e8",
+  "factory_sha256": "67f681bea00036ea385f0d841a30a3ab4d137274484f7e66b2a4d27b9727b447",
+  "constructor_sha256": "e755ebf0dcebb7cbe7587615e6a0592c19a7974119365fde5869c91dea86aabf",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 175605360438699,
+  "d4": 7,
+  "unique_base_inputs": 980,
+  "seconds": 1.972062874934636,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The mechanism is: every cell of the original colour 3 that touches an original-colour-2 cell orthogonally becomes colour 8, and each such touching 2 cell becomes background 0. All other cells, including the colour-5 distractors, stay the same. Orthogonal 4-neighbour adjacency looks the same under all eight D4 transforms. So in visible coordinates the rule needs no axis or direction changes, and the emitted program checks all four neighbours directly. The palette is handled by placing the constants palette[3], palette[2], palette[8] and palette[0] into the program as the green, red, cyan and black roles. Every decision is made from the unmodified input, so the order in which cells are scanned cannot affect the result. Rectangular grids and objects at the edges are handled by bounds-checked neighbour lookups.",
+    "limitations": "Not run or tested by me. Constructor note for host review: the generator updates its output in place while looping over the green cells. If a red cell ever touched two green cells, only the first green in scan order would turn cyan. The emitted program instead turns every green with an adjacent red cyan, with all decisions taken from the input. Within the constructor's domain this difference cannot arise. Each green is placed beside its own red, and reds are more than Manhattan distance 2 apart. So no green touches two reds, no red touches two greens, and later draws cannot overwrite earlier red or green cells. Greens whose red anchor fell outside the grid correctly stay green. The program assumes the palette is a mapping indexable by the original colours 0..9 and that palette[0] is the background.",
+    "independent_source_review": {
+      "verdict": "accept",
+      "mechanism": "Every input cell of role-colour 3 (green) with an orthogonal 4-neighbour of role-colour 2 (red) becomes role-colour 8 (cyan). Each such adjacent red becomes background (palette[0]). All decisions are read from the unmodified input. Isolated greens and reds and the grey (5) distractors are unchanged.",
+      "evidence": [
+        "The constructor's output loop scans green cells. For each orthogonal neighbour where get_pixel(output, ...) == red, it sets that neighbour to black and the green to cyan. The emitted solve() does the same, but reads g (the input) and writes out.",
+        "Red spacing: a candidate red is rejected when abs(row-r)+abs(col-c) <= 2, so accepted reds are pairwise at Manhattan distance >= 3.",
+        "Each green is drawn at distance 1 from its own red. It is therefore at distance >= 2 from every other red. So no green touches two reds, and no green lands on a red.",
+        "Two reds' greens are at distance >= 1, so a green never overwrites another green.",
+        "A red therefore has at most one green neighbour, and a green at most one red neighbour. The constructor's in-place mutation (black-out of a red before later greens are scanned) cannot change any result. Constructor labels and the input-based solver agree on the full constructor domain.",
+        "Greys are drawn before reds and greens. They are only overwritten, never overwrite, and colour 5 does not take part in the rule.",
+        "Off-grid anchors: reds can be placed at r or c = -1, height, or width, and common.draw clips them. A green whose red is off-grid stays green. A red that rolled no green (randint(0,3)==0) stays red. The solver's bounds-checked neighbours handle both cases the same way.",
+        "Fixture check by hand. Test pairs: (1,1)/(2,1), (1,6)/(1,7) and (5,7)/(6,7) become 0/8, 8/0 and 8/0. (6,1)=3 has neighbours 0, 5 and 0 and stays 3. This matches the approved test output. The train pairs listed in the rule also match the fixtures.",
+        "D4: 4-neighbour adjacency is invariant under all eight transforms. The solver works directly in visible coordinates and has no untransform wrapper.",
+        "Palette: GREEN/RED/CYAN/BLACK are palette[3]/[2]/[8]/[0]. These are role specialisations, and the same fixed roles appear in every demonstration.",
+        "The host audit passed: 1000 fresh pairs, 8000 augmented checks and 16 fixture variants, with no sampler rejections."
+      ],
+      "blocking_issues": [],
+      "nonblocking_limits": [
+        "The constructor's in-place output mutation would diverge from the solver if one red touched two greens. The spacing constraint makes this unreachable in the constructor domain, so it is not a blocker.",
+        "The g.ndim != 2 fallback is defensive and out of domain.",
+        "The solver assumes the palette is an injective mapping indexable by 0..9, with palette[0] as background."
+      ],
+      "required_context_checks": [
+        "None task-specific. d90796e8 is not in the colour-evidence list, and none is needed. The colour roles (3+2 becomes 8+0) are fixed and appear in every demonstration with a touching pair. The general D4 conflicting-answer policy is sufficient."
+      ],
+      "task_id": "d90796e8",
+      "factory_sha256": "67f681bea00036ea385f0d841a30a3ab4d137274484f7e66b2a4d27b9727b447",
+      "constructor_sha256": "e755ebf0dcebb7cbe7587615e6a0592c19a7974119365fde5869c91dea86aabf"
+    },
+    "host_review": "Read complete independent review, source mechanism, limitations and context requirements. All eight D4 indices tested per fresh pair, all supplied fixture pairs checked in16 orientation/palette variants. Per-episode execution and evidence checks required. Episode check requires a demonstrated touching-pair recolour for any query touching pair."
+  }
+}

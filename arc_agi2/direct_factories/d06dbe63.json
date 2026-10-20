@@ -1,0 +1,50 @@
+{
+  "task_id": "d06dbe63",
+  "factory_sha256": "ed3fa87c6e761d576246fa15b505ddeb9f2b3c047e961ced15f7b065158c4d1e",
+  "constructor_sha256": "238ae2813122cb1e528e34fc33ac9b0335135e607cd0e91fc4574d60baddef53",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 28866612973621,
+  "d4": 7,
+  "unique_base_inputs": 168,
+  "seconds": 4.726712584029883,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "In the original task, each arm starts at the seed and follows a fixed walk. The first arm repeats the moves up, up, right, right. The second arm repeats the opposite moves: down, down, left, left. Every visited cell is painted grey (5), and an arm stops at its first out-of-grid cell.\n\nBoth coordinates of a walk change only in one direction, so after the first out-of-bounds cell every later cell is also outside. That makes the generator's early break identical to the archived solver's per-cell clipping.\n\nThe factory carries the two move vectors through the D4 map. A reflection negates dc, and each clockwise rotation maps (dr,dc) to (dc,-dr). This gives the visible first-move vector A (originally up) and second-move vector B (originally right). The emitted program walks A,A,B,B from each non-background seed, and the mirrored arm walks -A,-A,-B,-B. Colours are fixed constants: background palette[0] and fill palette[5]. Any non-background cell (palette[8] in the generator's domain) counts as a seed. Only background cells are overwritten, so the seed survives. The program works directly in visible coordinates with H and W read separately, so rectangular grids are handled.",
+    "limitations": "Background and fill colours come from the palette constants, not from the demonstrations. Seeds are taken to be every non-background cell. The generator only produces one seed, so behaviour with several seeds follows the archived solver (each seed draws its own arms, and painting only overwrites background) and is outside the generated domain. No constructor defects or fixture contradictions were found: the generator's break-at-first-exit matches clipping because the walks are monotone. Untested by me; host verification required.",
+    "independent_source_review": {
+      "verdict": "accept",
+      "mechanism": "There is a single seed cell (colour 8 in the constructor domain). Two monotone walks start from it. The first repeats the moves up, up, right, right. The second repeats the opposite moves: down, down, left, left. Every visited cell is painted grey (5). Each walk stops at its first out-of-grid cell. The emitted solver moves the two vectors through D4 (A = tf(up), B = tf(right)) and walks [A,A,B,B] and [-A,-A,-B,-B] from every non-background cell in visible coordinates.",
+      "evidence": [
+        "Constructor state machine: v=2,h=0. Each vertical move decrements v, and v reaching 0 sets h=2. Each horizontal move decrements h, and h reaching 0 sets v=2. This yields the cycle dr,dr,dc,dc, and it breaks on the first out-of-bounds cell.",
+        "Manual trace of seed (7,6) up arm: (6,6),(5,6),(5,7),(5,8),(4,8),(3,8),(3,9),(3,10),(2,10),(1,10),(1,11),(1,12),(0,12), then break. This matches train output 1.",
+        "Manual trace of test seed (5,5) down arm: ...,(10,1),(11,1),(11,0), then break at (11,-1). This matches test row 11 = [5,5,0,...].",
+        "Manual trace of seed (3,4) down arm ends with (8,0),(9,0), then break at (9,-1). This matches the lone (9,0) cell in pair 2.",
+        "Archived step j cells are (r\u2213(1+2j), c\u00b12j), then the run in row r\u2213(2+2j). This is the same walk. Its 'any cell inside' loop and the constructor's early break agree because rows and columns change monotonically, so no cell can re-enter the grid after one exits.",
+        "Factory tf: a reflection negates dc, and a quarter turn maps (dr,dc) to (dc,-dr). Both vectors pass through the same map, so the relative move order is preserved. The solver reads H and W from the visible grid and never untransforms the whole grid.",
+        "No random latent affects the label: the seed position is fully visible in the input. No ties or lookup tables are involved.",
+        "Seed is never overwritten. Overwrite guards: `out[y,x]==BG` in the factory; monotone walks never revisit the seed in the constructor.",
+        "Host audit passed: 1000 fresh pairs, 8000 augmented checks, 16 fixture variants, no rejections."
+      ],
+      "blocking_issues": [],
+      "nonblocking_limits": [
+        "Orientation (A,B) and colours (BG=palette[0], FILL=palette[5]) are specialised constants. This is allowed, since they are a genuine spatial orientation and rule colours that the demonstrations teach.",
+        "Every non-background cell is treated as a seed. Multiple seeds and non-8 seeds are outside the constructor domain, which places exactly one cyan pixel.",
+        "The constructor only produces 13x13 square grids. The solver's rectangular support is untested by the generator."
+      ],
+      "required_context_checks": [
+        "Confirm that the host's D4 index convention matches the factory's tf (reflect dc first when d4>=4, then d4%4 rotations of (dr,dc)->(dc,-dr)). Passing 8000 augmented checks suggests it does, but this review cannot confirm it from the source alone.",
+        "No colour-association evidence check applies: d06dbe63 is not in the episode_evidence_checks list, and the rule uses no arbitrary lookup."
+      ],
+      "task_id": "d06dbe63",
+      "factory_sha256": "ed3fa87c6e761d576246fa15b505ddeb9f2b3c047e961ced15f7b065158c4d1e",
+      "constructor_sha256": "238ae2813122cb1e528e34fc33ac9b0335135e607cd0e91fc4574d60baddef53"
+    },
+    "host_review": "Read source review mechanism, evidence, limitations and context requirements. Host audit covers all eight D4 indices per fresh pair; d4=7 in report is only the final loop index. All supplied fixture pairs checked under 16 orientation/palette variants. Emitted programs operate in displayed coordinates. Per-episode verification and context-evidence checks are mandatory. "
+  }
+}

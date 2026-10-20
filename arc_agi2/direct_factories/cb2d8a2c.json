@@ -1,0 +1,52 @@
+{
+  "task_id": "cb2d8a2c",
+  "factory_sha256": "f0a92c8d336edb4d6f3f2474d417b12ce20d1203a026095c1ff458a57234e89c",
+  "constructor_sha256": "ee456387559db9dd91a68d58d63e927f4ae71fcd4fc6c8beff576a2e0a0aafdc",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 161349620762384,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 10.490865709027275,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The emitted program works directly in visible coordinates and uses palette constants for each colour role: BG=palette[8], SEED=palette[3], BAR=palette[2], ONE=palette[1].\n\n1. It locates the seed and reads which edge it sits on. Seeds never sit in corners, so the edge is unambiguous. The path direction is the inward normal of that edge. Under any D4 transform this turns vertical motion into horizontal motion naturally, so no rotation wrapper is used.\n2. Bars are found as 4-connected components of BAR or ONE cells.\n3. Every ONE cell is recoloured to BAR in the output.\n4. From the seed, the program scans along the travel direction for the first bar cell. That bar's clearance is k = (number of ONE cells in it) + 1. The path is drawn up to k cells before the hit cell.\n5. The path then sidesteps along the lateral axis. If the bar touches lateral coordinate 0, the target is its far end + k. If it touches the opposite lateral edge, the target is its near end \u2212 k. Targets may land on the border, as the first test fixture shows.\n6. This repeats until no bar lies ahead. The path then runs to the opposite edge.\n\nThe constructor guarantees several things:\n- every bar spans the current lateral position, so the first ray hit is always the next bar in order;\n- bars are at least 4 rows apart, so components never merge;\n- each bar touches exactly one side edge;\n- the sidestep target stays inside the grid.",
+    "limitations": "Two fallbacks exist only for robustness and are never reached in the constructor's domain:\n- If a bar touches both lateral edges or neither, the program picks the side with more free room, mirroring the archived solver.\n- If the seed sits in a corner, the program picks an edge deterministically.\n\nThe fixtures are consistent with the uniform rule; I found no contradictions.\n\nThe constructor has no indexing bugs or hidden tie-breaks that affect the visible answer. The program assumes exactly one seed cell; if there were several, it would use the first in reading order.\n\nI have not run any tests.",
+    "independent_source_review": {
+      "verdict": "accept",
+      "mechanism": "The constructor builds every scene in a canonical frame where the path runs down, then maps it into place with _orient (identity, vertical flip, transpose, or transpose plus flip). The seed sits at row 0, at a lateral coordinate in 1..width-2. Each bar is a single row attached at lateral 0 ('L') or width-1 ('R') and holds n alternating ONE cells starting at the attached end. The path descends to row-k, where k = n+1. It then sidesteps to free_end \u00b1 k and repeats at each bar. After the last bar it runs to the far edge. The emitted solver works in visible coordinates. It reads the travel direction from the seed's edge and finds bars as 4-connected BAR/ONE components. It scans ahead for the first bar cell, advances dist-k cells, and sidesteps along the visible lateral axis away from whichever edge the bar touches. It does this until no bar lies ahead, then runs to the far edge. Colours enter as palette role constants. There is no untransform/solve/retransform wrapper.",
+      "evidence": [
+        "Clearance is visible. In _render, k = ones + 1. The solver computes k as the count of ONE cells in the hit component plus one. Since `ones` is drawn as exactly `ones` blue cells at edge + 2j, and size >= 2*ones-1 keeps them in the bar, the visible count equals the latent.",
+        "Stop distance matches. The constructor moves from y to stop = row-k. The solver moves n = dist-k with dist = row-y. In _check, row-k >= 1 for the first bar and row-k >= prev+2 for later bars. Given the previous y = prev-k_prev, this gives n >= 1, so max(n, 0) never clips.",
+        "Bar side is visible and unambiguous. _check requires 0 <= target < width. For 'L' with size = width this gives target = width-1+k, which is rejected; for 'R' it gives -k, which is rejected. Oversize bars are also rejected before _render. So every bar touches exactly one lateral edge. The solver branches `lo == 0 and hi < lat_max` and `hi == lat_max and lo > 0` cover all in-domain bars, and the 'more room' fallback is unreachable.",
+        "Ray hits are in order. _check enforces `lo_c <= x <= hi_c`, so each bar spans the current lateral position. The previous bar's target lies k >= 2 beyond its free end, so the downward scan from the sidestep row skips the previous bar and hits the next one first. Bars are single rows at least k+2 >= 4 apart, so components never merge. The seed is at least 3 rows from the first bar.",
+        "Sidestep never degenerates. Target is strictly outside the bar's span: for 'L', size-1+k > size-1 >= x. Targets may equal 0 or width-1; the solver's clamp is a no-op there. This border case is shown in test 1.",
+        "Seed direction is unambiguous. The seed's lateral coordinate is 1..width-2 and its longitudinal coordinate is 0. After _orient it lies on exactly one visible edge and away from the corners, so the solver's first four branches pick the correct inward normal under all D4 maps.",
+        "_sample is constructive. The n=1 bar is always laterally feasible for width >= 4: 'L' covers x <= width-3 and 'R' covers x >= width-2. The budget reserves 4 rows per remaining bar, so `choices` is never empty. min_len = used+2 gives prev <= length-2. The _options ranges satisfy every _check constraint.",
+        "The archived program's clearance and sidestep logic agree with the factory. The factory does not use the _native_solve wrapper.",
+        "Host audit: passed. 1000 fresh pairs, 8000 augmented checks, 16 fixture variants, no sampler rejections."
+      ],
+      "blocking_issues": [],
+      "nonblocking_limits": [
+        "The solver assumes a single seed and uses the first SEED cell in reading order. The constructor always draws exactly one seed.",
+        "Unreachable fallbacks remain: corner seed, and a bar touching both or neither lateral edge. The constructor excludes both cases.",
+        "The iteration cap len(comps)+2 is adequate because each iteration consumes one bar. Exhausting the cap would skip the final run-off, but this is unreachable.",
+        "A synthetic episode's demos may show only some ONE counts. The clearance law k = n+1 is a numeric spatial rule shown across the canonical demos (counts 1\u20134), not an arbitrary colour lookup.",
+        "Synthetic extensions are not represented in the fixtures: grids larger than the fixtures, up to 7 bars, consecutive same-side bars, and runs ending at a far-edge corner."
+      ],
+      "required_context_checks": [
+        "Confirm the host's D4-conflict rejection is applied to sampled episodes. The rule is orientation-relative to the visible seed edge, so no conflict is expected.",
+        "No colour-association evidence check applies: cb2d8a2c is not in the require_colour_evidence list, and its colour roles are structural (seed, bar, marker, background)."
+      ],
+      "task_id": "cb2d8a2c",
+      "factory_sha256": "f0a92c8d336edb4d6f3f2474d417b12ce20d1203a026095c1ff458a57234e89c",
+      "constructor_sha256": "ee456387559db9dd91a68d58d63e927f4ae71fcd4fc6c8beff576a2e0a0aafdc"
+    },
+    "host_review": "Read mechanism, evidence, limitations and context requirements. Host reflects columns before clockwise rotation, tests all eight D4 indices, and applies a shared palette permutation after generation. Fixture audit verifies all train/test supplied pairs at every tested orientation/palette, not one pair per variant. Per-episode execution verification and conflicting-context rejection remain required."
+  }
+}

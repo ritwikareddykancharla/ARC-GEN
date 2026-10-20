@@ -1,0 +1,49 @@
+{
+  "task_id": "da2b0fe3",
+  "factory_sha256": "cec051087aa319bdd0a387fd2cb29c8b8949c7419cf78207cc3dbce0f6e39164",
+  "constructor_sha256": "f9632d3b3a668fdcc5d2f92ce0fb5ef060c40efbd292e77328e3e7313497e690",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 35697387171947,
+  "d4": 7,
+  "unique_base_inputs": 992,
+  "seconds": 3.487432291964069,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The constructor builds one connected, mirror-symmetric sprite. It blanks one full grid line (row 4) through the sprite. In the output it paints that line with colour 3 across the whole grid. The scene may then be transposed. Every other sprite row and column is guaranteed non-empty. Row connectivity holds before the blanking, and there is an explicit column check after it. So inside the bounding box of non-background cells, the cut line is the only all-background row or column. The emitted program works directly in visible coordinates. It takes the bounding box of cells differing from the background, palette[0]. It then paints every all-background row inside that box across the full width, and every all-background column across the full height, with palette[3]. Both axes are checked because the gap's orientation varies within the original family (xpose) and under D4. Rotations and reflections only swap rows and columns or reverse indices, and the rule is invariant to both. So d4 needs no further specialization. The palette maps the background and line roles to constants.",
+    "limitations": "Assumes the background is palette[0] and the line colour is palette[3], per the constructor (common.grids fills with 0; the line is 3). Assumes the sprite colour is never the background, i.e. common.random_color does not return 0 (it excludes 3 explicitly). If a scene had several empty lines inside the bbox, all would be painted, matching the archived solver. The constructor's connectivity and column checks prevent this. An all-background grid is returned unchanged. No fixture contradicts the rule. No constructor indexing defects affecting the visible rule were found. The column-emptiness check only inspects the sprite's own window, which is consistent with the bbox rule because the sprite fills its width and height extremes.",
+    "independent_source_review": {
+      "verdict": "accept",
+      "mechanism": "The constructor places one connected, left-right mirror-symmetric sprite (width 4-7, height 5-6, offset 1-2) on a 10x10 zero grid. It blanks grid row 4 in the input and sets that row to 3 across the full width in the output, then optionally transposes. The emitted solver takes the bounding box of cells != palette[0]. It paints every all-background row inside the box across the full grid width, and every all-background column across the full grid height, with palette[3].",
+      "evidence": [
+        "Row 4 is always strictly inside the sprite. With offset 1 or 2, it maps to sprite row 3 or 2. With height >= 5, both rows lie strictly between rows 0 and height-1, so the bbox reaches both sides of the cut.",
+        "Every other sprite row is non-empty. The sampler requires row 0 and row height-1 to be present, and requires 4-connectivity of the full sprite (common.connected) before blanking. Connectivity forces a pixel in every intermediate row.",
+        "Every sprite column is non-empty after blanking. The explicit loop in draw() checks grid[row+offset][col+offset] over all width columns and returns None if one is empty. This includes columns 0 and width-1, so the bbox equals the sprite window exactly.",
+        "Therefore the cut line is the unique all-background row or column inside the bbox. The solver's 'paint all such lines' never meets the multi-line case.",
+        "Bounds are safe. offset + width <= 9 and offset + height <= 8, so nothing is clipped.",
+        "Colours: random_color(exclude=[3]) draws from 1..9, so the sprite is never background (0) and never the line colour (3). The palette constants BG=palette[0] and LINE=palette[3] follow the constructor's fixed roles.",
+        "Colour 3 is a fixed rule constant shown in every demonstration. No arbitrary per-episode colour lookup is involved.",
+        "Input cells on the cut line become 3 in the output, sprite pixels included, since the input row is zeroed first. This matches the solver, which overwrites the whole line.",
+        "The solver works directly in visible coordinates and checks both axes. D4 only swaps or reverses rows and columns, and the bbox/empty-line rule is invariant under that. No untransform/native-solve/retransform wrapper is present.",
+        "All five canonical fixtures match the rule as hand-checked: column 4 in train 1 and test 1, row 4 in the other three. The host audit passed 1000 fresh pairs and 8000 augmented checks with no sampler rejections."
+      ],
+      "blocking_issues": [],
+      "nonblocking_limits": [
+        "The cut is always at index 4 in native coordinates. The solver does not hardcode it; it detects the empty line, which is more general than needed.",
+        "The empty-grid defensive branch (return unchanged) is out of domain, since the constructor always places a sprite.",
+        "The solver ignores demonstrations, which is appropriate here because the rule colours are fixed constants under the palette mapping.",
+        "No hidden-latent label dependence was found. xpose is visible as the line's orientation, and the solver handles both orientations."
+      ],
+      "required_context_checks": [],
+      "task_id": "da2b0fe3",
+      "factory_sha256": "cec051087aa319bdd0a387fd2cb29c8b8949c7419cf78207cc3dbce0f6e39164",
+      "constructor_sha256": "f9632d3b3a668fdcc5d2f92ce0fb5ef060c40efbd292e77328e3e7313497e690"
+    },
+    "host_review": "Read complete independent review, source mechanism, limitations and context requirements. All eight D4 indices tested per fresh pair, all supplied fixture pairs checked in16 orientation/palette variants. Per-episode execution and evidence checks required. "
+  }
+}

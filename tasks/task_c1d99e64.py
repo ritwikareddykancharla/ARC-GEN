@@ -17,6 +17,15 @@
 import common
 
 
+def _has_only_requested_lines(colors, width, height, rows, cols):
+  black = common.black()
+  found_rows = {r for r in range(height)
+                if all(colors[r * width + c] == black for c in range(width))}
+  found_cols = {c for c in range(width)
+                if all(colors[r * width + c] == black for r in range(height))}
+  return found_rows == set(rows) and found_cols == set(cols)
+
+
 def generate(width=None, height=None, colors=None, rows=None, cols=None):
   """Returns input and output grids according to the given parameters.
 
@@ -33,7 +42,7 @@ def generate(width=None, height=None, colors=None, rows=None, cols=None):
     cols = common.sample(range(1, width - 1), common.randint(0, 3))
     color = common.random_color(exclude=[common.red()])
     # Create static, but ensure that all rows and cols have it.
-    while True:
+    for _ in range(10000):
       colors = []
       for _ in range(height):
         for _ in range(width):
@@ -45,11 +54,16 @@ def generate(width=None, height=None, colors=None, rows=None, cols=None):
       for c in range(width):
         if len(set([colors[r * width + c] for r in range(height)])) < 2:
           legal = False
-      if legal: break
-    # Draw lines
-    for r in range(height):
-      for c in range(width):
-        if r in rows or c in cols: colors[r * width + c] = common.black()
+      if not legal: continue
+      # Test after drawing: a line can erase the last nonblack noise cell
+      # in an unselected row/column. Its hidden selection label would then
+      # contradict the visible full-line rule.
+      for r in range(height):
+        for c in range(width):
+          if r in rows or c in cols: colors[r * width + c] = common.black()
+      if _has_only_requested_lines(colors, width, height, rows, cols): break
+    else:
+      raise RuntimeError("unable to sample noise without unintended full lines")
 
   grid, output = common.grids(width, height)
   for r in range(height):

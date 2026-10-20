@@ -1,0 +1,48 @@
+{
+  "task_id": "d511f180",
+  "factory_sha256": "58b803ec45621a7fc6e56c3c100d482db433cc26eb726b976da503f4ad6b7b40",
+  "constructor_sha256": "d2217d734e4a979975df38405d630feb952dd39558578350de368910d61bfee6",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 79252341077183,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 1.2273812500061467,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The rule swaps two colours cell by cell. Original gray (5) becomes cyan (8), cyan becomes gray, and every other colour stays put. Position and shape play no part. The palette maps the two roles to palette[5] and palette[8], and the factory writes these into the emitted program as constants. Both masks are computed from the unmodified input before any recolouring, so newly written cells are never flipped back. The swap acts on each cell independently, so it commutes with every D4 transform. The emitted program therefore works directly in visible coordinates and needs no orientation-specific changes. It handles rectangular grids and cells at the boundary with no special cases, and the swap has no ties to resolve.",
+    "limitations": "The program assumes the palette is a permutation, so palette[5] and palette[8] are different colours. As a safeguard, if they were equal it returns the input unchanged. Demonstrations are not used, because the colour roles are fixed by the constructor and supplied by the palette. No constructor defects were found, and the fixtures match the uniform rule.",
+    "independent_source_review": {
+      "verdict": "accept",
+      "mechanism": "Cell-wise swap of gray and cyan. The constructor writes colors[r*size+c] into both grids, then sets output to cyan where the input is gray(5) and to gray where the input is cyan(8). Every other colour (1-9) is copied unchanged. The emitted solver specializes COLOR_A=palette[5] and COLOR_B=palette[8]. It computes both masks from the unmodified input, then assigns out[mask_a]=COLOR_B and out[mask_b]=COLOR_A.",
+      "evidence": [
+        "In the constructor, the two `if` statements both test grid[r][c], the input value, not the output. Each cell is therefore swapped exactly once, with no double-flip. The factory gets the same effect by computing mask_a and mask_b from g before writing to out.",
+        "All 4 fixtures are reproduced by the generate() calls in validate() with matching colour lists, so there are no fixture-specific branches. All four fixtures agree with the pure 5<->8 swap stated in the rule.",
+        "No hidden latent affects labels. Size and colours are fully visible in the input, and the output is a deterministic per-cell function of the input.",
+        "Each cell is mapped independently, so the operation commutes with every D4 transform. The solver works directly on the visible grid with no untransform, native-solve or retransform wrapper, and d4 is correctly unused.",
+        "common.gray() and common.cyan() return internal_colors[5] and [8]. Palette indexing by roles 5 and 8 in the factory matches these.",
+        "There is no geometry, so there are no indexing, tie or boundary issues.",
+        "The host audit passed: 1000 fresh pairs, 8000 augmented checks and 16 fixture variants, with no sampler rejections."
+      ],
+      "blocking_issues": [],
+      "nonblocking_limits": [
+        "The swap colours are fixed task constants carried into the program through the palette, not inferred from the demonstrations. This is acceptable because the roles are constant across the task. In the sampler each cell becomes gray or cyan with probability 0.5 at the override step, and can also land on 5 or 8 through random_color. Demonstrations will therefore almost always show both 5->8 and 8->5.",
+        "A single small sampled demonstration can occasionally lack one of the two colours (roughly 4% for a 3x3 grid lacking 8). Other demonstrations in the episode normally show it. The rule is a deterministic constant-colour mapping, so this is not an arbitrary association that needs a lookup check.",
+        "The COLOR_A == COLOR_B guard only triggers for a non-permutation palette. It is outside the constructor's domain and harmless.",
+        "Background colour 0 never appears, because random_color draws from 1-9. Palette remapping of 0 is therefore irrelevant."
+      ],
+      "required_context_checks": [
+        "None task-specific. d511f180 is not in require_colour_evidence's list, which is appropriate for a fixed-role per-cell colour swap. Confirm the standard D4 conflicting-answer rejection policy applies. It should never trigger here because the swap is equivariant."
+      ],
+      "task_id": "d511f180",
+      "factory_sha256": "58b803ec45621a7fc6e56c3c100d482db433cc26eb726b976da503f4ad6b7b40",
+      "constructor_sha256": "d2217d734e4a979975df38405d630feb952dd39558578350de368910d61bfee6"
+    },
+    "host_review": "Read complete independent review, source mechanism, limitations and context requirements. All eight D4 indices tested per fresh pair, all supplied fixture pairs checked in16 orientation/palette variants. Per-episode execution and evidence checks required. Episode check rejects unseen swap when query uses either mapped colour."
+  }
+}

@@ -28,8 +28,9 @@ def generate(rows=None, cols=None, lengths=None, cdirs=None, pcol=None):
     pcol: col of the pixel.
   """
 
-  def draw():
-    nonlocal pcol
+  def draw(pcol):
+    # Simulation may move the drop through a hole. Keep that position local:
+    # the validation draw must not change the next draw's initial input.
     grid, output = common.grids(10, 10)
 
     def check_for_holes(row, col):
@@ -113,10 +114,10 @@ def generate(rows=None, cols=None, lengths=None, cdirs=None, pcol=None):
       lengths = vlengths + hlengths
       cdirs = [1] * len(vlengths) + [0] * len(hlengths)
       pcol = common.randint(1, 8)
-      grid, _ = draw()
+      grid, _ = draw(pcol)
       if grid: break
 
-  grid, output = draw()
+  grid, output = draw(pcol)
   return {"input": grid, "output": output}
 
 

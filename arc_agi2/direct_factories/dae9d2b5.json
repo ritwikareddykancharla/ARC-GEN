@@ -1,0 +1,47 @@
+{
+  "task_id": "dae9d2b5",
+  "factory_sha256": "59254264b65dcce7043dc74affe529b14068ebb7a30033d9e3bfbdf3e13b5447",
+  "constructor_sha256": "859ce94ed5c6a30084e055f3f72b5636ae7207ee0f50d352a746eba5f69feb2f",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 229963284491369,
+  "d4": 7,
+  "unique_base_inputs": 999,
+  "seconds": 1.2722930409945548,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The constructor builds two 3x3 masks, one drawn in colour 4 and one in colour 3. It places them side by side in a 3x6 grid. The output is the cell-wise OR of the two masks, painted pink (6) on background 0. The factory works out which visible axis carries the panel split. An odd rotation (d4%4 in {1,3}) makes the input 6x3, so the program splits it into top and bottom halves. Otherwise it splits into left and right halves. Reflections and rotations of the whole grid map the native column offset of +size to a plain offset of +half along the visible split axis. Because OR is symmetric, the order of the two panels does not matter. The emitted program reads the half size from the grid shape. It counts any cell that is not palette[0] as set, and writes palette[6] where either half is set and palette[0] elsewhere. Colours are handled only as these two specialised constants. Panel colours are not used, so the palette images of colours 4 and 3 never matter.",
+    "limitations": "The split axis is fixed from d4 rather than inferred from the grid shape. This is correct for the constructor's domain, where the input is always 2*size by size. If the split dimension were odd, the extra middle line would be ignored. No contradictions between the fixtures and the OR rule were found, and the constructor has no tie-breaks or indexing defects that affect this rule. It does allow overlapping pixels when the same mask cell is chosen twice, but that has no visible effect.",
+    "independent_source_review": {
+      "verdict": "accept",
+      "mechanism": "Each input is two same-size panels side by side: a 3x3 colour-4 mask on the left and a 3x3 colour-3 mask on the right. The output is the 3x3 cell-wise OR of the two masks, painted in colour 6 on background 0. The emitted solver picks the visible split axis from d4. It takes the first and second halves along that axis and sets palette[6] wherever either half is not palette[0]. Everywhere else it writes palette[0].",
+      "evidence": [
+        "Constructor: `grid[r][c if color == 4 else c + size] = color` puts colour-4 pixels in columns 0..size-1 and colour-3 pixels in columns size..2*size-1. `output[r][c] = common.pink()` is written for every pixel of either colour, so the output is exactly the union of the two masks. No other latent affects the label.",
+        "The pixels for each colour come from a separate `common.random_pixels(size, size)` call, and each call is retried until it is non-empty. Within one panel there are no duplicate cells, and the two panels write to disjoint column ranges, so no input cell is overwritten. The prior note's 'overlap' comment describes a harmless repeat write of 6 in the output only.",
+        "I checked all 5 approved train fixtures row by row against the OR rule; every row matches. Example: fixture 4 row 1 is left 0 1 1 OR right 1 0 1 = 1 1 1, and the output is 6 6 6. Both test outputs also match OR.",
+        "Augmented-coordinate correctness: every D4 transform maps the native panel translation (0,+size) to a translation of +half along one visible axis. The output 3x3 is transformed by the same map. So the visible cell i of the output pairs visible cell i of the first half with visible cell i+half of the second half. If a transform swaps which panel comes first, OR's commutativity covers it. The input is 3x6, so an odd quarter-turn component makes it 6x3, and `axis = 0 if d4%4 in (1,3) else 1` selects the long dimension.",
+        "The solver uses no untransform, native-solve or retransform wrapper. It does a direct slice-and-OR in the visible frame, and its only constants are BG, FG and AXIS.",
+        "Colour handling: any non-BG cell counts as set, so the palette images of 3 and 4 are irrelevant. FG is the output colour shown in every demonstration, so it needs no extra lookup evidence. The episode_evidence_checks list does not include dae9d2b5, which fits since this task has no arbitrary colour association.",
+        "Host audit: passed, with 1000 fresh pairs and 8000 augmented checks (8 D4 variants per pair) plus 16 fixture variants. That exercise is consistent with the d4%4 axis convention being correct for every variant, including the reflected ones."
+      ],
+      "blocking_issues": [],
+      "nonblocking_limits": [
+        "AXIS is fixed from d4 rather than read from the grid's long dimension. This is correct in-domain because the constructor always emits a size x 2*size input with size=3, but it relies on the host's d4 indexing convention, where d4%4 odd means the shape is transposed. The host audit result is consistent with that convention, though I cannot verify it from source alone.",
+        "If the split dimension were odd (out of domain), the middle line would be ignored silently.",
+        "The program sets any non-background cell, so it would also accept panel colours other than 3 and 4. That is broader than the constructor's domain but harmless."
+      ],
+      "required_context_checks": [
+        "Confirm that the host's d4 enumeration puts the transpose-shape transforms exactly at d4%4 in {1,3} for both the rotation group and the reflected coset (d4 4..7). The passing 8000-check augmented audit suggests it does."
+      ],
+      "task_id": "dae9d2b5",
+      "factory_sha256": "59254264b65dcce7043dc74affe529b14068ebb7a30033d9e3bfbdf3e13b5447",
+      "constructor_sha256": "859ce94ed5c6a30084e055f3f72b5636ae7207ee0f50d352a746eba5f69feb2f"
+    },
+    "host_review": "Read complete independent review, source mechanism, limitations and context requirements. All eight D4 indices tested per fresh pair, all supplied fixture pairs checked in16 orientation/palette variants. Per-episode execution and evidence checks required. "
+  }
+}

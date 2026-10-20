@@ -35,7 +35,7 @@ recorded. Passing finite audits does not prove unrestricted generalization.
 
 - 213 native direct-coordinate certificates admitted after fresh audits and
   supplied-fixture checks.
-- 583 admitted factories. Each passed 1,000 fresh pairs, 8,000 augmented pair
+- 653 admitted factories. Each passed 1,000 fresh pairs, 8,000 augmented pair
   checks and 16 supplied-fixture variants. Their audit records retain draft
   limitations and source/constructor hashes. These checks are finite evidence,
   not proof of correctness on every generated input.
@@ -46,7 +46,7 @@ recorded. Passing finite audits does not prove unrestricted generalization.
   counts must be computed as a union, not added.
 - Local exporter test: 18 fresh base episodes, 144 augmented PNG/program/grid
   records. It requested 20 bases and reported a two-episode shortfall.
-- The union currently admits 802 of 1,120 families; 318 still need direct
+- The union currently admits 872 of 1,120 families; 248 still need direct
   augmented program admission. Constructor coverage and program coverage are
   different gates.
 - Synthetic labels for `00d62c1b` now fill every enclosed background component,
@@ -134,7 +134,7 @@ for the current exporter test, not the still-unresolved scalable TAR converter.
 
 ## Additional program review and episode evidence
 
-Program coverage is now **802/1,120** (583 factory certificates plus overlapping
+Program coverage is now **872/1,120** (653 factory certificates plus overlapping
 native/manual targets). Subscription-only Opus 5.5 CLI workers completed 247 independent
 reviews before reaching the session limit. No API fallback was used. A review does not admit a program: admission requires
 host review, source-hash agreement, full fixture checks and fresh execution.
@@ -187,3 +187,37 @@ Five further finite native domains were exhausted with all orientations and two
 palettes: `b7fb29bc` (49), `ba26e723` (22), `bdad9b1f` (18), `be03b35f` (14),
 `c1990cce` (13). They remain subject to adaptive quotas. Full regression suite:
 273 tests passed. No expanded generation or model training launched.
+
+
+## Latest continuation: 872 verified families
+
+Seventy additional factories bring program-target coverage to **872/1,120**,
+with 248 still pending. All 1,120 generator files already exist. Each training
+record remains one episode with both a program and grid target.
+
+- `c1d99e64`: reject synthetic noise that accidentally becomes an unlabelled
+  full line after the intended lines are painted. Requested geometry stays fixed.
+- `db7260a4`: keep the simulated water-drop position local, so validation cannot
+  change the initial position used for the final example. Reproduced with seed 239.
+- `c920a713`: retain the known background role even if no background pixel is
+  visible; do not discard a real box colour via a majority-colour fallback.
+
+The repaired sources each passed 1,000 fresh pairs, 8,000 augmented pair checks
+and 16 supplied-fixture variants. Original fixture labels are unchanged.
+The finite domain of `d4f3cd78` was also exhausted: 28 inputs, 448 checks.
+
+Episode evidence checks now compare alternative rules on the same visible query
+for mirror extension, drip direction, centre-axis selection and panel precedence.
+Colour mappings, clipped arm colours, even-length anchors and output-strip axes
+must be demonstrated when required by the query. These checks do not see query
+answers and are not a proof against every conceivable alternative ARC rule.
+
+[Fresh episode audit](reports/episode-evidence-continuation-audit.json): 400 base
+episodes across 20 families, 392 accepted and 8 rejected for missing evidence.
+All **3,136** accepted augmented program/grid records executed exactly; evidence
+decisions were invariant across all eight orientations. **288 regression tests
+passed.**
+
+HF's default viewer again returned HTTP 200 with 144 preview rows; a returned
+image decoded at 1188×1974 pixels. Scalable archive viewing remains unresolved.
+Full expanded generation and model training have not launched.

@@ -1,0 +1,51 @@
+{
+  "task_id": "d304284e",
+  "factory_sha256": "2065ecf698ea3c5ff86a8f7fcdbc3d37a2a50ab1134e4a3a12ca04a7ad6737e9",
+  "constructor_sha256": "58ce1bd80ae12b6cf150476c3ab8e735bdd146957a9318b134779b63d7687ced",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 67881563837841,
+  "d4": 7,
+  "unique_base_inputs": 993,
+  "seconds": 15.39096949994564,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "In the original orientation there is one motif in colour 7 on background 0. Copies of the motif's own pixel mask are laid along the +x direction. Each copy is shifted by (motif width + 1) from the last. Copy k gets colour 6 when k % 3 == 2 and colour 7 otherwise; copy 0 is the original. From every colour-6 copy, further colour-6 copies run along +y, each shifted by (motif height + 1). Copies are clipped at the grid border. A sequence stops once a copy's bounding box no longer overlaps the grid. This is the same stopping point as the generator's 'col >= width' check, and its vertical check, because each copy's leading edge starts inside the grid.\n\nThe factory maps the two direction vectors through the D4 transform to get the visible directions. Canonical right (0,1) becomes the primary direction P and canonical down (1,0) becomes the secondary direction S. The transform first negates dx when d4 >= 4, then rotates clockwise d4 % 4 times using (dy,dx) -> (dx,-dy). These directions are written into the emitted program as constants. The step along each direction is the motif's visible bounding-box size along that axis plus one; since P and S are perpendicular, the canonical width and height carry over correctly. Colour roles are fixed constants: palette[0] is the background, palette[7] the motif and plain copies, and palette[6] the special copies. Reflections and rotations that point P or S toward negative coordinates simply give negative translations. The emitted program works directly on the visible grid, with no rotation wrapper and no colour unpermutation.\n\nIn canonical orientation the emitted program gives exactly the archived solver's output; I checked this by hand against train pair 1 (copies at x = 3, 7, 11, 15, 19, 23, 27; colour-6 copies at rows 9, 13, 17, 21). No code has actually been run.",
+    "limitations": "Possible constructor defect: the generator always steps by the fixed box size (wide + 1 = 4 and tall + 1). The visible rule, and the archived solver, step by the motif's bounding box instead. These agree only if common.conway_sprite always makes the sprite fill every row and column of its wide x tall box. I believe it does, but I have not confirmed it. If a sprite ever leaves an edge row or column empty, the generator's spacing would not be recoverable from the visible grid, and the host should review that case. The generator's vertical loop uses 'row > height' instead of 'row >= height'. This off-by-one is harmless because draws outside the grid are clipped. It is not reproduced as a rule. The emitted program assumes a single foreground motif in the background colour palette[0], as the constructor produces. Demonstrations are not needed and are ignored. No tests were run.",
+    "independent_source_review": {
+      "verdict": "accept",
+      "mechanism": "One foreground motif (palette[7]) sits on background palette[0]. Its visible bounding box is w x h. Copies of the motif's pixel mask are placed along the primary direction P (canonical +x) at steps of w+1 (or h+1 when P is vertical). Copy k is palette[6] when k%3==2 and palette[7] otherwise. From each palette[6] copy, more palette[6] copies run along the secondary direction S (canonical +y) at steps of the box size along that axis plus one. Every copy is clipped at the grid border, and each sequence stops at the first copy whose box no longer overlaps the grid.",
+      "evidence": [
+        "The prior limitation about spacing is resolved by common.conway_sprite. It skips any deletion where `rows.count(r) <= 1 or cols.count(c) <= 1`, so every row 0..tall-1 and every column 0..2 keeps at least one entry.",
+        "conway_sprite shuffles rows and cols independently, which re-pairs them into new pixels. Each row value and each column value still appears in at least one zipped pixel, so the visible bounding box is always exactly 3 x tall. The constructor's fixed steps (wide+1=4 and tall+1) therefore equal the visible w+1 and h+1.",
+        "Colour indexing is consistent. The constructor builds `colors[row*wide+col]` and draws at `j//3, j%3` with wide=3.",
+        "The horizontal stop matches. The generator breaks on `col >= width`. The solver's `visible` test (`tx < W and tx + w > 0`) gives the same cutoff in canonical orientation. Under reflection, col >= W in canonical coordinates is equivalent to tx'+w <= 0 in the flipped coordinates.",
+        "The vertical stop matches. The generator loops while `row <= height` and relies on common.draw, which clips. It also restamps the k=2 copy itself. The solver starts at m=1 and stops at the first invisible copy. Neither difference changes the output.",
+        "No copies overlap. Horizontal copies are 3 wide at step 4. Vertical copies at step tall+1 sit only below the k%3==2 copies, at rows other than brow. Draw order therefore cannot matter.",
+        "The k=2 special copy always exists, because bcol <= 8 puts it at col <= 16 < 28. Every demonstration therefore shows the special colour and the secondary direction.",
+        "The emitted solver works directly in visible coordinates. Its direction vectors come from tf (dx negated when d4 >= 4, then (dy,dx)->(dx,-dy) applied d4%4 times). It has no whole-grid untransform or colour unpermutation. The step axis is chosen from PDY/SDY, and since P and S are perpendicular the canonical w and h carry over correctly.",
+        "The input colour 7 at copy k=0 is preserved through `out = g.copy()`. The solver does not restamp k=0, which is correct.",
+        "Host audit: 1000 fresh pairs, 8000 augmented checks (all 8 D4 variants), and 16 fixture variants passed, with no sampler rejections."
+      ],
+      "blocking_issues": [],
+      "nonblocking_limits": [
+        "conway_sprite's independent shuffling of rows and cols means the sprite distribution is not what the 'remove a few pixels' description suggests. Coincident pairs collapse, so sprites can be sparser. This changes scene variety, not label correctness.",
+        "The solver assumes exactly one foreground object, coloured palette[7], on palette[0]. The constructor guarantees this. The early return for an empty input mask is an out-of-domain fallback that the constructor never reaches.",
+        "Colour roles and direction constants are specialised per augmentation. This is allowed: they are genuine rule constants, and every demonstration shows them.",
+        "The archived rule text lists the pair-1 vertical copies as 'rows 5, 9, ...'. Row 5 is the horizontal k=2 copy itself, so this is a wording slip. The archived program and the prior notes (rows 9, 13, 17, 21) are correct."
+      ],
+      "required_context_checks": [
+        "d304284e is not in require_colour_evidence's task list. No arbitrary colour or shape lookup is involved: the special colour and both directions appear in every demonstration. No extra colour-evidence check is needed beyond the standard rejection of conflicting D4 answers."
+      ],
+      "task_id": "d304284e",
+      "factory_sha256": "2065ecf698ea3c5ff86a8f7fcdbc3d37a2a50ab1134e4a3a12ca04a7ad6737e9",
+      "constructor_sha256": "58ce1bd80ae12b6cf150476c3ab8e735bdd146957a9318b134779b63d7687ced"
+    },
+    "host_review": "Read source review mechanism, evidence, limitations and context requirements. Host audit covers all eight D4 indices per fresh pair; d4=7 in report is only the final loop index. All supplied fixture pairs checked under 16 orientation/palette variants. Emitted programs operate in displayed coordinates. Per-episode verification and context-evidence checks are mandatory. Inspected conway_sprite coverage invariant: independent row/column index permutations preserve its nonempty extent. Visible bounding-box spacing matches constructor extent."
+  }
+}

@@ -1,0 +1,47 @@
+{
+  "task_id": "dc2aa30b",
+  "factory_sha256": "77a80b7cde6d2596467ca0a74cb8dd6471aaf2fec6fd85f39815ab8337130fcb",
+  "constructor_sha256": "340fa36882a38d0ef7e64e70ba7975a657db6fe1502495e553c5d40c897e18aa",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 215257965285861,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 8.988689917023294,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The constructor draws an 11x11 grid. Two full lines of colour 0 in each direction cut it into a 3x3 array of 3x3 panels, and each panel holds only colours 1 and 2. Every panel has a different number of colour-1 cells. The output copies each panel unchanged. Ranked by ascending colour-1 count, panel i goes to block (2 - i//3, i%3): the fewest colour-1 cells sits at bottom-left, the order runs left to right along a block row, and block rows fill from bottom to top. This matches the archived solver, which sorts by ascending colour-2 count and fills top-down, right to left.\n\nHow the factory specialises the program:\n- It applies the D4 transform to each of the nine block destinations. When the index is 4 or more, the block column is reversed first (C -> 2-C). Then each clockwise turn maps (R, C) to (C, 2-R).\n- The emitted program uses the visible colours palette[0] for the dividers and palette[1] for counting.\n\nWhat the emitted program does:\n1. It finds the full divider rows and columns in visible coordinates and derives the 3x3 panel boxes.\n2. It counts palette[1] cells in each panel and sorts the panels by that count, ascending.\n3. It copies each visible panel as-is into its precomputed visible slot. Panel contents already carry the D4 transform, so no rotation is applied inside a panel.\n4. Divider lines stay as they are.\n\nIt does not normalise the grid, inverse-rotate it, or remap colours.",
+    "limitations": "1. **Ties are outside the domain.** The generator samples nine distinct counts from range(10), so ties never occur. If a tie did occur, the generator's blue_to_groups dict would silently overwrite a panel and drop it from the output. That is a latent constructor defect for host review if colours are ever supplied by hand with equal counts. The emitted program breaks ties with a stable sort in visible reading order. That fallback is not D4-equivariant and is not offered as a puzzle rule.\n2. **Layout is fixed.** The program assumes exactly a 3x3 panel layout separated by full lines of palette[0]. If the layout differs, it returns the input unchanged.\n3. **Panel sizes must match.** All panels must have the same shape, which the generator guarantees (3x3).\n4. **Fixtures.** The supplied fixtures are consistent with the uniform rule. The fixtures' counts are distinct, with no ties.\n5. **Not tested.** No tests were run.",
+    "independent_source_review": {
+      "verdict": "accept",
+      "mechanism": "An 11x11 grid is cut by full lines of colour 0 into a 3x3 array of 3x3 panels. Each panel contains only colours 1 and 2. Panels are copied unchanged and ranked by ascending colour-1 count. Panel i goes to block (2 - i//3, i%3): rows fill bottom to top, left to right within a row. Because every panel has 9 cells, this equals the archived rule: sort by ascending colour-2 count, fill top to bottom, right to left within a row.",
+      "evidence": [
+        "Constructor: `counts = common.shuffle(common.sample(range(10), 9))` picks 9 distinct colour-1 counts. So the colour-2 counts (9 - count) are also distinct, and the sort order is fully determined by visible content. No hidden latent decides the label.",
+        "Constructor placement `output[4*(2 - i//3) + r][4*(i%3) + c]`: the most-blue panel (i=8) lands at block (0,2), top-right. The fewest-red panel lands top-right in the archived program (`row[n-1-j]` with ascending red order). The two descriptions agree.",
+        "Fixtures: in all three train pairs and the test pair the panel counts are distinct, consistent with the archived rule's own count listings. Pair 3 omits count 7, which rules out a fixed count-to-slot mapping and supports ranking.",
+        "Factory: SLOTS starts from native (2 - i//3, i%3). It applies a column flip when d4 >= 4, then (R,C) -> (C, 2-R) once per quarter-turn. The result is a precomputed visible slot table. The solver finds divider rows and columns of colour DIV=palette[0] directly in visible coordinates, counts COUNT_COLOUR=palette[1] per panel, sorts, and stamps the visible panels unchanged. There is no whole-grid untransform/solve/retransform wrapper. Panel contents already carry the augmentation, so no in-panel rotation is needed.",
+        "Divider detection cannot misfire: panel cells are only palette[1] and palette[2], so no panel row or column is entirely palette[0]. In the 11x11 domain the dividers are always at index 3 and 7.",
+        "Host audit: 1000 fresh pairs, 8000 augmented checks (all 8 D4 variants), 16 fixture variants, and no sampler rejections. This is consistent with the slot-table convention matching the host's augmentation."
+      ],
+      "blocking_issues": [],
+      "nonblocking_limits": [
+        "If colours are supplied by hand with tied counts, the constructor's `blue_to_groups[blues] = 3*gr + gc` dict silently drops a panel. The random path cannot reach this, because counts are sampled without replacement, and the fixtures contain no ties.",
+        "The emitted solver breaks ties with a stable sort in visible reading order. That is not D4-equivariant, but it lies outside the constructor's domain.",
+        "The solver returns the input unchanged if the layout is not 3x3 panels with equal sizes. The constructor never produces such inputs.",
+        "Counting palette[1] instead of palette[2] gives an equivalent ordering only because every panel has exactly 9 two-colour cells, which the constructor guarantees."
+      ],
+      "required_context_checks": [
+        "None are task-specific: the rule is a deterministic count-ranking with no arbitrary colour lookup, and dc2aa30b is not in the episode evidence check list. The standard D4-conflict context policy is enough."
+      ],
+      "task_id": "dc2aa30b",
+      "factory_sha256": "77a80b7cde6d2596467ca0a74cb8dd6471aaf2fec6fd85f39815ab8337130fcb",
+      "constructor_sha256": "340fa36882a38d0ef7e64e70ba7975a657db6fe1502495e553c5d40c897e18aa"
+    },
+    "host_review": "Read source review mechanism/evidence/limitations and context requirements. Every D4 orientation tested per fresh pair; per-episode verification required. "
+  }
+}

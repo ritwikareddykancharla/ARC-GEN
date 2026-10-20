@@ -1,0 +1,48 @@
+{
+  "task_id": "c803e39c",
+  "factory_sha256": "7923f5363e976ea2c0805d099c82fa7eb8807ebc882d9ed73e87ec80447c8d3c",
+  "constructor_sha256": "56af41049e8a8e3d709ecc4912cfae6b7db897831dc3a29800efaf070da3fe29",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 117990852925796,
+  "d4": 7,
+  "unique_base_inputs": 912,
+  "seconds": 9.593860000022687,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The grid has four panels separated by full divider lines in colour palette[5]. The program finds them directly in the visible grid. If the dividers are columns, the panels run horizontally. If they are rows, the panels run vertically. In the constructor, each panel is s+2 cells thick across the axis, so the shape size is s = (cross dimension) - 2. Panels are told apart by role rather than by position. Panel A has the most palette[1] cells and panel B has the most palette[2] cells. Of the two solid squares, the one adjacent to B is the fill colour fg (constructor panel 3). The farther one is the output background (panel 4). This holds for any D4, including reversed panel order. Each square's colour is its dominant colour other than palette[0] and the divider colour, falling back to palette[0]. The A and B masks are read from the s x s interior of their panels, after stripping the 1-cell zero border. This border is symmetric, so the extraction does not depend on orientation. Using the fixed s x s region instead of cropping to the bounding box keeps shapes correct even if they do not touch all four edges. The output is the Kronecker composition B (x) A on an s^2 x s^2 canvas. It starts filled with the background colour. Every set cell (i,j) of B gets the tile 'A cells -> fg, other cells -> background' at block (i,j). Every D4 map sends block index and in-block index through the same flip or transpose, so T(B (x) A) = T(B) (x) T(A). That means the same stamping rule is correct in visible coordinates without any un-rotation. Truncation of the last panel at width 30 (s=5) only clips the far border of the background square, which the dominant-colour read tolerates.",
+    "limitations": "Assumes the constructor's domain: exactly four panels; palette[1] marks A and palette[2] marks B; the two squares are solid; panel thickness across the axis is s+2. Palette is assumed to be a permutation, so palette[0], palette[1], palette[2] and palette[5] are distinct. If the original fg or bg colour were 0, the dominant-colour fallback returns palette[0], which matches the constructor. No constructor defects found: the archived solver's empty 'stamped' bookkeeping does nothing. Its bounding-box crop could disagree with the generator only if conway_sprite left an empty border row or column; this program reads the generator's fixed s x s region instead. Not executed by me; untested.",
+    "independent_source_review": {
+      "verdict": "accept",
+      "mechanism": "The input is split by grey divider lines into four panels: shape A (palette[1]), shape B (palette[2]), a solid fg square and a solid bg square. The output is the s^2 x s^2 Kronecker composition B (x) A. Every set cell of B gets a block holding A in fg on bg. Every other block is solid bg.",
+      "evidence": [
+        "Constructor: colours are drawn by `random_colors(2, exclude=[1,2,5])`, so fg and bg come from {3,4,6,7,8,9}, are distinct and are never 0. After any palette permutation they cannot equal pal[0], pal[1], pal[2] or pal[5]. The `_dominant` read of each square and the `max` count of CA/CB therefore each have exactly one candidate panel, with no ties.",
+        "Constructor rows 0 and s+1 are zero everywhere except at the dividers. The only all-GREY lines are therefore the dividers, at columns size+2+k(size+3). `len(gcols) >= len(grows)` selects the correct axis under all D4 maps (3 vs 0).",
+        "Panel thickness across the axis is height = size+2, so `s = h-2` (or `w-2` after a transpose) is exact. The A and B panels are always full (s+2)x(s+2) with a 1-cell zero border, so `[1:1+s,1:1+s]` gives the D4-transformed shape in place.",
+        "`conway_sprite` never empties a row or column, because its guard is `rows.count(r) <= 1 or cols.count(c) <= 1`. The shapes therefore always span the full s x s box. The fixed-window read and the archived bounding-box crop are equivalent on this domain.",
+        "For size=5, width min(30,31) clips only the far border column of the last (bg) panel, giving 6 wide instead of 7. That panel is read only through `_dominant`, which is unaffected.",
+        "Role assignment by distance from ib: in the forward order [A,B,P3,P4], |2-1|=1 and |3-1|=2. In the reversed order [P4,P3,B,A], |1-2|=1 and |0-2|=2. So the fg square is the one adjacent to B in either direction. The demonstrations show this as a consistent spatial and colour-role rule.",
+        "Equivariance: every D4 map T satisfies T(B (x) A) = T(B) (x) T(A) for square s x s factors. Each panel's content is transformed in place along with the panel order. Stamping the visible masks therefore gives the augmented label directly, with no untransform/solve/retransform wrapper.",
+        "Output colours match the constructor: the canvas starts as bgcolor and only the fg cells of the tile are stamped, so the bg cells of each tile equal bgc. The label depends only on visible input content; there is no hidden latent.",
+        "The host audit passed: 1000 fresh pairs, 8000 augmented checks and 16 fixture variants, with no rejections."
+      ],
+      "blocking_issues": [],
+      "nonblocking_limits": [
+        "The solver hard-codes the constructor geometry: four panels, s = cross-dimension \u2212 2, and 1-cell borders. It would fail on hand-made inputs with irregular padding or shapes not anchored at the interior offset. The constructor excludes such inputs.",
+        "It assumes the palette is a permutation, so BG, CA, CB and GREY are distinct. The `_dominant` fallback to BG is unreachable in the constructor domain.",
+        "The demonstrations are not consulted; the role/colour constants (CA, CB, the fg panel adjacent to B) are specialised from the rule. This is legitimate because they are fixed across every episode and taught by every demo.",
+        "The archived program's `stamped` bookkeeping is dead code. It is harmless and has no effect on labels."
+      ],
+      "required_context_checks": [],
+      "task_id": "c803e39c",
+      "factory_sha256": "7923f5363e976ea2c0805d099c82fa7eb8807ebc882d9ed73e87ec80447c8d3c",
+      "constructor_sha256": "56af41049e8a8e3d709ecc4912cfae6b7db897831dc3a29800efaf070da3fe29"
+    },
+    "host_review": "Read mechanism, evidence, limitations and context requirements. Host reflects columns before clockwise rotation, tests all eight D4 indices, and applies a shared palette permutation after generation. Fixture audit verifies all train/test supplied pairs at every tested orientation/palette, not one pair per variant. Per-episode execution verification and conflicting-context rejection remain required."
+  }
+}

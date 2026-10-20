@@ -1,0 +1,48 @@
+{
+  "task_id": "c920a713",
+  "factory_sha256": "928a10b664c2eb62e83600e3636a1b94126a989ebf291adb1e384e30828f4016",
+  "constructor_sha256": "e2d89ea06ef0ce0574a7a33c99c3985f4a8046e3ad377f2ca5d4bb2a49e8cc50",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 267970827136559,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 26.58109108300414,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "Generator: hollow rectangles are drawn in index order, so later boxes cover earlier ones. check_dominance guarantees two things. First, each consecutive pair (i-1, i) shares a cell where only those two boxes overlap, so box i is visible on box i-1's frame there. Second, every box shows at least three corners, so the bounding box of a colour's visible pixels is exactly its rectangle. The output is concentric square rings, outermost first, in drawing order.\n\nThe emitted program rebuilds this directly. For each non-background colour it scans the visible frame of the bounding box and records which colours lie on it (the covered-by relation). It then looks for a chain that visits every colour once, where each next colour covers the previous one. Without stray pixels, the covered-by graph only points from earlier to later boxes and always contains the consecutive edges. It is therefore a DAG with a Hamiltonian path, and that path is unique: the true drawing order. This holds even when frames look woven, as in fixture pair 3 with its extra pixel.\n\nIf several complete chains exist, the program picks the one most consistent with all covered-by relations. If none exists, it falls back to a greedy stacking sort. The output is a (2n-1)x(2n-1) canvas of nested filled squares.\n\nAll of this is invariant under D4: rectangles stay rectangles, cover relations are preserved, and concentric squares map to themselves. So the program works in visible coordinates with no orientation constants and no wrappers. The palette only matters for the background role, specialised as palette[0]. If palette[0] is absent from the query, the program uses the most frequent colour instead.",
+    "limitations": "Relies on the generator's guarantees: at least three visible corners (so the bounding box is the frame), distinct non-background colours, and a dominance cell for each consecutive pair. Fixture train pair 3 has a hand-placed extra pixel (colour 4 on box 9's frame) that creates a two-way cover relation. Random generation never produces this, though the Hamiltonian-path rule still resolves it uniquely. If several complete chains score equally, the first one found in ascending colour order is used. That tie-break is palette-dependent, but it cannot occur under the generator's dominance constraints. Path enumeration is capped at 20000 paths; this is ample for 3 to 7 boxes. The demonstrations are not needed and are ignored. Nothing has been run or tested by me.",
+    "independent_source_review": {
+      "verdict": "accept",
+      "mechanism": "The constructor draws axis-aligned hollow rectangles with distinct colours in index order, so later boxes cover earlier ones. check_dominance enforces two conditions. First, each consecutive pair (i-1, i) shares a frame cell covered by only those two boxes, so box i's colour is visible on box i-1's frame. Second, each box keeps at least three corners on top. The output is concentric square rings of size 2n-1, outermost ring first, in drawing order. The emitted solver takes the bounding box of each colour, collects the other non-background colours visible on that frame (the covered-by graph), finds a Hamiltonian path through that graph, and paints the rings in path order.",
+      "evidence": [
+        "Lists in cells_to_boxes are appended in increasing box index, so `[-1]` is the topmost box at that cell. Therefore 'showing >= 3' really means at least three corners are uncovered. The colours are distinct (`random_colors` samples without replacement from 1..9), so the bounding box of a colour's visible pixels is exactly that box's rectangle.",
+        "Every cell the solver scans on c's bounding-box frame is a frame cell of box c. The visible colour there is the highest-index box covering the cell, which is c or a later box. So every covered-by edge goes from a lower index to a higher one, and the graph is acyclic when no extra pixel is present.",
+        "The `sorted(boxes) == [i-1, i]` condition guarantees a cell that shows colour i on box i-1's frame, so every consecutive edge i-1\u2192i exists. Corner cells appear twice in a list, which only makes this check stricter. In a DAG, a Hamiltonian path must step index+1 each time, so the path is unique and equals the drawing order. The `_score` and `_greedy` branches are therefore not used on generator inputs.",
+        "`extra_color` is set only in fixture pair 3. There, colour 4 at (16,13) on box 9's right edge creates the 4\u21949 two-way relation; only one Hamiltonian path exists (2,4,3,9,7,5), and the host's 16 fixture-variant checks pass.",
+        "The solver acts on visible coordinates. Bounding boxes, frame scans and concentric-square output are all D4-equivariant, and the output is D4-invariant. There is no untransform, native-solve, retransform wrapper. The only specialisation is BG = palette[0], a genuine role colour.",
+        "There is no arbitrary colour lookup: the ring order comes entirely from visible occlusion in the query. Ignoring the demonstrations is therefore legitimate, and this task is not in the episode-evidence check list.",
+        "Host audit: 1000 fresh pairs, 8000 augmented checks and 16 fixture variants passed, with no sampler rejections."
+      ],
+      "blocking_issues": [],
+      "nonblocking_limits": [
+        "If the background colour has no visible cell, the solver switches to the most frequent colour, which would be wrong. With hollow frames, sizes of 12 to 25 and box widths of at most size-3, this looks practically unreachable, but the constructor does not formally exclude it.",
+        "The tie-break among equally scored Hamiltonian paths (first found in ascending colour order) depends on the palette. Under the generator's DAG it cannot occur, since the path is unique. It matters only for hand-made inputs like fixture pair 3, where it resolves uniquely anyway.",
+        "Random generation never produces the woven or extra-pixel case from fixture pair 3. The cyclic-relation handling is exercised only by fixtures.",
+        "The 20000-path cap and the plain DFS are adequate for at most 7 colours from the generator. They are not a general guarantee for larger hand-made inputs."
+      ],
+      "required_context_checks": [
+        "No colour-association evidence check is needed. The ring order is fully determined by occlusion visible in the query input, and the D4 conflicting-answer policy is satisfied because the output is D4-invariant."
+      ],
+      "task_id": "c920a713",
+      "factory_sha256": "6831c72b324f607385938edff0d164f22f59713ae6ecda21f5077691b97f27e5",
+      "constructor_sha256": "e2d89ea06ef0ce0574a7a33c99c3985f4a8046e3ad377f2ca5d4bb2a49e8cc50"
+    },
+    "host_review": "Read source review mechanism, evidence, limitations and context requirements. Host audit covers all eight D4 indices per fresh pair; d4=7 in report is only the final loop index. All supplied fixture pairs checked under 16 orientation/palette variants. Emitted programs operate in displayed coordinates. Per-episode verification and context-evidence checks are mandatory. Removed most-frequent-colour fallback when BG absent. The known palette background stays BG even when not visible; no true box colour is dropped. Re-audit of updated factory passes 1000/8000/16."
+  }
+}

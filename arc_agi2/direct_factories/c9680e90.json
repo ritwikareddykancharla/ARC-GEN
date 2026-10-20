@@ -1,0 +1,49 @@
+{
+  "task_id": "c9680e90",
+  "factory_sha256": "0596cd1779162d53d681bcae2b7a89d8c7775e0375bb14133972d639784ed778",
+  "constructor_sha256": "d034d4eab871599b0309b689e2efbaf5af9085053bcebe9e29998eaedac014c2",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 43107970422371,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 9.728512833011337,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "Canonical rule: a full line of 9s divides the grid into two halves. In one half, each 2 has an attached induced path of 6s. The 2 moves to the far end of its path, which is the cell at the greatest BFS distance through 6-cells only. All 2s, 6s and 5s are then erased. A new 5 is drawn at the mirror image of each moved 2 across the divider.\n\nHow the factory maps this to visible coordinates:\n- Colour roles become constants: BG=palette[7], DIV=palette[9], RED=palette[2], CHAIN=palette[6], GREY=palette[5].\n- The divider axis comes from d4. A clockwise quarter turn swaps rows and columns, and the horizontal flip keeps rows as rows. So the divider is a visible row when d4%4 is 0 or 2, and a visible column when d4%4 is 1 or 3.\n- For a row divider at p, the mirror is (2p-y, x). For a column divider at p, it is (y, 2p-x).\n- The chain half's side (below, above, left or right) does not need special handling. The BFS runs only through chain-coloured cells, and mirroring across a central line is symmetric.\n- If the expected divider line is missing, the program falls back to checking the other axis.\n\nOther points:\n- Touching 2s are handled because the BFS never crosses RED cells.\n- Objects on the grid border are handled because the BFS checks bounds.\n- Rectangular grids work because the divider is located by scanning, not assumed to be at a fixed position.",
+    "limitations": "- The program assumes the constructor's invariants. Each chain is an induced simple path. A 6 touches only its own red. The divider is centred, so mirrored positions stay in bounds; it is bounds-checked anyway.\n- Far ends are unique by construction. If two cells ever tied for farthest, the program would pick the one with the lowest (row, col) in visible coordinates. That is only a defensive choice, not part of the puzzle rule.\n- A 2 with no chain would stay in place and be mirrored. The generator never produces chainless 2s.\n- I found no conflict between the fixtures and the uniform rule.\n- I have not run any tests.",
+    "independent_source_review": {
+      "verdict": "accept",
+      "mechanism": "The lower (chain) half holds red 2s, each attached to an induced path of 6s. Each 2 moves to the far end of its path, which is the strictly farthest cell by BFS through CHAIN cells only. All RED, CHAIN and GREY cells are erased. A GREY is then drawn at the reflection of each final 2 across the centred full DIV line. In the factory, colour roles are palette constants. The solver finds the divider by scanning the visible grid. It starts with the D4-predicted axis and falls back to the other axis. It mirrors with (2p-y, x) for a row divider and (y, 2p-x) for a column divider. All computation happens directly in augmented visible coordinates, with no untransform/solve/retransform wrapper.",
+      "evidence": [
+        "Constructor _render: input places RED at r, GREY at 2d-r and CHAIN at the chain cells. Output places RED at chain[-1] and GREY at 2d-fr. The label is a deterministic function of visible structure. No hidden latent decides it.",
+        "Far-end uniqueness: _grow_path rejects a candidate n if any neighbour m is in owner, or is in used with m != cur. So the path is induced, and it touches no other object. _red_ok forbids a red next to an existing CHAIN. In an induced path, chain cell i sits at BFS distance i, so the end is the unique maximum. The solver's tie-break `(ny,nx) < best[1]` is therefore unreachable.",
+        "Dense engine: _domino_ok and the _embellish extension checks (`any(m != end and m in owner ...)`) keep the same no-touch property. Swaps happen only on single-6 base chains, and _dense_objects re-validates the scene, falling back to base.",
+        "Touching 2s: the solver BFS enters only `g == CHAIN` cells, so adjacent reds never merge chains. Training example 3 has touching 2s.",
+        "Divider detection cannot misfire: a full-DIV line on the wrong axis would need DIV in every non-divider row. Non-divider rows hold only BG/RED/CHAIN/GREY. So the axis fallback stays correct even if the d4 axis-parity assumption were wrong.",
+        "The divider is centred (fh = 2d+1), so mirrored cells stay in bounds. The chain_side='before' and vertical options are covered by the symmetric reflection.",
+        "validate() objects reproduce all three train pairs and the test pair. Spot-checked train 1: finals (7,5),(6,7),(8,3) give 5s at (1,5),(2,7),(0,3), matching the fixture. Test: finals (7,3),(6,8),(8,9),(10,3),(10,10) match the given output.",
+        "Host audit passed: 1000 fresh pairs, 8000 augmented checks and 16 fixture variants, with no sampler rejections."
+      ],
+      "blocking_issues": [],
+      "nonblocking_limits": [
+        "The lowest-(row,col) tie-break in _far_end is only a defensive choice. The constructor guarantees unique far ends, so it is never used.",
+        "A chainless 2 would stay in place and be mirrored. The constructor never generates one.",
+        "The HORIZONTAL constant assumes d4%4 in (0,2) keeps the divider as a row. If the d4 encoding differed, the fallback scan would still find the correct axis.",
+        "Branching chains, off-centre dividers and multiple dividers are outside the constructor's domain and were not assessed."
+      ],
+      "required_context_checks": [
+        "No arbitrary colour/shape lookup is involved. All colour roles are fixed rule roles specialised via the palette. The task is not in require_colour_evidence's list, and no extra episode evidence check is needed beyond the standard D4 conflicting-answer policy."
+      ],
+      "task_id": "c9680e90",
+      "factory_sha256": "0596cd1779162d53d681bcae2b7a89d8c7775e0375bb14133972d639784ed778",
+      "constructor_sha256": "d034d4eab871599b0309b689e2efbaf5af9085053bcebe9e29998eaedac014c2"
+    },
+    "host_review": "Read mechanism, evidence, limitations and context requirements. Host reflects columns before clockwise rotation, tests all eight D4 indices, and applies a shared palette permutation after generation. Fixture audit verifies all train/test supplied pairs at every tested orientation/palette, not one pair per variant. Per-episode execution verification and conflicting-context rejection remain required."
+  }
+}

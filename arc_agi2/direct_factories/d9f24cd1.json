@@ -1,0 +1,50 @@
+{
+  "task_id": "d9f24cd1",
+  "factory_sha256": "425a9e3b2617732c730ece5559910a12a49fb014477eef44bac25f1a61bcaa9a",
+  "constructor_sha256": "f6b518f5fbd4386d3186d3ec2580b865c6e2c3de73a963ae4c07f9ebe1eb28a2",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 220679972502629,
+  "d4": 7,
+  "unique_base_inputs": 820,
+  "seconds": 4.070836375001818,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The canonical mechanism works like this. Red seeds sit on the bottom edge. Each one grows a line upward (direction (-1,0)). When the cell ahead is grey, the line steps one cell sideways in the canonical +column direction (0,1). It then re-checks the cell ahead and keeps going until it leaves the grid. This follows the constructor's while-loop exactly, including repeated sideways steps when the new cell is also blocked. The archived solver does not do that re-check.\n\nThe factory maps both direction vectors through the D4 transform. For d4>=4 it negates dc to mirror the rows. Then it applies a clockwise rotation (dr,dc)->(dc,-dr) d4%4 times. The emitted program therefore grows lines along the visible growth vector U and sidesteps along the visible vector S. Seeds are taken from the visible edge opposite U (bottom row, top row, right column or left column).\n\nColour roles are fixed constants, RED=palette[2] and GREY=palette[5]. Background is left untouched and grey cells are never changed. The code handles rectangular grids generically.",
+    "limitations": "1) Constructor defect for host review: the generator's draw loop has no bounds check on c+1. If a line were ever pushed into the last column and blocked again, it would index out of range or wrap. The emitted program stops the line in that case instead, but the constructor's actual domain (grey columns within start\u00b11, start+1 < size) makes it practically unreachable.\n2) The constructor overwrites a grey cell with red if a sidestep lands on one. The emitted program reproduces this literally. It is a degenerate case that the generator's parameter ranges make very unlikely.\n3) The archived solver differs from the constructor. After a sidestep it climbs without re-checking the cell ahead, so it can paint over a grey cell. The emitted program follows the constructor, which matches all approved fixtures.\n4) The rule's mention of per-line emit stages is not implemented; only the final grid is returned.\n5) Colours are fixed palette constants rather than inferred from the demonstrations.",
+    "independent_source_review": {
+      "verdict": "accept",
+      "mechanism": "Red seeds sit on the edge opposite the growth vector U. Each one paints a line along U. When the next cell along U is grey (checked on the output canvas, as in the constructor's `output[r-1][c] == gray`), the line moves one cell along the sidestep vector S, paints it, and re-checks. The line stops at the grid edge. U and S are the canonical (-1,0) and (0,1) passed through the same D4 map. RED and GREY are palette[2] and palette[5]. The solver works directly in visible coordinates: it picks the seed edge from U and walks with the UR/UC and SR/SC constants. There is no whole-grid untransform/retransform wrapper.",
+      "evidence": [
+        "The constructor loop `if output[r-1][c]==gray: c+=1 else: r-=1; output[r][c]=red` corresponds one-to-one to the emitted loop (`out[nr,nc]==GREY -> r,c = r+SR, c+SC else r,c = nr,nc; out[r,c]=RED`).",
+        "Grey columns are strictly increasing across starts, so a line meets at most one grey. Each grey column is start+randint(-1,1). With grey: next start >= s+3 and its grey col >= s+2. Without grey: next start = s+2. So the grey of start s is the only grey in columns s and s+1.",
+        "As a result, a line from s can be blocked only by its own grey, and only when that grey is in column s. It sidesteps once to column s+1, which holds no grey. A double sidestep, landing a sidestep on grey, and lines interfering with each other are all unreachable.",
+        "start+1 < size gives seed col <= size-2, so the sidestep reaches col <= size-1. The constructor never indexes out of range, and the emitted out-of-bounds `break` is a defensive fallback outside the domain.",
+        "Grey rows are 2..6, so greys never lie on the seed edge, and the seed-edge scan finds only red seeds.",
+        "`legal` forces at least one sidestep per generated pair. Both approved train fixtures show a sidestep (pair 1 at (6,1)->(6,2); pair 2 at (4,6)->(4,7)). Every demo therefore teaches the sidestep orientation under any D4 variant.",
+        "Applied by hand, the emitted rule reproduces the canonical test output: (5,1)->(5,2), (7,4)->(7,5), and column 8 straight.",
+        "Host audit passed 1000 fresh pairs, 8000 augmented checks and 16 fixture variants, which is consistent with the tf vector mapping matching the host's grid D4 convention."
+      ],
+      "blocking_issues": [],
+      "nonblocking_limits": [
+        "Per-line emit stages described in the rule are not produced; only the final grid is returned.",
+        "Colours are fixed palette-role constants (RED=palette[2], GREY=palette[5]). Both roles are visible in every demo, so no arbitrary association is required.",
+        "The archived solver skips the re-check after a sidestep. This differs from the constructor only for double-block configurations, which the constructor cannot reach. The emitted program follows the constructor.",
+        "Prior limitations 1\u20132 (sidestep out of bounds, sidestep landing on grey) are unreachable given the constructor's spacing of starts and greys, not merely unlikely. The emitted fallback behaviour is therefore untested but harmless."
+      ],
+      "required_context_checks": [
+        "Confirm the host's D4 grid convention matches the factory's tf (dc negation for d4>=4, then (dr,dc)->(dc,-dr) repeated d4%4 times). The passing augmented audit indicates it does.",
+        "No colour-evidence check applies: d9f24cd1 is not in the require_colour_evidence list, and none is needed."
+      ],
+      "task_id": "d9f24cd1",
+      "factory_sha256": "425a9e3b2617732c730ece5559910a12a49fb014477eef44bac25f1a61bcaa9a",
+      "constructor_sha256": "f6b518f5fbd4386d3186d3ec2580b865c6e2c3de73a963ae4c07f9ebe1eb28a2"
+    },
+    "host_review": "Read complete independent review, source mechanism, limitations and context requirements. All eight D4 indices tested per fresh pair, all supplied fixture pairs checked in16 orientation/palette variants. Per-episode execution and evidence checks required. "
+  }
+}

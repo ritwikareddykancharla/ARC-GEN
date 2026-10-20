@@ -1,0 +1,51 @@
+{
+  "task_id": "d6e50e54",
+  "factory_sha256": "ae50e089934ac9d26c3ea800d94de504bcd9cd50d068b95b1e3a60e065e2eee5",
+  "constructor_sha256": "64c62e31380da4555aa4b0d030575385462e6da88ca8c5cfa640d4c42fe4c7c9",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 161675281505669,
+  "d4": 7,
+  "unique_base_inputs": 998,
+  "seconds": 4.0889061660273,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "Colour roles are baked in as palette constants: background palette[7], square palette[1] (recoloured to palette[2]), and moving dots palette[9]. The program works directly on the visible grid. It finds the square's bounding box and paints the square with the output colour. Each dot is then classified by which side of the square it lies on (above or below inside the column span, left or right inside the row span), and its gap to the nearest square edge is measured along that line. Every dot is cleared from its old cell. The dot with the smallest gap is placed on the square's nearest edge cell, overwriting the recoloured square. Every other dot is placed in the background cell just outside that edge. This matches the constructor: draw_dots computes min_dist over all dots and sends only the dot with dist == min_dist to the edge cell. Nearest-to-the-square and slide-toward-the-square do not change under rotation or reflection, so the same code is correct in every D4 frame. The d4 argument therefore needs no specialisation, and all four directions are handled explicitly.",
+    "limitations": "Fixture/rule discrepancy, flagged for host review: the supplied rule text and the archived solver use 'gap < side length goes inside'. That is not the constructor's mechanism. The generator sends only the unique nearest dot inside; all other dots stop outside. The two rules agree on all four approved fixtures, but they disagree on fresh pairs, e.g. when two dots both have a gap smaller than the side. This factory follows the generator, so it intentionally differs from the archived program on such scenes. The generator rejects scenes whose minimum gap is tied. If a tie appeared anyway, this program would put every tied dot on the edge; that case is outside the constructor's domain. The program assumes the generator's guarantees: exactly one solid square of the square colour, every dot aligned with the square's row or column span, gaps of at least 2 (so the outside cell is in bounds and free), and at most one dot per side-line. Dots not aligned with the square are left unchanged. The program has not been tested by me.",
+    "independent_source_review": {
+      "verdict": "accept",
+      "mechanism": "Input: background palette[7], one solid L\u00d7L square of palette[1], and single palette[9] dots. Each dot lies outside the square on a row or column that crosses it. Output: the square is recoloured to palette[2]. Every dot slides along its line toward the square. The single dot with the smallest gap to the square lands on the square's nearest edge cell. Every other dot stops in the background cell just outside that edge. This comes from the constructor's draw_dots: min_dist is computed over all dots in a dry run, and the placement uses `brow - 1 + (1 if dist == min_dist else 0)` and its three mirrored forms.",
+      "evidence": [
+        "Constructor dry-run draw_dots returns my_min_dist, or None when num_min > 1. The sampling loop `if draw_dots(): break` rejects tied minimum gaps, so the 'inside' dot is unique and determined by visible geometry. No hidden latent decides the label.",
+        "Dot placement keeps every dot at least 2 cells from the square. Rows are drawn from randint(0, brow-2) or randint(brow+length+1, size-1), and columns likewise. So the gap is \u2265 2 and the outside cell brow-1, bcol-1, brow+length or bcol+length is always in bounds and background.",
+        "maybe_put is called at most once per side per line index i. Each row or column crossing the square therefore holds at most one dot per side. Target cells (edge cell or cell adjacent to the edge, inside the span) never coincide with another dot's original cell or with each other. The factory's 'clear all, then place all' order is therefore equivalent to the constructor's sequential writes.",
+        "Fixture check against the nearest-goes-inside rule: pair 1 gaps 5, 2, 4 \u2192 only the gap-2 dot goes inside. Pair 2 gaps 2, 3 \u2192 gap 2 inside. Pair 3 gaps 3, 4, 7, 4 \u2192 gap 3 inside. Test gaps 5, 5, 5, 4, 6, 5, 6 \u2192 only (7,13) with gap 4 goes inside at (7,9). All match the approved outputs.",
+        "Factory: it finds the square via the argwhere bounding box of SQ and recolours with `out[g == SQ] = SQ_OUT`. It classifies each dot by side using explicit four-direction branches and computes gap = distance to the nearest edge. `best = min(gap)`; dots with gap == best go to the inner cell, all others to the outer cell. This matches the constructor in every frame.",
+        "D4 handling: the solver works directly on visible coordinates. Nearest-gap selection and slide-toward-square are invariant under rotation and reflection, and all four directions are handled symmetrically. There is no untransform, native-solve, retransform wrapper. Only palette roles are specialised, which is legitimate.",
+        "No arbitrary colour or shape lookup is involved. Colour roles (square, recolour target, dot, background) are shown in every demonstration, and d6e50e54 is not in the episode_evidence_checks list.",
+        "Host audit passed: 1000 fresh pairs, 8000 augmented checks, 16 fixture variants, no sampler rejections."
+      ],
+      "blocking_issues": [],
+      "nonblocking_limits": [
+        "The archived rule text and the archived program use 'gap < side \u2192 inside'. The constructor uses 'unique minimum gap \u2192 inside'. The two rules agree on all four approved fixtures but diverge on fresh scenes where more than one dot has gap < side. The factory correctly follows the constructor, so the archived program should not be treated as the reference for synthetic labels.",
+        "Ties on the minimum gap are excluded by the constructor. The factory would put every tied dot on the edge, which is unreachable in the constructor's domain.",
+        "The factory returns early, recolouring only, if there are no SQ cells or no aligned dots. Both cases are outside the constructor's domain: there is always one square and at least two aligned dots.",
+        "The solver assumes a solid square and does not check squareness. The constructor always draws an exact L\u00d7L square with common.rect.",
+        "With only 3 demonstrations per episode, some synthetic episodes may also fit the alternative 'gap < side' hypothesis. That is ordinary demonstration ambiguity, not a label defect. The generator's own rule is consistently demonstrated, because exactly one dot goes inside in every pair."
+      ],
+      "required_context_checks": [
+        "Confirm the host uses constructor outputs, not the archived program or archived rule text, as the ground truth for fresh and augmented pairs, since the two diverge.",
+        "Confirm the D4-conflict policy (variants with the same visible demos and query input but conflicting answers are rejected) was applied. No conflict is expected, because the rule is D4-invariant."
+      ],
+      "task_id": "d6e50e54",
+      "factory_sha256": "ae50e089934ac9d26c3ea800d94de504bcd9cd50d068b95b1e3a60e065e2eee5",
+      "constructor_sha256": "64c62e31380da4555aa4b0d030575385462e6da88ca8c5cfa640d4c42fe4c7c9"
+    },
+    "host_review": "Read complete independent review, source mechanism, limitations and context requirements. All eight D4 indices tested per fresh pair, all supplied fixture pairs checked in16 orientation/palette variants. Per-episode execution and evidence checks required. Constructor unique-nearest-dot mechanism differs from archived gap<side hypothesis; both fit supplied fixtures. Synthetic labels and program consistently use visible unique-nearest mechanism, documented rather than silently copying archive."
+  }
+}

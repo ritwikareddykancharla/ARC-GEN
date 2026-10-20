@@ -1,0 +1,46 @@
+{
+  "task_id": "cb227835",
+  "factory_sha256": "36e3278c708f732da438fd9c42238abc339b3f3efdf48f14730d52fbedaf1c47",
+  "constructor_sha256": "2c074361e84df63835603ca70fc38658acbbc5ad5b3d8786bc40d92889a64957",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 150220829388168,
+  "d4": 7,
+  "unique_base_inputs": 990,
+  "seconds": 4.010878624976613,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The emitted program finds the two marker cells. Their colour is the constant palette[8], and palette[0] is the background. It splits the visible displacement between the markers into a diagonal leg of length min(|dy|,|dx|) and a straight leg covering the remaining difference. The straight leg runs along whichever visible axis (rows or columns) has the larger separation.\n\nIt then draws two routes from one marker to the other in palette[3], painting only background cells:\n- straight first, then diagonal;\n- diagonal first, then straight.\n\nTogether the two routes form the thin parallelogram. The same parallelogram results whichever marker is taken as the start, because one route from A is the reverse of the other route from B.\n\nUnder D4, straight steps map to straight steps and diagonal steps map to diagonal steps. The emitted code works only with the visible signs and magnitudes of dy and dx, so it handles every orientation directly in grid coordinates. It needs no d4-specific constant and does no normalisation or rotation. The palette is handled only by specialising the three role colours (background, marker, line).\n\nThe constructor's nested loops (straight leg from A including A, diagonal from A; and the same from B) produce exactly this union, and the result matches all four approved fixtures. The generator guarantees |wide - tall| >= 2 and both sizes >= 3. So both legs are non-empty, the |dy| == |dx| tie never occurs in the domain, and all painted cells lie inside the bounding box of the two markers, even when a marker sits on the grid border.",
+    "limitations": "If the two markers were ever exactly diagonal (|dy| == |dx|), the program draws just the single diagonal line. The generator never produces this case. A bounds check is included defensively but is never triggered in the domain. If the marker colour count is not exactly two, the program falls back to all non-background cells and uses the first and last in sorted order. The fixtures contradict nothing, and I found no constructor defects: the flip is applied identically to input and output, and there are no hidden tie-breaks. These are untested expectations; no tests have been run.",
+    "independent_source_review": {
+      "verdict": "accept",
+      "mechanism": "The grid holds two cells of colour 8: A at the top-left (r0,c0) and B at the bottom-right (r1,c1) of a random box, with an optional vertical flip. The output adds colour 3 along two routes: straight-then-diagonal and diagonal-then-straight. The diagonal leg has length min(|dy|,|dx|). The straight leg covers the remaining |dy|-|dx| difference along the larger axis. The two routes together form a thin parallelogram. The emitted solver finds the two MARK cells and sorts them. It takes the visible signs and magnitudes of dy and dx and draws both routes from the first point, painting only background cells.",
+      "evidence": [
+        "Constructor variable names are swapped: row_diff = pcols[1]-pcols[0] is the column span (dx) and col_diff = prows[1]-prows[0] is the row span (dy). The branches still use them consistently. When dx>dy the horizontal straight legs run along prows[0] and prows[1]; otherwise vertical legs run along pcols[0] and pcols[1]. No indexing error results.",
+        "Set check for dx>dy, with ns=dx-dy and nd=dy. Constructor straight-from-A covers (r0, c0..c0+ns). Straight-from-B covers (r1, c0+dy..c1). Diagonal-from-A covers (r0+i, c0+i) for i<dy. Diagonal-from-B covers (r1-i, c1-i) for i<dy.",
+        "Solver route 1 is (r0, c0+1..c0+ns) plus (r0+k, c0+ns+k) for k=1..dy. This equals straight-from-A plus diagonal-from-B. Solver route 2 is (r0+k, c0+k) for k=1..dy plus (r1, c0+dy+1..c1). This equals diagonal-from-A plus straight-from-B, which share the cell (r1, c0+dy). The only extra constructor cells are A and B, which are overwritten with 8. The solver never paints MARK cells. The vertical branch is symmetric.",
+        "The sampler loop requires abs(wide-tall)>=2 with wide,tall>=3. So |dy|\u2260|dx| always holds, both legs have length \u22652, and the tie branch in the solver is unreachable. Every drawn cell lies inside the markers' bounding box, so the bounds check never triggers.",
+        "common.flip is ingrid[::-1] and is applied to both grids. The solver uses sign(dy) and sign(dx) after sorting, so it handles both diagonal orientations in visible coordinates. The straight-axis choice follows the visible larger span, so transposed D4 variants work without any whole-grid untransform.",
+        "Colours are role constants: palette[0] background, palette[8] marker, palette[3] line. The line colour is shown in every demonstration output, so no arbitrary lookup association is involved.",
+        "The validate() parameters reproduce all four approved fixtures. For example, train 1 uses prows=[4,11], pcols=[2,11], flip, giving dy=7 and dx=9 as described in the rule. The host audit passed 1000 fresh pairs and 8000 augmented checks with no sampler rejections."
+      ],
+      "blocking_issues": [],
+      "nonblocking_limits": [
+        "When |dy|==|dx|, the solver draws only a single diagonal. This is out of domain because the sampler enforces abs(wide-tall)>=2.",
+        "If the MARK count is not exactly 2, the solver falls back to non-background cells and uses the first and last in sorted order. This is out of domain because the constructor always places exactly two markers.",
+        "The swapped naming in the constructor (row_diff/col_diff) is confusing but produces correct labels.",
+        "The archived program infers background as the most common colour, while the factory uses palette[0]. These are equivalent in this domain because the background dominates."
+      ],
+      "required_context_checks": [],
+      "task_id": "cb227835",
+      "factory_sha256": "36e3278c708f732da438fd9c42238abc339b3f3efdf48f14730d52fbedaf1c47",
+      "constructor_sha256": "2c074361e84df63835603ca70fc38658acbbc5ad5b3d8786bc40d92889a64957"
+    },
+    "host_review": "Read mechanism, evidence, limitations and context requirements. Host reflects columns before clockwise rotation, tests all eight D4 indices, and applies a shared palette permutation after generation. Fixture audit verifies all train/test supplied pairs at every tested orientation/palette, not one pair per variant. Per-episode execution verification and conflicting-context rejection remain required."
+  }
+}

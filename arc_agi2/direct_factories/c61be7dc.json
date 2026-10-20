@@ -1,0 +1,55 @@
+{
+  "task_id": "c61be7dc",
+  "factory_sha256": "f01947ced0697094c774449311d5594fbe197602571e0292bdd699e2f4dc1d72",
+  "constructor_sha256": "f4493d00aca49d7a6bc8700a854e74782264a806d4f9cf87d33589affdd0b956",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 269136810058557,
+  "d4": 7,
+  "unique_base_inputs": 974,
+  "seconds": 8.57064775004983,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The emitted solver works directly in visible coordinates and uses the palette constants LINE=palette[0], BG=palette[7] and GREY=palette[5]. It looks for two full LINE rows. If there are fewer than two, it looks for two full LINE columns. The midpoint between that pair is the new one-cell strip. The crossing divider is the perpendicular line that is LINE everywhere outside the pair. The output is built in stages. First it fills the canvas with BG. Then it draws the divider across the whole grid. Next it draws the two parallel lines adjacent to the strip. Finally it lays N GREY cells along the strip, where N is the number of grey cells in the input, centred on the divider. For odd N the centring is exact. For even N the canonical generator puts the extra cell toward the low index along the segment axis (start = centre - N//2). The factory sends that direction through the D4 map, with the reflection negating dc and each clockwise turn mapping (dr,dc) to (dc,-dr). This gives a fixed sign constant for each visible orientation. Horizontal and vertical layouts are handled as two explicit code paths. Nothing is rotated or transposed.",
+    "limitations": "Assumes the generator's domain: square odd-sized grids, two parallel full lines, an interrupted perpendicular divider, and symmetric grey dots. Only light fallbacks exist outside that domain: a missing divider defaults to the centre, and with no full lines the grid is returned unchanged. Constructor tie-break requiring host review: for an even grey count, the midpoint is ambiguous. The generator resolves it with floor division ((size-n)//2), which puts the extra cell on the low-index side in its own frame. The visible demos never show this case, so it cannot be inferred from them. I reproduce it by mapping that convention through d4 rather than inferring it. No tests were run.",
+    "independent_source_review": {
+      "verdict": "hold",
+      "mechanism": "The constructor builds an odd-sized square grid with size = 2*border + mid + 2. Two full 0 lines sit at rows border and size-border-1. A centre-column divider runs outside them. Grey dots are mirrored about the centre column. The output draws the divider column at size//2 everywhere except the centre row, adds full 0 rows at size//2\u00b11, and lays num_grey 5s along row size//2 starting at (size-num_grey)//2. Everything is optionally transposed. The emitted solver works in visible coordinates. It finds two full LINE rows, or falling back two full LINE columns, takes the midpoint c, picks the perpendicular line that is LINE everywhere outside the pair as divider d, draws the divider and lines c\u00b11, then centres n GREY cells on d. Even n uses a per-D4 sign constant (H_EXTRA or V_EXTRA) that mirrors the constructor's floor tie-break.",
+      "evidence": [
+        "Odd-n geometry is sound. r0 + r1 = size - 1 is even, so the midpoint c is exact. The interior centre column is never all LINE, so the wrong axis is never chosen. cand outside the pair is exactly [size//2] because border >= 1. Grey cells never overwrite lines because col <= size//2 - 1.",
+        "The solver is direct. It has two explicit row and column code paths with no whole-grid transpose or untransform wrapper. Palette constants map correctly: LINE=palette[0], BG=palette[7], GREY=palette[5].",
+        "Even grey counts are reachable. Each row adds 1 cell if col 0 is chosen and 2 for each nonzero col. So parity equals the number of rows containing col 0, and col 0 is included with probability 1/2 (`common.randint(0, pow(2, 0)) == 0`). Roughly half of fresh pairs have even num_grey.",
+        "For even n, `output[size // 2][(size - num_grey) // 2 + c] = 5` puts the extra cell on the low-index side in the generator frame. This is an arbitrary floor-division convention. All four approved fixtures have odd N (9, 5, 13, 11), and the archived rule only says 'centred on the crossing divider'.",
+        "Inputs are mirror-symmetric about the divider. Horizontal-type visible inputs are left-right symmetric and vertical-type ones are top-bottom symmetric, so the input never reveals which side gets the extra cell.",
+        "In visible coordinates the pair (horizontal extra side, vertical extra side) is (L,U) under identity and transpose, (R,D) under 180 degrees and anti-transpose, and (R,U) or (L,D) under the mirrors and 90-degree turns. Each D4 element is generated equally, so the horizontal side cannot be inferred from a vertical even demo or from odd demos."
+      ],
+      "blocking_issues": [
+        "Even-n labels depend on an untaught, hidden-latent tie-break. Source: `(size - num_grey) // 2` in the constructor, reproduced by the factory as `_start(d, n, H_EXTRA/V_EXTRA)` with constants derived from the hidden d4.",
+        "Concrete reachable failure: a demo set whose only even-n example is vertical-type (showing the extra cell up) plus a horizontal-type even-n query. Under d4=identity the answer is extra-left; under a left-right-mirror d4 applied to a left-right-mirrored base episode, the same visible demos and query input give extra-right. The base pattern distribution is symmetric because rows are i.i.d., so both bases are valid generator outputs.",
+        "If the host only compares D4 variants of the same base episode, this case is not rejected. The vertical-type demo inputs change under the left-right mirror, so the variants are not visibly identical, yet the label stays ambiguous.",
+        "The same applies to any query with even n whose visible axis has no even-n demonstration. Under a crude estimate (three demos, P(even) about 1/2, P(axis) = 1/2), this affects on the order of 20% of episodes.",
+        "The factory's matching of the constructor here is copying an arbitrary convention, not following a demonstrable rule. Host execution agreement does not resolve this."
+      ],
+      "nonblocking_limits": [
+        "Fallbacks (a missing divider defaults to W//2 or H//2; with no full lines the input is returned) are out of the constructor's domain.",
+        "The solver assumes square odd grids with symmetric grey dots, which the constructor guarantees.",
+        "The episode_evidence_checks module does not cover c61be7dc, so no colour or tie evidence gating exists for this task.",
+        "The odd-n path is fully determined by visible input and appears correct for all D4 variants."
+      ],
+      "required_context_checks": [
+        "Confirm whether the host rejects or excludes episodes whose query has an even grey count when no demonstration shows an even-count segment on the same visible axis. If such episodes are already filtered, the blocking issue is mitigated.",
+        "Confirm whether the D4-conflict policy compares visibly identical episodes arising from different base episodes, not just D4 variants of one base. Only the cross-base comparison catches the mixed-axis case above.",
+        "Confirm whether purely horizontal-type episodes (all inputs invariant under the left-right mirror) with odd-n demos and an even-n query are rejected by the existing conflict check. They should be."
+      ],
+      "task_id": "c61be7dc",
+      "factory_sha256": "f01947ced0697094c774449311d5594fbe197602571e0292bdd699e2f4dc1d72",
+      "constructor_sha256": "f4493d00aca49d7a6bc8700a854e74782264a806d4f9cf87d33589affdd0b956"
+    },
+    "host_review": "Read source review mechanism, evidence, limitations and context requirements. Host audit covers all eight D4 indices per fresh pair; d4=7 in report is only the final loop index. All supplied fixture pairs checked under 16 orientation/palette variants. Emitted programs operate in displayed coordinates. Per-episode verification and context-evidence checks are mandatory. Resolved review hold with required evidence: an even-count query needs an even-count demonstration on the SAME visible axis. Odd counts remain exact-centred. Gate tests horizontal/vertical contexts under all eight D4s and nonidentity palette; query answers not consumed."
+  }
+}

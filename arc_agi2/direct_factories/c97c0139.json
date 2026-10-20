@@ -1,0 +1,45 @@
+{
+  "task_id": "c97c0139",
+  "factory_sha256": "f7dd2cfc758497aad994310a16d7021f0256965d371d2894e7a47c265104c837",
+  "constructor_sha256": "2da1320aacfa53a4ed9a5eb6016e3d46dfc2515ddb68fbaf94b2f5e666964e61",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 111355688169100,
+  "d4": 7,
+  "unique_base_inputs": 997,
+  "seconds": 9.15206412493717,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "Each straight segment of the line colour (palette[2]) gets a fill-colour (palette[8]) triangle on both sides. For a segment spanning a..b along its own axis, the cells at perpendicular distance d = 1, 2, ... are filled over a+d..b-d. This continues while a+d <= b-d, so the line plus its triangles form a diamond. Only background cells (palette[0]) are painted. The emitted program works directly in visible coordinates. It finds 4-connected components of the line colour and decides orientation from each bounding box: one row means horizontal, otherwise vertical. Horizontal segments get triangles in the rows above and below; vertical segments get them in the columns to the left and right. This construction is invariant under every D4 transform, because rotation or reflection only turns horizontal segments into vertical ones and vice versa, and both cases are handled explicitly. So d4 needs no special treatment. Colour roles are fixed by the palette constants for background, line and fill.",
+    "limitations": "No tests have been run; I only checked the logic by reading it. The program assumes palette[0], palette[2] and palette[8] are distinct, which holds for a permutation. It also assumes the constructor's domain: segment lengths 5-14, and separated segments (the overlap check with margin 1 keeps the diamonds disjoint and inside the grid). Bounds checks are still included. A 1x1 component would be treated as vertical and draws nothing, which matches the reference solver. I found no constructor defects: the generator's index ranges match the stated rule, and the fixtures are consistent with it.",
+    "independent_source_review": {
+      "verdict": "accept",
+      "mechanism": "Every 4-connected line-colour segment (palette[2]) spanning a..b along its own axis gets fill colour (palette[8]) at perpendicular distance d=1,2,... on both sides, over a+d..b-d, while a+d<=b-d. Together with the line this forms a diamond. Orientation comes from each component's bounding box. Horizontal and vertical segments are handled as separate explicit branches, so the solver works directly in visible D4-augmented coordinates.",
+      "evidence": [
+        "Constructor horizontal branch: `for r in range(1, wide): for c in range(r, wide - r)` fills col+r..col+wide-1-r at rows row\u00b1r. With a=col and b=col+wide-1 this is exactly a+d..b-d. The inner range is empty once r>(wide-1)/2, so no out-of-range or negative row index is ever written. The vertical branch is symmetric.",
+        "Bounds: row = r_s + size//2 with r_s in [1, height-size-1], and the triangle depth is floor((size-1)/2). So the diamond's rows span at least r_s>=1 and at most r_s+size-1<=height-2, which keeps them inside the grid. The vertical case is the same along columns.",
+        "Separation: `common.overlaps(rs, cs, sizes, sizes, 1)` (checked in the actual common.py) rejects any pair of size x size squares that are not separated by at least one cell. Each diamond lies inside its own square. So segments are never 4-adjacent, diamonds never overlap and never cover another line. The constructor's unconditional write of 8 is therefore equivalent to the solver's paint-only-background guard.",
+        "Segment length is 5..14, so every component has extent >=5 along one axis. The solver's `y0 == y1` test classifies orientation unambiguously, and the 1x1 fallback is unreachable.",
+        "Solver colour roles come from palette constants (BG=palette[0], LINE=palette[2], FILL=palette[8]). It has no whole-grid untransform wrapper. Under D4, horizontal and vertical segments swap, and both are handled natively.",
+        "No hidden random latent affects the label: the output is fully determined by the visible segments. The fixtures match the constructor, e.g. pair 1 gains 16+16+4+4=40 cells and pair 2 gains 42+42=84.",
+        "Host audit passed: 1000 fresh pairs, 8000 augmented checks, 16 fixture variants, no sampler rejections."
+      ],
+      "blocking_issues": [],
+      "nonblocking_limits": [
+        "Correctness depends on the constructor's domain: separated segments of length >=2 with no colliding diamonds. Behaviour on overlapping diamonds or touching segments is untested. The solver's background-only guard is a reasonable convention, but no demonstration teaches it.",
+        "The solver assumes palette[0], palette[2] and palette[8] are distinct. This holds for a permutation palette.",
+        "The task is not in the episode_evidence_checks list. None is needed, because the colour roles (line, fill, background) appear in every demonstration and there is no arbitrary colour lookup."
+      ],
+      "required_context_checks": [],
+      "task_id": "c97c0139",
+      "factory_sha256": "f7dd2cfc758497aad994310a16d7021f0256965d371d2894e7a47c265104c837",
+      "constructor_sha256": "2da1320aacfa53a4ed9a5eb6016e3d46dfc2515ddb68fbaf94b2f5e666964e61"
+    },
+    "host_review": "Read mechanism, evidence, limitations and context requirements. Host reflects columns before clockwise rotation, tests all eight D4 indices, and applies a shared palette permutation after generation. Fixture audit verifies all train/test supplied pairs at every tested orientation/palette, not one pair per variant. Per-episode execution verification and conflicting-context rejection remain required."
+  }
+}

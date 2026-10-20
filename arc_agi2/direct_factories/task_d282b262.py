@@ -1,0 +1,63 @@
+def build_program(d4, palette):
+    d4 = int(d4) % 8
+    dy, dx = 0, 1
+    if d4 >= 4:
+        dy, dx = 0, -1
+    for _ in range(d4 % 4):
+        dy, dx = dx, -dy
+    bg = int(palette[0])
+    lines = [
+        'import numpy as np',
+        'from collections import deque',
+        '',
+        'BG = %d' % bg,
+        'DY = %d' % dy,
+        'DX = %d' % dx,
+        '',
+        'def _components(mask):',
+        '    h, w = mask.shape',
+        '    seen = np.zeros_like(mask, dtype=bool)',
+        '    out = []',
+        '    for y in range(h):',
+        '        for x in range(w):',
+        '            if mask[y, x] and not seen[y, x]:',
+        '                q = deque([(y, x)])',
+        '                seen[y, x] = True',
+        '                cells = []',
+        '                while q:',
+        '                    cy, cx = q.popleft()',
+        '                    cells.append((cy, cx))',
+        '                    for sy, sx in ((1, 0), (-1, 0), (0, 1), (0, -1)):',
+        '                        ny, nx = cy + sy, cx + sx',
+        '                        if 0 <= ny < h and 0 <= nx < w and mask[ny, nx] and not seen[ny, nx]:',
+        '                            seen[ny, nx] = True',
+        '                            q.append((ny, nx))',
+        '                out.append(sorted(cells))',
+        '    return out',
+        '',
+        'def solve(demonstrations, grid):',
+        '    g = np.array(grid, dtype=int)',
+        '    H, W = g.shape',
+        '    objs = _components(g != BG)',
+        '    # process the object whose leading edge is furthest along the push direction first',
+        '    objs.sort(key=lambda cells: -max(y * DY + x * DX for y, x in cells))',
+        '    out = np.full_like(g, BG)',
+        '    for cells in objs:',
+        '        shift = 0',
+        '        while True:',
+        '            ns = shift + 1',
+        '            ok = True',
+        '            for y, x in cells:',
+        '                ny, nx = y + DY * ns, x + DX * ns',
+        '                if ny < 0 or ny >= H or nx < 0 or nx >= W or out[ny, nx] != BG:',
+        '                    ok = False',
+        '                    break',
+        '            if not ok:',
+        '                break',
+        '            shift = ns',
+        '        for y, x in cells:',
+        '            out[y + DY * shift, x + DX * shift] = g[y, x]',
+        '    return out.tolist()',
+        '',
+    ]
+    return '\n'.join(lines)

@@ -1,0 +1,46 @@
+{
+  "task_id": "dc1df850",
+  "factory_sha256": "c53648e8249b2760b2036f272cefe67ae6c03c1f2ec861ea6c509a101691ee67",
+  "constructor_sha256": "7fd1730ff781fd5f6f69e5334130441b72ba2a2760a56b7a90cff1248fcf14d5",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 248658659832885,
+  "d4": 7,
+  "unique_base_inputs": 975,
+  "seconds": 2.7274520830251276,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The emitted program finds every cell of the seed colour, palette[2]. It paints each of that cell's 8 neighbours with palette[1], skipping cells outside the grid and only painting cells that held the background colour palette[0] in the input. All other coloured pixels are left alone. A 3x3 square is unchanged by any rotation or reflection, so the program works directly in visible coordinates under every d4 with no direction rewriting. Only the colour roles are specialised. Seeds are collected from the unmodified input, so where rings overlap the result is the same as their union. This handles rectangular grids, both orientations, rings clipped at the grid edge, and any number of seeds, including none.",
+    "limitations": "The background is fixed as palette[0], which matches the constructor: grids are created as all colour 0, which maps to palette[0]. The fixtures agree with this rule and I found no inconsistencies. The constructor keeps every pair of placed pixels at least 2 apart in Chebyshev distance, so a ring never lands on another pixel. Even so, the program never paints over a non-background cell. The constructor writes the ring before placing the pixel colours. The only consequence is that seed and other pixels keep their own colours, and the program reproduces that. I found no constructor defects or hidden tie-breaks.",
+    "independent_source_review": {
+      "verdict": "accept",
+      "mechanism": "For every input cell of the seed colour palette[2], each of its 8 Chebyshev neighbours that lies inside the grid and is background (palette[0]) in the unmodified input is painted with the fill colour palette[1]. All other non-background pixels are inert and keep their colours.",
+      "evidence": [
+        "Constructor: grids start as all 0. Pixels are placed only if no earlier pixel satisfies abs(r-i)<2 and abs(c-val)<2, so placed pixels are pairwise at Chebyshev distance >= 2. A red's 3x3 `common.draw` ring therefore never covers another pixel. The centre is then overwritten by `output[r][c] = color`, so the result is the ring minus the centre, with off-grid cells skipped by `draw`.",
+        "Other colours come from `random_color(exclude=[blue, red])`, which gives 3..9. Input pixels therefore never equal the fill or seed colour unless they are seeds. The factory's literal SEED/FILL/BG roles match the constructor exactly under a palette permutation.",
+        "Two reds can be exactly 2 apart, so their rings can overlap. The constructor's result is the union, both writes being blue. The program collects seeds and tests `g[rr][cc] == BG` against the untouched input and writes to `out`, which reproduces the union.",
+        "The 3x3 neighbourhood is invariant under all D4 transforms. The program uses H and W from the visible grid, so the transposed case (height > width after an odd d4) is handled directly. There is no untransform/retransform wrapper.",
+        "Degenerate draws are reachable and handled. With no red, output equals input. With no pixels at all, the grid is all background and output equals input. In both cases the program returns an unchanged copy.",
+        "BG fixed as palette[0] is correct. The constructor background is always 0, and in these sparse grids the archived most-common-colour choice agrees.",
+        "All fixtures are consistent with the rule, including the edge-clipped rings at (0,7) and (0,0) and the overlapping union in train pair 2. The host audit passed 1000 fresh pairs and 8000 augmented checks with no sampler rejections."
+      ],
+      "blocking_issues": [],
+      "nonblocking_limits": [
+        "There are no hidden latents, tie-breaks or fixture-specific branches. The only randomness is placement and colour, and all of it is visible in the input.",
+        "If a query contains a non-background cell adjacent to a seed, the program leaves it unpainted. The constructor's spacing makes this unreachable, so it is only out-of-domain behaviour."
+      ],
+      "required_context_checks": [
+        "A synthetic grid has no red with non-trivial probability, roughly (3/4)^n for n rows. The episode builder should ensure at least one demonstration contains a seed (palette[2]) with a visible fill ring before any query that contains seeds. Otherwise the seed and fill colour roles are not taught. dc1df850 is not in `require_colour_evidence`'s task list, so this must be confirmed elsewhere in the host or accepted as a low-probability gap."
+      ],
+      "task_id": "dc1df850",
+      "factory_sha256": "c53648e8249b2760b2036f272cefe67ae6c03c1f2ec861ea6c509a101691ee67",
+      "constructor_sha256": "7fd1730ff781fd5f6f69e5334130441b72ba2a2760a56b7a90cff1248fcf14d5"
+    },
+    "host_review": "Read source review mechanism/evidence/limitations and context requirements. Every D4 orientation tested per fresh pair; per-episode verification required. Added query-required bridge/ring fill-colour demonstration evidence; all-D4 missing-evidence regression tests pass."
+  }
+}

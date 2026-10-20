@@ -1,0 +1,48 @@
+{
+  "task_id": "ce9e57f2",
+  "factory_sha256": "03967ec8ed020dab3d2206c84bf053ad678b3510e33e1ffa6c241e0f81644cc2",
+  "constructor_sha256": "a4d1b497a81c7a8c99f18c9bc71614a20d75264ef75ad3e5418c8b5f1a333053",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 47681115106445,
+  "d4": 7,
+  "unique_base_inputs": 938,
+  "seconds": 3.6719696250511333,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "In the original task, each red bar stands on the bottom edge. The lowest floor(n/2) cells of a bar with n cells turn azure. Under D4, the edge the bars stand on maps to a visible direction. With d4 >= 4, rows are first reversed, which leaves the downward direction unchanged. Each clockwise rotation then turns 'down' into left, up and right in turn. The factory picks the direction vector (DR, DC) for d4 % 4. The emitted program finds 4-connected components of colour palette[2]. It sorts each component's cells by their projection onto (DR, DC), which runs from the free tip toward the base edge. It then recolours the last floor(n/2) cells to palette[8]. Everything happens directly in visible coordinates using palette constants. There is no normalisation and no colour un-permutation. Rectangular grids and bars at the grid border are handled naturally. Odd-length bars keep their middle cell in the bar colour, matching length // 2 in the generator.",
+    "limitations": "This assumes palette is a permutation, so the bar, fill and background colours stay distinct. It also assumes the bars are straight segments that do not touch each other, which the generator guarantees by spacing columns two apart. Demonstrations are not consulted because the direction and colours are fully determined by d4 and palette. No constructor defects or fixture contradictions were found: all fixtures match floor(length/2) cells recoloured from the base. The emitted program has not been executed here; the host's verification run is still required.",
+    "independent_source_review": {
+      "verdict": "accept",
+      "mechanism": "Each input holds 4 vertical bars in palette[2] (lengths 2..10, columns 1,3,5,7). Every bar stands on the bottom edge, and the grid is max(len)+1 tall. For each bar, the floor(n/2) cells nearest the base edge become palette[8]. The emitted solver finds the 4-connected components of the BAR colour. It sorts each component's cells by their projection onto the visible 'toward-base' vector (DR,DC) chosen from d4%4, then recolours the last n//2 cells to FILL.",
+      "evidence": [
+        "Constructor: the loop `for i in range(length // 2): r = height - i - 1` recolours the bottom floor(length/2) cells to cyan. No hidden random latent affects the label except the visible bar lengths.",
+        "All fixtures match floor(n/2). Train 1 lengths 7,5,3,6 give 3,2,1,3. Train 2 lengths 6,5,4,3 give 3,2,2,1. Train 3 lengths 7,3,4,8 give 3,1,2,4. Test lengths 10,9,2,5 give 5,4,1,2. The rule-text table lists pairs 1 and 3 in a different bar order, but the counts per bar are consistent.",
+        "Bars sit in columns 2*idx+1, so they are separated by background columns and never 4-connect. Each component is therefore exactly one straight bar.",
+        "Within a straight bar aligned with (DR,DC), the projection p[0]*DR+p[1]*DC is distinct per cell. The sort has no ties, and the secondary keys are irrelevant.",
+        "Factory direction table [(1,0),(0,-1),(-1,0),(0,1)]: a clockwise quarter turn moves the bottom edge to the left edge, then to the top, then to the right, so down->left->up->right is correct. The solver acts directly in visible coordinates using only palette constants. There is no untransform, native-solve or retransform wrapper.",
+        "Min length is 2, so n//2 >= 1 and the `if n > 0` guard is never needed. FILL colour (palette[8]) never appears in inputs, so recolouring cannot interfere with component detection. All components are found before any recolouring anyway.",
+        "Host audit passed: 1000 fresh pairs, 8000 augmented pair checks and 16 fixture variants, with no sampler rejections."
+      ],
+      "blocking_issues": [],
+      "nonblocking_limits": [
+        "The factory assumes that d4>=4 applies a horizontal (column-reversing) flip before rotation, which leaves 'down' unchanged. The prose says 'rows are first reversed', which is ambiguous. If the flip were vertical, the d4>=4 directions would be wrong. The host's augmented checks across D4 passing is consistent with the horizontal-flip convention, but the source alone cannot confirm it.",
+        "The solver ignores demonstrations. This is acceptable because the colours and direction are genuine rule constants specialised from palette and d4, not arbitrary lookup associations.",
+        "Correctness relies on the generator's guarantees: straight, non-touching bars on one shared base edge, and palette as a permutation. Out-of-domain scenes, such as touching or bent bars, are not handled, but the constructor excludes them."
+      ],
+      "required_context_checks": [
+        "Confirm that the host D4 convention for d4 in 4..7 is a column-reversing (left-right) flip followed by d4%4 clockwise rotations, matching the factory's direction table. The passing augmented audit suggests it is.",
+        "Task ce9e57f2 is not in the colour-evidence check list. None is needed, because there is no arbitrary colour association."
+      ],
+      "task_id": "ce9e57f2",
+      "factory_sha256": "03967ec8ed020dab3d2206c84bf053ad678b3510e33e1ffa6c241e0f81644cc2",
+      "constructor_sha256": "a4d1b497a81c7a8c99f18c9bc71614a20d75264ef75ad3e5418c8b5f1a333053"
+    },
+    "host_review": "Read mechanism, evidence, limitations and context requirements. Host reflects columns before clockwise rotation, tests all eight D4 indices, and applies a shared palette permutation after generation. Fixture audit verifies all train/test supplied pairs at every tested orientation/palette, not one pair per variant. Per-episode execution verification and conflicting-context rejection remain required."
+  }
+}

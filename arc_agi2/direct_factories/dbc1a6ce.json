@@ -1,0 +1,49 @@
+{
+  "task_id": "dbc1a6ce",
+  "factory_sha256": "218a4a8c0481553964c0c3dbc10223b6d1f0d3f6b60cc0609f5d5258e71abfab",
+  "constructor_sha256": "dee376013a1eacc3d6a56c21f8203d7658fead5a389d235b6bea17c3e8939ef7",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 95114726701376,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 7.845640875049867,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The mechanism has no direction. In every row, the background cells between consecutive dots (original colour 1) are filled with the original colour 8. The same is done in every column. Crossings are simply the fill colour. Because the rule treats rows and columns the same way, every D4 transform maps the set of row and column bridges onto itself. A rotation swaps the roles of rows and columns, and a reflection reverses the order along a line. Neither changes which cells lie between consecutive dots. So the emitted program does the bridging directly in visible coordinates for every d4. The palette only sets the constants: background = palette[0], dot = palette[1], fill = palette[8]. The background is fixed by the palette, not inferred as the most common colour, so it stays correct even for unusually dense scenes. Filling only between consecutive dots gives the same result as the constructor's all-pairs loop, because the union of the all-pairs intervals on a line is the span from its first dot to its last. That span is exactly the union of the consecutive-pair intervals, and dots themselves are never overwritten.",
+    "limitations": "The program assumes the constructor's domain: only background and dot colours appear in inputs. Any other colour would be treated as a non-dot obstacle that blocks nothing and is not overwritten. A grid with no dots is returned unchanged. The constructor has no defects, hidden tie-breaks or fixture contradictions; the fixtures match the uniform rule. This has not been tested by me.",
+    "independent_source_review": {
+      "verdict": "accept",
+      "mechanism": "Within each row, every background cell between consecutive dots (original colour 1) is filled with the fill colour (original 8). The same is then done within each column. Dots are never overwritten, and a cell where a row bridge and a column bridge cross is simply the fill colour. The emitted solver runs this directly on the visible grid, using palette constants BG=palette[0], DOT=palette[1] and FILL=palette[8].",
+      "evidence": [
+        "The constructor fills with an all-pairs loop. For r1==r2 it fills `range(min(c1,c2), max(c1,c2))` but skips blue cells, and does the same for columns. The pair (i,i) gives an empty range. So on any line the filled set is the span from the first dot to the last dot, minus the dots. That is exactly the union of the consecutive-pair intervals `range(a+1, b)` used by the solver. The constructor's inclusive start cell is always a dot and is skipped, so the off-by-one is harmless.",
+        "Rows are processed before columns in both programs. Each only paints cells that are still background, and both paint the same colour. The order therefore cannot change the result, and crossings resolve to the fill colour in both.",
+        "The rule treats rows and columns symmetrically and has no direction. Every D4 transform maps the set of between-consecutive-dots cells onto itself. So working directly in visible coordinates is correct and needs no untransform wrapper.",
+        "Fixtures checked by hand. Train pair 1: row 5 spans x=2..8, column 6 spans y=1..5, and they cross at (5,6) as 8. Column 10 (dots at y=2 and y=6) fills y=3..5, including (5,10). The 2x2 rectangle of dots at rows 9/11, columns 4/8 closes as a rectangle of 8s. All match.",
+        "The background colour is taken from the palette rather than inferred from frequency. At the constructor's 0.1 density, the most-common-colour heuristic in the archived program would also be safe.",
+        "There is no hidden random latent beyond dot placement. Dot placement is fully visible in the input, and there are no tie-breaks.",
+        "The fill colour (8) appears in every demonstration output whenever any bridge exists, so the colour constant is taught by the context. This is not an arbitrary per-object lookup. The task is not in the episode_evidence_checks list, which is appropriate.",
+        "Host audit passed: 1000 fresh pairs, 8000 augmented checks and 16 fixture variants, with no sampler rejections."
+      ],
+      "blocking_issues": [],
+      "nonblocking_limits": [
+        "If random_pixels returns an empty list, `zip(*pixels)` in the constructor raises an error. The chance is about 0.6% on the smallest 8x6 grids. This is a sampler-side failure, not a label error, and presumably leads to a resample.",
+        "The solver's `g.ndim != 2` fallback, and its treatment of colours other than BG and DOT, are outside the constructor's domain. The constructor only emits background and blue in inputs.",
+        "A demonstration set where no row or column has two dots would show no fill colour. At density 0.1 on grids of 8 or more cells per side this is very unlikely across multiple demos, but it is not formally excluded.",
+        "The archived rule text contains small narrative inaccuracies, such as the description of pair ordering. These do not affect the mechanism."
+      ],
+      "required_context_checks": [
+        "Confirm that sampled episodes contain at least one demonstration with a filled bridge, so the fill colour is visible. This is expected almost surely, but the generator does not guarantee it."
+      ],
+      "task_id": "dbc1a6ce",
+      "factory_sha256": "218a4a8c0481553964c0c3dbc10223b6d1f0d3f6b60cc0609f5d5258e71abfab",
+      "constructor_sha256": "dee376013a1eacc3d6a56c21f8203d7658fead5a389d235b6bea17c3e8939ef7"
+    },
+    "host_review": "Read source review mechanism/evidence/limitations and context requirements. Every D4 orientation tested per fresh pair; per-episode verification required. Added query-required bridge/ring fill-colour demonstration evidence; all-D4 missing-evidence regression tests pass."
+  }
+}

@@ -1,0 +1,48 @@
+{
+  "task_id": "ce4f8723",
+  "factory_sha256": "19f42f5b0a1b39078dd5ed7e06fb4c774b8bcdb6f4b7919a35d3ce3e1d62bd5d",
+  "constructor_sha256": "63233032fb565d88ca59f608ca3f0aab3386bc166c90c678937da9f8864f835d",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 261405199667550,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 2.5667860000394285,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The constructor draws a 4-wide by 9-tall grid. Rows 0..s-1 form a panel of colour 1. Row s is a full yellow (4) separator. Rows s+1..2s form a panel of colour 2. The output is an s x s grid that is green (3) wherever either panel cell is non-background, and background (0) elsewhere.\n\nUnder D4 the separator is a full row when d4%4 is 0 or 2, and a full column when d4%4 is 1 or 3. The factory therefore sets AXIS from d4 and uses the colour constants BG=palette[0], SEP=palette[4] and MARK=palette[3].\n\nThe input and output grids go through the same rigid transform. Each panel's image is therefore a pure translation of the transformed output, with no extra flip. This means the emitted program only has to:\n1. Find the line along AXIS made entirely of SEP. If several exist, it takes the one nearest the middle; if none exist, it uses the middle index.\n2. Slice the two panels on either side of that line.\n3. OR their non-background masks into MARK or BG, working directly in visible coordinates.\n\nBecause the separator is identified by the dedicated SEP colour, a full panel line of colour 1 or 2 cannot be mistaken for the divider. That was the flaw in the archived generic divider search. The approved fixtures agree with this rule; for example, train pair 1 with its all-1 row 3 still splits at the yellow row 4.",
+    "limitations": "The program assumes the constructor's domain: a single separator line of palette[4] exactly at the centre, and two equal panels on either side whose only background is palette[0]. If panel sizes are ever unequal, both are cropped to the shorter extent, aligned at their first index; this case never occurs in the generator's domain. The supplied 'rule' text is a debugging narrative rather than a clean rule statement, but it is consistent with the fixtures, and no fixture contradicts the OR rule. I found no generator indexing bugs or hidden tie-breaks. Two notes: (1) the call common.grid(size, 2*size+1) is taken to mean width=size and height=2*size+1, which the fixtures confirm; (2) size defaults to 4, but the program handles any size. I have not run any tests.",
+    "independent_source_review": {
+      "verdict": "accept",
+      "mechanism": "The input is a (2s+1) x s grid. Row s is a full separator of colour 4 (palette[4]). The colour-1 panel sits above it and the colour-2 panel below it, each s x s. The output is the s x s cell-wise OR of the two panels' non-background masks: green (palette[3]) where either panel cell is non-background, background (palette[0]) elsewhere. The emitted solver chooses the separator axis from d4 parity. It finds the line made entirely of SEP, slices the panels on either side, and ORs the non-BG masks into MARK/BG. All of this happens directly in visible (augmented) coordinates.",
+      "evidence": [
+        "Constructor: `grid[size][c] = common.yellow()` for every c produces the only full colour-4 line. Panel cells are written only with colour 1 (rows 0..s-1) or colour 2 (rows s+1..2s) via `grid[r if color == 1 else size + r + 1][c]`. `output[r][c] = common.green()` is set for every placed pixel, so the label is exactly the union of the two panel masks with matching (r,c) offsets.",
+        "common.grid(width, height) builds `height` rows of `width` cells. So common.grid(size, 2*size+1) is 9 rows x 4 columns and the output is 4x4, which matches all approved fixtures.",
+        "Under any D4 transform, both panels and the output move by the same rigid map. A flip perpendicular to the separator swaps the panels and flips each one in place. OR is symmetric and is applied cell-wise at aligned offsets, so the result still matches the transformed output. A transpose or quarter-turn moves the separator to a column; the factory covers this with AXIS=1 when d4%4 is 1 or 3. That is consistent with an 8-element D4 indexing in which d4%4 is the rotation count, and the host audit passed 8000 augmented checks.",
+        "The separator is identified by the dedicated SEP colour (palette[4]), which is distinct from the panel colours palette[1] and palette[2]. A full panel line of colour 1, such as fixture train pair 1, row 3, therefore cannot be chosen. This fixes the archived program's flaw, where it picked the first single-colour divider row.",
+        "No random latent affects the label beyond visible pixels. random_pixels only decides which cells are filled, and empty panels are handled correctly because the OR of zeros gives all-BG. No ties are possible because exactly one full SEP line exists.",
+        "There is no whole-grid untransform wrapper. The solver uses only AXIS, BG, SEP and MARK constants, which are genuine rule colours and axis specialisations.",
+        "Manual check of fixture train 1: the OR of top rows [1100,1010,1101,1111] and bottom rows [2202,0020,0200,2020] gives [3303,3030,3303,3333], which matches."
+      ],
+      "blocking_issues": [],
+      "nonblocking_limits": [
+        "The archived rule text is a debugging narrative, not a clean rule statement. It is nonetheless consistent with the fixtures and the constructor.",
+        "The fallbacks (no SEP line leads to the middle index; unequal panels are cropped to the shorter extent) are out-of-domain. The constructor always emits exactly one centred SEP line with equal panels.",
+        "The AXIS mapping depends on the host's D4 index convention, where odd d4%4 swaps the axes. I could not verify this from source. It is supported only by the host audit passing augmented checks.",
+        "The generator samples a fixed size of 4 by default. The solver is size-general, but only size 4 is exercised."
+      ],
+      "required_context_checks": [
+        "None for colour associations: ce4f8723 is not in the episode evidence check list, and the rule uses no arbitrary colour lookup. The output colour MARK is a fixed constant that every demonstration shows."
+      ],
+      "task_id": "ce4f8723",
+      "factory_sha256": "19f42f5b0a1b39078dd5ed7e06fb4c774b8bcdb6f4b7919a35d3ce3e1d62bd5d",
+      "constructor_sha256": "63233032fb565d88ca59f608ca3f0aab3386bc166c90c678937da9f8864f835d"
+    },
+    "host_review": "Read mechanism, evidence, limitations and context requirements. Host reflects columns before clockwise rotation, tests all eight D4 indices, and applies a shared palette permutation after generation. Fixture audit verifies all train/test supplied pairs at every tested orientation/palette, not one pair per variant. Per-episode execution verification and conflicting-context rejection remain required."
+  }
+}

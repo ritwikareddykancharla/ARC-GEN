@@ -1,0 +1,49 @@
+{
+  "task_id": "cf133acc",
+  "factory_sha256": "062ed27ca3727a4a5e60c0cee08dec172dbd0f567b057657710b30d3b1af16f9",
+  "constructor_sha256": "d1422dd4b4b5088c3d77fccde97380f3d92dda936692694c2a9dd21d895c9e6b",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 15928599424199,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 4.842391917016357,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "In the original orientation, the seeds sit on the bottom edge. Each seed column is filled toward the seeds. An empty cell takes the colour of the first position, at or past it in the seed direction, where something is present. That is either a horizontal-line neighbour on the perpendicular side (\u00b11) or the seed itself.\n\nThe flip in D4 indices 4 to 7 reverses each row. Each row reversal only swaps the two perpendicular neighbours. The canonical 'down' (seed) direction does not change. Each clockwise rotation maps a direction vector (dr, dc) to (dc, -dr). So the seed edge and the propagation direction depend only on d4 % 4:\n- 0: seeds on the bottom row; columns are filled, scanning downward.\n- 1: seeds on the left column; rows are filled, scanning leftward.\n- 2: seeds on the top row; columns are filled, scanning upward.\n- 3: seeds on the right column; rows are filled, scanning rightward.\n\nThe emitted program works directly on the visible grid. A seed line is any column (or row) whose cell on the seed edge is not background. For each background cell on that line, it walks toward the seed edge. It checks the cell on the line itself, then its two perpendicular neighbours, and takes the first non-background colour it finds.\n\nThe background is the constant palette[0]. All lookups read the unmodified input. This matches the archived in-place solver, because seed columns are never adjacent (they are at least 4 apart). Line colours that change partway along are handled automatically, because each gap uses its own immediate neighbours. The demonstrations are not needed and are ignored. The program handles rectangular grids of any size.",
+    "limitations": "Not executed or tested by me. The background is assumed to be palette[0], which is true for this constructor's domain.\n\nIf the two perpendicular neighbours of a gap were both non-background but had different colours, the program would use the lower-index neighbour in visible coordinates. That makes the result orientation-dependent. The generator explicitly rejects such scenes ('Just one color on one side is ill-defined'), so this case is outside the domain and was not treated as a rule.\n\nSeed lines are identified by any non-background cell on the seed edge. The generator never lets a horizontal line touch that edge, so no other cells qualify.\n\nThe constructor prints debug output (print(mid, hsides, hlengths)) during random generation. This is harmless, but the host may want to review it. No fixture contradictions were found.",
+    "independent_source_review": {
+      "verdict": "accept",
+      "mechanism": "Seed columns are the non-background cells on one edge. In canonical orientation that is the bottom row. Every background cell in a seed column takes the colour of the first non-background cell found by walking toward the seed edge. The cell checked is either the column cell itself (the seed) or one of its two perpendicular neighbours (a horizontal-line cell next to the gap). The factory sets the seed edge, axis and step from d4 % 4. It solves directly on the visible grid, with BG = palette[0].",
+      "evidence": [
+        "Constructor draw(): it walks each vcol from row 14 upward. `color` is updated to `output[r][vcol-1]` when that cell is nonzero, before `output[r][vcol]` is written. So the gap cell takes the line colour, and each cell above it keeps the colour of the nearest line at row >= y until the next line up. The solver's downward scan from y gives the same result: it stops at the first line neighbour or the seed.",
+        "The constructor rejects `output[r][vcol-1] != output[r][vcol+1]`, so the two neighbours always agree. The solver's left-before-right check order therefore never decides an outcome in the domain.",
+        "vcols[0] is in [1, mid-2] and vcols[1] is in [mid+2, 13], so the seed columns are at least 4 apart. Neither seed column is a neighbour of the other. Reading neighbours from `output` in the constructor and from the unmodified `src` in the solver therefore gives the same values.",
+        "In the input, the constructor sets every non-seed cell of each vcol to 0 (`grid[14-row][vcol] = vcolor if row < vlength else 0`). The only non-background cells in a seed column are therefore the seed, so the column-cell check in the solver can only hit the seed.",
+        "hrows are drawn from [1, 14-max(vlengths)]. Lines therefore never reach the seed rows or the bottom edge, and only the seed columns are non-background on the seed edge. Lines touch only the side edges, which stay perpendicular to the seed edge under every D4 variant.",
+        "A left line (length mid or mid+1) always covers vcols[0]+1 and never reaches vcols[1]-1. A right line always covers vcols[1]\u00b11. A right line extending to mid-1 next to vcols[0] gives a one-sided neighbour, and the constructor rejects that. A seed is always present on the edge, so the solver never ends with colour None.",
+        "The emitted program has no untransform/retransform wrapper. It specializes only the scan axis, step and edge, which is a legitimate orientation constant. The host audit passed 8000 augmented checks and 16 fixture variants, which supports the d4 % 4 mapping.",
+        "There is no arbitrary colour lookup. hcolors exclude vcolors, and every output colour is copied from visible input cells. No episode colour-evidence requirement applies."
+      ],
+      "blocking_issues": [],
+      "nonblocking_limits": [
+        "The solver picks the lower-index neighbour when the two perpendicular neighbours differ. The constructor excludes this case, so it is out of domain.",
+        "BG is assumed to be palette[0]. That holds for this constructor, whose background is always 0 before palette mapping.",
+        "The constructor has a debug `print(mid, hsides, hlengths)` in random generation. It is harmless to the labels.",
+        "The demonstrations are ignored. That is acceptable because the rule is deterministic and the orientation constant comes from d4."
+      ],
+      "required_context_checks": [
+        "Confirm that the host's D4 index convention matches the factory's assumed mapping: k=0 seeds bottom, k=1 seeds left, k=2 seeds top, k=3 seeds right, with flips 4-7 sharing the same k. The passing augmented audit indicates it does."
+      ],
+      "task_id": "cf133acc",
+      "factory_sha256": "062ed27ca3727a4a5e60c0cee08dec172dbd0f567b057657710b30d3b1af16f9",
+      "constructor_sha256": "d1422dd4b4b5088c3d77fccde97380f3d92dda936692694c2a9dd21d895c9e6b"
+    },
+    "host_review": "Read mechanism, evidence, limitations and context requirements. Host reflects columns before clockwise rotation, tests all eight D4 indices, and applies a shared palette permutation after generation. Fixture audit verifies all train/test supplied pairs at every tested orientation/palette, not one pair per variant. Per-episode execution verification and conflicting-context rejection remain required."
+  }
+}

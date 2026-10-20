@@ -1,0 +1,48 @@
+{
+  "task_id": "d5d6de2d",
+  "factory_sha256": "a190537c308820db672cdf39704a0a974d948e66a0177463059d13c4d211fdab",
+  "constructor_sha256": "c6cdc232c7e3d44e7ba0e408e0ef40a5706b00f81848de63d02d88afa619a725",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 13982669328927,
+  "d4": 7,
+  "unique_base_inputs": 995,
+  "seconds": 8.944994500023313,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "Each 4-connected object of the frame colour (palette[2]) is a rectangle generated as a solid block whose strict interior is reset to background. The output is an all-background canvas (palette[0]), with the background cells inside each object's bounding box shrunk by one cell on every side painted with the fill colour (palette[3]). Objects with no interior, meaning the bounding box spans fewer than 3 rows or 3 columns, just disappear. Rectangles stay rectangles under every D4 transform, and 'shrink the box by one on every side' is symmetric. So the program works directly in visible coordinates with no axis-specific logic. Only the colour roles are specialised, as palette constants. Background-ness is defined by palette[0], not by a majority count. Frames touching the grid boundary are handled naturally because only the bounding box is used.",
+    "limitations": "Relies on the constructor's non-overlap guarantee (common.overlaps with margin 1) to keep distinct boxes from merging into one 4-connected component. If two frames ever touched orthogonally, their joint bounding box would give a wrong fill. This would be a constructor-domain violation, not a rule. The approved fixtures are consistent with the uniform rule, and no contradictions were found. No tests have been run.",
+    "independent_source_review": {
+      "verdict": "accept",
+      "mechanism": "Each constructor box is drawn as a solid palette[2] rectangle (width and height 2..9). Its strict interior is then reset to background, and the same interior is painted palette[3] in an otherwise all-background output. The emitted solver finds the 4-connected same-colour non-background components and takes each one's bounding box. It skips any box spanning fewer than 3 rows or 3 columns, and paints palette[3] on the background cells strictly inside every other box. Everything else becomes palette[0].",
+      "evidence": [
+        "Constructor: `grid[r][c] = common.red()` over the full box, then `grid[r][c] = common.black(); output[r][c] = common.green()` over `range(row+1, row+tall-1) x range(col+1, col+wide-1)`. So the output is exactly the strict interior of each box, and 2-thick boxes yield nothing.",
+        "`common.overlaps(rows, cols, wides, talls, 1)` rejects any pair unless there is a gap of at least one full row or column between them, since it requires `rows[i]+talls[i]+1 <= rows[j]` or an analogous condition. Boxes therefore never touch orthogonally or diagonally. Each box is exactly one 4-connected component, and no box can lie inside another's interior.",
+        "Solver condition `if y1 - y0 < 2 or x1 - x0 < 2: continue` matches the constructor's empty-interior condition (tall<=2 or wide<=2). Fill range `range(y0+1, y1) x range(x0+1, x1)` equals the constructor's interior range. The `g[y][x]==BG` guard is always true there, because interiors are reset to black and no other box intrudes.",
+        "Grid size is 5*mult with mult in 2..5, so 10..25, within the 30 limit. Box dimensions and positions are bounded by `size - tall` and `size - wide`, so there are no out-of-range draws.",
+        "D4 invariance: rectangles map to rectangles, and 'shrink the bounding box by 1 on all sides' is symmetric under every D4 transform. The solver uses no orientation constants and applies no untransform/retransform wrapper. It acts directly on visible coordinates.",
+        "Palette roles are taken from palette[0] (bg) and palette[3] (fill), which are genuine rule colours. FRAME is interpolated but unused; the solver treats any non-bg component as an object, which is harmless in this domain.",
+        "No hidden random latent determines the label. The output is a deterministic function of the visible input. There are no ties or reading-order dependence, because objects are disjoint and fills commute.",
+        "Approved fixtures match `validate()` parameters and the archived rule. The host audit passed 1000 fresh pairs, 8000 augmented checks and 16 fixture variants, with no sampler rejections."
+      ],
+      "blocking_issues": [],
+      "nonblocking_limits": [
+        "The fill colour palette[3] is a constant the task teaches only through demonstrations that contain at least one box \u22653x3. The generator can produce a pair with no interior, for example mult=2, num_boxes=1 and a 2-thick box, which is roughly a few percent per pair. An episode in which every demonstration lacks a fill would leave the fill colour unshown. This is very unlikely with 3 demonstrations, and `require_colour_evidence` does not cover d5d6de2d.",
+        "Correctness relies on the constructor's margin-1 non-overlap guarantee. Touching frames are outside the domain and would merge into one bounding box. The prior notes already acknowledge this.",
+        "Grids are always square and objects are always solid-then-hollowed rectangles. The solver is not claimed for non-rectangular or partially open frames, which the constructor never produces."
+      ],
+      "required_context_checks": [
+        "Optionally confirm that the host's episode sampler shows the palette[3] fill in at least one demonstration whenever the query requires a fill, or accept the low-probability gap described in nonblocking_limits."
+      ],
+      "task_id": "d5d6de2d",
+      "factory_sha256": "a190537c308820db672cdf39704a0a974d948e66a0177463059d13c4d211fdab",
+      "constructor_sha256": "c6cdc232c7e3d44e7ba0e408e0ef40a5706b00f81848de63d02d88afa619a725"
+    },
+    "host_review": "Read complete independent review, source mechanism, limitations and context requirements. All eight D4 indices tested per fresh pair, all supplied fixture pairs checked in16 orientation/palette variants. Per-episode execution and evidence checks required. Episode check requires demonstrated fill colour when query contains an actual frame interior."
+  }
+}

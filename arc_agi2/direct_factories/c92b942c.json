@@ -1,0 +1,45 @@
+{
+  "task_id": "c92b942c",
+  "factory_sha256": "1e02027f41f334d09fb389bf1cdb0cd3a33258ccd5348012ab4c52c1031031c9",
+  "constructor_sha256": "70433a2a2dc99d133bd7bacacf5c8c400b9fbd47279096b251b3ab7dbdeef017",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 14222763872237,
+  "d4": 7,
+  "unique_base_inputs": 905,
+  "seconds": 5.7117396669927984,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "Mechanism: tile the input 3x3. Every line through a tiled seed, parallel to the original row direction, has its background cells set to palette[1]. Then each tiled seed marks the two cells at -v and +v with palette[3], where v is the image of the original down-right vector (1,1). A mark is placed only on a background cell and is clipped at the output border, with no wrap-around. The factory pushes the line direction (0,1) and the diagonal vector (1,1) through the D4 transform: a column flip first when d4>=4, then d4%4 clockwise rotations. From this it decides whether the lines are rows or columns and which diagonal (main or anti) carries the marks. Background is the constant palette[0]; seeds are any non-background cells. Seed colour is read from the pixels. Tiling 3x3 commutes with D4, so the emitted program works directly in visible coordinates with no normalisation step.",
+    "limitations": "Background is assumed to be palette[0], which holds in the constructor domain because seeds are never colour 0. The constructor rejects scenes where a diagonal mark would land on a line row/column or on a seed. Inside that domain, the order of fill-then-mark and the background-only guard never change the result; outside it, this program keeps existing line/seed pixels rather than overwriting them. Not run by me; I found no fixture inconsistencies and no constructor defects affecting the visible rule.",
+    "independent_source_review": {
+      "verdict": "accept",
+      "mechanism": "Tile the input 3x3. Every output line through a tiled seed, in the original row direction, has its background cells filled with palette[1]. Then each tiled seed marks the two cells at plus and minus v with palette[3], where v is the image of the original (1,1) diagonal. Marks go only on background cells and are clipped at the border. Seeds keep their own colour. The factory sets HORIZ from the parity of the rotation count, and sets the diagonal type (main or anti) from the parity of flip plus rotations.",
+      "evidence": [
+        "Constructor draw(): line rows are output[r*height+row][:] = 1 for every r in 0..2. Seed tiles are at (r*height+row, c*width+col). Marks are at absolute output offsets (-1,-1) and (+1,+1), using get_pixel/draw, which return -1 or skip outside the grid. So marks are clipped, with no wrap-around. This matches the solver's 0<=ny<OH and 0<=nx<OW bound. Diagonals across tile seams are handled the same way in both, in absolute output coordinates.",
+        "Rejection guards: a mark cell must be in [-1,0,3], and a seed cell must be in [-1,0,1]. Lines are drawn before any mark, so in-domain marks never land on a line row or a seed. A repeated seed is rejected because its cell already holds the seed colour. So the solver's fill-then-mark order and its background-only guard agree with the constructor everywhere in the domain. A mark that lands on an existing 3 is a no-op in both.",
+        "Colours: color = random_color(exclude=[1,3]), and random_color draws from 1..9, so 0 is excluded too. After the palette map, seeds are never palette[0], palette[1] or palette[3]. The constant BG = palette[0] is therefore valid, and nonzero(out != BG) finds exactly the tiled seeds. points >= 1, so at least one seed always exists.",
+        "D4 handling: flip (v0,-v1) and rot (v1,-v0) (clockwise) are each a single reflection or quarter-turn. Each one toggles main/anti diagonal, and only rotations toggle row/column orientation. The marks are symmetric (s in \u00b11), so the result does not depend on whether the host composes flip then rotate or rotate then flip. 3x3 tiling commutes with every D4 element. The emitted solver works directly in visible coordinates, with only genuine rule constants (orientation and diagonal) specialised. There is no untransform wrapper.",
+        "Fixtures were spot-checked against the rule. Pair 1 row 0 has marks at x=1,7,13, the up-left marks from row-1 seeds at x=2,8,14. Test row 2 has 3s only at x=2,5, from the row-3 seeds at x=3,6. Test row 8 is all 0. This is consistent.",
+        "No hidden-latent dependence: the output is a deterministic function of the visible input. Line colour 1, mark colour 3 and diagonal orientation are fixed rule constants, shown in every demonstration. No arbitrary colour or shape lookup is involved. This task is not among the tasks covered by the colour-evidence check, and needs no such check.",
+        "Host audit passed: 1000 fresh pairs, 8000 augmented checks covering all 8 D4 variants, 16 fixture variants, and no sampler rejections."
+      ],
+      "blocking_issues": [],
+      "nonblocking_limits": [
+        "Background is the constant palette[0] rather than being inferred. This is valid because the constructor never produces colour-0 seeds.",
+        "Outside the constructor domain (a mark landing on a line or seed), the solver keeps the existing pixel, where the constructor would reject the scene. That case is unreachable from generate().",
+        "The constructor produces one seed colour per scene, so behaviour with mixed seed colours is untested. The solver would handle it naturally, since seeds are taken as any non-background cell."
+      ],
+      "required_context_checks": [],
+      "task_id": "c92b942c",
+      "factory_sha256": "1e02027f41f334d09fb389bf1cdb0cd3a33258ccd5348012ab4c52c1031031c9",
+      "constructor_sha256": "70433a2a2dc99d133bd7bacacf5c8c400b9fbd47279096b251b3ab7dbdeef017"
+    },
+    "host_review": "Read mechanism, evidence, limitations and context requirements. Host reflects columns before clockwise rotation, tests all eight D4 indices, and applies a shared palette permutation after generation. Fixture audit verifies all train/test supplied pairs at every tested orientation/palette, not one pair per variant. Per-episode execution verification and conflicting-context rejection remain required."
+  }
+}

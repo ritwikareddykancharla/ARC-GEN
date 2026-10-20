@@ -161,8 +161,12 @@ class ProgramTargets(unittest.TestCase):
             audit_target(tid,'def solve(demos, grid):\n    return '+repr(a))
 
     def test_unreviewed_augmentation_cannot_fall_back_to_wrapper(self):
-        with self.assertRaisesRegex(TargetError, 'rewrite required'):
-            compile_target('cbebaa4b',1)
+        from unittest.mock import patch
+        # Coverage grows over time; simulate the missing direct target rather
+        # than assuming a particular real task will remain unreviewed forever.
+        with patch('arc_agi2.direct_programs.direct_source', return_value=None):
+            with self.assertRaisesRegex(TargetError, 'rewrite required'):
+                compile_target('cbebaa4b',1)
 
     def test_no_state_retained_between_pairs(self):
         ep=self.episode('0692e18c')

@@ -1,0 +1,48 @@
+{
+  "task_id": "d4a91cb9",
+  "factory_sha256": "d45588a98b1b556b605782787b1d443bd0d7a64f6c541c0cc9e30c043b2375c0",
+  "constructor_sha256": "3b58ed15ee5d1daddb6af15d23759dfee81b97d9adaeae73674c0457b1cabf49",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 155246304652882,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 5.496683124918491,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The original mechanism draws an L-shaped path of colour 4 between two pixels. It leaves the 8 vertically along the 8's column until it reaches the 2's row. From that corner, (row of 2, column of 8), it runs horizontally along the 2's row up to the 2. Only background cells are painted.\n\nUnder the D4 transform, the optional horizontal row-reversal keeps the axes as they are, and each clockwise quarter turn swaps them. So the leg leaving the anchor is vertical when d4%4 is even and horizontal when d4%4 is odd. In the horizontal case the corner is (anchor row, target column). Step direction along each leg is taken from the visible coordinates, so reflections and rotations are handled without extra cases.\n\nThe colour roles are fixed constants:\n- anchor = palette[8]\n- target = palette[2]\n- path = palette[4]\n- background = palette[0]\n\nThe emitted program finds the two visible pixels and computes the visible corner. It paints the two straight segments, skipping non-background cells so both endpoints are preserved. It does no normalisation and does not rotate the grid.",
+    "limitations": "- The program assumes exactly one anchor pixel and one target pixel. If either is missing, it returns the input unchanged. If there are several, it uses the first in row-major order.\n- The constructor samples distinct rows and distinct columns, so the corner never coincides with an endpoint. If the two pixels did share a row or column, the program would degenerate to a single straight segment.\n- The common.hpwl helper source was not supplied. The rule is taken from the archived solver and the fixtures, which agree with each other.\n- I saw no fixture contradictions or tie-break defects.",
+    "independent_source_review": {
+      "verdict": "accept",
+      "mechanism": "The input has two single pixels, a start colour 8 and an end colour 2. The output adds an L-shaped colour-4 path between them. Its corner is at (row of 2, column of 8): the path runs along the 8's column to the 2's row, then along the 2's row to the 2. Only background cells are painted. Under D4, the corner becomes (anchor row, target column) whenever the transform swaps axes, which is the odd-quarter-turn case. The emitted solver uses a FIRST_LEG_VERTICAL constant for this, and the demonstrations teach the orientation.",
+      "evidence": [
+        "common.hpwl source is now supplied. Red s=2 is placed at (rows[0],cols[0]) and cyan e=8 at (rows[1],cols[1]).",
+        "hpwl's first loop paints row rows[0] over columns strictly between cols[0] and cols[1]. Its second loop paints column cols[1] from row rows[0] (inclusive) toward rows[1] (exclusive). So the corner cell is (row of 2, column of 8) and gets colour 4, and neither endpoint is overwritten.",
+        "This matches the factory's even-k corner (cr,cc)=(rt,ca). In the factory, anchor=pal[8] and target=pal[2], and the archived transform uses the same corner.",
+        "The constructor uses common.sample(...,2) for both rows and cols. The two pixels therefore never share a row or column, so the corner is never an endpoint and both legs are non-degenerate.",
+        "_paint_segment is inclusive of both ends but paints only BG cells. Skipping the anchor and target pixels reproduces hpwl's exclusive bounds exactly. Step signs come from visible coordinates, so reflections need no special cases.",
+        "The axis-swap reasoning is correct: a horizontal flip preserves axes and each quarter turn swaps them, so k%2 decides which leg is first. The host passed 8000 augmented checks and 16 fixture variants.",
+        "The solver works directly in visible coordinates. There is no untransform/retransform wrapper. Its colour constants are genuine rule colours, and the palette is a fixed bijection.",
+        "There are no hidden random latents. The label is fully determined by the visible pixel positions and the role colours. Each demonstration's L orientation identifies which of the two possible L paths applies."
+      ],
+      "blocking_issues": [],
+      "nonblocking_limits": [
+        "The solver uses the first match in row-major order and returns the input unchanged if a pixel is missing. Both cases are outside the constructor's domain, which always places exactly one of each.",
+        "If the pixels shared a row or column, the result would degenerate to a straight segment. The constructor excludes this by sampling distinct rows and columns.",
+        "The prior note that the hpwl source was unavailable is now resolved: the supplied common.py confirms the rule."
+      ],
+      "required_context_checks": [
+        "Confirm that the host's d4 encoding (k=d4%4 quarter turns, d4//4 flip) matches the factory's assumption that odd k swaps axes. The passing audit across all variants suggests it does."
+      ],
+      "task_id": "d4a91cb9",
+      "factory_sha256": "d45588a98b1b556b605782787b1d443bd0d7a64f6c541c0cc9e30c043b2375c0",
+      "constructor_sha256": "3b58ed15ee5d1daddb6af15d23759dfee81b97d9adaeae73674c0457b1cabf49"
+    },
+    "host_review": "Read source review mechanism, evidence, limitations and context requirements. Host audit covers all eight D4 indices per fresh pair; d4=7 in report is only the final loop index. All supplied fixture pairs checked under 16 orientation/palette variants. Emitted programs operate in displayed coordinates. Per-episode verification and context-evidence checks are mandatory. "
+  }
+}

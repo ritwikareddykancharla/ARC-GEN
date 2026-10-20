@@ -1,0 +1,53 @@
+{
+  "task_id": "db695cfb",
+  "factory_sha256": "5735f1bc3d3e79169488715026de4142c2ef4d9490961866d142b73a9edc268d",
+  "constructor_sha256": "acdd81721c2a7d80835d881125de47571806dc4c56527aa94dee0f14aad6e3b7",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 207782962306721,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 8.353415958001278,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "1. The background is the most common colour. The constructor guarantees it is the strict plurality.\n2. Every pair of palette[1] cells that share a diagonal (equal |dr| and |dc|, dr != 0) is joined. The program paints palette[1] on the background cells strictly between them.\n3. Each palette[6] cell lying strictly inside such a segment emits a full line of palette[6] to both borders. The line follows the perpendicular diagonal direction (dr, -dc) and paints background cells only.\n4. The rule is the same in every D4 frame. Rotations and reflections map the set of diagonals onto itself and keep perpendicular diagonals perpendicular. So the emitted program works natively in visible coordinates. It never rotates, inverse-transforms or remaps grid colours.\n5. d4 does not change any axis choice. Only the colour roles are specialised, as constants palette[1] and palette[6]. The background is inferred from the pixels.",
+    "limitations": "1. Order-dependent cases are excluded by the constructor and cannot occur in its domain. These are a 6-line crossing another segment's interior, and a 6-line passing over other objects. If such inputs were supplied anyway, the result would follow the pair-enumeration order (row-major), as in the reference.\n2. A shared endpoint joined on both diagonals is handled naturally, because every pair is checked.\n3. The background is assumed to be the strict plurality colour, as guaranteed by the constructor.\n4. The palette is assumed to be a permutation, so palette[1], palette[6] and the background stay distinct.\n5. No fixture contradictions or constructor defects were found.\n6. I have not run any tests on this factory.",
+    "independent_source_review": {
+      "verdict": "accept",
+      "mechanism": "Background is the most common input colour. Every pair of palette[1] cells on a common diagonal (|dr|==|dc|, dr!=0) is joined: the background cells strictly between them are painted palette[1]. Each palette[6] cell strictly inside such a segment emits a full line of palette[6] along the perpendicular diagonal (dr,-dc) to both borders. All painting touches background cells only. The emitted solver does this directly in visible coordinates. Only the colours ONE and SIX are specialised; d4 is not used.",
+      "evidence": [
+        "Factory solve() matches the archived transform line for line: same pair enumeration, same diagonal test, same interior walk, same perpendicular (dr,-dc), same background-only painting. Only 1/6 are replaced by palette constants.",
+        "D4 equivariance holds. Under any D4 map a diagonal stays a diagonal, and the perpendicular of (dr,dc) is (dr,-dc) in every frame. The pair test is symmetric in main and anti diagonals. No untransform/retransform wrapper is present.",
+        "I hand-checked the test fixture. (14,11) lies inside (5,2)-(21,18) and emits r+c=25 from (5,20) to (24,1). (18,8) lies inside (17,9)-(23,3) and emits r-c=10 from (10,0) to (24,14). (4,4) and (6,6) emit r+c=8 and r+c=12. The lines cross only each other or parallel or parity-disjoint segments, e.g. r+c even never meets r-c=3. Same-row 1s (23,3)/(23,11) and same-column 1s (1,9)/(17,9) are correctly not joined.",
+        "Order dependence is excluded in the constructor domain. _check_scene rejects a 6-line hitting any object or any segment interior, and rejects 1s lying inside a segment, so collinear triples cannot occur. Remaining overlaps are 1-on-1 (segment crossings) and 6-on-6 (line crossings), both order-independent.",
+        "A 6 lying on two segment interiors would trigger for both in _render and in the solver alike. The sampler forbids it: interiors avoid existing cells, and triggers avoid segcells. Explicit scenes would need the two segments to be perpendicular, and then one line runs along the other segment's interior, which is rejected.",
+        "Shared-endpoint pairs: degree/dtype bookkeeping caps reuse at one pair per diagonal. The new endpoint is barred from sharing a diagonal with any other 1. _check_scene independently enforces that pairs list exactly every diagonal-sharing pair.",
+        "Distractor 1s cannot share a diagonal with any 1. Distractor 6s cannot lie in segcells, so they never trigger, or in linecells, so lines never pass over them. Validation is re-run by _check_scene before rendering.",
+        "Background strict plurality is enforced on the input, so _background is unambiguous. The palette is a permutation, so bg, ONE and SIX stay distinct.",
+        "No hidden latent decides labels. Every output cell follows from visible 1/6 positions and the inferred background.",
+        "Host audit passed: 1000 fresh pairs, 8000 augmented checks, 16 fixture variants, no sampler rejections."
+      ],
+      "blocking_issues": [],
+      "nonblocking_limits": [
+        "6s on the diagonal extension beyond an endpoint are treated as inert. Train demos never place a 6 there. This follows the 'strictly between' reading that pair 1 supports (triggers next to endpoints fire, off-segment 6s stay inert), but the extension case itself is a synthetic near-miss, not demonstrated.",
+        "Endpoints shared on both diagonals, grids larger than 25, and backgrounds 0/2/7/9 are declared synthetic extensions. All are deterministic under the rule.",
+        "Lines crossing other objects or segment interiors are excluded by construction. An out-of-domain input would follow row-major pair order, as the reference does.",
+        "Explicit scenes accept sides 1..30, while random controls require 4..30. This is harmless.",
+        "If a sampled scene ever failed _check_scene, generate would raise rather than resample. The sampler's own filters appear to prevent this, and the host saw no rejections."
+      ],
+      "required_context_checks": [
+        "None needed for colour evidence. db695cfb is not in the colour-association task list. The 1 and 6 roles are genuine rule colours present in every demonstration, and are permuted consistently by the palette.",
+        "Optional: confirm that synthetic episodes whose query contains extension-6 or same-row/column near-misses come with at least one demonstration showing a non-diagonal 1 pair left unjoined (as train pair 4 does). This is not blocking."
+      ],
+      "task_id": "db695cfb",
+      "factory_sha256": "5735f1bc3d3e79169488715026de4142c2ef4d9490961866d142b73a9edc268d",
+      "constructor_sha256": "acdd81721c2a7d80835d881125de47571806dc4c56527aa94dee0f14aad6e3b7"
+    },
+    "host_review": "Read source review mechanism/evidence/limitations and context requirements. Every D4 orientation tested per fresh pair; per-episode verification required. "
+  }
+}

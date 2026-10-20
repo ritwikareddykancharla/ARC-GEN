@@ -1,0 +1,51 @@
+{
+  "task_id": "c9f8e694",
+  "factory_sha256": "ae47ad0176774087383105411fb77174c7f7edde0bd461b9d26f3d0fa7b4b3b7",
+  "constructor_sha256": "b95a4aad3ee3e4100c6bbf3a00b4159ab2789dc777266fb955e3c234329fb685",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 269076352820270,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 6.31667504098732,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "In the original puzzle, column 0 is a strip of key colours. Every grey (5) cell takes the key colour found at the start of its own row. Black cells and the key strip never change.\n\nUnder D4 the key strip moves to a different edge of the grid. For indices below 4, rotating clockwise k times sends the left column to the left (k=0), top (k=1), right (k=2) or bottom (k=3). For indices 4 and above, the row-reversal first moves the strip to the right edge. Rotation then sends it to the right (k=0), bottom (k=1), left (k=2) or top (k=3).\n\nThe emitted program is written directly for the resulting edge:\n- If the strip is a vertical edge column, each row's grey cells take that row's key cell.\n- If the strip is a horizontal edge row, each column's grey cells take that column's key cell.\n\nThe grey colour is the constant palette[5]. Other colours are never remapped, because key colours are read from the grid's pixels. The key strip itself is excluded from repainting. Rectangular grids are handled through h and w.",
+    "limitations": "The program assumes the constructor's domain:\n- The key strip contains no grey. The generator excludes grey from key colours, though the strip may hold black (palette[0]) at its first cell.\n- Grey appears only inside the boxes.\n\nIf the strip's first cell is black (start=1) and a grey cell lay in that row or column, it would become black. Exactly that is what the generator's output (pattern[r]=0) and the archived solver do, so it is consistent.\n\nThe demonstrations are not used, since the rule is fully determined by d4 and the palette. No contradictions between the fixtures and the uniform rule were found, and no constructor defects were noticed.",
+    "independent_source_review": {
+      "verdict": "accept",
+      "mechanism": "One edge line of the grid is a strip of key colours: column 0 in native coordinates. Every grey (5) cell outside the strip is repainted with the key colour at the start of its own row. Under D4 the strip lands on a known edge. The emitted solver reads the key cell for each row (vertical-edge case) or each column (horizontal-edge case) and recolours grey cells in that line. The rest of the grid is left unchanged.",
+      "evidence": [
+        "Constructor: the key colours come from `random_colors(2..3, exclude=[gray()])`, which samples from 1..9. Key cells are therefore never grey and never black, except the `[0]` prepended when `start=1`.",
+        "Constructor: `rows = randint(start, size - tall)`. When `start=1`, row 0 (the black key) holds no box cells, so a black key never recolours anything. `cols = randint(2, size - wide)` keeps boxes off columns 0 and 1. Grey therefore never shares the key strip.",
+        "Pattern length: when `start=1`, the `range(start, size)` entries plus the prepended 0 give exactly `size` entries. When `start=0` there are `size` entries. The expression `output[r][c] = pattern[r]` indexes the cell's own row correctly.",
+        "Boxes are non-overlapping (`common.overlaps` checked) and all are grey. Box overlap would not affect the label anyway, because the label depends only on the row.",
+        "Archived `transform`: `g[y,1:][g[y,1:]==5] = g[y,0]` reproduces the constructor exactly.",
+        "Factory side mapping for non-flipped indices: clockwise k gives left, top, right, bottom. For flipped indices, the horizontal flip sends the left column to the right column, and clockwise k then gives right, bottom, left, top. This is internally consistent. The host's 8000 augmented checks with `passed=true` confirm that the rotation convention matches the host's D4.",
+        "Each branch reads its key from the true edge cell of the same row or column (`g[y,0]`, `g[y,w-1]`, `g[0,x]`, `g[h-1,x]`). It excludes that edge from the segment and replaces only `GREY = palette[5]`.",
+        "The solver works directly in augmented visible coordinates, with no untransform, native-solve or retransform wrapper. Specialising the edge side and the grey colour is allowed: both are orientation and colour constants that every demonstration teaches through visible grey-to-key transitions.",
+        "Key colours are read from pixels, not looked up, so there is no arbitrary colour association that needs `episode_evidence_checks`. The task id is not in that list, which is appropriate.",
+        "Fixtures match the `validate()` calls (train order swapped). The canonical fixture is uncorrected and consistent with the rule."
+      ],
+      "blocking_issues": [],
+      "nonblocking_limits": [
+        "The solver ignores the demonstrations. The key edge and grey colour are fixed per d4 and palette rather than inferred. This is legitimate because they are constant across the task.",
+        "Out-of-domain inputs are not handled specially: grey inside the key strip, or grey in a row or column whose key is black, would follow the simple replace rule. The constructor excludes both cases, as do the archived solver and the constructor's label semantics.",
+        "Generated grids are always 12x12 squares. Rectangular handling via `h` and `w` is present but not exercised by the constructor."
+      ],
+      "required_context_checks": [
+        "Confirm that the host's D4 indices 0-3 are clockwise quarter-turns and that 4-7 apply a horizontal flip before rotating. The passing audit across all eight variants implies this, but the convention itself is the dependency.",
+        "Confirm that the palette is a permutation, so that `palette[5]` never coincides with a remapped key colour."
+      ],
+      "task_id": "c9f8e694",
+      "factory_sha256": "ae47ad0176774087383105411fb77174c7f7edde0bd461b9d26f3d0fa7b4b3b7",
+      "constructor_sha256": "b95a4aad3ee3e4100c6bbf3a00b4159ab2789dc777266fb955e3c234329fb685"
+    },
+    "host_review": "Read mechanism, evidence, limitations and context requirements. Host reflects columns before clockwise rotation, tests all eight D4 indices, and applies a shared palette permutation after generation. Fixture audit verifies all train/test supplied pairs at every tested orientation/palette, not one pair per variant. Per-episode execution verification and conflicting-context rejection remain required."
+  }
+}

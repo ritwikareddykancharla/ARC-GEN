@@ -1,0 +1,51 @@
+{
+  "task_id": "d43fd935",
+  "factory_sha256": "4e903e2233d8c221a57da472a4a2dd4313534366f2f47a984de8376ed0c076e6",
+  "constructor_sha256": "a984d365907e3bc6107ac3a119f860ecbec66bf1d65c61370609e064b663e456",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 46799451086332,
+  "d4": 7,
+  "unique_base_inputs": 999,
+  "seconds": 5.154423541971482,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The family has one 2x2 block (original colour 3) and single dots on a background (original colour 0). For every cell on the block's edge, the program casts a ray straight outward along that block row or column. The ray walks over background cells. If the first non-background cell it meets is a dot (not the block), every background cell it crossed is painted the dot's colour. If the ray reaches the grid edge first, nothing is drawn.\n\nThe set of rays covers all four directions from both block rows and both block columns. That set is closed under every D4 transform, so the visible mechanism is the same in every orientation and no axis or direction needs specializing. The program works directly in the grid as shown and handles rectangular grids.\n\nPalette roles are fixed constants: BG = palette[0] and BLOCK = palette[3]. Dot colours are read from the pixels themselves, and demonstrations are not needed.\n\nThe rays read a frozen copy of the input. This makes the drawing order irrelevant. Two rays cannot conflict, because rays from different block edges cover disjoint cells.\n\nThis matches the constructor. It allows at most one aligned dot per side and keeps the ring of cells around the block empty, so the generator's line from each aligned dot always runs uninterrupted to the block. That is exactly the first-hit ray fill. The approved train and test fixtures follow this rule.",
+    "limitations": "I have not run the factory or the emitted program. Notes on the constructor:\n\n1. It only places an aligned dot when nothing lies between that dot and the block, so the nearest-dot-wins behaviour of the ray walk is never actually exercised. It is a natural reading of the visible rule, not something the constructor tests.\n2. The constructor draws lines directly from the dot's position and never bounds-checks. It relies on the line always reaching the block, which its sampling guarantees, so this is not a defect for in-domain scenes.\n3. Random pixels that land on the same cell are silently overwritten in sampling order. This only affects which colour a dot shows, never the rule.\n\nThe program assumes exactly one block of colour palette[3] and background palette[0]. If the block colour is missing, it returns the input unchanged. I found no fixture contradictions.",
+    "independent_source_review": {
+      "verdict": "accept",
+      "mechanism": "One 2x2 block of colour palette[3] sits on background palette[0], with single dots. Rays are cast outward from each block edge cell, in both block rows and both block columns, in all four directions. If the first non-background cell a ray meets is a dot rather than the block, the background cells it crossed are painted the dot's colour. Rays read a frozen input copy. This is the same as the constructor's draw(), which runs a line from each aligned dot back to the block.",
+      "evidence": [
+        "Constructor placement: boxrow and boxcol are drawn from randint(2, size-3), so the 4x4 ring checked in draw() (dr, dc in -1..2) is always inside the grid.",
+        "A sampled pixel in the block's rows and columns matches neither the `if row in [boxrow, boxrow+1]` branch's inner conditions nor the elif, so no dot ever lands on the block.",
+        "Aligned dots are capped by the left/right/up/down flags at one per side, and that cap covers both block rows (or both block columns). Unaligned dots lie outside the block rows and columns, so they can never sit on a ray. A ray therefore meets either exactly one aligned dot or the grid edge, which is exactly the first-hit rule.",
+        "In draw(), `c, dc = col, -1 if col > boxcol else 1` parses as dc = (-1 if col > boxcol else 1). The walk heads toward the block and stops at green. Lines from different sides lie in disjoint cells and cannot cross another dot. When two colours pick the same unaligned cell, both the grid and the output take the later colour, so the pair stays consistent.",
+        "Dot colours come from random_colors(..., exclude=[green()]), which samples 1..9, so dots are never the block or background colour. np.where(g == BLOCK) therefore isolates the block's bounding box exactly.",
+        "Factory: BG and BLOCK are palette-mapped role constants, not untransforms. The ray set {left, right} x block rows and {up, down} x block columns is closed under D4, so the solver works directly in visible coordinates with no whole-grid untransform/solve/retransform wrapper.",
+        "The solver's terminal test (in bounds, not BLOCK, not BG) matches the archived program. When the path is empty (dot adjacent to the block) nothing is painted, which is harmless and matches draw()'s while-loop. That case is in any event excluded by the ring check.",
+        "Fixtures checked by hand: train1 gives 8 above, 7 left, 8 right and 7 below. Train2 gives 1 right along row 3 and 6 down column 2. Train3 gives 1 up column 4. Test gives (6,1)=6, (1..5,3)=2 and (8,3)=6. Unaligned dots stay unchanged in every pair.",
+        "Host audit passed: 1000 fresh pairs, 8000 augmented checks and 16 fixture variants, with 0 sampler rejections. The source review agrees with this result rather than relying on it."
+      ],
+      "blocking_issues": [],
+      "nonblocking_limits": [
+        "The constructor never puts two dots on one ray, so nearest-dot-wins (first-hit) is a natural extension of the visible rule rather than something the constructor tests.",
+        "The ring check rejects any non-black cell in the 4x4 neighbourhood, so a dot touching the block (empty path), including diagonal neighbours, never appears.",
+        "Grids are always 10x10 with exactly one block. Scenes with no aligned dots, where output equals input, can occur. The solver's empty-block fallback is out of domain.",
+        "The solver assumes BG is palette[0] rather than detecting the most common colour. This is consistent with the constructor, where background is always black(), but it is a fixed role assumption."
+      ],
+      "required_context_checks": [
+        "None needed for colour evidence. Line colour is copied from the hit dot, not looked up, so d43fd935 correctly falls outside the episode colour-association checks.",
+        "Confirm the host's D4 conflict check applies. The rule is D4-equivariant, so no conflicts are expected."
+      ],
+      "task_id": "d43fd935",
+      "factory_sha256": "4e903e2233d8c221a57da472a4a2dd4313534366f2f47a984de8376ed0c076e6",
+      "constructor_sha256": "a984d365907e3bc6107ac3a119f860ecbec66bf1d65c61370609e064b663e456"
+    },
+    "host_review": "Read source review mechanism, evidence, limitations and context requirements. Host audit covers all eight D4 indices per fresh pair; d4=7 in report is only the final loop index. All supplied fixture pairs checked under 16 orientation/palette variants. Emitted programs operate in displayed coordinates. Per-episode verification and context-evidence checks are mandatory. "
+  }
+}

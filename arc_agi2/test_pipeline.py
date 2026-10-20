@@ -1,13 +1,32 @@
-import json,random,tempfile,unittest
+import hashlib,importlib,json,random,tempfile,unittest
 from collections import Counter
 from pathlib import Path
 import pyarrow.parquet as pq
 from . import build_million as b
 from .generators.registry import GENERATORS,generate
-from .runtime import solver,call,grid,check_reference
+from .runtime import BASE,reference,solver,call,grid,check_reference
+from .task_registry import NEW_TASK_IDS
 from .augmentation import apply_episode,settings
 
 class GeneratorTests(unittest.TestCase):
+    def test_registered_standalone_sources_and_fixtures(self):
+        # Validate the registered files, not only the older research registry.
+        for tid in NEW_TASK_IDS:
+            module=importlib.import_module('tasks.task_'+tid)
+            source=Path(module.__file__).read_bytes()
+            report=json.loads((BASE/'reports'/'standalone'/f'{tid}.json').read_text())
+            self.assertEqual(hashlib.sha256(source).hexdigest(),report['stress_test']['sha256'],tid)
+            self.assertTrue(report['stress_test']['ready'],tid)
+            actual=call(module.validate,seconds=30)
+            expected=reference(tid)['canonical']
+            key=lambda p:json.dumps(p,sort_keys=True)
+            for split in ['train','test']:
+                self.assertEqual(sorted(map(key,actual[split])),sorted(map(key,expected[split])),(tid,split))
+            solve=solver(tid)
+            for seed in range(10000,10020):
+                random.seed(seed)
+                pair=call(module.generate,seconds=3)
+                self.assertEqual(grid(pair['output']),grid(call(solve,grid(pair['input']),seconds=3)),(tid,seed))
     def test_colour_cycles_are_simultaneous_and_episode_wide(self):
         palette=[1,2,0,3,4,5,6,7,8,9]
         self.assertEqual(b.transformed([[0,1,2]],0,palette),[[1,2,0]])

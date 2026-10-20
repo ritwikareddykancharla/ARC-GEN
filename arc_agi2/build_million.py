@@ -23,6 +23,7 @@ from .task_registry import NEW_TASK_IDS
 from .audit import relation,UPSTREAM_IDS
 from .augmentation import transformed, exhaustive_variants
 from .contextual import CONTEXTUAL_TASK_IDS, verify_shared_picture_episode
+from .motif_context import MissingMotifEvidence, solve_demonstrated_motifs
 
 POLICY=json.loads((BASE/'training_policy.json').read_text())
 
@@ -93,7 +94,7 @@ def picture_episode(module, tid, sample_seed):
 
 def pool_signature(tid,configs):
     # Invalidate cached pools after constructor, verifier, policy or selection changes.
-    files=[Path(__file__),BASE/'runtime.py',BASE/'verified_rules.py',BASE/'contextual.py',BASE/'fixture_policy.py',BASE/'helpers.py',BASE/'training_policy.json',
+    files=[Path(__file__),BASE/'runtime.py',BASE/'verified_rules.py',BASE/'contextual.py',BASE/'motif_context.py',BASE/'fixture_policy.py',BASE/'helpers.py',BASE/'training_policy.json',
            BASE/'references'/f'{tid}.json',BASE.parent/'common.py',BASE/'task_registry.py']
     files+=sorted((BASE/'generators').glob('*.py'))
     native=BASE.parent/'tasks'/f'task_{tid}.py'
@@ -226,6 +227,14 @@ def make_episodes(arg):
                         four=demos+[q]
                         if tid in CONTEXTUAL_TASK_IDS:
                             call(verify_shared_picture_episode,{'train':demos,'test':[q]},seconds=3)
+                        if tid == '98c475bf':
+                            try:
+                                predicted=call(solve_demonstrated_motifs,demos,q['input'],seconds=3)
+                            except MissingMotifEvidence:
+                                failures['missing_motif_evidence_attempts']+=1
+                                continue
+                            if predicted!=q['output']:
+                                raise ValueError('Demonstration-derived motif output disagrees')
                         if len({p['canonical_input_hash'] for p in four})<4:continue
                         if all(p['input']==p['output'] for p in four):continue
                         basehash=digest([sorted(p['input_hash'] for p in demos),q['input_hash']])
@@ -316,6 +325,7 @@ Three demonstration pairs and one query per episode, with generator-produced out
 - Fresh input pool, no duplicated full native episodes, no equivalent inputs inside an episode. Every fresh episode expands into all eight D4 transforms. Symmetric identical episodes are stored once, with every represented transform recorded in `equivalent_d4`; fresh and augmented counts remain separate. Colours are generated natively; extra palette permutation is opt-in per family. One transformation applies consistently to all demonstration inputs/outputs and the query input/output.
 - Input equivalence classes under palette renaming and D4 are assigned to one split before episode construction, including across families. All 1,120 public task families, including the former 20 holdouts, are training-eligible after generator validation. Synthetic validation measures new-input generalization within known families.
 - For `269e22fb`, each fresh picture is shared by its three demonstrations and query. These pairs are stored together and never mixed with a different picture. The picture equivalence class and every crop belong to the same deterministic split. Fresh-episode capacity is limited to the number of complete context bundles, rather than multiplying the number of queries.
+- For `98c475bf`, a query marker colour must have its full motif demonstrated in the selected inputs or outputs. An independent context solver learns those templates from the demonstrations and verifies the query before augmentation. Missing-evidence attempts are rejected and counted; query answers never supply the templates.
 
 ## Generator examples
 

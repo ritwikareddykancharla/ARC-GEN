@@ -109,5 +109,71 @@ class SharedPictureTests(unittest.TestCase):
         self.fail('No deterministic validation context found in 100 seeds')
 
 
+class MotifEvidenceTests(unittest.TestCase):
+    def test_canonical_requires_demonstrated_marker_templates(self):
+        from .motif_context import solve_demonstrated_motifs, MissingMotifEvidence
+        episode=reference('98c475bf')['canonical']
+        query=episode['test'][0]
+        self.assertEqual(solve_demonstrated_motifs(episode['train'],query['input']),query['output'])
+        # Only the fourth demonstration shows colour3's template.
+        with self.assertRaises(MissingMotifEvidence):
+            solve_demonstrated_motifs(episode['train'][:3],query['input'])
+        changed=copy.deepcopy(query);changed['output']=[[9]]
+        self.assertEqual(solve_demonstrated_motifs(episode['train'],changed['input']),query['output'])
+        inconsistent=copy.deepcopy(episode['train'])
+        inconsistent[0]['input'][0][2]=0
+        with self.assertRaisesRegex(ValueError,'Conflicting'):
+            solve_demonstrated_motifs(inconsistent,query['input'])
+
+    def test_motif_controls_and_tight_packing(self):
+        m=importlib.import_module('tasks.task_98c475bf')
+        from .motif_context import solve_demonstrated_motifs
+        demos=reference('98c475bf')['canonical']['train']
+        for kw in ({'marker_colours':6},{'markers':5},{'height':21,'num_markers':4}):
+            with self.assertRaises(ValueError):m.generate(**kw)
+        for seed in range(20):
+            random.seed(seed)
+            p=m.generate(height=22,num_markers=4)
+            self.assertEqual(solve_demonstrated_motifs(demos,p['input']),p['output'])
+
+    def test_episode_builder_rejects_missing_evidence_before_augmentation(self):
+        from . import build_million as b
+        from .motif_context import solve_demonstrated_motifs
+        m=importlib.import_module('tasks.task_98c475bf')
+        tid='98c475bf';rows=[];seen=set()
+        def add(colour,height):
+            for seed in range(1000):
+                random.seed(150000+seed+colour*1000+height*100)
+                pair=m.generate(height=height,line_color=colour,
+                                marker_colours=[3] if height==30 else [7],num_markers=1)
+                ch=b.canonical_input(pair['input'])
+                if ch in seen or int(ch[:8],16)%20==0:continue
+                seen.add(ch)
+                row=dict(task_id=tid,**pair,seed=seed,parameters='{}',
+                         generator_mode='standalone_constructor',input_hash=b.digest(pair['input']),
+                         canonical_input_hash=ch,split='train',stratum=b.stratum(pair))
+                rows.append(row);return row
+            self.fail('No unique training-split motif input found')
+        for _ in range(3):add(6,20)
+        query=add(2,30)
+        with tempfile.TemporaryDirectory() as directory:
+            root=Path(directory);(root/'pools').mkdir()
+            with patch.object(b,'OUT',root):
+                file=root/'pools'/f'{tid}.parquet'
+                b.pq.write_table(b.pa.Table.from_pylist(rows),file)
+                result=b.make_episodes((tid,{'train':{query['stratum']:1}}))['splits']['train']
+                self.assertEqual(result['fresh_episodes'],0)
+                self.assertGreater(result['failures']['missing_motif_evidence_attempts'],0)
+                add(3,20)
+                b.pq.write_table(b.pa.Table.from_pylist(rows),file)
+                result=b.make_episodes((tid,{'train':{query['stratum']:1}}))['splits']['train']
+                self.assertEqual(result['fresh_episodes'],1)
+                generated=b.pq.read_table(root/'data/train'/f'{tid}.parquet').to_pylist()
+                native=next(row for row in generated if row['d4_transform']==0)
+                self.assertEqual(solve_demonstrated_motifs(native['train'],native['test'][0]['input']),
+                                 native['solutions'][0])
+                self.assertNotIn('output',native['test'][0])
+
+
 if __name__ == '__main__':
     unittest.main()

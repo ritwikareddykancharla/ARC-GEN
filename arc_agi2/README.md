@@ -14,11 +14,11 @@ This fork adds a reference-guided generator workflow and an adaptive episode bui
 
 - All **1,120** canonical tasks inventoried with saved Opus/Fable explanations, `transform(grid)` programs, provenance and separately labelled teaching fixtures.
 - **891 existing upstream generators** reproduce the canonical pair sets (pair ordering can differ between releases).
-- **164 new constructive implementations** have passed bounded validation, covering counting, selection, geometry, legends, relational motion, scaling, pattern construction and repair. Standalone conversion and review are tracked separately below.
+- **165 new constructive implementations** have passed bounded validation, covering counting, selection, geometry, legends, relational motion, scaling, pattern construction and repair. Standalone conversion and review are tracked separately below.
 - **Two variable-size extensions**: `0692e18c` (inverse self-tiling) and `00576224` (three-by-three tiling with mirrored middle band).
-- All 166 constructors (164 new families plus two size extensions) passed **300 bounded randomized checks each**: 163 use the archived pair solver, `78332cb0` uses the documented complete-chain verifier, `de493100` uses the dimension-aware reflection verifier, and `269e22fb` uses a demonstration-conditioned episode verifier. Of these, 165 reproduce all original examples; `581f7754` uses the explicitly approved, hash-pinned eight-cell teaching correction. Its unchanged canonical replay is reported separately as 4/5, versus 5/5 on the teaching copy. Outputs are constructed independently from latent parameters. New pictures in `269e22fb` are compared with an independent contextual verifier; its original fixtures still match the archived fixed-picture transform.
+- All 167 constructors (165 new families plus two size extensions) passed **300 bounded randomized checks each**: 164 use the archived pair solver, `78332cb0` uses the documented complete-chain verifier, `de493100` uses the dimension-aware reflection verifier, and `269e22fb` uses a demonstration-conditioned episode verifier. Of these, 166 reproduce all original examples; `581f7754` uses the explicitly approved, hash-pinned eight-cell teaching correction. Its unchanged canonical replay is reported separately as 4/5, versus 5/5 on the teaching copy. Outputs are constructed independently from latent parameters. New pictures in `269e22fb` are compared with an independent contextual verifier; its original fixtures still match the archived fixed-picture transform.
 - **22 additional fixed-size families / 111 size-parameter configurations** passed bounded 12-seed differential tests. Every such generated pair is checked again during generation. This is agreement evidence, not proof of semantic correctness.
-- **65 tasks still need constructive generators**. A saved transform is not itself an input generator. Reference packets and `reports/generator-roadmap.csv` provide the task-by-task backlog.
+- **64 tasks still need constructive generators**. A saved transform is not itself an input generator. Reference packets and `reports/generator-roadmap.csv` provide the task-by-task backlog.
 
 ## Inspect
 
@@ -74,7 +74,7 @@ The authoring campaign uses eight concurrent Claude CLI processes under the user
 
 A zero-error differential check is a bounded agreement test. It does not prove the saved solver is universally correct or that every original mechanism variant is covered.
 
-**158 standalone modules are now reviewed and registered** (the exact list lives in `task_registry.py`). Each passed 1,000 seed checks and exact reconstruction of its approved validation fixture: canonical for 157 modules, the labelled teaching copy for `581f7754`. The first sixteen used seeds 0..999 (including their 300 author-validation seeds); the next one hundred and forty-two used independent seeds 20,000..20,999. The regression suite also checks registered source hashes and seeds 10,000..10,019.
+**159 standalone modules are now reviewed and registered** (the exact list lives in `task_registry.py`). Each passed 1,000 seed checks and exact reconstruction of its approved validation fixture: canonical for 158 modules, the labelled teaching copy for `581f7754`. The first sixteen used seeds 0..999 (including their 300 author-validation seeds); the next one hundred and forty-three used independent seeds 20,000..20,999. The regression suite also checks registered source hashes and seeds 10,000..10,019.
 
 Twenty-four conversions replace earlier research constructors with the upstream task-file interface. The total is now 161 new constructive families, with 6 still awaiting standalone conversion/review. Remaining CLI drafts are authored and validated locally. Restricted shape and dimension ranges are documented per file and in `reports/standalone/`; the size-matching builder must respect those ranges.
 
@@ -386,3 +386,13 @@ Default dimensions now reach 30 cells. Fixed left-run cap nine and right-edge sp
 The minimum width-four sampler remains structurally limited and documented; valid explicit width-three profiles are preserved. Profiles require strict border-colour majorities and at least one moved cell. Fifteen malformed/infeasible controls reject deliberately; critic retests have 29 successful reference matches and seven intended rejections. All 117 regression tests pass.
 
 Coverage is **1,055/1,120**, with **65 missing** and **158 reviewed standalone additions**. Bulk generation and model training remain stopped pending complete reviewed coverage.
+
+## Demonstrated colour-to-motif lookup — 98c475bf
+
+Registered after five exact canonical pairs, 1,000 independent archived-solver checks and 1,745 independent scene checks (1,738 unique inputs). The verifier extracts motif shapes from demonstration grids; it does not import the generator's fixed template dictionary. Tests cover heights12..30, all five motif colours, one through four marker pairs, and100 tight height22/four-marker cases. Width20 and the five native templates are retained because absolute horizontal coordinates and colour-specific shapes define the observed rule.
+
+Pair correctness is insufficient for this family. Query marker colours must have their shapes shown in demonstration inputs or outputs. In1,000 verified three-demonstration episodes,367 candidate demonstration sets lacked necessary evidence and were rejected. The active episode builder now applies this context check before D4/palette augmentation, counts missing-evidence attempts, and raises on disagreement with the constructed answer. It never passes query labels to the context solver. The verifier is included in the pool source fingerprint. Native colour-to-shape mappings remain fixed, so these checks do not establish freedom from memorization.
+
+The builder regression proves an unsupported pool emits zero episodes; adding a demonstration of the missing colour permits an episode and its augmented versions. Other tests establish that changing query labels cannot change the context solver's answer and conflicting demonstration templates are rejected. Malformed containers now raise ValueError; the impossible four-marker height21 request rejects immediately. Critic retests have26 successful reference matches and10 intended rejections. All120 regression tests pass.
+
+Coverage is **1,056/1,120**, with **64 missing** and **159 reviewed standalone additions**. Bulk generation and model training remain stopped pending complete reviewed coverage.

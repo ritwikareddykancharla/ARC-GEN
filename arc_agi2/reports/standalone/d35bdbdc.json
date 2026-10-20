@@ -1,0 +1,809 @@
+{
+  "task_id": "d35bdbdc",
+  "ready": true,
+  "samples_requested": 1000,
+  "samples_attempted": 1000,
+  "samples_passed": 1000,
+  "verifier_mode": "archived_pair_solver",
+  "verifier_evidence": {
+    "mode": "archived_pair_solver"
+  },
+  "improved_verifier_fixture_replay": null,
+  "seed_start": 20000,
+  "seed_end_exclusive": 21000,
+  "fixture_basis": {
+    "fixture": "canonical",
+    "corrected": false
+  },
+  "unique_inputs": 1000,
+  "changed_pairs": 1000,
+  "fixture_replays": 0,
+  "shapes": [
+    [
+      10,
+      10,
+      10,
+      10
+    ],
+    [
+      10,
+      11,
+      10,
+      11
+    ],
+    [
+      10,
+      12,
+      10,
+      12
+    ],
+    [
+      10,
+      13,
+      10,
+      13
+    ],
+    [
+      10,
+      14,
+      10,
+      14
+    ],
+    [
+      10,
+      15,
+      10,
+      15
+    ],
+    [
+      10,
+      16,
+      10,
+      16
+    ],
+    [
+      11,
+      10,
+      11,
+      10
+    ],
+    [
+      11,
+      11,
+      11,
+      11
+    ],
+    [
+      11,
+      12,
+      11,
+      12
+    ],
+    [
+      11,
+      13,
+      11,
+      13
+    ],
+    [
+      11,
+      14,
+      11,
+      14
+    ],
+    [
+      11,
+      15,
+      11,
+      15
+    ],
+    [
+      11,
+      16,
+      11,
+      16
+    ],
+    [
+      12,
+      10,
+      12,
+      10
+    ],
+    [
+      12,
+      11,
+      12,
+      11
+    ],
+    [
+      12,
+      12,
+      12,
+      12
+    ],
+    [
+      12,
+      13,
+      12,
+      13
+    ],
+    [
+      12,
+      14,
+      12,
+      14
+    ],
+    [
+      12,
+      15,
+      12,
+      15
+    ],
+    [
+      12,
+      16,
+      12,
+      16
+    ],
+    [
+      13,
+      10,
+      13,
+      10
+    ],
+    [
+      13,
+      11,
+      13,
+      11
+    ],
+    [
+      13,
+      12,
+      13,
+      12
+    ],
+    [
+      13,
+      13,
+      13,
+      13
+    ],
+    [
+      13,
+      14,
+      13,
+      14
+    ],
+    [
+      13,
+      15,
+      13,
+      15
+    ],
+    [
+      13,
+      16,
+      13,
+      16
+    ],
+    [
+      14,
+      10,
+      14,
+      10
+    ],
+    [
+      14,
+      11,
+      14,
+      11
+    ],
+    [
+      14,
+      12,
+      14,
+      12
+    ],
+    [
+      14,
+      13,
+      14,
+      13
+    ],
+    [
+      14,
+      14,
+      14,
+      14
+    ],
+    [
+      14,
+      15,
+      14,
+      15
+    ],
+    [
+      14,
+      16,
+      14,
+      16
+    ],
+    [
+      15,
+      10,
+      15,
+      10
+    ],
+    [
+      15,
+      11,
+      15,
+      11
+    ],
+    [
+      15,
+      12,
+      15,
+      12
+    ],
+    [
+      15,
+      13,
+      15,
+      13
+    ],
+    [
+      15,
+      14,
+      15,
+      14
+    ],
+    [
+      15,
+      15,
+      15,
+      15
+    ],
+    [
+      15,
+      16,
+      15,
+      16
+    ],
+    [
+      16,
+      10,
+      16,
+      10
+    ],
+    [
+      16,
+      11,
+      16,
+      11
+    ],
+    [
+      16,
+      12,
+      16,
+      12
+    ],
+    [
+      16,
+      13,
+      16,
+      13
+    ],
+    [
+      16,
+      14,
+      16,
+      14
+    ],
+    [
+      16,
+      15,
+      16,
+      15
+    ],
+    [
+      16,
+      16,
+      16,
+      16
+    ]
+  ],
+  "fixture_matches": {
+    "canonical": true,
+    "teaching_fixture": true
+  },
+  "original_solver_replay": {
+    "canonical": {
+      "correct": 6,
+      "total": 6,
+      "all_exact": true
+    },
+    "teaching_fixture": {
+      "correct": 6,
+      "total": 6,
+      "all_exact": true
+    }
+  },
+  "errors": [],
+  "sha256": "e6503cc9a5a525207603181fb1e488600ba9a128a11138c81adfb211af7d6ac3",
+  "status": "reviewed_bounded_validation_passed",
+  "limitations": "Bounded randomized agreement with a saved solver is not proof of semantic completeness.",
+  "candidate_path": "/Users/ritwika/projects/arc-agi2/outputs/research/arcgen-coverage-cli/host-reviewed/d35bdbdc/task_d35bdbdc.py",
+  "attempts": 1,
+  "model_usage": {
+    "claude-opus-5-5": {
+      "inputTokens": 2,
+      "outputTokens": 26163,
+      "cacheReadInputTokens": 1892,
+      "cacheCreationInputTokens": 22657,
+      "webSearchRequests": 0,
+      "costUSD": 0.7049023999999999,
+      "contextWindow": 1000000,
+      "maxOutputTokens": 128000,
+      "thinkingTokens": 12740,
+      "canonicalModel": "claude-opus-5-5",
+      "provider": "firstParty",
+      "costBasis": "list"
+    }
+  },
+  "rule": "Erase every badge (ring or plus of one colour around a different centre colour), keep the grey path. Restore the two badges selected at the grey path's two loose ends: at each end, take the eligible touching badges (centre colour names some ring) with the nearest centre, and require one unique pair of distinct badges. Each restored badge's centre becomes the centre colour of the badge whose ring colour equals its old centre.",
+  "scope": "Random scenes: 10x10 about half the time, otherwise synthetic 10..16 per side (larger minimum for 6+ badges); explicit sizes 7..30. One shape style per scene (3x3 rings or pluses), 3..8 badges with distinct ring colours, optional single edge-clipped badge, random self-centred and pointing/non-pointing distractors, thin winding 8-connected grey path avoiding badge boxes. Two selection modes are sampled: geometry-decided (including distinct-pair ties as in query 2 and contested ends) and eligibility-decided (an ineligible distractor is tied with or nearer than the selected badge at a path end, as in query 3). Not supported: mixed ring/plus shapes in one scene, overlapping or edge-sharing badge boxes, paths entering badge boxes, branched or multiple grey paths, non-black backgrounds.",
+  "constraints": [
+    "1200 independent connected-badge and endpoint-matching checks; all original fixtures exact",
+    "563 cases require eligibility filtering; all 200 forced-eligibility cases change selection when it is removed",
+    "27 successful parameter controls after independent adjudication of two previously suspected-infeasible 7x7 cases; nine invalid rejections"
+  ],
+  "known_limitations": [
+    "The eligibility-decided situation is always constructed at the path start end (badge a); the path is undirected, so this only affects which badge is drawn first internally.",
+    "Eligibility mode only uses a distractor whose centre is at Chebyshev distance exactly 4 from the selected badge. Larger gaps cannot share a touching cell.",
+    "Plus-shaped eligibility scenes need aligned arms and fail to build more often; bounded retries may raise ValueError for very small explicit grids or extreme num_badges.",
+    "Sizes above 16 per side are only produced when explicitly requested; all ARC fixtures are 10x10.",
+    "Badge shapes never mix within a scene, and the path never threads between corner-touching badges.",
+    "Bounded semantic checks do not prove coverage of every valid configuration."
+  ],
+  "billing": "Claude Max CLI; API credentials excluded; no API fallback",
+  "review_candidate_sha256": "e6503cc9a5a525207603181fb1e488600ba9a128a11138c81adfb211af7d6ac3",
+  "authored_sha256": "e6503cc9a5a525207603181fb1e488600ba9a128a11138c81adfb211af7d6ac3",
+  "stress_test": {
+    "task_id": "d35bdbdc",
+    "ready": true,
+    "samples_requested": 1000,
+    "samples_attempted": 1000,
+    "samples_passed": 1000,
+    "verifier_mode": "archived_pair_solver",
+    "verifier_evidence": {
+      "mode": "archived_pair_solver"
+    },
+    "improved_verifier_fixture_replay": null,
+    "seed_start": 20000,
+    "seed_end_exclusive": 21000,
+    "fixture_basis": {
+      "fixture": "canonical",
+      "corrected": false
+    },
+    "unique_inputs": 1000,
+    "changed_pairs": 1000,
+    "fixture_replays": 0,
+    "shapes": [
+      [
+        10,
+        10,
+        10,
+        10
+      ],
+      [
+        10,
+        11,
+        10,
+        11
+      ],
+      [
+        10,
+        12,
+        10,
+        12
+      ],
+      [
+        10,
+        13,
+        10,
+        13
+      ],
+      [
+        10,
+        14,
+        10,
+        14
+      ],
+      [
+        10,
+        15,
+        10,
+        15
+      ],
+      [
+        10,
+        16,
+        10,
+        16
+      ],
+      [
+        11,
+        10,
+        11,
+        10
+      ],
+      [
+        11,
+        11,
+        11,
+        11
+      ],
+      [
+        11,
+        12,
+        11,
+        12
+      ],
+      [
+        11,
+        13,
+        11,
+        13
+      ],
+      [
+        11,
+        14,
+        11,
+        14
+      ],
+      [
+        11,
+        15,
+        11,
+        15
+      ],
+      [
+        11,
+        16,
+        11,
+        16
+      ],
+      [
+        12,
+        10,
+        12,
+        10
+      ],
+      [
+        12,
+        11,
+        12,
+        11
+      ],
+      [
+        12,
+        12,
+        12,
+        12
+      ],
+      [
+        12,
+        13,
+        12,
+        13
+      ],
+      [
+        12,
+        14,
+        12,
+        14
+      ],
+      [
+        12,
+        15,
+        12,
+        15
+      ],
+      [
+        12,
+        16,
+        12,
+        16
+      ],
+      [
+        13,
+        10,
+        13,
+        10
+      ],
+      [
+        13,
+        11,
+        13,
+        11
+      ],
+      [
+        13,
+        12,
+        13,
+        12
+      ],
+      [
+        13,
+        13,
+        13,
+        13
+      ],
+      [
+        13,
+        14,
+        13,
+        14
+      ],
+      [
+        13,
+        15,
+        13,
+        15
+      ],
+      [
+        13,
+        16,
+        13,
+        16
+      ],
+      [
+        14,
+        10,
+        14,
+        10
+      ],
+      [
+        14,
+        11,
+        14,
+        11
+      ],
+      [
+        14,
+        12,
+        14,
+        12
+      ],
+      [
+        14,
+        13,
+        14,
+        13
+      ],
+      [
+        14,
+        14,
+        14,
+        14
+      ],
+      [
+        14,
+        15,
+        14,
+        15
+      ],
+      [
+        14,
+        16,
+        14,
+        16
+      ],
+      [
+        15,
+        10,
+        15,
+        10
+      ],
+      [
+        15,
+        11,
+        15,
+        11
+      ],
+      [
+        15,
+        12,
+        15,
+        12
+      ],
+      [
+        15,
+        13,
+        15,
+        13
+      ],
+      [
+        15,
+        14,
+        15,
+        14
+      ],
+      [
+        15,
+        15,
+        15,
+        15
+      ],
+      [
+        15,
+        16,
+        15,
+        16
+      ],
+      [
+        16,
+        10,
+        16,
+        10
+      ],
+      [
+        16,
+        11,
+        16,
+        11
+      ],
+      [
+        16,
+        12,
+        16,
+        12
+      ],
+      [
+        16,
+        13,
+        16,
+        13
+      ],
+      [
+        16,
+        14,
+        16,
+        14
+      ],
+      [
+        16,
+        15,
+        16,
+        15
+      ],
+      [
+        16,
+        16,
+        16,
+        16
+      ]
+    ],
+    "fixture_matches": {
+      "canonical": true,
+      "teaching_fixture": true
+    },
+    "original_solver_replay": {
+      "canonical": {
+        "correct": 6,
+        "total": 6,
+        "all_exact": true
+      },
+      "teaching_fixture": {
+        "correct": 6,
+        "total": 6,
+        "all_exact": true
+      }
+    },
+    "errors": [],
+    "sha256": "e6503cc9a5a525207603181fb1e488600ba9a128a11138c81adfb211af7d6ac3",
+    "status": "validated_candidate_needs_semantic_review",
+    "limitations": "Bounded randomized agreement with a saved solver is not proof of semantic completeness.",
+    "review_candidate_sha256": "e6503cc9a5a525207603181fb1e488600ba9a128a11138c81adfb211af7d6ac3"
+  },
+  "authored_scope": "Random scenes: 10x10 about half the time, otherwise synthetic 10..16 per side (larger minimum for 6+ badges); explicit sizes 7..30. One shape style per scene (3x3 rings or pluses), 3..8 badges with distinct ring colours, optional single edge-clipped badge, random self-centred and pointing/non-pointing distractors, thin winding 8-connected grey path avoiding badge boxes. Two selection modes are sampled: geometry-decided (including distinct-pair ties as in query 2 and contested ends) and eligibility-decided (an ineligible distractor is tied with or nearer than the selected badge at a path end, as in query 3). Not supported: mixed ring/plus shapes in one scene, overlapping or edge-sharing badge boxes, paths entering badge boxes, branched or multiple grey paths, non-black backgrounds.",
+  "authored_constraints": [
+    "Badge ring and centre colours are never 0 or 5; ring colours are distinct.",
+    "Badge boxes never overlap or share an edge; corner-touching boxes have their junction cells kept free of the path.",
+    "The grey path is thin, connected, avoids every badge box and has exactly two ends under the diagonal-counting rule.",
+    "The two ends determine exactly one unordered pair of distinct badges under the eligibility filter.",
+    "In geometry mode the pair is also unique with every badge treated as eligible; in eligibility mode it is not.",
+    "Each selected badge's centre names exactly one ring (distinct rings) and never yields a restored centre equal to its own ring.",
+    "The rendered input contains no spurious badge-like centres; detected centres equal declared centres.",
+    "Eligibility mode needs at most 7 badges so a non-ring centre colour exists."
+  ],
+  "semantic_review": {
+    "status": "reviewed",
+    "checks": [
+      "1200 independent connected-badge and endpoint-matching checks; all original fixtures exact",
+      "563 cases require eligibility filtering; all 200 forced-eligibility cases change selection when it is removed",
+      "27 successful parameter controls after independent adjudication of two previously suspected-infeasible 7x7 cases; nine invalid rejections",
+      "1000 independent seeds 20000..20999; approved validation fixtures reconstructed exactly; canonical replay reported separately"
+    ],
+    "limitations": [
+      "The eligibility-decided situation is always constructed at the path start end (badge a); the path is undirected, so this only affects which badge is drawn first internally.",
+      "Eligibility mode only uses a distractor whose centre is at Chebyshev distance exactly 4 from the selected badge. Larger gaps cannot share a touching cell.",
+      "Plus-shaped eligibility scenes need aligned arms and fail to build more often; bounded retries may raise ValueError for very small explicit grids or extreme num_badges.",
+      "Sizes above 16 per side are only produced when explicitly requested; all ARC fixtures are 10x10.",
+      "Badge shapes never mix within a scene, and the path never threads between corner-touching badges.",
+      "Bounded semantic checks do not prove coverage of every valid configuration."
+    ]
+  },
+  "diversity_audit": {
+    "task_id": "d35bdbdc",
+    "source_sha256": "e6503cc9a5a525207603181fb1e488600ba9a128a11138c81adfb211af7d6ac3",
+    "independent_semantic_cases": 1200,
+    "seed_start": 80000,
+    "unique_inputs": 1200,
+    "canonical_exact": true,
+    "counts": {
+      "eligibility_changes_selection": 563,
+      "clipped_badges": 365,
+      "non_square": 435
+    },
+    "shapes": {
+      "11x16": 15,
+      "10x12": 7,
+      "10x10": 493,
+      "13x12": 15,
+      "11x15": 7,
+      "15x15": 10,
+      "13x15": 7,
+      "11x10": 10,
+      "14x15": 8,
+      "15x10": 8,
+      "15x12": 14,
+      "14x13": 14,
+      "14x11": 11,
+      "16x10": 9,
+      "12x12": 22,
+      "11x11": 10,
+      "13x10": 14,
+      "14x16": 11,
+      "13x16": 16,
+      "16x16": 10,
+      "16x15": 13,
+      "16x13": 10,
+      "11x13": 10,
+      "13x14": 12,
+      "16x11": 10,
+      "10x15": 9,
+      "12x13": 13,
+      "11x12": 10,
+      "15x14": 7,
+      "15x13": 8,
+      "12x14": 7,
+      "16x14": 12,
+      "12x16": 12,
+      "14x10": 11,
+      "16x12": 12,
+      "12x15": 14,
+      "13x13": 10,
+      "10x13": 10,
+      "10x16": 8,
+      "15x16": 7,
+      "12x10": 18,
+      "10x11": 8,
+      "13x11": 6,
+      "11x14": 16,
+      "15x11": 5,
+      "12x11": 8,
+      "14x12": 6,
+      "10x14": 7,
+      "14x14": 10,
+      "20x20": 200
+    },
+    "method": "Input-only connected badge masks and endpoint matching; no-eligibility counterfactual must change selection in every explicit eligibility case",
+    "seconds": 1.4026260375976562,
+    "parameter_adjudication": {
+      "case_6": "The old suspected-infeasible 7x7/four-badge scene is now valid using eligibility; seeds 40030 and 40031 pass independent inference."
+    }
+  }
+}

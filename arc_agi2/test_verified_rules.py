@@ -27,6 +27,60 @@ class CommutingGapTests(unittest.TestCase):
                          15)
 
 
+class LegendAndPointReflectionTests(unittest.TestCase):
+    def test_corner_divider_does_not_become_a_zero_hole_key(self):
+        module = importlib.import_module('tasks.task_e3721c99')
+        for seed, side in enumerate(('top', 'bottom', 'left', 'right'), 12300):
+            random.seed(seed)
+            pair = module.generate(
+                width=30, height=30, divider='corner', side=side,
+                key_holes=[0, 2], key_colours=[3, 4],
+                blob_holes=[0, 2, 3])
+            painted = {pair['output'][y][x]
+                       for y, row in enumerate(pair['input'])
+                       for x, value in enumerate(row) if value == 5}
+            self.assertEqual(painted, {0, 3, 4})
+            for y, row in enumerate(pair['input']):
+                for x, value in enumerate(row):
+                    if value != 5:
+                        self.assertEqual(pair['output'][y][x], value)
+
+    def test_only_single_key_colour_holes_fill(self):
+        module = importlib.import_module('tasks.task_dbff022c')
+        pair = module.generate(
+            width=18, height=16, legend_side='top', legend_offset=2,
+            keys=[2, 3, 4], fills=[6, 7, 8],
+            shapes=[
+                (4, 2, 2, ['###', '#o#', '###']),
+                (4, 7, 9, ['###', '#o#', '###']),
+                (9, 7, 2, ['#%#', '#o#', '###'], 3)])
+        expected = copy.deepcopy(pair['input'])
+        expected[5][3] = 6
+        self.assertEqual(pair['output'], expected)
+        self.assertEqual(expected[5][8], 0)  # Non-key outline.
+        self.assertEqual(expected[10][8], 0)  # Two-colour outline.
+
+    def test_marker_rotation_is_not_plain_mirroring(self):
+        module = importlib.import_module('tasks.task_e729b7be')
+        pair = module.generate(
+            size=11, top=2,
+            rows=['....1', '...22', '...31', '....2', '....3'])
+        expected = copy.deepcopy(pair['input'])
+        mirror = copy.deepcopy(pair['input'])
+        for y, row in enumerate(pair['input']):
+            for x, colour in enumerate(row):
+                if colour not in (7, 4, 8):
+                    expected[10-y][10-x] = colour
+                    mirror[y][10-x] = colour
+        self.assertEqual(pair['output'], expected)
+        self.assertNotEqual(pair['output'], mirror)
+
+    def test_disconnected_marker_touching_shape_rejected(self):
+        module = importlib.import_module('tasks.task_e729b7be')
+        with self.assertRaises(ValueError):
+            module.generate(size=9, top=3, rows=['...1', '.2.1', '...3'])
+
+
 class CompleteChainTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):

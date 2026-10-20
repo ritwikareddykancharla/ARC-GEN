@@ -1,0 +1,2376 @@
+{
+  "task_id": "e3721c99",
+  "ready": true,
+  "samples_requested": 1000,
+  "samples_attempted": 1000,
+  "samples_passed": 1000,
+  "verifier_mode": "archived_pair_solver",
+  "verifier_evidence": {
+    "mode": "archived_pair_solver"
+  },
+  "improved_verifier_fixture_replay": null,
+  "seed_start": 20000,
+  "seed_end_exclusive": 21000,
+  "fixture_basis": {
+    "fixture": "canonical",
+    "corrected": false
+  },
+  "unique_inputs": 1000,
+  "changed_pairs": 1000,
+  "fixture_replays": 0,
+  "shapes": [
+    [
+      18,
+      18,
+      18,
+      18
+    ],
+    [
+      18,
+      19,
+      18,
+      19
+    ],
+    [
+      18,
+      20,
+      18,
+      20
+    ],
+    [
+      18,
+      21,
+      18,
+      21
+    ],
+    [
+      18,
+      22,
+      18,
+      22
+    ],
+    [
+      18,
+      23,
+      18,
+      23
+    ],
+    [
+      18,
+      24,
+      18,
+      24
+    ],
+    [
+      18,
+      25,
+      18,
+      25
+    ],
+    [
+      18,
+      26,
+      18,
+      26
+    ],
+    [
+      18,
+      27,
+      18,
+      27
+    ],
+    [
+      18,
+      28,
+      18,
+      28
+    ],
+    [
+      18,
+      29,
+      18,
+      29
+    ],
+    [
+      18,
+      30,
+      18,
+      30
+    ],
+    [
+      19,
+      18,
+      19,
+      18
+    ],
+    [
+      19,
+      19,
+      19,
+      19
+    ],
+    [
+      19,
+      20,
+      19,
+      20
+    ],
+    [
+      19,
+      21,
+      19,
+      21
+    ],
+    [
+      19,
+      22,
+      19,
+      22
+    ],
+    [
+      19,
+      23,
+      19,
+      23
+    ],
+    [
+      19,
+      24,
+      19,
+      24
+    ],
+    [
+      19,
+      25,
+      19,
+      25
+    ],
+    [
+      19,
+      26,
+      19,
+      26
+    ],
+    [
+      19,
+      27,
+      19,
+      27
+    ],
+    [
+      19,
+      28,
+      19,
+      28
+    ],
+    [
+      19,
+      29,
+      19,
+      29
+    ],
+    [
+      19,
+      30,
+      19,
+      30
+    ],
+    [
+      20,
+      18,
+      20,
+      18
+    ],
+    [
+      20,
+      19,
+      20,
+      19
+    ],
+    [
+      20,
+      20,
+      20,
+      20
+    ],
+    [
+      20,
+      21,
+      20,
+      21
+    ],
+    [
+      20,
+      22,
+      20,
+      22
+    ],
+    [
+      20,
+      23,
+      20,
+      23
+    ],
+    [
+      20,
+      24,
+      20,
+      24
+    ],
+    [
+      20,
+      25,
+      20,
+      25
+    ],
+    [
+      20,
+      26,
+      20,
+      26
+    ],
+    [
+      20,
+      27,
+      20,
+      27
+    ],
+    [
+      20,
+      28,
+      20,
+      28
+    ],
+    [
+      20,
+      29,
+      20,
+      29
+    ],
+    [
+      20,
+      30,
+      20,
+      30
+    ],
+    [
+      21,
+      18,
+      21,
+      18
+    ],
+    [
+      21,
+      19,
+      21,
+      19
+    ],
+    [
+      21,
+      20,
+      21,
+      20
+    ],
+    [
+      21,
+      21,
+      21,
+      21
+    ],
+    [
+      21,
+      22,
+      21,
+      22
+    ],
+    [
+      21,
+      23,
+      21,
+      23
+    ],
+    [
+      21,
+      24,
+      21,
+      24
+    ],
+    [
+      21,
+      25,
+      21,
+      25
+    ],
+    [
+      21,
+      26,
+      21,
+      26
+    ],
+    [
+      21,
+      27,
+      21,
+      27
+    ],
+    [
+      21,
+      28,
+      21,
+      28
+    ],
+    [
+      21,
+      29,
+      21,
+      29
+    ],
+    [
+      21,
+      30,
+      21,
+      30
+    ],
+    [
+      22,
+      18,
+      22,
+      18
+    ],
+    [
+      22,
+      19,
+      22,
+      19
+    ],
+    [
+      22,
+      20,
+      22,
+      20
+    ],
+    [
+      22,
+      21,
+      22,
+      21
+    ],
+    [
+      22,
+      22,
+      22,
+      22
+    ],
+    [
+      22,
+      23,
+      22,
+      23
+    ],
+    [
+      22,
+      24,
+      22,
+      24
+    ],
+    [
+      22,
+      25,
+      22,
+      25
+    ],
+    [
+      22,
+      26,
+      22,
+      26
+    ],
+    [
+      22,
+      27,
+      22,
+      27
+    ],
+    [
+      22,
+      28,
+      22,
+      28
+    ],
+    [
+      22,
+      29,
+      22,
+      29
+    ],
+    [
+      22,
+      30,
+      22,
+      30
+    ],
+    [
+      23,
+      18,
+      23,
+      18
+    ],
+    [
+      23,
+      19,
+      23,
+      19
+    ],
+    [
+      23,
+      20,
+      23,
+      20
+    ],
+    [
+      23,
+      21,
+      23,
+      21
+    ],
+    [
+      23,
+      22,
+      23,
+      22
+    ],
+    [
+      23,
+      23,
+      23,
+      23
+    ],
+    [
+      23,
+      24,
+      23,
+      24
+    ],
+    [
+      23,
+      25,
+      23,
+      25
+    ],
+    [
+      23,
+      26,
+      23,
+      26
+    ],
+    [
+      23,
+      27,
+      23,
+      27
+    ],
+    [
+      23,
+      28,
+      23,
+      28
+    ],
+    [
+      23,
+      29,
+      23,
+      29
+    ],
+    [
+      23,
+      30,
+      23,
+      30
+    ],
+    [
+      24,
+      18,
+      24,
+      18
+    ],
+    [
+      24,
+      19,
+      24,
+      19
+    ],
+    [
+      24,
+      20,
+      24,
+      20
+    ],
+    [
+      24,
+      21,
+      24,
+      21
+    ],
+    [
+      24,
+      22,
+      24,
+      22
+    ],
+    [
+      24,
+      23,
+      24,
+      23
+    ],
+    [
+      24,
+      24,
+      24,
+      24
+    ],
+    [
+      24,
+      25,
+      24,
+      25
+    ],
+    [
+      24,
+      26,
+      24,
+      26
+    ],
+    [
+      24,
+      27,
+      24,
+      27
+    ],
+    [
+      24,
+      28,
+      24,
+      28
+    ],
+    [
+      24,
+      29,
+      24,
+      29
+    ],
+    [
+      24,
+      30,
+      24,
+      30
+    ],
+    [
+      25,
+      18,
+      25,
+      18
+    ],
+    [
+      25,
+      19,
+      25,
+      19
+    ],
+    [
+      25,
+      20,
+      25,
+      20
+    ],
+    [
+      25,
+      21,
+      25,
+      21
+    ],
+    [
+      25,
+      22,
+      25,
+      22
+    ],
+    [
+      25,
+      23,
+      25,
+      23
+    ],
+    [
+      25,
+      24,
+      25,
+      24
+    ],
+    [
+      25,
+      25,
+      25,
+      25
+    ],
+    [
+      25,
+      26,
+      25,
+      26
+    ],
+    [
+      25,
+      27,
+      25,
+      27
+    ],
+    [
+      25,
+      28,
+      25,
+      28
+    ],
+    [
+      25,
+      29,
+      25,
+      29
+    ],
+    [
+      25,
+      30,
+      25,
+      30
+    ],
+    [
+      26,
+      18,
+      26,
+      18
+    ],
+    [
+      26,
+      19,
+      26,
+      19
+    ],
+    [
+      26,
+      20,
+      26,
+      20
+    ],
+    [
+      26,
+      21,
+      26,
+      21
+    ],
+    [
+      26,
+      22,
+      26,
+      22
+    ],
+    [
+      26,
+      23,
+      26,
+      23
+    ],
+    [
+      26,
+      24,
+      26,
+      24
+    ],
+    [
+      26,
+      25,
+      26,
+      25
+    ],
+    [
+      26,
+      26,
+      26,
+      26
+    ],
+    [
+      26,
+      27,
+      26,
+      27
+    ],
+    [
+      26,
+      28,
+      26,
+      28
+    ],
+    [
+      26,
+      29,
+      26,
+      29
+    ],
+    [
+      26,
+      30,
+      26,
+      30
+    ],
+    [
+      27,
+      18,
+      27,
+      18
+    ],
+    [
+      27,
+      19,
+      27,
+      19
+    ],
+    [
+      27,
+      20,
+      27,
+      20
+    ],
+    [
+      27,
+      21,
+      27,
+      21
+    ],
+    [
+      27,
+      22,
+      27,
+      22
+    ],
+    [
+      27,
+      23,
+      27,
+      23
+    ],
+    [
+      27,
+      24,
+      27,
+      24
+    ],
+    [
+      27,
+      25,
+      27,
+      25
+    ],
+    [
+      27,
+      26,
+      27,
+      26
+    ],
+    [
+      27,
+      27,
+      27,
+      27
+    ],
+    [
+      27,
+      28,
+      27,
+      28
+    ],
+    [
+      27,
+      29,
+      27,
+      29
+    ],
+    [
+      27,
+      30,
+      27,
+      30
+    ],
+    [
+      28,
+      18,
+      28,
+      18
+    ],
+    [
+      28,
+      19,
+      28,
+      19
+    ],
+    [
+      28,
+      20,
+      28,
+      20
+    ],
+    [
+      28,
+      21,
+      28,
+      21
+    ],
+    [
+      28,
+      22,
+      28,
+      22
+    ],
+    [
+      28,
+      23,
+      28,
+      23
+    ],
+    [
+      28,
+      24,
+      28,
+      24
+    ],
+    [
+      28,
+      25,
+      28,
+      25
+    ],
+    [
+      28,
+      26,
+      28,
+      26
+    ],
+    [
+      28,
+      27,
+      28,
+      27
+    ],
+    [
+      28,
+      28,
+      28,
+      28
+    ],
+    [
+      28,
+      29,
+      28,
+      29
+    ],
+    [
+      28,
+      30,
+      28,
+      30
+    ],
+    [
+      29,
+      18,
+      29,
+      18
+    ],
+    [
+      29,
+      19,
+      29,
+      19
+    ],
+    [
+      29,
+      20,
+      29,
+      20
+    ],
+    [
+      29,
+      21,
+      29,
+      21
+    ],
+    [
+      29,
+      22,
+      29,
+      22
+    ],
+    [
+      29,
+      23,
+      29,
+      23
+    ],
+    [
+      29,
+      24,
+      29,
+      24
+    ],
+    [
+      29,
+      25,
+      29,
+      25
+    ],
+    [
+      29,
+      26,
+      29,
+      26
+    ],
+    [
+      29,
+      27,
+      29,
+      27
+    ],
+    [
+      29,
+      28,
+      29,
+      28
+    ],
+    [
+      29,
+      29,
+      29,
+      29
+    ],
+    [
+      29,
+      30,
+      29,
+      30
+    ],
+    [
+      30,
+      18,
+      30,
+      18
+    ],
+    [
+      30,
+      19,
+      30,
+      19
+    ],
+    [
+      30,
+      20,
+      30,
+      20
+    ],
+    [
+      30,
+      21,
+      30,
+      21
+    ],
+    [
+      30,
+      22,
+      30,
+      22
+    ],
+    [
+      30,
+      23,
+      30,
+      23
+    ],
+    [
+      30,
+      24,
+      30,
+      24
+    ],
+    [
+      30,
+      25,
+      30,
+      25
+    ],
+    [
+      30,
+      26,
+      30,
+      26
+    ],
+    [
+      30,
+      27,
+      30,
+      27
+    ],
+    [
+      30,
+      28,
+      30,
+      28
+    ],
+    [
+      30,
+      29,
+      30,
+      29
+    ],
+    [
+      30,
+      30,
+      30,
+      30
+    ]
+  ],
+  "fixture_matches": {
+    "canonical": true,
+    "teaching_fixture": true
+  },
+  "original_solver_replay": {
+    "canonical": {
+      "correct": 4,
+      "total": 4,
+      "all_exact": true
+    },
+    "teaching_fixture": {
+      "correct": 4,
+      "total": 4,
+      "all_exact": true
+    }
+  },
+  "errors": [],
+  "sha256": "6553a3f282233f5cd8451e2108f898daf06f8a3dfce6313b787fd296720d6556",
+  "status": "reviewed_bounded_validation_passed",
+  "limitations": "Bounded randomized agreement with a saved solver is not proof of semantic completeness.",
+  "candidate_path": "/Users/ritwika/projects/arc-agi2/outputs/research/arcgen-coverage-cli/host-reviewed/e3721c99/task_e3721c99.py",
+  "attempts": 1,
+  "model_usage": {
+    "claude-opus-5-5": {
+      "inputTokens": 2,
+      "outputTokens": 34400,
+      "cacheReadInputTokens": 1892,
+      "cacheCreationInputTokens": 60758,
+      "webSearchRequests": 0,
+      "costUSD": 1.1744504,
+      "contextWindow": 1000000,
+      "maxOutputTokens": 128000,
+      "thinkingTokens": 16095,
+      "canonicalModel": "claude-opus-5-5",
+      "provider": "firstParty",
+      "costBasis": "list"
+    }
+  },
+  "rule": "A colour-1 divider (a full row/column, or an L boxing a corner) separates a legend of coloured key shapes from grey (5) blobs. Each key has a distinct number of enclosed holes (4-connected background regions inside the object's bounding box that do not touch its edge). Every grey blob is recoloured to the key with the same hole count, or erased to 0 if no key matches. The divider is not a key, and everything else is unchanged.",
+  "scope": "Supported: grids 18-30 per side by default and 16-30 explicitly; all sizes other than 30x30 are synthetic extensions. Divider layouts are straight (full row/column, train 1 and both tests) and corner/L-shaped (train 2), with the legend on any of the four edges. A corner can sit at either end of its edge, giving 8 corner orientations. Each scene has 2-4 keys with distinct hole counts 0-6, using the fixture key template (3-thick bar with single-cell holes) and distinct colours from {1,2,3,4,6,7,8,9}; colour 1 keys are allowed. Each scene has 4-8 irregular eroded grey blobs (up to 10 explicitly) with hole counts 0-6, and every key count appears on at least one blob. Near-miss distractor blobs, which get erased, are included. Explicit controls are width, height, side, key_holes, key_colours, blob_holes and divider. Deliberately not supported: non-template key shapes (all fixture keys use the bar template), multiple dividers, non-zero background, keys that are not hole-count distinct, single-key legends, and corner scenes with 0-hole blobs but no 0-hole key, because there the L divider would be an ambiguous 0-hole colour-1 'key'. Fixture replay uses input_grid decomposition because the hand-drawn blobs are impractical to write as latent arguments.",
+  "constraints": [
+    "1200 independent padded-complement hole-count checks; all original fixtures exact",
+    "516 corner dividers including 449 with zero-hole keys; 1170 unmatched blobs correctly erased; hole counts zero through six exercised",
+    "Nine successful parameter controls and 15 invalid rejections; four old expectations now violate the documented requirement for two distinct key counts"
+  ],
+  "known_limitations": [
+    "Keys always use the fixture bar template. Only grey blobs are irregular.",
+    "Corner scenes never contain a 0-hole blob without a 0-hole key. This is an ambiguity guard, not a fixture-derived restriction.",
+    "Fixture replay goes through input_grid decomposition rather than explicit latent arguments.",
+    "The hole count range is capped at 6 and the number of blobs at 10.",
+    "Grid sizes other than 30x30 are synthetic extensions.",
+    "Bounded semantic checks do not prove coverage of every valid configuration."
+  ],
+  "billing": "Claude Max CLI; API credentials excluded; no API fallback",
+  "review_candidate_sha256": "6553a3f282233f5cd8451e2108f898daf06f8a3dfce6313b787fd296720d6556",
+  "authored_sha256": "6553a3f282233f5cd8451e2108f898daf06f8a3dfce6313b787fd296720d6556",
+  "stress_test": {
+    "task_id": "e3721c99",
+    "ready": true,
+    "samples_requested": 1000,
+    "samples_attempted": 1000,
+    "samples_passed": 1000,
+    "verifier_mode": "archived_pair_solver",
+    "verifier_evidence": {
+      "mode": "archived_pair_solver"
+    },
+    "improved_verifier_fixture_replay": null,
+    "seed_start": 20000,
+    "seed_end_exclusive": 21000,
+    "fixture_basis": {
+      "fixture": "canonical",
+      "corrected": false
+    },
+    "unique_inputs": 1000,
+    "changed_pairs": 1000,
+    "fixture_replays": 0,
+    "shapes": [
+      [
+        18,
+        18,
+        18,
+        18
+      ],
+      [
+        18,
+        19,
+        18,
+        19
+      ],
+      [
+        18,
+        20,
+        18,
+        20
+      ],
+      [
+        18,
+        21,
+        18,
+        21
+      ],
+      [
+        18,
+        22,
+        18,
+        22
+      ],
+      [
+        18,
+        23,
+        18,
+        23
+      ],
+      [
+        18,
+        24,
+        18,
+        24
+      ],
+      [
+        18,
+        25,
+        18,
+        25
+      ],
+      [
+        18,
+        26,
+        18,
+        26
+      ],
+      [
+        18,
+        27,
+        18,
+        27
+      ],
+      [
+        18,
+        28,
+        18,
+        28
+      ],
+      [
+        18,
+        29,
+        18,
+        29
+      ],
+      [
+        18,
+        30,
+        18,
+        30
+      ],
+      [
+        19,
+        18,
+        19,
+        18
+      ],
+      [
+        19,
+        19,
+        19,
+        19
+      ],
+      [
+        19,
+        20,
+        19,
+        20
+      ],
+      [
+        19,
+        21,
+        19,
+        21
+      ],
+      [
+        19,
+        22,
+        19,
+        22
+      ],
+      [
+        19,
+        23,
+        19,
+        23
+      ],
+      [
+        19,
+        24,
+        19,
+        24
+      ],
+      [
+        19,
+        25,
+        19,
+        25
+      ],
+      [
+        19,
+        26,
+        19,
+        26
+      ],
+      [
+        19,
+        27,
+        19,
+        27
+      ],
+      [
+        19,
+        28,
+        19,
+        28
+      ],
+      [
+        19,
+        29,
+        19,
+        29
+      ],
+      [
+        19,
+        30,
+        19,
+        30
+      ],
+      [
+        20,
+        18,
+        20,
+        18
+      ],
+      [
+        20,
+        19,
+        20,
+        19
+      ],
+      [
+        20,
+        20,
+        20,
+        20
+      ],
+      [
+        20,
+        21,
+        20,
+        21
+      ],
+      [
+        20,
+        22,
+        20,
+        22
+      ],
+      [
+        20,
+        23,
+        20,
+        23
+      ],
+      [
+        20,
+        24,
+        20,
+        24
+      ],
+      [
+        20,
+        25,
+        20,
+        25
+      ],
+      [
+        20,
+        26,
+        20,
+        26
+      ],
+      [
+        20,
+        27,
+        20,
+        27
+      ],
+      [
+        20,
+        28,
+        20,
+        28
+      ],
+      [
+        20,
+        29,
+        20,
+        29
+      ],
+      [
+        20,
+        30,
+        20,
+        30
+      ],
+      [
+        21,
+        18,
+        21,
+        18
+      ],
+      [
+        21,
+        19,
+        21,
+        19
+      ],
+      [
+        21,
+        20,
+        21,
+        20
+      ],
+      [
+        21,
+        21,
+        21,
+        21
+      ],
+      [
+        21,
+        22,
+        21,
+        22
+      ],
+      [
+        21,
+        23,
+        21,
+        23
+      ],
+      [
+        21,
+        24,
+        21,
+        24
+      ],
+      [
+        21,
+        25,
+        21,
+        25
+      ],
+      [
+        21,
+        26,
+        21,
+        26
+      ],
+      [
+        21,
+        27,
+        21,
+        27
+      ],
+      [
+        21,
+        28,
+        21,
+        28
+      ],
+      [
+        21,
+        29,
+        21,
+        29
+      ],
+      [
+        21,
+        30,
+        21,
+        30
+      ],
+      [
+        22,
+        18,
+        22,
+        18
+      ],
+      [
+        22,
+        19,
+        22,
+        19
+      ],
+      [
+        22,
+        20,
+        22,
+        20
+      ],
+      [
+        22,
+        21,
+        22,
+        21
+      ],
+      [
+        22,
+        22,
+        22,
+        22
+      ],
+      [
+        22,
+        23,
+        22,
+        23
+      ],
+      [
+        22,
+        24,
+        22,
+        24
+      ],
+      [
+        22,
+        25,
+        22,
+        25
+      ],
+      [
+        22,
+        26,
+        22,
+        26
+      ],
+      [
+        22,
+        27,
+        22,
+        27
+      ],
+      [
+        22,
+        28,
+        22,
+        28
+      ],
+      [
+        22,
+        29,
+        22,
+        29
+      ],
+      [
+        22,
+        30,
+        22,
+        30
+      ],
+      [
+        23,
+        18,
+        23,
+        18
+      ],
+      [
+        23,
+        19,
+        23,
+        19
+      ],
+      [
+        23,
+        20,
+        23,
+        20
+      ],
+      [
+        23,
+        21,
+        23,
+        21
+      ],
+      [
+        23,
+        22,
+        23,
+        22
+      ],
+      [
+        23,
+        23,
+        23,
+        23
+      ],
+      [
+        23,
+        24,
+        23,
+        24
+      ],
+      [
+        23,
+        25,
+        23,
+        25
+      ],
+      [
+        23,
+        26,
+        23,
+        26
+      ],
+      [
+        23,
+        27,
+        23,
+        27
+      ],
+      [
+        23,
+        28,
+        23,
+        28
+      ],
+      [
+        23,
+        29,
+        23,
+        29
+      ],
+      [
+        23,
+        30,
+        23,
+        30
+      ],
+      [
+        24,
+        18,
+        24,
+        18
+      ],
+      [
+        24,
+        19,
+        24,
+        19
+      ],
+      [
+        24,
+        20,
+        24,
+        20
+      ],
+      [
+        24,
+        21,
+        24,
+        21
+      ],
+      [
+        24,
+        22,
+        24,
+        22
+      ],
+      [
+        24,
+        23,
+        24,
+        23
+      ],
+      [
+        24,
+        24,
+        24,
+        24
+      ],
+      [
+        24,
+        25,
+        24,
+        25
+      ],
+      [
+        24,
+        26,
+        24,
+        26
+      ],
+      [
+        24,
+        27,
+        24,
+        27
+      ],
+      [
+        24,
+        28,
+        24,
+        28
+      ],
+      [
+        24,
+        29,
+        24,
+        29
+      ],
+      [
+        24,
+        30,
+        24,
+        30
+      ],
+      [
+        25,
+        18,
+        25,
+        18
+      ],
+      [
+        25,
+        19,
+        25,
+        19
+      ],
+      [
+        25,
+        20,
+        25,
+        20
+      ],
+      [
+        25,
+        21,
+        25,
+        21
+      ],
+      [
+        25,
+        22,
+        25,
+        22
+      ],
+      [
+        25,
+        23,
+        25,
+        23
+      ],
+      [
+        25,
+        24,
+        25,
+        24
+      ],
+      [
+        25,
+        25,
+        25,
+        25
+      ],
+      [
+        25,
+        26,
+        25,
+        26
+      ],
+      [
+        25,
+        27,
+        25,
+        27
+      ],
+      [
+        25,
+        28,
+        25,
+        28
+      ],
+      [
+        25,
+        29,
+        25,
+        29
+      ],
+      [
+        25,
+        30,
+        25,
+        30
+      ],
+      [
+        26,
+        18,
+        26,
+        18
+      ],
+      [
+        26,
+        19,
+        26,
+        19
+      ],
+      [
+        26,
+        20,
+        26,
+        20
+      ],
+      [
+        26,
+        21,
+        26,
+        21
+      ],
+      [
+        26,
+        22,
+        26,
+        22
+      ],
+      [
+        26,
+        23,
+        26,
+        23
+      ],
+      [
+        26,
+        24,
+        26,
+        24
+      ],
+      [
+        26,
+        25,
+        26,
+        25
+      ],
+      [
+        26,
+        26,
+        26,
+        26
+      ],
+      [
+        26,
+        27,
+        26,
+        27
+      ],
+      [
+        26,
+        28,
+        26,
+        28
+      ],
+      [
+        26,
+        29,
+        26,
+        29
+      ],
+      [
+        26,
+        30,
+        26,
+        30
+      ],
+      [
+        27,
+        18,
+        27,
+        18
+      ],
+      [
+        27,
+        19,
+        27,
+        19
+      ],
+      [
+        27,
+        20,
+        27,
+        20
+      ],
+      [
+        27,
+        21,
+        27,
+        21
+      ],
+      [
+        27,
+        22,
+        27,
+        22
+      ],
+      [
+        27,
+        23,
+        27,
+        23
+      ],
+      [
+        27,
+        24,
+        27,
+        24
+      ],
+      [
+        27,
+        25,
+        27,
+        25
+      ],
+      [
+        27,
+        26,
+        27,
+        26
+      ],
+      [
+        27,
+        27,
+        27,
+        27
+      ],
+      [
+        27,
+        28,
+        27,
+        28
+      ],
+      [
+        27,
+        29,
+        27,
+        29
+      ],
+      [
+        27,
+        30,
+        27,
+        30
+      ],
+      [
+        28,
+        18,
+        28,
+        18
+      ],
+      [
+        28,
+        19,
+        28,
+        19
+      ],
+      [
+        28,
+        20,
+        28,
+        20
+      ],
+      [
+        28,
+        21,
+        28,
+        21
+      ],
+      [
+        28,
+        22,
+        28,
+        22
+      ],
+      [
+        28,
+        23,
+        28,
+        23
+      ],
+      [
+        28,
+        24,
+        28,
+        24
+      ],
+      [
+        28,
+        25,
+        28,
+        25
+      ],
+      [
+        28,
+        26,
+        28,
+        26
+      ],
+      [
+        28,
+        27,
+        28,
+        27
+      ],
+      [
+        28,
+        28,
+        28,
+        28
+      ],
+      [
+        28,
+        29,
+        28,
+        29
+      ],
+      [
+        28,
+        30,
+        28,
+        30
+      ],
+      [
+        29,
+        18,
+        29,
+        18
+      ],
+      [
+        29,
+        19,
+        29,
+        19
+      ],
+      [
+        29,
+        20,
+        29,
+        20
+      ],
+      [
+        29,
+        21,
+        29,
+        21
+      ],
+      [
+        29,
+        22,
+        29,
+        22
+      ],
+      [
+        29,
+        23,
+        29,
+        23
+      ],
+      [
+        29,
+        24,
+        29,
+        24
+      ],
+      [
+        29,
+        25,
+        29,
+        25
+      ],
+      [
+        29,
+        26,
+        29,
+        26
+      ],
+      [
+        29,
+        27,
+        29,
+        27
+      ],
+      [
+        29,
+        28,
+        29,
+        28
+      ],
+      [
+        29,
+        29,
+        29,
+        29
+      ],
+      [
+        29,
+        30,
+        29,
+        30
+      ],
+      [
+        30,
+        18,
+        30,
+        18
+      ],
+      [
+        30,
+        19,
+        30,
+        19
+      ],
+      [
+        30,
+        20,
+        30,
+        20
+      ],
+      [
+        30,
+        21,
+        30,
+        21
+      ],
+      [
+        30,
+        22,
+        30,
+        22
+      ],
+      [
+        30,
+        23,
+        30,
+        23
+      ],
+      [
+        30,
+        24,
+        30,
+        24
+      ],
+      [
+        30,
+        25,
+        30,
+        25
+      ],
+      [
+        30,
+        26,
+        30,
+        26
+      ],
+      [
+        30,
+        27,
+        30,
+        27
+      ],
+      [
+        30,
+        28,
+        30,
+        28
+      ],
+      [
+        30,
+        29,
+        30,
+        29
+      ],
+      [
+        30,
+        30,
+        30,
+        30
+      ]
+    ],
+    "fixture_matches": {
+      "canonical": true,
+      "teaching_fixture": true
+    },
+    "original_solver_replay": {
+      "canonical": {
+        "correct": 4,
+        "total": 4,
+        "all_exact": true
+      },
+      "teaching_fixture": {
+        "correct": 4,
+        "total": 4,
+        "all_exact": true
+      }
+    },
+    "errors": [],
+    "sha256": "6553a3f282233f5cd8451e2108f898daf06f8a3dfce6313b787fd296720d6556",
+    "status": "validated_candidate_needs_semantic_review",
+    "limitations": "Bounded randomized agreement with a saved solver is not proof of semantic completeness.",
+    "review_candidate_sha256": "6553a3f282233f5cd8451e2108f898daf06f8a3dfce6313b787fd296720d6556"
+  },
+  "authored_scope": "Supported: grids 18-30 per side by default and 16-30 explicitly; all sizes other than 30x30 are synthetic extensions. Divider layouts are straight (full row/column, train 1 and both tests) and corner/L-shaped (train 2), with the legend on any of the four edges. A corner can sit at either end of its edge, giving 8 corner orientations. Each scene has 2-4 keys with distinct hole counts 0-6, using the fixture key template (3-thick bar with single-cell holes) and distinct colours from {1,2,3,4,6,7,8,9}; colour 1 keys are allowed. Each scene has 4-8 irregular eroded grey blobs (up to 10 explicitly) with hole counts 0-6, and every key count appears on at least one blob. Near-miss distractor blobs, which get erased, are included. Explicit controls are width, height, side, key_holes, key_colours, blob_holes and divider. Deliberately not supported: non-template key shapes (all fixture keys use the bar template), multiple dividers, non-zero background, keys that are not hole-count distinct, single-key legends, and corner scenes with 0-hole blobs but no 0-hole key, because there the L divider would be an ambiguous 0-hole colour-1 'key'. Fixture replay uses input_grid decomposition because the hand-drawn blobs are impractical to write as latent arguments.",
+  "authored_constraints": [
+    "Key hole counts are pairwise distinct and there are always at least 2 keys.",
+    "Every key hole count appears on at least one grey blob.",
+    "Blob hole counts agree under 4- and 8-connectivity of the background, and blobs are 4-connected.",
+    "Blob bounding boxes are pairwise separated by at least one blank cell, and are kept one blank cell clear of the divider/legend bounding region. No bounding box contains a foreign object.",
+    "Keys never touch the divider or the grid border. The divider always touches the border.",
+    "A straight divider spans a full row/column. Neither arm of an L divider spans the full grid, and an L divider has 0 holes.",
+    "In corner-divider scenes, 0-hole grey blobs exist only if a 0-hole key exists (corner ambiguity guard).",
+    "Background 0 covers more than half the grid.",
+    "A 0-hole blob has at least 6 cells, so blob size does not reveal hole count.",
+    "Explicit parameters are feasibility-checked up front and inconsistent requests raise ValueError. All sampling loops are bounded."
+  ],
+  "semantic_review": {
+    "status": "reviewed",
+    "checks": [
+      "1200 independent padded-complement hole-count checks; all original fixtures exact",
+      "516 corner dividers including 449 with zero-hole keys; 1170 unmatched blobs correctly erased; hole counts zero through six exercised",
+      "Nine successful parameter controls and 15 invalid rejections; four old expectations now violate the documented requirement for two distinct key counts",
+      "1000 independent seeds 20000..20999; approved validation fixtures reconstructed exactly; canonical replay reported separately"
+    ],
+    "limitations": [
+      "Keys always use the fixture bar template. Only grey blobs are irregular.",
+      "Corner scenes never contain a 0-hole blob without a 0-hole key. This is an ambiguity guard, not a fixture-derived restriction.",
+      "Fixture replay goes through input_grid decomposition rather than explicit latent arguments.",
+      "The hole count range is capped at 6 and the number of blobs at 10.",
+      "Grid sizes other than 30x30 are synthetic extensions.",
+      "Bounded semantic checks do not prove coverage of every valid configuration."
+    ]
+  },
+  "diversity_audit": {
+    "task_id": "e3721c99",
+    "source_sha256": "6553a3f282233f5cd8451e2108f898daf06f8a3dfce6313b787fd296720d6556",
+    "independent_semantic_cases": 1200,
+    "seed_start": 82000,
+    "unique_inputs": 1200,
+    "canonical_exact": true,
+    "counts": {
+      "corner_divider": 516,
+      "zero_hole_key": 879,
+      "corner_and_zero_key": 449,
+      "recoloured_blobs": 4545,
+      "blob_holes_5": 474,
+      "blob_holes_4": 655,
+      "blob_holes_0": 1218,
+      "blob_holes_3": 952,
+      "erased_blobs": 1170,
+      "blob_holes_1": 979,
+      "blob_holes_2": 1078,
+      "blob_holes_6": 359
+    },
+    "shapes": {
+      "30x28": 6,
+      "26x30": 9,
+      "27x29": 9,
+      "27x23": 10,
+      "19x23": 4,
+      "28x22": 5,
+      "23x23": 10,
+      "25x27": 9,
+      "22x29": 10,
+      "26x26": 9,
+      "30x25": 7,
+      "30x24": 12,
+      "19x20": 5,
+      "23x22": 9,
+      "24x20": 2,
+      "25x24": 7,
+      "28x28": 5,
+      "21x26": 6,
+      "26x28": 6,
+      "20x26": 8,
+      "30x29": 7,
+      "29x29": 7,
+      "24x26": 12,
+      "26x29": 10,
+      "19x29": 12,
+      "29x24": 6,
+      "18x25": 4,
+      "18x19": 7,
+      "30x19": 5,
+      "23x30": 8,
+      "30x21": 2,
+      "23x18": 6,
+      "27x27": 11,
+      "27x20": 5,
+      "26x21": 8,
+      "29x30": 11,
+      "21x27": 5,
+      "21x29": 9,
+      "21x20": 8,
+      "24x24": 7,
+      "20x22": 4,
+      "29x21": 4,
+      "25x28": 8,
+      "28x23": 6,
+      "27x28": 7,
+      "18x28": 8,
+      "30x27": 5,
+      "23x28": 6,
+      "22x18": 4,
+      "27x24": 6,
+      "22x23": 7,
+      "21x21": 5,
+      "22x30": 7,
+      "20x24": 3,
+      "22x27": 4,
+      "23x29": 6,
+      "26x25": 9,
+      "28x29": 7,
+      "26x20": 9,
+      "22x26": 7,
+      "19x30": 6,
+      "28x26": 4,
+      "23x20": 7,
+      "21x19": 5,
+      "24x25": 3,
+      "18x29": 7,
+      "28x20": 6,
+      "25x18": 8,
+      "29x27": 10,
+      "29x23": 6,
+      "28x21": 9,
+      "25x30": 6,
+      "28x30": 9,
+      "25x21": 8,
+      "18x30": 4,
+      "21x22": 6,
+      "25x19": 2,
+      "25x22": 6,
+      "19x27": 9,
+      "24x27": 3,
+      "18x27": 9,
+      "24x29": 8,
+      "19x25": 7,
+      "30x30": 203,
+      "30x26": 7,
+      "21x24": 6,
+      "26x23": 8,
+      "25x20": 4,
+      "18x26": 8,
+      "30x18": 1,
+      "27x19": 2,
+      "21x25": 6,
+      "28x18": 7,
+      "29x19": 4,
+      "19x19": 2,
+      "20x25": 6,
+      "27x21": 6,
+      "29x22": 5,
+      "28x25": 11,
+      "29x25": 4,
+      "23x27": 6,
+      "27x25": 10,
+      "18x21": 5,
+      "22x22": 3,
+      "19x24": 7,
+      "24x18": 8,
+      "24x28": 7,
+      "27x22": 4,
+      "30x23": 9,
+      "19x18": 3,
+      "20x30": 4,
+      "21x30": 12,
+      "19x21": 3,
+      "26x22": 3,
+      "22x19": 8,
+      "20x18": 4,
+      "22x24": 5,
+      "21x23": 8,
+      "23x26": 5,
+      "26x19": 5,
+      "22x28": 6,
+      "18x23": 7,
+      "19x26": 7,
+      "29x26": 4,
+      "24x21": 3,
+      "23x25": 6,
+      "26x27": 7,
+      "25x29": 5,
+      "23x19": 4,
+      "22x25": 4,
+      "22x20": 4,
+      "20x27": 3,
+      "20x28": 8,
+      "24x22": 7,
+      "23x24": 4,
+      "28x24": 6,
+      "18x20": 1,
+      "18x24": 4,
+      "24x30": 6,
+      "24x23": 7,
+      "25x25": 3,
+      "29x18": 6,
+      "20x19": 6,
+      "28x19": 4,
+      "20x23": 5,
+      "28x27": 10,
+      "29x20": 4,
+      "22x21": 2,
+      "27x18": 3,
+      "25x23": 5,
+      "27x26": 3,
+      "20x20": 1,
+      "21x28": 3,
+      "25x26": 8,
+      "19x28": 5,
+      "26x24": 5,
+      "21x18": 5,
+      "19x22": 3,
+      "20x21": 1,
+      "30x20": 4,
+      "20x29": 9,
+      "27x30": 5,
+      "30x22": 5,
+      "18x18": 1,
+      "24x19": 5,
+      "18x22": 2,
+      "29x28": 5,
+      "23x21": 1,
+      "26x18": 1
+    },
+    "method": "Input-only monochrome components, padded complement region count, border-connected divider exclusion, and independent hole-count-to-colour lookup",
+    "seconds": 6.44084095954895
+  }
+}

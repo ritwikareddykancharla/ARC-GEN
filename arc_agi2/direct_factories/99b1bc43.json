@@ -1,0 +1,21 @@
+{
+  "task_id": "99b1bc43",
+  "factory_sha256": "f3316d6950bf549b684bb29dab37df37dd5677c29d370ec220932ea540f2589b",
+  "constructor_sha256": "0a17443f86c195372eb738bfbe8d77c04db7454f448ea9fb830626bae10d6262",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 220257336476087,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 3.2957202079705894,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "In the original task, the input has two equal panels separated by a full line of colour 4. The top panel uses colour 1 and the bottom panel uses colour 2. The output is the cell-wise XOR of the two panels' occupancy. A cell is set to colour 3 when exactly one panel is non-background there, and to 0 otherwise. When D4 is applied to the whole grid, each panel gets the same D4 in place, and so does the output. So the visible output is still the XOR of the two visible panels, cell by cell. No reindexing is needed beyond picking the split axis.\n\nThe factory sets that axis from d4. An odd number of clockwise quarter turns makes the panels sit side by side, split by a column. Otherwise they are stacked, split by a row; row reversal does not change the axis. The emitted program finds the full line of palette[4] along that axis. It falls back to the other axis if the pixels clearly show that one instead, and to a middle split if no divider is found. It then marks palette[3] wherever exactly one panel differs from palette[0], and fills palette[0] elsewhere.\n\nXOR is symmetric, so it does not matter which panel comes first after reflection. Panel colours palette[1] and palette[2] only need to differ from the background, so they are not hard-coded. The program also handles other generator sizes, because it finds the divider position instead of assuming index 4.",
+    "limitations": "The program assumes that background (palette[0]) is the only 'off' value inside the panels, which matches the constructor. It also assumes the two panels have the same size. If no full divider line exists (never the case under the constructor), it splits the grid into two equal halves. No constructor defects were found, and the fixtures are consistent with a uniform XOR rule."
+  }
+}

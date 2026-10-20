@@ -1,0 +1,21 @@
+{
+  "task_id": "992798f6",
+  "factory_sha256": "d7683ce1e5b8551a04642a2add1bc84bc6ecdf1b78882242bfda84a2963afefe",
+  "constructor_sha256": "6431bcfb8f482488b4c3eab074d983c2ce1ea22a8e0d1533e259dc9a905df89d",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 213110079253209,
+  "d4": 7,
+  "unique_base_inputs": 998,
+  "seconds": 5.543628916959278,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The constructor puts colour 1 at (r0,c0) and colour 2 at (r1,c1), separated by at least 3 in both axes. From the 1 it steps diagonally toward the 2 while neither coordinate has reached T = 2 - (sign dy, sign dx), which is the cell diagonally touching the 2 on the side facing the 1. It then steps straight along the remaining axis until it reaches T. Every cell it steps onto is painted 3. The constructor's flip and flop, and any D4 transform including transposes, preserve this description: the diagonal heads toward the goal and stops when it first shares a row or column with T, then the straight leg finishes on T. The emitted program therefore works directly in visible coordinates and does not branch on d4. It locates palette[1] (the start) and palette[2] (the goal), computes the signs and T in the visible frame, and paints palette[3] along the diagonal leg and then the straight leg. When |dy| = |dx|, the diagonal reaches T directly and there is no straight leg. This matches the generator's loop conditions exactly, so the archived solver's >= tie-break has no effect.",
+    "limitations": "Assumes exactly one cell of palette[1] and one of palette[2], as the constructor guarantees. If either is missing, the grid is returned unchanged. Separations of less than one cell on an axis are outside the constructor domain and get a simple straight-line fallback. No constructor defects or fixture contradictions were found. All four train pairs and the test pair follow this rule. The factory has not been executed by me."
+  }
+}

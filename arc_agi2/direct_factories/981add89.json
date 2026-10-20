@@ -1,0 +1,21 @@
+{
+  "task_id": "981add89",
+  "factory_sha256": "ebcfe546263bde3bcc853b5810eca7015e2b99d2e6360c6cdd8d0c8613a60a6b",
+  "constructor_sha256": "ae78df9d89ab5c15d4476ce82f347299cf9218f210d0f2c45885c94749f61259",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 177289169769143,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 11.111630875035189,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "Rule in original coordinates:\n- Row 0 is a legend strip: background plus sparse seed cells.\n- Each seed of colour c at column x recolours column x from row 1 to the bottom.\n- A cell already of colour c becomes background; any other cell becomes c.\n- Lines never overlap because seed columns are distinct, so each line is computed from the input.\n\nHow D4 is handled:\n- A row reversal keeps row 0 on top.\n- Clockwise turns then move the strip to the right side (k=1), the bottom (k=2) or the left side (k=3).\n- The factory specialises the program to that visible side. The emitted program reads seeds along that edge and draws perpendicular rows or columns across the rest of the grid in visible coordinates.\n- The rewrite is per cell, so the mirror does not change which direction a line travels in any way that matters.\n\nHow colours are handled:\n- No colour constants are needed, because the palette only relabels colours.\n- The background is the most common colour of the legend strip. The strip is guaranteed mostly background: seeds are at least 3 apart and nothing else is drawn there.\n- This is more robust than the archived solver, which takes the mode of the non-strip area. That fails if the boxes cover more of the grid than the background does.\n- Ties in the strip fall back to the most common colour in the rest of the grid.\n- Rectangular grids and boxes touching the boundary are handled, because every line spans the full extent of the grid.",
+    "limitations": "- The program assumes the visible strip side fixed by d4, which holds under the constructor's domain.\n- It assumes seeds are never background-coloured. The constructor guarantees this.\n- Constructor note (not reproduced as a rule): the generator itself only rejects overlapping boxes of the same colour. Its rejection loop also needs both a same-colour crossing and a different-colour crossing somewhere. Neither affects the visible rule.\n- No fixture contradictions were found against the uniform rule: all train pairs and the test pair are consistent.\n- I have not run any tests."
+  }
+}

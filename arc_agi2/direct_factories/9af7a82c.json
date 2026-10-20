@@ -1,0 +1,21 @@
+{
+  "task_id": "9af7a82c",
+  "factory_sha256": "130826b1ad5b3a0b3236c1f9d5ff70ed84370f036a27bb9d3c5ded10a6df6e20",
+  "constructor_sha256": "1c16c85b0b539ed427ae181ed4e309c26d81991a21c6bad9c5153468d362d55e",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 21648667664238,
+  "d4": 7,
+  "unique_base_inputs": 952,
+  "seconds": 2.779513416113332,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The rule is a colour histogram. Count every colour in the visible input, including the most common colour. Sort the colours by count, largest first. Then draw one bar per colour, with length equal to its count, on a canvas filled with palette[0].\n\nCounts do not change under D4 or under palette recolouring, so only the output layout depends on d4. I derived the layout for each index from the canonical grid O (H rows by K columns, bars hanging from the top, largest bar on the left):\n- d0: vertical bars, anchored at the top, largest on the left.\n- d1: horizontal bars, anchored at the right, largest at the top.\n- d2: vertical bars, anchored at the bottom, largest on the right.\n- d3: horizontal bars, anchored at the left, largest at the bottom.\n- d4: vertical bars, anchored at the top, largest on the right.\n- d5: horizontal bars, anchored at the right, largest at the bottom.\n- d6: vertical bars, anchored at the bottom, largest on the left.\n- d7: horizontal bars, anchored at the left, largest at the top (the transpose).\n\nVertical layouts are H by K and horizontal layouts are K by H. The emitted program builds the histogram directly in visible coordinates using these constants and the palette-mapped background. It does no rotating, unrotating or recolouring of grids.",
+    "limitations": "The constructor only accepts scenes whose colour counts are all distinct, so ties never occur in its domain. If a tie did occur, the program keeps colours in order of first appearance in a visible row-major scan, matching the archived solver. That tie-break depends on orientation, so tied inputs would not be D4-equivariant. This is outside the generator's domain, not a puzzle rule.\n\nIf palette[0] (the output background colour) also occurs as an input colour, its bar cannot be told apart from the background. The canonical task behaves the same way, so the program reproduces it faithfully.\n\nThe demonstrations are not used, because the layout is fixed by d4.\n\nThe fixtures are consistent with a single uniform rule, and I found no contradictions.\n\nI have not run any tests; the per-index layouts were derived by hand."
+  }
+}

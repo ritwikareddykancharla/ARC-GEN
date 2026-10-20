@@ -1,0 +1,21 @@
+{
+  "task_id": "9b4c17c4",
+  "factory_sha256": "cdd2133c4bd7849cc6600a5ff8fb467eb4b3531f1e968cc9bd6c1d3d570bdb08",
+  "constructor_sha256": "f9784b35058905061deff89d9d09607e76540fee1d7877874c5c1a8beff3d478",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 30235524918049,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 8.900911082979292,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "In the original orientation, the grid is split into two solid rectangles: palette[8] and palette[1]. Red blocks (palette[2]) sit inside each rectangle. Blocks in the 8-rectangle slide west until they are flush with that rectangle's west edge. Blocks in the 1-rectangle slide east until they are flush with that rectangle's east edge. Each block moves independently, and the cells it leaves take the region colour.\n\nThe factory works out the visible directions from d4 and fixes them as constants:\n- The 8-direction starts as West. A reflection (d4 >= 4) changes it to East.\n- Each clockwise rotation then advances it one step through N, E, S, W.\n- The 1-direction is always the opposite of the 8-direction.\n\nThe emitted program works directly in visible coordinates:\n1. It finds each region rectangle as the bounding box of that colour's cells. In this domain that box is exactly the region: every row and column of a region keeps at least one background cell, because the first relative row is never red and blocks never span the full width.\n2. It assigns red cells to a region by location inside that rectangle, not by counting neighbours.\n3. It splits each region's red cells into 4-connected blocks.\n4. It shifts each block rigidly so its leading extremity lands on the region's edge in that region's direction.\n5. It clears all old block cells first, then paints all the moved blocks.\n\nThe program ignores the demonstrations, because d4 and the palette fully determine the roles.",
+    "limitations": "- **Archived solver vs. this program.** The archived solver decides which region a block belongs to by a majority vote over neighbouring colours. Here that decision is made by the block's location inside the region rectangle. The two agree on the intended domain. Location is also more robust: in the side-by-side layout, the generator does not stop a 1-region block that ends on the shared boundary from touching an 8-region block that starts there on overlapping rows. Their red cells then merge into one component spanning both regions. The archived component-plus-majority approach would mishandle that case. This is a constructor defect that needs host review; I did not reproduce it as a rule.\n- **Checkpoints.** The rule text mentions per-region checkpoints. These are not part of the input/output mapping, so the program does not emit them.\n- **Assumptions about the input.**\n  - There are exactly two axis-aligned background rectangles, with the colours palette[8] and palette[1].\n  - Blocks within one region occupy disjoint bands of lines along the motion axis, which the generator guarantees.\n  - The palette is indexable by the original colours 1, 2 and 8.\n- **Testing.** I have not run any tests on this factory."
+  }
+}

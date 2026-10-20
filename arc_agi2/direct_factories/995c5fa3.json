@@ -1,0 +1,30 @@
+{
+  "task_id": "995c5fa3",
+  "factory_sha256": "0004be1cab1589eb5c35744954c5c669d985f7cad4340c1455bb1455d9ddd49d",
+  "constructor_sha256": "b19f7df4a9063abff307f383ea11c0bdef8123ea386f144fdbf4a82a6f9e2b4f",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 187653546825802,
+  "d4": 7,
+  "unique_base_inputs": 64,
+  "seconds": 5.245051500038244,
+  "finite_default_domain": {
+    "exhaustive": true,
+    "cases_checked": 64,
+    "augmented_checks": 1024,
+    "definition": "All four hole patterns independently chosen for three panels: 4^3 = 64 native inputs.",
+    "query_distinct_from_demos": true,
+    "scope": "Default native parameter distribution only; finite input count is not inflated by repeated sampling."
+  },
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "In the original task the input is three 4x4 panels of colour 5, separated by full lines of colour 0. Each panel either has no hole or has one of three fixed 0-hole shapes. These map to colours: no hole -> 2, 2x2 centre hole -> 8, 2x2 bottom-centre hole -> 4, two side slots -> 3. Panel i fills row i of the 3x3 output. The factory pushes the original geometry through the given D4 transform. The transform reverses each row when d4>=4, then rotates clockwise d4%4 times. From this the factory computes three sets of constants. (1) The visible top-left corner of each transformed panel, so panels sit along columns or rows depending on the rotation. (2) Each hole shape rewritten as an exact set of offsets relative to the visible panel corner, keyed to the colour palette[c]. (3) The visible output cells for panel i: a row, a column, or a reversed order, as the rotation or reflection dictates. The emitted program works directly on the visible grid. It slices each 4x4 panel and collects the cells whose colour is the hole colour palette[0]. It looks that exact mask up in the table and paints that panel's output line with the result. Nothing is inverse-transformed and no colours are remapped.",
+    "limitations": "Panel count (3), panel size (4x4) and separator spacing are fixed to the constructor's domain: the generator always emits a 4x14 grid with three panels. The archived solver's generalisation to other widths is not reproduced. A hole mask not in the four known shapes gives palette[0], matching the archived solver's default of 0; this case never occurs in the generator's domain. The approved fixtures are consistent with the uniform rule, and I found no constructor defects or hidden tie-breaks. The output colours are drawn uniformly and independently per panel. I have not run any tests.",
+    "host_review": "Exporter and episode builder now require each query hole pattern to appear in a demonstration. This enforces visible evidence for the arbitrary shape-to-colour lookup, including all D4/palette variants. Tests cover missing evidence and canonical pairs."
+  }
+}

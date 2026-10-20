@@ -1,0 +1,50 @@
+{
+  "task_id": "abc82100",
+  "factory_sha256": "6bacd5ff17639fd97584f07ebf42fedb267f0b6e6732dd8346b6977aced97314",
+  "constructor_sha256": "f4c3abc6c356f78594f9042d13263f78b7204d4d015f9fbaa29187b24e4d83df",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 263902297505798,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 9.57083583297208,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The emitted program reimplements the legend-stamping mechanism directly on the visible grid. The palette is specialised as two constants: background is palette[0] and stencil is palette[8]. Source and target colours are read from the pixels.\n\nSteps:\n1. Find the diagonally connected stencil components.\n2. Scan every non-background, non-stencil cell s in all four orthogonal directions for a different non-background, non-stencil neighbour t.\n3. Step once more in that direction to reach the anchor, which must be inside the grid.\n4. Collect every stencil component touching the anchor's 3x3 neighbourhood. The stencil offsets are those cells measured relative to the anchor, in visible coordinates.\n5. Erase all legend cells (s, t and stencil cells) and every cell of a mapped source colour.\n6. Stamp each non-legend cell of colour s with the offsets in colour t, clipped at the border. Stamping reads only the input, so swaps and chains are not transitive.\n\nWhy d4 needs no special handling: the scan covers all four directions, the 3x3 neighbourhood test and 8-connectivity are symmetric under every rotation and reflection, and offsets are measured in visible coordinates. So the program is already direct-coordinate under any D4 transform, with no rotating or unrotating. The d4 argument is accepted but has no effect.",
+    "limitations": "Two orderings are left as the reference defines them:\n- If two legends shared a source colour, the later one in scan order would win.\n- Overlapping stamps of different colours would resolve by legend scan order, and that scan order changes under D4.\n\nThe constructor rules out both cases. It forbids duplicate source colours, never stamps two colours onto one cell in random scenes, and requires the input to read back as exactly the latent legends. So these orderings never affect generated answers and are not treated as puzzle rules.\n\nBackground is fixed to palette[0] rather than inferred as the most frequent colour. The constructor guarantees 0 is strictly the most frequent input colour, so the two choices agree.\n\nThe approved fixtures are consistent with the uniform rule, and I found no constructor defect. No tests have been run.",
+    "independent_source_review": {
+      "verdict": "accept",
+      "mechanism": "Legend-driven stencil stamping. Each legend is an orthogonal chain s, t, anchor (anchor = source + 2d), where some diagonally connected 8-component touches the anchor's 3x3 neighbourhood. Every loose cell of colour s is replaced by the 8-stencil, placed by its anchor-relative offsets and drawn in colour t, clipped at the border. Legend cells (s, t, 8s) and every original cell of a mapped source colour are erased. Unmapped colours are kept. Stamps are read from the input only, so swaps and chains are not transitive.",
+      "evidence": [
+        "Output labels are not set by hidden latents. _render builds the output from latent legends and loose cells. _scene_error then requires _detect_legends(full input grid, including loose and decoy cells) == {(sp, d): frozenset(cells)}. So the latent legends equal exactly what a visible-grid scanner recovers. That covers direction, stencil membership, and the absence of reverse or spurious chains.",
+        "The factory solver's detection is the same as _detect_legends: 8-connected ST components, a scan of all 4 DIRS, t != s, t not BG/ST, anchor in bounds, and the union of components touching the anchor's 3x3. Offsets are measured in visible coordinates. So mapping and offsets equal the latent _stamp_plan offsets.",
+        "Erasure matches. Constructor: _visible(leg) for every legend, plus loose cells of mapped colours. Solver: legend_cells (s, t, stencil cells) plus every cell of a mapped colour. Non-loose cells of a mapped colour can only be legend s/t cells, which are erased in both. The solver's stamp guard '(y, x) not in legend_cells' excludes the same cells that the constructor's loose-only stamping excludes.",
+        "Stamp-order dependence is removed for random scenes. fits() requires painted.get(q, t) == t and q not in preserved, so no cell gets two stamp colours and no unmapped loose cell is overwritten. The order of the solver's mapping dict (which changes with D4 scan order) therefore never affects random outputs. Duplicate source colours are rejected in _scene_error.",
+        "Overwrite semantics match. Stamps may land on legend or erased mapped cells. Both the constructor and the solver erase first and then stamp, and canonical pair 2 shows this happening (row 13 and the legend area).",
+        "Background is fixed to palette[0]. _scene_error requires 0 to be strictly the most frequent colour, so this agrees with the archived most-common rule. The stencil colour is palette[8]. Both are genuine rule constants taught by every demo.",
+        "D4: the 4-direction scan, the 3x3 test, 8-connectivity and the offsets are all computed in augmented visible coordinates. There is no untransform/retransform wrapper.",
+        "No arbitrary cross-example colour lookup exists. Each input carries its own s->t legends and stencils, so the episode colour-evidence checks are not needed and correctly do not list this task.",
+        "Host audit passed: 1000 fresh pairs, 8000 augmented checks and 16 fixture variants, with no sampler rejections."
+      ],
+      "blocking_issues": [],
+      "nonblocking_limits": [
+        "The explicit-legend path (used by validate) does not forbid overlapping stamps of different colours. There the result depends on legend order, and the solver's scan order varies under D4. Canonical fixtures pass all audited variants, and random scenes exclude this case.",
+        "The solver's mapping[s] last-wins on a duplicate source is unreachable, because the constructor rejects duplicate sources and readback forbids extra chains.",
+        "Default sides of 6..24 and explicit sides up to 30 extend beyond the 5..20 fixtures. This is a synthetic size extension and not a rule change.",
+        "Stamps may be fully or partly clipped. fits() only guarantees at least one in-bounds stamp cell per loose cell. This is consistent with pair 1's clipping."
+      ],
+      "required_context_checks": [
+        "None task-specific. The legend mapping and stencil are visible within each query input. Standard D4 conflicting-answer rejection suffices."
+      ],
+      "task_id": "abc82100",
+      "factory_sha256": "6bacd5ff17639fd97584f07ebf42fedb267f0b6e6732dd8346b6977aced97314",
+      "constructor_sha256": "f4c3abc6c356f78594f9042d13263f78b7204d4d015f9fbaa29187b24e4d83df"
+    },
+    "host_review": "Reviewed rule and domain limitations. Host augmentation maps completed grids with one bijective palette, horizontal reflection then clockwise quarter turns; odd indices swap axes. Fresh audit iterates all eight variants, supplied fixture checks include query answers, and export requires every pair exact. Sampler exceptions are recorded rejections, not admitted examples. Spatial connectivity follows the stated constructor/archived mechanism; optional out-of-domain modes are not certified."
+  }
+}

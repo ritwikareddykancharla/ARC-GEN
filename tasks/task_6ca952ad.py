@@ -53,11 +53,13 @@ def generate(size=None, wides=None, talls=None, brows=None, bcols=None,
       return None, None
     # Check that no two boxes are diagonally connected.
     for g in [igrid, ioutput]:
-      for row in range(1, size - 1):
-        for col in range(1, size - 1):
+      for row in range(size):
+        for col in range(size):
           if g[row][col] == -1: continue
           for dr in range(-1, 2):
             for dc in range(-1, 2):
+              if not (0 <= row + dr < size and 0 <= col + dc < size):
+                continue
               if g[row + dr][col + dc] == -1: continue
               if g[row + dr][col + dc] != g[row][col]: return None, None
     return grid, output

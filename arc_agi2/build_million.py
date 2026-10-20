@@ -25,6 +25,7 @@ from .audit import relation,UPSTREAM_IDS
 from .augmentation import transformed, exhaustive_variants, demonstrations_disambiguate
 from .contextual import CONTEXTUAL_TASK_IDS, verify_shared_picture_episode
 from .motif_context import MissingMotifEvidence, solve_demonstrated_motifs
+from .colour_evidence import MissingColourEvidence, require_colour_evidence
 from .program_targets import compile_target, audit_target, make_record, TargetError
 from .visual_shards import VisualShardWriter
 
@@ -249,6 +250,11 @@ def make_episodes(arg):
                             if len(ds)<3:break
                             demos=rng.sample(ds,3)
                         four=demos+[q]
+                        try:
+                            require_colour_evidence(tid,demos,[{'input':q['input']}])
+                        except MissingColourEvidence:
+                            failures['missing_colour_evidence_attempts']+=1
+                            continue
                         if tid in CONTEXTUAL_TASK_IDS:
                             call(verify_shared_picture_episode,{'train':demos,'test':[q]},seconds=3)
                         if tid == '98c475bf':

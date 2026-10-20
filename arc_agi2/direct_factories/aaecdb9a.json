@@ -1,0 +1,51 @@
+{
+  "task_id": "aaecdb9a",
+  "factory_sha256": "f420390be12dc6443a7ce41a2b9d6c0884354e37f3c876439a964db5c9d3ab89",
+  "constructor_sha256": "7b741f69796170929c3c78b21f3955f1f4c47d3635a55b9347c0e0a6b6deb73a",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 79619951149832,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 8.044561958056875,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The rule: for each legend colour, count its 8-connected objects. The output is a bar chart 5 slots wide. Each colour gets a fixed slot (5->0, 2->1, 8->2, 9->3, 6->4). Each bar has length equal to its count. The chart's extent along the bar axis is the largest count, and empty cells are background 7.\n\n8-connectivity does not change under any rotation or reflection, so the emitted program counts objects directly on the visible query grid. It recolours constants only: background is palette[7] and slot keys are palette[c].\n\nThe chart geometry is rewritten in visible coordinates by tracking where the canonical bottom-anchored vertical bars land under each D4 transform:\n- d4=0: vertical bars, bottom-anchored, slot = column L.\n- d4=1: horizontal bars, left-anchored, slot = row L.\n- d4=2: vertical bars, top-anchored, column 4-L.\n- d4=3: horizontal bars, right-anchored, row 4-L.\n- d4=4: vertical bars, bottom-anchored, column 4-L.\n- d4=5: horizontal bars, left-anchored, row 4-L.\n- d4=6: vertical bars, top-anchored, column L.\n- d4=7: horizontal bars, right-anchored, row L.\n\nThe output is H x 5 for even d4 and 5 x H for odd d4. Bars are filled from the anchored edge. No rotation wrapper is used, and demonstrations are not needed.",
+    "limitations": "- The legend order (5,2,8,9,6) is a fixed constant from the constructor and is not geometrically inferable. The factory hard-codes it, mapped through the palette.\n- It assumes the palette is a bijection, as the host specifies. If two legend colours mapped to the same value they would merge. If a legend colour mapped to the background it would be skipped.\n- Non-legend colours are ignored. The constructor never produces them.\n- The input-size domain is fixed at 10x10, but the counting works for any rectangular grid.\n- If no legend colour were present, the program returns a background-only chart of length 1. The constructor never produces this case (it always uses 2 to 5 colours), and the archived solver would raise an error instead.\n- No constructor defects or fixture contradictions were found: all three train pairs and the test pair agree with 8-connected counting and the fixed legend.\n- The rule text's mention of 'emitting after each bar' is only a description of construction stages and does not affect the final grid.",
+    "independent_source_review": {
+      "verdict": "hold",
+      "mechanism": "For each of the five legend colours (5, 2, 8, 9, 6), count its 8-connected components. Draw a 5-slot bar chart with background 7. Each colour has a fixed slot (5\u21920, 2\u21921, 8\u21922, 9\u21923, 6\u21924). Bar length equals the component count, bars are anchored at the chart's bottom edge, and chart length is the largest count. The emitted solver counts 8-components directly on the visible grid, which is valid because 8-connectivity is D4-invariant. It maps colours through the palette and specialises bar axis (VERTICAL), anchor edge (FAR) and slot order (reverse) per d4. There is no untransform/solve/retransform wrapper.",
+      "evidence": [
+        "Every shape the constructor can place is 8-connected. This holds for all small shapes, all medium shapes, straight lines, the diagonal and `_blob`, which grows by an 8-neighbour random walk.",
+        "`_fits` rejects any placement with a same-colour cell in another object's 8-neighbourhood, and rejects overlaps. So the per-colour object count used for the label equals the true 8-component count. The label is not a hidden latent.",
+        "In `_sample_objects` one colour is forced to `height`, so max count = height \u2208 [2, 6]. k \u2208 [2, 5] colours, so there are always at least two bars. Only legend colours are used.",
+        "`generate()` uses fixed BG = 7. The factory also uses BG = pal[7], not a mode-based background, so the two agree.",
+        "The canonical test pair was rechecked: colour 2 has 6 objects, all non-touching (checked (0,3) against (2,3), (0,0..1,1) and (2,5)). Colour 8 has 2 objects and colour 6 has 1, giving a 6\u00d75 output that matches the fixture. All three train pairs agree with the archived rule.",
+        "The D4 geometry table was spot-checked: cw rotation sends the bottom edge to the left edge with row = L, 180\u00b0 gives top-anchored bars in column 4-L, and ccw gives right-anchored bars in row 4-L. The reflection half depends on the host's flip convention. The host audit's 8000 augmented checks over all 8 d4 values passed, so the factory and host agree on it.",
+        "Bar orientation and anchor are deterministic spatial constants, and every demonstration shows them. That is acceptable."
+      ],
+      "blocking_issues": [
+        "The colour-to-slot legend is an arbitrary lookup association. The rule text itself says 'nothing geometric explains this order'. Each synthetic demonstration samples only k \u2208 {2..5} of the 5 legend colours (`random.sample(sorted(LEGEND), k)`). A query can therefore contain a colour whose slot never appears in any demonstration. Per demo, P(a given colour absent) = mean over k of (5-k)/5 = 0.3, so with 3 demos it is about 2.7% per colour, which is clearly reachable. When exactly one colour is unseen, its slot follows by elimination only if all four others were shown. When two or more query colours are unseen (about 0.1 per demo for a given pair, about 0.1% for 3 demos), the answer is undetermined by the episode. The supplied `require_colour_evidence` covers only 6ea4a07e, 913fb3ed, 494ef9d7 and 995c5fa3, and aaecdb9a is not among them. The `context_policy` D4-conflict check cannot catch this, because the issue is a colour association, not orientation. Copying the constructor's fixed legend is right for the label, but such episodes need an evidence gate."
+      ],
+      "nonblocking_limits": [
+        "The legend is hard-coded through the palette. This is legitimate only when demonstrations exhibit it; see the blocking issue.",
+        "The archived `transform` takes background as the most common colour. A dense scene could in principle let one legend colour outnumber colour 7 (for example, several 9-cell lines of one colour when there are 8 or fewer objects). The archived program would then mislabel, but the constructor and the emitted solver both use the fixed BG, so admitted labels are unaffected.",
+        "The `counts` empty fallback (H = 1) and the skipping of non-legend colours are out of domain. The constructor always emits at least 2 legend colours and no other colours.",
+        "The meaning of 'flip rows first' in the factory comment could not be verified independently from the source. Its correctness rests on the host's augmented audit passing for all d4 values."
+      ],
+      "required_context_checks": [
+        "Add an aaecdb9a episode-evidence check: every legend colour present in a query (after palette mapping) must appear as a bar in at least one demonstration output. A weaker, elimination-based alternative is to require that at most one query colour is undemonstrated and that all four other slots are demonstrated. Otherwise, reject or resample the episode.",
+        "Confirm whether the host builds synthetic episodes from multiple independent `generate()` scenes. If demonstrations always include a scene showing all five colours, the blocking issue disappears."
+      ],
+      "task_id": "aaecdb9a",
+      "factory_sha256": "f420390be12dc6443a7ce41a2b9d6c0884354e37f3c876439a964db5c9d3ab89",
+      "constructor_sha256": "7b741f69796170929c3c78b21f3955f1f4c47d3635a55b9347c0e0a6b6deb73a"
+    },
+    "host_review": "Reviewed rule and domain limitations. Host augmentation maps completed grids with one bijective palette, horizontal reflection then clockwise quarter turns; odd indices swap axes. Fresh audit iterates all eight variants, supplied fixture checks include query answers, and export requires every pair exact. Sampler exceptions are recorded rejections, not admitted examples. Spatial connectivity follows the stated constructor/archived mechanism; optional out-of-domain modes are not certified. Added query-input/demo-output evidence gate: demonstrated or transitively inferred overlap precedence, matching side parity, or every needed chart colour slot, respectively. Missing evidence is rejected before export; query answers cannot supply it. Tests cover rejection and acceptance."
+  }
+}

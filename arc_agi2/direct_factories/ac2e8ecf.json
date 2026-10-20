@@ -1,0 +1,53 @@
+{
+  "task_id": "ac2e8ecf",
+  "factory_sha256": "639014d90bc420ffe2e94a4d53c42637f3228505703bc8e9e46fecf7ce6ebea0",
+  "constructor_sha256": "9b05ef1f0d8c80d182da2ceac0ce2718aca10cf6c3f18b8f830c23b295b3e4ca",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 101355300724086,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 20.543760959059,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The factory works out where the original 'up' direction ends up on screen. That direction starts as (dy, dx) = (-1, 0). If d4 >= 4, the row reversal negates dx. Each clockwise quarter turn then maps (dy, dx) to (dx, -dy). For example, after one clockwise turn, frames move toward the right edge.\n\nThe background colour is fixed as the constant palette[0].\n\nThe emitted program works directly in the visible grid:\n- **Finding objects.** It splits the grid into single-colour, 4-connected components.\n- **Sorting objects.** It crops each object's bounding box and flood-fills the non-object cells from the border. If any non-object cell is not reached, the object has a hole and is a frame. Otherwise it is a cross.\n- **Moving frames.** Frames get box-level gravity toward the visible frame edge. They are processed starting with the one whose leading edge is nearest that edge. Each frame slides until it reaches the grid edge or the box of an already-placed frame that overlaps its perpendicular span. If the motion is vertical, the perpendicular span is its columns; if horizontal, its rows.\n- **Moving crosses.** Crosses get the same treatment toward the opposite edge.\n- **Pass-through.** Frames and crosses never block each other, as in the constructor.\n\nBecause hole detection does not change under rotation or reflection, the colour roles are inferred from the pixels. The only geometry that needs specializing is the direction of motion: its axis and its sign.",
+    "limitations": "1. **Mechanism follows the constructor.** Stacking uses bounding boxes, as in the constructor's _stack. In the default cell-contact mode, bounding-box and cell-level contact give the same result. The opt-in modes 'box_gap' and 'any' follow box semantics, which the fixtures cannot confirm.\n2. **Tie-breaking.** Ties in processing order are broken by the box's minimum perpendicular coordinate. The constructor guarantees that objects which share a span never tie, so this choice cannot change the result.\n3. **Background colour.** The background is taken to be palette[0]. That colour is the majority by construction.\n4. **Touching objects.** Objects of different colours that touch are still separated correctly, because the program groups cells by colour.\n5. **Defects.** I found no constructor defect, and no fixture contradicts the rule.\n6. **Testing.** I have not run any tests.",
+    "independent_source_review": {
+      "verdict": "accept",
+      "mechanism": "Single-colour 4-connected components are split into two kinds by a visible hole test: crop the box, flood-fill background from the border, and any unreached cell means a frame. Frames get box-level gravity toward the visible 'frame edge' (FRAME_DY, FRAME_DX). Crosses get the same treatment toward the opposite edge. Inside each kind, objects are processed nearest-edge first, and each slides until it meets the grid edge or a placed same-kind box whose perpendicular span overlaps. The two kinds never block each other. The factory specializes only the motion axis and sign, plus BG = palette[0].",
+      "evidence": [
+        "The constructor's _stack uses _frame_order key (top, left) and _cross_order key (-(top+h), left). The solver's _settle uses keys (a0, b0) for step<0 and (-a1, b0) for step>0. These match in native orientation.",
+        "In other orientations only the perpendicular tie-break changes. Same-kind objects that share columns have disjoint boxes, so their rows differ and their order is strict. Order between objects that share no columns cannot affect the result.",
+        "Cross bounding boxes equal the declared boxes. _cells draws a full-width bar at cr and a full-height bar at cc, so the solver's cell-derived bbox reproduces the constructor's o[4]/o[5]. Frames are full perimeters.",
+        "Hole classification is reliable. Frames are at least 3x3 and one cell thick, so they always enclose a cell. Crosses have strictly interior bars, so every off-bar cell connects to the border.",
+        "Neither the factory nor the archive uses the colour of a neighbouring object in the hole test; each uses only its own object's cells.",
+        "Component extraction is exact. _scene_error and _output_error reject same-colour objects that are 8-adjacent. Touching objects of different colours are separated because extraction is per colour.",
+        "Pass-through is safe. _output_error rejects any frame/cross box overlap in the output, so the solver's paint order (frames, then crosses) never overwrites anything.",
+        "Cell contact mode (the default): _fix_bars and _output_error require every cross-on-cross rest to have vertical bar contact. With that contact, box-level and cell-level gravity stop at the same row. Frames always agree because their top and bottom rows are full.",
+        "Direction mapping is consistent. A clockwise grid quarter turn sends (r,c) to (c,H-1-r), so a displacement (dy,dx) becomes (dx,-dy). The horizontal flip is applied before the rotations; it negates dx, which is a no-op for the native (-1,0) direction. The host audit passed 8000 augmented checks plus 16 fixture variants, which is consistent with this composition order.",
+        "The solver acts directly in visible coordinates. There is no whole-grid untransform, native solve and retransform wrapper.",
+        "There are no fixed answers and no hidden latent labels. The kind is determined by visible pixels, and colours carry through unchanged."
+      ],
+      "blocking_issues": [],
+      "nonblocking_limits": [
+        "The opt-in cross_contact='box_gap' and 'any' modes encode box-level semantics that the fixtures cannot confirm. The default 'cell' mode avoids this ambiguity.",
+        "Same-kind-only blocking is taught by train pair 1, where the 1-cross passes the 2-frame's columns. The archived rule prose says 'already-placed object' without saying 'same kind'. The constructor and solver both implement same-kind blocking.",
+        "BG is fixed to palette[0] rather than inferred. This is valid because the constructor enforces a background majority and the colour is a genuine rule constant.",
+        "The solver silently clips out-of-bounds writes. The constructor excludes overflow, so this guard is never exercised."
+      ],
+      "required_context_checks": [
+        "Confirm that the host D4 convention for d4>=4 is 'flip rows horizontally, then apply d4%4 clockwise quarter turns'. With the opposite composition, d4 in {5,7} would reverse the horizontal sign. The passing audit over all variants suggests the convention matches, but this should be confirmed explicitly.",
+        "Confirm that the fixture_variants_checked=16 run covers all 8 D4 variants of both the train fixtures and the test fixtures."
+      ],
+      "task_id": "ac2e8ecf",
+      "factory_sha256": "639014d90bc420ffe2e94a4d53c42637f3228505703bc8e9e46fecf7ce6ebea0",
+      "constructor_sha256": "9b05ef1f0d8c80d182da2ceac0ce2718aca10cf6c3f18b8f830c23b295b3e4ca"
+    },
+    "host_review": "Reviewed rule and domain limitations. Host augmentation maps completed grids with one bijective palette, horizontal reflection then clockwise quarter turns; odd indices swap axes. Fresh audit iterates all eight variants, supplied fixture checks include query answers, and export requires every pair exact. Sampler exceptions are recorded rejections, not admitted examples. Spatial connectivity follows the stated constructor/archived mechanism; optional out-of-domain modes are not certified."
+  }
+}

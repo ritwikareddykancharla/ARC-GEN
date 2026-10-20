@@ -1,0 +1,54 @@
+{
+  "task_id": "a5313dff",
+  "factory_sha256": "cce99ce2b8252f5c06d9ab17096078ad975d04b118e876940cc23e598f4c19a1",
+  "constructor_sha256": "0a27c713c1a05943bb26ba9715486684db349fc4a0eb7513f121fe9244ebd976",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 85507948639546,
+  "d4": 7,
+  "unique_base_inputs": 982,
+  "seconds": 10.583561374922283,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The rule is to fill every background region that is enclosed. Background is palette[0] and walls are palette[2]. The program finds connected regions of background cells using 4-connectivity. A region that touches any edge of the visible grid is open and stays unchanged. Every other region is fully enclosed and is recoloured to palette[1]. This covers box interiors, including the area around an isolated centre dot or 2x2 inner block of wall colour.\n\nThe mechanism does not change under any D4 transform. Rotations and reflections keep 4-adjacency and the set of border cells the same, so no direction needs to be specialised. Only the colour roles are turned into palette constants. The program works on rectangular H x W grids in visible coordinates.\n\nIt matches the constructor in two ways:\n- Blue is drawn only for boxes that lie fully inside the grid. A box that is clipped at the edge (row or column -1, or extending past the far edge) has an interior that reaches the border, so it is correctly left as background.\n- Boxes that share walls produce separate enclosed chambers, and each one is filled.\n\nThis agrees with all approved fixtures, including the bottom-right box in train pair 3, which touches the border and is not filled.",
+    "limitations": "Possible constructor defect for host review: the generator decides where to put blue from box parameters (box interiors that lie fully inside the grid), not from enclosure. Its anti-accidental-rectangle check only rejects rectangular wall outlines that do not belong to a placed box. In principle, up to 4 boxes that share walls could enclose a non-rectangular background pocket that no box owns. The generator would leave that pocket 0, while the visible enclosure rule fills it. I believe this is very unlikely or impossible under the constructor's overlap and size limits. If it does happen, it is a latent/visible mismatch, and I deliberately do not reproduce it.\n\nThe program assumes background, wall and fill colours are exactly palette[0], palette[2] and palette[1]. It does not infer them from the demonstrations, which is consistent with the stated palette mapping. No fixture contradictions were found.",
+    "independent_source_review": {
+      "verdict": "accept",
+      "mechanism": "Visible 4-connected enclosure fill. Each background (palette[0]) component is found by BFS. A component that touches any visible border row or column is left alone. Every other component is recoloured to palette[1]. The wall colour constant is unused. The solver runs directly on the augmented grid with no untransform or retransform wrapper, which is valid because border membership and 4-adjacency are D4-invariant.",
+      "evidence": [
+        "Constructor blue placement: blue is written to box interiors only under `row >= 0 and col >= 0 and row + tall <= size and col + wide <= size`. Clipped boxes have row or col equal to -1, or overflow by 1 because the max origin is size-dim+1. Their interior then reaches row/col 0 or size-1, so it is border-open. This matches leaving it as 0.",
+        "Box interiors are disjoint from other boxes' footprints. `common.overlaps(..., -1)` allows two boxes to share at most one wall line. So a later box cannot black out another box's wall or overwrite its blue, and its inner red core cannot do so either.",
+        "Each interior stays one connected region. For dimensions 4..6, the inner red core spans `range(row+2,row+tall-2)`, which is 0..2 cells, and leaves a 1-cell background ring. The whole interior is one connected component and is filled entirely.",
+        "Prior-limitation concern (unowned enclosed pocket), checked from source:",
+        "  - Each box is a convex rectangle. Its contribution to a non-interior hole's boundary is either one straight segment or two edges around one of its corners, which is a reflex vertex of the hole.",
+        "  - A non-rectangular (L-shaped) hole has 6 edges. The reflex box covers 2 of them, and the other 4 need distinct boxes, because adjacent convex-corner edges, or opposite-facing edges, from one box would make the hole that box's interior. That totals at least 5 boxes, more than the maximum of 4 from `randint(1, 4)`. For example, an L-tromino hole needs a box at (R,C-1) that none of the other four can supply.",
+        "  - A rectangular unowned hole, such as a 6x4 pinwheel, needs one box per side. The anti-rectangle check catches it: the outline origin is not a box origin, and the right/bottom outline walls are left walls of boxes, so they sit at col/row <= size-3, inside the scanned `wide < size-col` range. The pinwheel example gives a 3x3 outline at (3,3), which is detected and rejected.",
+        "  - If a hole outline's origin coincided with a box origin, cell (r+1,c+1) would lie in that box's ring interior, so the hole would be owned.",
+        "  - Unchecked outline corners do not matter under 4-connectivity.",
+        "Validate parameters reproduce the fixtures. In the test, the third box (col 4, wide 6, size 9) is clipped and its interior rows 7..8 touch the bottom border, so it stays 0. In train 3, box (9,7,5,5) overflows the bottom and its pocket stays 0.",
+        "The fill colour and the 0->1 mapping are demonstrated in every train pair. No arbitrary lookup association is involved. This task is not in the colour-evidence check list, and none is needed.",
+        "Host audit: 1000 fresh pairs and 8000 augmented checks passed, with no sampler rejections."
+      ],
+      "blocking_issues": [],
+      "nonblocking_limits": [
+        "The solver hardcodes BG, FILL and WALL from the palette instead of inferring them. This is consistent with the declared palette mapping. The WALL constant is unused, so any non-background colour acts as a barrier, which matches the constructor's domain where walls are the only non-background input colour.",
+        "The archived program uses the most-common colour as background, while the factory uses palette[0]. These are equivalent on the constructor domain, where background dominates, but they could diverge on adversarial out-of-domain grids.",
+        "The argument that the constructor's box-based labels equal the visible enclosure labels depends on the cap of 4 boxes and the rectangle-rejection loop. Raising num_boxes would reopen the possibility of non-rectangular unowned pockets.",
+        "The anti-rectangle check also rejects many benign layouts. This narrows the scene distribution but does not affect label correctness."
+      ],
+      "required_context_checks": [
+        "Confirm the palette passed to build_program maps palette[0] to the background colour, palette[1] to the fill colour (originally 1) and palette[2] to the wall colour (originally 2) under the host colour augmentation.",
+        "Confirm the host D4/colour augmentation of query answers uses the same palette as demonstrations, so that FILL is demonstrated in context."
+      ],
+      "task_id": "a5313dff",
+      "factory_sha256": "cce99ce2b8252f5c06d9ab17096078ad975d04b118e876940cc23e598f4c19a1",
+      "constructor_sha256": "0a27c713c1a05943bb26ba9715486684db349fc4a0eb7513f121fe9244ebd976"
+    },
+    "host_review": "Reviewed rule and domain limitations. Host augmentation maps completed grids with one bijective palette, horizontal reflection then clockwise quarter turns; odd indices swap axes. Fresh audit iterates all eight variants, supplied fixture checks include query answers, and export requires every pair exact. Sampler exceptions are recorded rejections, not admitted examples. Spatial connectivity follows the stated constructor/archived mechanism; optional out-of-domain modes are not certified."
+  }
+}

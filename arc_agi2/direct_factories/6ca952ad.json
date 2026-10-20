@@ -1,0 +1,61 @@
+{
+  "task_id": "6ca952ad",
+  "factory_sha256": "deb9d492ddbfba0954da55f0bf07f1c6ab97d02e1e94b51adf024d832abfc039",
+  "constructor_sha256": "6850a671e5d877c0fa17dbe9e162f1e8d8d3dd07435a1705aa6a8db29e3e1008",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [
+    {
+      "seed": 243805655331214,
+      "error": "reference/generator deadline"
+    },
+    {
+      "seed": 216910016250919,
+      "error": "reference/generator deadline"
+    }
+  ],
+  "seed": 87511367999754,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 291.945258541964,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "Mechanism, written in visible coordinates:\n- The background is the constant palette[7].\n- Objects are 4-connected single-colour components.\n- Components of size 3 or less stay put.\n- Each larger component is translated rigidly along the gravity direction until its bounding box touches that grid edge.\n- Original 'down' maps to: down (k=0), left (k=1), up (k=2), right (k=3), where k = d4 % 4. Row reversal for d4 >= 4 leaves the vertical axis unchanged.\n- All moved objects are erased first and then redrawn, so the result does not depend on processing order.\n\nGenerator boxes occupy disjoint column ranges (disjoint perpendicular ranges after the transform). So moved objects never collide with each other or with stationary ones.\n\nThis is the same mechanism as the failed candidate, re-emitted without changes to the rule. The counterexample is a constructor defect, not a mechanism error (see diagnosis).",
+    "limitations": "Constructor now checks all border cells for object separation; previous hidden partition ambiguity is rejected. Fresh audit passed 1,000 unique inputs / 8,000 checks with two recorded sampler timeouts. Unrestricted correctness is not claimed.",
+    "diagnosis": "Case: d4=0, background 6. The failing check is index 0, the first demonstration pair used as a query.\n\nInput details:\n- Row 0 has foreground at columns 1-5 and 7.\n- Rows 1-2 continue column 1, plus (2,2).\n- A vertical bar sits at column 7, rows 0-3.\n\nThe label treats {(0,1),(0,2),(1,1),(2,1),(2,2)} (size 5) as one object, which falls to rows 5-7. It treats {(0,3),(0,4),(0,5)} (size 3) as a separate object, which stays. But (0,2) and (0,3) are orthogonally adjacent, so visibly these form a single 4-connected component of size 8. The program correctly dropped that whole component, and the label differs.\n\nThe split cannot be recovered from the pixels. Between the column pairs 2|3, 3|4 and 4|5, the only links are row-0 links. That gives three different partitions: sizes 5+3, 6+2 and 7+1. Each partition is consistent with the column-disjoint boxes and with the num_small == num_boxes//2 constraint (one small object among three). Each predicts a different output. So the label is fixed by hidden generator latents, not by the visible mechanism. Fitting it would require a special case or a guessed tie-break, so the factory is left unchanged.",
+    "constructor_issue": "In draw(), the separation check loops `for row in range(1, size-1): for col in range(1, size-1)`. It only examines cells whose own coordinates are interior. When two cells of different boxes both lie on row 0, their 4-adjacency is never tested. Diagonal and orthogonal contacts that involve at least one interior cell are tested.\n\nInputs can touch row 0 (brows starts at 0) and boxes can sit in adjacent columns. So the generator can emit inputs where two boxes merge into one visible object, as in the counterexample: (0,2)-(0,3) at size 8. The output check has the same blind spot along the last row, but that only affects label appearance, not solvability.\n\nThe label for such samples depends on the latent box partition and is not determined by the visible grid. Suggested host fix: make the adjacency check cover all cells with bounds-checked neighbours, i.e. range(size) for row and col, skipping out-of-range neighbours. Alternatively, reject samples where any two boxes are 8-adjacent anywhere. The approved canonical fixtures are unaffected and were not modified.",
+    "independent_source_review": {
+      "verdict": "accept",
+      "mechanism": "Background is the fixed palette[7]. Objects are 4-connected single-colour components. Components with 3 or fewer cells stay in place. Each larger component is translated rigidly along a single gravity direction until its bounding box touches that grid edge. The original direction is down; the factory maps it to down/left/up/right for k = d4 % 4 and treats row reversal as leaving the vertical axis unchanged. All movers are erased first and then redrawn. The solver works directly in visible coordinates using specialised DR/DC constants, with no untransform/retransform wrapper.",
+      "evidence": [
+        "The prior constructor_issue (separation loop over range(1, size-1)) is no longer present in the current constructor. draw() now loops `for row in range(size): for col in range(size)` with bounds-checked neighbours. It rejects any 8-adjacency between cells of different box ids in both igrid and ioutput. So every box is exactly one visible component and cannot merge with another, including along borders.",
+        "Boxes have disjoint column ranges because `overlaps_1d(bcols, wides)` triggers rejection. Translation is purely vertical in native coordinates. So movers cannot collide with each other or with stationary objects, and erase-then-draw is order-independent.",
+        "Sprites come from common.connected_sprite. It uses `connected()`, which checks 4-neighbours only, so each box is one 4-connected component. conway_sprite refuses to delete the last pixel of any row or column. So the sprite bbox equals the declared box, and the solver's `H-1-max(ys)` matches the constructor's `orow = size - tall` shift.",
+        "Movement class is `sum(hues) <= 3`, the cell count of the box. This matches the solver's `len(cells) <= MAX_STAY` with MAX_STAY = 3, and the threshold is invariant under D4 and colour permutation.",
+        "In random mode brows \u2264 size - tall - 1, so every large object actually moves. num_boxes = (size+1)//3 \u2265 2 and num_small = num_boxes//2 < num_boxes, so every demonstration shows at least one mover. The gravity direction constant is therefore taught by every demo.",
+        "The canonical fixtures decode consistently. For example, test group 3 is a 3x4 box with pattern 011/011/111/111, giving 10 cells. Each fixture's num_small equals num_boxes//2.",
+        "Host audit passed: 1000 fresh pairs, 8000 augmented checks, and 16 fixture variants."
+      ],
+      "blocking_issues": [],
+      "nonblocking_limits": [
+        "The prior_notes limitation and diagnosis are stale. They describe the old range(1, size-1) separation check, which the current constructor no longer has. They should not be carried forward as a live limitation.",
+        "The \u22643 / \u22654 size threshold is a fixed task constant. Random episodes may not show both a size-3 stayer and a size-4 mover, so in some episodes the threshold is only weakly identifiable from demonstrations. This is inherent to the original ARC task, not a constructor defect.",
+        "The solver assumes non-overlapping perpendicular extents, guaranteed by overlaps_1d. For out-of-domain inputs where movers' paths overlap, it would overwrite instead of stacking. The constructor excludes such inputs.",
+        "There were 2 sampler deadline rejections, from the rejection loop at larger sizes with 5 column-disjoint boxes plus 8-adjacency filtering. This is a performance issue, not a correctness issue."
+      ],
+      "required_context_checks": [
+        "Confirm the host D4 convention: k quarter-turns clockwise, with d4 \u2265 4 meaning row reversal applied before rotation. Under that convention, original 'down' maps to (1,0), (0,-1), (-1,0), (0,1) for k = 0..3 regardless of the reflection. The 8000 augmented checks passing suggests this holds.",
+        "Confirm that the constructor hash audited (6850a671\u2026) is the fixed version with full-range adjacency checking, matching the source reviewed here."
+      ],
+      "task_id": "6ca952ad",
+      "factory_sha256": "deb9d492ddbfba0954da55f0bf07f1c6ab97d02e1e94b51adf024d832abfc039",
+      "constructor_sha256": "6850a671e5d877c0fa17dbe9e162f1e8d8d3dd07435a1705aa6a8db29e3e1008"
+    },
+    "host_review": "Reviewed mechanism and limitations. Confirmed augmentation.py uses a bijective palette, horizontal flip followed by clockwise turns; audit.py checks every D4, not only its final reported d4=7. Episode-wide D4 ambiguity gate is active. Out-of-domain fallbacks do not justify unverified inputs; every export still executes the program on every pair.",
+    "historical_limitations_before_constructor_fix": "The program segments objects by visible 4-connectivity, as the intended rule requires. If the constructor places two distinct boxes edge-adjacent along the input's first row, the visible pixels merge them into one component, and the generator's label cannot be recovered from the grid. Such samples, which appear on other borders after a D4 transform, will keep failing. No tests were run by me."
+  }
+}

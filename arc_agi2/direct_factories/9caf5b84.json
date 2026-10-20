@@ -1,0 +1,21 @@
+{
+  "task_id": "9caf5b84",
+  "factory_sha256": "6f1de0dfa421fd63dec15c4d295426476b2a056b3543a088c844fa9c8d9899f2",
+  "constructor_sha256": "f2e0b52d4f1b48187843a2122db5e7e7187e59e0786a1ba04b16aaa947f9c53c",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 48056547953028,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 1.6005989590194076,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "Rule: count every colour in the input. Keep the two most frequent colours where they are, and recolour every other cell with the fill colour (originally 7).\n\nThe rule only uses colour counts, never positions. Counts do not change under any rotation or reflection, and the output grid has the same shape as the input. So the D4 transform needs no change to the mechanism: the emitted program works on the visible grid as given.\n\nUnder a palette permutation, counts follow the colours. The only constant to specialise is the fill colour, which becomes palette[7]. The generator never draws colour 7 in inputs (its colour pool is {0,1,2,3,4,5,6,8,9}), so palette[7] cannot clash with a kept colour.",
+    "limitations": "Relies on the constructor's guarantees: exactly 5 colours, and the 2nd-ranked count strictly greater than the 3rd. Outside that domain, a tie at the cut-off is broken deterministically by colour value. That tie-break is a fallback, not part of the puzzle rule. The fixtures are consistent with the uniform rule and no constructor defects were found. No tests have been run."
+  }
+}

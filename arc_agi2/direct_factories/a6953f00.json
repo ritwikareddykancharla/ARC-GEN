@@ -1,0 +1,49 @@
+{
+  "task_id": "a6953f00",
+  "factory_sha256": "c9c4fd2e4f9c4fb87fd008cf1a51df25ffc22a84df370295ceb2ed094c98cb75",
+  "constructor_sha256": "b5a5971614898882f01924c0eb667b20f424990b645bef220abb811663663d8f",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 235573736194115,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 2.5174697920447215,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "Native rule: the input is a square n x n mosaic. The output is the 2x2 corner block from the top rows. It is the top-left block when n is odd and the top-right block when n is even. A D4 transform maps each 2x2 corner window of the input onto a 2x2 corner window of the transformed input. The content of that window, read in visible coordinates, is exactly the transformed output. So the emitted program only needs to know which visible corner corresponds to the native top-left (odd case) and the native top-right (even case). The factory works this out by applying the transform to corner labels (r, c). The optional row reversal maps c to 1-c. Each clockwise turn maps (r, c) to (c, 1-r). The two resulting corners are emitted as constants, and the program crops that 2x2 window directly from the visible grid. Parity is read from the visible dimension that holds the native width: the width for d4%4 in {0,2}, the height otherwise. In the generator's domain the grid is square, so both dimensions agree. Colours are copied verbatim, so the palette needs no handling. Demonstrations are not needed because the mechanism is fully fixed by the side parity.",
+    "limitations": "The generator only produces square grids with side 3..30. Rectangular inputs fall outside the constructor's domain. For those, the program takes parity from the dimension that corresponds to the native width, matching the archived transform's use of w, but that choice is an extrapolation. The even-side half of the rule rests on a single original demonstration (4x4). It is accepted because the constructor defines it explicitly. I found no fixture contradictions and no generator tie-breaks to report. The constructor forces the four corner windows to be distinct and non-flat, so a wrong corner choice always gives a wrong answer. I have not run any tests.",
+    "independent_source_review": {
+      "verdict": "accept",
+      "mechanism": "Square n\u00d7n mosaic. The output is the 2\u00d72 window from the top two rows: top-left (cols 0..1) when n is odd, top-right (cols n-2..n-1) when n is even. The factory maps the native TL and TR corner labels through the D4 element and emits them as constants. The solver then crops that visible corner directly from the augmented grid, choosing by parity of the visible dimension that holds the native width.",
+      "evidence": [
+        "Constructor `_crop`: `x = n - 2 if n % 2 == 0 else 0`, rows `[:2]`. This matches the archived `transform`, which uses `w`.",
+        "Fixtures check out. Train 1 (4\u00d74) gives `8 2 / 4 7` at cols 2-3. Train 2 (3\u00d73) gives `0 7 / 5 6`. Train 3 (5\u00d75) gives `5 8 / 8 0`. Test (8\u00d78) rows 0-1, cols 6-7 give `9 2 / 3 4`, which matches the approved output.",
+        "Factory corner algebra is correct. Row reversal maps c to 1-c. A clockwise quarter-turn maps (r,c) to (c,1-r), so TL goes to TR, TR goes to BR, BR goes to BL, and BL goes to TL. Any D4 image of a corner window is a corner window, and its visible content equals the transformed native output.",
+        "`PARITY_ON_WIDTH` is (d4%4 in {0,2}). It correctly tracks which visible axis carries the native width, and the grids are square anyway.",
+        "The emitted solver uses only visible-coordinate slicing `g[y:y+2, x:x+2]` with y in {0, h-2} and x in {0, w-2}. There is no untransform/solve/retransform wrapper. Colours are copied verbatim, so the palette is correctly ignored.",
+        "There are no hidden-latent labels. The output is fully determined by the visible n and the cells. `_corners_ok` forces all four corner windows to be pairwise distinct and non-flat, including the overlapping n=3 case, so a wrong-corner solver cannot pass by coincidence.",
+        "Host audit passed: 1000 fresh pairs, 8000 augmented checks, 16 fixture variants, no sampler rejections."
+      ],
+      "blocking_issues": [],
+      "nonblocking_limits": [
+        "The even-side half of the parity rule rests on a single original demonstration (4\u00d74). The canonical ARC task has the same limitation, and the constructor states it explicitly.",
+        "Rectangular inputs are out of domain. Taking parity from the native-width axis is an extrapolation that mirrors the archived `transform`, which uses `w`.",
+        "Some synthetic episodes may contain only one parity among their demos, for example all odd demos with an even query. In those episodes the D4-specific orientation constant for the other parity is not visibly taught. This is an episode-identifiability property, not a label error.",
+        "With a user-supplied 2-colour palette at n=3, distinct non-flat overlapping windows rely on rejection sampling (1000 tries). This is unlikely to fail, but it is not proven."
+      ],
+      "required_context_checks": [
+        "Confirm that episode assembly includes at least one odd-side and one even-side demonstration. Under augmentation, the visible corner for each parity is an orientation constant that only the demonstrations can teach.",
+        "Confirm that the host's D4 indexing convention matches the factory's documented convention: indices >= 4 reverse each row first, then rotate clockwise d4%4 times. The passing 8000 augmented checks suggest it does."
+      ],
+      "task_id": "a6953f00",
+      "factory_sha256": "c9c4fd2e4f9c4fb87fd008cf1a51df25ffc22a84df370295ceb2ed094c98cb75",
+      "constructor_sha256": "b5a5971614898882f01924c0eb667b20f424990b645bef220abb811663663d8f"
+    },
+    "host_review": "Reviewed rule and domain limitations. Host augmentation maps completed grids with one bijective palette, horizontal reflection then clockwise quarter turns; odd indices swap axes. Fresh audit iterates all eight variants, supplied fixture checks include query answers, and export requires every pair exact. Sampler exceptions are recorded rejections, not admitted examples. Spatial connectivity follows the stated constructor/archived mechanism; optional out-of-domain modes are not certified. Added query-input/demo-output evidence gate: demonstrated or transitively inferred overlap precedence, matching side parity, or every needed chart colour slot, respectively. Missing evidence is rejected before export; query answers cannot supply it. Tests cover rejection and acceptance."
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "task_id": "97999447",
+  "factory_sha256": "af98ae8ec577070bc7f467ba93561434623807905761b867580629313ca1d0c9",
+  "constructor_sha256": "3b87aabd119526bca3bc8acc8d27239b844f42a692f90aa1f45b215d51c5da8b",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 246683305163503,
+  "d4": 7,
+  "unique_base_inputs": 998,
+  "seconds": 2.936124625033699,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "In the original task, each non-background seed pixel starts a ray that runs to the right edge. Along the ray, cells at even distance from the seed keep the seed colour and cells at odd distance become grey 5. The factory maps the original ray direction (0,+1) into visible coordinates using the stated D4 convention. Reversing each row negates the column component. Each clockwise rotation maps (dr,dc) to (dc,-dr). The background constant is palette[0] and the grey constant is palette[5]. The emitted program works directly on the visible grid. It finds every pixel that is not background and walks from it in the specialised direction until it leaves the grid, writing the seed colour at even steps and the grey constant at odd steps. The ray length and parity are measured from the seed, so no absolute coordinates or grid sizes are involved. Rectangular grids and seeds next to the boundary work naturally, because the walk simply stops at the border.",
+    "limitations": "Background is assumed to be palette[0], matching the constructor, which always uses a black canvas. In the constructor's domain, seeds sit in distinct rows (rows are sampled without replacement), so rays never overlap. If out-of-domain inputs had overlapping rays, later seeds in row-major scan order would overwrite earlier ones; the constructor never defines that case. Seed colours exclude grey in the generator, and the program does not need to tell grey seeds apart. The demonstrations are not used, because every role is fixed by d4 and the palette. I found no constructor defects and no fixture contradictions: the canonical fixtures match the uniform rule. This factory has not been run or tested."
+  }
+}

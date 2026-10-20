@@ -1,0 +1,21 @@
+{
+  "task_id": "95990924",
+  "factory_sha256": "e1a3bd6b0ec0c97920cc818b1d6771f897d54bcdcbbd32e5eb18a634529ba731",
+  "constructor_sha256": "6b99db36599a7c48cb8f006ede587f0b8416c96820c75b74331be9a61222a1f5",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 15960052867290,
+  "d4": 7,
+  "unique_base_inputs": 753,
+  "seconds": 11.08294350001961,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "In the original frame, each 2x2 square of colour 5 gets four diagonal corner markers one step outside its bounding box: 1 at top-left, 2 at top-right, 3 at bottom-left and 4 at bottom-right. The factory writes each corner as a direction vector (sy, sx) in {-1,+1}^2 and pushes it through the visible transform. For d4>=4 it first applies a horizontal flip, (dy,dx)->(dy,-dx). It then applies d4%4 clockwise rotations, (dy,dx)->(dx,-dy). The result maps each visible diagonal direction to the constant palette[original marker colour]. The emitted program works directly on the visible grid. It finds 4-connected components of colour palette[5] and takes each bounding box. At each diagonal corner it places the matching marker colour, but only when the cell is in bounds and still background (palette[0]). Squares are processed independently, so their order does not matter.",
+    "limitations": "The program assumes the constructor's domain: a background of palette[0] with solid 2x2 squares of palette[5]. It matches squares by that colour, not by inferring roles from the demonstrations. It does not analyse the generator's own spacing guarantees. The bounds check and the write-only-onto-background check are kept as safeguards, matching the archived solver. No constructor defects or fixture contradictions were found. All fixtures follow the uniform corner-marker rule."
+  }
+}

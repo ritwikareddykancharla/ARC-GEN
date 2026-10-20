@@ -1,0 +1,21 @@
+def build_program(d4, palette):
+    bg = int(palette[1])
+    fill = int(palette[0])
+    lines = []
+    lines.append('import numpy as np')
+    lines.append('')
+    lines.append('BG = %d' % bg)
+    lines.append('FILL = %d' % fill)
+    lines.append('')
+    lines.append('def solve(demonstrations, grid):')
+    lines.append('    g = np.array(grid, dtype=int)')
+    lines.append('    mask = g != BG')
+    lines.append('    if not mask.any():')
+    lines.append('        return [[FILL]]')
+    lines.append('    ys, xs = np.nonzero(mask)')
+    lines.append('    y0, y1 = int(ys.min()), int(ys.max())')
+    lines.append('    x0, x1 = int(xs.min()), int(xs.max())')
+    lines.append('    out = g[y0:y1 + 1, x0:x1 + 1].copy()')
+    lines.append('    out[out == BG] = FILL')
+    lines.append('    return out.astype(int).tolist()')
+    return '\n'.join(lines) + '\n'

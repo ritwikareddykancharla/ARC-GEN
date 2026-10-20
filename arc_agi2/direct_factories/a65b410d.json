@@ -1,0 +1,50 @@
+{
+  "task_id": "a65b410d",
+  "factory_sha256": "124e7f525637bf120c039c7956d66c04280181c13e4a0aa04a6f9a5b3115eeb1",
+  "constructor_sha256": "342427a9f8f7451f8eb4fb51ce8d9cf2d4b087d22a338367770bd9a2359b8c7c",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 90993492595457,
+  "d4": 7,
+  "unique_base_inputs": 364,
+  "seconds": 8.025086041074246,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "In canonical coordinates there is a colour-2 bar that starts at the left edge and runs along +x. The rows above it get colour-3 runs whose length grows by one per step, up to the top edge. The rows below get colour-1 runs whose length shrinks by one per step until it reaches 0. Every run starts at the same edge as the bar.\n\nThe factory maps two canonical direction vectors through the D4 transform. A row reversal negates dc. Each clockwise rotation maps (dr, dc) to (dc, -dr). This gives the visible 'along' direction (canonical +x) and the visible 'up' direction (canonical -y). The colour roles become palette constants: bar = palette[2], widening colour = palette[3], shrinking colour = palette[1].\n\nThe emitted program works directly in visible coordinates:\n1. Find the bar pixels.\n2. Take the bar end with the smallest projection on 'along' as the anchor, which is the edge-attached end.\n3. Take the bar length as the projection span.\n4. Step k cells along 'up' and draw runs of length L+k along 'along'.\n5. Step k cells against 'up' and draw runs of length L-k.\n\nAll runs are clipped at the grid bounds. No grid rotation and no global recolouring is applied.",
+    "limitations": "Assumes the domain has exactly one bar of the bar colour. If there are several, all their pixels are pooled, and the span and min-projection end define the bar. The constructor's domain never needs clipping: the top run length equals 'triangle', which is less than the width, and the last shrinking row is triangle-1, which is less than the height. Clipping is kept only as a guard. The bar's starting offset is read from the grid rather than assumed to be the edge, matching the archived solver. No fixture contradictions, generator indexing bugs or hidden tie-breaks were found. Not executed or tested by me.",
+    "independent_source_review": {
+      "verdict": "accept",
+      "mechanism": "In canonical coordinates there is one colour-2 bar of length L, attached to the left edge on row r. Every row above it, up to the top edge, gets a colour-3 run of length L+k from x=0, where k is the distance from the bar. Rows below it get colour-1 runs of length L-k until the length reaches 0. The factory maps the canonical +x ('along') and -y ('up') vectors through the D4 transform and specialises the palette roles bar=palette[2], up=palette[3], down=palette[1]. The emitted solver finds the bar in visible coordinates. It anchors at the end with the minimum projection on ALONG and measures L as the projection span. It then steps along UP and against UP, drawing runs along ALONG.",
+      "evidence": [
+        "Constructor random branch: triangle\u2208[3,9], width and height = triangle+[1,4], length\u2208[2,triangle-1], row=triangle-length\u22651. The bar always starts at column 0 and there is always at least one row above it.",
+        "Green loop: `for r in range(row)` with run length `length+row-r`. This gives L+k for k=row-r, out to the top edge. The longest run is at r=0 with length triangle, which is at most width-1, so no out-of-bounds write is possible.",
+        "Blue loop: `range(row+1, row+length)` with length `length+row-r` = L-k, ending at length 1. The last row is triangle-1, which is at most height-2, so no out-of-bounds write is possible.",
+        "The output is fully determined by visible input quantities (bar row, length, grid size). No hidden random latent affects the labels. The test and train fixtures match the constructor parameters given in validate().",
+        "The bar is a single straight segment along ALONG, so all its cells share the perpendicular coordinate. argmin(proj) therefore picks a unique end cell, and there is no tie ambiguity.",
+        "The emitted solver iterates the up-staircase with `while inside(r0,c0)`, reaching the grid edge as the rule requires. The down-staircase uses `range(1,L)` with run length L-k, matching blue rows row+1..row+L-1.",
+        "The solver uses no whole-grid untransform/retransform. Directions and colours are rule constants specialised per D4/palette, which is allowed. The orientation and colour roles are visible in every demonstration's staircases.",
+        "Host audit passed: 1000 fresh pairs, 8000 augmented checks and 16 fixture variants. This is consistent with the tf() rotation/flip convention matching the host's D4 convention."
+      ],
+      "blocking_issues": [],
+      "nonblocking_limits": [
+        "The solver pools all bar-colour pixels if more than one bar exists. The constructor always emits exactly one bar, so this is outside the domain.",
+        "Clipping in draw_run and the archived min(L+k, W-x0) guard are never exercised, because the constructor guarantees triangle < width and triangle-1 < height.",
+        "The `len(cells)==0` early return is a defensive fallback that the constructor excludes (length \u2265 2).",
+        "From source alone I could not independently confirm that tf()'s rotation and reflection order matches the host's D4 indexing. The passing 8000 augmented checks provide the evidence for it."
+      ],
+      "required_context_checks": [
+        "None required for colour associations. The bar, up and down colours are fixed rule roles exhibited in every demonstration, not arbitrary lookups, and a65b410d is correctly absent from require_colour_evidence.",
+        "The standard D4 conflict policy suffices. The asymmetric staircase (3 above, 1 below, runs anchored at the bar's edge end) makes the visible orientation identifiable from the demonstrations."
+      ],
+      "task_id": "a65b410d",
+      "factory_sha256": "124e7f525637bf120c039c7956d66c04280181c13e4a0aa04a6f9a5b3115eeb1",
+      "constructor_sha256": "342427a9f8f7451f8eb4fb51ce8d9cf2d4b087d22a338367770bd9a2359b8c7c"
+    },
+    "host_review": "Reviewed mechanism and limitations. Confirmed augmentation.py uses a bijective palette, horizontal flip followed by clockwise turns; audit.py checks every D4, not only its final reported d4=7. Episode-wide D4 ambiguity gate is active. Out-of-domain fallbacks do not justify unverified inputs; every export still executes the program on every pair."
+  }
+}

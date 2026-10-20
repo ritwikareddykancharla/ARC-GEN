@@ -1,0 +1,48 @@
+{
+  "task_id": "a740d043",
+  "factory_sha256": "89be42f4bd7bb630ecafbf2556c1ad33488e27da8738da6e70a2081c39569ba8",
+  "constructor_sha256": "6717c4200626185c1edd840fbdb27fd193770baf0df2790e0baf64c387bdedfe",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 99486927316784,
+  "d4": 7,
+  "unique_base_inputs": 999,
+  "seconds": 1.7554165000328794,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The generator places a small sprite (2-3 by 2-3) on a background of blue (colour 1). The output is the sprite's bounding box, with black (colour 0) wherever the sprite has no pixel. Under a palette map, the background becomes palette[1] and the hole fill becomes palette[0]. Both are emitted as constants. Cropping to the bounding box of non-background cells commutes with every D4 transform: the bounding box of the transformed grid is the transformed bounding box. So the emitted program works directly in visible coordinates with no axis specialisation. It finds every cell not equal to palette[1], crops to their axis-aligned bounding box, and repaints the remaining palette[1] cells inside the crop as palette[0]. Sprite pixels keep their colour and position. A sprite colour may equal palette[0]; since the crop treats it as foreground, this is harmless.",
+    "limitations": "Nothing was executed. The generator sizes its output as (max(rows)+1, max(cols)+1), so it assumes common.hollow_conway returns a sprite whose minimum row and column are both 0. If that helper could leave an empty leading row or column, the expected output would contain all-black margins that are invisible in the input. No visible rule could recover them, and that would be a constructor defect needing host review. I have assumed the sprite fills its bounding box. If the input has no non-background cells, which the generator should never produce, the program returns [[palette[0]]] as a placeholder. The fixtures match the uniform rule; no contradictions were found.",
+    "independent_source_review": {
+      "verdict": "accept",
+      "mechanism": "The constructor fills a blue (1) grid and places a sprite from common.hollow_conway(wide, tall, tries), with wide and tall each 2\u20133. Each sprite pixel takes one of two random colours. Blue is excluded, and 0 cannot occur because random_colors draws from 1..9. The output is a black (0) grid of size (max(rows)+1) x (max(cols)+1) carrying the sprite pixels at their relative positions. The emitted solver uses BG=palette[1] and FILL=palette[0]. It crops to the bounding box of cells not equal to BG and repaints BG cells inside the crop as FILL.",
+      "evidence": [
+        "The prior limitation about leading empty rows or columns is resolved by common.hollow_conway. A pixel is not removed if it is the last one in row 0 or row height-1 (`if rows.count(r) <= 1 and r in [0, height - 1]: continue`). The same guard applies to column 0 and column width-1. So min row = 0, max row = tall-1, min col = 0 and max col = wide-1 always hold. The output size max+1 therefore equals the input bounding box exactly.",
+        "Interior rows or columns can be removed entirely, for example the middle row of a 3-tall sprite. That gives an all-0 row in the output and an all-background row inside the input crop. The crop-and-repaint rule reproduces it, so it stays consistent.",
+        "Sprite colours come from random_colors(2, exclude=[blue]), which is a subset of {2..9}. They never equal BG(1) or FILL(0), so after a palette permutation they never collide with palette[1] or palette[0]. The note's remark that a sprite colour 'may equal palette[0]' cannot actually happen, and would be harmless anyway.",
+        "Hard-coding BG is legitimate because the constructor's background is always blue. It is also the majority colour: grids are at least 25 cells and sprites have at most 9 pixels.",
+        "There is no orientation dependence. The axis-aligned bounding-box crop and the cellwise recolour commute with all D4 transforms, so the solver works directly on the visible grid. There is no untransform/retransform wrapper.",
+        "Fixtures agree with validate(). For example, train 2 uses rows [0,0,1,1,1,2], cols [0,1,0,1,2,2] at offset (1,1) to give [[2,2,0],[2,2,3],[0,0,2]]. The test gives [[0,2],[2,3]].",
+        "The empty-mask fallback [[FILL]] is outside the domain. hollow_conway always keeps at least one pixel, because the corner and edge guards stop any row or column from fully vanishing at the boundaries.",
+        "Host audit passed: 1000 fresh pairs, 8000 augmented checks and 16 fixture variants, with no sampler rejections."
+      ],
+      "blocking_issues": [],
+      "nonblocking_limits": [
+        "The fill colour (palette[0]) is a single global rule constant, not a lookup association. It is visible only in demonstrations whose sprite has holes. tries=randint(0,3) can be 0, so some sprites are solid. A synthetic episode could therefore have only hole-free demos and a query with holes, leaving the fill colour unseen in context. Rough estimate: about 25\u201330% of individual pairs are hole-free, which puts such episodes in the low single-digit percent range. episode_evidence_checks does not cover this task. This is not a solver or label defect.",
+        "Each sprite pixel's colour is chosen independently from two colours, so a sprite may be monochrome. This does not affect the rule.",
+        "The review is source-only. Correctness beyond the constructor's domain (e.g. a non-blue background or an empty grid) is not claimed."
+      ],
+      "required_context_checks": [
+        "Host may decide whether episodes need at least one demonstration showing a background hole recoloured to palette[0] whenever the query crop contains palette[1] cells. The current checker does not enforce this for a740d043."
+      ],
+      "task_id": "a740d043",
+      "factory_sha256": "89be42f4bd7bb630ecafbf2556c1ad33488e27da8738da6e70a2081c39569ba8",
+      "constructor_sha256": "6717c4200626185c1edd840fbdb27fd193770baf0df2790e0baf64c387bdedfe"
+    },
+    "host_review": "Reviewed mechanism and limitations. Confirmed augmentation.py uses a bijective palette, horizontal flip followed by clockwise turns; audit.py checks every D4, not only its final reported d4=7. Episode-wide D4 ambiguity gate is active. Out-of-domain fallbacks do not justify unverified inputs; every export still executes the program on every pair. Added input/demo-only evidence gate for query-required colour positions, diagonal offsets, inverted-board output or crop-hole fill as applicable. Regression checks cover the newly reachable missing-evidence case. Reviewer concern is resolved by episode rejection, not by inspecting query answers."
+  }
+}

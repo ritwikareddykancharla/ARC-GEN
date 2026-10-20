@@ -1,0 +1,61 @@
+{
+  "task_id": "a85d4709",
+  "factory_sha256": "58246a16514d7c9a4740b8ec8b505af513336fa7cbf7e1e03e61baade30dcf9f",
+  "constructor_sha256": "679472699877cc13233c3c4cedded2e28c83e6debd9b29bcd1f8dc44211731f2",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 247262589023880,
+  "d4": 7,
+  "unique_base_inputs": 6,
+  "seconds": 2.1142909169429913,
+  "finite_default_domain": {
+    "exhaustive": true,
+    "cases_checked": 6,
+    "augmented_checks": 96,
+    "definition": "All six native permutations of three grey seed positions.",
+    "query_distinct_from_demos": true,
+    "scope": "Default native parameter distribution only; finite input count is not inflated by repeated sampling."
+  },
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "In the original puzzle, each row has one grey cell. The grey cell's column picks a colour from a fixed table (col0->2, col1->4, col2->3), and the whole row is painted that colour on a background-0 canvas. Under D4 the 'lines' stay rows when the rotation count k is even and become columns when k is odd. Position along a line is measured either from the start or from the end. It is reversed when k is 2 or 3, XOR'd with the horizontal pre-flip. Derivation: a flip maps c to W-1-c. One CW rotation sends the original column to the visible row index. Two rotations send it to W-1-c. Three rotations send it to W-1-c along the columns. The emitted program scans each visible row or column for the grey constant palette[5]. If no grey is found, it falls back to the first non-background cell. It converts the visible position back to the original column index and paints the full line palette[TABLE[c]]. All other cells stay palette[0]. Every rule runs directly in visible coordinates with palette constants. There is no wrapper, no rotation of grids and no colour unpermutation.",
+    "limitations": "The constructor only supports 3x3 grids, since the colour table has three entries and larger sizes would raise an index error. For lines longer than 3, a grey cell at an unmapped position yields background. The domain has exactly one grey per line, so ties do not arise. If a line had several grey cells, the program would take the one with the smallest original column, which is a choice and not a generator rule. The fixtures agree with the uniform rule, and no constructor defects were found that affect the answer. Not tested by me.",
+    "independent_source_review": {
+      "verdict": "accept",
+      "mechanism": "Each line of a 3x3 grid holds one grey cell. The grey cell's original column index selects a colour from a fixed table (col0->2, col1->4, col2->3), and the whole line is painted that colour. Under D4, k = d4 % 4 and flip = d4 >= 4. Lines stay rows when k is even and become columns when k is odd. Position along a line is reversed when (k in {2,3}) XOR flip, which matches a horizontal pre-flip followed by k clockwise turns. The colours used are palette[2], palette[4], palette[3], grey is palette[5] and background is palette[0].",
+      "evidence": [
+        "Constructor: `output[r][c] = colors[col]` with `colors=(2,4,3)` and `grid[r][col] = common.gray()`. Each row gets exactly one grey cell, and the output row colour depends only on that cell's column. There is no hidden random latent beyond `cols`, and `cols` is visible in the input.",
+        "Random mode uses `cols = common.shuffle(range(size))`, which is `random.sample(range(3), 3)` in common.py, so it always yields a permutation. Every synthetic demonstration therefore shows all three column->colour associations. The `validate()` fixtures (e.g. [2,2,2], [0,1,0]) are non-permutations, but the solver handles them the same way.",
+        "The four approved train fixtures together cover col0->2, col1->4 and col2->3. The test output [[3,3,3],[2,2,2],[4,4,4]] agrees with the table, so the arbitrary lookup is demonstrated.",
+        "Factory orientation, worked through by hand:",
+        "- k=1 (CW): (r,c) maps to (c, H-1-r). Lines become columns, the position along each column equals the original c, and nothing is reversed. The factory gives REVERSED=False.",
+        "- k=2: positions become W-1-c, so lines are reversed rows.",
+        "- k=3: (r,c) maps to (W-1-c, r), so lines are reversed columns.",
+        "- A horizontal pre-flip toggles reversal. All of this matches `reversed_pos = (k in (2,3)) != flip`.",
+        "`c = (n-1-hit) if REVERSED else hit` recovers the original column index, and `TABLE[c]` uses the palette-mapped constants. The output is painted directly in visible rows or columns. There is no untransform, native solve or retransform wrapper, and no colour unpermutation.",
+        "In-domain, every line contains exactly one grey cell, so there are no ties. The non-grey fallback and the `BG` canvas are never reached, because every line gets painted.",
+        "The host audit passed 1000 fresh pairs, 8000 augmented checks and 16 fixture variants. Because random inputs are permutations, a CW/CCW or flip-order convention error would swap the colours for col0 and col2, and the audit would have caught it."
+      ],
+      "blocking_issues": [],
+      "nonblocking_limits": [
+        "The generator's domain is tiny: 6 base inputs, the permutations of 3, multiplied by D4 and palette variants. This is inherent to the original task and is not a defect.",
+        "Only 3x3 grids are supported. `colors[col]` would raise an IndexError for size > 3, and for longer lines the factory returns BG for unmapped positions. Both cases are outside the constructor's domain.",
+        "The handling of lines with several grey cells (take the first in original-column order) and the non-grey fallback are defensive choices. The constructor never produces either case.",
+        "The archived program uses the most common colour as background, whereas the factory uses the constant palette[0]. Within the domain these are equivalent: 6 background cells versus 3 grey cells."
+      ],
+      "required_context_checks": [
+        "Confirm every episode has at least one demonstration. A synthetic random demo always covers all three column->colour associations, but an episode with zero demos would leave the arbitrary table unsupported. a85d4709 is not covered by the supplied `require_colour_evidence` checks.",
+        "If episodes ever mix the `validate()`-style non-permutation fixtures with synthetic queries, confirm the demonstrations collectively cover every column index the query uses. The canonical fixtures do."
+      ],
+      "task_id": "a85d4709",
+      "factory_sha256": "58246a16514d7c9a4740b8ec8b505af513336fa7cbf7e1e03e61baade30dcf9f",
+      "constructor_sha256": "679472699877cc13233c3c4cedded2e28c83e6debd9b29bcd1f8dc44211731f2"
+    },
+    "host_review": "Reviewed mechanism and limitations. Confirmed augmentation.py uses a bijective palette, horizontal flip followed by clockwise turns; audit.py checks every D4, not only its final reported d4=7. Episode-wide D4 ambiguity gate is active. Out-of-domain fallbacks do not justify unverified inputs; every export still executes the program on every pair. Native finite domain independently exhausted under all D4 elements and two palettes; adaptive diversity limit recorded."
+  }
+}

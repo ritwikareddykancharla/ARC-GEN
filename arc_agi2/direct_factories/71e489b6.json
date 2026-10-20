@@ -1,0 +1,23 @@
+{
+  "task_id": "71e489b6",
+  "factory_sha256": "6521c46e03ab505d160eb5807a2941301a3af81201f99abffebb081b224da32a",
+  "constructor_sha256": "dc868de17e0083061b605a4c988d95cc4b57f6cc7f55f49c0e6c43959cad7740",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 192465839001139,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 11.367234207922593,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The mechanism has the same shape under every D4 transform, so no axis or direction needs specializing. Colour roles are baked in as constants: ZERO = palette[0], ONE = palette[1] and RING = palette[7].\n\nThe program works in two stages.\n\n1. **Remove specks.** It repeatedly peels colour-1 cells that have at most one cardinal colour-1 neighbour. Each round's kills are computed together. There is the archived border exception: a 1-cell on the grid border survives if more than half of its in-bounds 3x3 neighbours are currently 1, because it is a region cell clipped by the border. The peeled cells are the specks, and they become ZERO.\n\n2. **Find and ring the holes.** On the despeckled grid, it peels colour-0 cells the same way, without the exception. The peeled cells that were 0 in the input are the holes. Their 8-neighbour dilation, minus the holes themselves, is painted RING. This also covers a bridge centre: it was 1, gets erased as a speck, and is then overwritten by the ring.\n\nWhy this holds in the constructor's domain:\n- Thick base layouts give every base cell at least two same-colour cardinal neighbours, so the base never peels.\n- Floating specks have no 1-neighbours, and interior bumps have exactly one, so both peel.\n- Hole cells have at most one 0-neighbour, or reach that after their arm cells peel, as in L-trominoes and bridges.",
+    "limitations": "- **Border exception is a heuristic.** It never fires on random-mode scenes. Floating specks have an all-zero 3x3 neighbourhood, bumps and bridge centres are interior, and the generator keeps every non-hole 1-cell at two or more cardinal 1-neighbours. It only matters for explicit-latent scenes that break that invariant, such as fixture test 2.\n- **Possible wrong survival.** An explicit scene could place a lone 1-speck on the border inside a mostly-1 neighbourhood. That cannot happen under the constructor's sampling, but there such a speck would wrongly survive.\n- **Demonstrations are ignored.** The roles come from the palette constants.\n- **Not tested.** I have run no tests.",
+    "diagnosis": "The failed candidate dropped the border exception from the colour-1 peel. The failure is on fixture index 4, test pair 2.\n\n1. Holes (16,12) and (17,13) form a diagonal pair touching the bottom border. This leaves base-1 cell (17,12) with only one cardinal 1-neighbour, (17,11).\n2. A plain peel removes (17,12) as a speck.\n3. (17,11) is then left with one 1-neighbour, so it peels too, and so does (16,11). The peel cascades up the whole of column 11.\n4. That turns a long column of real 1-cells into 0. It also creates spurious holes and rings.\n\nThe archived solver spares (17,12): 4 of the 6 cells in its in-bounds 3x3 neighbourhood are 1, so 2*3 > 5. The repair restores that exception in visible coordinates. The exception is D4-invariant because it depends only on the border and the 3x3 neighbourhood. It only affects the colour-1 peel, and it is re-evaluated on the current mask in every peel round, as in the archived solver. Nothing is special-cased to the displayed grid.",
+    "constructor_issue": "Test pair 2 is built through explicit latents that the random sampler would reject.\n\n- **What breaks the invariant.** The hole pair (16,12),(17,13) leaves 1-cell (17,12) with a single cardinal 1-neighbour. `_hole_ok`'s local check (n < 2 \u2192 reject) forbids this. `generate()` in explicit mode never runs that check, so the fixture breaks the 'every remaining 1-cell keeps two cardinal 1-neighbours' invariant stated in the docstring.\n- **Labels are still consistent.** The label itself agrees with the rendered mechanism: base, holes kept as 0, 8-ring painted 7 and clipped at the border.\n- **Consequence for solvers.** A solver must spare border-clipped region cells, as the archived border-majority heuristic does. A pure cardinal-peel rule derived from the random-mode invariant is not enough.\n- **Recommendation.** The host should consider applying `_hole_ok`-style validation, or documenting the exemption, for explicit fixtures."
+  }
+}

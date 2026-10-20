@@ -1,0 +1,48 @@
+{
+  "task_id": "ae58858e",
+  "factory_sha256": "088b4cb28a832c4f6a207d63b29034ce093dd5f23460115f4759edceaa867c1a",
+  "constructor_sha256": "9f45bbf34006b9fca6bd3ee689725c2d254f7e5c79c287e96350dbfa65d8b491",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 216099511645880,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 74.48566737503279,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The output labels come from the constructor's draw(). It flood-fills each red (2) cell over 4-connected red neighbours in the whole grid and colours the cell 6 when the component has at least 4 cells. Otherwise the cell stays 2. Every fixture follows this rule. The emitted program finds the 4-connected components of the cells coloured palette[2] in the visible grid. It recolours every component of size 4 or more to palette[6] and leaves all other cells unchanged. Background palette[0] is never touched. Component size and 4-connectivity do not change under rotation or reflection, so no direction or axis needs specializing for d4. Only the colour constants depend on the palette. The demonstrations are not needed.",
+    "limitations": "Not tested by me. The program assumes the palette is a true per-episode colour map, so palette[2] and palette[6] are the shape and recolour colours, as the constructor guarantees. Constructor notes for host review: (1) make_shape checks `(nc, nr) in queue` with swapped coordinates. This is an indexing bug, but it only affects which shapes get sampled, not the labels. (2) Shapes are grown with 8-neighbour steps, so shapes under 4 cells can be only diagonally connected. Labels still use 4-connectivity over the whole grid, and the program follows that. Shapes are kept from touching even diagonally, so separate shapes never merge into one component. (3) draw() rejects scenes whose output lacks both 2 and 6. This only filters scenes and is not a rule. No fixture contradicts the uniform rule.",
+    "independent_source_review": {
+      "verdict": "accept",
+      "mechanism": "Recolour by connected-component size. The input is background palette[0] with shapes in palette[2]. Every 4-connected component of palette[2] cells with at least 4 cells becomes palette[6]. Smaller components and the background stay unchanged.",
+      "evidence": [
+        "Constructor draw()/get_color starts at each nonzero cell and flood-fills over 4-neighbours with colors[...] == 2, using correct row-major indexing nr*width+nc. It returns 6 when len(seen) >= 4 and 2 otherwise. The label therefore depends only on the size of the visible 4-connected component. No hidden latent such as shape id or num_pixels enters the label.",
+        "Synthetic scenes use colours only from {0, 2}: `colors = [2 if c != -1 else 0 ...]`. Shapes may not overlap and may not touch, even diagonally, because of the 8-neighbour get_pixel check. Shapes of size 4 or more must pass common.connected, which is 4-connectivity in the actual common.py. Shapes under 4 cells may be only diagonally connected. Those split into 4-components smaller than 4 and stay 2, which matches 4-connected labelling.",
+        "The `(nc, nr) in queue` swap in make_shape only affects how the queue is deduplicated during sampling. The `(r, c) in shape` check prevents duplicate cells, so labels are unaffected.",
+        "The `len(set(output)) != 3` check only filters scenes. It guarantees that 0, 2 and 6 all appear in every output, so every demonstration shows the 2\u21926 recolour colour.",
+        "I checked the fixtures by hand. Train 1: the 2x2 square becomes 6. The L at (4,3),(5,1..3) has 4 cells and becomes 6. The others are sizes 2, 1, 1, 1 and stay 2. Test: the 5-cell shape at rows 1\u20133, columns 0\u20132 and the 2x2 square at rows 2\u20133, columns 5\u20136 become 6. The 3-bar, the 2-bar and the two singles stay 2. The fixture output matches.",
+        "The factory solver runs a 4-connected DFS on g == palette[2] and recolours components with len >= 4 to palette[6]. It works directly in visible coordinates. Component size and 4-connectivity are invariant under D4, so no whole-grid untransform is used and none is needed. Only the colour constants are specialized.",
+        "The host audit passed 1000 fresh pairs, 8000 augmented checks and 16 fixture variants, with no sampler rejections."
+      ],
+      "blocking_issues": [],
+      "nonblocking_limits": [
+        "The factory hardcodes RED = palette[2], whereas the archived program uses the most common non-background colour. These are equivalent on the constructor domain, which only ever contains background plus palette[2].",
+        "In a synthetic episode, the demonstrations may not include both a size-3 component and a size-4 component. If so, the threshold of 4 is only weakly identifiable from that episode. This is inherent to the original task, not a constructor bug.",
+        "BG is interpolated into the solver but never used. This is harmless.",
+        "Inputs containing other colours, or components touching across shapes, are outside the constructor's domain. The solver's behaviour there is unverified."
+      ],
+      "required_context_checks": [
+        "None for colour association. The only arbitrary colour, palette[6], appears in every demonstration output because of the 3-colour output filter. ae58858e is not in the require_colour_evidence task list, and no extra evidence check appears necessary."
+      ],
+      "task_id": "ae58858e",
+      "factory_sha256": "088b4cb28a832c4f6a207d63b29034ce093dd5f23460115f4759edceaa867c1a",
+      "constructor_sha256": "9f45bbf34006b9fca6bd3ee689725c2d254f7e5c79c287e96350dbfa65d8b491"
+    },
+    "host_review": "Reviewed rule and domain limitations. Host augmentation maps completed grids with one bijective palette, horizontal reflection then clockwise quarter turns; odd indices swap axes. Fresh audit iterates all eight variants, supplied fixture checks include query answers, and export requires every pair exact. Sampler exceptions are recorded rejections, not admitted examples. Spatial connectivity follows the stated constructor/archived mechanism; optional out-of-domain modes are not certified."
+  }
+}

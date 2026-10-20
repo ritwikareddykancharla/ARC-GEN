@@ -1,0 +1,21 @@
+{
+  "task_id": "94f9d214",
+  "factory_sha256": "7782aea28f99f34e141efaa77725396a57ba3eb224e32cfeaa11ea8ce603b4a1",
+  "constructor_sha256": "5b8b58cb9b38fd105db4ec04c85bfc8bb5a801a0b8bdb78ee59ec73a7918f576",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 92778761598637,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 1.7756728329695761,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The input is two equal blocks stacked along the long axis. The original is 8x4, with the top block in green and the bottom block in blue. The output marks every cell that is background in both blocks, which is a cell-wise NOR, in red on a background canvas. Under any D4 transform, the stacked input becomes a stack of the two blocks, each transformed the same way the output is transformed. The order of the blocks may swap, for example under 180-degree rotation or when the transpose-like cases mirror the long axis. NOR is symmetric, so the order does not matter, and the cell alignment between the blocks and the output is preserved. The only geometric choice is therefore the split axis. When d4%4 is 1 or 3 the visible grid is 4x8 and the halves are split by columns (left and right). Otherwise the grid is 8x4 and the halves are split by rows (top and bottom). The colour roles become constants: background = palette[0] and mark = palette[2]. The two half colours (palette[3] and palette[1]) only need to be 'not background', so the program never refers to them. The emitted program works directly in visible coordinates and does no normalisation or colour unpermutation.",
+    "limitations": "The split axis is fixed from d4 rather than inferred from the grid shape. This matches the constructor's domain, where every input is a 2size x size stack (8x4) and is never square. The output canvas uses palette[0] as its background, which matches the constructor, where the output starts all-zero. The constructor's test `grid[r][c] <= 0` is equivalent to `== 0` for valid colours, so no defect needs reporting. The fixtures agree with the uniform NOR rule."
+  }
+}

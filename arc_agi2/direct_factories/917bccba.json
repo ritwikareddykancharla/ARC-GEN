@@ -1,0 +1,21 @@
+{
+  "task_id": "917bccba",
+  "factory_sha256": "5535f97e4648f9bb2adc98fc281707dbf4448aa1240223dc6dc9abd90d89caff",
+  "constructor_sha256": "6cc9727ceeb7af884a6c5bc35bd7a7d5f16704f04d032e8461508076ce951a91",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 162531590831629,
+  "d4": 7,
+  "unique_base_inputs": 974,
+  "seconds": 3.823011541971937,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "In the original orientation, the full-span cross is erased. It is then redrawn as two lines. One is a full-width horizontal line on the frame's top edge row. The other is a full-height vertical line on the frame's right edge column. Both lines appear only outside the frame, because the frame is drawn over them. The factory tracks where the 'top' and 'right' edges go under the D4 transform. A row reversal swaps left and right; each clockwise rotation maps top->right->bottom->left->top. It then emits a program that works directly in visible coordinates. For each mapped edge, the program draws a line through that frame edge, perpendicular to it and outside the frame's span. A top or bottom edge gives a horizontal line at row y0 or y1, drawn at columns outside [x0, x1]. A left or right edge gives a vertical line at column x0 or x1, drawn at rows outside [y0, y1]. The background is the constant palette[0]. The cross colour is inferred as the non-background colour that touches the grid border; the line spans the whole grid, so it always does. The frame colour is the non-background colour that does not touch the border; the constructor keeps the frame at rows/cols 1..10. The frame's bounding box gives the edge positions. All cross-colour cells are erased, including those inside the frame, before the new lines are drawn.",
+    "limitations": "The program assumes exactly one frame colour and one cross colour besides the background, as the constructor guarantees. If the input is degenerate (the cross colour is not on the border, or the frame touches the border), it returns the input unchanged. No ties or hidden random tie-breaks were found in the constructor. The fixtures are consistent with the uniform rule."
+  }
+}

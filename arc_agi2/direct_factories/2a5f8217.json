@@ -1,0 +1,121 @@
+{
+  "task_id": "2a5f8217",
+  "factory_sha256": "966ae87556612618e961e2695e7871cf4574c2878be19855b004c815e2cd0595",
+  "constructor_sha256": "f20dc15d209094b6531d49364b9611caee479347ddb52453d223a48bab0d4298",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [
+    {
+      "seed": 119277141390833,
+      "error": "reference/generator deadline"
+    },
+    {
+      "seed": 147230255363642,
+      "error": "reference/generator deadline"
+    },
+    {
+      "seed": 152045540403997,
+      "error": "reference/generator deadline"
+    },
+    {
+      "seed": 92812049389186,
+      "error": "reference/generator deadline"
+    },
+    {
+      "seed": 152922153453498,
+      "error": "reference/generator deadline"
+    },
+    {
+      "seed": 279665834125428,
+      "error": "reference/generator deadline"
+    },
+    {
+      "seed": 69438145013506,
+      "error": "reference/generator deadline"
+    },
+    {
+      "seed": 27076828266883,
+      "error": "reference/generator deadline"
+    },
+    {
+      "seed": 121561952875859,
+      "error": "reference/generator deadline"
+    },
+    {
+      "seed": 97690289501501,
+      "error": "reference/generator deadline"
+    },
+    {
+      "seed": 144840489719525,
+      "error": "reference/generator deadline"
+    },
+    {
+      "seed": 217514844671650,
+      "error": "reference/generator deadline"
+    },
+    {
+      "seed": 224123223576949,
+      "error": "reference/generator deadline"
+    },
+    {
+      "seed": 14666056335493,
+      "error": "reference/generator deadline"
+    },
+    {
+      "seed": 174995545166774,
+      "error": "reference/generator deadline"
+    },
+    {
+      "seed": 246708497466164,
+      "error": "reference/generator deadline"
+    },
+    {
+      "seed": 143088268357670,
+      "error": "reference/generator deadline"
+    },
+    {
+      "seed": 248267156078886,
+      "error": "reference/generator deadline"
+    }
+  ],
+  "seed": 223142090634054,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 374.2869646670297,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "Mechanism: every 4-connected single-colour object of the marker colour (original 1) is recoloured with the colour of the non-marker object whose cropped binary mask is identical. The background (original 0) and the marker are baked in as the constants palette[0] and palette[1]. All other colour roles are read from the pixels. A D4 transform is applied to both copies of each shape in the same way, so two masks that are equal stay equal. The emitted program therefore compares exact cropped masks directly in the visible coordinates and needs no orientation constants. Objects are collected per colour with 4-connectivity. The generator forbids shapes that share an edge, and only lets differently coloured shapes touch at a corner, so each component is exactly one placed shape, including shapes on the grid boundary. If two coloured objects had the same mask, the first in visible reading order of the bounding-box top-left would win. Under the generator this cannot happen, because the basic shapes are unique. A marker shape with no partner is left unchanged. The program works on rectangular grids of any size.",
+    "limitations": "Assumes generated colours never equal the background colour (original 0) or the marker colour (original 1). The generator explicitly excludes 1, and the common.random_color convention excludes 0. No tests have been run. The fixtures agree with the uniform rule, and no contradictions were found.",
+    "independent_source_review": {
+      "verdict": "accept",
+      "mechanism": "Each 4-connected, single-colour component of the marker colour (original 1, which is palette[1]) is recoloured with the colour of the non-marker component whose cropped binary mask is exactly the same. The masks are compared in visible coordinates with no rotation. Background (palette[0]) and all other cells are left unchanged.",
+      "evidence": [
+        "Constructor random branch: bshapes = range(n) + range(n). In draw(), the first placement of each base shape gets colors[bshape]. The second placement gets 1 in the input and colors[bshape] in the output (`1 if bshape in seen else colors[bshape]`). Every output colour can therefore be read from a visible partner in the same grid, so no hidden latent decides it.",
+        "common.conway_sprite only deletes a pixel if its row and column each still keep another pixel. Each sprite therefore fills its whole wide\u00d7tall box anchored at (0,0). Since connected_sprite returns sorted pixels, tuple(coord) equality is the same as cropped-mask equality.",
+        "The constructor rejects duplicate coord tuples. All coloured masks in a grid are therefore distinct, and each marker shape has exactly one exact-mask partner. The lookup.setdefault tie-break is never exercised.",
+        "Other placements are forbidden from sharing an edge with a shape: draw() rejects any 4-neighbour id other than -1 or its own. Diagonal contact is allowed only between differing grid colours, so two marker shapes cannot touch diagonally. Same-colour coloured shapes cannot touch diagonally either. Per-colour 4-connected components are therefore exactly the placed shapes, including at borders and with repeated colours, as in the test colors=[8,4,2,6,8].",
+        "random_color(exclude=[1]) draws from 2..9, because the list starts at 1. Coloured shapes therefore never use the background or marker colour. Under the palette permutation they never equal palette[0] or palette[1], which matches the BG and MARK constants in the factory.",
+        "Every placed shape has more than one cell (wide>1 or tall>1), and pixel ordering inside a component does not affect the key. The factory's _components builds the key the same way as the archived objects() crop mask, and its matching logic is identical to the archived transform.",
+        "D4 acts on both copies of a shape together, so equal masks stay equal. The emitted solve works directly on the visible grid. It has no untransform/retransform wrapper and needs no orientation constants.",
+        "Hand-checked against all four approved fixtures; each 1-shape has a unique exact partner, as the archived rule describes.",
+        "The supplied host audit passed: 1000 fresh pairs and 8000 augmented checks."
+      ],
+      "blocking_issues": [],
+      "nonblocking_limits": [
+        "The 'leave unmatched marker shape unchanged' fallback can never be reached under the constructor. It is defensive only.",
+        "The sampler had 18 generator deadline rejections. These come from the retry loop of the rejection sampler (overlap and adjacency checks on larger grids). They are a throughput issue, not a label-correctness issue.",
+        "The solver ignores demonstrations. This is appropriate, because the colour association can be read entirely from the partner shapes in the query.",
+        "If inputs from outside the generator contained duplicate coloured masks, reading order would decide the result. The constructor excludes this case."
+      ],
+      "required_context_checks": [],
+      "task_id": "2a5f8217",
+      "factory_sha256": "966ae87556612618e961e2695e7871cf4574c2878be19855b004c815e2cd0595",
+      "constructor_sha256": "f20dc15d209094b6531d49364b9611caee479347ddb52453d223a48bab0d4298"
+    },
+    "host_review": "Reviewed mechanism and limitations. Confirmed augmentation.py uses a bijective palette, horizontal flip followed by clockwise turns; audit.py checks every D4, not only its final reported d4=7. Episode-wide D4 ambiguity gate is active. Out-of-domain fallbacks do not justify unverified inputs; every export still executes the program on every pair."
+  }
+}

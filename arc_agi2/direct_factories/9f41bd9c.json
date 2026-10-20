@@ -1,0 +1,21 @@
+{
+  "task_id": "9f41bd9c",
+  "factory_sha256": "e241f76d92c27277d976e882381f6bca2c8a07d4c12d684e520eaec7615f1005",
+  "constructor_sha256": "998b86e3638db0a094b1c49d23984915e9a4d4d6bd98be32feb7b37bb4de1c72",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 249337575750411,
+  "d4": 7,
+  "unique_base_inputs": 362,
+  "seconds": 9.74660800001584,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The factory works out where the canonical 'down' direction (sky toward floor, (1,0)) lands after the D4 transform. A row reversal negates dx. Each clockwise turn maps (dy,dx) to (dx,-dy). The lateral axis is the perpendicular grid axis. Colour roles become constants: object = palette[5], sky = palette[1] (used to erase), streak = palette[9].\n\nThe emitted program works directly in visible coordinates using projections onto these two axes.\n1. It finds the object cells.\n2. It gets the original wall from whether the object touches lateral coordinate 0 or N-1.\n3. Header levels are depth levels whose cells fill the object's full lateral width. Leg levels lie beyond them, toward the floor. Leg k is counted from 0.\n4. It erases the object with the sky colour.\n5. It re-places every cell flush against the opposite wall, shifting leg k by k cells back toward the original wall.\n6. On the floor line one step beyond the bottom leg level, it paints the streak colour. The streak runs from the original wall up to, but not including, the leading bottom cell (the one nearest the destination wall).\n\nWhich wall the object starts on is inferred per input, so both generator flop states are handled under every D4 transform. The header-row count and leg count are also read from each grid.",
+    "limitations": "Constructor and archived-solver notes for host review:\n- The archived solver erases the object with the grid's most-common colour. When the sky is short (sky can be as small as roof+4 while size is up to 18), the floor colour 6 is most common. The archive would then wrongly erase the object with floor colour. The generator always leaves sky colour 1 there, so the emitted program uses palette[1] explicitly.\n- The rule text calls the streak's stopping cell the 'frontmost' 5. In the fixtures it is the leading bottom 5, the one nearest the destination wall. The program follows the fixtures and the generator; there is no contradiction.\n- The approved fixtures are consistent with the uniform rule.\n- Inputs outside the generator domain may be handled only heuristically: no object, an object touching neither wall or both walls, or no full-width header rows.\n- No tests were run."
+  }
+}

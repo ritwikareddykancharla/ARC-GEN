@@ -33,7 +33,8 @@ def generate(size=None, rows=None, cols=None, bgcolor=None, fgcolor=None):
     row, rows = common.randint(0, size // 2), []
     while row < size:
       rows.append(row)
-      row += common.randint(0, size // 2)
+      # A repeated or adjacent divider would count an invisible empty panel.
+      row += common.randint(2, size // 2)
     col, cols = common.randint(2, size // 2), []
     while col < size:
       cols.append(col)

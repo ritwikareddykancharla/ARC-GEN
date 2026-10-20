@@ -1,0 +1,21 @@
+{
+  "task_id": "981571dc",
+  "factory_sha256": "5a56864b00d76566b5f9a614ff34a5a56f4bd9a96bda10eec557bb2235135285",
+  "constructor_sha256": "1a8292dd3140447febb50e39787a11a7171feaa76fc4fc61493b079c824dda28",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 54850068277030,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 16.30332125001587,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "Each scene is a 30x30 crop of a 32x32 mosaic that is fully D4-symmetric. In native coordinates the two mirror axes sit at 15.5, so y<->31-y and x<->31-x, and the grid is also symmetric under the transpose. Some patches are erased to colour 0. Every erased cell is refilled from any visible, unerased image of it under this symmetry group.\n\nThe factory works out where those symmetries land in the visible grid:\n1. It builds the affine integer map F from native to visible coordinates. Indices >= 4 first apply x -> 29-x; then each clockwise turn applies (r,c) -> (c, 29-r).\n2. It conjugates each of the 7 native partner maps by F, giving F.P.F^-1.\n3. It writes the results into the emitted program as literal coordinate formulas. For example, with d4=4 the horizontal mirror becomes x <-> 27-x, and the columns with no mirror partner become 28-29 instead of 0-1. Under a rotation the transpose may become an anti-transpose with a shifted constant.\n\nThe emitted program uses these visible-coordinate formulas directly. It never rotates or recolours the grid. The mask colour is the constant palette[0].\n\nRepair runs in passes, as in the archived solver. In each pass, every mask cell takes the value of the first in-bounds, non-mask partner, using the old values from the start of that pass. Passes repeat until nothing changes.\n\nThe latent mosaic is fully symmetric, so every visible non-mask partner of a cell has the same colour. The partner order therefore cannot change the answer, and no tie-break is involved. The constructor rejects erasures where some masked cell has no unmasked image inside the crop, so one pass is enough on its domain. Extra passes are only a safe fallback.\n\nThe demonstrations are not needed. The fixtures agree with this uniform rule.",
+    "limitations": "- **Fixed geometry.** The constructor always makes 30x30 grids, and the factory hard-codes the native axis constant 31 and the index range 0..29 from that. Grids of other sizes, or a crop with a different offset, are outside this family and are not inferred from the demonstrations.\n- **Mask colour.** The erased colour is taken to be palette[0]. A cell is counted as unrecoverable only if all its partners are out of bounds or also masked. The constructor rules that case out; if it ever happened, the cell would stay at the mask colour.\n- **Task statement.** The rule text says the transpose agreement in train pair 1 is weak (76%). That is only because the grid was damaged when it was measured. The latent mosaic is exactly transpose-symmetric, so the transpose partners are valid and their order does not matter.\n- **Constructor defects.** None found. There are no generator indexing bugs or hidden random tie-breaks that the answer depends on.\n- **Not tested.** I have not run the factory or the emitted program."
+  }
+}

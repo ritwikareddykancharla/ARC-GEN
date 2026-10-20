@@ -1,0 +1,44 @@
+{
+  "task_id": "a61f2674",
+  "factory_sha256": "e64a7516f81c3d2b90876f396e5af0065a9c6339d55bb9e35ebbd0b5ea10116a",
+  "constructor_sha256": "a5b39b152ef64a04120567c79a8880f6d43636bdc484790d2d4c26c1287a0927",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 86573095940315,
+  "d4": 7,
+  "unique_base_inputs": 951,
+  "seconds": 4.908381957910024,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "In the original task, bars of colour 5 stand on the bottom edge, one bar per alternate column, and all heights differ. The output erases every bar except two: the tallest becomes colour 1 and the shortest becomes colour 2. Everything else is background 0.\n\nUnder D4, a row reversal leaves the bottom edge as the base. Each clockwise quarter turn then moves the base edge from bottom to left, top and right in turn. So bars lie in columns when d4%4 is even and in rows when it is odd.\n\nThe emitted program works directly in visible coordinates. It walks each line (column or row) outward from the specialised base edge and measures the run of the bar colour palette[5]. It then draws the longest run in palette[1] and the shortest in palette[2] on a canvas filled with palette[0]. The shortest bar is painted last, matching both the generator (min is checked first) and the archived solver (shortest overwrites).",
+    "limitations": "Bar heights are assumed to be distinct, which the generator guarantees by sampling without replacement. Exact ties would resolve to the lowest line index, but that case is outside the domain. Bars are assumed to be contiguous runs starting at the base edge, as the generator draws them. No fixture contradictions or constructor defects were found.",
+    "independent_source_review": {
+      "verdict": "accept",
+      "mechanism": "Several bars of colour 5 stand on one base edge, one bar in every other line, all with distinct heights. The output keeps only two bars: the tallest becomes colour 1 and the shortest becomes colour 2. Every other cell becomes background. The emitted solver is specialised by d4%4 to the line axis (columns or rows) and the base edge. It walks each line outward from that base edge in visible coordinates and measures the run of palette[5]. It then paints the longest run in palette[1] and the shortest in palette[2] on a palette[0] canvas.",
+      "evidence": [
+        "Constructor: `offset = randint(0,1)`; `num = randint(4, 4 if offset==1 else 5)`; `vals = sample(range(1, size+1), num)`. Sampling without replacement makes heights distinct, so max and min are unique. Bars sit at columns `2*idx+offset`, so with 4 bars at offset 1 the last is column 7, and with 5 bars at offset 0 the last is column 8. Neighbouring bars are never adjacent.",
+        "Constructor labels: each bar is drawn from row size-1 upward (`grid[size-1-c][...]`). The output marks `val == min(vals)` in red(2) and `elif val == max(vals)` in blue(1). The label depends only on visible heights, with no hidden latent. With distinct heights and num>=4, min and max are different bars.",
+        "Factory solver: `_line_cells` orders cells starting from the base edge. With `AXIS='col', FROM_END=True` (k=0) it scans y from h-1 down, which matches bars rising from the bottom row. The run stops at the first non-BAR cell. Constructor bars are contiguous from the base, so the run length equals the bar height. Lines with no bar give an empty run and are skipped.",
+        "Orientation table: a clockwise quarter turn moves the bottom edge to the left (row axis, from x=0), a half turn moves it to the top (col axis, from y=0), and three quarter turns move it to the right (row axis, from the end). This is geometrically consistent. The reflected variants (d4>=4) share the same k. That is correct only if the host's reflection is a horizontal flip (reversal within each row), which keeps the bottom edge. The host audit's 8000 augmented pair checks across 8 variants are consistent with this convention.",
+        "No whole-grid untransform/native-solve/retransform wrapper is used. The specialised constants are only the axis, scan direction and genuine rule colours (palette[0,1,2,5]). These colours are constant across all demonstrations, so no arbitrary lookup association is involved.",
+        "Fixtures match the rule: train 1 tallest is 9 at x=4 and shortest is 2 at x=2; train 2 tallest is 8 at x=2 and shortest is 3 at x=8; test tallest is 8 at x=7 and shortest is 1 at x=1. These agree with `validate()` and with the archived component-size solver, which is equivalent here because bars are separated single-column components."
+      ],
+      "blocking_issues": [],
+      "nonblocking_limits": [
+        "Heights are assumed distinct. Ties would resolve to the lowest line index, but the constructor excludes ties by sampling without replacement.",
+        "Bars are assumed to be contiguous runs anchored at the base edge. A gap or a floating bar would be truncated or missed, but the constructor never produces either.",
+        "Correctness of the reflected d4 values (4\u20137) relies on the host's convention that reflection reverses each row, keeping the base edge. The source comment asserts this, and the host's augmented checks pass, but the source does not independently define it."
+      ],
+      "required_context_checks": [],
+      "task_id": "a61f2674",
+      "factory_sha256": "e64a7516f81c3d2b90876f396e5af0065a9c6339d55bb9e35ebbd0b5ea10116a",
+      "constructor_sha256": "a5b39b152ef64a04120567c79a8880f6d43636bdc484790d2d4c26c1287a0927"
+    },
+    "host_review": "Reviewed mechanism and limitations. Confirmed augmentation.py uses a bijective palette, horizontal flip followed by clockwise turns; audit.py checks every D4, not only its final reported d4=7. Episode-wide D4 ambiguity gate is active. Out-of-domain fallbacks do not justify unverified inputs; every export still executes the program on every pair."
+  }
+}

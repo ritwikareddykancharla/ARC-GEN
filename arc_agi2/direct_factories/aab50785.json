@@ -1,0 +1,46 @@
+{
+  "task_id": "aab50785",
+  "factory_sha256": "c30cf5a74550babd30742d161102eb1c05b7b859aea439e73fc95cada223fa93",
+  "constructor_sha256": "7589f0561a7a995cb75e3a2ed72fa009188f3676c6c1e7062f2682332809fe4f",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 79995216987316,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 7.834488250082359,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The original rule works like this. Find the solid 2x2 squares of colour 8. They come in pairs that share the same two rows. Cut out the 2-row strip strictly between each pair. Stack the strips top to bottom.\n\nUnder D4, the original row axis lands on visible axis k%2, where k=d4%4. A horizontal flip does not affect the row axis. So for odd k, the paired squares share two visible columns, the strip is the 2-column block between them, and strips are joined left to right.\n\nThe input and output are transformed by the same map, so the stacking order in the visible output always follows ascending visible position along that axis. A reversed axis reverses both the input and the output consistently. Each strip is copied verbatim as a visible sub-block, so no content rotation is needed.\n\nThe square colour is the constant palette[8]. Squares are found as 4-connected components of exactly 4 cells forming a 2x2 box. They are grouped by their coordinate along the stacking axis, sorted along the other axis, and paired two at a time.",
+    "limitations": "The pairing axis comes from d4 rather than being inferred, which is valid under the stated episode transform. Strips of different lengths (outside the constructor's domain, where all gaps share one outwidth) are padded with palette[0], matching the archived solver's zero padding. If no squares are found, the input is returned unchanged; the generator never produces this. In the constructor, draw() locates strips using the first colour-8 cell in each row plus 2, with a fixed outwidth. This is equivalent to the between-squares gap because noise never uses colour 8 and squares in different segments are separated by at least one row. I saw no defects or fixture contradictions. No tests were run.",
+    "independent_source_review": {
+      "verdict": "accept",
+      "mechanism": "The input holds 2x2 squares of colour palette[8] in noise. Squares come in pairs that share the same two lines along the original row axis. For each pair, the solver cuts the 2-line block strictly between the two squares and concatenates the blocks in ascending visible order along the pairing axis. Under D4 that axis is (d4%4)%2: AXIS 0 stacks 2-row strips vertically, AXIS 1 joins 2-column strips left to right. Blocks are copied verbatim in visible coordinates.",
+      "evidence": [
+        "Constructor squares: grid[brow+dr][bcol+dc]=8 and grid[brow+dr][bcol+2+outwidth+dc]=8. Noise is drawn from choice([1,2,3,4,5,6,7,9]) or left 0, so colour 8 appears only in the squares.",
+        "draw() reads output[outrow][col] = grid[row][grid[row].index(8)+2+col]. The first 8 in a row is the left square at bcol, so this reads columns bcol+2 .. bcol+1+outwidth. That is exactly the gap, and the right square starts at bcol+2+outwidth. Rows are taken in ascending order, so the label is the visible between-squares strips stacked top to bottom, with no hidden latent.",
+        "overlaps_1d(brows,[3]*segments) forces top rows at least 3 apart. Squares of different segments are therefore never 4-adjacent, and no two segments share a top row. Within a segment the squares are separated by outwidth>=3 columns. So every colour-8 component is exactly one 2x2 square, which is what the solver's _squares requires.",
+        "Bounds: bcol <= inwidth-outwidth-4, so the right square's last column is at most inwidth-1. inwidth>=10 and outwidth<=6, so the bcol range is never empty. Brow placement is feasible for all sizes: 5 segments need 14 rows and inheight=20 gives at most 19 starting rows.",
+        "Solver: group key is min(ys) for AXIS 0 and min(xs) for AXIS 1. Each group has exactly two squares, and the slices are g[key:key+2, a+2:b] or g[a+2:b, key:key+2]. In AXIS 0, w = max(strip widths) equals the common outwidth because all gaps are equal; in AXIS 1, h = max(strip heights) likewise. Either way the BG padding is never used in-domain.",
+        "D4 consistency: input and output share the transform. A reversed pairing axis reverses both the strip order in the input and the strip order in the output, and each strip's content transforms the same way as its visible sub-block. Ascending visible order is therefore correct for all 8 variants. This is consistent with the host's 8000 augmented checks passing.",
+        "palette[8] is the only colour forming squares, because the palette maps distinct colours to distinct colours and noise excludes original colour 8. Specialising SQ and the axis is a genuine rule constant, not a whole-grid untransform.",
+        "Test fixture check: the rows 3-4 squares are at columns 3 and 9, so the gap is columns 5-8: [4,1,5,0] / [0,9,0,0]. This matches the first strip of the archived test output."
+      ],
+      "blocking_issues": [],
+      "nonblocking_limits": [
+        "The pairing axis is fixed from d4 rather than inferred from demonstrations. This is allowed as a deterministic orientation constant shown by the visible demos.",
+        "Fallbacks are out of domain and the constructor excludes them: identity output when no squares are found, BG padding for unequal strip lengths, and skipping empty strips. outwidth>=3 and every segment has exactly two squares.",
+        "The constructor rejects outputs that are all one colour (draw() returns None). This only narrows the distribution and does not affect label correctness."
+      ],
+      "required_context_checks": [],
+      "task_id": "aab50785",
+      "factory_sha256": "c30cf5a74550babd30742d161102eb1c05b7b859aea439e73fc95cada223fa93",
+      "constructor_sha256": "7589f0561a7a995cb75e3a2ed72fa009188f3676c6c1e7062f2682332809fe4f"
+    },
+    "host_review": "Reviewed rule and domain limitations. Host augmentation maps completed grids with one bijective palette, horizontal reflection then clockwise quarter turns; odd indices swap axes. Fresh audit iterates all eight variants, supplied fixture checks include query answers, and export requires every pair exact. Sampler exceptions are recorded rejections, not admitted examples. Spatial connectivity follows the stated constructor/archived mechanism; optional out-of-domain modes are not certified."
+  }
+}

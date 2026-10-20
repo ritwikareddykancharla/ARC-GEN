@@ -1,0 +1,228 @@
+{
+  "task_id": "2faf500b",
+  "factory_sha256": "4903e2cd1b5a5cd361c4db2f2db27b3c4fee7103575ce0f1cc80373631fc9c6e",
+  "constructor_sha256": "15dd63d43a101fefdc1d7a62a6d456c75e208ca61b589d9e16f62c6c602d0f9d",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [
+    {
+      "seed": 230550622024725,
+      "error": "reference/generator deadline"
+    },
+    {
+      "seed": 242298618236293,
+      "error": "reference/generator deadline"
+    },
+    {
+      "seed": 132718843902461,
+      "error": "reference/generator deadline"
+    },
+    {
+      "seed": 247616476261568,
+      "error": "reference/generator deadline"
+    },
+    {
+      "seed": 183838306076543,
+      "error": "reference/generator deadline"
+    },
+    {
+      "seed": 46800199994028,
+      "error": "reference/generator deadline"
+    },
+    {
+      "seed": 11158941422173,
+      "error": "reference/generator deadline"
+    },
+    {
+      "seed": 121972963103940,
+      "error": "reference/generator deadline"
+    },
+    {
+      "seed": 169993360523067,
+      "error": "reference/generator deadline"
+    },
+    {
+      "seed": 97485469044772,
+      "error": "reference/generator deadline"
+    },
+    {
+      "seed": 100284445620754,
+      "error": "reference/generator deadline"
+    },
+    {
+      "seed": 229851697884474,
+      "error": "reference/generator deadline"
+    },
+    {
+      "seed": 137527850704275,
+      "error": "reference/generator deadline"
+    },
+    {
+      "seed": 48822935670598,
+      "error": "reference/generator deadline"
+    },
+    {
+      "seed": 252998242329024,
+      "error": "reference/generator deadline"
+    },
+    {
+      "seed": 41796531757625,
+      "error": "reference/generator deadline"
+    },
+    {
+      "seed": 61765120375578,
+      "error": "reference/generator deadline"
+    },
+    {
+      "seed": 8974843171399,
+      "error": "reference/generator deadline"
+    },
+    {
+      "seed": 250637907263034,
+      "error": "reference/generator deadline"
+    },
+    {
+      "seed": 187468490507558,
+      "error": "reference/generator deadline"
+    },
+    {
+      "seed": 68136861587124,
+      "error": "reference/generator deadline"
+    },
+    {
+      "seed": 14409922830419,
+      "error": "reference/generator deadline"
+    },
+    {
+      "seed": 42228824948821,
+      "error": "reference/generator deadline"
+    },
+    {
+      "seed": 92491220888954,
+      "error": "reference/generator deadline"
+    },
+    {
+      "seed": 14968527065644,
+      "error": "reference/generator deadline"
+    },
+    {
+      "seed": 182167112960458,
+      "error": "reference/generator deadline"
+    },
+    {
+      "seed": 186323147590010,
+      "error": "reference/generator deadline"
+    },
+    {
+      "seed": 137324990165247,
+      "error": "reference/generator deadline"
+    },
+    {
+      "seed": 190595075862622,
+      "error": "reference/generator deadline"
+    },
+    {
+      "seed": 143918416248172,
+      "error": "reference/generator deadline"
+    },
+    {
+      "seed": 223232647143118,
+      "error": "reference/generator deadline"
+    },
+    {
+      "seed": 86492248556225,
+      "error": "reference/generator deadline"
+    },
+    {
+      "seed": 113685683658093,
+      "error": "reference/generator deadline"
+    },
+    {
+      "seed": 42327575316081,
+      "error": "reference/generator deadline"
+    },
+    {
+      "seed": 260154711216840,
+      "error": "reference/generator deadline"
+    },
+    {
+      "seed": 234439328242115,
+      "error": "reference/generator deadline"
+    },
+    {
+      "seed": 36381185780172,
+      "error": "reference/generator deadline"
+    },
+    {
+      "seed": 48048045607655,
+      "error": "reference/generator deadline"
+    },
+    {
+      "seed": 261138154554789,
+      "error": "reference/generator deadline"
+    },
+    {
+      "seed": 264874952228328,
+      "error": "reference/generator deadline"
+    },
+    {
+      "seed": 31108362416565,
+      "error": "reference/generator deadline"
+    },
+    {
+      "seed": 243201016476486,
+      "error": "reference/generator deadline"
+    },
+    {
+      "seed": 88204848050474,
+      "error": "reference/generator deadline"
+    },
+    {
+      "seed": 52709692385463,
+      "error": "reference/generator deadline"
+    }
+  ],
+  "seed": 140203594064543,
+  "d4": 7,
+  "unique_base_inputs": 942,
+  "seconds": 236.18774924997706,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The emitted program works directly in visible coordinates. Colour roles are fixed constants taken from the palette: background is palette[0], body is palette[9] and seam is palette[6]. I did not use most-common-colour detection. In small generated grids a single block can outnumber the background cells, and that heuristic would then pick the wrong background.\n\nThe mechanism follows the archived solver.\n1. Find 4-connected non-background blocks.\n2. Inside each block, split the non-seam cells into 4-connected halves.\n3. Shift each half by one cell away from the centroid of that block's seam cells, then paint it onto a background canvas. Seam cells are dropped, cells that land outside the grid are clipped, and blocks with no seam are copied unchanged.\n\nThe axis of motion comes first from the seam's geometry, which does not depend on orientation:\n- If every column of the block holds exactly one seam cell, the seam is horizontal and the halves move vertically.\n- If every row holds exactly one seam cell, the seam is vertical and the halves move horizontally.\n- Only if neither or both tests hold does the program fall back to the archived rule of comparing |dy| against |dx|.\n\nIn that fallback, an exact tie goes to the visible axis that corresponds to the original vertical: vertical when d4%4 is even, horizontal when it is odd. The sign of the shift is always the sign of the centroid difference along the chosen axis. All of this behaves the same way under rotations and reflections, because rows and columns are handled symmetrically.",
+    "limitations": "Nothing has been run or tested. The program assumes the constructor's domain: rectangular body blocks crossed by a one-cell zig-zag seam, with at least one background cell separating blocks.\n\nThe tie-break rule only comes into play outside that domain, where a seam neither covers every column once nor every row once. In that case a piece whose centroid exactly matches the seam's along the chosen axis moves in the negative direction, and that direction is not adjusted for d4.\n\nThe demonstrations are not used; the colour roles come entirely from the palette.",
+    "independent_source_review": {
+      "verdict": "accept",
+      "mechanism": "Each non-background 4-connected block is a body rectangle crossed by a one-cell zig-zag seam. The solver erases the seam. It then shifts each of the two 4-connected body halves one cell away from the seam, perpendicular to the seam, and clips at the grid edge. The axis comes from seam geometry: one seam cell per column means a horizontal seam and vertical motion; one seam cell per row means a vertical seam and horizontal motion. The sign comes from the half's centroid relative to the seam centroid. Colours are fixed palette constants (bg=palette[0], seam=palette[6]).",
+      "evidence": [
+        "Constructor, angle 0/2: the input rect is wide x (tall-2) at row brow+1. In each column the seam sits at m=brow+tall//2 when c%2==angle//2, otherwise at m-1. The output zeros rows m-1 and m plus one extra row per column (m+1 or m-2). Tracing both column types shows this equals the upper half shifted up 1 and the lower half shifted down 1. Angles 1/3 are the transposed case. The labels are a pure rigid split with no hidden latent beyond the visible layout.",
+        "Domain exclusivity of the axis test, angle 0/2: rows = tall-2 >= 4, but seam cells occupy only 2 rows, so seam_vertical is false. Every column has exactly one seam cell, so seam_horizontal is true. Angle 1/3 is symmetric (cols = wide-2 >= 4). The fallback branch, including the d4-dependent TIE_VERTICAL constant, is therefore unreachable in the constructor domain.",
+        "Halves are exactly two 4-connected pieces. tall>=6 gives tall//2>=3, so at least one full row lies on each side of the seam. The teeth in rows m-1 and m touch the other half only diagonally.",
+        "Sign is never zero. Upper half: it contains a full row at <= m-2 and teeth at m-1, so its mean y < m-1 <= seam mean y. The lower half is the mirror case. Hence dy<0 and dy>0 respectively.",
+        "overlaps(..., spacing=1) is applied to the output rects, which contain both the input blocks and the shifted pieces. Blocks are therefore separated by background, no shifted pieces collide, and no clipping occurs for generated pairs. The fixture test blocks at rows 0-1 and 17-18 are angle 1/3 blocks with tall=2. They have a vertical seam with one cell per row over 4 columns and are handled correctly.",
+        "The archived centroid rule agrees with the geometric axis test in this domain: |dx| <= ~0.5 while |dy| >= ~1. Example: a 6x4 body gives dx\u2248-0.17, dy\u2248-1.17.",
+        "The solver treats rows and columns symmetrically and needs no untransform wrapper. It acts directly in visible coordinates under D4.",
+        "Host audit passed: 1000 fresh pairs, 8000 augmented checks, 16 fixture variants."
+      ],
+      "blocking_issues": [],
+      "nonblocking_limits": [
+        "The fallback tie-break (TIE_VERTICAL from d4, negative direction when the centroid difference is zero) is only defined outside the constructor domain and is unreachable for generated inputs.",
+        "Blocks without a seam are copied unchanged. This is defensive and unreachable, because every generated block has a seam.",
+        "Colour roles come from palette constants rather than from the demonstrations. This is acceptable because there is no arbitrary colour/shape association; the rule is deterministic given the fixed role colours.",
+        "The 44 sampler rejections are generator deadlines, likely from the unbounded overlap-retry loop for size//4 boxes. This is a sampler inefficiency, not a label problem.",
+        "The BODY constant is emitted but unused. This is harmless."
+      ],
+      "required_context_checks": [
+        "Confirm the augmentation palette is a permutation, so palette[0], palette[6] and palette[9] stay distinct in visible grids.",
+        "None of the episode colour-evidence checks apply: 2faf500b is not in the lookup-task list and no arbitrary association is required."
+      ],
+      "task_id": "2faf500b",
+      "factory_sha256": "4903e2cd1b5a5cd361c4db2f2db27b3c4fee7103575ce0f1cc80373631fc9c6e",
+      "constructor_sha256": "15dd63d43a101fefdc1d7a62a6d456c75e208ca61b589d9e16f62c6c602d0f9d"
+    },
+    "host_review": "Reviewed mechanism and limitations. Confirmed augmentation.py uses a bijective palette, horizontal flip followed by clockwise turns; audit.py checks every D4, not only its final reported d4=7. Episode-wide D4 ambiguity gate is active. Out-of-domain fallbacks do not justify unverified inputs; every export still executes the program on every pair."
+  }
+}

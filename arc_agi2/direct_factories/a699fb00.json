@@ -1,0 +1,50 @@
+{
+  "task_id": "a699fb00",
+  "factory_sha256": "aef92eccbb13e6d41311a76833641859dcf8d0d16c8f7995b9c927a892ecbcad",
+  "constructor_sha256": "28a91056487a3c638317ce8f20b7a17e3a885c0effbaee12b5bad2f9a68d1a89",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 195521302384625,
+  "d4": 7,
+  "unique_base_inputs": 883,
+  "seconds": 2.6220950830029324,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "Original mechanism: each row of the input may hold one run of blue (1) pixels spaced two apart on a background of 0. Every background cell that has a blue cell immediately on both sides along the row becomes red (2). Vertical neighbours do not matter.\n\nHow the D4 transform is handled: reversing each row (indices 4 to 7) keeps the runs horizontal, and the neighbour test is symmetric, so reflection changes nothing. Each clockwise quarter turn swaps rows and columns. So for an odd value of d4 % 4 the emitted program tests the up and down neighbours in each column. For an even value it tests the left and right neighbours in each row. The program works directly in visible coordinates and never rotates the grid.\n\nHow the palette is handled: the background, blue and red roles become the constants palette[0], palette[1] and palette[2]. The program uses palette[0] as the background rather than the most common colour, which is equivalent under the generator's sparse scenes and more robust. It handles rectangular grids, and runs that touch the border, because only interior cells along the axis are tested.",
+    "limitations": "The program assumes the generator's domain: blue pixels sit at even offsets within runs of odd length, and there is at most one run per original row. Adjacent original rows (the r += 1 step) can place runs next to each other perpendicular to the fill axis. The program correctly ignores those neighbours, because only the fixed axis is tested. If two blue pixels from unrelated structures happened to sit exactly two apart on the fill axis, the gap would be filled; the generator cannot produce that case. Demonstrations are not consulted, because the colour roles and the axis are fully determined by palette and d4. No constructor defects or fixture contradictions were found: all approved fixtures match the uniform rule. These results have not been verified by running tests.",
+    "independent_source_review": {
+      "verdict": "accept",
+      "mechanism": "Each sampled row holds at most one run of odd length 2k+1 (k \u2265 1), starting at column c. The constructor colours even offsets blue (input and output) and odd offsets red (output only). So every red cell is exactly a background cell whose two neighbours along the row are both blue, and no other cell changes. The emitted solver applies this local three-cell test along a fixed axis. It tests columns (up and down neighbours) when d4 % 4 is odd and rows (left and right neighbours) otherwise. It uses the palette constants BG, BLUE and RED.",
+      "evidence": [
+        "Constructor: `length = 2 * common.randint(1, (size // 2) - 1) + 1` always gives an odd length of at least 3. For size 5 the bound is randint(1, 1), which is valid. `c = randint(0, size - length)` keeps the run in bounds.",
+        "Constructor loop: `if x % 2 == 0` sets blue in both grids, and the else branch sets red only in the output. So the red cells match one-for-one the BG cells with blue at x-1 and x+1 inside the run.",
+        "Exactly one (r, c, length) entry exists per sampled row, because r strictly increases by 1, 2 or 3. So no unrelated blue on the same row can create a spurious gap fill. Runs on adjacent rows (r += 1) touch only perpendicular to the fill axis, and the solver ignores that axis.",
+        "Run endpoints are blue at offsets 0 and length-1, so there is no dangling red at a run end. Cells just outside the run are background with only one blue neighbour and stay unchanged, matching the solver.",
+        "No hidden latent decides labels: the output is a deterministic function of the visible input.",
+        "Approved fixtures: the validate() parameters reproduce all three train pairs and the test pair. Each red cell in them has blue on both horizontal sides.",
+        "Factory: the solver works directly on visible coordinates with a fixed axis constant. There is no whole-grid untransform or retransform wrapper. Choosing the axis from d4 is legitimate orientation specialisation. Colour roles come from the palette rather than from arbitrary lookup associations.",
+        "Host audit passed 1000 fresh pairs, 8000 augmented checks and 16 fixture variants, with no sampler rejections."
+      ],
+      "blocking_issues": [],
+      "nonblocking_limits": [
+        "The axis parity `(d4 % 4) % 2 == 1` assumes indices 4-7 are a reflection composed with rotations 0-3, so the odd members swap axes. Under a different D4 index convention this would be wrong. The passing 8000 augmented checks suggest the convention matches.",
+        "The solver takes the background as palette[0] rather than the most common colour. This is equivalent in the generator's sparse domain.",
+        "If two blues from unrelated structures were exactly two apart on the fill axis, they would be bridged. The constructor cannot produce this, because it places one run per row.",
+        "Demonstrations are not consulted. This is acceptable because the rule has no arbitrary colour association; the colour roles are fixed by the palette."
+      ],
+      "required_context_checks": [
+        "Confirm the host's D4 index convention: d4 values 1, 3, 5 and 7 should be exactly the variants that swap rows and columns.",
+        "Confirm that palette[0], palette[1] and palette[2] map to the constructor's internal colours 0 (background), 1 (blue) and 2 (red)."
+      ],
+      "task_id": "a699fb00",
+      "factory_sha256": "aef92eccbb13e6d41311a76833641859dcf8d0d16c8f7995b9c927a892ecbcad",
+      "constructor_sha256": "28a91056487a3c638317ce8f20b7a17e3a885c0effbaee12b5bad2f9a68d1a89"
+    },
+    "host_review": "Reviewed mechanism and limitations. Confirmed augmentation.py uses a bijective palette, horizontal flip followed by clockwise turns; audit.py checks every D4, not only its final reported d4=7. Episode-wide D4 ambiguity gate is active. Out-of-domain fallbacks do not justify unverified inputs; every export still executes the program on every pair."
+  }
+}

@@ -1,0 +1,150 @@
+{
+  "task_id": "a2d730bd",
+  "factory_sha256": "bfd278cba958c508fff48eaa4f83efdd8f22b1ff27807fce4c6ec9f0ec96397c",
+  "constructor_sha256": "74a3c79cba9e0a3166dcfb14f0c5ce67da8f8bbd1c4ec1062eb514eb22ca5852",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [
+    {
+      "seed": 77847691077321,
+      "error": "Sample larger than population or is negative"
+    },
+    {
+      "seed": 144652033647058,
+      "error": "Sample larger than population or is negative"
+    },
+    {
+      "seed": 150151440519293,
+      "error": "Sample larger than population or is negative"
+    },
+    {
+      "seed": 39247073733447,
+      "error": "Sample larger than population or is negative"
+    },
+    {
+      "seed": 56870304465511,
+      "error": "Sample larger than population or is negative"
+    },
+    {
+      "seed": 184100552263744,
+      "error": "Sample larger than population or is negative"
+    },
+    {
+      "seed": 231187924107650,
+      "error": "Sample larger than population or is negative"
+    },
+    {
+      "seed": 37870903998876,
+      "error": "Sample larger than population or is negative"
+    },
+    {
+      "seed": 220089428011295,
+      "error": "Sample larger than population or is negative"
+    },
+    {
+      "seed": 263819333607374,
+      "error": "Sample larger than population or is negative"
+    },
+    {
+      "seed": 80176926913691,
+      "error": "Sample larger than population or is negative"
+    },
+    {
+      "seed": 146532612414176,
+      "error": "Sample larger than population or is negative"
+    },
+    {
+      "seed": 266255803666514,
+      "error": "Sample larger than population or is negative"
+    },
+    {
+      "seed": 279241761971914,
+      "error": "Sample larger than population or is negative"
+    },
+    {
+      "seed": 225624083220812,
+      "error": "Sample larger than population or is negative"
+    },
+    {
+      "seed": 31118970049852,
+      "error": "Sample larger than population or is negative"
+    },
+    {
+      "seed": 234898639201146,
+      "error": "Sample larger than population or is negative"
+    },
+    {
+      "seed": 132087160485191,
+      "error": "Sample larger than population or is negative"
+    },
+    {
+      "seed": 64219329317613,
+      "error": "Sample larger than population or is negative"
+    },
+    {
+      "seed": 93609503710643,
+      "error": "Sample larger than population or is negative"
+    },
+    {
+      "seed": 193949608727290,
+      "error": "Sample larger than population or is negative"
+    },
+    {
+      "seed": 180240001207423,
+      "error": "Sample larger than population or is negative"
+    },
+    {
+      "seed": 57200095228379,
+      "error": "Sample larger than population or is negative"
+    },
+    {
+      "seed": 241349873198160,
+      "error": "Sample larger than population or is negative"
+    },
+    {
+      "seed": 281218699428793,
+      "error": "Sample larger than population or is negative"
+    }
+  ],
+  "seed": 203118099594978,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 14.55979170894716,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The emitted solve() works directly on the visible query grid. It takes the background as the most common colour. It splits non-background pixels into 4-connected single-colour components: components larger than one cell are rectangles, and singletons are dots. Each dot is matched to the same-coloured rectangle whose row span or column span contains it, choosing the nearest if more than one qualifies.\n\nIf the dot lies in the row span, the connector is horizontal:\n- A 3-cell bar is drawn in the column just outside the facing edge (right edge +1 or left edge -1), centred on the dot's row.\n- A line runs along the dot's row from that column up to the cell next to the dot.\n\nIf the dot lies in the column span, the same construction is used vertically: the bar goes in the row just above or below the rectangle, and the line runs along the dot's column. Then the dot's four orthogonal neighbours are painted, and the dot cell itself becomes background.\n\nAll matched dot cells are cleared first and all connectors are painted afterwards. This reproduces the constructor's output exactly: it starts from a dot-free canvas and accepts no overlapping strokes. Because the rule is defined per axis with both directions handled, every rotation and reflection is covered natively without normalisation. Palette changes are handled by inferring colour roles from the pixels, so d4 and palette need no specialisation.",
+    "limitations": "Demonstrations are not consulted. The rule is fully determined by the query pixels.\n\nThe program assumes the constructor's domain:\n- Rectangles of distinct colours, each larger than one cell, not touching each other.\n- Dots that are isolated single cells, each lying strictly within one same-coloured rectangle's row or column span and at least two cells away from it.\n\nOutside that domain:\n- A dot with no matching rectangle, or one not aligned with any span, is left unchanged.\n- Strokes that would leave the grid are clipped. The generator rejects such cases, so this never arises in valid scenes.\n- If a scene ever made the background not the most common colour, the background estimate would fail. The generator's sizes make this impossible.\n\nNo fixture contradictions or constructor defects were found. Two variants match the fixtures and give the same union of cells: the constructor draws the line up to dot-2 and adds the ring at dot-1, while the archived solver draws through to dot-1. The program implements that union.",
+    "independent_source_review": {
+      "verdict": "accept",
+      "mechanism": "Background is the most common colour. Non-background pixels are split into 4-connected single-colour components: those larger than one cell are rectangles, singletons are dots. Each dot is matched to the unique same-coloured rectangle whose row span or column span contains it. If the dot is in the row span, the connector is horizontal: a 3-cell bar in the column just outside the facing edge, centred on the dot's row, plus a line along that row up to the cell next to the dot. If the dot is in the column span, the same construction is drawn vertically. The dot's four orthogonal neighbours are painted and the dot cell becomes background. The solver clears all dot cells first, then paints every connector.",
+      "evidence": [
+        "Right side. The constructor draws bar rows prow\u00b11 at column bcol+wide and a line over range(bcol+wide, pcol-1), with the left ring cell at pcol-1. The solver draws the bar at s=x1+1 for dy-1..dy+1 and a line over range(s, dx). Both paint the same cell set. The constructor's line always includes the bar centre because sampling forces pcol >= bcol+wide+2.",
+        "Left side. The constructor draws a line over range(pcol+2, bcol) with the right ring cell at pcol+1. The solver draws range(dx+1, x0). Same union. The vertical cases mirror this exactly.",
+        "Every constructor output write goes through put(), which rejects any non-background cell. Rectangles, bars, lines and rings are therefore pairwise disjoint in accepted scenes. Since the solver's painted sets are also disjoint, its painting order is irrelevant.",
+        "Dots are never adjacent to rectangles: a ring cell would hit a rectangle already drawn in the output, and put() rejects it. Same-colour horizontal-rectangle dots have distinct rows because prows comes from sample() without replacement.",
+        "Two same-colour dots that are vertically adjacent on the same side are rejected: the second dot's line starts at column s, which is already occupied by the first dot's bar end. Same-colour singletons therefore never merge into one component, and size>1 cleanly separates rectangles (at least 14 cells) from dots.",
+        "Bars span prow\u00b11 within the interior span brow+1..brow+tall-2, so they stay adjacent to the facing edge. Dot positions are sampled inside 1..W-2 and 1..H-2, so rings never clip. The solver's bounds check is only defensive.",
+        "Background dominance: for areas under 250 there is at most one box (44 cells plus 3 dots, against at least 144 cells). Areas of 250\u2013499 allow at most 2 boxes and areas of 500 or more at most 3, so the background is always the strict majority.",
+        "There is exactly one rectangle per colour (random_colors samples distinct colours), so the solver's nearest-rectangle choice never faces a tie.",
+        "Solver directness: the per-axis, both-direction logic and the colours inferred from pixels work directly in visible coordinates under any D4 transform or palette. There is no untransform wrapper.",
+        "Demonstrations are not consulted. Dots pair with rectangles by colour identity, so no arbitrary colour lookup needs demonstration evidence. The task is not in the episode-evidence list."
+      ],
+      "blocking_issues": [],
+      "nonblocking_limits": [
+        "Reachable cross-colour interaction: colour A's dot can sit on colour B's outer or side ring cell, for example directly above B's dot. put() accepts this because dot cells are background in the output, so each dot cell is painted by the other colour's ring. The constructor and solver agree because neither depends on order. It is an unusual visible case, not a hidden latent.",
+        "Sampler exceptions ('Sample larger than population') happen when the off-span column or row range is too small for num_pixels. The constructor raises instead of retrying, and the host records these as rejections. This is harmless to label correctness.",
+        "The archived rule text says 'one or two' dots per rectangle, but the constructor allows up to 3. The solver handles any number.",
+        "The solver silently leaves unaligned or unmatched dots unchanged. That case is out of domain because the constructor excludes it."
+      ],
+      "required_context_checks": [],
+      "task_id": "a2d730bd",
+      "factory_sha256": "bfd278cba958c508fff48eaa4f83efdd8f22b1ff27807fce4c6ec9f0ec96397c",
+      "constructor_sha256": "74a3c79cba9e0a3166dcfb14f0c5ce67da8f8bbd1c4ec1062eb514eb22ca5852"
+    },
+    "host_review": "Reviewed mechanism and limitations. Confirmed augmentation.py uses a bijective palette, horizontal flip followed by clockwise turns; audit.py checks every D4, not only its final reported d4=7. Episode-wide D4 ambiguity gate is active. Out-of-domain fallbacks do not justify unverified inputs; every export still executes the program on every pair."
+  }
+}

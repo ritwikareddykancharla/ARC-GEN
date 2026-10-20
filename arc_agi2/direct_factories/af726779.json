@@ -1,0 +1,49 @@
+{
+  "task_id": "af726779",
+  "factory_sha256": "e35badea62eea689544c5d148399b89bcb08b1570d0691ffe755951e0cc74d92",
+  "constructor_sha256": "7117281416f99cf972928cd033e6250b2a9ef2c50670f4fd1e4a274c616de874",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 118059018667126,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 11.990899791009724,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "In canonical coordinates the input has one row of seed cells (colour 7) on a background of 3. Starting from that row, the program builds a new row two rows further down. A cell in the new row is filled when the cell directly above it in the previous built row is background and both of that cell's neighbours along the line are non-background. Built rows alternate between colour 6 and colour 7, starting with 6. Growth stops when a built row would be empty or would fall outside the grid. This matches the constructor and the archived solver, including the rule that the first and last cells of each line are never filled.\n\nThe factory works out where 'down' points in the visible grid. A row-reversal does not change it. Each clockwise rotation turns the vector (dr, dc) into (dc, -dr), so growth points down, left, up or right for d4%4 = 0, 1, 2, 3. When growth is horizontal, the seed is a column and the propagation lines are columns. The neighbour test is symmetric along each line, so a reflection only matters through the growth direction. The emitted program indexes the visible grid directly through (line, position) accessors and does no rotation, transposition or colour remapping. Colours are fixed constants: background palette[3], first new line palette[6], second new line palette[7]. Seed cells are recognised as any non-background cell, and the single non-background line is taken as the seed.",
+    "limitations": "The growth direction comes from d4, not from the pixels. This is because the seed row index can be as large as height//2, which can place it in the middle of the grid, so the direction cannot always be read from the seed position. The program assumes, as the constructor guarantees, exactly one non-background line in the input that runs fully across the grid perpendicular to the growth direction. The constructor always puts a seed cell at index 0, so the seed line is never empty; if it were, the program would return the input unchanged. No fixture contradictions, generator indexing bugs or hidden random tie-breaks were found. The generator's loop keeps running over empty rows after growth dies, but that produces the same output as stopping early. The code has not been executed by me.",
+    "independent_source_review": {
+      "verdict": "accept",
+      "mechanism": "The input has a single seed line of non-background cells (palette[7]) on background palette[3]. Every second line away from the seed is built from the previous built line. A cell at position q (1 \u2264 q \u2264 len-2) is filled when the previous built line has background at q and non-background at q-1 and q+1. Built lines alternate palette[6], palette[7], starting with palette[6]. Growth stops when a built line is empty or the next line would leave the grid. The emitted solver specializes the growth axis and sign from d4 and indexes the visible grid directly through cell/put accessors.",
+      "evidence": [
+        "Constructor loop `for r in range(row + 2, height, 2)` tests `output[r-2][c-1] != 3 and output[r-2][c] == 3 and output[r-2][c+1] != 3` for c in range(1, width-1). The solver's `while 0 <= p + 2*STEP < n_lines` with q in range(1, length-1) and `prev[q-1] and prev[q+1] and not prev[q]` is the same test.",
+        "The constructor colours `6 + color % 2`, and `color` increments on every iteration. Rows after the first empty row stay empty, because an all-background previous row never qualifies. So the solver breaking early gives identical output, and its k counter matches the constructor's colour sequence until growth dies.",
+        "The constructor writes only to output row r on each iteration and reads row r-2. Previously built rows of colour 6 or 7 count as non-background, which matches the solver's `!= BG` test.",
+        "The seed is never empty: mod starts at 0 and c=0 is always appended. The input contains only the seed line, so `lines` has exactly one entry and the `lines[0]` / `lines[-1]` choice is immaterial.",
+        "The neighbour test is symmetric along the line and the excluded endpoints are symmetric, so reflections along the line need no special handling. Only the growth axis and sign depend on d4.",
+        "The approved fixtures match the generator outputs. Example: train 3 seed 3,5,6,7,9,10,12,13,15 gives 4,8,11,14. Test 1 gives 3,11 and then stops.",
+        "No random latent affects labels beyond the visible seed pattern. No ties or fixture-specific branches appear in either the constructor or the solver.",
+        "Host audit passed: 1000 fresh pairs, 8000 augmented checks and 16 fixture variants, with no sampler rejections."
+      ],
+      "blocking_issues": [],
+      "nonblocking_limits": [
+        "The growth direction is a d4-derived constant, not read from pixels. This is legitimate because the demonstrations show the direction in every episode. The seed can sit at height//2, so position alone would not always reveal it.",
+        "The factory comment's d4 convention ('row-reversal leaves this unchanged'; k=0 down, 1 left, 2 up, 3 right) cannot be verified from source alone. It is consistent with the host's 8000 passing augmented checks. A wrong sign would mismatch almost every grownth-producing pair.",
+        "The constructor can produce pairs with no growth, where output equals input. Examples are seeds where every gap has width 2 or touches an edge. These cases are rare and are handled identically by the solver.",
+        "The solver treats any non-background cell as seed or propagated ink. It does not check that the seed colour is palette[7]. This is outside the constructor's domain and harmless."
+      ],
+      "required_context_checks": [
+        "Confirm that the host's d4 augmentation convention (which index means row reversal versus clockwise rotation) matches the factory's mapping k = d4 % 4 \u2192 {down, left, up, right}. The passing augmented audit indicates it does."
+      ],
+      "task_id": "af726779",
+      "factory_sha256": "e35badea62eea689544c5d148399b89bcb08b1570d0691ffe755951e0cc74d92",
+      "constructor_sha256": "7117281416f99cf972928cd033e6250b2a9ef2c50670f4fd1e4a274c616de874"
+    },
+    "host_review": "Reviewed rule and domain limitations. Host augmentation maps completed grids with one bijective palette, horizontal reflection then clockwise quarter turns; odd indices swap axes. Fresh audit iterates all eight variants, supplied fixture checks include query answers, and export requires every pair exact. Sampler exceptions are recorded rejections, not admitted examples. Spatial connectivity follows the stated constructor/archived mechanism; optional out-of-domain modes are not certified."
+  }
+}

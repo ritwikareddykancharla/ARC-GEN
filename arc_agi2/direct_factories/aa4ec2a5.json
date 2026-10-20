@@ -1,0 +1,49 @@
+{
+  "task_id": "aa4ec2a5",
+  "factory_sha256": "5de65d2a780fd5aea1337127465fa8d759182d6b5eb5a60fae2f813f58be8f8b",
+  "constructor_sha256": "83fa6cb8cbe9e6b408415ffeaae7e3eedc795c3726c1466d500c21937218efea",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 186929370275927,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 30.537856999901123,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "Every step of the mechanism is unchanged by any D4 transform: the 4-connected border flood fill, the 4-connected shape and pocket components, the 4-adjacency test that decides which shape owns a pocket, and the 8-neighbour outline dilation. Because of this, the emitted program runs directly in visible coordinates and needs no direction-specific rewriting. d4 is accepted but has no effect.\n\nThe colour roles are specialised as constants: background palette[4], shape palette[1], outline palette[2], holed-shape palette[8] and pocket palette[6].\n\nThe program then works in these steps:\n1. Flood-fill background cells that are 4-reachable from the grid border; these are the 'outside' cells.\n2. Every other background cell is a pocket.\n3. Each outside cell that is an 8-neighbour of a shape cell becomes the outline colour.\n4. Each pocket component is assigned to the shape component(s) it touches orthogonally. That pocket is filled with the hole colour, and each owning shape is recoloured to the holed colour.\n5. Shapes without a pocket keep the shape colour.\n\nThis covers several cases from the generator's domain correctly:\n- Diagonal-only leaks stay enclosed under 4-connectivity, so those pockets become holes.\n- Open rings with a breaching channel join the outside, so the shape stays unrecoloured and the channel gets the outline.\n- Rectangular grids are handled.",
+    "limitations": "- The program assumes the generator's input domain: only the palette images of colours 4 and 1 appear, and the background is palette[4] (the generator guarantees it is a strict majority).\n- If a pocket ever bordered two shapes, the program would recolour both. The constructor rejects such scenes, so this outside-domain behaviour matches the archived solver.\n- The 'teaching stages' (intermediate canvases) mentioned in the rule text are not emitted. solve returns only the final grid.\n- No constructor defects or fixture contradictions were found. The rule is uniform across all fixtures.\n- Nothing has been run or tested here.",
+    "independent_source_review": {
+      "verdict": "accept",
+      "mechanism": "Background cells (palette[4]) that are 4-connected to the grid border are 'outside'. Every other background cell is a pocket. Each outside cell that is an 8-neighbour of a shape cell (palette[1]) becomes the outline colour palette[2]. Each 4-connected pocket component is filled with palette[6], and every 4-connected shape component it touches orthogonally becomes palette[8]. The emitted solver applies this directly in visible coordinates using palette-specialised constants. Flood fill, component labelling, 4-adjacency ownership and 8-neighbour dilation are all D4-invariant, so ignoring d4 is correct.",
+      "evidence": [
+        "Outline target: the constructor paints OUTLINE on 8-neighbours of shape cells that are neither in `occupied` nor in `all_holes`. `_analyse` enforces `enclosed == all_holes`, so that set equals the background 4-reachable from the border. The solver's `outside[ny, nx]` test matches it exactly.",
+        "Holed status comes from the flood fill, not from latents. Declared holes must equal the enclosed set. Each pocket component must border exactly one shape, the declaring one (`len(adjacent) != 1` rejects; `holes != owned[idx]` rejects). The solver's `owners` rule therefore marks exactly the declaring shape.",
+        "The solver's pocket owners are never empty in-domain. Every 4-neighbour of an enclosed cell is in the grid (pockets sit in the interior `1..h-2`) and is either a shape cell or another pocket cell. A pocket component therefore always touches some shape.",
+        "Shape components equal latent shapes. `_connected(cells)` enforces 4-connectivity, and the 8-neighbour no-touch check forbids merging. `_label(g == SHAPE)` therefore recovers one component per shape.",
+        "Notches and channels only subtract cells. `holes -= notches`, and the final `_analyse` check overrides any local construction inaccuracy. Open-ring channels join the outside and get outlined, and the ring stays palette[1]. This is consistent with both programs.",
+        "The input contains only palette[4] and palette[1], with palette[4] the strict majority, so the fixed BG constant agrees with the archived `background()` mode.",
+        "The canonical fixtures are reconstructed through the same `_analyse` path. Hand checks match: pair 1 corner (0,15)=2; pair 3 pocket (13,5..6)=6; test ring gap (22,21..22)=6.",
+        "The host audit passed 1000 fresh pairs and 8000 augmented checks with no sampler rejections. This is consistent with the source reading."
+      ],
+      "blocking_issues": [],
+      "nonblocking_limits": [
+        "Diagonal-only leak distractor: a pocket that touches the outside only diagonally is labelled a hole (6, and the shape becomes 8). This follows the archived program's 4-connected background flood fill. The canonical fixtures never show this case, so it is demonstrated only when a synthetic demo happens to include one. Visually the pocket is fully 4-walled, so this is the natural reading, but under the dual (4-foreground, 8-background) convention it would leak.",
+        "The intermediate teaching stages described in the rule text are not emitted; only the final grid is returned.",
+        "A pocket bordering two shapes would recolour both. This is out of domain because `_analyse` rejects it, and it matches the archived solver.",
+        "Nesting, touching shapes and extra colours are unsupported by design and excluded by the constructor."
+      ],
+      "required_context_checks": [
+        "Confirm that episodes where a query contains a diagonal-only-leak pocket are acceptable when no demonstration shows that configuration. Alternatively, confirm that host policy accepts the archived 4-connectivity convention as the taught rule."
+      ],
+      "task_id": "aa4ec2a5",
+      "factory_sha256": "5de65d2a780fd5aea1337127465fa8d759182d6b5eb5a60fae2f813f58be8f8b",
+      "constructor_sha256": "83fa6cb8cbe9e6b408415ffeaae7e3eedc795c3726c1466d500c21937218efea"
+    },
+    "host_review": "Reviewed rule and domain limitations. Host augmentation maps completed grids with one bijective palette, horizontal reflection then clockwise quarter turns; odd indices swap axes. Fresh audit iterates all eight variants, supplied fixture checks include query answers, and export requires every pair exact. Sampler exceptions are recorded rejections, not admitted examples. Spatial connectivity follows the stated constructor/archived mechanism; optional out-of-domain modes are not certified."
+  }
+}

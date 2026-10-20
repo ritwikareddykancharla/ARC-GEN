@@ -1,0 +1,47 @@
+{
+  "task_id": "a644e277",
+  "factory_sha256": "444dda160824c72790d1567826079f8fe7faf2adb95ac0672fe1e0c8a57189eb",
+  "constructor_sha256": "dfd412d6ee1f97c67d309df4b5a8f01f128ca10b07fbf781fd3161854cc9eb2a",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 123441549806554,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 16.118563457974233,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The input is a lattice of full-length lines in one colour, with period 4 or 5. Exactly four line crossings are repainted in the background colour, and they form the corners of a rectangle. The output is the inclusive crop of that rectangle.\n\nThe emitted program finds the line colour from the pixels. The line colour is the one that fills whole rows (at least W-2 cells) and whole columns (at least H-2 cells). The slack of 2 allows for the hole corners. Rows and columns that pass this test are the lattice lines. Holes are the crossings of those lines that are not the line colour. The program crops the bounding box of the holes, edges included.\n\nRows and columns are handled symmetrically, and a bounding-box crop is the same under every D4 transform. Colour roles are inferred, not hard-coded. So the program works in visible coordinates under any d4 or palette, with no wrapper and no colour unpermutation. The constants d4 and palette are deliberately unused because nothing in the mechanism depends on orientation or on specific colours.\n\nI changed one thing from the archived solver, for robustness. The archived solver takes the most common colour as the background and the largest object as the line colour. With period 4, line cells are about 44% of the grid and background about 45%, so the line colour can sometimes be the most common colour. The archived solver can then fail. The full-line test avoids that. If no full line is found, the program falls back to the archived test (a colour covering more than half of a row).",
+    "limitations": "Constructor and solver notes for host review. These are not fixture contradictions; all three fixtures are consistent with the rule.\n\n1. The archived solver's background heuristic (most common colour) is fragile on generated scenes where the period is 4. In some of those scenes the line colour outnumbers the background, and the archived solver may mis-identify the roles. The emitted program does not use that heuristic.\n\n2. The archived solver has a dead 'marking' stage: it paints holes with an unused colour, but that copy never affects the output. I did not reproduce it.\n\nDomain assumptions:\n- The grid is at least about 17x17, as in the generator, so that every non-line row crosses two or more line columns.\n- There are exactly four holes, all in the background colour.\n- The line colour is never used for scattered marks inside cells; the generator guarantees this.\n\nIf no holes are found, the program returns the input unchanged. That case is outside the generator's domain.",
+    "independent_source_review": {
+      "verdict": "accept",
+      "mechanism": "The input is a full lattice in one line colour, period 4 or 5. Exactly four crossings are repainted in the background colour, forming a rectangle's corners. The output is the inclusive crop of the bounding box of those hole crossings. The emitted solver infers the line colour as the only colour that fills whole rows (count >= max(W-2, W//2+1)) and whole columns (the same test with H). It takes the crossings of those rows and columns, keeps the crossings that are not the line colour, and crops their bounding box directly in visible coordinates.",
+      "evidence": [
+        "Constructor: the lattice is drawn at r,c = mini-1 + k*mini over the full extent. brow and bcol are always lattice positions, mini*randint(...)+mini-1. outwidth and outheight are mini*k+1 with k>=1, so the four corners are distinct lattice crossings, at least 5 apart.",
+        "Bounds: the maximum brow+outheight-1 is mini*(upper+1)-1, which is 15 for mini=4 and 14 for mini=5. Grid dimensions are 17..23, so the holes stay inside the grid and on drawn line rows and columns.",
+        "Scattered marks come only from {bgcolor, fgcolor}, and random_colors(3) makes all three colours distinct. So the only non-line crossings are the four holes, the hole set is unambiguous, and its bounding box equals the constructor's crop window.",
+        "Strict threshold: every line row and column holds at most 2 holes, so its line-colour count is >= W-2 (or H-2). For W,H >= 17, W-2 >= W//2+1. A non-line row crosses at least 3 line columns (W=17, mini=5 gives cols 4, 9, 14), so no colour reaches W-2 there. Line rows hold at most 2 background cells. Only the line colour therefore yields non-empty rows and cols, the key tie-break is never exercised, and rows and cols are exactly the lattice lines.",
+        "Fixtures checked by hand. Pair 1: row 3 has 19 = W-2 line cells and col 3 has 15 = H-2. Pair 2: row 4 has 20 and col 4 has 16. Test: row 4 has 18 and col 4 has 17. Non-line rows and cols stay below threshold in all three. Each produces the stated crops (9x9, 6x11, 11x6).",
+        "D4 and palette: row and column handling is symmetric, the thresholds use the matching dimension, colour roles are inferred from pixel counts, and no whole-grid untransform wrapper is used. Palette mapping a role to 0 is harmless because no colour is assumed to be the background.",
+        "Host audit passed: 1000 fresh pairs, 8000 augmented checks and 16 fixture variants, with no sampler rejections."
+      ],
+      "blocking_issues": [],
+      "nonblocking_limits": [
+        "The emitted solver departs from the archived heuristic (most-common background, then largest object for the line colour). The rule is the same, and the change is more robust. The archived approach can misassign roles when the line colour outnumbers the background, e.g. mini=4 with a dimension of 20 (about 175 line cells vs about 180 expected background). The constructor labels do not depend on that heuristic, so no label is affected.",
+        "The non-strict fallback and the 'no holes, return input' path are unreachable under the constructor's domain (dimensions >= 17, exactly four background-coloured holes). They are defensive only.",
+        "Correctness relies on domain assumptions: dimensions >= 17, the line colour never used for marks, and at most 2 holes per line. The constructor guarantees all three."
+      ],
+      "required_context_checks": [
+        "None for colour evidence. a644e277 is not in the episode colour-association list, and the rule uses no arbitrary colour lookup. All roles are inferred structurally from the query input."
+      ],
+      "task_id": "a644e277",
+      "factory_sha256": "444dda160824c72790d1567826079f8fe7faf2adb95ac0672fe1e0c8a57189eb",
+      "constructor_sha256": "dfd412d6ee1f97c67d309df4b5a8f01f128ca10b07fbf781fd3161854cc9eb2a"
+    },
+    "host_review": "Reviewed mechanism and limitations. Confirmed augmentation.py uses a bijective palette, horizontal flip followed by clockwise turns; audit.py checks every D4, not only its final reported d4=7. Episode-wide D4 ambiguity gate is active. Out-of-domain fallbacks do not justify unverified inputs; every export still executes the program on every pair."
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "task_id": "9344f635",
+  "factory_sha256": "5982f6f4fd815206d75de09039cefa741c94bdae5f7b6efc6ed40934aa4680cf",
+  "constructor_sha256": "5f5321de6ffdfb9a378284876f3ed7d7dad11b926f941397e2d565697d3faf9b",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 108224014910708,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 3.0372646250762045,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The input contains dominoes on a background of palette[7]. The program finds them as 4-connected single-colour components of size 2. A domino whose cells share one column becomes a full column line of its colour. A domino whose cells share one row becomes a full row line. In the original frame the generator paints vertical-domino columns first and horizontal-domino rows on top, so rows win at crossings. Row-reversal reflections keep orientation, while an odd number of clockwise rotations turns original columns into visible rows. The emitted program therefore paints visible columns then rows when d4%4 is 0 or 2, and rows then columns when d4%4 is 1 or 3. The background is the constant palette[7]. The program works directly on rectangular visible grids and needs no demonstrations.",
+    "limitations": "Relies on the constructor's guarantees: dominoes never overlap or touch, vertical columns are distinct, horizontal rows are distinct, and segment colours never equal the background colour 7. Under those guarantees the result is fully determined and there are no ties. Same-orientation lines never share a column or row, so the order within a group does not matter. If the constructor's abutment check missed diagonal contact, 4-connectivity still separates the dominoes correctly. The constructor itself only makes square grids; the program also handles rectangular grids. No fixture contradictions were found; all three train pairs and the test agree with rows-over-columns in the original frame."
+  }
+}

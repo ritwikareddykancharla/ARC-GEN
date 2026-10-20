@@ -1,0 +1,21 @@
+{
+  "task_id": "9f27f097",
+  "factory_sha256": "c0a6a852dda0742acb3da4c1f782f504d8c9a0573a18912eb8ebc2c8ab558c88",
+  "constructor_sha256": "e8ac24c95c7972b60aa896590224eaf15130aa21f00250cdfd77c118e8f19dbd",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 38917259051004,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 4.245685250032693,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The constructor places one two-colour pattern block on a single background. It also places a same-sized rectangle of colour 0 that does not overlap the pattern. The output fills the 0 rectangle with the pattern mirrored left-to-right, keeping the row order. The emitted program works directly in visible coordinates. The hole colour is the constant palette[0]. The background is the most common colour, which always holds: the background covers at least 84 of the 144 cells. The pattern is the bounding box of the cells that are neither background nor hole. The mirror axis is specialised from d4: for d4%4 even the copy reverses columns, for d4%4 odd it reverses rows. This follows because conjugating a horizontal mirror by a 90\u00b0 rotation turns it into a vertical mirror. The extra row reversal for indices >= 4 commutes with the horizontal mirror, so it does not change the axis. The mirrored block is written into the hole's bounding box, and every other cell is unchanged.",
+    "limitations": "No tests have been run. The program assumes the hole colour palette[0] appears only in the hole, which holds in the constructor's domain. It also assumes the hole and the pattern are the same size; the constructor guarantees this, and if they differed the write is clipped defensively. Demonstrations are not consulted because the colour role and the axis are fixed by d4 and palette. No fixture contradictions or constructor defects were found. The colour list is resampled until exactly 2 colours appear, so the pattern's bounding box is exactly the pattern."
+  }
+}

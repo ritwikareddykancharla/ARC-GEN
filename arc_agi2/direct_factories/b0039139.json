@@ -1,0 +1,52 @@
+{
+  "task_id": "b0039139",
+  "factory_sha256": "7dc2f96388a3bcb7078dbf8ca124a737c5256b0af4fd1f639271f5112fc9a95b",
+  "constructor_sha256": "4f7735024b29f1ab5afb70c136c281da61c038623973cb95cf473e4e13cda664",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 262673595692890,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 76.67095062497538,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The emitted program works directly in visible coordinates. Divider lines are rows or columns made entirely of palette[1]. If any whole row is the divider colour, the layout is vertical; otherwise it is horizontal. The program slices the grid into panels between the dividers.\n\nThe factory decides the panel order. It maps the native layout directions (+x for the horizontal layout, +y for the stacked layout) through the D4 transform: a horizontal reflection first, then clockwise rotations, with (dr,dc)->(dc,-dr). From the visible axis and the sign of the mapped direction, it knows whether the motif panel sits at the high end, so the panel list must be reversed. As a pixel-level consistency check, the motif panel must contain palette[0] (its border); the solid A/B panels never do.\n\nThe four roles are then:\n- the motif: palette[4] cells, cropped to their bounding box;\n- the bars: count the 4-connected components of palette[3];\n- A: the dominant colour of the solid panel next to the bars;\n- B: the dominant colour of the far solid panel.\n\nThe tile paints motif cells A and the other cells B. n tiles are laid along the visible layout axis with one-cell B separators. Every tile is identical, so the direction of tiling does not affect the result.",
+    "limitations": "Assumes the constructor's domain: four panels; a motif panel with a 0 border; bars that never touch, so 4-connectivity counts them exactly; and solid A/B panels in colours 2..9, which never equal 0 or 1. No full row of the divider colour can occur in a horizontal layout, so the orientation test is unambiguous. No fixture contradictions or constructor defects were found. The rule in the task text matches the generator and the archived solver.",
+    "independent_source_review": {
+      "verdict": "accept",
+      "mechanism": "The input has four panels separated by full lines of colour 1. In order they are: a colour-4 motif with a 0 border, a panel of n non-touching colour-3 dominoes on 0, a solid block of colour A, and a solid block of colour B. The output crops the motif to its bounding box and paints shape cells A and empty cells B. It then lays out n identical tiles along the panel axis, with a one-cell B separator between neighbours. n is the number of 4-connected bar components. The emitted solver works directly in visible coordinates. Divider lines are rows or columns made entirely of pal[1]. A, B and the tile come from visible pixels: the dominant colour of the far panels and a crop of the pal[4] mask. n comes from counting 4-connected pal[3] components. Tiles are placed along the visible layout axis.",
+      "evidence": [
+        "Size budget: budget = 25 - w and l2 <= budget - 4. Then l3 <= rest - 2 and l4 <= rest - l3, so the input width is w + 5 + l2 + l3 + l4 <= 30. The height is h + 2 <= 8.",
+        "Output size: n <= 31 // (w + 1), so the output length n(w + 1) - 1 is at most 30.",
+        "Divider detection is unambiguous. No non-divider cell is ever colour 1: A and B are in 2..9, the bars are 3, the motif is 4 and the background is 0. In the horizontal frame every row passes through panel 1's 0 border column, so no row is all 1. Under transpose or D4 the same holds for columns.",
+        "Panels never merge or vanish. Panel 1 is at least 4 long, len2 >= 4, and len3, len4 >= 2. Dividers are never adjacent and never on a grid edge, so `segs` always yields exactly 4 panels.",
+        "Bar count is exact. _place_bars keeps every domino inside the 0 border and rejects any 8-neighbourhood contact with earlier bars. The 4-component count therefore equals len(hb) = n. Counting stays inside panel 2, so A or B being 3 or 4 cannot interfere.",
+        "Motif crop is exact. _random_motif guarantees every row and column holds a shape cell, and the fallback (a full grid minus one cell) also satisfies this. The motif sits at offset (1,1) inside a (h+2) x (w+2) panel, so the crop is exactly h x w.",
+        "Panel order is determined by visible pixels. The factory's REV_ROWS/REV_COLS come from mapping native +x and +y through D4, and the native layout axis is whichever one lands on the visible divider axis. This is backed by a pixel check: panel 0 must contain BG, and the solid A/B panels can never contain BG. So the motif panel is identified from visible evidence, not from a hidden latent.",
+        "Tile order does not matter. All tiles are identical, and a D4 transform of the native output equals the visible-cropped tile repeated along the visible axis with B separators. No whole-grid untransform or retransform wrapper is used.",
+        "Validate fixtures match the approved fixtures. In pair 1 (stacked), the motif transpose is symmetric and the output is 5x2. Pair 3 gives 4x15 and test 2 gives 5x29.",
+        "No arbitrary colour lookup is involved. A and B are read from the visible panels in every pair, so no episode evidence check is needed. The task is not in require_colour_evidence's list.",
+        "Host audit: 1000 fresh pairs, 8000 augmented checks and 16 fixture variants passed, with 1000 unique base inputs and no sampler rejections."
+      ],
+      "blocking_issues": [],
+      "nonblocking_limits": [
+        "The constructor docstring says 'at least one hole cell'. The code only guarantees at least one empty cell inside the bounding box, not an enclosed hole. This is a wording issue only.",
+        "generate() with an explicit motif but bars=None would fail on iterating None. This is only reachable through manual misuse; the random path and validate() always supply both.",
+        "The solver assumes the constructor domain: exactly four panels, and A and B never equal to pal[0] or pal[1]. Its BG-based panel reversal is a redundant safety check in that domain.",
+        "The bar count n is always in 2..6 and the bars are always dominoes. The solver's generality beyond this range is untested but not needed."
+      ],
+      "required_context_checks": [
+        "Confirm that the factory's apply() convention (horizontal reflection when d4 >= 4, then (dr,dc)->(dc,-dr) per quarter turn) matches the host's D4 augmentation. The host audit passing all 8 variants, plus the BG-based panel reversal, makes a mismatch harmless, but the convention itself was not verified from source."
+      ],
+      "task_id": "b0039139",
+      "factory_sha256": "7dc2f96388a3bcb7078dbf8ca124a737c5256b0af4fd1f639271f5112fc9a95b",
+      "constructor_sha256": "4f7735024b29f1ab5afb70c136c281da61c038623973cb95cf473e4e13cda664"
+    },
+    "host_review": "Reviewed rule and domain limitations. Host augmentation maps completed grids with one bijective palette, horizontal reflection then clockwise quarter turns; odd indices swap axes. Fresh audit iterates all eight variants, supplied fixture checks include query answers, and export requires every pair exact. Sampler exceptions are recorded rejections, not admitted examples. Spatial connectivity follows the stated constructor/archived mechanism; optional out-of-domain modes are not certified."
+  }
+}

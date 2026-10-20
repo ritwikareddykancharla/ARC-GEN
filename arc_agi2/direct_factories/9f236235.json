@@ -1,0 +1,27 @@
+{
+  "task_id": "9f236235",
+  "factory_sha256": "e6ca7ab937be0dc5d5a207af91978e2f6821a89044dd1688eaffba64f261f426",
+  "constructor_sha256": "10b7830de47434a3acd0533b7d07e90a333d13aaf4a9c58a22008fe00609aecb",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [
+    {
+      "seed": 59663764860085,
+      "error": "not enough values to unpack (expected 2, got 0)"
+    }
+  ],
+  "seed": 125411021546979,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 5.571653167018667,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The canonical mechanism has two steps. First, collapse a lattice of equal square panels separated by one-pixel divider lines to one cell per panel. Then mirror that small grid left-to-right. Collapsing panels commutes with every D4 transform, so the visible output is T\u2218flipH\u2218T^-1 applied to the visible panel grid. When the rotation count d4%4 is 0 or 2, that conjugate is a left-right mirror. When it is 1 or 3, it is a top-bottom mirror. A row reversal applied first commutes with flipH, so the reflected variants follow the same rule. The factory therefore only specialises the flip axis. Colours need no constants: the divider colour is found from the pixels and panel colours are copied exactly, so any palette is handled naturally.\n\nThe emitted program finds the lattice directly in visible coordinates. For each panel size m, it requires H = nr*m + nr - 1 and W = nc*m + nc - 1. It then checks that every divider row and column is uniform, that all dividers share one colour, and that every panel is a single colour. Among valid splits it prefers the generator's domain (square, 3-4 panels, magnifier 2-5), then larger panels. This avoids the archived solver's 'most common colour = background' heuristic, which can misfire, for example when the line colour dominates or panel colour 1 is everywhere. A looser uniform-line splitter is kept only as a fallback.",
+    "limitations": "If every panel is the same colour as the dividers (e.g. a fully uniform grid), the lattice is genuinely ambiguous. The 11x11 case (3 panels of size 3 vs 4 panels of size 2) can only collide in such degenerate scenes. The tie-break prefers larger panels, and such scenes have no visible way to determine the intended size; this needs host review if the constructor's random_color can return the background colour 0 as linecolor. No fixture contradicts the uniform rule. I have not run any tests.",
+    "host_review": "Inspected constructor and common helpers: line colour is in 1..9; patch colours exclude the line colour and unfilled cells are 0. A uniformly line-coloured grid cannot be generated, so the hypothesised lattice ambiguity is excluded."
+  }
+}

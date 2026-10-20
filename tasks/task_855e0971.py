@@ -16,6 +16,17 @@
 
 import common
 
+_MAX_SIDE = 30
+
+
+def _sample_heights(count):
+  """Samples per-stratum heights in [2, 10] whose sum fits an ARC grid."""
+  for _ in range(200):
+    heights = [common.randint(2, 10) for _ in range(count)]
+    if sum(heights) <= _MAX_SIDE:
+      return heights
+  raise RuntimeError("could not sample strata fitting the ARC size limit")
+
 
 def generate(width=None, colors=None, heights=None, strata=None, rows=None,
     cols=None, xpose=None,
@@ -34,7 +45,7 @@ def generate(width=None, colors=None, heights=None, strata=None, rows=None,
   if width is None:
     width = common.randint(10, 20)
     colors = common.random_colors(common.randint(2, 5))
-    heights = [common.randint(2, 10) for _ in colors]
+    heights = _sample_heights(len(colors))
     while True:
       strata, rows = [], []
       for idx, height in enumerate(heights):

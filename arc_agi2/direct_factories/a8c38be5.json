@@ -1,0 +1,84 @@
+{
+  "task_id": "a8c38be5",
+  "factory_sha256": "7c7798cbcb769a10e1b974abbea9499027cddc1d14b79a24cf9c20a119397e69",
+  "constructor_sha256": "307371e7860c0252de4db8325ce7115f574bde294277bb3a18b038c53d5fd932",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [
+    {
+      "seed": 19390184975956,
+      "error": "reference/generator deadline"
+    },
+    {
+      "seed": 58455083981279,
+      "error": "reference/generator deadline"
+    },
+    {
+      "seed": 213000294896161,
+      "error": "reference/generator deadline"
+    },
+    {
+      "seed": 196804124507540,
+      "error": "reference/generator deadline"
+    },
+    {
+      "seed": 276457159050179,
+      "error": "reference/generator deadline"
+    },
+    {
+      "seed": 45893598923491,
+      "error": "reference/generator deadline"
+    },
+    {
+      "seed": 219983533364725,
+      "error": "reference/generator deadline"
+    },
+    {
+      "seed": 171878266831376,
+      "error": "reference/generator deadline"
+    },
+    {
+      "seed": 135939054643294,
+      "error": "reference/generator deadline"
+    }
+  ],
+  "seed": 13822611912490,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 913.0026223750319,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The input contains nine solid 3x3 tiles of grey (palette[5]) on a background (palette[0]); eight tiles have coloured cells pressed against one side or corner, one is all grey. Tiles are found by shape, not connectivity: scanning in reading order, the first unclaimed non-background cell must be the top-left corner of a tile (any earlier corner would be unclaimed and earlier in reading order), so a 3x3 block is cut there and claimed. This works even when tiles touch. For each tile, the mean position of its non-grey cells relative to the tile centre gives sign offsets (-1/0/+1) in row and column, selecting the 3x3 slot in a 9x9 grey-filled output; the tile is copied unrotated. This mechanism is D4-equivariant in visible coordinates (a rotated/reflected tile's colour offset rotates/reflects exactly like its target slot, and the 9x9 output is square), so the same direct-coordinate algorithm applies for all d4; only the background and grey constants are specialised via palette.",
+    "limitations": "Assumes the generator's non-grey tile colours never equal the background colour (common.random_color is assumed to exclude black); if a colour cell equalled the background, a tile's top-left could be invisible and the scan would misalign. Assumes tiles never overlap (guaranteed by the constructor's overlap check) and each of the nine offset patterns is unique so slots never collide. Demonstrations are not consulted; colour roles come from palette constants.",
+    "independent_source_review": {
+      "verdict": "accept",
+      "mechanism": "The input holds nine non-overlapping solid 3x3 tiles of grey (palette[5]) on background (palette[0]). Eight tiles carry a fixed non-grey pattern pressed against one side or corner; tile idx 4 is all grey. Each tile is copied unrotated into the 9x9 grey output, in the slot given by the sign of the mean row/column offset of its non-grey cells from the tile centre (1,1). The factory finds tiles with a reading-order claim scan: the first unclaimed non-background cell is taken as a tile's top-left corner, and that 3x3 block is cut and claimed. All of this happens directly in visible coordinates, with only the BG and GRAY palette constants specialised.",
+      "evidence": [
+        "Constructor colours come from common.random_color(exclude=[common.gray()]), which draws from range(1,10) minus 5. Pattern cells are therefore never black or grey, and every tile is fully non-background, so a tile's top-left cell is always visible.",
+        "Claim-scan correctness: tiles are disjoint and every prior claim covered exactly one true tile. If the scan hit a cell (y,x) that was not its tile's top-left, then that top-left (ty,tx) comes earlier in reading order. It is unclaimed and non-background, so the scan would have stopped there first. This holds whether or not tiles touch.",
+        "Fixture pair 2 has touching tiles: the 8-tile occupies rows 0-2, cols 0-2 and the 2-tile occupies rows 3-5, cols 2-4. The claim scan handles this. Random generation uses overlaps(..., spacing=1), so it never makes touching tiles. That makes the fixtures stricter than the random generator, not more permissive.",
+        "Slot derivation checked for every hard-coded pattern. idx0 has mean (1/3,1/3) giving (-,-). idx1 has (0.25,1.0) giving (-,0). idx2 has (1/3,5/3) giving (-,+). idx3 has (1.0,0.25) giving (0,-). idx5 has (1.0,1.75) giving (0,+). idx6 has (5/3,1/3) giving (+,-). idx7 has (1.75,1.0) giving (+,0). idx8 has (5/3,5/3) giving (+,+). idx4 has no non-grey cells, giving the centre. Each slot equals the constructor's output position 3*(idx//3), 3*(idx%3).",
+        "Exact zero offsets are computed from small integers (for example 4/4 = 1.0), so the float np.sign returns 0 exactly. No ambiguous ties arise.",
+        "D4 equivariance: rotating or reflecting the input rotates each tile's offset vector the same way as its target slot in the square 9x9 output. The tile is copied in visible orientation, which matches the augmented output. No whole-grid untransform wrapper is used.",
+        "Colours repeat across tiles freely, but placement depends only on pattern position, not colour. No colour lookup is needed, so the colour-evidence checks do not apply. Demonstrations are correctly unused.",
+        "Tile rows lie in [0, height-3] and cols in [0, width-3], so tiles always fit inside the grid. The `tile.shape != (3,3)` guard is therefore an out-of-domain fallback only."
+      ],
+      "blocking_issues": [],
+      "nonblocking_limits": [
+        "The random generator never produces touching tiles (spacing=1), so fresh-pair audits do not exercise the touching case. The claim-scan argument above and fixture pair 2 cover it.",
+        "Rejection sampling places nine spaced 3x3 tiles in grids as small as 14x14, which explains the reference/generator deadline rejections. This affects sampling throughput, not label correctness.",
+        "The archived rule text has small descriptive inaccuracies in its test-input commentary, for example about which tiles touch. They do not affect the program.",
+        "The factory hard-codes BG=palette[0] instead of the most-common colour as in the archived program. This is valid because the constructor always uses black as background."
+      ],
+      "required_context_checks": [],
+      "task_id": "a8c38be5",
+      "factory_sha256": "7c7798cbcb769a10e1b974abbea9499027cddc1d14b79a24cf9c20a119397e69",
+      "constructor_sha256": "307371e7860c0252de4db8325ce7115f574bde294277bb3a18b038c53d5fd932"
+    },
+    "host_review": "Reviewed mechanism and limitations. Confirmed augmentation.py uses a bijective palette, horizontal flip followed by clockwise turns; audit.py checks every D4, not only its final reported d4=7. Episode-wide D4 ambiguity gate is active. Out-of-domain fallbacks do not justify unverified inputs; every export still executes the program on every pair."
+  }
+}

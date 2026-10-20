@@ -1,0 +1,48 @@
+{
+  "task_id": "a5f85a15",
+  "factory_sha256": "869c5c84775b3e784565aceab526fb76c2159da13316b78c263d7d2591412edb",
+  "constructor_sha256": "e4e392715ac1f929c621dbc64bc6879453d60d7069c31700df60b7df67d7fede",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 209039968489017,
+  "d4": 7,
+  "unique_base_inputs": 784,
+  "seconds": 3.0189087920589373,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "In the original frame, every line is a diagonal running in the step direction (+1,+1). Each line starts at its upper-left end, which always lies on the top or left border. The generator's rule `c % 2` gives yellow at odd step indices counted from that start. That holds because top diagonals use only even offsets, so they start at an even column, and bottom diagonals start at column 0.\n\nThe factory carries the step vector (1,1) through the D4 transform. A row reversal negates dc. Each clockwise rotation maps (dr, dc) to (dc, -dr). The result is the visible walking direction, and it also fixes which end of each line is the start.\n\nThe emitted program works directly in the visible grid. A line start is any non-background cell whose predecessor (cell minus step) is background or outside the grid. From each start it walks along the visible step while cells stay coloured. Cells at odd step indices are painted palette[4]; cells at even steps keep their colour.\n\nThe background is the constant palette[0] and the mark colour is palette[4]. The line colour is not needed because any non-background cell counts as a line cell. Direction matters for correctness: a line with an even number of cells gets a different parity if counted from the other end.",
+    "limitations": "The program assumes the constructor's domain. Background is the original black, the mark is the original yellow, and the line colour is never yellow, which the generator guarantees. Lines are assumed separated along the step direction. This holds because each generated diagonal is a single full edge-to-edge run, and distinct diagonals are never collinear. The program uses the step-parity mechanism from the line's start, not absolute column parity. These coincide on the generator's domain because the generator excludes odd top diagonals ('Odd tops are ambiguous'). Demonstrations are not consulted; the colour roles come from the palette constants. No fixture contradictions were found: all three train pairs and the test pair match the rule.",
+    "independent_source_review": {
+      "verdict": "accept",
+      "mechanism": "Each input is a square grid on background 0. It holds one or more full edge-to-edge diagonals with constant r-c, all in one non-yellow colour. Walking each diagonal from its upper-left end in step (+1,+1), cells at odd step indices become yellow (4) and cells at even steps keep their colour. The constructor labels by absolute column parity (`yellow if c % 2`). This equals step parity from the line start because top diagonals use only even offsets (`range(0, -size+1, -2)`), so they start at an even column on row 0, and bottom diagonals (`range(1, size-1)`) start at column 0. The emitted solver carries the step vector (1,1) through the D4 transform: a row reversal negates dc, and each clockwise turn maps (dr,dc) to (dc,-dr). In the visible grid it finds line starts as non-BG cells whose predecessor (cell minus step) is BG or off-grid, then walks forward and paints odd indices with MARK=palette[4].",
+      "evidence": [
+        "Constructor: `grid[r][c] = color if r - c in diags`; `output = yellow if c % 2 else color`. For diag -k with k even, the cell at step i is in column k+i, so c%2 equals i%2. For diag d>0, the cell at step i is in column i. Step parity and the label therefore agree throughout the domain.",
+        "Distinct diags have distinct r-c values, so they are parallel and never collinear. Walking along (+1,+1) stays on one r-c value, so adjacent diagonals (e.g. 0 and 1) cannot merge runs or shift parity. Each diagonal is one contiguous run from border to border, so the predecessor test finds exactly one start per line.",
+        "Every line has at least 2 cells: the bottom range stops at size-2, and the top range excludes -(size-1). Even a 1-cell line would be harmless, since index 0 is never painted.",
+        "`random_color(exclude=[yellow])` draws from 1..9 minus 4. The line colour therefore never equals BG (0) or MARK (4), so the hard-coded BG/MARK constants from the palette are sound and need no demonstration evidence.",
+        "Fixtures: the train pairs (diags [-2,4], [0], [-2,3]) and the test pair (diags [-4,1,8]) all match odd-step yellowing from the upper-left end.",
+        "Factory direction derivation is self-consistent: (1,1) gives (1,-1) under row reversal, then (dc,-dr) per clockwise turn. Getting the direction wrong would be detectable. A perpendicular direction breaks line walking entirely, and a reversed direction flips parity on even-length lines. The host's 8000 augmented checks across D4 variants pass, which corroborates the convention.",
+        "The solver works directly in visible coordinates with specialised direction and colour constants. There is no untransform/native-solve/retransform wrapper. `_native_solve` exists only in the archived program, not in the emitted code."
+      ],
+      "blocking_issues": [],
+      "nonblocking_limits": [
+        "Demonstrations are not consulted. BG and MARK come from palette[0] and palette[4], which is valid because the constructor fixes black background and yellow mark.",
+        "Absolute column parity and step parity coincide only because odd top diagonals are excluded. The solver correctly implements the step-parity rule, and this exclusion is the constructor's own domain restriction, not a fixture-specific hack.",
+        "The walking direction, and hence which end counts as index 0, is a D4 orientation constant. In an episode where every demonstration line has odd length, the visible demos do not distinguish the start end. Any query line of even length would then be orientation-ambiguous from the visible context alone."
+      ],
+      "required_context_checks": [
+        "Confirm the host's D4-conflict rejection (same visible demos and query input but conflicting query answers) is applied to this task. It is the safeguard for episodes where all demonstration lines have odd length but a query line has even length, making the start end undetermined by the visible evidence.",
+        "Confirm the host's D4 convention applies the row reversal before the d4%4 clockwise rotations, matching the order assumed in build_program. The passing augmented audit across all 8 variants suggests it does."
+      ],
+      "task_id": "a5f85a15",
+      "factory_sha256": "869c5c84775b3e784565aceab526fb76c2159da13316b78c263d7d2591412edb",
+      "constructor_sha256": "e4e392715ac1f929c621dbc64bc6879453d60d7069c31700df60b7df67d7fede"
+    },
+    "host_review": "Reviewed mechanism and limitations. Confirmed augmentation.py uses a bijective palette, horizontal flip followed by clockwise turns; audit.py checks every D4, not only its final reported d4=7. Episode-wide D4 ambiguity gate is active. Out-of-domain fallbacks do not justify unverified inputs; every export still executes the program on every pair."
+  }
+}

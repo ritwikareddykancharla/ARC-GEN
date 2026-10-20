@@ -1,0 +1,21 @@
+{
+  "task_id": "9b365c51",
+  "factory_sha256": "fb5fec3e3feeb095f5e888d2b525ec526c3ca0fdfeae2ac733b502507e30fd2e",
+  "constructor_sha256": "9264d65b10990d8f076877cefea5fe1d051084cac4f927f914098d0459bcbfd0",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 235501790433942,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 5.237618083017878,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "Canonical mechanism: the left side holds full-height legend lines in distinct colours, separated by background. To the right, solid rectangles of colour 8 are placed left to right. Each rectangle occupies its own column range, and neighbouring rectangles either touch or are separated by one blank column. The output erases the legend and paints the k-th rectangle (left to right) with the k-th legend colour (left to right).\n\nRectangles that touch can merge into one connected component, so connectivity cannot separate them. Instead the program scans slices perpendicular to the layout direction. A rectangle is a maximal run of adjacent slices with an identical set of shape-cell positions. This split is reliable because the generator forces neighbouring rectangles to have different start rows, so their position sets always differ.\n\nThe factory works out where the canonical left-to-right scan points in visible coordinates. It starts with the displacement (0,+1). For d4>=4 it negates the column component (row reversal). It then applies the clockwise map (dr,dc)->(dc,-dr) d4%4 times. The result gives the slice axis: rows when the scan is vertical, columns when it is horizontal. It also gives the scan direction, increasing or decreasing index.\n\nThe emitted program uses these constants directly: background palette[0] and shape colour palette[8]. Legend lines are full-length uniform slices whose colour is neither background nor shape. They are read in scan order and set to background. The rectangles found by the slice-run segmentation are then recoloured in scan order. No rotation, normalization or colour unpermutation happens.",
+    "limitations": "Background and shape colours are fixed to palette[0] and palette[8] rather than inferred from the demonstrations. The program assumes the generator's domain: legend lines span the whole perpendicular extent, rectangles occupy disjoint ranges along the scan axis, and neighbouring touching rectangles differ in their set of occupied positions (the generator guarantees different start rows). If there are more rectangles than legend colours, the extra rectangles are left in the shape colour; the generator never produces this. A rectangle could never fill a whole slice (height 6-8 against a maximum rectangle size of 5), and the shape colour is excluded from legend detection anyway. The supplied fixtures fit the uniform rule; I found no contradictions, indexing bugs or hidden tie-breaks in the constructor. The task's 'rule' field is mostly a revision note about emit-label wording ('grey' changed to 'cyan') and does not affect the mechanism. No tests have been run."
+  }
+}

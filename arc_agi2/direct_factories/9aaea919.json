@@ -1,0 +1,21 @@
+{
+  "task_id": "9aaea919",
+  "factory_sha256": "c1d3065d61804c347a4dcf79205fe3db86e415dd541eca382397d73d7c3f7f87",
+  "constructor_sha256": "030ed781f3e48241f56c680f7780e7618da573871971ea0f05836d78f24105d4",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 108919393081646,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 19.56289233302232,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "Canonical mechanism: the bottom row holds 5-cell marker bars, each lying directly beneath a stack of 3x5 plus shapes. The shapes are stacked upward with a pitch of 4. A colour-2 bar recolours its whole stack to colour 5. A colour-3 bar adds copies of its stack's farthest shape further away from the marker line, keeping the stack's colour. The number of added copies is the summed height of all 2-marked stacks. All bars are erased.\n\nIn visible coordinates the marker line is an edge line that depends only on d4%4:\n- 0: bottom row, stacks grow up.\n- 1: left column, stacks grow right.\n- 2: top row, stacks grow down.\n- 3: right column, stacks grow left.\n\nA row reversal does not move the bottom edge. The plus shape is symmetric, so reflections only reorder stacks across the line, which does not affect the result.\n\nThe emitted program works as follows:\n1. It takes the background as the most common colour off the marker line.\n2. It scans the marker line for runs of palette[2] and palette[3].\n3. For each run, it treats the band of cells perpendicular to the run as that stack.\n4. It counts the stack's shapes as maximal contiguous occupied slices along the stacking axis.\n5. It recolours the 2-marked bands to palette[5].\n6. It stamps translated copies of the farthest shape of each 3-marked stack. The pitch is measured from the stack when it has at least two shapes, otherwise shape thickness + 1 (which equals 4).\n7. It clears the marker line.\n\nStack heights are read from the input before any recolouring.",
+    "limitations": "Several behaviours are extrapolations rather than rules established by the train pairs, and should be noted for host review:\n- Summing the heights of multiple 2-marked stacks is shown only by the canonical test pair, never by the train pairs.\n- Giving every 3-marked stack the full sum is a synthetic generator extension.\n- Using three or more 2-markers is also a synthetic generator extension.\n\nThe program then relies on the following generator guarantees:\n- **Background:** it is the most common colour off the marker line. This holds in all generator scenes, including the smallest 9-row grids.\n- **Separate bars:** marker bars are separated by background, because the slot spacing is 6 and the shapes are 5 wide.\n- **Stack fits:** each extended stack stays inside the grid. Copies that would fall outside are clipped rather than wrapped.\n\nI found no contradictions between the fixtures and the uniform rule. I did not identify any constructor tie-break or indexing defects that affect the answer. The program does not use the demonstrations. No tests were run."
+  }
+}

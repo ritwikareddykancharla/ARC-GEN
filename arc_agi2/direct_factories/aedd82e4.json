@@ -1,0 +1,49 @@
+{
+  "task_id": "aedd82e4",
+  "factory_sha256": "80640d022217a5db29a5480d84928b779425c4c337317e14b04247ae6b660826",
+  "constructor_sha256": "ff6c5b431a44d97feba51d9e093bd3e018f08803f8de79ae73611e86383dc8ff",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 48263145091445,
+  "d4": 7,
+  "unique_base_inputs": 984,
+  "seconds": 4.874158833990805,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The constructor marks each red pixel (colour 2) that has no red neighbour above, below, left or right (common.edgefree_pixels) and recolours it blue (colour 1). Every other cell keeps its input value. Connecting cells only through edges (4-connectivity) gives the same neighbour set under any rotation or reflection. So the emitted program uses no direction or axis, and d4 changes nothing about the mechanism. The palette is handled by baking in the constants palette[2] for the red role and palette[1] for the blue role. The program reads the input grid directly and checks each red cell's 4 neighbours, treating cells past the grid edge as absent. It then writes the blue colour into a copy of the grid, so the original is untouched. The grid can be any rectangular size, and red cells on the boundary work correctly. The rule has no ties to break. The program does not need to know the background colour; it is kept only as a documented constant. On the approved fixtures this matches the archived solver (single-cell 4-connected components become 1), including train pair 3, where the cells (1,2) and (2,1) touch only diagonally and both turn blue.",
+    "limitations": "The program assumes the roles stated by the constructor: red is palette[2] and blue is palette[1]. It does not infer these colours from the demonstrations. Under the stated episode-wide palette mapping this is exact. The demonstrations are ignored because the rule has no free parameters. I found no constructor defects or contradictions in the fixtures. No tests have been run.",
+    "independent_source_review": {
+      "verdict": "accept",
+      "mechanism": "The constructor paints the listed pixels red (internal 2) on a black (0) canvas. It then calls common.edgefree_pixels(grid), which returns every nonzero cell with no nonzero 4-neighbour, counting out-of-bounds cells as 0. Each returned cell becomes blue (1) in the output. The input holds only colours 0 and 2, so 'nonzero' means exactly 'red'. The rule is therefore: a red cell with no red edge-neighbour becomes blue. The emitted solver does the same in visible coordinates. For each cell equal to RED=palette[2], it checks the four in-bounds edge neighbours for RED and writes BLUE=palette[1] into a copy of the grid when none is found.",
+      "evidence": [
+        "edgefree_pixels in common.py: get_val returns 1 if ingrid[r][c] > 0 and 0 when out of bounds. It skips cells equal to 0 and keeps cells with friends == 0. This matches the solver's in-bounds RED-neighbour test, given the input alphabet {0, 2}.",
+        "Isolation is decided from the input grid alone and is order-independent. The constructor computes the pixel list before recolouring anything, and the solver reads from the unmodified grid while writing to out. No sequential-update hazard exists.",
+        "The 4-neighbourhood is the same set under every D4 transform. The solver has no axis, direction or whole-grid untransform wrapper; the d4 value appears only in a comment.",
+        "Hand check of the test fixture: (0,3), (2,2) and (3,0) have no red edge-neighbours and become 1. {(0,0), (0,1), (1,1)} and {(4,2), (4,3)} stay 2. Train pair 3: (1,2) and (2,1) touch only diagonally, and both become 1. All fixtures agree with the solver and with the archived 4-connected singleton-component program.",
+        "No hidden random latent affects labels. The only randomness is grid size and pixel placement, and both are fully visible in the input.",
+        "There are no tie-breaks, no fixed answers and no fixture-specific branches. The colour roles are genuine rule constants, and the solver specialises them through the palette.",
+        "Host audit passed: 1000 fresh pairs, 8000 augmented checks and 16 fixture variants, with no sampler rejections."
+      ],
+      "blocking_issues": [],
+      "nonblocking_limits": [
+        "Random generation can crash on an empty pixel set. If random_pixels returns [], then 'rows, cols = zip(*pixels)' raises ValueError. The chance is roughly 1/9 \u00d7 2^-9 for 3x3 grids, and smaller for larger ones. This is a sampler robustness defect, not a label defect, and it did not occur in the audited run.",
+        "edgefree_pixels hard-codes 0 as background (== 0 and > 0). This is correct only if the palette is applied to the finished grids rather than through common.set_colors before generation. The passing augmented audit is consistent with palette remapping applied after generation.",
+        "The solver ignores the demonstrations and bakes in the red and blue roles from the palette. This is exact under the episode-wide palette mapping and needs no demonstration lookup.",
+        "Red-heavy grids, including grids where red outnumbers background, are reachable. The solver never infers background, so they are handled correctly."
+      ],
+      "required_context_checks": [
+        "Confirm the host applies the palette by remapping the finished grids, not by calling common.set_colors before generate(). Otherwise edgefree_pixels' literal 0 test would misclassify cells.",
+        "Confirm that the empty-pixel-set ValueError from random generation is handled by the sampler as a rejection or retry, and is not counted as a constructor output."
+      ],
+      "task_id": "aedd82e4",
+      "factory_sha256": "80640d022217a5db29a5480d84928b779425c4c337317e14b04247ae6b660826",
+      "constructor_sha256": "ff6c5b431a44d97feba51d9e093bd3e018f08803f8de79ae73611e86383dc8ff"
+    },
+    "host_review": "Reviewed rule and domain limitations. Host augmentation maps completed grids with one bijective palette, horizontal reflection then clockwise quarter turns; odd indices swap axes. Fresh audit iterates all eight variants, supplied fixture checks include query answers, and export requires every pair exact. Sampler exceptions are recorded rejections, not admitted examples. Spatial connectivity follows the stated constructor/archived mechanism; optional out-of-domain modes are not certified."
+  }
+}

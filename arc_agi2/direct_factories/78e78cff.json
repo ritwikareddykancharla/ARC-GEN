@@ -1,0 +1,23 @@
+{
+  "task_id": "78e78cff",
+  "factory_sha256": "9f109c6b5dcf5858ac4d1f896aa8e2dc8ccff7dd3721474afc2c41b55948228e",
+  "constructor_sha256": "eeb9f765f791286a509b7123627fe368c81a9c2424be8e21daa73bffa26ab292",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 13617252837067,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 5.17833729099948,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The program finds the background (most common colour), the marker (rarest non-background colour) and the frame (the remaining colour). It takes the frame's bounding box (y0, x0, y1, x1). It fills the interior's background cells with the marker colour. Each background cell in a side's non-corner range then leaks straight outward to the grid edge, and the leak includes the gap cell. Top gaps paint rows 0..y0 of that column. Bottom gaps paint rows y1..H-1. Left gaps paint columns 0..x0 of that row. Right gaps paint columns x1..W-1. Only background cells are recoloured, so frame cells and cut corners are kept. This rule is symmetric under D4 and colour roles come from pixels, so the same code works for every d4 and palette. It agrees with all canonical fixtures. It is the same program as the failed candidate, because that program already implements the intended mechanism correctly.",
+    "limitations": "The program assumes exactly one frame object and one marker cell, with the frame having more cells than the marker. It does not reproduce the constructor's out-of-place leak painting (see constructor_issue). Fresh pairs that trigger that generator bug will therefore not match the synthetic label, and the host will need to review or exclude them. No tests were run by me.",
+    "diagnosis": "Failing case: the query frame is 2 (palette-mapped), the marker is 8 and the background is 6. The frame bounding box is rows 2..9, cols 5..9, so bcol=5 and wide=5. The right side has gaps at rows 4 and 7. The expected label sets row 4 and row 7 to 8 from col 5 to col 11. That recolours the left frame cells (4,5) and (7,5), which are 2 in the input and are not gaps. No consistent visible rule gives this: the left side has no gap on those rows, yet its frame pixel disappears only because the opposite side has a gap. The cause is an indexing bug in the generator's horizontal leak. For a right-side gap it uses start = ecol + 1, a coordinate relative to the frame, as an absolute column. It also paints colors[2] unconditionally. When bcol >= wide, the leak therefore starts at or left of the left frame column and overwrites frame (and possibly background) cells. The vertical leak has the same bug, with start = erow + 1 for bottom gaps, which hits when brow >= tall. The canonical fixtures all have bcol = brow = 2, so the wrong start always falls inside the already-filled interior and the bug is invisible there. It only appears in fresh scenes with wide = 5 and bcol = 5 (or tall = 5 and brow = 5) on 12-wide or 12-tall grids, which is exactly this counterexample.",
+    "constructor_issue": "In generate().draw(), the leak loops compute `start = 0 if ecol == 0 else ecol + 1` and `start = 0 if erow == 0 else erow + 1`. These mix frame-relative offsets with absolute grid coordinates. The intended code is `start = bcol + ecol` (or bcol + ecol + 1, which is equivalent because the gap cell is already painted) for right-side gaps, and `start = brow + erow` for bottom-side gaps. Combined with unconditional painting of colors[2], the bug overwrites opposite-side frame pixels, and any background between the grid edge and the frame, whenever bcol >= wide or brow >= tall. The resulting labels contradict the uniform mechanism shown by every canonical fixture. In the same episode, a right gap erases a left frame pixel only when the frame happens to sit far from the edge. These labels are constructor defects that need host review, for example by fixing the start offsets or rejecting such samples. I did not fit them."
+  }
+}

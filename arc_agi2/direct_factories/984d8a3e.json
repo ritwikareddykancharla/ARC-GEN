@@ -1,0 +1,21 @@
+{
+  "task_id": "984d8a3e",
+  "factory_sha256": "45cfa09ad7c689a319ed90046e36ef8af4bbab12816d517745316a31142879ed",
+  "constructor_sha256": "43505799cec842cb477cf5e37bf3555fe979483a5c2306ed423f3dcf318d9e6a",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 46392406536536,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 9.12359450000804,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "In the original task each row has three runs: the left colour touches the left edge, the middle colour sits in between, and the right colour touches the right edge. Let m be the smallest right-run start over all rows. In each row, k = min(L, rs - m) left-colour cells are removed from the left run. The middle run slides k cells toward the left edge and keeps its width. The k cells are then placed directly against the right run.\n\nThe factory works out where the original rows and the original left edge end up after the D4 transform:\n- d4 0 and 6: rows, starting at the left column.\n- d4 2 and 4: rows, starting at the right column.\n- d4 1 and 7: columns, starting at the top row.\n- d4 3 and 5: columns, starting at the bottom row.\n\nThe emitted program uses these as two fixed constants. It walks each visible line using visible indices that step away from the start edge, and it writes the result straight into visible cells. No grid is rotated or flipped. Colour roles are read from the pixels:\n- start colour = most common colour on the start edge,\n- end colour = most common colour on the opposite edge,\n- middle colour = the remaining colour.\n\nThe constructor guarantees strict majorities on both edges and a middle run at least one cell wide in every line, so this is robust under any palette. Because the roles are inferred, the palette argument is not needed. m is a global minimum, so the order in which lines are processed does not matter. This matches the constructor's _render and the archived solver, including rows with L=0, rows with no end run (rs = line length), anchor rows with no start colour, and non-square grids.",
+    "limitations": "Colour roles are inferred from edge majorities, as in the archived solver. This relies on the constructor's guarantee that the start and end colours are strict majorities of their edge lines and that the three colours are distinct. If an explicit profile broke that guarantee, the inference could fail, but the constructor rejects such profiles.\n\nIf no third colour were present, the program falls back to the most common colour. This cannot happen under the constructor, because every line has a middle run.\n\nThe palette argument is not used, because roles are derived from pixels.\n\nThe archived solver's stage-1 intermediate grid is not returned; only the final grid is.\n\nNo constructor defects or fixture contradictions were found. All three fixture pairs are consistent with k = min(L, rs - m) using the global m. I have not executed this code; correctness rests on manual tracing against the fixtures and the constructor."
+  }
+}

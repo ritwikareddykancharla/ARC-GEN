@@ -1,0 +1,48 @@
+{
+  "task_id": "ac6f9922",
+  "factory_sha256": "dcaafb67b9fb29cde8d1bb329747dfc569e4aa72591d53285046d02e5451b86a",
+  "constructor_sha256": "e5fdeede5b742548c05447396ac240b72ee6c6620c40ae2b38b56ca5f0cc8c96",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 249257672493085,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 41.29958654101938,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The emitted program works directly on the visible grid. It finds the background as the dominant colour of the grid border. In the generator the frame rectangle always has at least one background row or column on every side. The frame is the largest single-colour 4-connected non-background object. Inside the frame's bounding box, each 4-connected region of non-frame cells is one hole. A hole's colour is any non-background cell it contains, or the background if it is empty. The output rows are the sorted distinct visible hole tops, and the output columns are the sorted distinct visible hole lefts. Each cell takes its hole's colour. Under any D4 transform, the generator's hole lattice and its output grid are transformed together. Holes in the same lattice band share a visible top or left edge, and their visible order matches the transformed output order. So rows become columns and reversals happen naturally, with no rotation or normalisation wrapper. Colour roles (background, frame, content) are inferred from pixels, so any palette permutation is handled. d4 and palette are recorded only as a comment.",
+    "limitations": "Assumes the constructor's domain. The frame is a solid rectangle with at least a 1-cell background margin. Holes are separated by frame cells, and each hole has a background ring around its content. Content colours differ from the background and frame colours. Constructor note for host review: the archived solver takes the most common colour as the background. In fresh scenes with small holes and a tight margin, the frame can outnumber the background (e.g. 2x2 holes of size 3x3, a 12x12 frame on a 14x14 grid), and that solver would fail. This program uses the border colour instead and does not reproduce that defect. No contradictions with the fixtures were found. The program has not been executed.",
+    "independent_source_review": {
+      "verdict": "accept",
+      "mechanism": "The constructor draws a solid fgcolor rectangle with at least a 1-cell background margin on all sides. It cuts a lattice of background holes out of it: hole row bands come from talls/brows and hole column bands from wides/bcols. Bands are sorted, separated by at least 1 frame cell, and start and end at least 1 cell inside the frame. Each hole gets a (wide-2)\u00d7length block of its colour at its top, inset by one cell. The colour is either bgcolor (empty) or a colour from the subset that excludes bg and fg. output[row][col] is that colour, and a vertical flip is applied to grid and output together. The emitted solver takes the background as the border mode and the frame as the largest single-colour 4-connected non-background component. Holes are the 4-components of non-frame cells inside the frame bbox. Each hole's colour is its first non-background cell. Output rows and columns are the sorted distinct hole tops and lefts, all in visible coordinates.",
+      "evidence": [
+        "Border is pure background. row_offset is in [1, size-height-1], and size >= max(width,height)+2 guarantees that range is non-empty. The same holds for col_offset. So border-mode bg is exact, and this avoids the archived solver's global most-common-colour assumption.",
+        "Holes cannot merge. overlaps_1d(..., 1) forces a gap of at least 1 between bands, and brow >= 1 with brow+tall <= height-1 (likewise for columns) keeps a frame margin. So each hole is exactly one 4-component of sub != fc.",
+        "The frame is one connected component. Every frame cell lies in either a non-band row or a non-band column, and both kinds connect to the outer frame ring.",
+        "The frame is strictly the largest object. Its outer ring alone has at least 2(9+9)-4 = 32 cells. A content block has at most (6-2)\u00d7(6-2) = 16 cells. No tie is reachable.",
+        "Hole colour is exact. A hole contains only bg and its single content colour, which is drawn from a subset excluding bg and fg. The content is always inset by a bg ring because length <= tall-2 and the width is wide-2.",
+        "Hole bands share both edges. All holes in a band have identical top and bottom (or left and right) extents. So under the constructor flip or any D4 augmentation, every hole in a visible band has the same min row or min column. Sorted visible order matches the transformed output order, and transposition swaps rows and columns consistently.",
+        "Output dimensions are correct. common.grid(len(wides), len(talls)) gives len(talls) rows \u00d7 len(wides) columns, matching the counts of distinct tops and lefts.",
+        "No hidden latent decides the label. lengths only change content shape, and colours are visible pixels. There is no arbitrary colour association, so no episode evidence check applies.",
+        "Max size is 6*3+3+1+3+4 = 29 <= 30.",
+        "The solver hardcodes no colours or orientation. The d4/palette header is only a comment. There is no untransform/retransform wrapper."
+      ],
+      "blocking_issues": [],
+      "nonblocking_limits": [
+        "The archived transform uses the global most-common colour as background. As the prior notes say, the frame can outnumber the background in tight scenes. The constructor's labels do not depend on that program, and the emitted solver avoids the problem by using the border, so this is not a label defect.",
+        "The solver's fallbacks (no non-bg object, no holes) are out of domain, and the constructor never reaches them.",
+        "Hole content is always a top-anchored solid rectangle. The solver does not rely on that and only reads colour."
+      ],
+      "required_context_checks": [],
+      "task_id": "ac6f9922",
+      "factory_sha256": "dcaafb67b9fb29cde8d1bb329747dfc569e4aa72591d53285046d02e5451b86a",
+      "constructor_sha256": "e5fdeede5b742548c05447396ac240b72ee6c6620c40ae2b38b56ca5f0cc8c96"
+    },
+    "host_review": "Reviewed rule and domain limitations. Host augmentation maps completed grids with one bijective palette, horizontal reflection then clockwise quarter turns; odd indices swap axes. Fresh audit iterates all eight variants, supplied fixture checks include query answers, and export requires every pair exact. Sampler exceptions are recorded rejections, not admitted examples. Spatial connectivity follows the stated constructor/archived mechanism; optional out-of-domain modes are not certified."
+  }
+}

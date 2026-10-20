@@ -59,12 +59,12 @@ def generate(width=None, height=None, wide=None, tall=None, brow=None,
       grid[brow + erow][bcol + ecol] = colors[0]
       output[brow + erow][bcol + ecol] = colors[0]
       if erow not in [0, tall - 1]:
-        start = 0 if ecol == 0 else ecol + 1
+        start = 0 if ecol == 0 else bcol + ecol
         end = bcol + 1 if ecol == 0 else width
         for col in range(start, end):
           output[brow + erow][col] = colors[2]
       if ecol not in [0, wide - 1]:
-        start = 0 if erow == 0 else erow + 1
+        start = 0 if erow == 0 else brow + erow
         end = brow + 1 if erow == 0 else height
         for row in range(start, end):
           output[row][bcol + ecol] = colors[2]

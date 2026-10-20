@@ -1,0 +1,21 @@
+def build_program(d4, palette):
+    bg = int(palette[0])
+    lines = []
+    lines.append('import numpy as np')
+    lines.append('')
+    lines.append('BG = %d' % bg)
+    lines.append('')
+    lines.append('def solve(demonstrations, grid):')
+    lines.append('    g = np.asarray(grid, dtype=int)')
+    lines.append('    h, w = g.shape')
+    lines.append('    k = int((g != BG).sum())')
+    lines.append('    if k < 1:')
+    lines.append('        k = 1')
+    lines.append('    out = np.full((h * k, w * k), BG, dtype=int)')
+    lines.append('    for y in range(h):')
+    lines.append('        for x in range(w):')
+    lines.append('            c = int(g[y, x])')
+    lines.append('            if c != BG:')
+    lines.append('                out[y * k:(y + 1) * k, x * k:(x + 1) * k] = c')
+    lines.append('    return out.tolist()')
+    return '\n'.join(lines) + '\n'

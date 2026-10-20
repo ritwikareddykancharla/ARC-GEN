@@ -1,0 +1,21 @@
+{
+  "task_id": "941d9a10",
+  "factory_sha256": "9b1467514801ed244d2b4ac998e6c6a348fc61078fdc7bf987c964280f8b01df",
+  "constructor_sha256": "08e0f9ad73715d89374481b3b98ffed33b70b19b7f408937f5b6b669452d98ba",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 270867488371048,
+  "d4": 7,
+  "unique_base_inputs": 109,
+  "seconds": 5.5693898749304935,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "Rule: the grid is split into a lattice by full-length divider rows and columns. The divider colour is palette[5] and the background is palette[0]. The divider-free rows group into row bands, and the divider-free columns group into column bands. Three lattice cells are filled. The original top-left cell gets palette[1], the centre cell (middle row band x middle column band) gets palette[2], and the original bottom-right cell gets palette[3].\n\nAdapting to the visible grid: the factory tracks the original top-left corner through the D4 transform as a (bottom?, right?) pair. A row reversal flips the horizontal flag. Each clockwise rotation maps (vr, hc) to (hc, 1 - vr). The emitted program then picks the first or last row band and column band for the palette[1] cell, and the opposite corner for the palette[3] cell.\n\nThe band counts are always odd (3 or 5), so the middle band index is the same under any reflection. The program has no rotation or recolouring wrapper. It scans the visible grid directly for divider lines in the palette[5] colour and paints the three cells in place.",
+    "limitations": "- **No dividers:** the program assumes the generator's domain, which always has at least one divider row and one divider column (3 or 5 bands each, separated by full lines, none at the border). If a grid has no divider lines of colour palette[5], the corresponding axis is treated as a single band.\n- **Generator domain:** the generator always produces 10x10 grids with an odd number of bands per axis, so the three target cells never overlap. Rectangular grids and other sizes are handled by the same band logic.\n- **Archived solver:** it picks the most common uniform-line colour (falling back to 5); the emitted program uses the fixed palette[5] instead. This is equivalent within the domain, because no full row or column of background can exist, since every axis has at least one divider.\n- **Constructor and fixtures:** no constructor defects or fixture contradictions were found. The approved fixtures match the uniform rule. Not run or tested by me."
+  }
+}

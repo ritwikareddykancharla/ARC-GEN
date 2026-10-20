@@ -1,0 +1,49 @@
+{
+  "task_id": "ac3e2b04",
+  "factory_sha256": "3e95c010b3add3602af6b7f506d5f5661fadb2573b1b13d6839960c425b02ca3",
+  "constructor_sha256": "c0c3525a9da23825e06b31196d32d257fb881896d1ec02d476c6d143f3813c86",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 87455220082670,
+  "d4": 7,
+  "unique_base_inputs": 999,
+  "seconds": 33.62517783290241,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The colour roles become fixed constants: background=palette[0], emitted line/ring=palette[1], full-length lines=palette[2], frames=palette[3]. The emitted program works directly in the visible grid. It finds each 3x3 frame as a 4-connected component of the frame colour and takes the centre of its bounding box. It then checks whether the frame sits on a full row-line or a full column-line, by testing whether that row or column is entirely line colour outside the frame. It falls back to a check two cells away along each axis. A rotation therefore only changes which orientation is found per grid, and no rewrite of the motion is needed. The emitted line runs perpendicular through the centre and paints background cells along it. Wherever that path crosses a line-colour cell other than the frame centre, it stamps a 3x3 ring of the new colour around the crossing. The ring paints over everything except frame cells, and the crossing cell keeps its line colour. This matches the generator: it draws rings at every line, colour 3 on the frame's own line and 1 elsewhere, then fills the column's zeros with 1. It also matches the archived solver. Reflections are handled automatically because the rule is symmetric under mirroring. The d4 parameter is only recorded in a comment.",
+    "limitations": "This assumes the generator's own domain. Frames lie fully inside the grid, lines are at least 4 apart and so are frame positions, so frames never overlap rings from other frames. If a frame were clipped at the border, the bounding-box centre could be wrong. Where the generator would overwrite a frame cell with a ring, the program leaves it in the frame colour, following the archived solver and the stated rule. Under the overlap constraints that case cannot occur. No contradiction between the fixtures and the rule was found. No tests have been run.",
+    "independent_source_review": {
+      "verdict": "accept",
+      "mechanism": "Background has full-length lines of the LINE colour. Each 3x3 FRAME-coloured hollow square is centred on one line cell. The solver emits a NEW-coloured line through the frame centre, perpendicular to the frame's host line, painting only background cells. At every other LINE cell on that path it stamps the 8-neighbour ring in NEW, skipping FRAME cells and keeping the crossing cell as LINE. The emitted solver finds frames as 4-connected FRAME components and takes the bbox centre. It decides the host-line orientation in visible coordinates: if the host row outside the frame is entirely LINE, it emits a column; if the host column is, it emits a row. No whole-grid untransform is used, and d4 appears only in a comment.",
+      "evidence": [
+        "Constructor draw(): lines are full rows of red. Frames come from hollow_rect(grid,3,3,row-1,col-1,3) with row in lines and col in [1,W-2], and lines in [1,H-2], so frames are fully in-bounds and every frame centre is a line cell.",
+        "overlaps_1d(lines,[4]*n) and overlaps_1d(cols,[4]*n) force pairwise spacing of at least 4. rows=sample(lines,k) gives distinct frame rows. As a result, rings (rows L\u00b11, cols c\u00b11) never touch another line, another frame, or another frame's emitted column.",
+        "Output construction: for each frame and each line it calls hollow_rect(output,...,line-1,col-1, 3 if line==row else 1), then turns column zeros into 1. The own-line 'ring' recreates the input frame, and the other-line rings are 1 over 0s and over 2s at (L,col\u00b11) while the centre (L,col) stays 2. This equals the solver's 'paint BG on path, ring around non-centre LINE cells on path, never over FRAME'.",
+        "Orientation test in the generator domain: before transpose, all lines are horizontal. The frame's row outside |x-cx|<=1 is entirely LINE, because no other frame shares or is adjacent to that row. The frame's column outside |y-cy|<=1 contains background between lines spaced at least 4 apart with H>=12, so it cannot be all LINE. on_row and not on_col therefore holds, and the path is the vertical column. Transpose and D4 only swap which branch fires, and the test is symmetric under reflection.",
+        "Frame components are disjoint and non-adjacent because column centres differ by at least 4 and frame rows differ by at least 4. The 3x3 hollow square is 4-connected, so the bbox centre is exact.",
+        "Fixtures were checked against validate() parameters: pair 1 (xpose=1, line 4, col 6) gives vertical line x=4 and emitted row 6. Pair 3 shows a ring suppressed where it would hit the other frame's own-line position, consistent with both programs.",
+        "No colour-lookup associations exist. The roles bg/new/line/frame are structural and fixed by palette index, so no episode colour evidence is required.",
+        "Host audit passed: 1000 fresh pairs, 8000 augmented checks, 16 fixture variants, no sampler rejections."
+      ],
+      "blocking_issues": [],
+      "nonblocking_limits": [
+        "The fallback (cells two away along each axis) and the both/neither-full-line cases are unreachable in the constructor domain. They are untested heuristics if frames were clipped or lines broken.",
+        "The constructor would overwrite a frame cell with ring colour 1 if spacing were below 4. The solver instead preserves the frame. This divergence is excluded by the overlaps_1d spacing constraint.",
+        "The emitted solver uses a stricter full-row/column orientation test than the archived program's cy\u00b12 probe. The two are equivalent on the generator domain, but they could differ out of domain.",
+        "The 'teaching stages' mention in the archived rule text has no counterpart in the generator or solver; it is irrelevant to the input/output labels."
+      ],
+      "required_context_checks": [
+        "Standard D4 conflict check (identical visible demos/query with conflicting answers). It is expected to pass because the rule is orientation-agnostic and needs no taught orientation constant."
+      ],
+      "task_id": "ac3e2b04",
+      "factory_sha256": "3e95c010b3add3602af6b7f506d5f5661fadb2573b1b13d6839960c425b02ca3",
+      "constructor_sha256": "c0c3525a9da23825e06b31196d32d257fb881896d1ec02d476c6d143f3813c86"
+    },
+    "host_review": "Reviewed rule and domain limitations. Host augmentation maps completed grids with one bijective palette, horizontal reflection then clockwise quarter turns; odd indices swap axes. Fresh audit iterates all eight variants, supplied fixture checks include query answers, and export requires every pair exact. Sampler exceptions are recorded rejections, not admitted examples. Spatial connectivity follows the stated constructor/archived mechanism; optional out-of-domain modes are not certified."
+  }
+}

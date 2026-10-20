@@ -1,0 +1,21 @@
+{
+  "task_id": "90347967",
+  "factory_sha256": "cfb2ae62d2b458d16ab53e14c3b9a250762980f0ced12b021454a55ae2dd63a0",
+  "constructor_sha256": "c8f2c105f681bdf00d7d60e5dc6b06821e888292634b7eddc420cb1e4b08d83a",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 128759154063775,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 15.658573833992705,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The family's rule is a 180-degree point reflection of every non-background cell through the single grey pivot cell. The pivot stays where it is. Point reflection about a fixed cell commutes with every D4 transform: rotations and reflections carry the pivot to the transformed pivot and carry the map (y,x)->(2py-y,2px-x) to the same map in the new frame. So the emitted program works directly in visible coordinates and no axis needs specializing. The colour roles are fixed constants. The background is palette[0] and the pivot colour is palette[5]. Background is not taken as the most common colour, because on small grids such as 3x3 the sprite can outnumber the background. The program erases every non-background, non-pivot cell. It then stamps each one at its reflected position and finally re-asserts the pivot cell.",
+    "limitations": "The program assumes exactly one pivot cell of colour palette[5]. If several exist it uses the first in row-major order. If none exists it returns the input unchanged. Reflected cells that land out of bounds are dropped, which matches the archived solver. The generator rejects such scenes, so this case never arises in its domain. No fixture contradictions or constructor defects were found. In the generator, the sprite pixel at offset (0,0) sits under the pivot and is overwritten by grey in both grids. This is consistent with the visible rule and needs no special handling. I have not run any tests on this factory."
+  }
+}

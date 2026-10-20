@@ -1,0 +1,48 @@
+{
+  "task_id": "a87f7484",
+  "factory_sha256": "a99b23bbe43d4d4634c8bfafc61b347aec6f6383029c1c24a33dc4e65bd24302",
+  "constructor_sha256": "54f55a8054e9f7c6e1c5bd07e8fe55f7dc89be9649c3fc5ecbe82bbf400b282f",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 250101274748532,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 2.7873007910093293,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The constructor stacks 3x3 sprites end to end, one per colour, on background 0. All of them share a basic shape except one, the weird sprite, which has a different pixel count. The whole thing may be transposed. The output is the weird sprite, with its colour kept.\n\nThe emitted program works directly on the visible grid:\n- It finds the strip's long axis from the grid's own shape. The block size is the short side, which is 3.\n- It cuts the strip into square blocks along that axis.\n- It builds a binary mask for each block, using cells that are not the mapped background palette[0].\n- It returns the block whose mask occurs exactly once.\n\nWhy this holds under D4 and palette changes:\n- A D4 transform applies the same rotation or reflection to every block. That changes their order and orientation, but equal masks stay equal and the weird mask stays unique.\n- So no direction needs to be reversed explicitly. Orientation is read from the visible grid, which covers both the generator's own xpose and the d4 rotation.\n- The block is returned exactly as it appears in the visible grid, so its orientation and mapped colour already match the transformed expected output.\n- Using palette[0] as the background, rather than the most common colour, avoids the misreading the rule text notes for pair 4.",
+    "limitations": "This has not been run or tested. The background is assumed to be palette[0], which is true across the generator's whole domain since common.grid fills with 0.\n\nUniqueness is guaranteed by the constructor in two ways:\n- The weird and basic sprites have different pixel counts.\n- There are at least 3 blocks, so the basic shape always appears at least twice.\n\nThe fallback branches only cover inputs outside that domain:\n- If several masks are unique, the program prefers one whose cell count differs from the most common mask.\n- If no mask is unique, it returns the first block.\n\nThe fixtures are consistent with the uniform rule. No constructor defect was found that would affect the visible mechanism.",
+    "independent_source_review": {
+      "verdict": "accept",
+      "mechanism": "The constructor stacks n = 3\u20135 single-colour 3x3 conway_sprite blocks on background 0 and optionally transposes the strip. Exactly one block (index `weird`) uses a sprite whose pixel count differs from the shared basic sprite. The output is that weird block with its own colour. The emitted solver takes the strip's short side as the block size and cuts along the long axis. It masks each block by != palette[0] and returns the block whose mask occurs exactly once. It works directly on the visible, augmented grid.",
+      "evidence": [
+        "Uniqueness is guaranteed by the constructor. The sampling loop breaks only when `len(basicpixels) != len(weirdpixels)`, so the weird mask can never equal the basic mask. `common.randint(3, 5)` colours means at least 3 blocks, so the basic mask appears at least twice. Exactly one mask is therefore unique, and there is no tie.",
+        "conway_sprite starts from 9 cells and makes at most 5 deletions, each refused if it would empty a row or column. Every block therefore has at least 4 cells, so no block is empty or degenerate.",
+        "`common.random_colors` samples from 1..9, so no sprite colour equals background 0. Under a palette permutation, palette[0] is the image of 0, and the sprite colours never map to it.",
+        "Indexing is consistent. `common.grid(size, size*len(colors))` is grid(width=3, height=3n), and `grid[size*idx + r][c]` writes block idx into rows 3idx..3idx+2. `common.transpose` is applied to the input and the output together, so the native label is self-consistent for both xpose values.",
+        "D4 behaviour holds. A 3x3n or 3nx3 strip always has n \u2265 3, so w != h and s = min(h, w) = 3. Any D4 map sends each square block to a block position and applies the same transform to every block. Equal masks stay equal, so the unique block is preserved. The returned block already matches the D4-transformed 3x3 expected output. There is no whole-grid untransform/solve/retransform wrapper.",
+        "The solver uses `w >= h` where the archived program uses `w > h`. These differ only for square grids, which the constructor never produces.",
+        "Fixtures fit the uniform rule. Pair 1 weird = 4 (H shape). Pair 2 weird = 7 (X). Pair 3 weird = 7. Pair 4 weird = 8 (ring, 8 cells vs 6). The test weird = 6 (6 cells vs 4 for the diamond). Each output equals the uniquely-masked block.",
+        "Using palette[0] as the background avoids the pair-4 most-common-colour pitfall noted in the rule text.",
+        "There is no arbitrary colour or shape lookup. The output colour is copied from the visible block, so no demonstration colour evidence is needed. a87f7484 is not in the episode evidence-check list, which is appropriate.",
+        "The host audit passed: 1000 fresh pairs, 8000 augmented checks, 16 fixture variants, and no sampler rejections."
+      ],
+      "blocking_issues": [],
+      "nonblocking_limits": [
+        "The fallback branches (several unique masks, preferring a differing cell count; no unique mask, returning block 0) are unreachable within the constructor's domain. On out-of-domain inputs their choice would be heuristic.",
+        "The solver assumes palette[0] is the background and that the block size equals the short side. Both hold across the generator domain (size fixed at 3, background 0).",
+        "The constructor separates the weird shape by pixel count. That is stronger than the solver's mask-uniqueness criterion, but the two always agree in this domain."
+      ],
+      "required_context_checks": [],
+      "task_id": "a87f7484",
+      "factory_sha256": "a99b23bbe43d4d4634c8bfafc61b347aec6f6383029c1c24a33dc4e65bd24302",
+      "constructor_sha256": "54f55a8054e9f7c6e1c5bd07e8fe55f7dc89be9649c3fc5ecbe82bbf400b282f"
+    },
+    "host_review": "Reviewed mechanism and limitations. Confirmed augmentation.py uses a bijective palette, horizontal flip followed by clockwise turns; audit.py checks every D4, not only its final reported d4=7. Episode-wide D4 ambiguity gate is active. Out-of-domain fallbacks do not justify unverified inputs; every export still executes the program on every pair."
+  }
+}

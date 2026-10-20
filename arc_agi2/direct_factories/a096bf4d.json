@@ -1,0 +1,21 @@
+{
+  "task_id": "a096bf4d",
+  "factory_sha256": "d22f31a8afc9191a44f6d16a7a4baa4dee9a7df21bdf61d104e980b8becefa0c",
+  "constructor_sha256": "839a6f3f037f3ba9d14bb8b3a5a8412cda5b252dd94fec86e1dc2fa71b199570",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 7487669415313,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 15.962930375011638,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The mechanism is fully D4-symmetric: the grid is a lattice of 4x4 framed tiles with divider lines at every multiple of 5 in both axes (dimensions 5h+1 by 5w+1, which stay of that form under any rotation/reflection), so tiles are located geometrically in visible coordinates (fallback: full lines of palette[0]). Colour roles are inferred from pixels: the tile frame colour (bg) is the majority over frame cells; the normal interior foreground (fg) is the most common interior colour other than bg (fg has >= 3N-12 cells vs <= 3 cells per special colour, so this is robust where per-position majority could fail). Special markers are interior cells that are neither bg nor fg. Markers are grouped by (colour, within-tile position); every pair of a group lying in the same tile row or same tile column has that colour stamped at that within-tile position in every tile between them (inclusive). Diagonal pairs and lone markers do nothing. Rows/columns are treated symmetrically, so no direction specialization is needed; d4 is irrelevant and palette only supplies the fallback divider colour.",
+    "limitations": "Assumes the generator domain (5-period lattice, 2x2 interiors, specials only on active fg cells, at most 4 special colours with 2-3 markers each). Constructor note: the connection step uses r = cell_i // 2, c = cell_j % 2 (mixing indices i and j); this is harmless only because all markers of one colour share the same cell index, and is not reproduced as a rule. The generator rejects scenes where fills collide or adjacent same-colour tiles occur, so no tie-breaking between overlapping fills is needed. If bgcolor or a special colour could equal palette[0] the geometric lattice path still works; the colour-based fallback is used only for non-5k+1 dimensions outside the generator domain."
+  }
+}

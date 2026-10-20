@@ -1,0 +1,50 @@
+{
+  "task_id": "ad3b40cf",
+  "factory_sha256": "d188fe56551bb589c36c55e6c0adf54360857b63db010aba30bdb1052aa8e8ce",
+  "constructor_sha256": "854c193f84e5f5aa7bff61774812a6de6eee683ff7519aea0015248bbaa7f583",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 91408684581491,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 19.56347024999559,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The mechanism is a reflection across a single straight line, and it is already the same in every orientation. The four line types (vertical, horizontal, r-c=k, r+c=s) are mapped onto each other by the D4 group. Vertical and horizontal swap under odd rotations, and the diagonal and anti-diagonal swap under reflections and odd rotations. So the emitted program finds the line type directly from the visible pixels of colour palette[1]. It checks in this order: constant column, then constant row, then constant r-c, then constant r+c. It then builds the matching reflection map in visible coordinates: (y,2c-x), (2r-y,x), (x+k,y-k) or (s-x,s-y). Colour roles are fixed constants: the background is palette[8] and the line is palette[1]. Every other colour is an object colour. The program counts the total cells of each object colour and picks the strictly smaller total. Each cell of that colour is reflected and painted only if it lands inside the grid on a background cell, which matches the constructor's clip and occlusion rule. Rectangular grids and offset diagonals work because the line parameter is read from the pixels, not assumed to run corner to corner. No normalisation wrapper is used and the demonstrations are not needed.",
+    "limitations": "If the two object colours had equal totals, the program breaks the tie by the smaller colour value. The constructor guarantees a unique rarest colour, so this branch is unreachable in its domain. It is not an intended rule. If the line pixels match none of the four patterns, or there are fewer than two line cells, the input is returned unchanged. The constructor's domain never produces this, because lines always cover at least two cells. The program has not been executed here; host verification is pending.",
+    "independent_source_review": {
+      "verdict": "accept",
+      "mechanism": "One edge-to-edge line of colour 1 (vertical, horizontal, r-c=k, or r+c=s) sits on background 8. Objects in two other colours lie on one side of it. The colour with the strictly smaller total cell count is reflected across the line. A reflected cell is painted only if it is in-grid and lands on background. The emitted solver detects the line type from visible palette[1] pixels in this order: constant column, constant row, constant y-x, constant y+x. It builds the reflection map in visible coordinates, picks the rarest non-BG/non-LINE colour by total count, and stamps reflected cells onto BG.",
+      "evidence": [
+        "Constructor _mirror formulas are correct reflections. Diagonal: (c+line, r-line) gives offset -(r-c-line). Antidiagonal: (line-c, line-r) gives offset -(r+c-line). Orthogonal: 2*line-c and 2*line-r. The solver's lambdas are identical in visible coordinates.",
+        "The rare colour is a visible function of the input. _assignments rejects tx==ty, and the fallback witness is a domino (2) plus a tromino (3), so totals are always unequal. Explicit mode raises an error if the rarest colour is not unique. The solver tie-break (counts[v], v) is therefore unreachable.",
+        "Line-type detection is unambiguous. Random mode gives diagonals length >= MIN_DIAG=6 and orthogonal lines length >= 2. Explicit mode enforces length >= 2. A line of length >= 2 has exactly one constant coordinate or invariant, so the check order cannot misclassify. A length-2 vertical line still has non-constant ys.",
+        "Random mode cannot occlude. Objects satisfy offset*side >= 2. _allowed requires the mirror to land in-grid. Mirrors land at offset <= -2, so they never hit the line, objects, or out-of-grid cells. The solver's BG guard matches the constructor's explicit-mode clip/occlusion rule anyway.",
+        "Canonical test verified by hand. Colour 7 totals 3+7+2=12 and colour 4 totals 5+6+6=17. The 7 cells transpose to (1,9),(1,10),(2,9); row 4 cols 11..15 plus (5,14),(5,15); and (11,15),(12,15). This matches the fixture output. Train pairs also match (5:4 vs 2:5; 6:7 vs 7:14; 2:7 vs 6:12).",
+        "The solver uses no whole-grid untransform wrapper. BG and LINE are palette-mapped constants for genuine rule roles that every demonstration shows. No arbitrary colour lookup is involved, so the episode colour-evidence checks do not apply to this task.",
+        "Anti-proxy flags guard against shortcut rules. hard: the rare colour owns more objects. smallbreak: the frequent colour owns the smallest object. tight: the totals differ by at most 2.",
+        "Host audit passed: 1000 fresh pairs, 8000 augmented checks, 16 fixture variants, no sampler rejections."
+      ],
+      "blocking_issues": [],
+      "nonblocking_limits": [
+        "Drawn hard/tight/smallbreak preferences are released after 120 attempts and may be dropped in small regions, so not every sample is adversarial. Explicitly requested flags are never released.",
+        "The solver returns the input unchanged if fewer than 2 line pixels exist or no line pattern fits. Both cases are outside the constructor's domain.",
+        "The rarest-colour tie-break by colour value is unreachable in the constructor's domain and is not part of the rule.",
+        "Explicit objects= mode (clipping/occlusion, colour 0 allowed) is a documented extension and is likely not exercised by the host sampler. The solver handles it identically through the BG guard and in-grid check."
+      ],
+      "required_context_checks": [
+        "Confirm the host sampler uses random mode (objects=None) so the audited distribution matches the reviewed domain.",
+        "Confirm the palette mapping keeps palette[8] (background) and palette[1] (line) distinct from the sampled object colours, so the constant BG/LINE roles stay valid under recolouring."
+      ],
+      "task_id": "ad3b40cf",
+      "factory_sha256": "d188fe56551bb589c36c55e6c0adf54360857b63db010aba30bdb1052aa8e8ce",
+      "constructor_sha256": "854c193f84e5f5aa7bff61774812a6de6eee683ff7519aea0015248bbaa7f583"
+    },
+    "host_review": "Reviewed rule and domain limitations. Host augmentation maps completed grids with one bijective palette, horizontal reflection then clockwise quarter turns; odd indices swap axes. Fresh audit iterates all eight variants, supplied fixture checks include query answers, and export requires every pair exact. Sampler exceptions are recorded rejections, not admitted examples. Spatial connectivity follows the stated constructor/archived mechanism; optional out-of-domain modes are not certified."
+  }
+}

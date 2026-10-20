@@ -1,0 +1,54 @@
+{
+  "task_id": "a834deea",
+  "factory_sha256": "e6bcb966884c233513ef83c38c93b2f93eb661ed919682ccb501a99a0eaf7517",
+  "constructor_sha256": "5915a0dc06ca8f3493eaa0842c968df7c09706abaa883c0d07e21ae638d12e55",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 35758941762313,
+  "d4": 7,
+  "unique_base_inputs": 995,
+  "seconds": 10.11415291693993,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The canonical rule finds every square drawn in colour 0. A square is a 4-connected component of colour 0 whose bounding box is exactly 5x5 and whose whole border is colour 0. In each square's 3x3 interior, every cell that is still 0 is recoloured by a fixed key that depends on its position: [[1,7,6],[4,0,5],[2,9,3]]. The centre entry is 0, so a 0 centre stays 0. Interior cells that are 8 stay 8.\n\nThe factory works out the visible form of this key when it builds the program:\n- It starts from the canonical 3x3 key.\n- For d4 >= 4 it reverses each row.\n- It then rotates the key clockwise d4%4 times.\n- It maps every key colour c to palette[c]. The centre therefore becomes palette[0] and visibly stays the square colour.\n\nThe emitted program works directly in the visible coordinates:\n- It searches for 4-connected components of palette[0].\n- It keeps those with a 5x5 bounding box and a full palette[0] border.\n- It writes the transformed key colour into each interior cell that equals palette[0].\n\nThe 5x5 detection is unchanged by D4, because a 5x5 box with a solid border stays one under every rotation and reflection. An isolated interior centre 0 forms its own 1x1 component, so it is ignored as the canonical rule requires. Squares that touch the grid edge are handled by the bounds checks. Rectangular grids are supported, although the generator only produces square ones.",
+    "limitations": "- The program assumes palette[0] differs from palette[8], i.e. the palette is a permutation. That is the episode's stated domain.\n- It relies on the constructor's guarantee that boxes do not overlap and have at least a 1-cell gap. Two 4-adjacent boxes would merge into one larger component and would not be recoloured. The generator's overlap check with buffer 1 rules this out.\n- No constructor defects were found. The fixtures match the uniform rule: the test's isolated centre 0 at (13,3) stays 0, consistent with key entry 0.\n- The demonstrations are not used, because the key is fully determined by d4 and the palette.",
+    "independent_source_review": {
+      "verdict": "hold",
+      "mechanism": "Each 5x5 square of colour 0 has a solid border and a 3x3 interior of 0/8 cells. Every interior cell that is 0 is recoloured from a fixed position key [[1,7,6],[4,0,5],[2,9,3]]. The centre entry is 0, so a 0 centre stays 0, and interior 8s stay 8. The factory moves the key into visible coordinates: for d4>=4 it reverses each row, then rotates clockwise d4%4 times (new[i][j]=old[n-1-j][i]), then maps each entry through the palette. The emitted solver detects 4-connected palette[0] components with a 5x5 bounding box and a full palette[0] border, and writes KEY[r][c] onto interior palette[0] cells.",
+      "evidence": [
+        "Constructor: common.rect fills each 5x5 box with 0. The interior is then set by `output[row][col] = grid[row][col] = 8 * color` and `if not color: output[row][col] = order[r*3+c]`. order[4]=0, so a 0 centre is unchanged. This matches the archived rule and all fixtures, including the test's isolated centre 0 at (13,3).",
+        "Box separation: `common.overlaps(rows, cols, lengths, lengths, 1)` in the actual common.py rejects boxes closer than a 1-cell gap. So boxes never 4-merge. Each box border forms its own component with a bounding box of exactly 5x5. Interior-only 0 components fit inside 3x3, so they can never pass the 5x5 test.",
+        "Interior sampling rejects sum 0 and sum 9. Every box therefore has at least one 0 and at least one 8 inside. This affects nothing about correctness.",
+        "Factory: the centre stays at [1][1] under every D4 operation, and palette[0] written onto palette[0] is a no-op. Interior 8 cells (palette[8]) are never touched. The solver works natively in visible coordinates and has no untransform/retransform wrapper. Specializing the key's orientation and colours is legitimate.",
+        "Host audit passed: 1000 fresh pairs, 8000 augmented checks (consistent with all 8 D4 variants), 16 fixture variants, no sampler rejections. This supports the factory's D4 convention matching the host augmentation.",
+        "The labels have no dependence on hidden random latents. The output is fully determined by the visible input and the fixed key."
+      ],
+      "blocking_issues": [
+        "Missing episode evidence for an arbitrary colour lookup. The key colours 1,7,6,4,5,2,9,3 (palette-mapped) are an arbitrary fixed position-to-colour table. They cannot be derived from the query.",
+        "A position's key colour is revealed only by a demonstration box whose interior cell at that position is 0. That happens independently with probability about 1/2 per box.",
+        "Episodes are drawn from the generator with 1 to 4 boxes per demo. So it is reachable that a query needs a key position never shown in any demonstration. For example, with three single-box demos (size 6 to 10), a given position stays unrevealed with probability of roughly 1/8.",
+        "The supplied episode_evidence_checks cover only 6ea4a07e, 913fb3ed, 494ef9d7 and 995c5fa3, so a834deea has no check. 913fb3ed has the same kind of fixed seed-to-ring colour table and is checked.",
+        "The generator and program themselves are correct. The hold is solely about this unenforced evidence requirement at episode level."
+      ],
+      "nonblocking_limits": [
+        "Assumes palette[0] != palette[8], i.e. the palette is a permutation. This is in the stated domain.",
+        "Two 4-adjacent boxes would merge and be skipped. The constructor's 1-cell gap rules this out, so it is outside the domain.",
+        "The generator only makes square grids. The solver also handles rectangular grids and squares touching the grid edge.",
+        "Demonstrations are ignored by the solver. The key is hard-coded per d4/palette, which is correct for the rule but makes the evidence question above an episode-level concern."
+      ],
+      "required_context_checks": [
+        "Add a834deea to the episode evidence checks. Compute the visible key positions (relative to each 5x5 square's interior) that are palette[0] in the query squares, excluding the centre. Require each such position to be palette[0] in the interior of at least one demonstration square, so its output colour is shown. Reject or resample episodes that fail this.",
+        "Confirm that the D4 convention used by the host's augmentation is the same one the evidence check uses when mapping interior positions. Interior positions are relative to each square and are consistent within an episode, so per-episode visible positions are enough."
+      ],
+      "task_id": "a834deea",
+      "factory_sha256": "e6bcb966884c233513ef83c38c93b2f93eb661ed919682ccb501a99a0eaf7517",
+      "constructor_sha256": "5915a0dc06ca8f3493eaa0842c968df7c09706abaa883c0d07e21ae638d12e55"
+    },
+    "host_review": "Reviewed mechanism and limitations. Confirmed augmentation.py uses a bijective palette, horizontal flip followed by clockwise turns; audit.py checks every D4, not only its final reported d4=7. Episode-wide D4 ambiguity gate is active. Out-of-domain fallbacks do not justify unverified inputs; every export still executes the program on every pair. Added input/demo-only evidence gate for query-required colour positions, diagonal offsets, inverted-board output or crop-hole fill as applicable. Regression checks cover the newly reachable missing-evidence case. Reviewer concern is resolved by episode rejection, not by inspecting query answers."
+  }
+}

@@ -1,0 +1,48 @@
+{
+  "task_id": "8fff9e47",
+  "factory_sha256": "250f606911677d64a67b573997fc71a3204f6e1efdde521805167d3b95a889a5",
+  "constructor_sha256": "7abc1d15250b829ecb7370024e3ac24813c2eca79fb9fa335231e7b7153443bc",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 243480171848299,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 6.378176833037287,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "Mechanism: cut the input into 2x2 blocks. Order them along a traversal of the block grid and reverse that order. The output is N = 2*(number of blocks) square. Ring k is the set of cells with min(y, x, N-1-y, N-1-x) = k. Each cell in ring k copies the cell of block k that sits in the same quadrant: top or bottom half of the output picks the top or bottom row of the block, and left or right half picks the left or right column. This quadrant-to-block-cell rule does not change under D4, because the D4 moves output quadrants and the cells inside each 2x2 block in exactly the same way. Ring indices are also unchanged. The only thing that depends on the D4 is the block traversal order. Originally the outer loop runs top to bottom and the inner loop runs left to right. The factory sends both step vectors through the episode's D4 (horizontal flip first if the index is 4 or more, then clockwise rotations, with (dy,dx) -> (dx,-dy)). It then emits a program that walks the visible block grid with those steps, starting from the corner they imply. The program reads the visible grid directly, with no inverse rotation. Colours are copied unchanged, so the palette has no role and no colour constants are needed. I checked by hand that the constructor and the archived solver agree. Block b goes to ring n-1-b. The generator's odd-row index expression floor(row*width/4) is exact only because width is 4 or 6, which is the full generator domain, so there is no defect there.",
+    "limitations": "Assumes even input dimensions, as the generator always produces (4 or 6 per side). For odd dimensions the program floors to the block grid and is outside the domain. Demonstrations are not used, because the D4 fully determines the traversal. Not executed or tested by me.",
+    "independent_source_review": {
+      "verdict": "accept",
+      "mechanism": "Cut the input into 2x2 blocks and list them in a fixed traversal of the block grid. Reverse the list. The output is an N\u00d7N grid with N = 2\u00b7(block count). Ring k (cells with min(y, x, N-1-y, N-1-x) = k) takes block k of the reversed list. Each output quadrant (TL/TR/BR/BL) copies the matching cell of that 2x2 block. Under D4 only the traversal direction changes. The factory sends the outer step (1,0) and inner step (0,1) through the episode D4 and walks the visible block grid with the resulting steps.",
+      "evidence": [
+        "Constructor middle placement: for even rows, row*width//4 equals (row/2)*(width/2). For odd rows with width 4, it is 2m+1. With width 6, floor((2m+1)*1.5) = 3m+1. Both give top center row size/2-1-b and bottom center row size/2+b, where b = (row//2)*(width/2) + col//2 is the reading-order block index. The floor is therefore exact over the full domain width \u2208 {4,6}.",
+        "Constructor fill: a TL-quadrant cell copies output[min(row,col)][size/2-1]. So ring k = size/2-1-b, which gives b = n-1-k. That is reversed reading order. TL/TR/BL/BR copy center columns size/2-1 or size/2 and the top or bottom center halves, so each quadrant gets the same-named block cell. This matches the archived transform and the emitted solve (blocks = order[::-1], qy/qx from half = n).",
+        "D4 invariance of the ring/quadrant part: input dimensions are always even, so the 2x2 blocks stay aligned under any D4. The same map moves output quadrants and in-block cell positions, and ring index is D4-invariant. Only the traversal order needs to be specialised.",
+        "Factory step algebra: flip is (dy,dx)->(dy,-dx), a column reversal applied for d4>=4. Clockwise rotation is (dy,dx)->(dx,-dy), consistent with (r,c)->(c,H-1-r). _block_order picks the start row and start column from the sign of whichever step has a nonzero component on that axis. It picks n_outer and n_inner from the axis each step moves along. This yields a correct boustrophedon-free raster in visible coordinates for all 8 D4s.",
+        "The emitted solver indexes g[2*by+qy, 2*bx+qx] on the visible grid. There is no untransform or retransform wrapper. Colours are copied, so no palette constants are needed.",
+        "The label is fully determined by the input. There are no hidden latents, no ties, and no fixed answers. Output sizes are 8, 12 or 18, all within 30.",
+        "Host audit: 1000 fresh pairs \u00d7 8 augmentations and 16 fixture variants passed. This is consistent with the factory's flip/rotate convention matching the host D4."
+      ],
+      "blocking_issues": [],
+      "nonblocking_limits": [
+        "Odd input dimensions are floored to the block grid. The constructor never produces them (sides are always 4 or 6).",
+        "The flip convention (column reversal first, then clockwise rotations) is checked against the host D4 definition only indirectly, through the passing 8-variant audit. The D4 code itself is not shown.",
+        "The demonstrations are not consulted. Traversal orientation comes from d4, which is legitimate as a demonstration-taught orientation constant for a deterministic spatial rule."
+      ],
+      "required_context_checks": [
+        "Confirm the host D4 for indices >=4 is a horizontal (column) flip followed by d4%4 clockwise rotations, matching the factory's step-vector transform.",
+        "The standard D4-conflict rejection policy applies. No colour-evidence check is needed, since no arbitrary colour association exists (8fff9e47 is correctly absent from require_colour_evidence)."
+      ],
+      "task_id": "8fff9e47",
+      "factory_sha256": "250f606911677d64a67b573997fc71a3204f6e1efdde521805167d3b95a889a5",
+      "constructor_sha256": "7abc1d15250b829ecb7370024e3ac24813c2eca79fb9fa335231e7b7153443bc"
+    },
+    "host_review": "Reviewed mechanism and limitations. Confirmed augmentation.py uses a bijective palette, horizontal flip followed by clockwise turns; audit.py checks every D4, not only its final reported d4=7. Episode-wide D4 ambiguity gate is active. Out-of-domain fallbacks do not justify unverified inputs; every export still executes the program on every pair."
+  }
+}

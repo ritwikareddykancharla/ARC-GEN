@@ -256,6 +256,10 @@ def verify(source, episode, seconds=3):
 
 def make_record(episode, source_repo='', source_revision=''):
     task_id = episode['task_id']
+    from .colour_evidence import require_colour_evidence
+    require_colour_evidence(task_id, episode['train'], episode['test'],
+                            episode.get('color_permutation'),
+                            episode.get('d4_transform', 0))
     if task_id == '00dbd492':
         # Older ARC-GEN samples at size 7 could contain zero boxes. Exact
         # execution alone accepts these vacuous examples. Check all demos and

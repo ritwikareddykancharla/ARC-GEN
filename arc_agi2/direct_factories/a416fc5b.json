@@ -1,0 +1,56 @@
+{
+  "task_id": "a416fc5b",
+  "factory_sha256": "cbf5d852ec0258e299493b64a904cbea88c1cee9d6fd23c9790766fe97bf03a7",
+  "constructor_sha256": "7b4b6e20fad36eb937b63b190b970fa89b20ec709f52a34e9517392d032fe9f9",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 1713651786968,
+  "d4": 7,
+  "unique_base_inputs": 16,
+  "seconds": 5.889181584003381,
+  "finite_default_domain": {
+    "exhaustive": true,
+    "cases_checked": 16,
+    "augmented_checks": 256,
+    "definition": "Eight marker positions times two visibly distinct board states: 16.",
+    "query_distinct_from_demos": true,
+    "scope": "Default native parameter distribution only; finite input count is not inflated by repeated sampling."
+  },
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The canvas is split by full lines of the divider colour palette[6] into a 3x3 board of panels, on a background of palette[7]. The emitted solver finds these divider lines directly in the visible grid. It locates the one non-centre panel that holds a marker of colour palette[2] and takes the direction opposite to it, using the visible screen-clockwise ring of the eight surrounding panels. Rotations keep the handedness of that ring and reflections reverse it. So the colour palette[8] goes one step clockwise from the opposite direction when d4<4 and one step counter-clockwise when d4>=4, and palette[5] goes the other way. Each new motif copies the centre panel's motif shape (non-background, non-divider cells) recoloured onto a background-filled panel. If palette[5] or palette[8] already appears in the input, this is the generator's 'invert' branch, and the solver returns a 16x16 grid of the background colour. That size is the same under every D4 transform.",
+    "limitations": "Assumes the constructor's domain: exactly one non-centre marker panel and a 3x3 panel board with equal-size panels. If no marker is found or the dividers don't give 3x3 panels, the input is returned unchanged. The 16x16 blank output for already-solved boards is a constructor quirk ('invert' swaps the solved output in as the input and emits a fixed 16x16 background canvas). It is reproduced because the approved fixtures label it, but it is an arbitrary output rather than a mechanism visible from the input, so it is flagged for host review. No tests have been run.",
+    "independent_source_review": {
+      "verdict": "accept",
+      "mechanism": "The input is an 11x11 background-7 canvas with colour-6 dividers at rows/cols 3 and 7, giving a 3x3 board of panels. A plus-shaped colour-2 motif sits in the centre panel and a second copy sits in the marker panel at direction ring[index]. The constructor ring (row_map/col_map) is screen-clockwise starting at up-left. Grey 5 goes to ring[index+3] and blue 8 to ring[index+5]. The opposite of the marker is ring[index+4], so 8 goes one step clockwise from the opposite and 5 one step counter-clockwise. Both are recoloured copies of the centre motif. When invert=1, the solved board becomes the input and the output is a fixed 16x16 background grid. The emitted solver works on the visible grid: it detects dividers by full DIV rows and columns, builds pos[(i-1,j-1)] in screen coordinates, finds the MARK panel, and places C8 at RING[opp+S8] and C5 at RING[opp-S8]. S8 is +1 for rotations (d4<4) and -1 for reflections, because a reflection reverses ring handedness. If C5 or C8 is present, it returns a 16x16 grid of BG.",
+      "evidence": [
+        "Constructor index math: get_grey_coord uses (index+3)%8 and get_blue_coord uses (index+5)%8, against the clockwise ring [UL,U,UR,R,DR,D,DL,L]. The opposite is index+4, so 8 = opposite+1 (clockwise) and 5 = opposite-1. This matches all fixtures: pair1 index=5 (down) \u2192 8 at UR, 5 at UL; pair2 index=2 (UR) \u2192 8 at L, 5 at D; test index=3 (R) \u2192 8 at UL, 5 at DL.",
+        "The invert latent is visible in the input. Non-inverted inputs never contain 5 or 8. Inverted inputs always contain both, because ring offsets +3 and +5 never coincide with the marker (+0) or the centre. The solver's `np.any(g == C5) or np.any(g == C8)` test therefore separates the two branches exactly.",
+        "The 16x16 output is square, so it is the same under every D4 transform. Its fill is palette[7] (BG), matching common.grid(16,16,7) after palette mapping.",
+        "Exactly one non-centre panel holds MARK in non-inverted inputs, so the first-match scan over RING has no tie. Target panels are blank in the input, so overwriting them with a patch of motif-or-BG is exact.",
+        "There is no untransform/native-solve/retransform wrapper. The solver specialises only palette colours and the handedness constant S8, which is a genuine rule orientation.",
+        "Host audit passed: 1000 fresh pairs, 8000 augmented checks and 16 fixture variants, with no sampler rejections."
+      ],
+      "blocking_issues": [],
+      "nonblocking_limits": [
+        "The 16x16 blank output for already-solved boards is an arbitrary constant taken from the canonical fixtures (pair 3), not a mechanism derivable from the input. It is faithfully reproduced, and the approved fixtures teach it.",
+        "The solver assumes the constructor domain: a 3x3 equal-panel board and a single marker. It has defensive fallbacks (returns the input unchanged) for other shapes; the constructor excludes those inputs.",
+        "The motif is always the same 4-cell plus shape and the marker is always palette[2]. Scene variety is limited to 8 marker directions \u00d7 2 invert states, giving only 16 unique base inputs. That is a constructor property, not a solver defect.",
+        "S8's correctness depends on the host convention that d4 indices 0-3 are rotations and 4-7 are reflections. The passing 8000 augmented checks support this, but source review alone cannot confirm the convention."
+      ],
+      "required_context_checks": [
+        "Invert is drawn with p=1/2 per pair, and the supplied episode_evidence_checks do not cover a416fc5b. Confirm that any episode whose query is an already-solved board (contains palette[5]/palette[8]) has at least one inverted demonstration showing the 16x16 background answer. Without one, the query answer is not identifiable.",
+        "For non-inverted queries, confirm the demonstrations reveal which of palette[5] and palette[8] goes clockwise versus counter-clockwise under the episode's D4. This can come from a non-inverted output or from 5/8 placement in an inverted input. Without it, the chirality and colour assignment are underdetermined."
+      ],
+      "task_id": "a416fc5b",
+      "factory_sha256": "cbf5d852ec0258e299493b64a904cbea88c1cee9d6fd23c9790766fe97bf03a7",
+      "constructor_sha256": "7b4b6e20fad36eb937b63b190b970fa89b20ec709f52a34e9517392d032fe9f9"
+    },
+    "host_review": "Reviewed mechanism and limitations. Confirmed augmentation.py uses a bijective palette, horizontal flip followed by clockwise turns; audit.py checks every D4, not only its final reported d4=7. Episode-wide D4 ambiguity gate is active. Out-of-domain fallbacks do not justify unverified inputs; every export still executes the program on every pair. Added input/demo-only evidence gate for query-required colour positions, diagonal offsets, inverted-board output or crop-hole fill as applicable. Regression checks cover the newly reachable missing-evidence case. Reviewer concern is resolved by episode rejection, not by inspecting query answers. Native finite domain independently exhausted under all D4 elements and two palettes; adaptive diversity limit recorded."
+  }
+}

@@ -1,0 +1,126 @@
+{
+  "task_id": "96a8c0cd",
+  "factory_sha256": "bd4e678328f42fd909c97940959132600acaf99ec1cf63ad1bc05cf17633a70e",
+  "constructor_sha256": "137c8ce011f5af87cb10cac426af8b5dc2fd6c4baac5d596ff3fcb43dcec2e56",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [
+    {
+      "seed": 137725786527367,
+      "error": "reference/generator deadline"
+    },
+    {
+      "seed": 122063506464918,
+      "error": "reference/generator deadline"
+    },
+    {
+      "seed": 64689388969376,
+      "error": "reference/generator deadline"
+    },
+    {
+      "seed": 142004359204962,
+      "error": "reference/generator deadline"
+    },
+    {
+      "seed": 64133022074008,
+      "error": "reference/generator deadline"
+    },
+    {
+      "seed": 46330917285141,
+      "error": "reference/generator deadline"
+    },
+    {
+      "seed": 165259631729126,
+      "error": "reference/generator deadline"
+    },
+    {
+      "seed": 145593729777017,
+      "error": "reference/generator deadline"
+    },
+    {
+      "seed": 88718875622396,
+      "error": "reference/generator deadline"
+    },
+    {
+      "seed": 214940889081946,
+      "error": "reference/generator deadline"
+    },
+    {
+      "seed": 126638195745377,
+      "error": "reference/generator deadline"
+    },
+    {
+      "seed": 214673766485011,
+      "error": "reference/generator deadline"
+    },
+    {
+      "seed": 155257409161066,
+      "error": "reference/generator deadline"
+    },
+    {
+      "seed": 10307376718750,
+      "error": "reference/generator deadline"
+    },
+    {
+      "seed": 185037985197068,
+      "error": "reference/generator deadline"
+    },
+    {
+      "seed": 174570839010606,
+      "error": "reference/generator deadline"
+    },
+    {
+      "seed": 243577513507533,
+      "error": "reference/generator deadline"
+    },
+    {
+      "seed": 132158667946035,
+      "error": "reference/generator deadline"
+    },
+    {
+      "seed": 103348777206783,
+      "error": "reference/generator deadline"
+    },
+    {
+      "seed": 129767936914111,
+      "error": "reference/generator deadline"
+    },
+    {
+      "seed": 112915208259047,
+      "error": "reference/generator deadline"
+    },
+    {
+      "seed": 247939305711667,
+      "error": "reference/generator deadline"
+    },
+    {
+      "seed": 90421854515880,
+      "error": "reference/generator deadline"
+    },
+    {
+      "seed": 62022144724006,
+      "error": "reference/generator deadline"
+    },
+    {
+      "seed": 69499182987249,
+      "error": "reference/generator deadline"
+    },
+    {
+      "seed": 15483210137330,
+      "error": "reference/generator deadline"
+    }
+  ],
+  "seed": 177455483641162,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 385.19677554199006,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The constructor builds the path in native coordinates. The seed sits on the left edge and the path heads right. Before each move it reads the cell ahead in the INPUT grid. If that cell is colour 3 it side-steps clockwise (down). If it is colour 1 it side-steps counter-clockwise (up). Otherwise it steps forward. It stops when it reaches the far border. The transposed variant flips the colour test together with the axis, so the result is the same: in visible terms, 3 is clockwise and 1 is counter-clockwise, measured relative to the heading.\n\nThe emitted program works directly in visible coordinates:\n- It finds the seed, which is palette[2], on a border.\n- It sets the heading inward, away from that border.\n- It walks the same per-cell loop, reading the unmodified input. Side-steps repeat until the cell ahead is no longer a bar cell, and the path ends when the next forward cell is off-grid.\n- Every visited cell is painted with the seed colour.\n\nRotations preserve handedness. Reflections (d4>=4) swap it, so the factory then assigns clockwise to palette[1] and counter-clockwise to palette[3]. All colour roles are palette constants. Nothing is normalized or inverse-transformed.",
+    "limitations": "1. The generator rejects scenes in which the path leaves through a side border. The emitted program simply stops if that happens.\n2. When side-stepping, the generator does not check the side cell. If the side cell held a bar, it would overwrite it with 2. The emitted program mirrors that. The generator's overlap constraint appears to make this case impossible, but I have not verified that.\n3. The constructor has no loop guard. Its overlap spacing appears to rule out oscillation, but I have not verified that either. The emitted program caps the number of steps.\n4. The constructor keeps prow in [3, height-4], so the seed is never in a corner. The corner tie-break in the emitted program is therefore arbitrary and should never be exercised.\n5. The 'emitted stages' description in the rule text is not a puzzle mechanism. solve returns only the final grid.\n6. The fixtures are consistent with the uniform rule (3 = clockwise, 1 = counter-clockwise relative to heading). No contradictions were found by inspection. No tests were run."
+  }
+}

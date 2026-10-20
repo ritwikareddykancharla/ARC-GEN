@@ -1,0 +1,21 @@
+{
+  "task_id": "99fa7670",
+  "factory_sha256": "d6c575e1c3983148cc0534661d4f36ea283b9a7c96af057b068d8d129f3cfc8c",
+  "constructor_sha256": "678ab8a800a2fbcd00a65e913ec0dbdae6cbc22938b44aa1a571ee3d6e138eb8",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 54298409317773,
+  "d4": 7,
+  "unique_base_inputs": 969,
+  "seconds": 2.0607602909440175,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The factory works out where the two original directions end up after the D4 transform. The ray direction starts as right (0,1) and the leg direction as down (1,0). For d4>=4 the column component of each is negated, because every row is reversed. Then each clockwise rotation maps (dr,dc) to (dc,-dr). The results are written into the emitted program as RAY and LEG constants. The background is the constant palette[0].\n\nThe emitted program works directly on the visible grid in two phases. First, each non-background seed paints its colour from itself along RAY to the grid border, and the end cell is recorded. Second, from each end cell the program steps along LEG, painting background cells until it meets a coloured cell or the edge. Because all rays are drawn before any leg, each leg fills only the gap up to the next seed's ray, and the last leg runs to the edge. This matches the constructor, where later seeds overwrite the shared border column from their own line onward. Since the leg segments do not overlap, the order of seeds in the second phase does not matter.",
+    "limitations": "Nothing has been run or tested. The program assumes the constructor's domain: each seed sits on its own line across the ray direction (its own row in the original), and no seed lies on the far border that the legs travel along (the generator's cols range is 0..W-2). It also assumes the background is palette[0] and that the input contains no other coloured cells. The constructor writes the border column by overwriting, while this program stops at coloured cells. The two give the same result within this domain, but they could differ on inputs outside it, such as two seeds sharing a line. I found no fixture contradictions and no constructor defects."
+  }
+}

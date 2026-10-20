@@ -1,0 +1,21 @@
+{
+  "task_id": "97d7923e",
+  "factory_sha256": "ec5fa4cca24e5cb0296b5949e18f5c598fc6e1e6f3615747a0618db7214bfb95",
+  "constructor_sha256": "61344af9e0df5f21d49c419f8c240e6452c430b9e32e85ac2f40e130723e2768",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 88193674244924,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 5.247769249952398,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The original mechanism has legend strips hanging from the top edge and bars standing on the bottom edge. A legend strip of colour c and length n selects the n-th tallest bar whose cap (the cell on the bottom edge) is c. That bar is repainted entirely in c. I tracked the original 'down' direction through the D4 transform. Row reversal leaves it unchanged, and each clockwise rotation maps (dr,dc) to (dc,-dr). So the legend edge and growth direction are: top/down for k=0, right column/leftward for k=1, bottom/up for k=2, and left column/rightward for k=3. The bar edge is always the opposite edge.\n\nThe factory emits one of two direct-coordinate bodies. In the column-scanning body (k even), legend runs are read from row lr along direction d. Each bar is measured as the run of non-background cells going back from the opposite row, and the cap is the colour on the edge cell. The row-scanning body (k odd) is the same with rows and columns swapped. Background is the constant palette[0]. Legend colours and cap colours are read from the pixels, so no colour remapping is needed. The work is done line by line (not by connected components), which keeps adjacent bars separate. No grid is rotated or un-permuted.",
+    "limitations": "Within the constructor's domain, height ties inside a colour group cannot occur. If one appears at the selected rank, the emitted program leaves that bar unchanged rather than inheriting the archived solver's order-dependent tie-break; the archived stable sort picks by scan order, which would change under D4 and so is not a visible rule. A legend colour with no bars, or with fewer bars than its rank, changes nothing, the same as the constructor. The program assumes the background is palette[0] rather than taking the most frequent colour. These agree throughout the constructor's domain. No contradictions with the approved fixtures were found: all three train pairs and the test follow the uniform rule. I have not run any tests."
+  }
+}

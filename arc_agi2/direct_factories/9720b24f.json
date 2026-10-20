@@ -1,0 +1,21 @@
+{
+  "task_id": "9720b24f",
+  "factory_sha256": "33673aea0565d6b27e59e67d17887cb8c526073677854d1eedbf42d1d5e7d7c0",
+  "constructor_sha256": "1d55a463eec4db9d42b80068bb8981143ab3de57fa7532b3f447f8d68e8b86a1",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 198006865189042,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 13.927967209019698,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The emitted program treats each 8-connected single-colour component that is not background as an object. It erases an object to background when all of the object's cells lie inside the inclusive bounding box of a strictly larger object of a different colour. All containment tests use the original input objects, so the order of erasures does not matter. Ties in size never trigger erasure. Bounding-box containment, 8-connectivity and size comparison are all unchanged by rotation and reflection. So the same direct-coordinate mechanism works in the visible frame for every d4 value, and no axis needs specializing. The only palette-dependent constant is the background, palette[0]: this is the image of original colour 0, which the generator always keeps present. If that colour is absent, the program falls back to the most common colour, matching the archived solver. Fixture 1 (a 3x3 grid that still contains a 0) is handled because 0 is present there.",
+    "limitations": "No code was run, including on the fixtures. 'Inside' means bounding-box containment, not topological enclosure. This matches the generator's own _contained check, which is the intended rule. The constructor documents some untaught cases that its random scenes never produce: erased objects in cut-corner regions outside the outline, and nesting inside equal-or-smaller or same-colour objects. Those cases follow the literal rule (size must be strictly larger, colour must differ). I found no contradiction between the fixtures and the rule, and no constructor defect that needs host review."
+  }
+}

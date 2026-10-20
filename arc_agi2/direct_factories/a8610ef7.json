@@ -1,0 +1,49 @@
+{
+  "task_id": "a8610ef7",
+  "factory_sha256": "51e9e13b03e4313fb467f1356b89b6656056ce5fedb7bd5c6161b6ffa5373882",
+  "constructor_sha256": "49fc43eb5feb77164af15623212cf9176fe7e7b8c58bcb276396439c8c9008b8",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 44694449343201,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 2.3558437500614673,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "In the original task, each foreground (8) cell becomes 2 if its mirror partner in the same column across the horizontal midline (row H-1-r) is also 8. Otherwise it becomes 5. Background cells are unchanged. Under the D4 transform, the optional row reversal (index >= 4) keeps a top-bottom mirror as a top-bottom mirror. An odd number of clockwise rotations turns it into a left-right mirror. So the emitted program compares cell (r,c) with (H-1-r,c) when d4%4 is even, and with (r,W-1-c) when it is odd, working directly in visible coordinates. Colour roles are fixed constants: foreground = palette[8], symmetric = palette[2], asymmetric = palette[5]. All other cells, including background palette[0], are copied unchanged. The middle row or column of an odd-sized grid pairs with itself, so its foreground cells become the symmetric colour. This matches the archived solver.",
+    "limitations": "Assumes the constructor's domain: grids contain only the background and foreground colours, generated at 6x6, though the code handles any rectangular size. I found no fixture contradictions or constructor defects. The constructor compares grid[row][col] == grid[5-row][col] only for nonzero cells, which is the same as the foreground-partner test. Demonstrations are not needed and are ignored. Nothing has been executed or tested.",
+    "independent_source_review": {
+      "verdict": "accept",
+      "mechanism": "Each foreground (8) cell becomes 2 if the cell in the same column on the mirrored row (5-r) is also 8, and 5 otherwise. Background stays 0. The emitted solver applies this directly in visible coordinates. When d4%4 is even it compares (r,c) with (H-1-r,c), using g[::-1,:]. When d4%4 is odd it compares (r,c) with (r,W-1-c), using g[:,::-1]. Colours are palette[8]->palette[2] for paired cells and palette[8]->palette[5] for unpaired cells.",
+      "evidence": [
+        "Constructor: `output[row][col] = 2 if grid[row][col] == grid[5 - row][col] else 5`, applied only when grid[row][col] is nonzero. Inputs contain only {0, 8}, so equality with a nonzero cell means the partner is 8. This matches the factory's `paired = is_fg & (mirrored == FG)`.",
+        "No hidden latent decides labels. The output is a deterministic function of the visible input, and the random latents are only the 36 cell bits.",
+        "Indexing is correct. 5-row equals H-1-r for H=6, and the column index is unchanged. Archived program and factory both use g[::-1,:] in the base orientation.",
+        "D4 axis handling: conjugating a horizontal-midline reflection by a D4 element gives a vertical-midline reflection exactly for the axis-swapping elements (rot90, rot270, transpose, anti-transpose). Those are the elements with an odd quarter-turn count, whether or not a flip is composed in. So `horizontal = (k % 2 == 1)` is correct for indices 0-7.",
+        "No whole-grid untransform/retransform wrapper is used. The solver only selects a mirror axis and colour constants, which is a legitimate specialization.",
+        "Spot-checked the fixtures against the rule. Test (0,5) and (5,5) are both 8, giving 2 \u2713. Test (0,3)=8 with (5,3)=0 gives 5 \u2713. Test (1,0)=8 with (4,0)=0 gives 5 \u2713. Train 4 (1,5) and (4,5) are both 8, giving 2 \u2713.",
+        "No ties or ambiguities: the outcome is a binary test per cell.",
+        "Host audit passed: 1000 fresh pairs, 8000 augmented checks, 16 fixture variants, no sampler rejections."
+      ],
+      "blocking_issues": [],
+      "nonblocking_limits": [
+        "The solver assumes inputs contain only background and foreground. Any other colour would be copied unchanged. The constructor never produces other colours, so this does not matter in-domain.",
+        "The self-paired middle row/column behaviour for odd-sized grids, and the `ndim != 2` fallback, are unreachable because the constructor always emits 6x6 grids.",
+        "Demonstrations are ignored. This is acceptable because the 2/5/8 colour roles are fixed task constants, not arbitrary per-episode lookups. The episode evidence checks do not cover this task, which is consistent with that.",
+        "The archived rule text contains self-corrections about earlier inspections. They do not affect the final rule, which agrees with the constructor."
+      ],
+      "required_context_checks": [
+        "Confirm the host's D4 index convention is the standard one: 0-3 are rotations by k quarter-turns and 4-7 are the flipped variants. The odd-k axis selection is valid for any composition order, provided k counts quarter-turns."
+      ],
+      "task_id": "a8610ef7",
+      "factory_sha256": "51e9e13b03e4313fb467f1356b89b6656056ce5fedb7bd5c6161b6ffa5373882",
+      "constructor_sha256": "49fc43eb5feb77164af15623212cf9176fe7e7b8c58bcb276396439c8c9008b8"
+    },
+    "host_review": "Reviewed mechanism and limitations. Confirmed augmentation.py uses a bijective palette, horizontal flip followed by clockwise turns; audit.py checks every D4, not only its final reported d4=7. Episode-wide D4 ambiguity gate is active. Out-of-domain fallbacks do not justify unverified inputs; every export still executes the program on every pair."
+  }
+}

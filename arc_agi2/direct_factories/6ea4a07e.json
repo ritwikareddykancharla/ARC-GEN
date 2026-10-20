@@ -1,0 +1,22 @@
+{
+  "task_id": "6ea4a07e",
+  "factory_sha256": "a80447773d5db2951cab86f9a4047eea9c0ffc813ab921a474c01dc68384b5ba",
+  "constructor_sha256": "6888b55e20c5a144f44e09f744d44a84b217620da0e507682a4e3168896decbf",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 208714678011410,
+  "d4": 7,
+  "unique_base_inputs": 729,
+  "seconds": 5.393348291050643,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The rule is a per-pixel colour negative. Each ink cell becomes background. Each background cell becomes a colour that depends on the ink colour: 5->4, 8->2 and 3->1. Because the rule works cell by cell, the D4 transform does not affect the mechanism. The output keeps the visible grid shape and positions, so no orientation-specific code is needed and d4 is ignored. The palette is applied to the colour roles as constants. The background is palette[0], not the most common colour, since the query can have more ink than background cells. The lookup table becomes {palette[5]:palette[4], palette[8]:palette[2], palette[3]:palette[1]}. The ink is found as the one colour in the query that is not background. As a fallback, the program also learns ink->fill pairs from the demonstrations, but this is only used for inks missing from the constant table. Grids that are entirely ink are allowed, since the generator only requires at least one ink cell; every cell then becomes background.",
+    "limitations": "The program assumes the generator's domain: one ink colour plus the background, with ink drawn from the three mapped colours. The 5->4, 8->2, 3->1 table is arbitrary and has no arithmetic pattern, so it is fixed as palette-mapped constants rather than derived. If a query used an ink that is neither in the table nor learnable from the demonstrations, the program would fill background cells with the ink colour itself, as the archived solver does; the generator never produces this case. A grid made only of background colour cannot occur (the generator requires sum>0) and is returned unchanged. No fixture contradictions or constructor defects were found: all approved fixtures match the uniform rule.",
+    "host_review": "The builder and make_record require demonstration evidence for each query colour association. This is checked using only demonstrations and query input before exact output verification. Missing evidence causes resampling, not a guessed target."
+  }
+}

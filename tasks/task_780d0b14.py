@@ -17,6 +17,32 @@
 import common
 
 
+def _scene_ok(bitmap, lengths, depths, width, height):
+  """True iff the all-zero lines are exactly the dividers and no panel is empty."""
+  wide, tall = len(lengths), len(depths)
+  div_cols = set(sum(lengths[:i + 1]) + i for i in range(wide - 1))
+  div_rows = set(sum(depths[:i + 1]) + i for i in range(tall - 1))
+  for r in range(height):
+    zero = all(bitmap[r][c] == 0 for c in range(width))
+    if zero != (r in div_rows):
+      return False
+  for c in range(width):
+    zero = all(bitmap[r][c] == 0 for r in range(height))
+    if zero != (c in div_cols):
+      return False
+  for row in range(tall):
+    for col in range(wide):
+      left, top = sum(lengths[:col]) + col, sum(depths[:row]) + row
+      found = False
+      for r in range(top, top + depths[row]):
+        for c in range(left, left + lengths[col]):
+          if bitmap[r][c] != 0:
+            found = True
+      if not found:
+        return False
+  return True
+
+
 def generate(width=None, height=None, colors=None, wide=None, tall=None,
              patches=None):
   """Returns input and output grids according to the given parameters.
@@ -30,23 +56,38 @@ def generate(width=None, height=None, colors=None, wide=None, tall=None,
     patches: the colors in the patch grid
   """
   if width is None:
+    # Retain the sampled panel counts across retries; a 3x3 layout should
+    # not become rarer merely because its panel sizes need more retries.
     wide, tall = common.randint(2, 3), common.randint(2, 3)
-    patches = [common.random_color() for _ in range(wide * tall)]
-    lengths = [common.randint(3, 15) for _ in range(wide)]
-    depths = [common.randint(3, 15) for _ in range(tall)]
-    width, height = sum(lengths) + wide - 1, sum(depths) + tall - 1
-    bitmap, colors = common.grid(width, height), []
-    for row in range(tall):
-      for col in range(wide):
-        left, top = sum(lengths[:col]) + col, sum(depths[:row]) + row
-        for r in range(top, top + depths[row]):
-          for c in range(left, left + lengths[col]):
-            if common.randint(0, 9) == 0: continue
-            bitmap[r][c] = patches[row * wide + col]
-    for r in range(height):
-      for c in range(width):
-        colors.append(bitmap[r][c])
- 
+    accepted = False
+    for _ in range(1000):
+      patches = [common.random_color() for _ in range(wide * tall)]
+      lengths = [common.randint(3, 15) for _ in range(wide)]
+      depths = [common.randint(3, 15) for _ in range(tall)]
+      width, height = sum(lengths) + wide - 1, sum(depths) + tall - 1
+      if width > 30 or height > 30:
+        continue
+      if any(not 1 <= p <= 9 for p in patches):
+        continue
+      bitmap = common.grid(width, height)
+      for row in range(tall):
+        for col in range(wide):
+          left, top = sum(lengths[:col]) + col, sum(depths[:row]) + row
+          for r in range(top, top + depths[row]):
+            for c in range(left, left + lengths[col]):
+              if common.randint(0, 9) == 0: continue
+              bitmap[r][c] = patches[row * wide + col]
+      if not _scene_ok(bitmap, lengths, depths, width, height):
+        continue
+      colors = []
+      for r in range(height):
+        for c in range(width):
+          colors.append(bitmap[r][c])
+      accepted = True
+      break
+    if not accepted:
+      raise RuntimeError("could not sample a valid scene")
+
   grid, output = common.grid(width, height), common.grid(wide, tall)
   for r in range(height):
     for c in range(width):

@@ -1,0 +1,21 @@
+{
+  "task_id": "9473c6fb",
+  "factory_sha256": "27c236434b391ead7256bf878b60d97fdd03024d657b2464a44dc0ad33c8c31e",
+  "constructor_sha256": "60be37930d33e0a46b303e5ff2dcb9062c851beb6077e328b2fc0292788ff8e7",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 236651449375011,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 3.8302500419085845,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The original rule has a background of 7 and isolated single pixels. In valid scenes, exactly one axis has at most one pixel per line. If each row holds one pixel, the pixels are walked top to bottom. If each column holds one pixel, they are walked left to right. Pixels are recoloured in that order with the repeating cycle 2, 8, 5. Under D4, the rows and columns may swap and the walking direction may reverse. The factory tracks where the original +row and +column directions land after the transform: a row reversal negates the column direction, and each clockwise rotation maps (dr, dc) to (dc, -dr). From this it computes a walk sign for each visible axis, SR for rows and SC for columns. The emitted program finds the non-background pixels using the constant palette[7]. It checks which visible axis has unique coordinates and sorts the pixels along that axis using its sign. It then recolours them with palette[2], palette[8], palette[5] in sequence. Everything happens directly in visible coordinates, with no rotation of the grid and no remapping of colours.",
+    "limitations": "This program has not been tested. The generator guarantees that exactly one axis is unique; it rejects scenes where both or neither are. If both or neither are unique (out of domain), the program falls back to walking the rows with the computed signs. There are no tie-breaks inside the domain, because the sort key on the unique axis is distinct for every pixel. The background is taken as palette[7] rather than inferred. This is safe because pixel colours never include 7. The fixtures agree with the uniform rule, and I found no constructor defects. The 'construction stages' mentioned in the rule text are presentation only and are not emitted."
+  }
+}

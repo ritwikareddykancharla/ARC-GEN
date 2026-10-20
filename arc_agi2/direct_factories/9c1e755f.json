@@ -1,0 +1,22 @@
+{
+  "task_id": "9c1e755f",
+  "factory_sha256": "ee4b6a000a894559fec91d3387db7962d02c7d18b05d470fdcd235e8c64b65d2",
+  "constructor_sha256": "ee8af22c45d547ccb76e6914e9a058a1af7646095d5585b0ac85e57328bc8d2a",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 251796245637785,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 8.298002625000663,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "Colour roles are fixed by the palette. The background is palette[0] and the bar colour is palette[5]; both are baked in as constants. All other non-background, non-bar cells are grouped into 4-connected multicolour patches. Each patch is assigned to the bar it 8-touches most often. In the generator, boxes are separated by a gap, so each patch touches exactly one bar.\n\nThe program works directly in visible coordinates and reads each bar's orientation from its bounding box. A one-row bar is horizontal: the patch's rows are filled across the bar's columns using pattern[y-py0][(x-px0) mod pw]. A one-column bar is vertical: the patch's columns are filled across the bar's rows using pattern[(y-py0) mod ph][x-px0].\n\nThe tiling is anchored on the patch's own position, so it is the unique periodic extension that agrees with the patch where the patch sits. That means it does not depend on which end or side of the bar the patch is on. The same code therefore handles every D4 image: a vertical bar with its patch at the bottom-right can become a horizontal bar with its patch on any side or end, and reflections are covered automatically. The generator always picks a period (the thickness) that divides the bar length, so anchoring at either end gives the same result. The d4 argument is not needed beyond what is read from the grid.",
+    "limitations": "Not tested. Assumes the generator's patch colours never include the original background colour 0. common.random_colors excludes only 5 explicitly; if it can return 0, a patch could be split or its bounding box shrunk (for example, a thickness-2 patch with a fully background row would get the wrong period). That would be a constructor issue for host review. Assumes bars have length of at least 4, so orientation is never ambiguous, and that different boxes do not touch; the generator's overlap margin guarantees both. The patch's bounding box is copied cell for cell, as in the archived solver. No fixture contradictions were found: all approved train and test pairs match the rule.",
+    "host_review": "Inspected common.random_colors: samples from 1..9, never background 0. The conditional background-ambiguity concern is resolved."
+  }
+}

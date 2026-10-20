@@ -1,0 +1,46 @@
+{
+  "task_id": "a68b268e",
+  "factory_sha256": "c6c123fc48d6dd4d740b45a34ebe018455b048a76d20d349d0d4586a36adbc24",
+  "constructor_sha256": "bb8ca5d4a4625f03d867e67bd4c83040e5add9fd3d95e9033e2f47b0d68618e3",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 107750760465535,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 3.9142984999343753,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The constructor builds a (2s+1)x(2s+1) grid. A full row and a full column of colour 1 split it into four s x s panels. Each panel has its own colour (7, 4, 8, 6) on a background of 0. The output overlays the panels cell by cell. Colour index 0 is painted last, so the order from top to bottom is 7 > 4 > 8 > 6.\n\nThe emitted program works directly in the visible grid. It finds divider rows and columns as full lines of palette[1] in the actual grid, so no orientation is assumed. It cuts out the panels between those lines and gives each panel the non-background colour it contains. It then paints the panels onto a canvas of palette[0], from lowest to highest priority, so palette[7] ends up on top, then palette[4], palette[8] and palette[6].\n\nThe overlay is cellwise and the dividers are found from the pixels. Any D4 transform therefore moves the panels and the output together, and the same rule gives the transformed answer with no un-rotation. The palette only changes the constants, so no colour unpermuting is needed. d4 itself is not needed beyond this.",
+    "limitations": "The priority order is a constant taken from the constructor (colours 7, 4, 8, 6 mapped through the palette). It is not re-learned from the demonstrations. A panel with no coloured pixels adds nothing to the output, which matches the generator. It assumes no panel row or column is entirely the divider colour, which the constructor guarantees because panels only hold their own colour and 0. I found no constructor defects or contradictions in the fixtures. All approved train and test pairs fit the 7 > 4 > 8 > 6 overlay.",
+    "independent_source_review": {
+      "verdict": "accept",
+      "mechanism": "The constructor builds a 9x9 grid. A full row and a full column of colour 1 sit at index 4 and split it into four 4x4 panels. Panel idx k uses colours[k] from (7,4,8,6) and holds only that colour on 0, with pixels drawn by random_pixels at probability 0.5. The output is a 4x4 overlay painted in the loop `for i in range(len(colors)-1, -1, -1)`, so idx 0 (7) is painted last. The fixed priority is therefore 7 > 4 > 8 > 6, and cells where every panel is 0 stay 0. The emitted solver finds divider rows and columns as full lines of palette[1] in the visible grid. It crops the panels between them and identifies each panel by its single non-BG, non-DIV colour. It paints the panels onto a palette[0] canvas in rising priority, using PRIORITY = [p[7], p[4], p[8], p[6]].",
+      "evidence": [
+        "Priority comes from the constructor's paint order, not from position: the output loop paints colours[3]..colours[0] in turn, and each idx has a fixed colour. Ranking panels by colour is therefore equivalent to ranking by idx, and it does not depend on where a panel sits after a D4 transform.",
+        "The dividers are self-consistent under D4. The grid is (2s+1)x(2s+1) with the divider at the centre index s, so every D4 transform maps the divider cross onto itself. A transform maps each panel onto a quadrant and applies the same local transform to its contents; for example a 90\u00b0 turn maps local (r,c) to (c, 3-r) in every quadrant. The cellwise overlay therefore commutes with the transform. The solver detects cuts from the pixels (`(g[y,:]==DIV).all()`), with no whole-grid untransform or retransform.",
+        "No false dividers: panel cells are only colours[idx] or 0, never 1. No other full row or column can be all DIV, and every off-centre column contains a non-DIV cell, so the cuts are exactly {4} on each axis.",
+        "The factory uses the fixed constant BG = palette[0] for background. It does not use the archived program's most-common-colour background(), which could misfire on dense grids.",
+        "There is one non-zero colour per panel by construction, so the Counter most_common in _panel_colour has no ties. Priority is a total order on four distinct colours, so the overlay has no ambiguous ties.",
+        "An empty panel (probability 2^-16 per panel from random_pixels) gets rank len+1, is painted first, and contributes nothing. This matches the constructor, where such a panel has no pixels to paint.",
+        "All 6 train pairs and the test pair fit the 7 > 4 > 8 > 6 overlay. Spot checks: pair 1 cell (0,2) gives 8; pair 4 cell (3,0) gives 4 over 8; pair 5 cell (0,0) gives 6 alone.",
+        "Host audit passed: 1000 fresh pairs, 8000 augmented checks, 16 fixture variants, no sampler rejections."
+      ],
+      "blocking_issues": [],
+      "nonblocking_limits": [
+        "The priority order is a compiled-in constant mapped through the palette. It is not inferred from the demonstrations. This is acceptable because the four colours and their order are fixed across every episode. With about 50% density, the demonstrations exhibit pairwise overlaps abundantly, so the order is taught visibly.",
+        "The solver ignores the demonstrations argument.",
+        "The defensive branches are unreachable under the constructor and are not exercised: no panels found, panels with mismatched shapes, and colours outside PRIORITY."
+      ],
+      "required_context_checks": [],
+      "task_id": "a68b268e",
+      "factory_sha256": "c6c123fc48d6dd4d740b45a34ebe018455b048a76d20d349d0d4586a36adbc24",
+      "constructor_sha256": "bb8ca5d4a4625f03d867e67bd4c83040e5add9fd3d95e9033e2f47b0d68618e3"
+    },
+    "host_review": "Reviewed rule and domain limitations. Host augmentation maps completed grids with one bijective palette, horizontal reflection then clockwise quarter turns; odd indices swap axes. Fresh audit iterates all eight variants, supplied fixture checks include query answers, and export requires every pair exact. Sampler exceptions are recorded rejections, not admitted examples. Spatial connectivity follows the stated constructor/archived mechanism; optional out-of-domain modes are not certified. Added query-input/demo-output evidence gate: demonstrated or transitively inferred overlap precedence, matching side parity, or every needed chart colour slot, respectively. Missing evidence is rejected before export; query answers cannot supply it. Tests cover rejection and acceptance."
+  }
+}

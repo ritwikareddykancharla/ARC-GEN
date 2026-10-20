@@ -1,0 +1,47 @@
+{
+  "task_id": "a57f2f04",
+  "factory_sha256": "b1c17e7e6833595fe7d3c1bfcc346d09f84585d1bdd314b721fe6288fd392efd",
+  "constructor_sha256": "df1aee45a89171c3f9a4b54be160d5bffd390c98352ab795a6188c6bce6948ef",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 270779955364271,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 24.59963241603691,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The canvas colour is palette[8] and the empty rectangle colour is palette[0]. The emitted program finds each rectangle as a 4-connected component of non-canvas cells and takes its bounding box. The motif is every cell in the rectangle whose colour is not palette[0].\n\nFor each axis, the program decides which side of the rectangle the motif is anchored to. It prefers the side the motif touches; if that is ambiguous, it picks the nearer side. The tile size runs from that rectangle edge to the far edge of the motif. If that size does not divide the rectangle side, it is rounded up to the smallest divisor of the side, preferring one that gives at least two repeats. This handles sprites that do not reach the inner edges of their nominal tile, which the archived bbox-of-motif solver would get wrong.\n\nThe tile is read from the input at the anchored corner and repeated over the whole rectangle using offsets relative to the tile origin. Every rectangle side is a multiple of its tile size, so the original motif stays in place.\n\nThe rule treats all four corners and both axes symmetrically, so it works directly in visible coordinates under every D4 transform. No direction specialisation is needed, and d4 is accepted but does not change the program. Colours enter only as the palette[8] and palette[0] role constants.",
+    "limitations": "Not executed or tested by me.\n\nThe tile size is recovered from the motif's extent, so the program assumes the generated sprite reaches the inner edge of its tile, or that rounding up to a divisor gives the true tile size. If common.diagonally_connected_sprite can leave an inner row or column empty, the tile size is ambiguous from the input alone. In that case the smallest consistent divisor is chosen, which may differ from the generator's latent tile size. That would be a constructor ambiguity for host review, not a rule I have reproduced.\n\nThe program assumes rectangles never touch each other, which the generator's overlap margin of 2 guarantees, and that the canvas colour is palette[8] and the rectangle fill is palette[0].\n\nThe fixtures appear consistent with the uniform rule. The archived solver's failure was only the missing collections import described in the task notes.",
+    "independent_source_review": {
+      "verdict": "accept",
+      "mechanism": "Each solid zero-rectangle contains one fully visible tile in one corner. The emitted solver treats every 4-connected non-canvas component as a rectangle and takes the non-zero cells as the motif. On each axis it anchors to the side the motif touches and sets the tile size to the motif's extent from that side. It then copies that corner block and repeats it modulo (h, w) from the tile origin. Only the palette roles palette[8] (canvas) and palette[0] (empty fill) are specialised.",
+      "evidence": [
+        "Constructor: wides = length*k and talls = depth*k with k in [2,5]. The input reveals only cells where the column lies in [0,length) if left, or [wide-length,wide) otherwise, and likewise for rows. The visible block is therefore exactly one aligned tile in a corner.",
+        "common.conway_sprite skips a removal when `rows.count(r) <= 1 or cols.count(c) <= 1`. Every row and column of the length x depth tile therefore keeps at least one bcolor pixel, so the motif bbox equals the full tile. This resolves the prior limitation about inner rows or columns being empty: that case is unreachable.",
+        "_axis: k>=2 means the motif extent is less than the rectangle side, so the motif touches exactly one side and the tie branch is unreachable. The needed extent equals the tile size exactly.",
+        "_period(total, need): need divides total and total//need >= 2, so the function returns need. Both fallback loops are unreachable.",
+        "Tile phase: for a bottom or right anchor, ty0 = y1-h+1 = brow+tall-depth, which is congruent to brow mod depth because tall is a multiple of depth. The repetition therefore matches the constructor's `(row % depth)` and `(col % length)` indexing. The same holds for the left/top anchor, where ty0 = brow.",
+        "Zeros inside the tile are copied from the input. They match the pattern zeros, because the corner block in the input is exactly patterns[...] there.",
+        "Separation: common.overlaps(..., 2) plus brows/bcols in [2, dim-size-2] give each rectangle a canvas margin. Each rectangle is solid non-canvas and therefore 4-connected, so components equal rectangles. bcolors come from [1,4] and never collide with 0 or 8.",
+        "D4: the rule is symmetric across all four corners and both axes, and the solver computes directly on visible coordinates. There is no untransform wrapper.",
+        "The output is a deterministic function of the visible input, and no hidden latent is left unrecoverable. The host audit passed 1000 fresh pairs, 8000 augmented checks and 16 fixture variants."
+      ],
+      "blocking_issues": [],
+      "nonblocking_limits": [
+        "The _axis tie branch and the non-exact _period fallbacks are defensive and unreachable under this constructor.",
+        "The solver assumes the canvas is palette[8] and the rectangle fill is palette[0]. The constructor fixes both roles.",
+        "The prior note's stated uncertainty about tile-size ambiguity is moot because conway_sprite guarantees full row and column coverage."
+      ],
+      "required_context_checks": [],
+      "task_id": "a57f2f04",
+      "factory_sha256": "b1c17e7e6833595fe7d3c1bfcc346d09f84585d1bdd314b721fe6288fd392efd",
+      "constructor_sha256": "df1aee45a89171c3f9a4b54be160d5bffd390c98352ab795a6188c6bce6948ef"
+    },
+    "host_review": "Reviewed mechanism and limitations. Confirmed augmentation.py uses a bijective palette, horizontal flip followed by clockwise turns; audit.py checks every D4, not only its final reported d4=7. Episode-wide D4 ambiguity gate is active. Out-of-domain fallbacks do not justify unverified inputs; every export still executes the program on every pair."
+  }
+}

@@ -1,0 +1,49 @@
+{
+  "task_id": "aee291af",
+  "factory_sha256": "3bc0edd83894cd5718566163c234780eae4fbf57cfaeb82dd96b70b63f04790f",
+  "constructor_sha256": "b8d7b6f008baefbc388050c66701bb76cf039a9a0f50be26234c0e596361e68d",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 237855327139635,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 79.16425737494137,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The mechanism is the same in every D4 frame. A square window stays a square window, and every interior pattern is transformed the same way. So equal interiors stay equal and a unique interior stays unique. The cropped box in visible coordinates is exactly the transformed expected output.\n\nThe factory therefore only specialises the colour roles: BORDER = palette[8] and INK = palette[2]. The background colour palette[1] is never needed.\n\nThe emitted program scans every square window of side 3..min(H,W) in the visible grid, using prefix sums. A window is a candidate when all three hold:\n- its border is all BORDER;\n- its interior holds only INK/BORDER;\n- its interior holds at least one INK.\n\nCandidates are grouped by their exact interior, and the program crops the window whose interior occurs once.\n\nScanning all sides up to the grid size matches the constructor's strict invariant, which checks sides 3..30. Under that invariant exactly one unique window exists, so no tie-break is needed for fresh scenes.\n\nIf several unique windows ever exist, the program uses a fallback. It first keeps unique windows whose side equals the largest side among repeated-interior windows. This is the planted box size, since the odd box matches the common boxes. Only then does it fall back to side/row/column order, the archived order.",
+    "limitations": "- **Fresh scenes:** the generator guarantees exactly one unique window over all sides, so the answer depends on the visible mechanism alone.\n- **Fixtures:** fixture replay is validated only with the order-sensitive 'first unique window by side 3..8, row, col' rule. If a fixture held more than one unique window, the archived answer would depend on scan order, which is not D4-invariant. The size-matching preference should resolve any such case in favour of the planted box. A remaining pure ordering tie would be a constructor/fixture defect needing host review. Inspection suggests the supplied fixtures have only one unique window, but this was not executed.\n- **No-unique fallback:** the 'no unique window, return the first candidate' fallback is kept only for robustness. It is outside the generator's domain and is not a puzzle rule.\n- **Testing:** no tests were run.",
+    "independent_source_review": {
+      "verdict": "accept",
+      "mechanism": "Each input is a noisy 1/8 field containing several square boxes. A box has an all-8 border and a 2/8 interior holding at least one 2. Every box shares one interior pattern except one. The output is that odd box, cropped with its border. The emitted solver works directly in visible coordinates. It specialises only BORDER=palette[8] and INK=palette[2]. It scans every square window of side 3..min(H,W) using prefix sums and keeps windows with an all-BORDER border and an INK/BORDER-only interior containing INK. It groups them by exact interior and crops the window whose interior occurs exactly once.",
+      "evidence": [
+        "Generator labels do not depend on hidden latents. The output is _box(k, odd), and boxes are painted last, after noise and decoys. So the label equals the visible crop at pos[oi]. Non-explicit scenes are accepted only if _strict_ok holds: all planted boxes are detected; every detectable window of side 3..30 is planted or nested inside a planted box; and the list of unique-interior windows is exactly [target]. The odd box is therefore the only visibly unique window.",
+        "Nested windows are handled correctly. _nested_ok requires every nested interior of the odd box to also appear in the common pattern's nested set. With n>=3 boxes, at least 2 common boxes exist, so each nested interior repeats. The canonical test shows this: an isolated 2 at interior (2,2) of 228/288/882 gives a 3x3 nested window in each of the four common boxes. The odd pattern 822/822/288 has no such window.",
+        "Decoys cannot become alternative answers. Near-miss decoys are only used when the common pattern has no nested windows, and their broken border makes the k-window undetectable. Solid and ring decoys have no 2s. Any stray window is caught by the strict planted-or-nested check.",
+        "D4 equivariance holds. The set of square windows maps onto itself, interiors transform uniformly, and interior equality and multiplicity are preserved. The unique-window answer in a transformed grid is the transformed cropped box. The solver has no whole-grid untransform or retransform wrapper and no orientation constants.",
+        "The solver's side range 3..min(H,W) matches the strict invariant's 3..30 check. Fresh scenes therefore have exactly one unique window, and the size-preference and (side,row,col) tie-breaks are never reached.",
+        "Fixtures are consistent with the solver. Replay validates with _selected (sides 3..8, scan order). The solver scans larger sides too, but the host audit reports all 16 fixture variants (fixtures x D4) passing. That rules out an order-dependent multi-unique tie or an extra large unique window in the fixtures under the checked transforms.",
+        "No arbitrary colour or shape lookup is involved. The palette roles (border 8, ink 2) are visible structural roles taught by every demo, and the episode evidence checks do not cover this task, appropriately.",
+        "The host audit passed 1000 fresh pairs and 8000 augmented checks with no sampler rejections."
+      ],
+      "blocking_issues": [],
+      "nonblocking_limits": [
+        "The solver's tie-break (prefer unique windows whose side equals the largest repeated side, then side/row/col order) is not D4-invariant. It is unreachable for fresh scenes because of the strict invariant, and the fixtures pass under all D4 variants per the host audit.",
+        "The 'no unique window, use the first candidate' and 'no candidates, return the input' fallbacks are out-of-domain defensive code, excluded by the constructor.",
+        "Box sizes 6..8, grid sides other than 16/18, and decoys are synthetic extensions. They keep the same visible rule and are covered by the strict acceptance check.",
+        "Fully explicit replay is checked only with the archived order-sensitive selector rather than the strict invariant. Uniqueness of the fixtures is therefore established by the host's fixture-variant audit, not by the constructor itself."
+      ],
+      "required_context_checks": [
+        "The host should confirm that the 16 fixture-variant checks cover all 8 D4 transforms of the canonical test pair, not only the train pairs. This verifies that the test input has a single unique window across all sides when scanned to min(H,W)."
+      ],
+      "task_id": "aee291af",
+      "factory_sha256": "3bc0edd83894cd5718566163c234780eae4fbf57cfaeb82dd96b70b63f04790f",
+      "constructor_sha256": "b8d7b6f008baefbc388050c66701bb76cf039a9a0f50be26234c0e596361e68d"
+    },
+    "host_review": "Reviewed rule and domain limitations. Host augmentation maps completed grids with one bijective palette, horizontal reflection then clockwise quarter turns; odd indices swap axes. Fresh audit iterates all eight variants, supplied fixture checks include query answers, and export requires every pair exact. Sampler exceptions are recorded rejections, not admitted examples. Spatial connectivity follows the stated constructor/archived mechanism; optional out-of-domain modes are not certified."
+  }
+}

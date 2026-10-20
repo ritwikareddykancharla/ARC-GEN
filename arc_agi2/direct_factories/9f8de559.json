@@ -1,0 +1,21 @@
+{
+  "task_id": "9f8de559",
+  "factory_sha256": "ead80fecdf0a525ca2a8b2acef73d31885cb159a8d1ab52b257f2e4facedaa69",
+  "constructor_sha256": "e531724204bbde4bce659b3eec9c52062d0716f9d92c006bc68432a30f29dfaf",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 70807842385966,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 4.4105391670018435,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The mechanism works the same in any orientation. It reads the pointer from the visible pixels. The head colour is palette[2], the shaft colour is palette[6] and the field colour is palette[7]. The program finds the head, then finds the adjacent shaft cell among the 8 neighbours. The firing direction is head minus that shaft cell, so rotations and reflections are handled because the direction is measured in visible coordinates. From the head it steps over field-coloured cells. The first non-field cell, which is the border strip, is recoloured to the field colour. Nothing else changes. The direction is never hard-coded from d4. The only specialisation is the three palette constants.",
+    "limitations": "This has not been run or tested. Under the constructor the head is always one end of a straight 5-cell run inside the 7 field, so exactly one shaft cell is adjacent to it. The collinear-run tie-break is defensive only and never fires on the constructor's domain. If the ray ever left the grid without meeting a non-field cell, the output would equal the input. That cannot happen in the constructor because the border rectangles cover every non-field cell up to the grid edge. Host review note: the constructor checks neighbours with Python indices prow-1 and pcol-1, which would wrap around at row or column 0. This is harmless only because the head always sits strictly inside the field, never on the grid boundary. The emitted program bounds-checks instead of relying on wrap-around. The fixtures match the uniform rule and I found no contradictions."
+  }
+}

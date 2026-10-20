@@ -1,0 +1,143 @@
+{
+  "task_id": "aa18de87",
+  "factory_sha256": "a107f102a35a07ef9a73cc82833012def5d90547c7d386b02759bbf8c8f4851c",
+  "constructor_sha256": "e518f6c7a9d8045665147670ff101b522ebdfd01173a7032a8a4676c62ffc154",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [
+    {
+      "seed": 87966589953386,
+      "error": "Invalid ARC grid"
+    },
+    {
+      "seed": 54208624775781,
+      "error": "Invalid ARC grid"
+    },
+    {
+      "seed": 17656392002987,
+      "error": "Invalid ARC grid"
+    },
+    {
+      "seed": 78522328373773,
+      "error": "Invalid ARC grid"
+    },
+    {
+      "seed": 15845317021314,
+      "error": "Invalid ARC grid"
+    },
+    {
+      "seed": 200969128313824,
+      "error": "Invalid ARC grid"
+    },
+    {
+      "seed": 130346273638184,
+      "error": "Invalid ARC grid"
+    },
+    {
+      "seed": 234058103433880,
+      "error": "Invalid ARC grid"
+    },
+    {
+      "seed": 8887113218527,
+      "error": "Invalid ARC grid"
+    },
+    {
+      "seed": 255969690137268,
+      "error": "Invalid ARC grid"
+    },
+    {
+      "seed": 89709035714639,
+      "error": "Invalid ARC grid"
+    },
+    {
+      "seed": 86126815639849,
+      "error": "Invalid ARC grid"
+    },
+    {
+      "seed": 207147994752406,
+      "error": "Invalid ARC grid"
+    },
+    {
+      "seed": 71821712910642,
+      "error": "Invalid ARC grid"
+    },
+    {
+      "seed": 133296576792975,
+      "error": "Invalid ARC grid"
+    },
+    {
+      "seed": 52358181024327,
+      "error": "Invalid ARC grid"
+    },
+    {
+      "seed": 131011400865078,
+      "error": "Invalid ARC grid"
+    },
+    {
+      "seed": 219805002837483,
+      "error": "Invalid ARC grid"
+    },
+    {
+      "seed": 39264299854364,
+      "error": "Invalid ARC grid"
+    },
+    {
+      "seed": 213966828604302,
+      "error": "Invalid ARC grid"
+    },
+    {
+      "seed": 76435909066120,
+      "error": "Invalid ARC grid"
+    },
+    {
+      "seed": 246977794931029,
+      "error": "Invalid ARC grid"
+    },
+    {
+      "seed": 180509864568645,
+      "error": "Invalid ARC grid"
+    },
+    {
+      "seed": 254411849986500,
+      "error": "Invalid ARC grid"
+    }
+  ],
+  "seed": 242019434169726,
+  "d4": 7,
+  "unique_base_inputs": 936,
+  "seconds": 2.678447249927558,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "In the original task each row of the zigzag holds a few cells of the line colour. Every background cell strictly between two consecutive line cells in that row becomes colour 2. Reflections leave the row axis alone. An odd number of clockwise quarter turns turns rows into columns. So when d4%4 is odd, the emitted program scans each column and fills vertically between consecutive non-background cells. Otherwise it scans rows and fills horizontally. The order of the scan along the line does not matter, because the fill only depends on which cells lie between two line cells. Background is the constant palette[0], since the generator always uses black 0. The fill colour is the constant palette[2]. The line colour never needs to be known: any non-background cell counts as a bound, which matches the generator's rule that a cell needs the line colour somewhere on both sides in its row.",
+    "limitations": "Background is fixed to palette[0], matching the generator, rather than inferred. The demonstrations are not consulted because the mechanism is fully fixed by d4 and palette. No constructor defects were found: the fixtures agree with the uniform rule and the generator's fill condition is the same as filling between consecutive line cells. Neither the factory nor the emitted programs have been run or tested; the host's fixture and fresh-pair checks will be the first execution.",
+    "independent_source_review": {
+      "verdict": "accept",
+      "mechanism": "The input is a zigzag of one colour. The constructor places at most one line cell per column, at row `start`, and moves `start` by \u00b11 at every column, so horizontally adjacent line cells never occur. The output turns a background cell (0) into 2 when the line colour appears both to its left and to its right in the same row. With only bg and the line colour present, this is the same as filling every background cell strictly between consecutive non-background cells of each row. For augmented coordinates, the factory emits a direct row scan or column scan. It fills between consecutive non-bg cells with FILL=palette[2] and uses BG=palette[0].",
+      "evidence": [
+        "Constructor fill test: `color not in grid[row][:col]` / `color not in grid[row][col+1:]` on a `grid[row][col]==0` cell, applied to the input grid. The input contains only 0 and the line colour, so the set of filled cells equals the bg cells between the first and last line cell of the row. That is exactly the consecutive-pair fill.",
+        "`random_color(exclude=[2])` guarantees the line colour never equals the fill colour. Under any palette permutation, palette[2] therefore differs from the line colour, and the emitted FILL constant never collides with an existing non-bg cell.",
+        "The emitted solver does not need the line colour: any non-bg cell bounds the fill. This matches the constructor domain, since inputs contain a single non-bg colour.",
+        "All four approved train fixtures and the test fixture agree with the row-gap rule. Examples: pair 1 row 1 has cells at 0, 2, 8, 10 and fills 1, 3..7, 9; the test row 2 has cells at 0, 4, 6 and fills 1..3 and 5.",
+        "Factory axis choice `(d4%4)%2==1` switches to a column scan for odd quarter-turns. It only specialises the genuine rule axis; there is no untransform/native-solve/retransform wrapper.",
+        "The host audit passed 1000 fresh pairs, 8000 augmented pair checks (presumably all 8 D4 variants) and 16 fixture variants. This is consistent with the d4 encoding mapping axis swaps to odd d4%4.",
+        "The fill colour 2 is a constant shown in every demonstration, so no arbitrary colour association needs episode evidence. This task is not in the episode_evidence_checks list, which is appropriate."
+      ],
+      "blocking_issues": [],
+      "nonblocking_limits": [
+        "Background is hardcoded to palette[0] rather than inferred. This is fine because the constructor always uses 0.",
+        "Constructor quirk: if `start == top` with `cdir == 1`, or `start > top-1` moving upward, the walk can run off-grid and never bounce. This only produces partial or degenerate lines. Labels stay consistent with the rule, and scenes with no fill are rejected by `good`. No label defect results.",
+        "Sampler rejections ('Invalid ARC grid', 24 seeds) come from the host sampling path, and their exact cause is not visible from source. They do not affect the label rule.",
+        "The axis-mapping correctness for d4 values 4..7 depends on the host's D4 encoding (rotate then reflect). It is supported by the passing augmented checks rather than verified from source here."
+      ],
+      "required_context_checks": [],
+      "task_id": "aa18de87",
+      "factory_sha256": "a107f102a35a07ef9a73cc82833012def5d90547c7d386b02759bbf8c8f4851c",
+      "constructor_sha256": "e518f6c7a9d8045665147670ff101b522ebdfd01173a7032a8a4676c62ffc154"
+    },
+    "host_review": "Reviewed rule and domain limitations. Host augmentation maps completed grids with one bijective palette, horizontal reflection then clockwise quarter turns; odd indices swap axes. Fresh audit iterates all eight variants, supplied fixture checks include query answers, and export requires every pair exact. Sampler exceptions are recorded rejections, not admitted examples. Spatial connectivity follows the stated constructor/archived mechanism; optional out-of-domain modes are not certified. Invalid-size samples remain rejections; the audit does not label them valid. Constructor throughput/size limits remain in sampler accounting."
+  }
+}

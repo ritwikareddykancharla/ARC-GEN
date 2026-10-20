@@ -1,0 +1,21 @@
+{
+  "task_id": "90c28cc7",
+  "factory_sha256": "88ead9f2133c3438c75e1c65514c2e565b6b6b893fdb428bc50d14303cd300c8",
+  "constructor_sha256": "133304296365a214309f47952d7a1895ce9821c7d06b1d1f66b107d6b95c9c8e",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 32488745670958,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 9.267000833991915,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The background is the original colour 0, so the emitted program uses palette[0] as a fixed constant. It does not use the archived solver's most-common-colour heuristic. The program works directly in the visible coordinates. First it crops the grid to the bounding box of the non-background cells. Then it starts a new row band at every row that differs from the row above it. It starts a new column band at every column that differs from the column to its left. The output cell for each pair of row band and column band is the colour at that band pair's first cell. Cropping and collapsing runs of identical rows and columns are treated the same way along both axes. A rotation or reflection of the episode therefore just rotates or reflects the quilt, and the program produces the matching transformed miniature. No direction or axis needs to be specialised for any d4, and the emitted code is identical for all eight. Palette remapping is handled by the background constant. Patch colours are copied from the visible grid.",
+    "limitations": "This applies the generator's rule in visible coordinates. It relies on these points about the constructor's domain:\n\n- **Background.** The background is always the original colour 0. The quilt colours come from common.random_color(), which is assumed to never return 0.\n- **No duplicate rows or columns.** The generator rejects patch layouts with two identical patch rows or two identical patch columns. So every true block boundary appears as a change point and no bands merge.\n\nConstructor and solver issues for host review:\n\n1. **Background heuristic in the archived solver.** The solver takes the most common colour as the background. That can fail on fresh scenes. The quilt can be up to 20x20, which is 400 of 441 cells, and a single patch colour can outnumber the 0 cells. The factory deliberately uses the palette[0] constant instead.\n2. **Stale TODO in the generator.** The comment says adjacent rows or columns may be identical. The later legality loop does reject identical rows and columns, so this does not affect the answer.\n3. **Non-default input sizes.** The generator only produces square 21x21 inputs. The emitted program handles any rectangular grid.\n4. **Unsupported inputs.** Inputs with no foreground are outside the domain. The program returns [[bg]] for them.\n\nThe fixtures are consistent with the uniform rule. No contradictions were found."
+  }
+}

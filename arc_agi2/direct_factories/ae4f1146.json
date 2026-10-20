@@ -1,0 +1,46 @@
+{
+  "task_id": "ae4f1146",
+  "factory_sha256": "fe2bf20c2cc1a57a946f9d0bfa245b6f88c5ec372bab1a54d1f5556cce0ad3cd",
+  "constructor_sha256": "826f0b686fb64410e9baa3b7afb97f059c4a9f5e523b2b106fcdd84af94cd19b",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 172162453431154,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 8.821407500072382,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The generator places four 3x3 tiles on a 9x9 background of colour 0. Each tile is filled with colour 8 and then gets a distinct number of colour-1 pixels. The counts are sampled without replacement from 0..8 and sorted. The tile with the most 1s is always the last one, and the output is an exact copy of that tile. The placement check allows tiles to touch at corners but never along an edge or by overlapping. So 4-connected components of non-background cells are exactly the tiles.\n\nThe emitted program works directly in visible coordinates:\n1. Background is the constant palette[0] and the counted colour is palette[1]. palette[8] is recorded only as the fill role and is not needed for the decision.\n2. It finds 4-connected non-background components in reading order.\n3. It crops each component's bounding box and counts palette[1] cells.\n4. It returns the crop with the strictly largest count.\n\nNo D4 specialisation is needed, and none is applied. Rotating or reflecting the scene maps each tile's bounding-box crop to the same transform of that tile. That is exactly how the output is transformed, and colour counts are unchanged by D4. The grid is never rotated or recoloured; only the colour-role constants are specialised.",
+    "limitations": "Ties for the maximum count cannot happen in the constructor's domain because the counts are distinct. If a tie were ever supplied, the program keeps the first tile in reading order of each tile's first-scanned cell. That choice is a deterministic fallback, not an intended rule. Tiles that touch along an edge would merge into one component; the constructor's overlap check rules this out. A tile with zero 1s is still a valid component, but it can never win because at least one other tile has more 1s. The fixtures match the uniform rule, and I found no constructor defects. The output colour roles rely on the palette mapping 0->background and 1->counted colour, as stated in the task. The program has not been executed by me.",
+    "independent_source_review": {
+      "verdict": "accept",
+      "mechanism": "Four 3x3 tiles are filled with colour 8 and placed on a 9x9 canvas of colour 0. Tile i receives lengths[i] cells of colour 1. lengths = sorted(sample(range(9), 4)), so the counts are distinct values in 0..8. The output is a copy of the last tile (idx == num-1), which is the tile with the strictly largest count of colour 1. The emitted solver finds 4-connected non-background components, crops each bounding box, counts cells of palette[1] in each crop, and returns the crop with the strictly largest count.",
+      "evidence": [
+        "Output label: the line `if idx + 1 < len(minirows): continue` means only the last tile's blue pixels are written onto the cyan 3x3 output. The output is therefore exactly the last tile. Because `lengths.sort()` runs over distinct values from `sample(range(9), 4)`, the last tile has the unique maximum count of 1s. The label is not tied to a hidden latent beyond a visible count.",
+        "Separation: the placement loop skips pairs only when rowdiff > 3 or coldiff > 3, or when both equal 3 (corner touch). Every other pair is rejected, including edge-sharing (rowdiff == 3 with coldiff < 3) and overlap. 4-connected components of non-background cells are therefore exactly the four full 3x3 tiles, since every tile cell is 8 or 1 and never background. Each component's bounding box is the tile itself.",
+        "Ties are unreachable. Counts are distinct, the maximum is at least 3, and no tile is ever all-1 because the count is at most 8.",
+        "All four train pairs and the test pair in the fixtures pick the tile with the unique maximum count of 1s (5, 4, 6, 5; test 6). This matches the archived rule.",
+        "D4 equivariance: under any D4 transform the bounding-box crop of a transformed tile equals the transformed tile, and colour counts are invariant. The solver therefore needs no orientation constants and contains no untransform/retransform wrapper. It operates directly on the visible grid.",
+        "Colour roles are specialised to palette[0] (background) and palette[1] (counted colour). This is legitimate rule-colour specialisation. FILL (palette[8]) is defined but unused, which is harmless.",
+        "The host audit passed 1000 fresh pairs, 8000 augmented checks and 16 fixture variants, with no sampler rejections. This is consistent with the source analysis."
+      ],
+      "blocking_issues": [],
+      "nonblocking_limits": [
+        "Ties fall back to the first component in scan order. This is unreachable in the constructor domain because counts are distinct.",
+        "Edge-adjacent tiles would merge into one component. The constructor's overlap check excludes this.",
+        "The `best is None` fallback (returning the input grid) is unreachable because there are always four tiles.",
+        "The solver ignores demonstrations. This is acceptable because the rule is deterministic and its colour roles are fixed by the palette constants. No arbitrary colour association needs episode evidence, and this task is not in the colour-evidence check list."
+      ],
+      "required_context_checks": [],
+      "task_id": "ae4f1146",
+      "factory_sha256": "fe2bf20c2cc1a57a946f9d0bfa245b6f88c5ec372bab1a54d1f5556cce0ad3cd",
+      "constructor_sha256": "826f0b686fb64410e9baa3b7afb97f059c4a9f5e523b2b106fcdd84af94cd19b"
+    },
+    "host_review": "Reviewed rule and domain limitations. Host augmentation maps completed grids with one bijective palette, horizontal reflection then clockwise quarter turns; odd indices swap axes. Fresh audit iterates all eight variants, supplied fixture checks include query answers, and export requires every pair exact. Sampler exceptions are recorded rejections, not admitted examples. Spatial connectivity follows the stated constructor/archived mechanism; optional out-of-domain modes are not certified."
+  }
+}

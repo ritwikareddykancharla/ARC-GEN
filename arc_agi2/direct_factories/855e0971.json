@@ -1,0 +1,24 @@
+{
+  "task_id": "855e0971",
+  "factory_sha256": "e2507ef2d30bdbcb384d39cd280f3ec0fc27da25f617ddcd7313853696c2ab10",
+  "constructor_sha256": "e0f01ff712ff3933e03ef7b75216e614296189bfaa69834512b36107781d7fdc",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 176294080469059,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 6.010163874947466,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "diagnosis": "The host failure happened at the sampling stage, before the factory ran. Every rejected seed raised 'ValueError: Invalid ARC grid'. The constructor draws 2-5 strata, each with height randint(2,10), and stacks them along one axis. Nothing limits the total, so the stacked length can reach 5*10 = 50, which breaks ARC's 30-cell limit. When xpose=1 the oversized axis becomes the width instead. The factory logic was never the cause. Its mechanism is sound under every D4 and palette. Under any D4 the bands are either uniform rows or uniform columns. Both cannot hold at once, because there are at least 2 strata with distinct colours. No row or column can be all black: the cross-axis is at least 10 cells and black columns are sampled distinctly, so a stratum has at most 2 blacks. The black colour is palette[0]. A reflection does not change band extents, and the segment always spans the whole band, so no direction needs to be reversed.",
+    "constructor_issue": "Constructor defect needing host review: the stacked axis length sum(heights) is unbounded, ranging from 4 to 50. That produces invalid grids over 30 cells. The fix is to resample heights until sum(heights) <= 30. The resampling is capped, and a deterministic in-range shrink is the fallback. The canonical fixtures (all sums <= 17) and validate() are unchanged. No label inconsistency with the mechanism was found.",
+    "explanation": "The factory is unchanged in substance, because the failure was a constructor sampling defect and not a solver error. The emitted program works directly in visible coordinates. It first checks whether every row is single-coloured once palette[0] (black) cells are ignored. If so, the bands are horizontal, and each black cell becomes a vertical segment spanning its band's contiguous rows. Otherwise the bands are vertical, and each black cell becomes a horizontal segment spanning its band's contiguous columns. The program never transposes the grid. Each D4 variant just lands in one of the two direct branches, and reflections need no direction change because segments cover the whole band. The constructor repair only bounds the stacked axis to 30 cells.",
+    "limitations": "The constructor fix changes the random distribution slightly. Height samples are conditioned on sum <= 30, which mainly trims tall 4-5-strata scenes. The fallback shrink is effectively unreachable. The repair assumes common.random_colors returns distinct non-black colours, so adjacent strata always differ, as the original mechanism already requires. The solver assumes no row or column consists only of black, which the constructor guarantees. I have not run any tests, and the host must execute both proposals.",
+    "host_review": "Removed deterministic shrink fallback; bounded rejection raises on exhaustion, preserving the sampled count and valid conditional height distribution."
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "task_id": "a1570a43",
+  "factory_sha256": "9e88f6eb58763bf5b8188cb4c00a02c67fc2df6f4df40a76a6ab168f268eac47",
+  "constructor_sha256": "be03a36466cddf491c74efe8714a6f3a70b86b273373b7292a7cb872b0b7850c",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 87309393228031,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 4.568883875035681,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "Four single marker cells (palette[3]) mark the corners of a 7x7 frame. One shape (palette[2]) is pushed partly off that frame's interior. The program reads the frame from the bounding box of the marker cells. It erases the shape, filling with palette[0], and re-stamps it inside the interior strictly between the marker rows and columns. Each axis is handled the same way. If the shape's extent equals the interior size (always 5 in the generator), the shape starts at the interior start. This matches the archived solver's centring, since the difference is 0. If the shape is already strictly inside on an axis, that coordinate is kept. If it sticks out, it is shifted the minimal amount to fit. Frame, interior and translation are all defined symmetrically from visible coordinates, so the rule is unchanged under every D4 transform. A canonical upward or leftward displacement simply shows up as displacement in whichever visible direction the transform produces, and correcting it needs no direction constant. Colour roles come directly from the palette constants. As a fallback, if those colours are absent, the background is the most common colour, the marker is the rarest other colour, and the shape is the most frequent other colour.",
+    "limitations": "Constructor note for host review: the shape comes from conway_sprite(5,5). If that sprite does not span the full 5x5 box on the shifted axis, the true output position on that axis depends on a hidden latent: the sprite's offset within its local box combined with the random shift k. That position is not recoverable from the visible input. The program then falls back to keeping or minimally clamping the shape, which may differ from the generator's output. All approved fixtures have a 5x5 shape bbox, which matches the archived solver's assumption. The generator's TODO (no diagonal shift) means only one axis is ever displaced, but the program handles both axes independently anyway. Red never overwrites a green corner under the generator's ranges, so marker detection by colour is safe. The parameter d4 is unused because the mechanism is D4-equivariant. No tests were run.",
+    "host_review": "common.conway_sprite preserves every row and column, including after shuffling, so the complete 5x5 sprite bounding box is visible."
+  }
+}

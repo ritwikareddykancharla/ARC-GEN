@@ -1,0 +1,51 @@
+{
+  "task_id": "aba27056",
+  "factory_sha256": "e2353b20cb28e45136aa044e9b52c3f66959af9694fd4af7e1cd190187b6129b",
+  "constructor_sha256": "c7b6daa108efb436a70b454114db409f221c8b3e171ea59be5e1d5a242b21d5a",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 50077082869902,
+  "d4": 7,
+  "unique_base_inputs": 853,
+  "seconds": 4.908629041980021,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The emitted program works directly in the visible grid coordinates. It uses two specialised constants: the background colour palette[0] and the fountain colour palette[4]. The cup colour is not needed, because any non-background cell counts as wall.\n\nThe program takes the bounding box of all wall cells and fills every background cell inside it, including the gap cells, with FILL. It then looks at the four visible sides of the box and finds the one with missing wall cells. That side gives the outward direction d and the along-wall direction a, so the opening can face up, down, left or right. This is required because the constructor itself randomises opening orientation via flip/transpose, so the direction cannot be fixed from d4 alone.\n\nFrom each gap cell, a ray in direction d is painted up to the grid border. For each wall cell flanking the gap (indices s-1 and e+1 along the side), a diagonal starts one step outward from that wall cell. It then advances by d plus or minus a, away from the gap, until it leaves the grid. This matches the generator's draw loop: at diff=1 the cell sits directly outward of the wall cell beside the gap, and each later cell moves one more step outward and along the wall. Out-of-bounds cells are clipped, just as common.draw clips them. Only background cells are overwritten.\n\nThe D4 transform and the palette change only which visible side holds the gap and which colours are used. Both are handled by detecting the gap side directly and by using the palette constants. No inverse transforms are applied.",
+    "limitations": "This analysis assumes the constructor's domain: exactly one rectangular outline whose gap is a single contiguous run on one side, not touching the corners, with background palette[0].\n\n- **Multiple sides with gaps:** these never occur in the domain. If they did, the program would pick the side with the most gap cells.\n- **Wall colour equal to the fill colour:** if the random cup colour were itself 4 (palette[4]), the mechanism still holds, because walls are detected as non-background.\n- **Out-of-bounds draw in the constructor:** the generator calls common.draw with row index r-row = -1 when row=1. I assume common.draw clips out-of-range coordinates rather than wrapping via Python negative indexing. If it wrapped, that would be a constructor defect needing host review, not a puzzle rule. The fixtures (e.g. the test pair with row=1) are consistent with clipping.\n- **Fixtures:** no contradictions with the uniform rule were found in the approved fixtures.",
+    "independent_source_review": {
+      "verdict": "accept",
+      "mechanism": "The constructor draws a single rectangular outline in colour `color` with bounding box rows size-tall-row..size-1-row and cols col..col+wide-1. It clears the interior to black. It opens a gap in the top wall at cols col+2..col+wide-3. Because wide>=5, the gap has width wide-4>=1, and at least one wall cell flanks the gap on each side (col+1 and col+wide-2), so the gap never touches a corner. The output adds yellow in three places: (a) the interior; (b) a beam over the gap columns from row 0 down to the last interior row, which covers the gap cells and everything above them; (c) two diagonals at (r-row, col+2-diff) and (r-row, col+wide-3+diff) with diff=size-tall-r. At diff=1 each diagonal cell sits directly above a flanking wall cell, one row above the top wall. Each later cell moves one more step outward and one step away from the gap. All draws are clipped by common.draw. Optional flip and transpose then place the opening on any of the four sides. The emitted solver works in visible coordinates. It takes the bbox of non-BG cells and fills BG cells inside it with FILL. It finds the single side containing BG cells, which gives the outward direction d and along-wall direction a. It casts rays in direction d from each gap cell. It casts diagonal rays starting at flank wall cell + d and stepping d\u00b1a away from the gap. Rays stop at the border and only overwrite BG.",
+      "evidence": [
+        "Interior fill: the generator fills rows size-tall+1..size-2 (minus row) and cols col+1..col+wide-2. Together with the gap cells covered by the beam, this is exactly the set of background cells in the box bbox. The solver fills all BG cells in the non-BG bbox. The cup is the only non-background object, so the two bboxes coincide.",
+        "Beam: the generator covers rows 0..size-2-row in gap columns. Above the top wall this is rows 0..T-1, where T=size-tall-row. Below it, the rows are interior or gap and already filled. The solver's ray from each gap cell + d up to the border produces the same cells.",
+        "Diagonal start and step: at diff=1 the generator draws (T-1, col+1) and (T-1, col+wide-2), i.e. flank wall cell + outward. Increasing diff moves one row outward and one column away from the gap. This matches the solver's ray(by+dy, bx+dx, dy+sgn*ay, dx+sgn*ax) with idx=s-1 / e+1.",
+        "Clipping: the actual common.draw ignores r<0, c<0 and out-of-range indices, so row=1 gives r-row=-1 and that cell is dropped, not wrapped. Columns that go negative or past the edge are dropped too. This matches the solver, whose rays stop at the grid border.",
+        "No overwrite conflicts: diagonals lie strictly outside the box on the open side. The beam occupies only gap columns. Neither touches wall cells, so the solver's BG-only overwrite policy is consistent with the constructor.",
+        "Gap side uniqueness: only the opened wall contains background cells. Corner and flank cells are always wall, so the solver's 'side with most gap cells' selection is unambiguous, and the corner fallback branch is unreachable in the domain.",
+        "Orientation: flip/xpose in the constructor plus host D4 augmentation are handled by detecting the gap side in visible coordinates. There is no untransform/native-solve/retransform wrapper. Only BG=palette[0] and FILL=palette[4] are specialised, and both correspond to common.black()/common.yellow().",
+        "T=size-tall-row>=1 because tall<=size-2, so at least one row exists on the open side and the beam and diagonals are always visible.",
+        "Canonical fixtures match the constructor's validate() parameters. The prose rule's pair checks agree with the flank+outward start."
+      ],
+      "blocking_issues": [],
+      "nonblocking_limits": [
+        "The cup colour can be 4 (random_color covers 1..9), which makes the wall the same colour as the fill. The solver detects walls from the input as non-BG, so outputs remain correct. Visually the output is less informative, but the label is not ambiguous.",
+        "The solver assumes background = palette[0] and exactly one non-background object. This holds throughout the constructor's domain but would not hold for arbitrary inputs.",
+        "If several sides had gaps (out of domain), the solver would pick the side with the most gap cells. The archived program instead picks the first side in order. This difference is not reachable from the constructor.",
+        "The archived program uses the most-common colour as background, while the factory uses palette[0]. Within the domain these agree, because background dominates every grid the constructor can produce."
+      ],
+      "required_context_checks": [
+        "None for colour associations: the fill colour is fixed and demonstrated in every pair, and the wall colour is irrelevant to the rule. No arbitrary colour or shape lookup is involved, so the task correctly falls outside the episode_evidence_checks list.",
+        "Standard D4 conflict rejection (identical visible demos and query with conflicting answers) suffices. The rule is orientation-equivariant through gap detection."
+      ],
+      "task_id": "aba27056",
+      "factory_sha256": "e2353b20cb28e45136aa044e9b52c3f66959af9694fd4af7e1cd190187b6129b",
+      "constructor_sha256": "c7b6daa108efb436a70b454114db409f221c8b3e171ea59be5e1d5a242b21d5a"
+    },
+    "host_review": "Reviewed rule and domain limitations. Host augmentation maps completed grids with one bijective palette, horizontal reflection then clockwise quarter turns; odd indices swap axes. Fresh audit iterates all eight variants, supplied fixture checks include query answers, and export requires every pair exact. Sampler exceptions are recorded rejections, not admitted examples. Spatial connectivity follows the stated constructor/archived mechanism; optional out-of-domain modes are not certified."
+  }
+}

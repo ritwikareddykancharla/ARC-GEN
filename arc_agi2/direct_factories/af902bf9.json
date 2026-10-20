@@ -1,0 +1,48 @@
+{
+  "task_id": "af902bf9",
+  "factory_sha256": "b0e25604b508f6a3e447cbd6f8f8544206fe8d950ee30a16f08950bb9e354374",
+  "constructor_sha256": "40a8b4eb8562a660207fdddb0c2f10413106f66d082249bc4a3880905143d09b",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 174973118966741,
+  "d4": 7,
+  "unique_base_inputs": 815,
+  "seconds": 5.414541082922369,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The rule does not depend on orientation. The four corners of an axis-aligned rectangle still form an axis-aligned rectangle after any D4 transform, and 'strictly inside' keeps its meaning. So the emitted program works directly in the visible coordinates and does not need direction constants.\n\nColour roles are fixed as constants: background = palette[0], corner = palette[4], fill = palette[2].\n\nHow the program works:\n- Every non-background cell is treated as a candidate corner.\n- For each ordered pair (r0,c0),(r1,c1) with r1-r0>=2 and c1-c0>=2, the program checks that the other two corners (r0,c1) and (r1,c0) are also marked.\n- It also checks that no marked cell lies strictly inside that rectangle.\n- If both checks pass, the strict interior is filled with the fill colour. Corners and border lines stay unchanged.\n\nWhy this matches the constructor: it generates at most two boxes, each at least 3x3. When there are two boxes, they sit in diagonally opposite quadrants. A mixed rectangle would need one of its other two corners at a row from one box's band and a column from the other box's band, and no marked cell exists there. So only the real boxes are found. This stays true after any D4 transform and after the constructor's vertical flip. Boxes touching the grid edge need no special handling.",
+    "limitations": "The background, corner and fill colours are fixed from the palette (palette[0], palette[4], palette[2]) rather than inferred from the demonstrations. Any non-background cell is treated as a corner, which is enough for this domain because inputs contain only corner cells. No fixture contradictions or constructor defects were found. The constructor's random flip is a symmetry that the solution handles, not a hidden tie-break. The archived solver's teaching-stage emission (one snapshot per rectangle) is not reproduced; only the final grid is returned. I have not run the factory or the emitted program.",
+    "independent_source_review": {
+      "verdict": "accept",
+      "mechanism": "Inputs contain only corner cells, all in the corner colour on the background. The constructor draws 1 or 2 axis-aligned boxes. Each box has its four corners in palette[4] and a strict interior of palette[2], and each box is at least 3x3. With two boxes, box 0 lies in [0,row)x[0,col) and box 1 in [row,10)x[col,10). An optional vertical flip turns this diagonal quadrant arrangement into the anti-diagonal one. The emitted solver treats every non-background cell as a candidate corner. For each pair (r0,c0),(r1,c1) with both gaps at least 2, it requires (r0,c1) and (r1,c0) to be present and no candidate cell strictly inside. It then fills each accepted rectangle's strict interior with FILL.",
+      "evidence": [
+        "Constructor: `lengths, depths = [col, size - col], [row, size - row]` with row and col in 4..6. Box placement is `sum(depths[:idx]) + randint(0, depth - tall)` and `sum(lengths[:idx]) + randint(0, length - wide)`. So the two boxes have disjoint row bands and disjoint column bands.",
+        "Mixed rectangles are unreachable. Take a in box A and b in box B. The required corner (r0,c1) would have a row in A's band and a column in B's band, and no marked cell exists there. With a single box, the four corners of a box with tall>=3 and wide>=3 form exactly one qualifying rectangle. So the solver's rectangle set equals the constructor's boxes, with no ties and no ordering dependence.",
+        "`wide = randint(3, min(6, length))` is always valid because length >= 4. Every box therefore has a non-empty interior, so every demonstration shows the FILL colour. The palette-specialised FILL and CORNER constants are taught by the demos rather than being arbitrary hidden associations.",
+        "The rule is D4-invariant: axis-aligned rectangles, strict interiors and quadrant disjointness are all preserved under D4. The solver works directly in visible coordinates and has no untransform or retransform wrapper. The constructor flip is a symmetry, not a hidden label latent.",
+        "Canonical fixtures match validate(). Train pairs are the same set in a different order. Test: boxes (1,0,4x4) and (5,5,5x5) with flip=1 map to rows 5-8, cols 0-3 and rows 0-4, cols 5-9, which matches the supplied test output.",
+        "The host audit passed: 1000 fresh pairs, 8000 augmented checks, 16 fixture variants, no sampler rejections."
+      ],
+      "blocking_issues": [],
+      "nonblocking_limits": [
+        "Colours are fixed from the palette (BG=palette[0], CORNER=palette[4], FILL=palette[2]) rather than inferred from the demonstrations. The demos consistently teach these colours, so this is acceptable.",
+        "Every non-background cell is treated as a corner. This is valid only because constructor inputs contain nothing else.",
+        "The archived teaching-stage emission (one snapshot per rectangle) is not reproduced; only the final grid is returned.",
+        "No defensive handling exists for out-of-domain scenes such as nested or overlapping marked rectangles or additional colours. The constructor excludes these."
+      ],
+      "required_context_checks": [
+        "Confirm the palette is a permutation, so palette[2] != palette[0] and palette[4] != palette[0].",
+        "Confirm the D4 conflicting-answer rejection policy is applied. No conflicts are expected because the rule is D4-equivariant."
+      ],
+      "task_id": "af902bf9",
+      "factory_sha256": "b0e25604b508f6a3e447cbd6f8f8544206fe8d950ee30a16f08950bb9e354374",
+      "constructor_sha256": "40a8b4eb8562a660207fdddb0c2f10413106f66d082249bc4a3880905143d09b"
+    },
+    "host_review": "Reviewed rule and domain limitations. Host augmentation maps completed grids with one bijective palette, horizontal reflection then clockwise quarter turns; odd indices swap axes. Fresh audit iterates all eight variants, supplied fixture checks include query answers, and export requires every pair exact. Sampler exceptions are recorded rejections, not admitted examples. Spatial connectivity follows the stated constructor/archived mechanism; optional out-of-domain modes are not certified."
+  }
+}

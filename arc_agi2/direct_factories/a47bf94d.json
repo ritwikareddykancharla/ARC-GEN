@@ -1,0 +1,52 @@
+{
+  "task_id": "a47bf94d",
+  "factory_sha256": "8c15ccd506c24d87abd0a127d03fabd061a510295b4429e4180bb955667638fb",
+  "constructor_sha256": "4e03ac61aa56dbf77dbf05e2112fac3e21da25035200a5906dbf42e559d1f89d",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 31062930314819,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 21.937432541977614,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The emitted program does not depend on orientation. It needs no axis or direction constants. The pieces that might seem orientation-dependent are all symmetric. Pipe tracing tries all four directions. Turns are the two perpendiculars of the current heading. A block exit is chosen as 'straight' by testing collinearity with the current heading. The solid, X and diamond glyph shapes are unchanged by every D4 transform. So the program can run directly on the visible grid with no rotation. The factory specialises only the colour roles: BG=palette[0], WIRE=palette[8], DECO=palette[5], BLOCK=palette[9]. Marker colours are inferred from the pixels as any other colour.\n\nThe mechanism follows the constructor's strict trace:\n- Markers are 8-connected single-colour components with a 3x3 bounding box. Each is classed as solid, X or diamond by its exact cell pattern.\n- A trace starts only if exactly one WIRE cell sits two steps from the marker centre.\n- It walks straight over WIRE/DECO/BLOCK cells.\n- On meeting a BLOCK component, it jumps to an exit port. It takes the unique straight collinear port, or else the sole remaining port.\n- When the straight path stops, it turns only if exactly one perpendicular pipe neighbour exists.\n- The far glyph centre is two steps past the last pipe cell.\n\nIf a marker already sits at that centre, nothing is done. Otherwise:\n- A solid source becomes a diamond and gets an X at the far end.\n- An X source gets a diamond at the far end.\n- A diamond source gets an X at the far end.\n\nTracing reads the original input grid, and stamps go to a copy, so the order in which markers are processed cannot change the result.",
+    "limitations": "No tests were run. The archived solver falls back to 'first exit' or 'first turn' when the path is ambiguous. That is a hidden order-dependent tie-break, and it is not reproduced here. The emitted program uses the constructor's strict uniqueness rule instead, and it skips a marker whose trace is ambiguous. The constructor's consistency guard rejects such scenes, so this matters only outside the generated domain. I assume the palette is injective, which makes the four structural colours distinct from the marker colours. I found no contradiction between the fixtures and the rule. One constructor detail needs host review: its _dihedral transposes for k>=4, whereas the stated D4 convention reverses rows. Both conventions give the same set of 8 transforms, and the solver is invariant under all of them, so this does not affect correctness. The demonstrations are not used, because every role is fixed by the palette.",
+    "independent_source_review": {
+      "verdict": "accept",
+      "mechanism": "Each 3x3 marker glyph (solid, X or diamond) is traced along its colour-8 wire to the far end. The trace walks straight over 8/5/9 cells. When the straight path stops, it turns onto the single perpendicular pipe neighbour. When it enters a 9-block, it jumps to the unique collinear exit port, or else to the only other port. The far glyph centre is two steps past the last wire cell. If a marker already sits there, nothing changes. Otherwise a solid source becomes a diamond and an X of its colour is drawn at the far end; an X source gets a diamond there; a diamond source gets an X there. The generator builds a latent wire scene and derives the output from the latent connections. Every scene must pass _check_scene, which runs a strict, tie-free _trace and requires each glyph to reach its latent partner slot. The emitted solver uses exactly that strict trace on the visible grid.",
+      "evidence": [
+        "The labels are visibly determined. _derive uses the latent wiring, but _check_scene calls _trace(g, owner, ports, a) != b on the rendered grid for every glyph end and rejects any mismatch. Random scenes are resampled and explicit scenes raise ValueError. So every reachable output equals what a visible strict trace gives.",
+        "The solver's trace() is the same code as the constructor's _trace: unique WIRE start at distance 2, unique straight port or else a single exit, unique perpendicular turn, and the same iteration cap. The port map uses the same 4-connected BLOCK components with PORT=(WIRE, DECO) neighbours.",
+        "The trace is D4-equivariant. Starts consider all four directions and require uniqueness. Turns consider both perpendiculars and require uniqueness. The straight port is chosen by collinearity with the current heading. The S/X/D patterns are D4-invariant. Because every choice is unique, the result does not depend on ordering, so running directly on augmented grids is valid. The factory specialises only the palette roles BG/WIRE/DECO/BLOCK and has no untransform wrapper.",
+        "Marker identification is unambiguous. Wire colours are distinct, so each colour component belongs to one wire. Glyph centres are at Chebyshev distance >= 4, so glyphs never merge in the 8-connected search. Slots may not overlap wires or blocks and must lie in the grid, so glyphs are fully visible. Decorations sit only on plain wire cells.",
+        "The 'marker already at far end' case matches _derive. X/D pairs are skipped in _derive. In the solver, each end of a pair traces to the other end's centre, which is in the centres set. Single-glyph far slots are empty, and the slot separation guarantees they are not another marker's centre.",
+        "Order independence: tracing reads g, and stamps write to out. Stamped slots are distinct and in bounds, and their 3x3 clears never overlap wire cells, which the guard enforces.",
+        "The canonical fixtures check out. Train 3 block (8,10,2,2): the straight collinear port (10,11) is taken, then the trace turns left. Test block (15,1,3,4): wire 6's corner at (16,2) is hidden, there is no straight port, and the only exit is (18,2). Both match the strict rule and the expected outputs.",
+        "The archived program's first-exit, first-turn and first-start fallbacks agree with the strict rule on every scene the guard admits. The emitted solver drops those fallbacks for out-of-domain uniqueness failures, which the constructor excludes.",
+        "The task needs no arbitrary colour/shape lookup. Glyph-kind transitions are fixed shapes shown in the demonstrations, and the context checks do not list a47bf94d. The host audit passed 1000 fresh pairs and 8000 augmented checks with no sampler rejections."
+      ],
+      "blocking_issues": [],
+      "nonblocking_limits": [
+        "Some hidden-routing cases are rarely or never shown in the original training pairs: the only-exit fallback for a turn hidden inside a block, odd port counts, and a turn just outside a block. The original test needs the hidden-turn case, so including them preserves the canonical difficulty. A sampled episode may still need one of these behaviours without demonstrating it.",
+        "Random scenes cover only straight, Z and jog routes between two opposite glyph rows. Glyphs on perpendicular sides, routes with more than four turns, and wires running beside glyphs come only from the explicit fixture transcriptions.",
+        "Explicit configs that cannot contain an inversion are accepted as non-hard controls; hardness is enforced only when it is achievable.",
+        "The solver assumes an injective palette, so structural colours are distinct from marker colours. Defensive skips on ambiguous traces are outside the generated domain.",
+        "_dihedral uses a transpose-then-rotate convention for k>=4. It still produces all 8 D4 elements, and the solver is invariant, so this has no effect."
+      ],
+      "required_context_checks": [
+        "The host should confirm that the palette passed to build_program is injective over {0,5,8,9} and the marker colours actually used.",
+        "Optional: if strict demonstration coverage of the hidden-turn only-exit behaviour is wanted, check that sampled episodes whose query needs a hidden turn include at least one demonstration of it. This is not required by the stated policy for deterministic spatial rules."
+      ],
+      "task_id": "a47bf94d",
+      "factory_sha256": "8c15ccd506c24d87abd0a127d03fabd061a510295b4429e4180bb955667638fb",
+      "constructor_sha256": "4e03ac61aa56dbf77dbf05e2112fac3e21da25035200a5906dbf42e559d1f89d"
+    },
+    "host_review": "Reviewed mechanism and limitations. Confirmed augmentation.py uses a bijective palette, horizontal flip followed by clockwise turns; audit.py checks every D4, not only its final reported d4=7. Episode-wide D4 ambiguity gate is active. Out-of-domain fallbacks do not justify unverified inputs; every export still executes the program on every pair."
+  }
+}

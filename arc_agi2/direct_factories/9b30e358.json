@@ -1,0 +1,21 @@
+{
+  "task_id": "9b30e358",
+  "factory_sha256": "74bdd865b52cf831eb67d9d363aff2c633289ff37e2406d39e1496a620b16b0c",
+  "constructor_sha256": "d6118d8050ea49ec7585118478c08cd7f049e32d56fdd50de2c56f4260941452",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 135263418414710,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 3.289496833924204,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "In the original task a motif sits against the bottom edge. It spans from the first non-background row y0 down to the edge. It is repeated toward the opposite edge with a period equal to its extent, and the last copy is clipped at the far border. A horizontal flip leaves the bottom edge in place, so only the rotation count k = d4 % 4 matters. Clockwise rotations move the bottom edge to the left edge (k=1), the top edge (k=2) or the right edge (k=3). The factory emits a specialized solver for each case. k=0 tiles rows upward: out[y] = g[y0 + (y - y0) mod h]. k=2 tiles rows downward from a top-anchored motif: out[y] = g[y mod h]. k=1 tiles columns rightward from a left-anchored motif. k=3 tiles columns leftward from a right-anchored motif. The background is inferred as the most common colour. In this domain it is always more than half the cells, because at least 5 of the 10 lines are pure background. The solver therefore needs no palette constants and does not unpermute any colours. Every case works directly on the visible grid and handles rectangular sizes and clipped partial copies at the border.",
+    "limitations": "The solver returns only the final grid, not the intermediate construction stages. It assumes, as the generator guarantees, that the motif touches the edge given by the D4 orientation and that the background is the strict plurality colour. The motif's extent comes from the outermost line containing any non-background cell. Interior lines of the motif may be partly background. Each generated motif line has at least one coloured cell, so this extent matches the generator's 'line' value. An all-background input is returned unchanged. I found no fixture contradictions or constructor tie-break defects."
+  }
+}

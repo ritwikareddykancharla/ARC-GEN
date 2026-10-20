@@ -1,0 +1,21 @@
+{
+  "task_id": "9c56f360",
+  "factory_sha256": "6f27420f45f10880be3c495d98238cc4bc07c133eec4c1455817406f5e4b9ee4",
+  "constructor_sha256": "2fcb58c7a8b69335e44bb83eb06394a5c0a2de9c05f7c0540a009868f09bb272",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 98716289985959,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 3.7303539579734206,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "In the original task, every row whose right-edge cell is 3 has a contiguous run of 3s anchored at that edge. That run slides left through background 0 cells. It stops when its leading cell is next to a non-background cell (an 8) or reaches the grid border. The vacated cells become 0, and the 8s never change. This matches the constructor's per-row shift loop and the archived solver on the generator's domain.\n\nThe factory specializes the rule to the visible frame:\n- **Motion direction.** It starts from the original vector (0,-1). The horizontal component is negated when d4>=4 (row reversal). Each clockwise rotation then maps (dr,dc) to (dc,-dr). The result is a left, right, up or down slide in visible coordinates.\n- **Colour roles.** The colours become the constants palette[0] (background), palette[3] (mover) and palette[8] (wall).\n\nThe emitted program enumerates the lines parallel to the motion: rows for horizontal motion, columns for vertical motion. Each line is ordered from the anchor edge (the side opposite the motion direction) in the direction of travel. If the first cell is the mover colour, the program measures the mover run length L. It then counts the background cells k immediately beyond the run, clears the first k cells and writes the run at positions k..k+L-1. Each line moves independently, so multi-line blocks are not moved rigidly, as in the fixtures. The program works on rectangular grids of any size. It does not rotate grids or permute colours.",
+    "limitations": "- The program only moves mover runs that touch the anchor edge, which is the generator's actual domain. Movers elsewhere in a line are left unchanged. The archived solver would also slide those, but the constructor never produces them.\n- The program assumes the palette is a bijection, so background, mover and wall colours are distinct. Any non-background cell blocks motion, matching the constructor's 'stop at non-zero' test.\n- The demonstrations are not used; the roles are fixed by the palette constants.\n- No constructor defects that would change the intended rule were found. The constructor's inner shift reads output[row][c+1] while guarding c+1<width, which is safe.\n- The fixtures are consistent with the uniform rule."
+  }
+}

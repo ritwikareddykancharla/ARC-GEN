@@ -1,0 +1,52 @@
+{
+  "task_id": "a8d7556c",
+  "factory_sha256": "77564faed1f343201db9c67e8cb5fd020d1c8cdb147f8008211d0ae625447c48",
+  "constructor_sha256": "3f1dbe9dfd1dcd084289382226c955cc91d5771b2341a1a71c7dfb7687cbefc7",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 163865989417096,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 11.95627745904494,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "This reproduces the constructor's two-phase stripe mechanism directly in visible coordinates.\n\nPhase A paints 2x2 all-empty windows of palette[0] whose two neighbouring side pairs, one on each flank along one axis, are not both empty. Grid edges count as blocked. All qualifying windows are collected against the same grid state and then painted palette[2] together. Phase B repeats this on the updated grid, with the flank check on the other axis.\n\nIn the original orientation, Phase A checks left/right neighbours (the generator's 'downstripes') and Phase B checks top/bottom neighbours ('sidestripes'). For D4 indices with an odd number of clockwise quarter turns (d4 odd), the visible axes are swapped, so the phase order is swapped. A row reversal on its own does not change which axis comes first. The flank test is symmetric within each axis, so no direction needs reversing. Colour roles are fixed constants: palette[0] is the hole colour and palette[2] is the paint. Every other colour, the gray static, acts as a wall.\n\nI traced this by hand against all three train pairs; it has not been run. Train pair 1's 2x3 block (rows 3-4, cols 6-8) is filled in Phase B. Train pair 3's region at rows 7-10, cols 10-12 is filled at cols 10-11 in Phase A, and col 12 stays 0 because it is too narrow. Rectangular grids are supported via separate H and W bounds.",
+    "limitations": "Constructor defect requiring host review: generate(colors=...) ignores the `legal` flag returned by draw(). As a result, the validate() fixtures contain zero regions (2x3, 3x2 and larger) that the random-generation domain explicitly rejects. In that domain, scenes are accepted only if no all-zero 2x3 or 3x2 rectangle exists and both phase orders agree. There, the rule reduces to 'paint every all-zero 2x2 window'.\n\nOn the fixtures, the result depends on the generator's procedure: the stripe-phase order and the flank tests. The archived solver's 'greedy largest rectangle' rule happens to agree on these fixtures, but it is not the generator's mechanism and can differ on other irregular regions.\n\nI did not emit the per-rectangle intermediate stages mentioned in the rule text; solve returns only the final grid.\n\nThe factory assumes palette is injective, so palette[0], palette[2] and palette[5] are distinct.",
+    "independent_source_review": {
+      "verdict": "accept",
+      "mechanism": "The constructor's draw() copies colors into the grid. It then runs two stripe phases, in order [0, 1] by default (the validate path uses this default). In each phase, every 2x2 window whose four cells are 0 is a candidate. Phase 0 rejects a window if either flank column pair, (r..r+1, c-1) or (r..r+1, c+2), is both 0. Phase 1 applies the same test to the flank rows, (r-1, c..c+1) and (r+2, c..c+1). Grid edges count as blocked. Candidates are collected against the same grid state and then painted red together. Phase 1 sees the red cells painted by phase 0. The factory emits exactly this two-phase, collect-then-paint procedure in visible coordinates. EMPTY is palette[0] and RED is palette[2]. The phase order is ('h', 'v') for even d4 and ('v', 'h') for odd d4, which swaps the visible axes.",
+      "evidence": [
+        "Emptiness matches. Constructor is_empty tests the truthiness of output[r][c], i.e. native 0. The flank test `output[a]+output[b]==0` means both cells are 0, because all colours are non-negative. The factory's `e()` both-empty tests check the same thing with palette[0] as the empty colour.",
+        "Phase semantics match. Both versions build the todo list over r in range(H-1) and c in range(W-1) before painting. In phase 2, painted RED cells count as non-empty in both.",
+        "Pair 3, h phase first. Window (7,10) is accepted: the left flank col 9 is 5,5 and the right flank col 12 is 5,0. Window (8,10) is rejected because col 12 rows 8-9 are both 0. Window (8,11) is rejected because col 10 rows 8-9 are both 0. Window (9,10) is accepted. So cols 10-11 rows 7-10 are painted and col 12 stays 0, matching the expected output.",
+        "Pair 3, v phase first, for comparison. This order would instead paint rows 8-9 cols 11-12. The order therefore matters, and the demonstrations teach it, so it is a legitimate orientation constant taught by demos, not a hidden latent.",
+        "Pair 1, rows 3-4 cols 6-8. Both windows are rejected in the h phase, because each has a fully empty flank column inside the block. Both are accepted in the v phase, since rows 2 and 5 are blocked. The full 2x3 block is painted, matching the expected output.",
+        "Pair 3, rows 1-2 cols 6-7. Accepted in the h phase. Row 1 cols 8-9 remain 0, matching the expected output.",
+        "Random domain. Only scenes that are legal for both orders and give identical outputs for both orders are kept, so the order constant is irrelevant there. Fixtures use the default order, which the factory reproduces for each axis parity.",
+        "The host audit passed: 1000 fresh pairs, 8000 augmented checks and 16 fixture variants. This is consistent with the d4 parity convention matching the host's D4 indexing.",
+        "The emitted solver has no whole-grid untransform or retransform. It specializes only the axis order and the colour constants."
+      ],
+      "blocking_issues": [],
+      "nonblocking_limits": [
+        "generate(colors=...) ignores the `legal` flag, so the fixtures contain 2x3 and 3x2 zero regions that the random domain rejects. Phase-order and flank-test behaviour on such irregular regions is only exercised by the 4 canonical fixtures and their D4 variants, not by fresh samples.",
+        "The archived greedy-largest-rectangle program is not the generator's mechanism. It may agree only on these fixtures. The factory correctly follows the constructor instead.",
+        "Correctness of the d4 parity mapping depends on the host's D4 index convention, where odd means a transposing quarter turn. This is confirmed by the audit, not by source alone.",
+        "The factory assumes an injective palette, so that palette[0], palette[2] and the static colour are distinct.",
+        "The per-rectangle intermediate emit stages described in the rule text are not emitted. solve returns only the final grid."
+      ],
+      "required_context_checks": [
+        "Confirm that the host's D4 indexing treats odd d4 as the axis-swapping transforms. The audit with d4=7 and the 16 fixture variants passing suggests it does.",
+        "Confirm the context policy rejects D4 variants with conflicting query answers. The phase order is orientation-dependent on fixtures, and the demonstrations (pair 3) reveal it in each augmented orientation."
+      ],
+      "task_id": "a8d7556c",
+      "factory_sha256": "77564faed1f343201db9c67e8cb5fd020d1c8cdb147f8008211d0ae625447c48",
+      "constructor_sha256": "3f1dbe9dfd1dcd084289382226c955cc91d5771b2341a1a71c7dfb7687cbefc7"
+    },
+    "host_review": "Reviewed rule and domain limitations. Host augmentation maps completed grids with one bijective palette, horizontal reflection then clockwise quarter turns; odd indices swap axes. Fresh audit iterates all eight variants, supplied fixture checks include query answers, and export requires every pair exact. Sampler exceptions are recorded rejections, not admitted examples. Spatial connectivity follows the stated constructor/archived mechanism; optional out-of-domain modes are not certified."
+  }
+}

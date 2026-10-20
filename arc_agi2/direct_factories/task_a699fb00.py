@@ -1,0 +1,40 @@
+def build_program(d4, palette):
+    d4 = int(d4) % 8
+    bg = int(palette[0])
+    blue = int(palette[1])
+    red = int(palette[2])
+    # The original runs lie along rows. Reflection (reversing each row) keeps rows
+    # as rows. Each clockwise quarter turn swaps rows and columns, so an odd number
+    # of turns makes the runs vertical.
+    vertical = (d4 % 4) % 2 == 1
+    lines = []
+    lines.append('import numpy as np')
+    lines.append('')
+    lines.append('BG = %d' % bg)
+    lines.append('BLUE = %d' % blue)
+    lines.append('RED = %d' % red)
+    lines.append('VERTICAL = %s' % ('True' if vertical else 'False'))
+    lines.append('')
+    lines.append('def solve(demonstrations, grid):')
+    lines.append('    g = np.array(grid, dtype=int)')
+    lines.append('    if g.ndim != 2:')
+    lines.append('        return [list(r) for r in grid]')
+    lines.append('    out = g.copy()')
+    lines.append('    H, W = g.shape')
+    lines.append('    if VERTICAL:')
+    lines.append('        # Runs of pixels spaced two apart run down columns: fill the gap cell')
+    lines.append('        # whose upper and lower neighbours are both blue.')
+    lines.append('        for x in range(W):')
+    lines.append('            for y in range(1, H - 1):')
+    lines.append('                if g[y, x] == BG and g[y - 1, x] == BLUE and g[y + 1, x] == BLUE:')
+    lines.append('                    out[y, x] = RED')
+    lines.append('    else:')
+    lines.append('        # Runs run along rows: fill the gap cell whose left and right')
+    lines.append('        # neighbours are both blue.')
+    lines.append('        for y in range(H):')
+    lines.append('            for x in range(1, W - 1):')
+    lines.append('                if g[y, x] == BG and g[y, x - 1] == BLUE and g[y, x + 1] == BLUE:')
+    lines.append('                    out[y, x] = RED')
+    lines.append('    return out.astype(int).tolist()')
+    lines.append('')
+    return '\n'.join(lines)

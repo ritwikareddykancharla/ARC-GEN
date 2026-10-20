@@ -1202,4 +1202,32 @@ All 525 regression tests passed. Remaining: 46 semantic/context holds,
 9 execution failures and 3 missing factories. Bulk generation and model
 training have not launched.
 
-All 467 regression tests passed for this checkpoint.
+## 1063-family checkpoint
+
+- `d8e07eb2`: preserve variable catalogue sizes, narrow glyphs, partial row or
+  column selections and near misses. An independent decoder reads the visible
+  divider bands and fixed slots; it does not reuse the solver's tight-box
+  snapping. Compare nine combinations of disabled/full/partial line rules on
+  both axes. Demonstrations independently teach frame, success-query,
+  success-result and failure-result paint roles. Surviving predictions must
+  agree on the query and match the program target. Query answers are never
+  passed to this gate. Original full-line demonstrations do not alone teach
+  partial-line success; adding a suitable partial-line demo resolves that
+  ambiguity without removing the hard query from the generator.
+
+Constructor and direct program remain unchanged. Their hashes match the prior
+1,000-fresh-pair/8,000-augmented-check/16-fixture-variant execution certificate;
+that certificate was reused, not rerun. New complete-episode auditing accepted
+13 of 20 independent contexts and verified 104 augmented program/grid records.
+The seven contexts lacking evidence were excluded, with no execution errors.
+
+A separate production-assembler audit used 256 fresh pairs and completed all
+83 requested base episodes, retaining each selected query through 70 evidence
+retries. It kept 17 partial-line successes, 21 full-line successes and 45
+failures, with zero query-context shortfalls. All 664 augmented rows passed
+combined program/grid verification. See
+`reports/query-preserving-assembly-1063-audit.json`.
+
+All 530 regression tests passed. Remaining: 45 semantic/context holds,
+9 execution failures and 3 missing factories. These are local audit records;
+bulk generation and model training have not launched.

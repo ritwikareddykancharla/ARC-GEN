@@ -1,0 +1,23 @@
+{
+  "task_id": "d8e07eb2",
+  "factory_sha256": "609c586ad2cf14d00df3986312065d73dd3c8bc29f96bc8653cd6cc9158ac1cd",
+  "constructor_sha256": "97c225c6489528d80ef5a79a0afdf52673f32b6531e35ef5c0272e60f2651eda",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 143566992411702,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 25.971888790954836,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The factory maps the canonical 'down' direction (the query band, then the catalogue, then the result band) through the D4 transform: optionally negate dx, then rotate clockwise with (dy,dx)->(dx,-dy). This gives AXIS, which says whether the dividers are visible rows or columns. It also gives SIGN, which says whether the 5-deep query band sits at the low or high index end. Colour roles are baked in as palette constants: background palette[8], frame/success palette[3], failure palette[2].\n\nThe emitted program works directly on the visible grid:\n1. It finds the two full single-colour divider lines along AXIS and uses SIGN to pick the query band, the catalogue between the dividers, and the result band.\n2. It extracts 8-connected monochrome glyphs from the query band and the catalogue. It matches each query glyph to a catalogue glyph by colour plus tight-crop shape, which is orientation-invariant because both bands are transformed together.\n3. It snaps each matched glyph to its 3x3 slot. Slot starts on each axis come from catalogue glyphs that span 3 cells on that axis. If none applies, it falls back to the fixed lattice: offset 3 plus pitch 5 from the query divider on the primary axis, and margin 2 plus pitch 5 on the secondary axis, which is symmetric.\n4. It sets the background cells of the 5x5 box around each snapped slot to the mark colour.\n5. Success means at least 2 queries, all matched, whose snapped slots share one primary start or one secondary start (one catalogue line). On success, the background of both the result band and the query band becomes the mark colour. Otherwise only the result band's background becomes the failure colour.",
+    "limitations": "Untested: no tests were run when writing this.\n\nThe program assumes the constructor's fixed geometry: exactly two divider lines, a 5-deep query band, slot pitch 5 and 3x3 slots. It also assumes the catalogue glyphs are unique by colour and shape, and that every slot line contains a glyph that spans 3 cells along it. The generator guarantees this last point; the geometric fallback covers it otherwise.\n\nThe missing-query branch is out of the generator's scope. If a query has no match, it is treated as a failure, the same as in the archived solver.\n\nNo contradictions with the fixtures were found. The narrow-6 frame issue is resolved by slot snapping, as the rule describes. No constructor defects were observed.",
+    "host_review": "Retain native variable catalogues, narrow glyphs, partial row/column success and near misses. Independent visible decoder reads divider band lengths and fixed slots, not solver boxes. Compare nine off/full/partial-line policies over both axes; learn frame, success-query, success-result and failure-result paints independently from demo outputs. All surviving query predictions must agree and equal the target rule. Missing branch colours, partial-line evidence and axis ambiguity trigger demo resampling with the same query. Query answers ignored; native constructor and emitted program unchanged.",
+    "semantic_draft_review": "Diagnosis-only draft accepted as issue identification, resolved by independent evidence gate, not generator narrowing. Existing source hashes match complete 1000 fresh-pair/8000 augmented-pair/16 fixture-variant certificate; reused without claiming a rerun. New full-episode validation follows."
+  }
+}

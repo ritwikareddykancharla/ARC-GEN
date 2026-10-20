@@ -1,0 +1,142 @@
+{
+  "task_id": "d8e07eb2",
+  "scope": "Local production-assembler audit; no bulk job, publication or model training. Grid pool assembled then every row verified with combined program/grid make_record.",
+  "pool_pairs": 256,
+  "source_hash": "97c225c6489528d80ef5a79a0afdf52673f32b6531e35ef5c0272e60f2651eda",
+  "metrics": {
+    "shards": [],
+    "episodes": 664,
+    "fresh_episodes": 83,
+    "requested_fresh_episodes": 83,
+    "spatial_variant_upper_bound": 664,
+    "symmetric_variants_removed": 0,
+    "variants_per_fresh_episode": {
+      "8": 83
+    },
+    "query_histograms": {
+      "input": {
+        "height": {
+          "25": 96,
+          "27": 88,
+          "20": 52,
+          "12": 48,
+          "17": 60,
+          "22": 136,
+          "30": 184
+        },
+        "width": {
+          "27": 88,
+          "25": 96,
+          "20": 52,
+          "12": 48,
+          "17": 60,
+          "22": 136,
+          "30": 184
+        },
+        "longest": {
+          "27": 96,
+          "25": 128,
+          "30": 368,
+          "20": 32,
+          "22": 40
+        },
+        "shapes": {
+          "25x27": 32,
+          "27x25": 32,
+          "20x27": 16,
+          "27x20": 16,
+          "25x12": 24,
+          "12x25": 24,
+          "25x17": 36,
+          "17x25": 36,
+          "25x22": 4,
+          "22x25": 4,
+          "30x22": 112,
+          "22x30": 112,
+          "30x27": 40,
+          "27x30": 40,
+          "30x17": 16,
+          "17x30": 16,
+          "30x12": 16,
+          "12x30": 16,
+          "20x17": 8,
+          "17x20": 8,
+          "20x12": 8,
+          "12x20": 8,
+          "20x22": 20,
+          "22x20": 20
+        }
+      },
+      "output": {
+        "height": {
+          "25": 96,
+          "27": 88,
+          "20": 52,
+          "12": 48,
+          "17": 60,
+          "22": 136,
+          "30": 184
+        },
+        "width": {
+          "27": 88,
+          "25": 96,
+          "20": 52,
+          "12": 48,
+          "17": 60,
+          "22": 136,
+          "30": 184
+        },
+        "longest": {
+          "27": 96,
+          "25": 128,
+          "30": 368,
+          "20": 32,
+          "22": 40
+        },
+        "shapes": {
+          "25x27": 32,
+          "27x25": 32,
+          "20x27": 16,
+          "27x20": 16,
+          "25x12": 24,
+          "12x25": 24,
+          "25x17": 36,
+          "17x25": 36,
+          "25x22": 4,
+          "22x25": 4,
+          "30x22": 112,
+          "22x30": 112,
+          "30x27": 40,
+          "27x30": 40,
+          "30x17": 16,
+          "17x30": 16,
+          "30x12": 16,
+          "12x30": 16,
+          "20x17": 8,
+          "17x20": 8,
+          "20x12": 8,
+          "12x20": 8,
+          "20x22": 20,
+          "22x20": 20
+        }
+      }
+    },
+    "relations": {
+      "same_shape": 664
+    },
+    "failures": {
+      "missing_colour_evidence_attempts": 70
+    },
+    "query_context_shortfalls": [],
+    "max_query_reuse_in_fresh_episodes": 1,
+    "max_pair_reuse_in_fresh_episodes": 5,
+    "distinct_inputs_used": 194
+  },
+  "base_query_types": {
+    "full_line_success": 21,
+    "failure": 45,
+    "partial_line_success": 17
+  },
+  "verified_program_grid_records": 664,
+  "seconds": 3.797846750007011
+}

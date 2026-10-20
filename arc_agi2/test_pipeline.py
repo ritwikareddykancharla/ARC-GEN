@@ -2202,4 +2202,74 @@ class GeneratorTests(unittest.TestCase):
         self.assertEqual(p['output'][1][0],7)
         self.assertEqual(p['output'],grid(call(solver('9bbf930d'),p['input'])))
 
+    def test_symmetry_glyph_dense_layout_and_exact_controls(self):
+        m=importlib.import_module('tasks.task_a09f6c25')
+        for seed in range(10):
+            random.seed(83000+seed)
+            p=m.generate(height=14,width=14,num_shapes=9,num_noise=2)
+            self.assertEqual((len(p['input']),len(p['input'][0])),(14,14))
+            self.assertEqual(p['output'],grid(call(solver('a09f6c25'),p['input'])))
+        for kind,colour in [('UD',1),('LR',3),('D',6)]:
+            random.seed(83000)
+            p=m.generate(height=30,width=30,background=0,kinds=[kind],num_noise=0)
+            self.assertEqual({v for row in p['output'] for v in row},{0,colour})
+        for kw in ({'height':10,'width':10,'num_shapes':5},{'kinds':[[]]},
+                   {'noise':5},{'num_shapes':True}):
+            with self.assertRaises(ValueError):m.generate(**kw)
+
+    def test_motif_anchor_matching_ignores_body_colour(self):
+        m=importlib.import_module('tasks.task_a251c730')
+        p=m.generate(size=30,stripes=[5,6],vertical=True,
+            motif_box=(1,1,12,12,9,0),motifs=[(3,3,['221']),(6,3,['118'])],
+            marker_box=(15,1,10,12,9,0),markers=[(17,5,1),(20,5,8)])
+        self.assertEqual(p['output'][2][2:5],[2,2,1])
+        self.assertEqual(p['output'][5][2:5],[1,1,8])
+        self.assertEqual(p['output'],grid(call(solver('a251c730'),p['input'])))
+
+    def test_motif_unused_anchor_still_requires_one_pattern(self):
+        m=importlib.import_module('tasks.task_a251c730')
+        kw=dict(size=30,stripes=[5,6],vertical=False,
+            motif_box=(1,1,12,12,9,0),motifs=[(3,3,['221']),(6,3,['221']),(9,3,['338'])],
+            marker_box=(15,1,10,12,9,0),markers=[(17,5,8),(20,5,8)])
+        p=m.generate(**kw)
+        self.assertEqual(p['output'],grid(call(solver('a251c730'),p['input'])))
+        kw['motifs'][1]=(6,3,['441'])
+        with self.assertRaises(ValueError):m.generate(**kw)
+        random.seed(83000)
+        p=m.generate(size=14)
+        self.assertEqual(len(p['input']),14)
+        self.assertEqual(p['output'],grid(call(solver('a251c730'),p['input'])))
+
+    def test_legend_hard_tiles_distinguish_swap_from_geometry(self):
+        import numpy as np
+        m=importlib.import_module('tasks.task_a32d8b75')
+        original=m._render;scenes=[]
+        def capture(legends,canvas):
+            scenes.append((legends,canvas));return original(legends,canvas)
+        with patch.object(m,'_render',capture):
+            for tile_size in (2,3,4):
+                for seed in range(5):
+                    random.seed(84000+seed)
+                    p=m.generate(height=30,width=30,sides=['left','right'],
+                                 tile_size=tile_size,hard_tile=True)
+                    legends,canvas=scenes[-1]
+                    for leg in legends:
+                        tile=np.asarray(leg['tile']);a,b=sorted(set(tile.flat))
+                        swapped=np.where(tile==a,b,a)
+                        for base in (tile,np.fliplr(tile)):
+                            for k in range(4):self.assertFalse(np.array_equal(swapped,np.rot90(base,k)))
+                        k={'up':0,'right':3,'down':2,'left':1}[leg['arrow']]
+                        if k:self.assertFalse(np.array_equal(tile,np.rot90(tile,k)))
+                    self.assertEqual(p['output'],grid(call(solver('a32d8b75'),p['input'])))
+
+    def test_legend_canvas_controls_reject_wrong_type_and_unreachable_width(self):
+        m=importlib.import_module('tasks.task_a32d8b75');canvas=[[1]*8 for _ in range(13)]
+        for kw in ({'canvas':canvas,'height':13.0},{'canvas':canvas,'width':16},
+                   {'hard_tile':1},{'tile_size':True},{'height':13,'tile_size':3}):
+            with self.assertRaises(ValueError):m.generate(**kw)
+        random.seed(84000)
+        p=m.generate(height=13,width=11,sides=['left'],tile_size=2,hard_tile=True)
+        self.assertEqual((len(p['input']),len(p['input'][0])),(13,11))
+        self.assertEqual(p['output'],grid(call(solver('a32d8b75'),p['input'])))
+
 if __name__=='__main__':unittest.main()

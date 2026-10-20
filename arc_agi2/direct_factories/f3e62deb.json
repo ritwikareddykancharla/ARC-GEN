@@ -1,0 +1,69 @@
+{
+  "task_id": "f3e62deb",
+  "factory_sha256": "aa6b04a309d8c2c284a75be66afdca7cc46d68b60c4c09c61201feee1ef98a25",
+  "constructor_sha256": "fb8ac872f35427829f0e909baa81c1feeb4f36936457bd057048f3e9c422c640",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 146401219549394,
+  "d4": 7,
+  "unique_base_inputs": 64,
+  "seconds": 11.787235582945868,
+  "finite_default_domain": {
+    "exhaustive": true,
+    "augmented_checks": 1024,
+    "cases_checked": 64
+  },
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The generator draws one hollow 3x3 square on a background of colour 0. The square slides in a straight line until it touches an edge of the grid. Its colour sets the direction: 3 goes left, 4 down, 6 up, 8 right. The factory turns each direction vector into visible coordinates. For d4>=4 it first mirrors the vector horizontally (dx -> -dx), then rotates it clockwise d4%4 times ((dy,dx) -> (dx,-dy)). It keys each direction by the visible colour palette[c]. The emitted program works in visible coordinates and does the following: (1) Take palette[0] as the background, falling back to the most common colour if palette[0] is absent. (2) Find the 4-connected single-colour objects. (3) Clear them all. (4) Look up each object's direction. (5) Shift the object so its bounding box touches the edge in that direction. The other axis stays fixed. The colour-to-direction table is the generator's real rule, so colour 3 (left) is handled even though it never appears in training. The rule text calls the 'left' choice for colour 3 a guess, but the generator confirms it. For colours outside the table there is a fallback: the direction is learned from the demos, or else the one unused direction is chosen. This never happens in the generator's domain.",
+    "limitations": "Nothing in the fixtures contradicts the rule. Colour 3 appears only in a test pair. Its direction (left) cannot be inferred from the training demos and comes from the generator's fixed colour-to-direction table. A solver that only looked at the demos would have to guess, so the host may want to review this. The program assumes objects never overlap after sliding, which holds because there is only one square per grid. Colours outside the palette-mapped set {3,4,6,8} use the demo-learned or unused-direction fallback, which is outside the constructor's domain. I have not run any tests.",
+    "independent_source_review": {
+      "verdict": "hold",
+      "mechanism": "One hollow 3x3 square (colour in {3,4,6,8}, row/col in 2..5) on a 10x10 background slides in a straight line until it touches an edge. The direction comes from a fixed colour table: 3 goes left, 4 down, 6 up, 8 right. The other axis is unchanged. The factory maps each base direction vector through D4: optional horizontal mirror (dx -> -dx), then k clockwise turns ((dy,dx) -> (dx,-dy)). It keys the result by palette[c] and emits a solver that works directly in visible coordinates: find components, clear them, look up TABLE[colour], shift the bounding box to the edge.",
+      "evidence": [
+        "Constructor: `color = common.choice([3, 4, 6, 8])`, then `if color == 3: col = 0`, `if color == 4: row = 7`, `if color == 6: row = 0`, `if color == 8: col = 7`. Position never decides direction; colour alone does. This is an arbitrary colour-to-direction lookup.",
+        "Canonical fixtures demonstrate 6 up (pairs 1-2), 8 right (pairs 3, 5, 6) and 4 down (pair 4). Test 1 uses colour 3, which appears in no demonstration. The archived rule itself says 'left' for colour 3 'is a guess, not something the training data proves'.",
+        "Emitted solver: `_direction` returns `TABLE[c]` first. TABLE holds all four palette-mapped colours, so for every in-domain input the demonstrations are never read. `_learn` and the unused-direction fallback are unreachable in-domain. The answer for every colour is therefore a hard-coded constant, not something the episode teaches.",
+        "Context check: 'f3e62deb' is not in the special-case list of `require_colour_evidence`, so it falls to the generic else branch. That branch only looks for rows containing exactly two non-background cells of different colours forming the pair {palette[4],palette[7]} or {palette[1],palette[8]}. A single-colour square never produces such a pair, so no requirement is ever added. No context check enforces that the query colour's direction was demonstrated.",
+        "`_require_rule_agreement` is not invoked for this task. The generic D4 policy (rejecting conflicting answers across D4 variants of the same visible episode) does not detect a missing colour-to-direction association.",
+        "Reachable failures in synthetic episodes: demonstrations are independent draws of colour from {3,4,6,8}. A query of colour 4 with demonstrations showing only 6 and 8 leaves two directions (down/left) unresolved, so even elimination fails. A query whose colour matches no demonstrated colour is admitted with the table answer. Colour 3 is never inferable unless the other three colours all appear and elimination is accepted as a rule.",
+        "Geometric parts check out. The background is palette[0]. A single object means slides cannot collide. Shift amounts are -y0, H-1-y1, -x0, W-1-x1, which match the constructor (row 0/7, col 0/7 on a 10x10 grid with a 3-wide box). No whole-grid untransform/native-solve/retransform wrapper is used. The host audit (1000 fresh pairs, 8000 augmented checks, 16 fixture variants) passed, consistent with the D4 vector mapping matching the augmentation convention."
+      ],
+      "blocking_issues": [
+        "Arbitrary colour-to-direction association without demonstration evidence. The constructor's direction is a pure lookup on colour (`if color == 3: col = 0`, etc.). No context check for task f3e62deb requires that the query colour's direction appear in the demonstrations: the generic else branch of `require_colour_evidence` is inert for single-colour squares. The emitted solver hard-codes all four directions in TABLE and ignores demonstrations. Synthetic episodes whose query colour was not demonstrated (e.g. colour 4 query with only 6/8 demos, or any colour-3 query) would be admitted with labels determined by a hidden constant rather than visible evidence. The canonical test 1 (colour 3) has exactly this problem, as the archived rule concedes.",
+        "Matching host execution does not settle this: the factory copies the constructor's undemonstrated colour-3 = left constant into TABLE, so agreement with generated labels is automatic, not evidence that the episode determines the answer."
+      ],
+      "nonblocking_limits": [
+        "D4 vector mapping (mirror dx, then k clockwise turns) was checked only for internal consistency of the rotation formula. The flip/rotate composition order depends on the augmentation module, which was not supplied. The passing host audit across augmented checks suggests it matches, but I did not verify this independently.",
+        "`_bg` falls back to the most common colour when palette[0] is absent. Out of domain; the constructor always fills with colour 0.",
+        "The `_learn` and unused-direction fallbacks are out-of-domain defensive code and are not blockers in themselves. The 'unused direction' order ((0,-1),(1,0),(-1,0),(0,1)) is in base coordinates, not D4-transformed, but it is only reachable for off-domain colours.",
+        "Objects are assumed not to collide after sliding. This holds because the constructor draws exactly one square.",
+        "Only 64 unique base inputs exist (4 rows x 4 cols x 4 colours). Coverage is small but complete."
+      ],
+      "required_context_checks": [
+        "Add a task-specific evidence check for f3e62deb. For each query, take the visible colour of its square. Require some demonstration whose input contains that colour and whose output shows the square displaced to the edge in the corresponding visible direction. Otherwise raise MissingColourEvidence.",
+        "Alternatively, if inference by elimination is deliberately admitted, require that the demonstrations reveal three distinct colours with three distinct directions before a fourth, undemonstrated colour can be queried. Document that this assumes a bijection the generator does not visibly teach. Reject episodes where two or more directions remain open.",
+        "Decide explicitly whether the canonical fixture test 1 (colour 3, never demonstrated) is admissible. Under the stated policy it lacks demonstration evidence for its colour association; the archived rule itself labels it a guess."
+      ],
+      "task_id": "f3e62deb",
+      "factory_sha256": "aa6b04a309d8c2c284a75be66afdca7cc46d68b60c4c09c61201feee1ef98a25",
+      "constructor_sha256": "fb8ac872f35427829f0e909baa81c1feeb4f36936457bd057048f3e9c422c640"
+    },
+    "host_review": "Resolved independent hold for synthetic episodes with explicit query-colour motion demonstration gate. Original canonical colour-3 query remains underdetermined without a demonstrated association; labels unchanged. No bijection-by-elimination assumption. Exhaustively verified all64 default inputs and1024 D4/palette checks; finite-domain shortfalls must be reported.",
+    "finite_host_review": {
+      "task_id": "f3e62deb",
+      "exhaustive": true,
+      "parameter_cases": 64,
+      "unique_inputs": 64,
+      "augmented_checks": 1024,
+      "scope": "complete default row/column/colour domain",
+      "factory_sha256": "aa6b04a309d8c2c284a75be66afdca7cc46d68b60c4c09c61201feee1ef98a25",
+      "constructor_sha256": "fb8ac872f35427829f0e909baa81c1feeb4f36936457bd057048f3e9c422c640"
+    }
+  }
+}

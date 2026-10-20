@@ -1,0 +1,46 @@
+{
+  "task_id": "f35d900a",
+  "factory_sha256": "b4813b3823641992c61dd5d74d397cfb4684439823fd504ceef99b6bdfee3b0a",
+  "constructor_sha256": "9ce95cc4e3df7a6c54d4a673865d5abc54c9fe4aef0388efee263647b29433fc",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 24933867604156,
+  "d4": 7,
+  "unique_base_inputs": 999,
+  "seconds": 7.762698959093541,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "There are four corner pixels in two colours. Diagonally opposite corners share a colour. Each corner keeps its pixel and gets a 3x3 ring (clipped at the grid border) in the other colour. Then, between each pair of neighbouring corners that share a row or a column, gray dots fill the background gap. The gap runs from a+2 to b-2 and has length n. A cell at offset i is dotted when min(i, n-1-i) is even, so dots start next to each ring and alternate inward.\n\nThis matches the generator exactly. Its dots at col+dc and col+wide-dc, for even dc up to wide//2, are the same cells as the min-offset rule. That rule is symmetric under reversal and treats rows and columns the same way. So in visible coordinates the mechanism is identical under every D4 transform: it handles both horizontal and vertical sides with no orientation-specific direction. The palette only fixes two constants: background = palette[0] and dot colour = palette[5]. The two corner colours are read from the pixels, and the ring colour is the partner colour found in the input.",
+    "limitations": "Assumes the generator's domain: one background colour (palette[0]) and exactly two non-gray, non-background corner colours. The corner colours must not equal palette[0]; this assumes the generator's random_colors excludes black as well as gray, which is not confirmed from the source shown. Assumes box sides of at least 5, so rings never overlap. If there are more or fewer than two colours, each pixel's ring uses its own colour as a fallback. Demonstrations are not used, because the rule is fully determined by the query. No constructor defects or fixture contradictions found: all four train pairs and the test pair agree with the uniform rule. Untested; no code was run.",
+    "independent_source_review": {
+      "verdict": "accept",
+      "mechanism": "The input has four single pixels at the corners of an axis-aligned rectangle. Diagonally opposite corners share a colour, and the pair uses two colours. Each corner keeps its pixel and gets a 3x3 ring in the other colour of the pair, clipped at the grid border. Between consecutive corners on the same row or column, the background gap runs from a+2 to b-2 with length n. A cell at offset i in that gap becomes gray when min(i, n-1-i) is even. The emitted solver reads the corners, colours and gaps directly in visible coordinates. It specializes only BG=palette[0] and GRAY=palette[5].",
+      "evidence": [
+        "Constructor dots, for the horizontal side: for even dc in range(2, 1+wide//2), it paints col+dc and col+wide-dc on rows row and row+tall. Let dc=x-col and dc'=wide-dc. Because dc+dc'=wide, min(dc,dc') <= wide//2 always holds. The constructor's set is therefore exactly {x : min(dc,dc') even, both >= 2}. The solver's offset i=x-col-2 has n-1-i = dc'-2, so min(i, n-1-i) even is the same condition. When wide is odd (dc=3, dc'=4 for wide=7), both sides correctly leave the cell undotted. Vertical sides are handled identically with tall.",
+        "The solver's gap range is range(a+2, b-1), which gives n = b-a-3 = wide-3. This matches the constructor gap col+2..col+wide-2.",
+        "Rings: the constructor writes colors[1-idx] in the 3x3 block and then restores the centre to colors[idx]. That equals 'ring in the partner colour'. The solver's other-map has two colours, so it swaps them. wide and tall are at least 5, so rings at col+1 and col+wide-1 never overlap. Dots are written after rings and lie at dc in [2, wide-2], so they never touch ring cells.",
+        "Bounds: row >= 1 and row+tall <= height-2, and the same holds for columns. Random scenes therefore never clip. Fixture 1 (col=1) has a ring touching column 0, which is in range, and the solver's clipping also covers it.",
+        "Colours: common.random_colors draws from list(range(1,10)) minus gray. Corner colours therefore never equal background 0 or gray 5. This resolves the prior note's uncertainty about black exclusion. After palette permutation the two corner colours stay distinct from palette[0] and palette[5].",
+        "D4: the rule is symmetric under reversing a side and under swapping rows with columns. The solver processes both axes the same way with no direction constant. No untransform wrapper is used.",
+        "No hidden latent decides the output. All of wide, tall, the colours and the positions are visible in the input. The ring colour is the other input colour. Gray is a constant colour shown in every demonstration, and none of the arbitrary colour/shape associations need extra context evidence.",
+        "The host audit passed: 1000 fresh pairs, 8000 augmented checks and 16 fixture variants, with 999 unique base inputs."
+      ],
+      "blocking_issues": [],
+      "nonblocking_limits": [
+        "The fallback other={c:c} for colour counts other than 2 is outside the constructor's domain (exactly two corner colours are always drawn) and is never reached.",
+        "The solver relies on a palette constant for the background rather than detecting it. This is valid because the constructor always uses background 0, which maps to palette[0].",
+        "The demonstrations are not consulted. The rule is fully determined by the query input plus the gray and background constants that every demonstration shows."
+      ],
+      "required_context_checks": [],
+      "task_id": "f35d900a",
+      "factory_sha256": "b4813b3823641992c61dd5d74d397cfb4684439823fd504ceef99b6bdfee3b0a",
+      "constructor_sha256": "9ce95cc4e3df7a6c54d4a673865d5abc54c9fe4aef0388efee263647b29433fc"
+    },
+    "host_review": "Host checked full constructor/factory. Opposite corner colours are distinct, rectangles have gaps >=5; the symmetric min-distance parity matches dot placement. Gray appears in every demonstration. No axis specialization or arbitrary association."
+  }
+}

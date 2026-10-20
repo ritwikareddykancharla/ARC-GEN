@@ -1,0 +1,50 @@
+{
+  "task_id": "f3cdc58f",
+  "factory_sha256": "81c2164bbfb8fd3e335c16ef06186c432b50bf3c3e4ad7afb5b939673f3204d9",
+  "constructor_sha256": "763478e511a8fd9bd9ec13580b1bd30bfa19642e3a8f356018efa81c7c328f94",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 235292718732683,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 4.46407020802144,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The original rule builds a bar chart. Original colour c (1..4) gets a bar in column c-1. The bar stands on the bottom row and its length equals the number of input cells of that colour. The background is colour 0.\n\nThe factory works out the D4 geometry once. It sends three reference points of a 10x10 grid through the stated transform (reverse each row if d4>=4, then rotate clockwise d4%4 times):\n- the base of bar 0 at (9,0),\n- the next cell up that bar at (8,0),\n- the base of bar 1 at (9,1).\n\nFrom these points it gets:\n- the visible corner where the bars start, stated as the low or high end of each axis,\n- the growth vector, which says which way a bar extends,\n- the ordering vector, which says where each next bar sits.\n\nThese become constants in the emitted program. The program draws directly in visible coordinates and never rotates the grid. For example, bars become horizontal and grow from the left edge under d4=1. Reflections reverse the order of the bars, the side the bars grow from, or both, as the transform requires.\n\nColour roles are fixed constants. The bar order is palette[1], palette[2], palette[3], palette[4], following the original colour index rather than the sorted visible values. Without this, a random palette would scramble the bar order. The background is palette[0].\n\nCounts are taken over the whole query grid. Each bar is capped at the length of the growth axis, and bars beyond the ordering axis length are skipped. Both checks matter only for non-square grids; they mirror the archived solver's min(n, H) and i < W guards. The demonstrations are not needed.",
+    "limitations": "- **Palette must be a permutation.** If palette[0] collided with a foreground colour, the role constants would be ambiguous.\n- **Absent colours are not compacted.** The generator guarantees that all four colours appear. If one were missing, its slot would stay empty. The archived solver instead uses sorted present colours, which shifts the later bars over. The two agree on the constructor's domain.\n- **Rectangular grids:** the bar base is placed at the transformed bottom edge of whatever visible size is given. The constructor itself only makes 10x10 grids, and a count can never exceed 10 there.\n- **No constructor defects found.** The approved fixtures are consistent with the rule.\n- **Not tested.** The factory has not been run; it still needs the host's fixture and fresh-pair verification.",
+    "independent_source_review": {
+      "verdict": "accept",
+      "mechanism": "Bar chart of colour counts. In native coordinates, colour c (1..4) gets a bar in column c-1. The bar stands on the bottom row and is as tall as the number of colour-c cells in the input; everything else is background. The factory sends three reference points through the stated D4 transform: base (9,0), next-up (8,0) and next-bar base (9,1). From these it derives the visible corner, a unit growth vector and a unit ordering vector, and emits them as constants. The emitted solver counts palette[1..4] over the whole query grid and draws the bars directly in visible coordinates. It never rotates the grid.",
+      "evidence": [
+        "Constructor: each colour 1..4 is placed randint(2,8) times at random flat indices. Later placements may overwrite earlier ones. The rejection loop guarantees every colour has at least 1 cell, so each count is between 1 and 8, which is below 10. No bar is ever clipped.",
+        "The label uses colors.count(color), the realised count after overwrites, not the hidden number of placement draws. The label therefore depends only on the visible input histogram; no hidden latent leaks into it.",
+        "Background: at most 32 non-zero cells in 100, so colour 0 is always the strict majority. The emitted solver uses palette[0] as BG, which is consistent.",
+        "Bar order follows the colour role (palette[1], palette[2], palette[3], palette[4]), not the sorted visible colour values. This is required under palette permutation. The archived solver's sorted(present colours) would scramble the order under a non-monotone palette but agrees on the native palette.",
+        "The colour-to-slot order is an arbitrary association once the palette is permuted, but every demonstration shows it. All four colours always appear with at least 1 cell, so every demo output shows all four bars in order. f3cdc58f is not in the episode-evidence task list, so no extra check applies. None is needed, because the evidence is intrinsic to every demo.",
+        "Orientation is taught by the demos. The corner and ordering axis follow from the bar sequence. The growth direction is the unique inward perpendicular from the corner. This holds even in the unlikely case where every bar has length 1.",
+        "vis() matches the stated convention: column flip if k>=4, then clockwise (r,c)->(c,H-1-r) with the dimensions swapped. Host audit: 8000 augmented pair checks and 16 fixture variants passed, confirming the convention matches the host augmentation.",
+        "Indexing: out[br + i*ER + j*DR, bc + i*EC + j*DC] with unit vectors pointing inward from a corner stays in bounds for i<4 and j<=8 on 10x10 grids.",
+        "The approved fixtures match the constructor and the rule. The test counts are 1\u00d76, 2\u00d77, 3\u00d78, 4\u00d74, matching the stated output."
+      ],
+      "blocking_issues": [],
+      "nonblocking_limits": [
+        "The glen/olen guards and the base placement on non-square grids are unexercised. The constructor only emits 10x10 grids.",
+        "An absent colour would leave its slot empty rather than compacting the later bars as the archived solver does. This is unreachable, because the constructor rejects scenes missing a colour.",
+        "The solver assumes the palette is a permutation, i.e. palette[0] does not collide with palette[1..4].",
+        "The demonstrations are ignored by the solver. This is acceptable because the orientation and colour-role constants are fully determined by every demo."
+      ],
+      "required_context_checks": [
+        "The host should confirm that augmented episodes apply one shared d4/palette to all demos and the query. The constants are episode-level, and every demo already shows all four colour slots and the orientation."
+      ],
+      "task_id": "f3cdc58f",
+      "factory_sha256": "81c2164bbfb8fd3e335c16ef06186c432b50bf3c3e4ad7afb5b939673f3204d9",
+      "constructor_sha256": "763478e511a8fd9bd9ec13580b1bd30bfa19642e3a8f356018efa81c7c328f94"
+    },
+    "host_review": "Host checked realized post-overwrite counts and rejection of absent colours. All four colour slots occur in every demo. augmentation.py applies horizontal flip first then clockwise rotations with shared bijective palette across episode; factory corner vectors match."
+  }
+}

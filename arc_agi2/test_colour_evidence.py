@@ -5,6 +5,47 @@ from .program_targets import make_record
 
 
 class ColourEvidenceTests(unittest.TestCase):
+    def test_corridor_start_must_be_taught_when_it_changes_query(self):
+        from tasks import task_f1bcbc2c as gen
+        weak = gen.generate(flop=0, col=3, pos=-1, lengths=[4, 3, 7])
+        strong = gen.validate()['train'][1]
+        for d4 in range(8):
+            pal = [3, 9, 0, 7, 2, 8, 1, 6, 4, 5]
+            a, b = apply_episode([weak, strong], d4, pal)
+            with self.assertRaises(MissingColourEvidence):
+                require_colour_evidence('f1bcbc2c', [a], [{'input': b['input']}], pal, d4)
+            require_colour_evidence('f1bcbc2c', [a, b], [{'input': b['input']}], pal, d4)
+            # Ambiguous start is harmless when both starts give the same answer.
+            require_colour_evidence('f1bcbc2c', [a], [{'input': a['input']}], pal, d4)
+
+    def test_tiled_lines_need_axis_and_fill_evidence(self):
+        from tasks import task_f5b8619d as gen
+        axis_hidden = gen.generate(size=2, rows=[0, 1], cols=[0, 1], color=2)
+        fill_hidden = gen.generate(size=2, rows=[0, 1], cols=[0, 0], color=2)
+        strong = gen.generate(size=3, rows=[0], cols=[1], color=2)
+        for d4 in range(8):
+            pal = [3, 9, 0, 7, 2, 8, 1, 6, 4, 5]
+            a, b, q = apply_episode([axis_hidden, fill_hidden, strong], d4, pal)
+            for weak in (a, b):
+                with self.assertRaises(MissingColourEvidence):
+                    require_colour_evidence('f5b8619d', [weak], [{'input': q['input']}], pal, d4)
+            require_colour_evidence('f5b8619d', [a, b], [{'input': q['input']}], pal, d4)
+
+    def test_slide_query_colour_needs_demonstrated_motion(self):
+        from tasks import task_f3e62deb as gen
+        a = gen.generate(row=3, col=3, color=6)
+        b = gen.generate(row=4, col=4, color=3)
+        for d4 in range(8):
+            pal = [3, 9, 0, 7, 2, 8, 1, 6, 4, 5]
+            weak, strong = apply_episode([a, b], d4, pal)
+            q = {'input': strong['input']}
+            with self.assertRaises(MissingColourEvidence):
+                require_colour_evidence('f3e62deb', [weak], [q], pal, d4)
+            require_colour_evidence('f3e62deb', [weak, strong], [q], pal, d4)
+            unchanged = dict(strong, output=strong['input'])
+            with self.assertRaises(MissingColourEvidence):
+                require_colour_evidence('f3e62deb', [weak, unchanged], [q], pal, d4)
+
     def test_new_reviewed_roles_need_demonstrated_output_colours(self):
         from tasks import task_ed74f2f2 as glyph, task_f2829549 as nor
         from tasks import task_ef135b50 as gap, task_f0afb749 as ray

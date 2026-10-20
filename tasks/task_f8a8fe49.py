@@ -36,12 +36,14 @@ def generate(rows=None, cols=None, wide=None, tall=None, brow=None, bcol=None,
     brow, bcol = 3, common.randint(2, 5)
     while True:
       pixels = common.random_pixels(wide - 2, tall - 4, 0.75)
+      if not pixels: continue
       rows, cols = zip(*pixels)
       if tall % 2:  # If height is odd, we can't have pixels in the middle.
         rows = [r if r * 2 != tall - 5 else 0 for r in rows]
       # Make sure the two halves are diagonnally connected.
       top = [(r, c) for r, c in zip(rows, cols) if r * 2 < tall - 5]
       bottom = [(r, c) for r, c in zip(rows, cols) if r * 2 > tall - 5]
+      if not top or not bottom: continue
       if not common.diagonally_connected(top): continue
       if not common.diagonally_connected(bottom): continue
       # Make sure the two halves are centrally aligned.

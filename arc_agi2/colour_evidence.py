@@ -75,13 +75,83 @@ def require_colour_evidence(task_id, demonstrations, queries, palette=None, d4=0
                        'e45ef808', 'e345f17b', 'e3497940',
                        'e760a62e', 'e8593010', 'e99362f0', 'ea9794b1', 'e6de6e8f',
                        'ed74f2f2', 'f2829549', 'ef135b50', 'f0afb749',
+                       'f1bcbc2c', 'f5b8619d', 'f3e62deb',
                        '37d3e8b2', 'ba9d41b8', 'd2abd087', 'e39e9282'):
         return
     palette = list(range(10)) if palette is None else palette
     bg = palette[0]
     colours = lambda g: {c for row in g for c in row} - {bg}
     required, seen = set(), set()
-    if task_id == 'd2abd087':
+    if task_id == 'f1bcbc2c':
+        wall, plug, paint = palette[7], palette[9], palette[8]
+        def variants(g):
+            h, w = len(g), len(g[0])
+            borders = [([(0, c) for c in range(1, w-1)], (0, 1)),
+                       ([(r, w-1) for r in range(1, h-1)], (1, 0)),
+                       ([(h-1, c) for c in range(1, w-1)], (0, 1)),
+                       ([(r, 0) for r in range(1, h-1)], (1, 0))]
+            results = []
+            for cells, (dy, dx) in borders:
+                starts = [(r, c) for r, c in cells if g[r][c] == bg
+                          and g[r-dy][c-dx] == g[r+dy][c+dx] == wall]
+                out = [row[:] for row in g]
+                if len(starts) != 1:
+                    results.append(out)
+                    continue
+                current = starts[0]
+                visited = {current}
+                out[current[0]][current[1]] = paint
+                while True:
+                    r, c = current
+                    following = [(r+dr, c+dc, dr, dc) for dr, dc in
+                                 ((1, 0), (-1, 0), (0, 1), (0, -1))
+                                 if 0 <= r+dr < h and 0 <= c+dc < w
+                                 and (r+dr, c+dc) not in visited
+                                 and g[r+dr][c+dc] in (bg, plug)]
+                    if len(following) != 1:
+                        break
+                    y, x, dr, dc = following[0]
+                    if g[y][x] == plug and not (
+                            0 <= y+dr < h and 0 <= x+dc < w and g[y+dr][x+dc] == bg):
+                        break
+                    out[y][x] = paint
+                    current = (y, x)
+                    visited.add(current)
+                results.append(out)
+            return results
+        _require_rule_agreement(task_id, demonstrations, queries, variants)
+        return
+    elif task_id == 'f5b8619d':
+        # A symmetric demo can conceal the line axis. A full coloured line can
+        # conceal the new fill colour. Compare both axes and all ten colours.
+        def variants(g):
+            h, w = len(g), len(g[0])
+            tile = [[g[r % h][c % w] for c in range(2*w)] for r in range(2*h)]
+            results = []
+            for axis in (0, 1):
+                occupied = {c if axis == 0 else r
+                            for r, row in enumerate(tile) for c, v in enumerate(row) if v != bg}
+                for fill in range(10):
+                    results.append([[fill if v == bg and (c if axis == 0 else r) in occupied else v
+                                     for c, v in enumerate(row)] for r, row in enumerate(tile)])
+            return results
+        _require_rule_agreement(task_id, demonstrations, queries, variants)
+        return
+    elif task_id == 'f3e62deb':
+        roles = {palette[c] for c in (3, 4, 6, 8)}
+        for demo in demonstrations:
+            for ink in colours(demo['input']) & roles:
+                before = [(r, c) for r, row in enumerate(demo['input']) for c, v in enumerate(row) if v == ink]
+                after = [(r, c) for r, row in enumerate(demo['output']) for c, v in enumerate(row) if v == ink]
+                if len(before) == len(after) and before and before != after:
+                    shifts = {(y-r, x-c) for (r, c), (y, x) in zip(before, after)}
+                    if len(shifts) == 1:
+                        dr, dc = next(iter(shifts))
+                        if (dr == 0) != (dc == 0):
+                            seen.add(ink)
+        for query in queries:
+            required.update(colours(query['input']) & roles)
+    elif task_id == 'd2abd087':
         # Both branches have arbitrary paint colours; observe a corresponding
         # demonstration before asking for that branch on the query.
         for demo in demonstrations:

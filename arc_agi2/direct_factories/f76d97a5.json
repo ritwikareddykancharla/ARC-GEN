@@ -1,0 +1,45 @@
+{
+  "task_id": "f76d97a5",
+  "factory_sha256": "3c97ae6bfae503d63f2ca518fe58723a30a22072f70ea7da28a03709679f61ad",
+  "constructor_sha256": "1b8488c7519f68666bfbd35b500199e93b4dec8f94963c1c337dcaa4d865b2a1",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 120979241287251,
+  "d4": 7,
+  "unique_base_inputs": 980,
+  "seconds": 1.3867456669686362,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The task works cell by cell, so the D4 transform has no effect on the mechanism. Only the colour roles need to be specialised. The gray marker colour 5 becomes the constant palette[5], and the output background 0 becomes the constant palette[0]. The emitted solve works directly on the visible query grid. It finds the one colour C that is not gray, builds a canvas of the same shape (rectangular is fine) filled with palette[0], and paints C onto every gray cell. As a result, every C cell ends up as palette[0] and every gray cell ends up as C. This follows the generator exactly: the input is filled with color plus gray pixels at the chosen positions, and the output is zeros with color at those same positions.",
+    "limitations": "The generator always produces square grids of size 3-5 with between size and (size*size+1)//2 gray pixels, so both colours always appear in the input. If a query ever contained only gray, the program falls back to C = palette[0], which matches the archived solver's choice of 0. If a query ever contained more than one non-gray colour (outside the constructor's domain), the program picks the most frequent one, breaking ties by lowest value. That is a defensive heuristic, not part of the puzzle rule. The fixtures agree with the uniform rule. One note: the validate() call for the 6-pair passes rows with 11 entries but cols with only 10. zip truncates this silently, so the fixture still matches the rule, but it is a harmless constructor inconsistency the host may want to review. No tests were run.",
+    "independent_source_review": {
+      "verdict": "accept",
+      "mechanism": "Per-cell colour swap. The input holds exactly two colours: gray (palette[5]) and one other colour C. The output starts as a canvas of palette[0], and C is painted on every gray cell. Every C cell therefore becomes palette[0] and every gray cell becomes C. The emitted solver reads C directly from the visible query input and applies the swap in visible coordinates, with no untransform/retransform wrapper.",
+      "evidence": [
+        "Constructor: input = common.grid(size, size, color) with gray at the chosen pixels; output = common.grid(size, size) (zeros) with color at those same pixels. The label depends only on the visible gray positions and the visible fill colour, so no hidden latent decides it.",
+        "Both colours are always visible. num_pixels ranges from size (>=3) to (size*size+1)//2, which is always less than size*size, so at least one gray cell and at least one C cell exist.",
+        "common.random_color(exclude=[gray()]) draws from list(range(1,10)) minus 5, so C is never 0 or 5. After a palette permutation, palette[C] is never palette[0] or palette[5], so the canvas colour and the painted colour cannot collide.",
+        "The rule is purely cellwise, so the D4 transform cannot change it. The factory only specialises the colour roles GRAY=palette[5] and ZERO=palette[0]. Both roles are constant across all demonstrations and are shown in every pair (gray turns into C, and C turns into the 0 colour).",
+        "No arbitrary lookup is involved. C is read from the query input itself, and the demonstrations show the change from C to palette[0] directly. The task is not on the colour-evidence list, and none is needed.",
+        "Fixtures were checked by hand. Pair 1 (6): zipping rows[0..9] with cols gives (0,0),(0,1),(1,1),(1,2),(2,2),(2,3),(3,3),(3,4),(4,0),(4,4), which matches the 10 fives exactly. Pairs 2 and 3 and the test pair also match the uniform rule.",
+        "The host audit passed: 1000 fresh pairs and 8000 augmented checks, with no sampler rejections."
+      ],
+      "blocking_issues": [],
+      "nonblocking_limits": [
+        "validate() for the colour-6 pair passes 11 row entries but only 10 col entries. zip silently drops the trailing row value 4, so the fixture is still correct. This is a cosmetic inconsistency in the constructor, not a label error.",
+        "Two defensive fallbacks fall outside the constructor's domain and cannot be reached by it: the most-frequent non-gray colour with ties broken by lowest value, and C=ZERO for an all-gray input. Neither is part of the rule.",
+        "The constructor only produces square grids of size 3-5. The solver is shape-agnostic, so a rectangular grid after augmentation is not a concern."
+      ],
+      "required_context_checks": [],
+      "task_id": "f76d97a5",
+      "factory_sha256": "3c97ae6bfae503d63f2ca518fe58723a30a22072f70ea7da28a03709679f61ad",
+      "constructor_sha256": "1b8488c7519f68666bfbd35b500199e93b4dec8f94963c1c337dcaa4d865b2a1"
+    },
+    "host_review": "Host checked generator and cellwise solver. Both gray and object colours always present; every demo exposes erased canvas colour. Fallbacks unreachable in default domain; rectangularity independent."
+  }
+}

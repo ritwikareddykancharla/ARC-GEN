@@ -35,7 +35,7 @@ recorded. Passing finite audits does not prove unrestricted generalization.
 
 - 213 native direct-coordinate certificates admitted after fresh audits and
   supplied-fixture checks.
-- 760 admitted factories. Each passed 1,000 fresh pairs, 8,000 augmented pair
+- 774 admitted factories. Each passed 1,000 fresh pairs, 8,000 augmented pair
   checks and 16 supplied-fixture variants. Their audit records retain draft
   limitations and source/constructor hashes. These checks are finite evidence,
   not proof of correctness on every generated input.
@@ -46,7 +46,7 @@ recorded. Passing finite audits does not prove unrestricted generalization.
   counts must be computed as a union, not added.
 - Local exporter test: 18 fresh base episodes, 144 augmented PNG/program/grid
   records. It requested 20 bases and reported a two-episode shortfall.
-- The union currently admits 979 of 1,120 families; 141 still need direct
+- The union currently admits 993 of 1,120 families; 127 still need direct
   augmented program admission. Constructor coverage and program coverage are
   different gates.
 - Synthetic labels for `00d62c1b` now fill every enclosed background component,
@@ -595,3 +595,25 @@ inputs (864 orientation/palette checks), and `eb281b96` has 36 (576 checks).
 They require explicit diversity shortfalls, not padding to 1,000 unique inputs.
 All 306 independent source reviews are now complete; review completion does not
 automatically admit a program. Bulk generation and model training remain unlaunched.
+
+## 993-family checkpoint
+
+Fourteen additional factories passed host review. Same-query rule checks now
+require corridor start-side evidence and distinguish tiled-line axis and fill
+colour. The colour-to-edge family `f3e62deb` requires demonstrated movement for
+the query colour; its original colour-3 test remains underdetermined and is
+excluded by the teaching gate, without changing its benchmark labels.
+
+The complete-episode audit sampled 280 bases, accepted 268, excluded 12 for
+missing evidence, and verified 2,144 D4 records. `f3e62deb` has exactly 64
+default inputs, all checked in 1,024 D4/palette combinations. The 76 structural
+settings of `f8c80d96` passed 1,216 D4/palette checks, with all preferred candidate
+centres agreeing on the final painting. These checks do not expand the default
+size domain. See `reports/episode-evidence-993-audit.json`.
+
+The `f8a8fe49` sampler now retries empty content masks and empty halves before
+connectivity checks. A reproduced IndexError is removed; gripper sizes and
+original fixtures are preserved. The repaired sampler passed 1,000 fresh pairs
+and 8,000 augmented pair checks, with 970 unique inputs and no sampler failures.
+
+All 377 regression tests passed at this checkpoint.

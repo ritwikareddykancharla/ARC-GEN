@@ -1,0 +1,49 @@
+{
+  "task_id": "f1bcbc2c",
+  "factory_sha256": "e8ef5b441cb2155ae2a2e341ea12ba94c3d1671580dbd4583c69d2829c6fa674",
+  "constructor_sha256": "b56a86f8134e8a9a60f51e204abefffe279eff59a7ad3c7d0aa8af2eb992cacb",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 241818219886366,
+  "d4": 7,
+  "unique_base_inputs": 713,
+  "seconds": 7.353526457911357,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The generator draws a one-cell-wide corridor. It enters from the original top border and moves monotonically down and right, or down and left after the flop. It leaves through the bottom border or a side border. Every corridor cell is enclosed by walls of colour 7 in its 8-neighbourhood. Because the path is a monotone staircase, the corridor is a simple 4-connected chain, so walking it is deterministic.\n\nBoth ends of the corridor look like a background cell on a border flanked by two walls. Only the entry end is correct: the 9 test depends on the direction of travel. The factory therefore uses d4 to work out which visible side the original top border became. Flipping leaves the top in place, and each clockwise rotation moves it top->right->bottom->left, so the side is ('top','right','bottom','left')[d4%4]. The emitted program looks for the flanked opening on that side first. If several qualify, it prefers one whose inward neighbour is open. Other sides are only a fallback.\n\nColour roles are fixed constants from the palette: background palette[0], wall palette[7], plug palette[9], paint palette[8].\n\nThe walk paints each corridor cell in turn. When the next cell is the plug, it looks one more step in the same direction. If that cell is open background, the plug sits mid-run: it is painted over and the walk continues. If that cell is blocked or off the grid, the plug sits at a turn: the walk stops before it and the plug is left as is. This matches the generator. A plug at index pos inside a segment gets output colour 8. A plug at a corner reached by a vertical (entry-direction) run keeps 9, and all later cells stay background. Corners reached by a horizontal run are rejected by the generator.\n\nThe mechanism works directly in visible coordinates. It never rotates, inverts or remaps colours globally.",
+    "limitations": "The program relies on d4 to pick the entry side. If a scene happened to have no flanked opening on that side, it would fall back to scanning the other sides, which could pick the exit instead. The constructor never produces such a scene.\n\nI checked the constructor for defects and found none that are reachable. In one branch, a plug index equal to the final cell index after a vertical last segment would give an input with no 9 but an unpainted final cell. That case needs at least 12 path cells while pos is at most 9, so it cannot occur. The case after a horizontal last segment is rejected by the generator.\n\nThe demonstrations are not used, because the rule is fully determined by the visible structure. The fixtures agree with the uniform rule.\n\nThe optional per-run 'teaching stages' are not emitted; only the final grid is returned.\n\nNo tests have been run.",
+    "independent_source_review": {
+      "verdict": "accept",
+      "mechanism": "The constructor draws a one-cell-wide corridor as a monotone staircase. It enters at original top (0,col) with col in 1..4 (5..8 after flop), runs down and right (down and left after flop), alternates vertical and horizontal segments starting vertical, and exits through the bottom or side border. Every 0 cell 8-adjacent to the corridor becomes wall 7. A plug at index pos is either mid-run, where it is painted 8 and painting continues, or at a corner reached by a vertical run, where earlier cells are painted 8, the 9 stays and later cells stay 0. The emitted solver works in augmented visible coordinates. It picks the flanked border opening on START_SIDE=('top','right','bottom','left')[d4%4], walks the 4-connected corridor, and at a plug looks one step further in the same direction: if that cell is background it paints over the plug and continues, otherwise it stops. Colours are palette constants.",
+      "evidence": [
+        "Because the path is monotone, cells i<j satisfy Manhattan distance = j-i. Only consecutive corridor cells are 4-adjacent. All other 8-neighbours are walls or off-grid. The walk is therefore deterministic and the solver's direction priority order is irrelevant.",
+        "Mid-run plug: the cell beyond it is the next corridor cell, which is 0 in the input. The solver paints through, matching `output[r][c] = color` (8).",
+        "Corner plug: generated only when rdir==1 (the `if rdir == 0: return None, None` check). The cell beyond it in the arrival direction, (r+1,c), is a wall: row 9 cannot carry a horizontal run because `(r == 9 and cdir)` rejects it. The solver stops before the plug, matching `output=9, color=transparent`.",
+        "The 'corner plug at the final cell' branch, where grid[r][c]=transparent overwrites the 9, is unreachable. A vertical last segment needs 9 vertical moves plus at least 2 horizontal moves, so the final index is at least 11, while pos<=9. (The prior notes say 12; the correct bound is 11, and the conclusion holds either way.) A horizontal last segment is rejected by the rdir==0 check.",
+        "Plugs cannot sit at the final cell or at index 0, since pos is in 6..9 and the final index is at least 11. The beyond-cell test therefore never runs off the grid in the mid-run case.",
+        "The top row has exactly one flanked opening. The only row-0 walls are (0,col\u00b11), because the first segment has length >=3. The exit opening lies on a different side, and START_SIDE disambiguates between the two ends.",
+        "No whole-grid untransform/solve/retransform: START_SIDE is a genuine orientation constant used directly in visible coordinates.",
+        "Host audit passed 1000 fresh pairs and 8000 augmented checks across D4 variants, plus 16 fixture variants. Wrong-side starts would differ on corner-plug cases, so this supports the d4%4 side mapping empirically."
+      ],
+      "blocking_issues": [],
+      "nonblocking_limits": [
+        "The d4->side mapping ('top','right','bottom','left')[d4%4] depends on the host augmentation convention for d4 4..7, which is not visible in the source. It is supported only by the passing augmented audit.",
+        "Fallback scanning of other sides can pick the exit opening, but the constructor always produces an entry-side opening, so this is out of domain.",
+        "Per-run teaching stages described in the rule are not emitted; only the final grid is returned.",
+        "Prior note's path-length bound is slightly misstated (11, not 12); the conclusion is unaffected."
+      ],
+      "required_context_checks": [
+        "Entry-side evidence: in episodes where every demonstration exits on the border opposite the entry and none contains a corner plug, both ends look like valid starts. A corner-plug query would then be ambiguous between them: the forward walk paints the head, the reverse walk paints the tail. No episode_evidence_checks branch covers f1bcbc2c, because the function returns immediately for it. The host should confirm that such episodes include a demonstration showing the start side (a corner-plug demo or a side-exit demo), or accept this as a taught orientation convention."
+      ],
+      "task_id": "f1bcbc2c",
+      "factory_sha256": "e8ef5b441cb2155ae2a2e341ea12ba94c3d1671580dbd4583c69d2829c6fa674",
+      "constructor_sha256": "b56a86f8134e8a9a60f51e204abefffe279eff59a7ad3c7d0aa8af2eb992cacb"
+    },
+    "host_review": "Host checked monotone corridor source and visible walking logic. Added input-only candidate-rule agreement over all four entry sides; a corner query is excluded unless demonstrations identify its output. Tests cover ambiguous through-path demos and corner teaching under all eight D4 transforms."
+  }
+}

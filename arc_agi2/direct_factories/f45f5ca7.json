@@ -1,0 +1,49 @@
+{
+  "task_id": "f45f5ca7",
+  "factory_sha256": "8dbe9498e372ba233838ee41b54391a9603e9d84b13e79a2a1aa99a112a6ed18",
+  "constructor_sha256": "3a67776ca2a4877dbcd144fe8b4b2c229ccd83147ee9dcd5932a020b348c8122",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 61834495085091,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 2.8806054999586195,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "In the original puzzle, a 10x10 grid has a single column of coloured cells on the west edge (column 0). Each cell keeps its row and moves to a column fixed by its colour: 8 to column 1, 2 to column 2, 4 to column 3, and 3 to column 4. Background 0 cells stay empty.\n\nThe factory rewrites this mechanism directly in visible coordinates. It tracks where the original eastward motion vector points after the transform. A row reversal flips east to west, and each clockwise rotation maps E to S, S to W, W to N, and N to E. The source edge is opposite the motion direction.\n\nThe emitted program places each non-background cell at the colour's offset measured from the source edge, along the motion axis:\n- E: column k\n- W: column W-1-k\n- S: row k\n- N: row H-1-k\n\nThe cell keeps its coordinate across the motion axis. Colour roles are fixed as palette constants: the background is palette[0], and the offsets map is keyed by palette[8], palette[2], palette[4] and palette[3]. Offsets are clamped to the grid bounds. Cells are painted in increasing offset order, which matches the archived solver.",
+    "limitations": "The colour-to-distance table is an arbitrary legend in the constructor (offsets list indexed by colour), not derived from the visible scene. It is therefore hard-coded via the palette rather than inferred from the demonstrations. Colours outside {2,3,4,8} (none occur in the generator's domain) are assigned offset 0, so they stay on the source edge; this follows the archived solver's fallback. The program assumes the background is palette[0]; the generator always uses 0 as background. Every generated scene has exactly one cell per row on the source line, so collisions cannot occur. If they did, cells would be painted in increasing offset order. No constructor defects or fixture contradictions were found: all three train pairs and the test pair agree with the uniform table. I have not run any tests.",
+    "independent_source_review": {
+      "verdict": "accept",
+      "mechanism": "The input is a 10x10 grid with a single line of coloured cells on one edge. Each cell keeps its cross-axis coordinate and is moved along the motion axis to a fixed distance from the source edge. The distance depends only on the cell's colour: 8\u21921, 2\u21922, 4\u21923, 3\u21924 in canonical colours. Background 0 cells stay empty. The factory tracks where the canonical east motion vector points after the D4 transform. It emits a direct visible-coordinate placement: E: x=k, W: x=W-1-k, S: y=k, N: y=H-1-k. Colours are remapped through the palette.",
+      "evidence": [
+        "Constructor: `offsets = [0, 0, 2, 4, 3, 0, 0, 0, 1, 0]` indexed by colour gives 2\u21922, 3\u21924, 4\u21923, 8\u21921, 0\u21920. The factory OFFSETS dict {palette[8]:1, palette[2]:2, palette[4]:3, palette[3]:4} matches exactly.",
+        "Colour 0 at offset 0 writes background onto background, so it is a no-op. The emitted program skips BG cells, which is equivalent.",
+        "The output depends only on the visible input (row position and colour). There is no hidden random latent beyond the input contents.",
+        "Default sampling loops until `len(set(colors)) == 5`. So every generated input contains 0, 2, 3, 4 and 8, and every demonstration shows all four colour\u2192distance associations.",
+        "Each row has exactly one source cell, so no collisions are possible. The paint order and the `min/max` clamps are unreachable, since k\u22644<10.",
+        "All three train fixtures and the test fixture reproduce the uniform table. The constructor `validate()` colours equal the fixture columns.",
+        "The emitted solver computes positions directly from visible H/W and the specialised direction. It has no whole-grid untransform/retransform wrapper.",
+        "Host audit: 1000 fresh pairs, 8000 augmented checks and 16 fixture variants passed with no sampler rejections. This is consistent with the D4 direction table (row reversal E\u2192W; clockwise E\u2192S\u2192W\u2192N)."
+      ],
+      "blocking_issues": [],
+      "nonblocking_limits": [
+        "The colour\u2192distance table is an arbitrary legend specialised as palette constants. This is justified because every generated demonstration exhibits all four colours.",
+        "Colours outside {2,3,4,8} fall back to offset 0, so they stay on the source edge. This is out of domain and excluded by the constructor.",
+        "BG is fixed to palette[0] rather than inferred. The constructor always uses 0 as background.",
+        "The direction mapping correctness relies on the host augmentation convention. I could not read the augmentation code, but the 8000 augmented checks support it."
+      ],
+      "required_context_checks": [
+        "f45f5ca7 is not in the episode_evidence_checks list, so require_colour_evidence returns immediately. No check is needed because the constructor's `len(set(colors)) == 5` guarantees every demonstration displays all four colour mappings. If the sampler or fixtures could ever omit a colour, a check would be required that every query colour appears in some demonstration."
+      ],
+      "task_id": "f45f5ca7",
+      "factory_sha256": "8dbe9498e372ba233838ee41b54391a9603e9d84b13e79a2a1aa99a112a6ed18",
+      "constructor_sha256": "3a67776ca2a4877dbcd144fe8b4b2c229ccd83147ee9dcd5932a020b348c8122"
+    },
+    "host_review": "Host checked full constructor/factory: all four movable colours and background required in each default sample, so every colour/distance association is taught. Direction rotation matches horizontal flip then clockwise turns."
+  }
+}

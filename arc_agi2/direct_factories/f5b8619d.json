@@ -1,0 +1,49 @@
+{
+  "task_id": "f5b8619d",
+  "factory_sha256": "100f6e9a9ef8bce82d7181e326f0a77a425fe99197684bd772b90b1d9be40f4c",
+  "constructor_sha256": "0a215bb867c2b5238658550ef1cc70edb42ec48cc7020c821514eef300fc5e21",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 235359513247207,
+  "d4": 7,
+  "unique_base_inputs": 837,
+  "seconds": 2.295331333996728,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The emitted program tiles the visible input 2x2. The tiling is the same under every D4 transform, so it needs no adjustment. It then marks lines: every line that contains a non-background cell gets its background cells turned into the fill colour, and the original coloured cells are kept. The background is palette[0] and the fill is palette[8]; both are constants. In the original task the marked lines are columns. Reversing each row and rotating 0 or 180 degrees keeps columns as columns. Rotating 90 or 270 degrees turns them into rows. So the factory picks the axis from d4 % 4 parity. The 'reverse each row' step does not change which axis is used, because the fill applies to whole lines in the tiled grid and the tiling is invariant under that reversal. Reflections change only which lines are marked, and that happens automatically because the program works in visible coordinates. The program also handles rectangular grids, where tiling uses h and w separately, and objects at the grid boundary.",
+    "limitations": "Assumes the background is palette[0] and that the object colour is never palette[0] or palette[8]. The generator excludes cyan (8). It presumably also excludes black (0) through common.random_color's defaults, but that was not verified. Demonstrations are not consulted; the roles come from the palette constants. No fixture contradicts the uniform rule. No generator defects were found: the generator only produces square grids, and the tiling and column fill are applied consistently. Nothing has been tested yet.",
+    "independent_source_review": {
+      "verdict": "accept",
+      "mechanism": "Tile the input 2x2 (out[i][j] = g[i mod h][j mod w]). Then, along the rule axis, every line of the tiled grid that holds a non-background cell has its background cells recoloured to the fill colour; the original coloured cells stay. In native orientation the axis is columns, the background is 0 and the fill is 8. The emitted solver specialises BG=palette[0], FILL=palette[8] and AXIS by d4 parity (cols for even quarter-turns, rows for odd). It runs directly on the visible augmented grid.",
+      "evidence": [
+        "Constructor: for each c in cols, output[r][c] and output[r][c+size] are set to cyan for every r. The coloured pixel is then written at all four tiled offsets, overwriting cyan. The result is identical to tile-then-fill-columns-containing-colour, which is what the archived transform does.",
+        "A tiled column c or c+size contains a coloured cell exactly when input column c is in cols. So 'tiled column contains non-bg' agrees with the constructor's column set. No indexing mismatch.",
+        "common.random_color picks from range(1,10) and the constructor excludes cyan(), so the object colour is never 0 or 8. This settles the prior note's unverified assumption. FILL and BG never collide with the object colour after the palette map.",
+        "A 2x2 tiling commutes with every D4 transform. For example, a 90\u00b0 rotation maps g[(2h-1-j) mod h][i mod w] to T(g) indexed mod its own dimensions. So the solver can tile in visible coordinates with no untransform.",
+        "Row reversal or column reversal keeps columns as columns. Only quarter-turn parity swaps columns and rows, so AXIS = cols if d4%4 even else rows is a genuine rule-axis specialisation, not a wrapper. The host audit passed 8000 augmented checks with d4 variants, which supports this reading of the D4 convention.",
+        "No hidden latent decides the label. The output depends only on visible pixel positions and the visible colour. There are no ties or selection rules.",
+        "All four fixture pairs reproduce exactly under the factory program with d4=0 and identity palette."
+      ],
+      "blocking_issues": [],
+      "nonblocking_limits": [
+        "The axis and fill colour are constants taught by demonstrations, not read from them. This is acceptable for a deterministic spatial rule with a fixed rule colour.",
+        "Some generated demonstrations do not identify the axis on their own. Column fill and row fill give the same output when the occupied input columns and rows each cover the whole grid, as with a permutation-pattern input such as size 2 with pixels (0,0),(1,1). If every demonstration in an episode were like this, the query axis would be untaught. This is rare and is covered by the D4-conflict context policy.",
+        "When num_pixels == size and all pixels share one input column, the output contains no fill colour. Such a demo does not show palette[8], but other demos usually do.",
+        "The constructor only produces square grids of size 2\u20136. The solver also handles rectangular grids, but that path is never exercised by the generator."
+      ],
+      "required_context_checks": [
+        "Confirm the host D4 convention: d4 = 4..7 means a quarter-turn count k plus a row or column reversal, not a transpose-based reflection. A transpose-based reflection would invert the axis parity. The passing 8000-check audit across variants suggests this holds.",
+        "Optionally confirm that the episode-level D4 conflict rejection covers episodes where every demonstration has full row and column coverage, which leaves the column-versus-row axis untaught."
+      ],
+      "task_id": "f5b8619d",
+      "factory_sha256": "100f6e9a9ef8bce82d7181e326f0a77a425fe99197684bd772b90b1d9be40f4c",
+      "constructor_sha256": "0a215bb867c2b5238658550ef1cc70edb42ec48cc7020c821514eef300fc5e21"
+    },
+    "host_review": "Host checked tiling/fill implementation. Existing D4 prompt-collision gate alone need not reject axis ambiguity for asymmetric query inputs. Added same-query candidate comparison over both fill axes and all ten fill colours; tests reject missing axis and missing fill evidence under all D4 transforms."
+  }
+}

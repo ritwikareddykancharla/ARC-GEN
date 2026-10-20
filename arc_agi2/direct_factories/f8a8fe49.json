@@ -1,0 +1,59 @@
+{
+  "task_id": "f8a8fe49",
+  "factory_sha256": "5bc84f763607ea7893b5ee189e6ba58cd4abed5d00d322a636e2852c806968c9",
+  "constructor_sha256": "58c4db88e962272d97d5d1d4b0a6b33082e146569380158b15f8f1336d5be225",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 121708040115851,
+  "d4": 7,
+  "unique_base_inputs": 970,
+  "seconds": 3.4110523329582065,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The emitted program works directly on the visible grid.\n\n- **Colour roles.** These are fixed by the palette: background is palette[0] and the bracket colour is palette[2]. Every other non-background cell is treated as a mover, which covers the gray pixels (palette[5]).\n- **Spines.** The generator transposes at random, so spine orientation cannot be fixed from d4 alone. It is inferred from pixels instead. The two full gripper lines each hold `wide` (5 to 7) bracket cells. Any perpendicular line holds at most 4. So the program counts bracket cells per row and per column. The orientation with the larger maximum is the spine direction, and the lines that reach that maximum are the spines.\n- **Moving.** All mover cells are first erased to background. Each original mover is then stamped at its mirror image across the nearer spine: the coordinate c along the spine normal becomes 2s - c, and the other coordinate is unchanged.\n- **Check against the generator.** This matches its mapping exactly. Inside row brow+r+2 maps to brow-r-2 for the top half and to brow+2*tall-4-r for the bottom half; both are reflections across the gripper rows. The generator's split threshold (r < (tall-1)//2 - 1) also matches the nearest-spine rule for both tall=8 and tall=9.\n- **Reflections and rotations.** Mirror reflection is equivariant under D4, so all orientations are handled by the visible-axis detection. No normalisation or inverse rotation is used.",
+    "limitations": "1. **Tie-breaking.** For an odd box height, the generator removes pixels on the exact middle row by remapping them to r=0. So under the domain no mover is ever equidistant from both spines. If an equidistant mover did appear, the emitted program reflects it across the smaller-index spine. That is an arbitrary deterministic choice. The archived solver instead depends on object list order, which is a hidden tie-break. Any such out-of-domain scene would need host review.\n2. **Remapped pixels.** The same remapping (middle-row pixels changed to r=0) can silently merge or duplicate pixels. That is a quirk of the generator. It does not affect the visible rule.\n3. **Bounds.** Reflected cells falling outside the grid are dropped. The generator's constants (brow=3, size 15, tall 8 or 9) keep all reflections in bounds.\n4. **Assumptions.** The program assumes the bracket colour is exactly palette[2] and the background is exactly palette[0]. It also assumes both spines share one orientation, as the constructor guarantees.\n5. **Rule text.** The supplied rule text mentions a crash from a missing `collections` import. That concerns the archived program only; the emitted code does not use `collections`.\n6. **Fixtures.** The fixtures agree with the uniform reflect-across-nearest-spine rule. No contradictions were found.",
+    "independent_source_review": {
+      "verdict": "accept",
+      "mechanism": "Two colour-2 (palette[2]) grippers of width `wide` are drawn at rows brow and brow+tall-1, transposed when xpose=1. Interior gray pixels sit at rows brow+r+2. Each is erased and redrawn at its reflection across the nearer full gripper line: 2*brow-y for the top half and 2*(brow+tall-1)-y for the bottom half. The emitted solver finds the spine axis by comparing the maximum bracket count per row with the maximum per column. Spines are the lines that reach that maximum. It erases every non-bg, non-bracket cell and stamps each one at 2s-c across the nearest spine, all in visible coordinates.",
+      "evidence": [
+        "Constructor reflection formulas match exact mirror maps across the gripper lines.",
+        "Top half: brow-r-2 = 2*brow-(brow+r+2).",
+        "Bottom half: brow-r+1+tall+(tall-1)//2 equals brow+12-r for tall=8 and brow+14-r for tall=9. Both equal 2*(brow+tall-1)-(brow+r+2).",
+        "Split threshold r < (tall-1)//2-1 agrees with nearest-spine distance.",
+        "tall=8: r in {0,1} has distance r+2 < 5-r, so it goes to the top spine; r in {2,3} goes to the bottom spine.",
+        "tall=9: the only equidistant row is r=2 (distance 4 to each spine). The constructor removes it with `r if r*2 != tall-5 else 0`, so no in-domain ties remain.",
+        "Spine detection is unambiguous. Spine rows hold `wide` cells (>=5; 7-8 in the fixtures).",
+        "Perpendicular lines hold at most 4 bracket cells (the end columns: brow, brow+1, brow+tall-2, brow+tall-1). Gripper side rows hold 2. Gray pixels are never bracket colour. So `rc.max() >= cc.max()` picks the correct axis, and the max-count lines are exactly the two spines.",
+        "Interior pixels occupy rows brow+2..brow+tall-3 and columns bcol+1..bcol+wide-2. They never overlap bracket cells.",
+        "Reflections land outside the spines, so stamped cells cannot collide with brackets or with erased movers.",
+        "Bounds: with brow=3 and size=15, reflected rows fall in 0..1 (top) and at most 14 (bottom). The validate fixtures with brow=4 also stay in bounds (test outputs at rows 1, 2 and 13).",
+        "Test fixture reproduced by hand. Inside rows 6, 7 and 9 map to 2, 1 and 13. This matches the approved output.",
+        "Train fixtures 1 and 3 are transposed (xpose=1) with spines at x=3 and x=10. The solver's column branch handles them.",
+        "No whole-grid untransform wrapper. Reflection across a detected visible line is D4-equivariant, and axis and spines are recomputed per grid.",
+        "Palette specialisation (BG=palette[0], BRACKET=palette[2]) is a genuine role specialisation. Every grid's background is colour 0 and every bracket is red.",
+        "The context-check else branch requires only palette pairs {4,7} and {1,8}. These never occur here (only colours 0, 2 and 5), so no arbitrary colour association is needed.",
+        "Host audit passed: 1000 fresh pairs and 8000 augmented checks, no sampler rejections."
+      ],
+      "blocking_issues": [],
+      "nonblocking_limits": [
+        "Equidistant (tie) movers are out of domain because the constructor remaps the middle row. The solver's choice of the smaller-index spine on a tie is arbitrary but unreachable.",
+        "Remapping middle-row pixels to r=0 can create duplicate pixel entries. This is a constructor quirk that does not change the visible rule.",
+        "Possible generator crash when the top or bottom half is empty: `common.diagonally_connected` indexes pixels[0], and `min()` is called on an empty sequence. Probability is roughly 1e-4 per draw. It would crash rather than mislabel, and it does not affect solver correctness.",
+        "The MOVER constant is unused. Every non-bg, non-bracket cell is treated as a mover, which is consistent with the domain because only gray movers exist.",
+        "The archived program's missing-import note concerns only the archived transform. The emitted code does not use collections."
+      ],
+      "required_context_checks": [
+        "None task-specific. f8a8fe49 falls through to the generic pair check, which requires no evidence for this palette usage. Standard D4 conflicting-answer rejection applies."
+      ],
+      "task_id": "f8a8fe49",
+      "factory_sha256": "5bc84f763607ea7893b5ee189e6ba58cd4abed5d00d322a636e2852c806968c9",
+      "constructor_sha256": "61f619772e8fc890d6171ff8470ee2f5606ad9c301960e2e96d342127f2dc7fc"
+    },
+    "host_review": "Host checked full constructor and visible nearest-spine reflection; tie row excluded by constructor. Reproduced empty-half IndexError in diagonally_connected; added rejection of empty sampled masks/halves before connectivity, preserving sampled gripper width/height and legal masks. No fixture labels changed (hash regression). Fresh re-audit1000/8000/16 passed with970unique inputs and no rejections. Reviewer generic-check wording corrected: task not whitelisted, so evidence function returns early; no hidden association needed."
+  }
+}

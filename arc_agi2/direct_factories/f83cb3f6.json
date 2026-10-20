@@ -1,0 +1,51 @@
+{
+  "task_id": "f83cb3f6",
+  "factory_sha256": "5cc1ab0109295d14294377302489ecd84c217ff7ac6c0837606516d9d95aac97",
+  "constructor_sha256": "582a3884705399a06ab6ab049a93c283bfce176b59bc777825ff71d69f80e21c",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 103611555123068,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 5.9068828750168905,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The rule is already symmetric under D4. A wall is one full row or column of palette[8] cells, possibly with gaps. For every line perpendicular to the wall whose wall cell is really a wall colour, each side that holds at least one dot gets a single dot stamped right next to the wall. All other dots are erased. Rotations and reflections only swap row and column orientation and mirror the two sides, and both sides are treated the same way. So the emitted program detects the orientation directly in visible coordinates: if every wall cell is in one column the wall is vertical, and if every wall cell is in one row it is horizontal. It then stamps left/right or up/down accordingly. No normalization wrapper is used. Colour roles are specialized as constants: background = palette[0] and wall = palette[8]. The dot colour is read from the query, because the generator draws a fresh foreground colour for every pair. It is taken as the most common colour that is neither background nor wall. Boundary guards (c-1>=0, c+1<W and the row equivalents) mirror the archived solver. The generator keeps the wall about 1 cell from the centre, so it never actually touches the edge.",
+    "limitations": "Constructor defect for host review: each wall cell independently has a 5/6 chance of being 8. In rare scenes the wall therefore has exactly one 8 cell, and then its orientation is ambiguous; the archived solver would silently call it vertical. In that case the emitted program uses visible evidence in this order. First, the generator forbids dots on the wall line, so an orientation whose line contains dots is rejected. Second, it prefers the orientation that actually stamps something, because the generator requires a change. Third, it prefers the orientation whose line is nearer the grid centre, and on an exact tie it chooses vertical. These cases may still be undecidable, and that is a constructor ambiguity rather than a puzzle rule. Malformed inputs whose wall cells span several rows and several columns fall back to the axis with the most-populated line. The generator never produces these. The parameter d4 is unused, because orientation is inferred per grid. No tests were run.",
+    "independent_source_review": {
+      "verdict": "accept",
+      "mechanism": "There is one wall of palette[8] cells, lying in a single row or a single column and possibly gapped. There are scattered dots of one query-specific foreground colour. For each perpendicular line whose wall cell is a wall cell, each side that holds at least one dot gets one dot stamped adjacent to the wall. Every other dot is erased, and the wall cells are kept. The emitted solver works in visible coordinates. It infers orientation from the spread of wall cells across rows and columns, then stamps left/right or up/down directly. No untransform, native-solve, retransform wrapper is used.",
+      "evidence": [
+        "Constructor draw(): output starts as 8 where the input is 8 and 0 elsewhere. For each line where grid[r][pos]==8 (or grid[pos][c]==8), it stamps fgcolor at pos-1 or pos+1 when the sum of cells on that side is nonzero. The emitted _stamp() matches this, and so does the initialisation `out = BG; out[g==WALL]=WALL`.",
+        "The sum is over off-wall cells. random_color(exclude=[8]) means 8 appears only on the wall line, and fgcolor is never 0. So `sum>0` is equivalent to the solver's `dot_mask[...].any()`.",
+        "The constructor rejects any scene where a wall-line cell is neither 0 nor 8 (`if grid[r][pos] not in [0, 8]: return None`). Gap cells therefore never contain dots.",
+        "pos = height//2 + randint(-1,1) with the pre-transpose height \u226510, so 4 \u2264 pos \u2264 H-5 or so. Both pos-1 and pos+1 are always in bounds, and the solver's boundary guards are never used.",
+        "A wall with zero 8s stamps nothing, and `changed` rejects it. With two or more 8s the wall cells lie in exactly one row or column. That is covered by the `len(cols)==1 and len(rows)>1` branch and its mirror.",
+        "Single-8 case at (r,c). Suppose the true wall is horizontal. The gap rule makes row r dot-free, so h_ok is true. The `changed` requirement forces dots in column c, so v_ok is false. The vertical case mirrors this. The first test `v_ok != h_ok` therefore always picks the correct orientation in-domain. The later stamp and centre fallbacks cannot be reached from the constructor.",
+        "Each pair has a single foreground colour, and the output dot colour equals the input dot colour, as all three demonstrations show. Reading it from the query is a genuine visible rule, not a lookup association that would need extra episode evidence. BG and WALL are specialised through the palette, which is legitimate.",
+        "The rule treats both sides and both axes symmetrically under D4, so the d4 parameter not being used is correct.",
+        "The archived fixtures fit the rule: pair 1 has rows 9\u201311 with no wall cell and all their dots erased, and pair 3 has gap columns 3, 4 and 9 deleted.",
+        "Host audit passed: 1000 fresh pairs, 8000 augmented checks, 16 fixture variants, no sampler rejections."
+      ],
+      "blocking_issues": [],
+      "nonblocking_limits": [
+        "The prior notes overstate the single-8 ambiguity. Within the constructor's domain it is always resolved by the dot-free-wall-line test. The remaining tie-breaks (stamp effect, nearness to centre, vertical by default) only act on out-of-domain inputs and cannot be checked against the constructor.",
+        "The fallback for walls that span several rows and several columns uses the most-populated line. This is defensive only; the constructor never produces such inputs.",
+        "Dot colour is taken as the most common non-bg, non-wall colour. Inputs with several dot colours are out of domain."
+      ],
+      "required_context_checks": [
+        "Confirm that augmentation palettes are bijections, so the foreground colour never collides with palette[0] or palette[8].",
+        "No colour-association episode check is needed. The dot colour is copied from the query input, and the demonstrations show this identity."
+      ],
+      "task_id": "f83cb3f6",
+      "factory_sha256": "5cc1ab0109295d14294377302489ecd84c217ff7ac6c0837606516d9d95aac97",
+      "constructor_sha256": "582a3884705399a06ab6ab049a93c283bfce176b59bc777825ff71d69f80e21c"
+    },
+    "host_review": "Host checked draw rejection and solver single-wall case. A valid scene has dot-free wall line and at least one orthogonal ray, so single wall cell orientation is identifiable. Palette permutation validated centrally."
+  }
+}

@@ -1,0 +1,62 @@
+{
+  "task_id": "f8c80d96",
+  "factory_sha256": "16f86df0d013d465313f67bfd8f92cc433fead9ad85815d32ebcbf3bfb6ff275",
+  "constructor_sha256": "bf6af96e784176d56f9ba10062e8c887a11f7dc23bf7c541c3679f05f725d4cc",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 88472026777417,
+  "d4": 7,
+  "unique_base_inputs": 493,
+  "seconds": 185.27739449997898,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "Generator: rings i=1..size-1 are 1-cell-thick square frames with spacing thick+1 (p=2 or 3) centred at (row+(thick-1)/2, col+(thick-1)/2), i.e. on an integer cell (thick=1) or a half-integer point (thick=2), on a grid edge. With d = max(ceil|y-cy|, ceil|x-cx|), ring i is exactly the level set d = p*i-1. The input shows rings 1..show and the output colours every ring (d \u2261 p-1 mod p) in the shape colour and everything else gray. The emitted program works directly in visible coordinates. Chebyshev ring geometry is D4-invariant, and half-integer centres map to half-integer centres. The candidate-centre search range [-1, H] x [-1, W] is symmetric under every row/column reversal and transpose. So no axis rewriting is needed. d4 does not change the mechanism, and the scan covers every centre placement any D4 image can produce (true centres lie in [0, 9.5], which maps into [-0.5, 9.5]). Colour roles are specialised as constants: background = palette[0], filler = palette[5]. The frame colour is read from the query's non-background pixels. For each half-integer centre the program checks three things: the mask is exactly a union of complete level sets, the levels form an arithmetic progression, and the step is >= 2. It prefers candidates whose innermost level is p-1, meaning the first frame directly surrounds the centre, as in the constructor. This removes the off-grid shifted-centre aliases near corners, which give level+1 relabellings of the same partition and identical outputs anyway. It then renders every residue-class ring. Remaining candidates are merged by their rendered output. The chosen output is the one supported by the most candidates, then the smaller spacing, so the result does not depend on which centre the scan happened to reach first. This differs from the archived first-hit break.",
+    "limitations": "No tests were run. Constants assume the shape colour is never palette[0] or palette[5], since the constructor excludes gray and uses 0 as background. The final tie-break (most candidates rendering the same output, then smaller step) is a heuristic for hypothetical cases where genuinely different centres explain the mask with level p-1 and still produce different outputs. I don't believe the constructor's domain (10x10, edge-centred frames, 2-3 shown rings) produces such cases, but this has not been exhaustively proven. If it does occur, it is an ambiguity in the constructor that needs host review, not a rule. Interpretive note: the archived solver and the rule text describe Pair 1's centre as (0,9). The constructor actually places it at (0.5, 8.5) with thick=2, and both readings give the same level sets in-grid. Fixtures are consistent with the uniform rule: colour every ring d \u2261 d0 (mod p), everything else 5. Demonstrations are not used beyond the fixed palette roles. If the episode's palette mapping were inconsistent with palette[0]/palette[5] roles, the program would not adapt.",
+    "independent_source_review": {
+      "verdict": "accept",
+      "mechanism": "The constructor places a centre on a grid edge: (row, 0) or (0, col). The real centre is (row+(thick-1)/2, col+(thick-1)/2), so it lies on a cell when thick=1 and on a half-integer point when thick=2. For i>=1 it draws one-cell square frames with radius (thick+1)*i, spanning [row-radius+thick, row+radius-1] in rows and the same in columns. Under d = max(ceil|y-cy|, ceil|x-cx|), frame i is exactly the level set d = p*i-1, where p = thick+1 is 2 or 3. The input shows frames 1..show (show is 2 or 3). The output colours every frame in the shape colour, which is every cell with d \u2261 p-1 (mod p), and makes everything else gray. The emitted solver scans half-integer centres over [-1,H] x [-1,W] in visible coordinates. It keeps centres where the mask is exactly a union of complete level sets forming an arithmetic progression with step >= 2, prefers candidates whose innermost level is p-1, then renders the residue class d%p == levels[0]%p in the query colour on a FILL background.",
+      "evidence": [
+        "Frame geometry checks out. For thick=1, radius=2i gives half-width 2i-1 around an integer centre, so d=2i-1. For thick=2, radius=3i gives extent [row-3i+2, row+3i-1], centre row+0.5, and ceil(3i-1.5)=3i-1. Both equal p*i-1. At i=0 the ranges are empty, so nothing is drawn.",
+        "At i=size-1 the radius is at least 18, so the output's residue-class colouring covers the whole 10x10 grid. The solver's full-grid `(d % p) == r` render matches this.",
+        "With the preferred levels[0]==p-1, no d value below p-1 shares residue p-1. So the render adds no spurious inner cells.",
+        "Pair 1 is generated with row=0, col=8, thick=2, so the true centre is (0.5,8.5), not the rule text's (0,9). Under the d measure the two centres differ only at cell (0,9), with d=1 vs 0. Neither value is \u22612 mod 3, so both give identical outputs. The test case is similar: (4.5,0.5) vs (4.5,0) differ only where d would be 0 or 1, and neither is coloured.",
+        "True centres lie in [0,9.5]^2. Every D4 reflection or transpose maps them into [-0.5,9.5], which falls inside the ky,kx range -2..2H/2W, i.e. cy,cx in [-1,H]. The solver applies no whole-grid untransform; geometry is computed directly in visible coordinates.",
+        "Shifted-centre aliases near edges and corners, e.g. (-0.5,-0.5) vs (0,0), relabel levels by +1. The levels[0]==p-1 filter removes them. Even where such an alias survives, it renders the same partition.",
+        "show affects only the input. The output depends only on row, col, thick and color, all of which are recoverable from the visible frames. The solver is a deterministic function of the input, so no hidden latent decides the label.",
+        "The structural domain has 19 (row,col) placements x 2 thick x 2 show = 76 configurations, and colour is irrelevant to geometry. Each configuration has sampling probability >= ~1/80. The host's 1000 fresh pairs (493 unique inputs) x 8 D4 checks therefore almost surely cover every configuration, which supports the claim that the vote/tie-break never meets a conflicting in-domain case.",
+        "FILL=palette[5] and BG=palette[0] are the genuine fixed roles, and every demonstration output shows the fill colour. The shape colour is read from the query. No arbitrary colour association needs extra context evidence, and the task is not in the episode-evidence special-case list."
+      ],
+      "blocking_issues": [],
+      "nonblocking_limits": [
+        "The rule text and archived program describe Pair 1's centre as (0,9) and the test centre as (4.5,0). The constructor's actual centres are (0.5,8.5) and (4.5,0.5). The level sets differ only at d values 0 or 1, which are never coloured, so the outputs are identical. This is an interpretive inaccuracy, not a label error.",
+        "The final tie-break (most supporting candidates, then smaller p) is heuristic. Its correctness in-domain rests on near-exhaustive host coverage of the 76 structural configurations, not on a proof.",
+        "The fallbacks for an empty mask and for no candidate are out-of-domain; the constructor always yields at least 2 visible frames with step >= 2.",
+        "The solver's search differs from the archived first-hit break. That is acceptable, since it removes dependence on scan order.",
+        "The constructor parameter name 'thick' actually controls the gap between frames, not frame thickness. This is documentation only."
+      ],
+      "required_context_checks": [
+        "Confirm the host D4/palette augmentation keeps palette[0] as background and palette[5] as fill, and never maps the shape colour onto either.",
+        "Optional: enumerate all 76 structural (row/col, thick, show) configurations under all 8 D4 transforms, to turn the sampled coverage into an exhaustive guarantee for the tie-break."
+      ],
+      "task_id": "f8c80d96",
+      "factory_sha256": "16f86df0d013d465313f67bfd8f92cc433fead9ad85815d32ebcbf3bfb6ff275",
+      "constructor_sha256": "bf6af96e784176d56f9ba10062e8c887a11f7dc23bf7c541c3679f05f725d4cc"
+    },
+    "host_review": "Host checked constructor level-set formula and direct search. Exhaustive 76 structural settings with all eight D4 and two palettes supplements sampled audit; preferred centre candidates must agree on full painting, not only winning heuristic. Fixed size10 default scope recorded.",
+    "finite_host_review": {
+      "task_id": "f8c80d96",
+      "exhaustive": true,
+      "parameter_cases": 76,
+      "unique_inputs": 76,
+      "augmented_checks": 1216,
+      "scope": "complete 76 default structural parameter configurations; one object colour and two palettes; preferred candidate paintings agree",
+      "factory_sha256": "16f86df0d013d465313f67bfd8f92cc433fead9ad85815d32ebcbf3bfb6ff275",
+      "constructor_sha256": "bf6af96e784176d56f9ba10062e8c887a11f7dc23bf7c541c3679f05f725d4cc"
+    }
+  }
+}

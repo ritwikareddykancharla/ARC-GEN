@@ -1,0 +1,50 @@
+{
+  "task_id": "f341894c",
+  "factory_sha256": "e0f90258f09bd9e0480ed8d52e1403385f8ab9ec418195919edbb2b44628307d",
+  "constructor_sha256": "10219698bacf098136e55195b0529bda685d271d38e53d50c097f4c355838c3c",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 45243582800373,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 10.258551790961064,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The rule is isotropic: every 1/6 domino lies along a row or column that also holds a 7, and the domino end nearer the closest 7 on that line becomes 6 while the other end becomes 1. Because the rule has no preferred direction, d4 needs no axis specialisation. The emitted program works directly in visible coordinates and uses the constants palette[7] (mark), palette[1] and palette[6]. For each cell it considers the right and down neighbours. A pair is a candidate when the two cells hold opposite domino colours and the line through both cells (the row for a side-by-side pair, the column for a stacked pair) contains a mark. Under the constructor's guarantee, cells of different dominoes that touch with opposite colours lie on mark-free lines. So the candidates are exactly the true dominoes, and the pairing does not depend on scan order or rotation. Pairs whose two cells have degree 1 are accepted first. Any other pairs are then taken greedily for robustness. The program then measures distances along the line to every mark, finds the strictly nearest one, writes palette[6] on the nearer end and palette[1] on the other. Marks and background are copied unchanged. Demonstrations are not needed.",
+    "limitations": "Distance ties (two marks equally close on opposite sides of a domino) are never sampled by the constructor. The archived solver breaks such a tie silently, keeping the first mark in scan order, which is a hidden tie-break. The emitted program leaves a tied domino unchanged instead. Host review is needed if ties ever appear. If an input violated the constructor's unique-pairing guarantee (a cell with several valid partners), the fallback greedy matching depends on visible scan order and is not D4-invariant. The constructor's _check_pairing rules this out. Palette is assumed to be a bijection, so palette[1], palette[6], palette[7] and palette[8] are distinct. No fixture contradictions were found: all train and test pairs match the uniform rule.",
+    "independent_source_review": {
+      "verdict": "accept",
+      "mechanism": "Background 8 contains single 7 marks, mostly on borders, and 1/6 dominoes. A domino is a pair of orthogonally adjacent cells with opposite colours whose shared line (the row if horizontal, the column if vertical) contains a 7. In the output, the end nearer the strictly closest 7 on that line becomes 6 and the other end becomes 1. 7s and background are unchanged. Pairing is unique because, inside packed clusters, every perpendicular line through touching cells of different dominoes is kept free of 7s.",
+      "evidence": [
+        "Fixtures fit the rule. Train1: (4,4)h flips toward (4,9); (5,2)v and (5,6)v flip toward the 7s at y=9; (7,7)v stays. Test: rows 5\u20138 checkerboard in cols 8\u20139 is read horizontally because cols 8 and 9 have no 7. The (13,6)/(13,7) block is read vertically because rows 13 and 14 have no 7. The step pair (9,10)v/(10,11)v touches only along row 10, which has no 7. No fixture domino line carries two 7s.",
+        "_cluster_layout perpendicular lines are correct for each layout. Stack 'h' clears cols 0 and 1. Stack 'v' clears rows 0 and 1. Step 'v' (normal and mirrored) shares cells only on row offset 1 and clears ('r',1). Step 'h' (normal and mirrored) shares cells only on col offset 1 and clears ('c',1). These lines go into rows_no7/cols_no7, are checked by _seven_ok for every later 7 including the distractor, and are re-checked through perp_lines.",
+        "Clusters never touch orthogonally: blocked |= _around4(cells). Dominoes never touch a 7, even diagonally: blocked |= _around(pending), and forbidden includes near_domino. The only cross-domino orthogonal contacts are therefore inside clusters, on 7-free lines. _check_pairing re-verifies this in generate() for both random and explicit scenes.",
+        "Every domino line has at least one 7: either an existing one is reused or one is placed at a border end. Any line with two 7s must be an explicitly sampled double line, enforced by the n>=2 and allowed check. _facing_end rejects ties (hits != 1). Its Manhattan distance equals 1D distance because all considered 7s lie on the domino's own line. The end comparison is never equal, since a 7 cannot sit inside the domino.",
+        "Factory solve() acts directly in visible coordinates. An edge is an adjacent opposite-colour pair whose row (horizontal) or column (vertical) has a mark, using row_marks[y] or col_marks[x] correctly. Under the constructor guarantee every domino cell has degree 1, so the edges are exactly the true dominoes. The strict-nearest choice with the hits==1 tie check matches _facing_end. It writes SIX on the nearer end and ONE on the other.",
+        "There is no untransform/retransform wrapper. The rule is isotropic, so D4 needs no specialisation. Palette constants (8, 7, 1, 6) are fixed roles visible in every demo: every sample flips at least one domino, and every output shows 6 facing the 7.",
+        "The output depends only on the visible input. The flips==0 correction changes only input colours, and the label is then recomputed from the visible grid."
+      ],
+      "blocking_issues": [],
+      "nonblocking_limits": [
+        "Double-7 lines (double_seven_prob=0.08, isolated dominoes only) are a synthetic extension with no fixture evidence. The 'strictly nearer 7 wins' reading is the archived rule's step 3. However, an episode whose query has a double line and whose demos have none teaches it only by convention.",
+        "Sides of 21\u201330 are a synthetic extension beyond the fixture maximum of 18.",
+        "The factory's greedy fallback (deg>1 cells) and its leave-unchanged handling of tied dominoes are unreachable under the constructor. Outside the constructor domain they would depend on scan order and are not D4-invariant. The archived solver instead breaks ties silently by first-found 7.",
+        "_check_pairing raises instead of retrying in random mode. It is unreachable given the layout invariants, but it is a crash path rather than a rejection path if those invariants ever change.",
+        "The palette is assumed to be a bijection: palette[1], [6], [7] and [8] must be distinct."
+      ],
+      "required_context_checks": [
+        "Confirm the palette augmentation is a bijection, so ONE, SIX, MARK and BG are distinct.",
+        "Optionally confirm how often a query contains a double-7 line while no demo in the same episode does, and decide whether that synthetic extension is acceptable without demonstration."
+      ],
+      "task_id": "f341894c",
+      "factory_sha256": "e0f90258f09bd9e0480ed8d52e1403385f8ab9ec418195919edbb2b44628307d",
+      "constructor_sha256": "10219698bacf098136e55195b0529bda685d271d38e53d50c097f4c355838c3c"
+    },
+    "host_review": "Host inspected full constructor and factory. Pairing enforces absent perpendicular markers, unique nearest marker, distinct palette roles. Double-marker lines are explicitly documented synthetic nearest-distance extensions, not canonical fixture evidence. Shared palette is bijective; no colour lookup or hidden order."
+  }
+}

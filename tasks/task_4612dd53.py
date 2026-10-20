@@ -17,6 +17,23 @@
 import common
 
 
+def _visible_structure(pixels, colors, top, left, tall, wide, horiz, vert):
+  """Require evidence of each frame extremum and of a present cut's axis."""
+  visible = {(r, c) for (r, c), color in zip(pixels, colors)
+             if color == common.blue()}
+  bottom, right = top + tall - 1, left + wide - 1
+  if not all((any(r == top for r, c in visible),
+              any(r == bottom for r, c in visible),
+              any(c == left for r, c in visible),
+              any(c == right for r, c in visible))):
+    return False
+  if horiz is not None:
+    return sum(r == horiz and left < c < right for r, c in visible) >= 2
+  if vert is not None:
+    return sum(c == vert and top < r < bottom for r, c in visible) >= 2
+  return True
+
+
 def generate(height=None, rows=None, cols=None, colors=None, width=13):
   """Returns input and output grids according to the given parameters.
 
@@ -42,9 +59,16 @@ def generate(height=None, rows=None, cols=None, colors=None, width=13):
           if r != horiz and c != vert: continue
         pixels.append((r, c))
     rows, cols = zip(*pixels)
-    colors = [
-        common.blue() if common.randint(0, 3) else common.red() for _ in pixels
-    ]
+    # Keep the chosen frame/cut geometry. Resample only the erasure mask:
+    # one surviving interior point cannot determine a cut's orientation.
+    for _ in range(256):
+      colors = [
+          common.blue() if common.randint(0, 3) else common.red() for _ in pixels
+      ]
+      if _visible_structure(pixels, colors, top, 2, tall, wide, horiz, vert):
+        break
+    else:
+      raise RuntimeError("Could not sample an identifiable damaged lattice")
 
   grid, output = common.grids(width, height)
   for r, c, color in zip(rows, cols, colors):

@@ -469,12 +469,14 @@ def overlaps_1d(cols, wides, spacing=0):
   return False
 
 
-def place_rectangles(width, height, wides, talls, spacing=0, max_nodes=512):
+def place_rectangles(width, height, wides, talls, spacing=0, max_nodes=512,
+                     fixed_positions=None):
   """Place the requested rectangles with bounded randomized backtracking.
 
   Returns (rows, cols) in the caller's rectangle order, or None if no packing
   is found within the node budget. Dimensions and rectangle counts are never
   reduced to make a scene fit. Spacing has the same meaning as overlaps().
+  Optional fixed_positions maps rectangle indices to required (row, col).
   """
   if len(wides) != len(talls) or spacing < 0:
     raise ValueError("Expected matching dimensions and nonnegative spacing")
@@ -483,16 +485,24 @@ def place_rectangles(width, height, wides, talls, spacing=0, max_nodes=512):
     return None
   if sum(w * t for w, t in zip(wides, talls)) > width * height:
     return None
+  fixed_positions = {} if fixed_positions is None else fixed_positions
+  if any(i < 0 or i >= len(wides) for i in fixed_positions):
+    raise ValueError("Fixed rectangle index out of range")
+  if any(r < 0 or c < 0 or r + talls[i] > height or c + wides[i] > width
+         for i, (r, c) in fixed_positions.items()):
+    return None
 
   def mask(top, left, wide, tall):
     bits = (1 << wide) - 1
     return sum(bits << (r * width + left) for r in range(top, top + tall))
 
   options = []
-  for wide, tall in zip(wides, talls):
+  for i, (wide, tall) in enumerate(zip(wides, talls)):
     choices = []
-    for r in range(height - tall + 1):
-      for c in range(width - wide + 1):
+    rows = [fixed_positions[i][0]] if i in fixed_positions else range(height - tall + 1)
+    cols = [fixed_positions[i][1]] if i in fixed_positions else range(width - wide + 1)
+    for r in rows:
+      for c in cols:
         top, left = max(0, r - spacing), max(0, c - spacing)
         bottom, right = min(height, r + tall + spacing), min(width, c + wide + spacing)
         choices.append((r, c, mask(r, c, wide, tall),

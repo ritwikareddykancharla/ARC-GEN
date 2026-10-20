@@ -1,0 +1,32 @@
+{
+  "task_id": "465b7d93",
+  "factory_sha256": "4d991ba7762b416b1d6d982762033f672edb0adf3c33cb38cc75852c6fb4d5dc",
+  "constructor_sha256": "46ba343c70759b67d7b9463274be996a10f3a57b56d0b71005e6df726000fc9b",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 217340203530189,
+  "d4": 7,
+  "unique_base_inputs": 994,
+  "seconds": 2.060969707905315,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The generator draws a hollow square frame in colour 6 on a background of 7. It also draws a seed elsewhere. The seed is either a 1x1 block (when the frame has length 3) or a 2x2 block with at most one cell removed (the 'notch'). In the output, the seed is erased and the frame interior is filled with the seed colour. If the seed had a notch, an (n-1)x(n-1) block of background is carved out at the notch's corner offset, which leaves a one-cell-thick L made of the row and column opposite the notch.\n\nThe emitted program uses the archived stretch rule, which gives the same result:\n- The first and last rows and columns of the interior come from the first and last seed rows and columns.\n- All middle rows and columns come from the sparsest seed row and column.\n\nThis rule treats rows and columns the same way and treats first and last the same way. So under every rotation or reflection it acts identically in visible coordinates, and d4 needs no axis or direction specialisation. The rotated notch position is read directly from the visible seed.\n\nColour roles are fixed as constants: background = palette[7], frame = palette[6]. The seed colour is whichever remaining colour is present. The frame interior is the frame-colour bounding box shrunk by 1 on each side.",
+    "limitations": "- The program assumes exactly one frame (all palette[6] pixels) and one seed (all pixels that are neither palette[6] nor palette[7]), as the constructor guarantees.\n- If the seed is a full 2x2 block, rows and columns tie in argmin. The output is the same whatever the tie-break, because every seed cell is filled.\n- If the seed overlapped the frame, frame pixels would be overwritten and the program would give wrong results. The constructor's non-overlap check is assumed to prevent this.\n- Demonstrations are not used, because the roles are fully determined by the palette.\n- The fixtures are consistent with a single uniform rule; no contradictions were found.",
+    "host_review": "Saved counterexample visibly overwrote the pink frame. Factory unchanged; original fixtures unchanged; 994 unique inputs among 1000 sampled verification pairs.",
+    "host_sampler_revision": "The old overlap test paired seed coordinates with frame dimensions and frame coordinates with seed dimensions, allowing the seed to overwrite the frame. Bounded packing now keeps the coordinate/size order aligned while retaining all lengths 3\u20138 and the conservative 2x2 seed footprint.",
+    "repair_verification": {
+      "fresh_pairs_checked": 1000,
+      "augmented_pair_checks": 8000,
+      "fixture_variants_checked": 16,
+      "unique_base_inputs": 994,
+      "factory_sha256": "4d991ba7762b416b1d6d982762033f672edb0adf3c33cb38cc75852c6fb4d5dc",
+      "constructor_sha256": "46ba343c70759b67d7b9463274be996a10f3a57b56d0b71005e6df726000fc9b"
+    },
+    "common_sha256": "879eb61e360e4a47ee1d569408e8c66114ac068794721fe1de1b59aaa476586a"
+  }
+}

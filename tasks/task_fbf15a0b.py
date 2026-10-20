@@ -54,7 +54,9 @@ def generate(width=None, height=None, fgcolor=None, wides=None, talls=None,
 
   if width is None:
     width, height = 2 * common.randint(2, 15), 2 * common.randint(4, 15)
-    fgcolor = common.random_color(exclude=[8])
+    # The two grey cells encode which half to keep. Pattern cells must have
+    # a distinct colour so this instruction remains observable.
+    fgcolor = common.random_color(exclude=[5, 8])
     flip = common.randint(0, 1)
     flop = common.randint(0, 1)
     xpose = common.randint(0, 1)

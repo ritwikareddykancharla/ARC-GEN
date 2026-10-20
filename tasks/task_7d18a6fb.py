@@ -36,14 +36,19 @@ def generate(width=None, height=None, brow=None, bcol=None, srows=None,
     width, height = common.randint(12, 18), common.randint(12, 18)
     num_sprites = common.randint(4, 6)
     colors = common.random_colors(num_sprites, exclude=[1])
-    brow = common.randint(0, 1) * (height - 7)
-    bcol = common.randint(0, 1) * (width - 7)
-    while True:
-      srows = [common.randint(0, height - 3) for _ in range(num_sprites)]
-      scols = [common.randint(0, width - 3) for _ in range(num_sprites)]
-      if not common.overlaps([brow] + srows, [bcol] + scols,
-                             [7] + [3] * num_sprites,
-                             [7] + [3] * num_sprites, 1): break
+    bottom, right = common.randint(0, 1), common.randint(0, 1)
+    for attempt in range(2000):
+      if attempt:
+        width, height = common.randint(12, 18), common.randint(12, 18)
+      brow, bcol = bottom * (height - 7), right * (width - 7)
+      placement = common.place_rectangles(
+          width, height, [7] + [3] * num_sprites, [7] + [3] * num_sprites,
+          spacing=1, fixed_positions={0: (brow, bcol)})
+      if placement is not None:
+        srows, scols = placement[0][1:], placement[1][1:]
+        break
+    else:
+      raise RuntimeError("bounded sampler failed to place board and all sprites")
     values = []
     for _ in range(num_sprites):
       pixels = common.diagonally_connected_sprite()

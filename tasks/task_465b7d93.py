@@ -37,11 +37,14 @@ def generate(prow=None, pcol=None, brow=None, bcol=None, length=None,
   if prow is None:
     length = common.randint(3, 8)
     color = common.random_color(exclude=[pink, orange])
-    while True:
-      prow, pcol = common.randint(0, size - length), common.randint(0, size - length)
-      brow, bcol = common.randint(0, size - 2), common.randint(0, size - 2)
-      rows, cols = [brow, prow], [bcol, pcol]
-      if not common.overlaps(rows, cols, [length, 2], [length, 2]): break
+    # Keep each footprint aligned with its coordinates: the frame is first,
+    # and the seed is second. Swapping only coordinates allowed overwritten
+    # frame cells in otherwise accepted random examples.
+    placed = common.place_rectangles(
+        size, size, [length, 2], [length, 2], max_nodes=20000)
+    if placed is None:
+      raise RuntimeError("Could not place the frame and seed without overlap")
+    (prow, brow), (pcol, bcol) = placed
     notch = -1 if length == 3 else common.randint(-1, 3)
 
   grid, output = common.grids(size, size, orange)

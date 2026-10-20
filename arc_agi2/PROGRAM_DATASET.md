@@ -35,7 +35,7 @@ recorded. Passing finite audits does not prove unrestricted generalization.
 
 - 213 native direct-coordinate certificates admitted after fresh audits and
   supplied-fixture checks.
-- 728 admitted factories. Each passed 1,000 fresh pairs, 8,000 augmented pair
+- 733 admitted factories. Each passed 1,000 fresh pairs, 8,000 augmented pair
   checks and 16 supplied-fixture variants. Their audit records retain draft
   limitations and source/constructor hashes. These checks are finite evidence,
   not proof of correctness on every generated input.
@@ -46,7 +46,7 @@ recorded. Passing finite audits does not prove unrestricted generalization.
   counts must be computed as a union, not added.
 - Local exporter test: 18 fresh base episodes, 144 augmented PNG/program/grid
   records. It requested 20 bases and reported a two-episode shortfall.
-- The union currently admits 947 of 1,120 families; 173 still need direct
+- The union currently admits 952 of 1,120 families; 168 still need direct
   augmented program admission. Constructor coverage and program coverage are
   different gates.
 - Synthetic labels for `00d62c1b` now fill every enclosed background component,
@@ -504,3 +504,43 @@ in `reports/f3b10344-bridge-boundary-investigation.json`; no labels were changed
 
 Bulk generation and training have not started. Target: 1,000 fresh episodes per
 family, program and grid together, followed by consistent D4 augmentation.
+
+
+## Coverage checkpoint: 952 families
+
+Five more direct program families passed source review and execution checks:
+`7d18a6fb`, `97a05b5b`, `465b7d93`, `fbf15a0b`, and `4612dd53`.
+There are now 733 factory certificates and 213 native certificates; with the
+existing manual rewrites and overlap accounted for, the union is **952/1,120**.
+The remaining 168 comprise 68 semantic/context holds, 38 execution failures,
+three unresolved native-label conflicts, and 59 pending independent reviews.
+
+- `7d18a6fb`: bounded packing retains all four to six sprites and pins the board
+  at its chosen corner. Resample an infeasible canvas within the original range.
+- `97a05b5b`: bounded packing retains all one to five keys, and random examples
+  exercise rotations already present in canonical fixtures. An independent
+  visible-input search rejects multiple distinct complete paintings or search
+  exhaustion. Equivalent assignments with identical final paintings remain valid.
+- `465b7d93`: correct the reversed coordinate/size pairing in frame/seed placement
+  so the seed cannot overwrite the frame. Keep all original frame lengths.
+- `fbf15a0b`: reserve grey instruction-marker colour when sampling pattern colour.
+  Previously, patterned dots could masquerade as crop-direction markers.
+- `4612dd53`: preserve frame/cut geometry and resample only erased cells until
+  frame extrema remain visible and any cut retains two interior points. A saved
+  single-point counterexample supports two legal, different output completions;
+  the solver must not be trained on an arbitrary tie. The investigation is in
+  `reports/4612dd53-single-cell-cut-investigation.json`.
+
+Original supplied fixtures remain unchanged. Bounded placement and visibility
+filters condition the random distribution; they do not claim uniform sampling
+of the old domain. Each family passed 1,000 sampled pairs, 8,000 D4 checks and
+16 fixture variants. The frame/seed family had 994 distinct inputs; the other
+four had 1,000. These are validation draws, not completed training episodes.
+
+Complete-episode verification passed 100 base episodes and all 800 augmented
+program/grid records, with no missing-evidence exclusions or mismatches. Report:
+`reports/episode-evidence-952-audit.json`. **362 regression tests passed**.
+
+The production requirement remains **1,000 fresh episodes per family**, each
+with program and grid together, then consistent rotation/reflection/colour
+augmentation. Neither bulk production nor training has started.

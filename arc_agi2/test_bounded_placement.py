@@ -39,6 +39,27 @@ class BoundedPlacementTests(unittest.TestCase):
         self.assertIsNone(common.place_rectangles(5, 5, [4, 4], [4, 4]))
         self.assertIsNone(common.place_rectangles(5, 5, [2], [2], max_nodes=0))
 
+    def test_fixed_second_rectangle_matches_exhaustive_feasibility(self):
+        for spacing in (0, 1):
+            for w1, h1, w2, h2 in itertools.product(range(1, 4), repeat=4):
+                feasible = any(not common.overlaps(
+                    [r, 0], [c, 0], [w1, w2], [h1, h2], spacing)
+                    for r in range(4-h1) for c in range(4-w1))
+                result = common.place_rectangles(
+                    3, 3, [w1, w2], [h1, h2], spacing, max_nodes=10000,
+                    fixed_positions={1: (0, 0)})
+                self.assertEqual(result is not None, feasible)
+                if result is not None:
+                    self.assertEqual((result[0][1], result[1][1]), (0, 0))
+
+    def test_fixed_overlap_or_out_of_bounds_fails_without_moving_anchor(self):
+        self.assertIsNone(common.place_rectangles(
+            5, 5, [3, 3], [3, 3], fixed_positions={0: (0, 0), 1: (1, 1)}))
+        self.assertIsNone(common.place_rectangles(
+            5, 5, [3], [3], fixed_positions={0: (3, 0)}))
+        with self.assertRaises(ValueError):
+            common.place_rectangles(5, 5, [3], [3], fixed_positions={1: (0, 0)})
+
     def test_dense_plus_layout_retains_all_four(self):
         result = common.place_rectangles(7, 7, [3]*4, [3]*4, spacing=1)
         self.assertIsNotNone(result)

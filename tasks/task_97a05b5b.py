@@ -19,6 +19,85 @@ import sys
 import common
 
 
+def _unique_output(grid, max_nodes=20000):
+  """Find the unique complete key-placement painting from visible input.
+
+  Reject multiple paintings or search exhaustion. Identical paintings from
+  equivalent rotations are allowed. No generator coordinates/answers are read.
+  """
+  height, width = len(grid), len(grid[0])
+  remaining = {(r, c) for r in range(height) for c in range(width) if grid[r][c] != 0}
+  groups = []
+  while remaining:
+    cells = {remaining.pop()}
+    stack = list(cells)
+    while stack:
+      r, c = stack.pop()
+      for p in ((r-1, c), (r+1, c), (r, c-1), (r, c+1)):
+        if p in remaining:
+          remaining.remove(p)
+          cells.add(p)
+          stack.append(p)
+    groups.append(cells)
+  if not groups: return None
+  board = max(groups, key=len)
+  top, bottom = min(r for r, c in board), max(r for r, c in board)
+  left, right = min(c for r, c in board), max(c for r, c in board)
+  canvas = [row[left:right+1] for row in grid[top:bottom+1]]
+  tall, wide = len(canvas), len(canvas[0])
+  total = frozenset((r, c) for r in range(tall)
+                    for c in range(wide) if canvas[r][c] == 0)
+  candidate_lists = []
+  for cells in groups:
+    if all(top <= r <= bottom and left <= c <= right for r, c in cells): continue
+    y0, y1 = min(r for r, c in cells), max(r for r, c in cells)
+    x0, x1 = min(c for r, c in cells), max(c for r, c in cells)
+    patch = tuple(tuple(grid[r][c] if (r, c) in cells else 0
+                        for c in range(x0, x1+1)) for r in range(y0, y1+1))
+    variants, candidates = set(), []
+    for _ in range(4):
+      variants.add(patch)
+      patch = tuple(zip(*patch[::-1]))
+    for patch in variants:
+      h, w = len(patch), len(patch[0])
+      if not any(v == 2 for row in patch for v in row): continue
+      for r in range(tall-h+1):
+        for c in range(wide-w+1):
+          if any((canvas[r+y][c+x] == 0) != (patch[y][x] == 2)
+                 for y in range(h) for x in range(w)):
+            continue
+          holes = frozenset((r+y, c+x) for y in range(h) for x in range(w)
+                            if patch[y][x] == 2)
+          paint = tuple((r+y, c+x, patch[y][x]) for y in range(h) for x in range(w)
+                        if patch[y][x] != 0)
+          footprint = frozenset((y, x) for y, x, ink in paint)
+          candidates.append((holes, footprint, paint))
+    candidate_lists.append(candidates)
+  answers, nodes, exhausted = set(), 0, False
+  order = sorted(range(len(candidate_lists)), key=lambda i: len(candidate_lists[i]))
+
+  def search(depth, covered, occupied, paints):
+    nonlocal nodes, exhausted
+    if nodes >= max_nodes:
+      exhausted = True
+      return
+    nodes += 1
+    if depth == len(order):
+      if covered == total:
+        out = [row[:] for row in canvas]
+        for paint in paints:
+          for r, c, ink in paint: out[r][c] = ink
+        answers.add(tuple(tuple(row) for row in out))
+      return
+    for holes, footprint, paint in candidate_lists[order[depth]]:
+      if holes & covered or footprint & occupied: continue
+      search(depth+1, covered | holes, occupied | footprint, paints + [paint])
+      if exhausted or len(answers) > 1: return
+
+  search(0, frozenset(), frozenset(), [])
+  return next(iter(answers)) if len(answers) == 1 and not exhausted else None
+
+
 def generate(width=None, height=None, rows=None, cols=None, idxs=None,
              srows=None, scols=None, colors=None, irows=None, icols=None,
              rotates=None, wide=None, tall=None, brow=None, bcol=None):
@@ -81,23 +160,24 @@ def generate(width=None, height=None, rows=None, cols=None, idxs=None,
   if width is None:
     num_sprites = common.randint(1, 5)
     # Choose positions until everything fits and nothing overlaps.
-    while True:
+    for _ in range(2000):
       wide, tall = common.randint(8, 20), common.randint(8, 20)
       width, height = wide + common.randint(2, 10), tall + common.randint(2, 10)
       brow = common.randint(1, height - tall - 1)
       bcol = common.randint(1, width - wide - 1)
-      srows = [common.randint(0, height - 3) for _ in range(num_sprites)]
-      scols = [common.randint(0, width - 3) for _ in range(num_sprites)]
-      irows = [common.randint(1, tall - 4) for _ in range(num_sprites)]
-      icols = [common.randint(1, wide - 4) for _ in range(num_sprites)]
       lens = [3] * num_sprites
-      if common.overlaps(srows + [brow], scols + [bcol], lens + [wide],
-                         lens + [tall], 1): continue
-      if common.overlaps(irows, icols, lens, lens, 0): continue
+      outside = common.place_rectangles(
+          width, height, [wide] + lens, [tall] + lens, spacing=1,
+          fixed_positions={0: (brow, bcol)})
+      if outside is None: continue
+      inside = common.place_rectangles(wide - 2, tall - 2, lens, lens)
+      if inside is None: continue
+      srows, scols = outside[0][1:], outside[1][1:]
+      irows, icols = [r + 1 for r in inside[0]], [c + 1 for c in inside[1]]
       counts = common.sample(range(4, 9), num_sprites)
       rows, cols, idxs = [], [], []
       for idx in range(num_sprites):
-        while True:  # Avoid sprites where rotation might be ambiguous.
+        for _ in range(256):  # Avoid sprites where rotation might be ambiguous.
           pixels = common.sample(common.all_pixels(3, 3), counts[idx])
           num_blank = 0
           for r in range(3):
@@ -113,13 +193,19 @@ def generate(width=None, height=None, rows=None, cols=None, idxs=None,
           if counts[idx] == 4 and num_blank >= 2: continue  # Avoid 2x2
           if counts[idx] == 6 and num_blank >= 1: continue  # Avoid 2x3
           break
+        else:
+          raise RuntimeError("bounded sampler failed to draw key silhouette")
         rows.extend(p[0] for p in pixels)
         cols.extend(p[1] for p in pixels)
         idxs.extend([idx] * len(pixels))
-      rotates = [0] * num_sprites
+      # Exercise the relative rotations already present in supplied fixtures,
+      # rather than teaching only keys that happen to be pre-aligned.
+      rotates = [common.randint(0, 3) for _ in range(num_sprites)]
       colors = common.random_colors(num_sprites, exclude=[common.red()])
       grid, output = common.grid(width, height), common.grid(wide, tall)
-      if draw(grid, output): break
+      if draw(grid, output) and _unique_output(grid) is not None: break
+    else:
+      raise RuntimeError("bounded sampler failed to place board and all keys")
 
   grid, output = common.grid(width, height), common.grid(wide, tall)
   draw(grid, output)

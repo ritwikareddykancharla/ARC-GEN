@@ -1,0 +1,32 @@
+{
+  "task_id": "97a05b5b",
+  "factory_sha256": "12c9862a3c6a201d3420ea7528033e13a3576d79b580a8cedb3ab7313da4bdac",
+  "constructor_sha256": "db38a0bffaf23f0bb258b8a337c2375d4990d839dbd6df19224e21f332b5969c",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 9514972336361,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 60.842732375022024,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "This uses the generator's own roles. Background black is the constant palette[0] and the board/key-hole colour red is palette[2]. These constants replace the archived solver's 'most common colour' guess, which can fail when the red box is large enough to outnumber black.\n\nThe emitted program works as follows.\n(1) It finds the 4-connected non-background components and takes the largest as the board. Its bounding box is the red box, because the box's outer ring is always solid red. That box is cropped.\n(2) Keys are the components not contained in that bounding box. Red fragments cut off inside the box by holes are therefore ignored; this was the pair-1 bug.\n(3) For each key, it lists every placement over the 4 rotations and every window where the window's background cells coincide exactly with the key's red cells.\n(4) Instead of greedy first-fit, it runs a small backtracking exact-cover search. It picks one placement (or none) per key so that hole cells are used at most once and stamped footprints do not overlap, aiming to cover every hole cell. If no full cover exists it relaxes the footprint constraint, and then falls back to the maximum coverage found.\n(5) It stamps each chosen rotated key's non-background cells, then turns any leftover background inside the crop into red.\n\nD4 needs no special-casing. A reflection conjugates the rotation group onto itself, so 'some rotation of the visible key fits the visible hole' holds in every frame. The crop and window scan work directly in visible coordinates. Because the exact-cover search does not depend on order, the answer does not hinge on reading-order tie-breaks that change under rotation.",
+    "limitations": "1. The background and red roles come from the palette constants, not from the demonstrations.\n2. The generator does not strictly guarantee that a key's red pattern fails to fit some offset window spanning parts of other holes. The exact-cover requirement removes almost all such cases. If two distinct exact covers ever existed, the choice would follow the first found in reading order, which can vary with D4. That would be a constructor ambiguity for host review, not an intended rule.\n3. Keys are assumed to be single connected components separated from the board and from each other, as the constructor's margin-1 overlap check ensures. Sprite colours are assumed to differ from black, which the generator appears to do but I have not verified.\n4. The archived solver picks the background as the most common colour. That choice is a latent defect for large boxes, and it is deliberately not reproduced.\n5. The fixtures agree with the corrected rule: inside-bounding-box fragments are excluded and the fit uses rotations only.\n6. No tests were run.",
+    "host_review": "The original saved fresh mismatch exposed a translated 180-degree S-key rotation with the same holes but a different painted frame. All canonical fixtures have one exact painting. No fixture labels changed; factory unchanged.",
+    "host_sampler_revision": "Bounded interior/exterior packing preserves all 1\u20135 keys. Random generation now exercises rotations already present in supplied fixtures. A visible-input exact-cover search rejects multiple distinct final paintings, no solution, or search-budget exhaustion; equivalent assignments producing the same painting are accepted.",
+    "repair_verification": {
+      "fresh_pairs_checked": 1000,
+      "augmented_pair_checks": 8000,
+      "fixture_variants_checked": 16,
+      "unique_base_inputs": 1000,
+      "factory_sha256": "12c9862a3c6a201d3420ea7528033e13a3576d79b580a8cedb3ab7313da4bdac",
+      "constructor_sha256": "db38a0bffaf23f0bb258b8a337c2375d4990d839dbd6df19224e21f332b5969c"
+    },
+    "common_sha256": "879eb61e360e4a47ee1d569408e8c66114ac068794721fe1de1b59aaa476586a"
+  }
+}

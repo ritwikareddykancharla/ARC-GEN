@@ -11,6 +11,38 @@ from .fixture_policy import fixture_basis
 from .augmentation import apply_episode,settings,exhaustive_variants
 
 class GeneratorTests(unittest.TestCase):
+    def test_border_cycle_preserves_skeleton_and_palette_direction(self):
+        cycle=importlib.import_module('tasks.task_880c1354')
+        colours=[0,9,2,6,5,3,8,1]
+        transfer={col:colours[i-1] for i,col in enumerate(colours)}
+        for width,height in ((30,30),(30,6),(6,30)):
+            random.seed(44000+width)
+            pair=cycle.generate(width=width,height=height,colors=colours)
+            self.assertEqual((len(pair['input']),len(pair['input'][0])),
+                             (height,width))
+            self.assertEqual(set(sum(pair['input'],[]))-{4,7},set(colours))
+            self.assertEqual(pair['output'],
+                             [[transfer.get(c,c) for c in row]
+                              for row in pair['input']])
+            self.assertEqual(pair['output'],
+                             grid(call(solver('880c1354'),pair['input'])))
+
+    def test_border_cycle_small_four_region_controls(self):
+        cycle=importlib.import_module('tasks.task_880c1354')
+        for h in (6,7):
+            for seed in range(6):
+                random.seed(42000+seed)
+                p=cycle.generate(width=6,height=h,num_regions=4)
+                self.assertEqual(len(set(sum(p['input'],[]))-{4,7}),4)
+                self.assertEqual(p['output'],
+                                 grid(call(solver('880c1354'),p['input'])))
+
+    def test_border_cycle_malformed_layout_rejects_cleanly(self):
+        cycle=importlib.import_module('tasks.task_880c1354')
+        for layout in ([7], [True], [[]], [None], ['aaa',7,'bbb']):
+            with self.subTest(layout=layout),self.assertRaises(ValueError):
+                cycle.generate(layout=layout,colors=[1,2])
+
     def test_legend_sampling_reaches_compact_native_layouts(self):
         legend=importlib.import_module('tasks.task_845d6e51')
         strips=set()

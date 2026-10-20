@@ -1,0 +1,1773 @@
+{
+  "task_id": "880c1354",
+  "ready": true,
+  "samples_requested": 1000,
+  "samples_attempted": 1000,
+  "samples_passed": 1000,
+  "verifier_mode": "archived_pair_solver",
+  "verifier_evidence": {
+    "mode": "archived_pair_solver"
+  },
+  "improved_verifier_fixture_replay": null,
+  "seed_start": 20000,
+  "seed_end_exclusive": 21000,
+  "fixture_basis": {
+    "fixture": "canonical",
+    "corrected": false
+  },
+  "unique_inputs": 1000,
+  "changed_pairs": 1000,
+  "fixture_replays": 0,
+  "shapes": [
+    [
+      6,
+      6,
+      6,
+      6
+    ],
+    [
+      6,
+      7,
+      6,
+      7
+    ],
+    [
+      6,
+      8,
+      6,
+      8
+    ],
+    [
+      6,
+      9,
+      6,
+      9
+    ],
+    [
+      6,
+      10,
+      6,
+      10
+    ],
+    [
+      6,
+      11,
+      6,
+      11
+    ],
+    [
+      6,
+      12,
+      6,
+      12
+    ],
+    [
+      6,
+      13,
+      6,
+      13
+    ],
+    [
+      6,
+      14,
+      6,
+      14
+    ],
+    [
+      6,
+      15,
+      6,
+      15
+    ],
+    [
+      6,
+      16,
+      6,
+      16
+    ],
+    [
+      7,
+      6,
+      7,
+      6
+    ],
+    [
+      7,
+      7,
+      7,
+      7
+    ],
+    [
+      7,
+      8,
+      7,
+      8
+    ],
+    [
+      7,
+      9,
+      7,
+      9
+    ],
+    [
+      7,
+      10,
+      7,
+      10
+    ],
+    [
+      7,
+      11,
+      7,
+      11
+    ],
+    [
+      7,
+      12,
+      7,
+      12
+    ],
+    [
+      7,
+      13,
+      7,
+      13
+    ],
+    [
+      7,
+      14,
+      7,
+      14
+    ],
+    [
+      7,
+      15,
+      7,
+      15
+    ],
+    [
+      7,
+      16,
+      7,
+      16
+    ],
+    [
+      8,
+      6,
+      8,
+      6
+    ],
+    [
+      8,
+      7,
+      8,
+      7
+    ],
+    [
+      8,
+      8,
+      8,
+      8
+    ],
+    [
+      8,
+      9,
+      8,
+      9
+    ],
+    [
+      8,
+      10,
+      8,
+      10
+    ],
+    [
+      8,
+      11,
+      8,
+      11
+    ],
+    [
+      8,
+      12,
+      8,
+      12
+    ],
+    [
+      8,
+      13,
+      8,
+      13
+    ],
+    [
+      8,
+      14,
+      8,
+      14
+    ],
+    [
+      8,
+      15,
+      8,
+      15
+    ],
+    [
+      8,
+      16,
+      8,
+      16
+    ],
+    [
+      9,
+      6,
+      9,
+      6
+    ],
+    [
+      9,
+      7,
+      9,
+      7
+    ],
+    [
+      9,
+      8,
+      9,
+      8
+    ],
+    [
+      9,
+      9,
+      9,
+      9
+    ],
+    [
+      9,
+      10,
+      9,
+      10
+    ],
+    [
+      9,
+      11,
+      9,
+      11
+    ],
+    [
+      9,
+      12,
+      9,
+      12
+    ],
+    [
+      9,
+      13,
+      9,
+      13
+    ],
+    [
+      9,
+      14,
+      9,
+      14
+    ],
+    [
+      9,
+      15,
+      9,
+      15
+    ],
+    [
+      9,
+      16,
+      9,
+      16
+    ],
+    [
+      10,
+      6,
+      10,
+      6
+    ],
+    [
+      10,
+      7,
+      10,
+      7
+    ],
+    [
+      10,
+      8,
+      10,
+      8
+    ],
+    [
+      10,
+      9,
+      10,
+      9
+    ],
+    [
+      10,
+      10,
+      10,
+      10
+    ],
+    [
+      10,
+      11,
+      10,
+      11
+    ],
+    [
+      10,
+      12,
+      10,
+      12
+    ],
+    [
+      10,
+      13,
+      10,
+      13
+    ],
+    [
+      10,
+      14,
+      10,
+      14
+    ],
+    [
+      10,
+      15,
+      10,
+      15
+    ],
+    [
+      10,
+      16,
+      10,
+      16
+    ],
+    [
+      11,
+      6,
+      11,
+      6
+    ],
+    [
+      11,
+      7,
+      11,
+      7
+    ],
+    [
+      11,
+      8,
+      11,
+      8
+    ],
+    [
+      11,
+      9,
+      11,
+      9
+    ],
+    [
+      11,
+      10,
+      11,
+      10
+    ],
+    [
+      11,
+      11,
+      11,
+      11
+    ],
+    [
+      11,
+      12,
+      11,
+      12
+    ],
+    [
+      11,
+      13,
+      11,
+      13
+    ],
+    [
+      11,
+      14,
+      11,
+      14
+    ],
+    [
+      11,
+      15,
+      11,
+      15
+    ],
+    [
+      11,
+      16,
+      11,
+      16
+    ],
+    [
+      12,
+      6,
+      12,
+      6
+    ],
+    [
+      12,
+      7,
+      12,
+      7
+    ],
+    [
+      12,
+      8,
+      12,
+      8
+    ],
+    [
+      12,
+      9,
+      12,
+      9
+    ],
+    [
+      12,
+      10,
+      12,
+      10
+    ],
+    [
+      12,
+      11,
+      12,
+      11
+    ],
+    [
+      12,
+      12,
+      12,
+      12
+    ],
+    [
+      12,
+      13,
+      12,
+      13
+    ],
+    [
+      12,
+      14,
+      12,
+      14
+    ],
+    [
+      12,
+      15,
+      12,
+      15
+    ],
+    [
+      12,
+      16,
+      12,
+      16
+    ],
+    [
+      13,
+      6,
+      13,
+      6
+    ],
+    [
+      13,
+      7,
+      13,
+      7
+    ],
+    [
+      13,
+      8,
+      13,
+      8
+    ],
+    [
+      13,
+      9,
+      13,
+      9
+    ],
+    [
+      13,
+      10,
+      13,
+      10
+    ],
+    [
+      13,
+      11,
+      13,
+      11
+    ],
+    [
+      13,
+      12,
+      13,
+      12
+    ],
+    [
+      13,
+      13,
+      13,
+      13
+    ],
+    [
+      13,
+      14,
+      13,
+      14
+    ],
+    [
+      13,
+      15,
+      13,
+      15
+    ],
+    [
+      13,
+      16,
+      13,
+      16
+    ],
+    [
+      14,
+      6,
+      14,
+      6
+    ],
+    [
+      14,
+      7,
+      14,
+      7
+    ],
+    [
+      14,
+      8,
+      14,
+      8
+    ],
+    [
+      14,
+      9,
+      14,
+      9
+    ],
+    [
+      14,
+      10,
+      14,
+      10
+    ],
+    [
+      14,
+      11,
+      14,
+      11
+    ],
+    [
+      14,
+      12,
+      14,
+      12
+    ],
+    [
+      14,
+      13,
+      14,
+      13
+    ],
+    [
+      14,
+      14,
+      14,
+      14
+    ],
+    [
+      14,
+      15,
+      14,
+      15
+    ],
+    [
+      14,
+      16,
+      14,
+      16
+    ],
+    [
+      15,
+      6,
+      15,
+      6
+    ],
+    [
+      15,
+      7,
+      15,
+      7
+    ],
+    [
+      15,
+      8,
+      15,
+      8
+    ],
+    [
+      15,
+      9,
+      15,
+      9
+    ],
+    [
+      15,
+      10,
+      15,
+      10
+    ],
+    [
+      15,
+      11,
+      15,
+      11
+    ],
+    [
+      15,
+      12,
+      15,
+      12
+    ],
+    [
+      15,
+      13,
+      15,
+      13
+    ],
+    [
+      15,
+      14,
+      15,
+      14
+    ],
+    [
+      15,
+      15,
+      15,
+      15
+    ],
+    [
+      15,
+      16,
+      15,
+      16
+    ],
+    [
+      16,
+      6,
+      16,
+      6
+    ],
+    [
+      16,
+      7,
+      16,
+      7
+    ],
+    [
+      16,
+      8,
+      16,
+      8
+    ],
+    [
+      16,
+      9,
+      16,
+      9
+    ],
+    [
+      16,
+      10,
+      16,
+      10
+    ],
+    [
+      16,
+      11,
+      16,
+      11
+    ],
+    [
+      16,
+      12,
+      16,
+      12
+    ],
+    [
+      16,
+      13,
+      16,
+      13
+    ],
+    [
+      16,
+      14,
+      16,
+      14
+    ],
+    [
+      16,
+      15,
+      16,
+      15
+    ],
+    [
+      16,
+      16,
+      16,
+      16
+    ]
+  ],
+  "fixture_matches": {
+    "canonical": true,
+    "teaching_fixture": true
+  },
+  "original_solver_replay": {
+    "canonical": {
+      "correct": 4,
+      "total": 4,
+      "all_exact": true
+    },
+    "teaching_fixture": {
+      "correct": 4,
+      "total": 4,
+      "all_exact": true
+    }
+  },
+  "errors": [],
+  "sha256": "54e41fb6815b639b5f0a6b3d6f9c62e34f866500f0657f8b8d45be2a97a4b01d",
+  "status": "reviewed_bounded_validation_passed",
+  "limitations": "Bounded randomized agreement with a saved solver is not proof of semantic completeness.",
+  "candidate_path": "/Users/ritwika/projects/arc-agi2/outputs/research/arcgen-coverage-cli/host-reviewed/880c1354/task_880c1354.py",
+  "attempts": 1,
+  "model_usage": {
+    "claude-opus-5-5": {
+      "inputTokens": 2,
+      "outputTokens": 10504,
+      "cacheReadInputTokens": 1892,
+      "cacheCreationInputTokens": 21137,
+      "webSearchRequests": 0,
+      "costUSD": 0.37956239999999997,
+      "contextWindow": 1000000,
+      "maxOutputTokens": 128000,
+      "thinkingTokens": 1718,
+      "canonicalModel": "claude-opus-5-5",
+      "provider": "firstParty",
+      "costBasis": "list"
+    }
+  },
+  "rule": "Colour 4 (inner body) and colour 7 (outlines) are fixed. Every other connected region touches the border in one contiguous arc; ordering regions by a clockwise border walk, each region takes the input colour of the previous region (colours rotate one step clockwise; two regions swap).",
+  "scope": "Clockwise transfer of colours across separated border-connected regions, preserving all 4/7 skeleton cells. Variable sizes and two to eight regions; morphological extensions explicitly labelled.",
+  "constraints": [
+    "Independent input-only component and polar-angle boundary oracle passed 1240 unique scenes; output and every skeleton cell matched.",
+    "All 40 6x6/four-region and 40 6x7/four-region trials succeeded; no perimeter bound was tightened.",
+    "Forty cases each passed for 30x30/eight regions, 30x6/eight regions, 6x30/eight regions and six-colour explicit order.",
+    "Default count histogram: 113 two-region swaps, 373 three-region, 325 four-region, 189 five-region; direction identifiable in 887/1000 defaults.",
+    "Morphology measured: 962 regions containing holes (1682 enclosed cells) across the 1240-scene audit; 962 scenes contain some 7 cells not directly adjacent to a region. These are recorded synthetic extensions.",
+    "Malformed first layout rows reject with ValueError rather than TypeError.",
+    "Final adversarial trials: 26 successes and 9 expected rejections, no expectation overrides."
+  ],
+  "known_limitations": [
+    "Random weighted regions differ morphologically from the fixtures' diagonal wedges; enclosed holes and thick 7 patches are measured, not silently excluded.",
+    "Two-region scenes are swaps and alone cannot distinguish clockwise from counterclockwise transfer.",
+    "All non-8x8 sizes and counts above four are synthetic extensions.",
+    "Random scenes have one connected 4 body; explicit layouts check rule-critical invariants without imposing that morphology."
+  ],
+  "billing": "Claude Max CLI; API credentials excluded; no API fallback",
+  "authored_sha256": "fbe4f92bc9dd8fb81229a4c875ebe7507ddfbe40b371d0d4ab80cd7c9f025695",
+  "stress_test": {
+    "task_id": "880c1354",
+    "ready": true,
+    "samples_requested": 1000,
+    "samples_attempted": 1000,
+    "samples_passed": 1000,
+    "verifier_mode": "archived_pair_solver",
+    "verifier_evidence": {
+      "mode": "archived_pair_solver"
+    },
+    "improved_verifier_fixture_replay": null,
+    "seed_start": 20000,
+    "seed_end_exclusive": 21000,
+    "fixture_basis": {
+      "fixture": "canonical",
+      "corrected": false
+    },
+    "unique_inputs": 1000,
+    "changed_pairs": 1000,
+    "fixture_replays": 0,
+    "shapes": [
+      [
+        6,
+        6,
+        6,
+        6
+      ],
+      [
+        6,
+        7,
+        6,
+        7
+      ],
+      [
+        6,
+        8,
+        6,
+        8
+      ],
+      [
+        6,
+        9,
+        6,
+        9
+      ],
+      [
+        6,
+        10,
+        6,
+        10
+      ],
+      [
+        6,
+        11,
+        6,
+        11
+      ],
+      [
+        6,
+        12,
+        6,
+        12
+      ],
+      [
+        6,
+        13,
+        6,
+        13
+      ],
+      [
+        6,
+        14,
+        6,
+        14
+      ],
+      [
+        6,
+        15,
+        6,
+        15
+      ],
+      [
+        6,
+        16,
+        6,
+        16
+      ],
+      [
+        7,
+        6,
+        7,
+        6
+      ],
+      [
+        7,
+        7,
+        7,
+        7
+      ],
+      [
+        7,
+        8,
+        7,
+        8
+      ],
+      [
+        7,
+        9,
+        7,
+        9
+      ],
+      [
+        7,
+        10,
+        7,
+        10
+      ],
+      [
+        7,
+        11,
+        7,
+        11
+      ],
+      [
+        7,
+        12,
+        7,
+        12
+      ],
+      [
+        7,
+        13,
+        7,
+        13
+      ],
+      [
+        7,
+        14,
+        7,
+        14
+      ],
+      [
+        7,
+        15,
+        7,
+        15
+      ],
+      [
+        7,
+        16,
+        7,
+        16
+      ],
+      [
+        8,
+        6,
+        8,
+        6
+      ],
+      [
+        8,
+        7,
+        8,
+        7
+      ],
+      [
+        8,
+        8,
+        8,
+        8
+      ],
+      [
+        8,
+        9,
+        8,
+        9
+      ],
+      [
+        8,
+        10,
+        8,
+        10
+      ],
+      [
+        8,
+        11,
+        8,
+        11
+      ],
+      [
+        8,
+        12,
+        8,
+        12
+      ],
+      [
+        8,
+        13,
+        8,
+        13
+      ],
+      [
+        8,
+        14,
+        8,
+        14
+      ],
+      [
+        8,
+        15,
+        8,
+        15
+      ],
+      [
+        8,
+        16,
+        8,
+        16
+      ],
+      [
+        9,
+        6,
+        9,
+        6
+      ],
+      [
+        9,
+        7,
+        9,
+        7
+      ],
+      [
+        9,
+        8,
+        9,
+        8
+      ],
+      [
+        9,
+        9,
+        9,
+        9
+      ],
+      [
+        9,
+        10,
+        9,
+        10
+      ],
+      [
+        9,
+        11,
+        9,
+        11
+      ],
+      [
+        9,
+        12,
+        9,
+        12
+      ],
+      [
+        9,
+        13,
+        9,
+        13
+      ],
+      [
+        9,
+        14,
+        9,
+        14
+      ],
+      [
+        9,
+        15,
+        9,
+        15
+      ],
+      [
+        9,
+        16,
+        9,
+        16
+      ],
+      [
+        10,
+        6,
+        10,
+        6
+      ],
+      [
+        10,
+        7,
+        10,
+        7
+      ],
+      [
+        10,
+        8,
+        10,
+        8
+      ],
+      [
+        10,
+        9,
+        10,
+        9
+      ],
+      [
+        10,
+        10,
+        10,
+        10
+      ],
+      [
+        10,
+        11,
+        10,
+        11
+      ],
+      [
+        10,
+        12,
+        10,
+        12
+      ],
+      [
+        10,
+        13,
+        10,
+        13
+      ],
+      [
+        10,
+        14,
+        10,
+        14
+      ],
+      [
+        10,
+        15,
+        10,
+        15
+      ],
+      [
+        10,
+        16,
+        10,
+        16
+      ],
+      [
+        11,
+        6,
+        11,
+        6
+      ],
+      [
+        11,
+        7,
+        11,
+        7
+      ],
+      [
+        11,
+        8,
+        11,
+        8
+      ],
+      [
+        11,
+        9,
+        11,
+        9
+      ],
+      [
+        11,
+        10,
+        11,
+        10
+      ],
+      [
+        11,
+        11,
+        11,
+        11
+      ],
+      [
+        11,
+        12,
+        11,
+        12
+      ],
+      [
+        11,
+        13,
+        11,
+        13
+      ],
+      [
+        11,
+        14,
+        11,
+        14
+      ],
+      [
+        11,
+        15,
+        11,
+        15
+      ],
+      [
+        11,
+        16,
+        11,
+        16
+      ],
+      [
+        12,
+        6,
+        12,
+        6
+      ],
+      [
+        12,
+        7,
+        12,
+        7
+      ],
+      [
+        12,
+        8,
+        12,
+        8
+      ],
+      [
+        12,
+        9,
+        12,
+        9
+      ],
+      [
+        12,
+        10,
+        12,
+        10
+      ],
+      [
+        12,
+        11,
+        12,
+        11
+      ],
+      [
+        12,
+        12,
+        12,
+        12
+      ],
+      [
+        12,
+        13,
+        12,
+        13
+      ],
+      [
+        12,
+        14,
+        12,
+        14
+      ],
+      [
+        12,
+        15,
+        12,
+        15
+      ],
+      [
+        12,
+        16,
+        12,
+        16
+      ],
+      [
+        13,
+        6,
+        13,
+        6
+      ],
+      [
+        13,
+        7,
+        13,
+        7
+      ],
+      [
+        13,
+        8,
+        13,
+        8
+      ],
+      [
+        13,
+        9,
+        13,
+        9
+      ],
+      [
+        13,
+        10,
+        13,
+        10
+      ],
+      [
+        13,
+        11,
+        13,
+        11
+      ],
+      [
+        13,
+        12,
+        13,
+        12
+      ],
+      [
+        13,
+        13,
+        13,
+        13
+      ],
+      [
+        13,
+        14,
+        13,
+        14
+      ],
+      [
+        13,
+        15,
+        13,
+        15
+      ],
+      [
+        13,
+        16,
+        13,
+        16
+      ],
+      [
+        14,
+        6,
+        14,
+        6
+      ],
+      [
+        14,
+        7,
+        14,
+        7
+      ],
+      [
+        14,
+        8,
+        14,
+        8
+      ],
+      [
+        14,
+        9,
+        14,
+        9
+      ],
+      [
+        14,
+        10,
+        14,
+        10
+      ],
+      [
+        14,
+        11,
+        14,
+        11
+      ],
+      [
+        14,
+        12,
+        14,
+        12
+      ],
+      [
+        14,
+        13,
+        14,
+        13
+      ],
+      [
+        14,
+        14,
+        14,
+        14
+      ],
+      [
+        14,
+        15,
+        14,
+        15
+      ],
+      [
+        14,
+        16,
+        14,
+        16
+      ],
+      [
+        15,
+        6,
+        15,
+        6
+      ],
+      [
+        15,
+        7,
+        15,
+        7
+      ],
+      [
+        15,
+        8,
+        15,
+        8
+      ],
+      [
+        15,
+        9,
+        15,
+        9
+      ],
+      [
+        15,
+        10,
+        15,
+        10
+      ],
+      [
+        15,
+        11,
+        15,
+        11
+      ],
+      [
+        15,
+        12,
+        15,
+        12
+      ],
+      [
+        15,
+        13,
+        15,
+        13
+      ],
+      [
+        15,
+        14,
+        15,
+        14
+      ],
+      [
+        15,
+        15,
+        15,
+        15
+      ],
+      [
+        15,
+        16,
+        15,
+        16
+      ],
+      [
+        16,
+        6,
+        16,
+        6
+      ],
+      [
+        16,
+        7,
+        16,
+        7
+      ],
+      [
+        16,
+        8,
+        16,
+        8
+      ],
+      [
+        16,
+        9,
+        16,
+        9
+      ],
+      [
+        16,
+        10,
+        16,
+        10
+      ],
+      [
+        16,
+        11,
+        16,
+        11
+      ],
+      [
+        16,
+        12,
+        16,
+        12
+      ],
+      [
+        16,
+        13,
+        16,
+        13
+      ],
+      [
+        16,
+        14,
+        16,
+        14
+      ],
+      [
+        16,
+        15,
+        16,
+        15
+      ],
+      [
+        16,
+        16,
+        16,
+        16
+      ]
+    ],
+    "fixture_matches": {
+      "canonical": true,
+      "teaching_fixture": true
+    },
+    "original_solver_replay": {
+      "canonical": {
+        "correct": 4,
+        "total": 4,
+        "all_exact": true
+      },
+      "teaching_fixture": {
+        "correct": 4,
+        "total": 4,
+        "all_exact": true
+      }
+    },
+    "errors": [],
+    "sha256": "54e41fb6815b639b5f0a6b3d6f9c62e34f866500f0657f8b8d45be2a97a4b01d",
+    "status": "validated_candidate_needs_semantic_review",
+    "limitations": "Bounded randomized agreement with a saved solver is not proof of semantic completeness."
+  },
+  "authored_scope": "Random scenes: width/height 6..16, 2..5 regions (weighted to 3-4), distinct colours from {0,1,2,3,5,6,8,9}, border gaps of widely varying length (total k..~55% of perimeter, skewed short), optional full 7-outlining of border gaps, otherwise the 4 body may reach the border. Explicit sizes up to 30 and 2..8 regions are synthetic extensions. Fixtures are replayed via explicit label layouts plus colour lists. Not supported: regions touching the border in multiple arcs, nested/non-border regions, multiple 4 bodies, colour 4 or 7 as region colours.",
+  "authored_constraints": [
+    "Every region is 4-connected and meets the border in exactly one contiguous cyclic arc",
+    "Different regions are at Chebyshev distance >= 2 (no 4- or 8-adjacency), so connectivity convention is irrelevant",
+    "No 4 cell is 4-adjacent to a region cell; region boundaries are outlined by 7",
+    "Exactly one 4-connected 4 body, with at least max(2, w*h//16) cells",
+    "Region colours distinct, ints, not 4 or 7; 4/7 cells identical in input and output",
+    "Region count >= 2 so the output always differs from the input"
+  ],
+  "semantic_review": {
+    "status": "reviewed",
+    "checks": [
+      "Independent input-only component and polar-angle boundary oracle passed 1240 unique scenes; output and every skeleton cell matched.",
+      "All 40 6x6/four-region and 40 6x7/four-region trials succeeded; no perimeter bound was tightened.",
+      "Forty cases each passed for 30x30/eight regions, 30x6/eight regions, 6x30/eight regions and six-colour explicit order.",
+      "Default count histogram: 113 two-region swaps, 373 three-region, 325 four-region, 189 five-region; direction identifiable in 887/1000 defaults.",
+      "Morphology measured: 962 regions containing holes (1682 enclosed cells) across the 1240-scene audit; 962 scenes contain some 7 cells not directly adjacent to a region. These are recorded synthetic extensions.",
+      "Malformed first layout rows reject with ValueError rather than TypeError.",
+      "Final adversarial trials: 26 successes and 9 expected rejections, no expectation overrides.",
+      "1000 independent seeds 20000..20999; approved validation fixtures reconstructed exactly; canonical replay reported separately"
+    ],
+    "limitations": [
+      "Random weighted regions differ morphologically from the fixtures' diagonal wedges; enclosed holes and thick 7 patches are measured, not silently excluded.",
+      "Two-region scenes are swaps and alone cannot distinguish clockwise from counterclockwise transfer.",
+      "All non-8x8 sizes and counts above four are synthetic extensions.",
+      "Random scenes have one connected 4 body; explicit layouts check rule-critical invariants without imposing that morphology."
+    ]
+  },
+  "diversity_audit": {
+    "task_id": "880c1354",
+    "source_sha256": "54e41fb6815b639b5f0a6b3d6f9c62e34f866500f0657f8b8d45be2a97a4b01d",
+    "method": "Infer connected regions from input; sort perimeter cells by angle to recover cyclic colour order; apply predecessor-colour map independently and compare every output cell.",
+    "counts": {
+      "regions_with_holes": 962,
+      "hole_cells": 1682,
+      "checked": 1240,
+      "default": 1000,
+      "zero_is_region_colour": 633,
+      "wraparound_arc": 877,
+      "direction_identifiable": 1127,
+      "scenes_with_nonadjacent_outline_cells": 962,
+      "small_square_4": 40,
+      "small_rectangle_4": 40,
+      "large_8": 40,
+      "wide_8": 40,
+      "tall_8": 40,
+      "ordered_palette": 40
+    },
+    "unique_inputs": 1240,
+    "shape_histogram": {
+      "10x10": 10,
+      "10x11": 7,
+      "10x12": 6,
+      "10x13": 8,
+      "10x14": 7,
+      "10x15": 11,
+      "10x16": 19,
+      "10x6": 9,
+      "10x7": 7,
+      "10x8": 5,
+      "10x9": 6,
+      "11x10": 13,
+      "11x11": 8,
+      "11x12": 12,
+      "11x13": 10,
+      "11x14": 7,
+      "11x15": 7,
+      "11x16": 8,
+      "11x6": 2,
+      "11x7": 8,
+      "11x8": 6,
+      "11x9": 8,
+      "12x10": 12,
+      "12x11": 9,
+      "12x12": 11,
+      "12x13": 9,
+      "12x14": 9,
+      "12x15": 5,
+      "12x16": 9,
+      "12x6": 4,
+      "12x7": 10,
+      "12x8": 6,
+      "12x9": 11,
+      "13x10": 11,
+      "13x11": 13,
+      "13x12": 9,
+      "13x13": 13,
+      "13x14": 11,
+      "13x15": 9,
+      "13x16": 5,
+      "13x6": 6,
+      "13x7": 11,
+      "13x8": 13,
+      "13x9": 8,
+      "14x10": 14,
+      "14x11": 8,
+      "14x12": 10,
+      "14x13": 10,
+      "14x14": 10,
+      "14x15": 14,
+      "14x16": 10,
+      "14x6": 6,
+      "14x7": 4,
+      "14x8": 12,
+      "14x9": 10,
+      "15x10": 8,
+      "15x11": 10,
+      "15x12": 10,
+      "15x13": 6,
+      "15x14": 7,
+      "15x15": 10,
+      "15x16": 12,
+      "15x6": 7,
+      "15x7": 6,
+      "15x8": 7,
+      "15x9": 21,
+      "16x10": 9,
+      "16x11": 7,
+      "16x12": 8,
+      "16x13": 8,
+      "16x14": 7,
+      "16x15": 10,
+      "16x16": 9,
+      "16x6": 2,
+      "16x7": 8,
+      "16x8": 10,
+      "16x9": 9,
+      "24x20": 40,
+      "30x30": 40,
+      "30x6": 40,
+      "6x10": 8,
+      "6x11": 7,
+      "6x12": 3,
+      "6x13": 8,
+      "6x14": 5,
+      "6x15": 9,
+      "6x16": 3,
+      "6x30": 40,
+      "6x6": 47,
+      "6x7": 5,
+      "6x8": 4,
+      "6x9": 8,
+      "7x10": 9,
+      "7x11": 8,
+      "7x12": 5,
+      "7x13": 4,
+      "7x14": 7,
+      "7x15": 5,
+      "7x16": 10,
+      "7x6": 46,
+      "7x7": 8,
+      "7x8": 7,
+      "7x9": 6,
+      "8x10": 9,
+      "8x11": 5,
+      "8x12": 5,
+      "8x13": 9,
+      "8x14": 5,
+      "8x15": 11,
+      "8x16": 5,
+      "8x6": 8,
+      "8x7": 4,
+      "8x8": 10,
+      "8x9": 5,
+      "9x10": 17,
+      "9x11": 14,
+      "9x12": 7,
+      "9x13": 8,
+      "9x14": 6,
+      "9x15": 9,
+      "9x16": 11,
+      "9x6": 4,
+      "9x7": 7,
+      "9x8": 5,
+      "9x9": 7
+    },
+    "default_region_count_histogram": {
+      "2": 113,
+      "3": 373,
+      "4": 325,
+      "5": 189
+    },
+    "max_generation_seconds": {
+      "default": 0.0019153750035911798,
+      "small_square_4": 0.00026062503457069397,
+      "small_rectangle_4": 0.00025558401830494404,
+      "large_8": 0.005501499981619418,
+      "wide_8": 0.0019705420127138495,
+      "tall_8": 0.001797167002223432,
+      "ordered_palette": 0.0024132499238476157
+    },
+    "limitations": [
+      "Random weighted regions differ morphologically from the fixtures' diagonal wedges; enclosed holes and thick 7 patches are measured, not silently excluded.",
+      "Two-region scenes are swaps and alone cannot distinguish clockwise from counterclockwise transfer.",
+      "All non-8x8 sizes and counts above four are synthetic extensions.",
+      "Random scenes have one connected 4 body; explicit layouts check rule-critical invariants without imposing that morphology."
+    ]
+  }
+}

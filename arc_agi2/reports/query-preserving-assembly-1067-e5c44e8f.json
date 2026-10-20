@@ -1,0 +1,64 @@
+{
+  "task_id": "e5c44e8f",
+  "scope": "Local full-quota production-assembler audit only.1200unique native pool pairs,1000requested fresh bases. Grid pool then combined program/grid make_record on every augmented row; temporary audit rows removed,no public dataset or training launched.",
+  "pool_pairs": 1200,
+  "pool_draws": 1340,
+  "constructor_sha256": "d8bfd12f1473bfff3f94aee5da82c2fec1f3c8a778fe00084577db7e26a84fc8",
+  "metrics": {
+    "shards": [],
+    "episodes": 8000,
+    "fresh_episodes": 1000,
+    "requested_fresh_episodes": 1000,
+    "spatial_variant_upper_bound": 8000,
+    "symmetric_variants_removed": 0,
+    "variants_per_fresh_episode": {
+      "8": 1000
+    },
+    "query_histograms": {
+      "input": {
+        "height": {
+          "11": 8000
+        },
+        "width": {
+          "11": 8000
+        },
+        "longest": {
+          "11": 8000
+        },
+        "shapes": {
+          "11x11": 8000
+        }
+      },
+      "output": {
+        "height": {
+          "11": 8000
+        },
+        "width": {
+          "11": 8000
+        },
+        "longest": {
+          "11": 8000
+        },
+        "shapes": {
+          "11x11": 8000
+        }
+      }
+    },
+    "relations": {
+      "same_shape": 8000
+    },
+    "failures": {
+      "missing_colour_evidence_attempts": 1
+    },
+    "query_context_shortfalls": [],
+    "max_query_reuse_in_fresh_episodes": 1,
+    "max_pair_reuse_in_fresh_episodes": 11,
+    "distinct_inputs_used": 1181
+  },
+  "base_query_types": {
+    "changed_query": 962,
+    "unchanged_query": 38
+  },
+  "verified_program_grid_records": 8000,
+  "seconds": 8.774292415939271
+}

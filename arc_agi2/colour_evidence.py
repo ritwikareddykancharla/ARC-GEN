@@ -63,6 +63,16 @@ def _hole_count(cells):
 
 
 def require_colour_evidence(task_id, demonstrations, queries, palette=None, d4=0):
+    if task_id == '98c475bf':
+        from .line_motif_evidence import require_line_motif_evidence
+        require_line_motif_evidence(demonstrations, queries,
+                                   list(range(10)) if palette is None else palette)
+        return
+    if task_id == 'e5c44e8f':
+        from .spiral_evidence import require_spiral_evidence
+        require_spiral_evidence(demonstrations, queries,
+                               list(range(10)) if palette is None else palette)
+        return
     if task_id == 'b7cb93ac':
         from .packing_evidence import require_packing_evidence
         require_packing_evidence(demonstrations, queries,

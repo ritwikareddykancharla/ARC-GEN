@@ -1315,3 +1315,49 @@ All 543 regression tests passed. Remaining: 43 semantic/context holds,
 9 execution failures and 3 missing factories. Audit rows were generated in a
 local temporary directory; this was not the expanded public dataset launch.
 Bulk generation and model training remain pending complete coverage.
+
+## 1067-family checkpoint
+
+- `e5c44e8f`: retain early-stop spirals. An independent segment-pair simulator
+  compares all four initial headings and both turn senses using complete demo
+  outputs and query inputs. A single immediate obstacle can teach a heading
+  without teaching the turn; four adjacent obstacles leave all orientations
+  equivalent for a fully stopped query. Require agreement on the actual query,
+  not a minimum painted-path heuristic. Tests cover unobstructed exits and
+  re-entry at all 121 native start cells, D4 closure, contradictory demos and
+  recovery with an informative example. Constructor and factory hashes are
+  unchanged; their matching 1,000-sampled-pair/8,000-augmented/16-fixture audit
+  is reused (927 distinct inputs).
+- `98c475bf`: remove the fixed colour-to-motif fallback and plain-line default.
+  Every target motif is read from full demonstrated input/output lines.
+  Conflicting patterns, missing colours, span mismatch, clipping and overlaps
+  raise instead of guessing. An independent gate infers the visible border
+  axis and reads templates without D4 metadata. It now protects `make_record`
+  for every augmentation, in addition to the existing native `motif_context`
+  builder check. A counterfactual test changes a demonstrated motif while
+  keeping the query input fixed: the program follows the changed pattern in
+  all eight orientations, rather than the constructor's private motif table.
+
+The new motif execution audit keeps each of 250 fresh queries fixed while
+resampling three-demo contexts from visible evidence. It verifies 1,000 unique
+pairs, 8,000 augmented pair checks and 16 fixture variants, with 40 context
+retries and no sampler failures. No query answer is used to select the context.
+Neither native constructor nor benchmark labels changed.
+
+An independent episode audit accepted 36/40 contexts, excluded four missing-
+evidence contexts, and verified 288 augmented program/grid records without
+execution errors. Full-quota production-assembler audits then used 1,200 unique
+native pool pairs per family and completed **1,000/1,000 bases each**:
+
+| Family | Verified augmented records | Demo retries | Query-context shortfalls |
+|---|---:|---:|---:|
+| e5c44e8f | 8,000 | 1 | 0 |
+| 98c475bf | 8,000 | 202 | 0 |
+
+The spiral set retains 38 immediate-stop queries. Pair reuse peaks at 11 and 10,
+respectively, below the existing cap. Audit rows were temporary local artifacts;
+reports are saved as `query-preserving-assembly-1067-<task_id>.json`.
+
+All 552 regression tests passed. Remaining: 41 semantic/context holds,
+9 execution failures and 3 missing factories. Bulk publication and model
+training remain pending complete coverage.

@@ -269,7 +269,7 @@ def make_episodes(arg):
                         try:
                             require_colour_evidence(tid,demos,[{'input':q['input']}])
                         except MissingColourEvidence:
-                            failures['missing_colour_evidence_attempts']+=1
+                            failures['missing_motif_evidence_attempts' if tid=='98c475bf' else 'missing_colour_evidence_attempts']+=1
                             continue
                         if tid in CONTEXTUAL_TASK_IDS:
                             call(verify_shared_picture_episode,{'train':demos,'test':[q]},seconds=3)

@@ -11,6 +11,49 @@ from .fixture_policy import fixture_basis
 from .augmentation import apply_episode,settings,exhaustive_variants
 
 class GeneratorTests(unittest.TestCase):
+    def test_legend_sampling_reaches_compact_native_layouts(self):
+        legend=importlib.import_module('tasks.task_845d6e51')
+        strips=set()
+        compact=False
+        for seed in range(41000,41100):
+            random.seed(seed)
+            p=legend.generate()
+            g=p['input']
+            wr=max(r for r,row in enumerate(g) if 5 in row)
+            wc=max(c for row in g for c,v in enumerate(row) if v==5)
+            strips.add(len(g[0])-wc-1)
+            compact |= len(g)==10 and wr==3
+            self.assertEqual(p['output'],grid(call(solver('845d6e51'),g)))
+        self.assertTrue({2,3,4,5}.issubset(strips))
+        self.assertTrue(compact)
+
+    def test_legend_malformed_explicit_shapes_reject_cleanly(self):
+        legend=importlib.import_module('tasks.task_845d6e51')
+        base=dict(width=10,height=10,wall_row=3,wall_col=7,
+                  legend=[(2,[(0,0),(1,0)]),(4,[(0,2),(0,3),(1,2)])])
+        for malformed in (3,[3],[(0,3)],[(0,[5,6])],[(0,[(1,)])]):
+            with self.subTest(malformed=malformed),self.assertRaises(ValueError):
+                legend.generate(**base,greens=malformed)
+
+    def test_legend_dense_count_is_honoured(self):
+        legend=importlib.import_module('tasks.task_845d6e51')
+        random.seed(43000)
+        p=legend.generate(width=30,height=30,num_greens=40)
+        remaining={(r,c) for r,row in enumerate(p['input'])
+                   for c,v in enumerate(row) if v==3}
+        count=0
+        while remaining:
+            stack=[remaining.pop()]
+            count+=1
+            while stack:
+                r,c=stack.pop()
+                for q in ((r-1,c),(r+1,c),(r,c-1),(r,c+1)):
+                    if q in remaining:
+                        remaining.remove(q)
+                        stack.append(q)
+        self.assertEqual(count,40)
+        self.assertEqual(p['output'],grid(call(solver('845d6e51'),p['input'])))
+
     def test_stencil_partial_masks_respect_output_bounds(self):
         stamps=importlib.import_module('tasks.task_bf45cf4b')
         mask=[[1,1],[1,0],[1,1],[0,1],[1,1],[1,0],[1,1]]

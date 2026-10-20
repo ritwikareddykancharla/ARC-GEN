@@ -161,6 +161,39 @@ class GeneratorTests(unittest.TestCase):
         self.assertTrue(jigsaw._ambiguous(holes,[(2,1,1),(3,1,1)]))
         self.assertFalse(jigsaw._ambiguous(holes,[(2,1,1),(2,1,1)]))
 
+    def test_ray_bounces_legend_positions_and_piece_conservation(self):
+        rays=importlib.import_module('tasks.task_142ca369')
+        p=rays.generate(height=18,width=18,emitters=[(7,7,-1,-1,2)],
+                        bars=[(4,4,'h',3,4),(8,0,'v',3,6),(14,8,'v',3,5)])
+        for r,c,colour in [(6,6,2),(5,5,4),(6,4,4),(9,1,6),
+                            (10,2,6),(15,7,5),(16,6,5),(17,5,5)]:
+            self.assertEqual(p['output'][r][c],colour,(r,c))
+        for seed in range(5):
+            random.seed(seed)
+            p=rays.generate(width=30,height=24,mode='parallel')
+            self.assertEqual((len(p['input']),len(p['input'][0])),(24,30))
+            self.assertEqual(p['output'],grid(call(solver('142ca369'),p['input'])))
+        legend=importlib.import_module('tasks.task_1da012fc')
+        self.assertEqual(legend._axis(5,3,allow_border=True),[0,2,4])
+        join=importlib.import_module('tasks.task_20270e3b')
+        damaged=importlib.import_module('tasks.task_2037f2c7')
+        for seed in range(5):
+            random.seed(seed)
+            p=legend.generate(width=30,height=24,num_shapes=5,shape_color=8)
+            self.assertEqual((len(p['input']),len(p['input'][0])),(24,30))
+            self.assertEqual(p['output'],grid(call(solver('1da012fc'),p['input'])))
+            p=join.generate(width=30,height=24,fill=0,transpose=True)
+            self.assertEqual(sum(row.count(4) for row in p['input']),sum(row.count(4) for row in p['output']))
+            self.assertFalse(any(7 in row for row in p['output']))
+            self.assertEqual(p['output'],grid(call(solver('20270e3b'),p['input'])))
+            p=call(lambda:damaged.generate(width=30,height=30,fig_width=8,fig_height=20),seconds=3)
+            self.assertEqual(len(p['output'][0]),8)
+            self.assertEqual(p['output'],grid(call(solver('2037f2c7'),p['input'])))
+        with self.assertRaisesRegex(ValueError,'both explicit pieces'):
+            join.generate(piece_a=(0,0,['#m']))
+        with self.assertRaisesRegex(ValueError,'both copy positions'):
+            damaged.generate(intact_pos=(0,0))
+
     def test_registered_standalone_sources_and_fixtures(self):
         # Validate the registered files, not only the older research registry.
         for tid in NEW_TASK_IDS:

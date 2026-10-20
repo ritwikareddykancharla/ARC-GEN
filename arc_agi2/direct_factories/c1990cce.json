@@ -1,0 +1,59 @@
+{
+  "task_id": "c1990cce",
+  "factory_sha256": "fc66b9382b1209d24228420b31ba87bceafd5ee2eacfc0a9402c4559966204c1",
+  "constructor_sha256": "70f03bda171f8acc63124cfe8887229cb92a100feffbccbb72507af96f64cae9",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 54557908805121,
+  "d4": 7,
+  "unique_base_inputs": 13,
+  "seconds": 6.952125290990807,
+  "finite_default_domain": {
+    "exhaustive": true,
+    "cases_checked": 13,
+    "augmented_checks": 208,
+    "definition": "All thirteen odd native widths from 5 through 29.",
+    "query_distinct_from_demos": true,
+    "scope": "Default native parameter distribution only; finite input count is not inflated by repeated sampling."
+  },
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "Native rule: the input is a 1xN row (N odd) with one red seed at the centre c=N//2. The output is NxN. Its top row is the input. Red cells form an inverted V where depth equals |column - c|. Blue (1) cells lie strictly inside the V on down-right diagonals where (depth - column + c) % 4 == 0.\n\nUnder D4 the input line becomes one edge of the visible output square. I traced the coordinate map (r,x) -> visible position for each transform:\n- d4=0: (r,x), top edge.\n- d4=1: (x, N-1-r), right edge.\n- d4=2: (N-1-r, N-1-x), bottom edge, lateral reversed.\n- d4=3: (N-1-x, r), left edge, lateral reversed.\n- d4=4: (r, N-1-x), top edge, reversed.\n- d4=5: (N-1-x, N-1-r), right edge, reversed.\n- d4=6: (N-1-r, x), bottom edge.\n- d4=7: (x, r), left edge (transpose).\n\nThe emitted program works directly in visible coordinates. Depth t is the distance from that edge, and s is the visible index along it. Red is t == |s-c|. Blue needs t > |s-c| and (t + SIGN*(s-c)) % 4 == 0. SIGN is -1 when the lateral axis keeps its native direction and +1 when it is reversed, because x_native = 2c - s in that case. The diagonal hatch is chiral, so this sign is essential.\n\nColours: the seed colour is read from the input pixel, falling back to palette[2]. Background is palette[0] if present, otherwise the most common colour. Blue is the constant palette[1]. The input line is copied onto its edge, and N is the length of the 1xN or Nx1 input.",
+    "limitations": "Assumes the constructor's domain: one seed, odd N from 5 to 29, seed at the exact centre. If several non-background cells appear, the first is used as the seed. For a non-line query, the line is taken from the edge chosen by d4. Blue never appears in inputs, so its colour is the palette constant. No fixture contradictions found: generator, archived solver, and all fixtures agree on the rule. The generator's abs() inside the mod-4 test does not change the result, so it is not a defect. Not executed by me; host verification pending.",
+    "independent_source_review": {
+      "verdict": "accept",
+      "mechanism": "The input is a 1xN line (N odd, 5..29) with one seed at its exact centre c = N//2. The output is NxN. Measure depth t from the edge that holds the input line and lateral index s along that edge. Red (the seed colour) is drawn where t == |s-c|, forming an inverted V that reaches the side edges at depth c. Blue is drawn strictly inside the V (t > |s-c|) on diagonals where (t - x_native + c) % 4 == 0, so the lines are spaced 4 apart and start 4 after the right arm. The input line is copied onto its edge.",
+      "evidence": [
+        "Constructor red: `if 2*r < width: output[r][w//2 - r] = output[r][w//2 + r] = 2`. This sets red only for r <= c. The archived `y = abs(x-c)` has y <= c for every x in [0, N-1], so the two agree.",
+        "Constructor blue uses the strict condition `c > w//2 - r and c < w//2 + r`. This equals y > |x-c|. Blue therefore never lands on a red arm, and for r > c it covers the whole row. The `abs(...) % 4 == 0` test is equivalent to `(...) % 4 == 0`, so the abs has no effect.",
+        "No random latent affects the label except width, and width is fully visible in the input. The 13 unique base inputs (odd widths 5..29) match the host audit's unique_base_inputs = 13.",
+        "Factory sign derivation is correct. With the lateral axis kept, x = s and the blue test becomes (t - (s-c)) % 4, so SIGN = -1. With it reversed, x = 2c - s and the test becomes (t + (s-c)) % 4, so SIGN = +1. Because c is the exact centre, s -> N-1-s maps c to itself, so the seed index does not move under reversal.",
+        "The edge/sign table pairs (top,-1), (right,-1), (bottom,+1), (left,+1), (top,+1), (right,+1), (bottom,-1), (left,-1). This matches the traced coordinate maps in the prior notes. All 8 variants are covered by augmented_pair_checks = 8000 (1000 x 8).",
+        "The solver works directly in visible coordinates. It computes (t, s) per output cell from the specialized EDGE constant; there is no whole-grid untransform/solve/retransform wrapper. EDGE and SIGN are orientation constants.",
+        "Those constants are taught by demonstrations. Every N >= 5 output contains at least one blue diagonal (for N=5: cells (3,1) and (4,2)), so each demo reveals the hatch chirality and which edge holds the line. The d4=0 and d4=4 variants share query inputs but have distinguishable demo outputs.",
+        "Colours: the seed/red colour is read from the input pixel. The background is palette[0], which is always present because the line has N-1 background cells. Blue is the rule constant palette[1], shown in every demo output. This is a fixed rule colour, not an arbitrary lookup association, and the task is not in the episode_evidence_checks list.",
+        "The host audit passed: 1000 fresh pairs, 8000 augmented checks, 16 fixture variants, no sampler rejections."
+      ],
+      "blocking_issues": [],
+      "nonblocking_limits": [
+        "The solver assumes the constructor domain: one seed at the exact centre and odd N. If a seed were off-centre, the line would no longer map to itself under reversal, but the constructor never produces such inputs.",
+        "With several non-background cells, the first is used as the seed. Out of domain.",
+        "The fallbacks for a non-line query (choosing the line edge by EDGE) and for an empty seed (c = N//2 with RED_DEFAULT) are defensive and unreachable under the constructor.",
+        "Blue is the palette[1] constant rather than inferred from demos. This is consistent with the fixed rule colour, which every demo shows."
+      ],
+      "required_context_checks": [
+        "Confirm the host's d4 index-to-transform convention matches the edge/sign tables. The 8000 passing augmented checks indicate it does.",
+        "Confirm the context policy keeps demos in the same D4 variant as the query, so EDGE and SIGN (chirality and edge) are taught by the visible demo outputs."
+      ],
+      "task_id": "c1990cce",
+      "factory_sha256": "fc66b9382b1209d24228420b31ba87bceafd5ee2eacfc0a9402c4559966204c1",
+      "constructor_sha256": "70f03bda171f8acc63124cfe8887229cb92a100feffbccbb72507af96f64cae9"
+    },
+    "host_review": "Reviewed mechanism, evidence, limitations and checks. Shared bijective palette and horizontal-reflection-then-clockwise-rotation convention confirmed. All eight D4 indices audited, with d4=7 being the final loop index. Per-episode execution and context checks remain required."
+  }
+}

@@ -1,0 +1,55 @@
+{
+  "task_id": "ba26e723",
+  "factory_sha256": "89ce09792e3a9c449a0c66bff43578f7506ce0524ceb5b2e20e58ded38ab909f",
+  "constructor_sha256": "1745d93c701786e2636adc2bd11990ec5b3f061470af3d924996eabf2bb7aa37",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 161342996243630,
+  "d4": 7,
+  "unique_base_inputs": 22,
+  "seconds": 3.6976596659515053,
+  "finite_default_domain": {
+    "exhaustive": true,
+    "cases_checked": 22,
+    "augmented_checks": 352,
+    "definition": "Eleven strip widths times two alternating-edge phases: 22 native inputs.",
+    "query_distinct_from_demos": true,
+    "scope": "Default native parameter distribution only; finite input count is not inflated by repeated sampling."
+  },
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The canonical task is a 3-wide strip. Its central line is all yellow (4). The two outer lines alternate yellow and background (0) out of phase. Count every third cross-section starting from the left edge (index 0, 3, 6, ...). In each such cross-section, the central cell and whichever outer cell is yellow become pink (6), forming a 2-cell bar. The factory maps this mechanism directly into visible coordinates. Tracking where canonical column 0 lands under each D4 element gives four cases. For d4 in {0, 6} the strip is horizontal and counting starts at the left. For d4 in {2, 4} it is horizontal and counting starts at the right (x = w-1-i). For d4 in {1, 7} the strip is vertical (3 columns) and counting starts at the top. For d4 in {3, 5} it is vertical and counting starts at the bottom (y = h-1-i). Colour roles are constants: FG = palette[4] for yellow and MARK = palette[6] for pink. Background palette[0] is never touched. The emitted program works over the 3-cell cross-section of each selected line. It sets the middle cell to MARK, and it sets the outer cell(s) equal to FG to MARK. This mirrors the archived solver's per-column logic in the rotated frame.",
+    "limitations": "Orientation and counting origin come from d4, not from the grid shape or the demos. This is sound because the constructor always gives a 3-thick strip with length 10-20, but the program does not independently verify the axis. The counting origin matters when the strip length is not \u2261 1 mod 3, and the fixtures confirm counting from the canonical left edge. The 'middle' line is taken as cross-dimension // 2, matching the archived solver and the fixed cross-thickness of 3. No constructor defects or fixture contradictions were found: all fixtures agree with the uniform rule. common.yellow()/common.pink() are assumed to be the constants 4 and 6, as the fixtures show.",
+    "independent_source_review": {
+      "verdict": "accept",
+      "mechanism": "The input is a 3-thick strip of length 10-20. The central line is all FG (4). The outer lines alternate FG/0 in opposite phase, with phase set by `flip`. At every cross-section with index c%3==0, counted from the canonical left edge, the central cell and the one outer FG cell become MARK (6). Nothing else changes. The factory specialises the axis (HORIZONTAL) and counting origin (FROM_START) per d4. It also fixes the colours FG=palette[4] and MARK=palette[6]. The emitted solver then indexes visible coordinates directly.",
+      "evidence": [
+        "Constructor: `grid[1][c] = grid[2*((c+flip)%2)][c] = yellow` and `output[...] = pink if c % 3 == 0 else yellow`. The label depends only on the visible column index and on which outer cell is visibly yellow. No hidden latent affects the output beyond what the input shows, since `flip` is the visible phase.",
+        "common.yellow()/pink() return internal_colors[4]/[6]. With the default internal_colors these are 4 and 6, which matches the fixtures and the factory's palette[4]/palette[6].",
+        "All fixtures (train widths 10, 11, 11, 13, 14; test width 17) match `c%3==0` counted from the left. Widths 11 and 14 (\u22621 mod 3) separate a left origin from a right origin.",
+        "Emitted solver: it reads from `g` and writes to `out = g.copy()`, so there is no read-after-write contamination. Mid is `h//2` or `w//2`, which is index 1 for thickness 3. The selected line is `i` or `w-1-i` / `h-1-i`, with i stepping by 3 from 0. Outer cells are marked only if equal to FG. The solver has no untransform/retransform wrapper. It applies constants directly in augmented coordinates.",
+        "Factory d4 partition: even values are horizontal and odd values are vertical (transposed). from_start holds for {0,6} and {1,7}. This is consistent with a standard D4 enumeration, and the host audit (8000 augmented checks, 16 fixture variants) confirms it matches the host's augmentation convention.",
+        "unique_base_inputs=22 equals 11 widths \u00d7 2 flips, so the full constructor input space is covered.",
+        "There are no ties or ambiguous cases. Each selected cross-section has exactly one outer FG cell, and the colour roles are fixed rather than an arbitrary per-episode lookup."
+      ],
+      "blocking_issues": [],
+      "nonblocking_limits": [
+        "Axis and counting origin are fixed by d4, not inferred from grid shape or demos. This is sound within the constructor domain, where the strip is always 3 thick and 10-20 long.",
+        "In a random fresh episode where every demo length is \u22611 mod 3, the demos would not visibly separate a left origin from a right origin for a query of a different residue. The fixtures do disambiguate this. It is a legitimate orientation constant of a deterministic spatial rule.",
+        "Middle-line selection via `//2` assumes a cross thickness of 3. That holds because the constructor default height=3 is never varied."
+      ],
+      "required_context_checks": [
+        "Confirm the host's d4 index convention matches the factory's partition ({0,6}/{2,4} horizontal; {1,7}/{3,5} vertical). The passing 8000 augmented checks already indicate this."
+      ],
+      "task_id": "ba26e723",
+      "factory_sha256": "89ce09792e3a9c449a0c66bff43578f7506ce0524ceb5b2e20e58ded38ab909f",
+      "constructor_sha256": "1745d93c701786e2636adc2bd11990ec5b3f061470af3d924996eabf2bb7aa37"
+    },
+    "host_review": "Read the independent mechanism, evidence, limitations and context requirements. D4 uses horizontal reflection then clockwise rotation, with the same bijective palette throughout the episode; contradictory D4 contexts are rejected. Native-domain checks and per-episode execution remain mandatory. No hidden output access or normalization wrapper was identified."
+  }
+}

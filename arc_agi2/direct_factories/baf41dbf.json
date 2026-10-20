@@ -1,0 +1,49 @@
+{
+  "task_id": "baf41dbf",
+  "factory_sha256": "406663fde1167302e1618ee2e8d4e8c7fcb1778170207bb736a1904dd241349d",
+  "constructor_sha256": "e39c9d5f39e110690d6b6f76098371b32a74f746ba21176343e01dba17b104e6",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 244510325359520,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 5.617625541985035,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The mechanism treats all four sides and both divider orientations the same way, so a D4 transform only changes which visible side each marker pulls. The emitted program therefore works directly in visible coordinates with no axis specialisation. Colour roles become constants: background = palette[0], frame = palette[3], marker = palette[6].\n\nSteps in the emitted program:\n1. Take the frame's bounding box.\n2. Record the internal divider rows and columns: full-span lines of frame colour strictly inside the box.\n3. Erase the old frame.\n4. Assign markers to sides in repeated passes. A marker whose row lies in the current box row range and is left or right of the box sets that edge to the cell next to it. A marker whose column lies in the current column range and is above or below the box does the same for the top or bottom edge. Passes repeat until nothing changes, which resolves diagonal markers that only become level with the box after another marker has stretched it.\n5. Draw the new border and redraw the dividers at their original absolute positions across the new box. Markers stay where they are.\n\nWhy the assignment is unambiguous: in the constructor each side receives at most one marker, and only that marker extends the box on its side. So a marker generated as, say, a right marker can never fall inside the column range before it is assigned. Pass order therefore does not affect the result, and there is no hidden tie-break.",
+    "limitations": "- Assumes exactly one frame object in the frame colour, and that the marker colour palette[6] is present. If it is not, any pixel that is neither background nor frame counts as a marker.\n- A marker that never becomes level with the box on either axis is ignored. The constructor's domain cannot produce one.\n- Edges are clipped to the grid bounds as a safety measure; the generator always keeps markers at least one cell from the border.\n- No fixture contradicts the uniform rule, and I found no constructor defects.\n- The factory has not been run or tested.",
+    "independent_source_review": {
+      "verdict": "accept",
+      "mechanism": "One hollow frame of colour palette[3], with at most one full-span interior divider row (trow) and at most one divider column (tcol). Two or three single palette[6] markers sit outside the frame, at most one per side. The output erases the old frame and stretches each marked side until it is one cell short of its marker. The divider lines keep their absolute positions and are redrawn across the new box. Markers that start diagonal to the original box become level with it once an earlier marker has extended the box. The emitted solver resolves these by repeating passes over the markers, working directly in visible coordinates.",
+      "evidence": [
+        "Constructor side generation. Each side index i in 0..3 is visited once in shuffled order, so each side gets at most one marker. Each marker's perpendicular coordinate is drawn from the strict interior of the current effective box (eff_brow+1..eff_brow+eff_tall-2, or eff_bcol+1..eff_bcol+eff_wide-2). Its along-axis coordinate always leaves a gap of at least one cell: pcol <= eff_bcol-2, prow >= eff_brow+eff_tall+1, and the symmetric cases. So every marked edge actually moves, and the new edge is the cell next to the marker.",
+        "The output loop's coordinate tests are non-exclusive ifs: prow<brow, prow>=brow+tall, pcol<bcol, pcol>=bcol+wide. They run in generation order, the same order that built eff_*. Each marker satisfies exactly one test at its own step, so the output box evolves exactly like eff_* and the constructor labels are self-consistent.",
+        "Solver correctness under any marker order. Each edge is changed only by its unique marker, and only to its final value. So the solver's current box is always contained in the final box. A top marker satisfies my < final y0 <= current y0, which means it can never match a left, right or bottom branch. The same argument holds for each side, so there is no misassignment and no tie-break that depends on np.nonzero's row-major order.",
+        "Termination and completeness. Marker k was generated level with the eff box formed by markers before it. Once those markers are assigned, the solver's box contains that eff box, so marker k matches its own side's branch. By induction, repeated passes assign every marker before the loop stops.",
+        "Divider detection is unambiguous. trow lies in brow+2..brow+tall-3 and requires tall>=5; tcol likewise requires wide>=5. Any non-divider interior row or column contains background cells, so only the true dividers are full-span. Dividers stay strictly inside the expanded box and are redrawn over its full span, which matches the constructor's output loops.",
+        "Markers always lie outside the final box, adjacent to their side. They are never overwritten by frame or divider redraws, and the solver never modifies them.",
+        "The solver treats all four sides symmetrically and uses only palette constants for colours. It contains no untransform, native-solve or retransform wrapper, so it is valid for every D4 variant. This agrees with the host audit: 8000 augmented checks with d4=7 passed.",
+        "Approved fixtures match the constructor's validate() parameters. Hand-tracing test pair 1, with markers (4,1), (11,13) and (12,6), the repeated-pass solver gives left edge 2, bottom edge 11, then right edge 12, matching the fixture output."
+      ],
+      "blocking_issues": [],
+      "nonblocking_limits": [
+        "The MC-absent fallback (any non-bg, non-frame pixel counts as a marker) and grid-bound clipping are defensive paths only. The constructor always emits palette[6] markers at least one cell from the grid border.",
+        "Markers that never become level with the box are silently ignored. The constructor cannot produce them, since each marker is generated level with the current effective box.",
+        "The solver assumes a single frame-colour object and computes the box as the bbox of all frame-colour cells. This holds throughout the constructor domain.",
+        "Colour roles (bg, frame, marker) are fixed role constants. They are not arbitrary lookup associations, so no extra colour-evidence check applies; baf41dbf is not in require_colour_evidence's task list."
+      ],
+      "required_context_checks": [
+        "Host's standard D4-conflict policy: confirm no variant shares visible demos and query input while having a conflicting answer. This is not expected here because the rule is D4-equivariant."
+      ],
+      "task_id": "baf41dbf",
+      "factory_sha256": "406663fde1167302e1618ee2e8d4e8c7fcb1778170207bb736a1904dd241349d",
+      "constructor_sha256": "e39c9d5f39e110690d6b6f76098371b32a74f746ba21176343e01dba17b104e6"
+    },
+    "host_review": "Read mechanism, evidence, domain limits and contextual requirements. Host uses horizontal reflection then clockwise rotation, all eight indices tested, and shared bijective palette. Source audit d4=7 is the last completed loop index, not the sole tested transform. Standard conflicting-context rejection and per-episode verification required. No unresolved mechanism blocker identified within the sampled native domain."
+  }
+}

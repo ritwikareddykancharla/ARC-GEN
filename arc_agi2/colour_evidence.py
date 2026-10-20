@@ -12,13 +12,70 @@ class MissingColourEvidence(ValueError):
 def require_colour_evidence(task_id, demonstrations, queries, palette=None, d4=0):
     if task_id not in ('6ea4a07e', '913fb3ed', '494ef9d7', '995c5fa3',
                        'a834deea', 'a9f96cdd', 'a416fc5b', 'a740d043',
-                       'a6953f00', 'aaecdb9a', 'a68b268e'):
+                       'a6953f00', 'aaecdb9a', 'a68b268e',
+                       'c0f76784', 'bcb3040b'):
         return
     palette = list(range(10)) if palette is None else palette
     bg = palette[0]
     colours = lambda g: {c for row in g for c in row} - {bg}
     required, seen = set(), set()
-    if task_id == '6ea4a07e':
+    if task_id == 'c0f76784':
+        def frames(g):
+            visited = set()
+            for r, row in enumerate(g):
+                for c, ink in enumerate(row):
+                    if ink != palette[5] or (r, c) in visited:
+                        continue
+                    cells, stack = set(), [(r, c)]
+                    visited.add((r, c))
+                    while stack:
+                        y, x = stack.pop()
+                        cells.add((y, x))
+                        for dy, dx in ((1, 0), (-1, 0), (0, 1), (0, -1)):
+                            p = y+dy, x+dx
+                            if (0 <= p[0] < len(g) and 0 <= p[1] < len(row)
+                                    and p not in visited and g[p[0]][p[1]] == palette[5]):
+                                visited.add(p)
+                                stack.append(p)
+                    y0, y1 = min(y for y, x in cells), max(y for y, x in cells)
+                    x0, x1 = min(x for y, x in cells), max(x for y, x in cells)
+                    side = y1-y0+1
+                    if side not in (3, 4, 5) or x1-x0+1 != side:
+                        continue
+                    border = {(y, x) for y in range(y0, y1+1)
+                              for x in range(x0, x1+1)
+                              if y in (y0, y1) or x in (x0, x1)}
+                    if cells == border:
+                        yield side, [(y, x) for y in range(y0+1, y1)
+                                     for x in range(x0+1, x1)]
+        for demo in demonstrations:
+            for side, interior in frames(demo['input']):
+                if all(demo['input'][r][c] == bg and
+                       demo['output'][r][c] == palette[side+3] for r, c in interior):
+                    seen.add(side)
+        for query in queries:
+            required.update(side for side, _ in frames(query['input']))
+    elif task_id == 'bcb3040b':
+        def crossings(g):
+            markers = [(r, c) for r, row in enumerate(g) for c, ink in enumerate(row)
+                       if ink == palette[2]]
+            if len(markers) != 2:
+                return []
+            (r0, c0), (r1, c1) = markers
+            dr, dc = r1-r0, c1-c0
+            if dr and dc and abs(dr) != abs(dc):
+                return []
+            n = max(abs(dr), abs(dc))
+            sy, sx = (dr > 0)-(dr < 0), (dc > 0)-(dc < 0)
+            return [(r0+k*sy, c0+k*sx) for k in range(1, n)
+                    if g[r0+k*sy][c0+k*sx] == palette[1]]
+        for demo in demonstrations:
+            if any(demo['output'][r][c] == palette[3]
+                   for r, c in crossings(demo['input'])):
+                seen.add('crossing-colour')
+        if any(crossings(q['input']) for q in queries):
+            required.add('crossing-colour')
+    elif task_id == '6ea4a07e':
         for demo in demonstrations:
             # A completely filled mask has an all-background output and reveals
             # nothing about the colour that would fill the complement.

@@ -1,0 +1,50 @@
+{
+  "task_id": "bd5af378",
+  "factory_sha256": "9ed5a1d2179c6e0d5ab0c883773780977d1bffaa615da49c5a69aaed31493209",
+  "constructor_sha256": "24b83d4c3b588a3283edd9ca9a6552144c79dfb4c7b7dca002cbcbc3c7004f26",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 251660441083417,
+  "d4": 7,
+  "unique_base_inputs": 951,
+  "seconds": 4.6425962910288945,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The input is a background colour with an L of a second colour. The L is one full row and one full column along two grid edges, and they meet at a grid corner. The emitted program checks the four visible corners and picks the one whose entire row and entire column match the corner colour. That colour is L. Background is the most common remaining colour.\n\nEvery output cell is then set from its offsets a=|y-cy| and b=|x-cx| from that corner:\n- The old L (min=0, off the diagonal) becomes background.\n- The ring one step inward (min=1, a!=b) becomes L.\n- Deeper off-diagonal cells (min>=2) become the fill colour.\n- On the diagonal (a==b), the corner and the next cell become fill, and the rest become background.\n\nThis matches the generator: an inset rect of colours[0], an inset fill of 8, 8 at (0,0) and (1,1), and colours[1] on the diagonal from i=2. The generator then flips and flops the grid. Every D4 transform maps a grid corner to a grid corner, and the relation a==b is unchanged by transposition. So the rule is written directly in visible coordinates and needs no orientation constant; d4 is accepted but unused. The only palette dependence is the fill colour, which is palette[8]. L and background are inferred from pixels. Non-square grids work because the diagonal simply stops at the shorter edge.",
+    "limitations": "- The corner search assumes the generator's domain: grids of 5-10 per side, where exactly one corner has both its full row and full column in one colour. A fallback using full single-colour lines is kept for safety.\n- The demonstrations are not consulted. The fill colour is fixed to palette[8], as specialised by the factory.\n- No constructor defects were found. All four train fixtures and the test fixture match this uniform rule.\n- No tests have been run.",
+    "independent_source_review": {
+      "verdict": "accept",
+      "mechanism": "The input is a background B with an edge-hugging L of colour L: one full row and one full column meeting at a grid corner. Every output cell is a function of its offsets (a, b) from that corner: a=|y-cy|, b=|x-cx|. Off the diagonal, min(a,b)=0 becomes B, min=1 becomes L, and min>=2 becomes fill 8. On the diagonal (a==b), cells with a<=1 become 8 and cells with a>=2 become B.",
+      "evidence": [
+        "Constructor input: common.rect fills the whole grid with colors[0], then rect(w-1, h-1, 1, 1, colors[1]) overwrites it. So row 0 and column 0 are L=colors[0], everything else is B=colors[1], and the corner is (0,0) before flip/flop.",
+        "Constructor output, built in order: whole grid colors[1]; rect from (1,1) colors[0]; rect from (2,2) colour 8; output[0][0]=output[1][1]=8; then output[i][i]=colors[1] for i in 2..min(w,h)-1.",
+        "Result per (a, b): min=0 off-diagonal is B; min=1 off-diagonal is L; min>=2 off-diagonal is 8; diagonal a<=1 is 8; diagonal a>=2 is B. This is exactly what the factory computes.",
+        "common.rect uses draw(), which clips out-of-bounds cells, so the oversize rects cause no indexing faults. common.flip reverses rows and common.flop reverses each row; both map corner (0,0) to another corner and keep a and b equal to row and column distances from it.",
+        "Factory _find_corner tests each of the four corners for a full row and full column matching the corner colour. In the constructor's domain (H,W>=5) only the L corner qualifies. The adjacent corners on row 0 or column 0 fail their perpendicular line. The opposite corner is B, and its row and column both contain an L cell.",
+        "Because exactly one corner qualifies, the score tie-break never matters. bg is the single remaining colour.",
+        "D4 invariance: every D4 transform maps grid corners to grid corners. Transposition swaps a and b, which preserves both min(a,b) and the a==b test. The solver therefore works directly in visible coordinates and wraps no untransform step. d4 is unused, which is legitimate.",
+        "Non-square grids: the constructor's diagonal loop stops at min(w,h), and the factory's a==b mask is naturally bounded by the grid. These agree.",
+        "Palette: random_colors draws from 1..9 with 8 excluded, so L and B are never 8. After palette mapping, L and B can never equal FILL=palette[8].",
+        "The fill colour is constant (8) and appears in every demonstration output, so it is a taught constant rather than a hidden association. No other latent affects labels; size, colours and flip/flop are all recoverable from the visible input.",
+        "Fixtures: train pair 1 (6x5, colors [7,9], flip+flop) has its corner at bottom-right (4,5). Its output shows 9 on the old L, 7 on column 4 and row 3, 8 at (4,5) and (3,4), and 9 at (2,3), (1,2), (0,1), all consistent. The test output, with its corner at bottom-left (9,0), is also consistent.",
+        "The host audit passed: 1000 fresh pairs, 8000 augmented checks and 16 fixture variants, with no sampler rejections."
+      ],
+      "blocking_issues": [],
+      "nonblocking_limits": [
+        "The fallback branch (corner is None) uses the first non-bg colour and its first full line. It is unreachable in the constructor's domain, and it would be fragile on out-of-domain inputs such as multiple full lines or 2-wide grids.",
+        "Demonstrations are not consulted. The fill colour is fixed to palette[8] by the factory, which is acceptable because 8 is constant across all demonstrations.",
+        "Corner uniqueness relies on H,W>=2 with an L that spans full edges. Degenerate 1-row or 1-column grids are outside the constructor domain (5..10) and are not handled specially."
+      ],
+      "required_context_checks": [],
+      "task_id": "bd5af378",
+      "factory_sha256": "9ed5a1d2179c6e0d5ab0c883773780977d1bffaa615da49c5a69aaed31493209",
+      "constructor_sha256": "24b83d4c3b588a3283edd9ca9a6552144c79dfb4c7b7dca002cbcbc3c7004f26"
+    },
+    "host_review": "Read mechanism, evidence, domain limits and contextual requirements. Host uses horizontal reflection then clockwise rotation, all eight indices tested, and shared bijective palette. Source audit d4=7 is the last completed loop index, not the sole tested transform. Standard conflicting-context rejection and per-episode verification required. No unresolved mechanism blocker identified within the sampled native domain."
+  }
+}

@@ -1,0 +1,48 @@
+{
+  "task_id": "b457fec5",
+  "factory_sha256": "2cc3e2102b183db7f66306201d9a84a7b9e95858f28cda98aed61944acdfb6d6",
+  "constructor_sha256": "dc2e6d1ffcd3041ab43b599fc66b281c726fd8e63fd99ea2a2fccb251261766d",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 193884869855264,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 22.297804457950406,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "Original mechanism: each grey band is a stack of t\u00d7t squares. Square i is placed one step further along the original downward direction and one step left or right. Later squares overwrite earlier ones. Square i is coloured legend[i mod n], where the legend is read in the original left-to-right direction. A cell therefore takes the colour of the largest square index covering it, d = min(p, q, cap):\n- p is the offset from the band's starting edge along the stacking axis;\n- q is the offset from the side where the first slice touches the bbox;\n- cap = extent along the stacking axis minus w, where w is the first slice's length.\n\nThe factory maps the original 'down' and 'right' unit vectors through the D4 transform: flip the column sign for indices >= 4, then apply (dr, dc) -> (dc, -dr) once per clockwise turn. The image of 'down' gives the visible stacking axis and sign. This tells the program which bbox edge holds the starting slice. The image of 'right' gives the visible direction in which to read the legend; legend cells are sorted by their projection onto that vector.\n\nColour roles are fixed constants: background = palette[0] and band colour = palette[5]. Every other non-background cell is a legend cell. The sideways direction of each band is not fixed by D4. It is inferred per object, from which bbox side the first slice touches along the cross axis. Each band is a 4-connected component of the band colour and is recoloured in place. Everything else is copied unchanged.",
+    "limitations": "Assumptions, all guaranteed by the constructor's domain:\n- The legend is the only non-background, non-band colour in the input, and its cells lie on a single line.\n- Bands are separated by at least one cell, including diagonally. The generator's adjacency check skips the border rows and columns, but with thick >= 3 every border cell has an interior neighbour in the same band, so separation still holds.\n- Band length exceeds thickness: min_len = thick + n - 1 > thick. So the first slice touches exactly one cross-axis side of the bbox. If length equalled thickness, both sides would tie, but cap = 0 makes the result the same either way.\n\nDemonstrations are not used, because the mechanism is fully determined by the query input, d4 and the palette. No fixture contradictions or constructor defects were found: overwrite order in the generator matches the min(p, q, cap) formula. No tests have been run.",
+    "independent_source_review": {
+      "verdict": "accept",
+      "mechanism": "Each grey band is a stack of t\u00d7t squares. Square i sits at (brow+i, bcol+i) when cdir=1, or at (brow+i, bcol+L\u2212t\u2212i) when cdir=\u22121, and gets colour colors[i mod n]. Later squares overwrite earlier ones, so each cell shows the largest covering index, d = min(p, q, L\u2212t). The emitted solver takes the stacking axis and sign from the D4 image of 'down' and the legend reading direction from the D4 image of 'right'. It then infers each band's sideways direction from which cross-axis bbox side its first slice touches, and colours cells legend[min(p, q, cap) mod n] directly in visible coordinates.",
+      "evidence": [
+        "Overwrite order matches the formula. Coverage of a cell by squares i is the interval max(dy,dx)\u2212t+1 \u2264 i \u2264 min(dy,dx), clipped to 0..L\u2212t. The final writer is therefore min(dy, dx, L\u2212t). With cdir=\u22121 the same holds with dx replaced by bmax\u2212x.",
+        "cap is computed correctly. The first slice along the stacking axis is covered only by square 0, so its length w equals t. The stacking extent is L, so cap = amax\u2212amin+1\u2212w = L\u2212t, which is the generator's last index.",
+        "from_low is unambiguous. lengths \u2265 thick+n\u22121 > thick, so for cdir=\u22121 the first slice starts at bcol+L\u2212t \u2260 bcol, and for cdir=1 it starts at bmin. The prior note's tie argument holds.",
+        "Bands are separate 4-connected components. common.overlaps uses the L\u00d7L bboxes, so bboxes are disjoint. The 8-neighbour id check rejects touching bands. Its skipping of border rows and columns is harmless because thick \u2265 3 puts an interior same-band cell next to any border contact, and that cell's 8-neighbourhood is checked.",
+        "Legend cells are identified correctly. Colours come from {1,2,3,4,8} and never equal 0 or 5. The legend is collinear on original row 1, and rows 0\u20132 \u00d7 cols legend\u22121..legend+n are verified empty, so no grey touches the legend. Sorting by projection onto the visible image of 'right' recovers the legend order.",
+        "D4 constants are needed and legitimate. Band shapes are centrally symmetric (e.g. pair 1 row widths 3,4,5,\u2026,5,4,3), so the start end cannot be read from shape alone. The orientation is a deterministic spatial constant taught by same-d4 demonstrations, and the legend's position near the original top is also a visible cue.",
+        "There is no whole-grid untransform wrapper. The solver works natively on visible axes via AXIS/SIGN and LUR/LUC. The transpose case for cdir=\u22121 bands was hand-checked: p = column offset and q = bmax\u2212row reproduce the native min(dy, bmax\u2212x).",
+        "The host audit passed: 1000 fresh pairs, 8000 augmented checks and 16 fixture variants, with no sampler rejections."
+      ],
+      "blocking_issues": [],
+      "nonblocking_limits": [
+        "Demonstrations are unused. The stacking direction and legend reading direction are fixed per-d4 constants. This is acceptable because demos within an episode share d4 and show the orientation, but the solver would mis-handle a hypothetical band stacked against the d4 direction. The constructor never produces such a band.",
+        "The `d < 0` clip and `n == 0` early return are out-of-domain fallbacks. The constructor guarantees cap \u2265 n\u22121 \u2265 2 and a non-empty legend.",
+        "Correctness of the tf() D4 convention (flip then rotate) against the host's augmentation could not be checked from source alone. It is supported by the passing augmented-pair audit."
+      ],
+      "required_context_checks": [
+        "Confirm the host's augmented-pair checks covered all 8 D4 indices, so the tf() flip/rotate order matches the host convention for d4 \u2265 4."
+      ],
+      "task_id": "b457fec5",
+      "factory_sha256": "2cc3e2102b183db7f66306201d9a84a7b9e95858f28cda98aed61944acdfb6d6",
+      "constructor_sha256": "dc2e6d1ffcd3041ab43b599fc66b281c726fd8e63fd99ea2a2fccb251261766d"
+    },
+    "host_review": "Reviewed source analysis and domain restrictions. Confirmed palette remaps finished grids bijectively, reflection precedes clockwise rotation, all eight D4 variants are checked on fixtures and fresh inputs. Original fixture query grids are included. Per-episode verification remains mandatory. D4 ambiguous visible supervision is rejected; defensive out-of-domain cases do not establish broader validity."
+  }
+}

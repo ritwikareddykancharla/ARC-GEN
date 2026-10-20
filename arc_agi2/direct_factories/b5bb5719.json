@@ -1,0 +1,49 @@
+{
+  "task_id": "b5bb5719",
+  "factory_sha256": "a230aff41b15648f08729c85f3da28001589295ba778a66f34f253a5b5ecf38e",
+  "constructor_sha256": "bf677420b8419d3a96d5be1cebc5f612c87e1d02eb5e7b4767a3ccf93cdd60ba",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 263388325389405,
+  "d4": 7,
+  "unique_base_inputs": 793,
+  "seconds": 3.3939174170373008,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "Original mechanism: the top row is a seed line of colours 2/5 on background 7; each subsequent row is built from the previous one, where cell c becomes the opposite of its left parent (c-1) when both diagonal parents (c-1 and c+1) are non-background, producing a shrinking triangle. The factory tracks where the original growth vector (down) and along-line vector (right) land under the D4 transform (row reversal first for indices >= 4, then clockwise rotations mapping delta (a,b)->(b,-a)). It then emits a program that iterates layers directly in visible coordinates: either rows or columns, starting from the visible seed edge (first or last layer) and stepping in the growth direction; the 'left' parent is the neighbour at along-offset -sign(dc), so reflections correctly swap which diagonal parent determines the colour. Colours are constants palette[7] (background), palette[2], palette[5]; the new cell is palette[5] if the left parent is palette[2], else palette[2]. Background is a fixed constant rather than a most-common guess, avoiding ties in small grids.",
+    "limitations": "Assumes the constructor's domain: seed line on one edge containing only palette[2]/palette[5]/palette[7], with everything else background. Demonstrations are not consulted since the rule and roles are fully determined by d4 and palette. All fixtures are consistent with the uniform rule (result = complement of the left parent when both parents are non-background); no constructor defects detected. The archived solver's early break and most-common background are not reproduced but give identical results within the domain.",
+    "independent_source_review": {
+      "verdict": "accept",
+      "mechanism": "The seed line holds colours 2, 5 and 7 on one edge of a 7 background. Each later layer is built only from the layer before it. Cell p takes the complement of its left diagonal parent (2\u21945, written 7-x in the constructor) when both diagonal parents are non-background; otherwise it stays background. This produces a shrinking inverted triangle. The factory maps the original growth vector (down) and along-line vector (right) through the D4 transform. It then emits a solver that loops over visible rows or columns, starting at the visible seed edge and stepping in the growth direction. The left parent is read at along-offset -dc.",
+      "evidence": [
+        "Constructor: `output[r][c] = 7 - output[r-1][c-1]` is guarded by `output[r-1][c-1] != 7 and output[r-1][c+1] != 7`. With row 0 restricted to {2,5,7}, this is exactly 'complement of the left parent when both parents are non-background'. The label depends only on the visible seed row. There are no hidden latents and no ties.",
+        "Constructor iteration reads only row r-1 (already final) and writes row r. There is no dependence within a row, so the factory's per-layer order does not matter.",
+        "All 7 train fixtures and the test fixture match the rule. Example: pair 5 row 1 is [7,2,2,5,5,2,2,2,7], the complement of the left parents [5,5,2,2,5,5,5].",
+        "Factory delta map: a clockwise rotation sends old (r,c) to new (c, H-1-r), so a delta (a,b) becomes (b,-a). This matches `dr = (dr[1], -dr[0])`. A row reversal applied first for d4>=4 negates dc, which matches `dc = (0,-1)`.",
+        "Left parent: original c-1 is offset -1 along dc. In visible coordinates that is p - along = p + LEFT, with LEFT = -along. Reflections therefore swap which diagonal parent controls the colour, as they should.",
+        "Seed edge: `first = 0 if GROW > 0 else n_layers - 1`, and `cur = first + GROW*i` for i in 1..n_layers-1. This stays in bounds and covers every layer, as the constructor fills rows 1..height-1.",
+        "Inner range `range(1, length-1)` matches the constructor's `range(1, width-1)` along the seed axis. The minimum width of 3 gives height 2 and a single cell p=1.",
+        "Colours are palette[7], palette[2] and palette[5] as constants. The 2\u21945 flip and background 7 are fixed rule colours, not arbitrary lookup associations. The task is not in the episode_evidence_checks list, and none is needed.",
+        "The emitted solver works directly on visible coordinates. There is no untransform/native-solve/retransform wrapper.",
+        "Host audit passed: 1000 fresh pairs, 8000 augmented checks and 16 fixture variants, with no sampler rejections. This is consistent with the source analysis."
+      ],
+      "blocking_issues": [],
+      "nonblocking_limits": [
+        "The solver ignores demonstrations and hard-codes background, colours and orientation from d4 and the palette. This is valid within the constructor domain, but it is not inferred from the episode.",
+        "It assumes the domain contains a single seed line on one edge holding only palette[2], palette[5] and palette[7], with all other cells background. Inputs outside that domain, such as other colours in the seed line or a non-empty interior, are not handled specially.",
+        "Unlike the archived solver, it has no early break and does not take the most common colour as background. Within the domain the results are identical. The fixed background also avoids ties in small grids.",
+        "Seed rows that are all 7 are reachable (choices include 7) and give output == input. Both constructor and solver handle this consistently."
+      ],
+      "required_context_checks": [],
+      "task_id": "b5bb5719",
+      "factory_sha256": "a230aff41b15648f08729c85f3da28001589295ba778a66f34f253a5b5ecf38e",
+      "constructor_sha256": "bf677420b8419d3a96d5be1cebc5f612c87e1d02eb5e7b4767a3ccf93cdd60ba"
+    },
+    "host_review": "Read the independent mechanism, evidence, limitations and context requirements. D4 uses horizontal reflection then clockwise rotation, with the same bijective palette throughout the episode; contradictory D4 contexts are rejected. Native-domain checks and per-episode execution remain mandatory. No hidden output access or normalization wrapper was identified."
+  }
+}

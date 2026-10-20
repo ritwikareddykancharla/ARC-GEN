@@ -1,0 +1,49 @@
+{
+  "task_id": "c0f76784",
+  "factory_sha256": "d378f2527df3c349daeeb5b0d027db6c81a618656981383da3ba09fbf8fbc887",
+  "constructor_sha256": "6194a3a003a40097bdd8acd9a19a590280e691d8268f36665e4f230d90d40d80",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 19828290269990,
+  "d4": 7,
+  "unique_base_inputs": 624,
+  "seconds": 11.00629212509375,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The mechanism is: find each hollow square frame in the frame colour palette[5] on the background palette[0]. Then fill its background interior with a colour chosen by interior side length k = L-2. The generator writes gray + k, so k=3 gives palette[8], k=2 gives palette[7] and k=1 gives palette[6]. Frames are found as 4-connected components of the frame colour. A component is accepted when its bounding box is square, its side is 3 to 5, its cell count is 4*(L-1), and the border is all frame colour with an all-background interior. Every D4 transform maps a square frame to a square frame of the same size, and the fill depends only on size. So the same visible-coordinate rule applies under all D4 settings with no axis or direction specialisation; d4 is intentionally unused. Colour roles are fixed constants taken from the palette. As a defensive fallback, if a component is not one clean frame (for example two frames touching), the program scans its bounding box for exact L x L hollow-frame templates (L = 5, 4, 3) and fills each match. Frames at grid edges are handled because only the frame's own bounding box is used.",
+    "limitations": "The program relies on the constructor domain: square frames of side 3, 4 or 5 in palette[5] on palette[0], with fill colours palette[6], palette[7], palette[8] (from the generator's gray + length - 2). Any other frame size is left unchanged, because the demonstrations define no colour for it. Demonstrations are not used to re-learn the table. The generator's overlap check uses a buffer of 1, so frames should never touch; the touching-frame fallback is untested defensive code. The generator sometimes silently drops a frame when its random placement overlaps (seen as two-frame scenes); this is harmless to the rule, and the program handles any number of frames. No contradictions between the fixtures and the rule were observed. Nothing has been run or tested.",
+    "independent_source_review": {
+      "verdict": "hold",
+      "mechanism": "Each hollow square frame in palette[5] on background palette[0] has its interior filled with a colour chosen by side length L. The constructor writes gray()+L-2, so L=3 gets palette[6], L=4 gets palette[7] and L=5 gets palette[8], assuming the palette is applied as a post-hoc permutation. The factory finds 4-connected FR components. It checks for a square bounding box, (H-2) in {1,2,3}, a cell count of 4(H-1), and an exact frame template. It then fills background interior cells with FILL[H-2]. Square frames are D4-invariant and the fill depends only on size, so the solver correctly works directly in visible coordinates without a wrapper.",
+      "evidence": [
+        "Constructor: the line `output[...] = common.gray() + length - 2` maps sizes 5/4/3 to canonical colours 8/7/6. The factory's FILL = {1: palette[6], 2: palette[7], 3: palette[8]} indexed by H-2 matches this.",
+        "Constructor: `common.overlaps(..., 1)` in common.py requires a gap of at least one cell (`rows[i]+talls[i]+1 <= rows[j]`) on some axis, so placed frames never touch, even diagonally. Each FR component is therefore exactly one frame, and the touching-frame fallback is out of domain.",
+        "The fixtures (canonical, uncorrected) agree with the archived rule and the factory. Pair 3 has no 3x3 frame; pairs 1 and 2 demonstrate it.",
+        "Host audit passed: 1000 fresh pairs and 8000 augmented checks.",
+        "The factory leaves d4 unused. This is legitimate because square frames and size-keyed fills are D4-invariant. There is no untransform, native-solve or retransform wrapper."
+      ],
+      "blocking_issues": [
+        "Missing demonstration evidence for an arbitrary size-to-colour lookup. Under palette augmentation, the colour for each frame size (palette[6]/[7]/[8]) is an arbitrary association that can only be learned from a demonstration where that size is filled. The constructor silently drops frames on overlap (`if common.overlaps(...): continue`) very often. With the 5x5 frame uniformly placed in [0,7]^2, a 4x4 frame placed in [0,8]^2 conflicts with probability about (7.5/9)^2 \u2248 0.69. The 3x3 frame is dropped at a comparably high rate because it is checked against both frames. This matches the host's 624 unique inputs out of 1000, which points to many single-frame scenes. Rough estimate: with 3 demonstrations, P(no demo contains a 4x4 frame) \u2248 0.33 and P(query contains one) \u2248 0.31. So about 10% of episodes, plus a similar share for 3x3, require a query colour never shown. The supplied episode_evidence_checks do not list c0f76784, so these episodes are not rejected. The factory answers them correctly only because it hard-codes the palette lookup, which is unidentifiable from the episode."
+      ],
+      "nonblocking_limits": [
+        "Frame dropping is far more frequent than the prior notes' 'sometimes' suggests: most scenes lose the 4x4 and/or 3x3 frame. This is constructor behaviour and harmless to rule correctness.",
+        "Correct fill colours assume the host applies the palette as a post-hoc colour permutation rather than via common.set_colors. With set_colors, gray()+k would be palette[5]+k. The passing augmented audit supports the post-hoc interpretation.",
+        "The touching-frame fallback in the factory cannot be reached under the constructor's spacing-1 overlap rule.",
+        "The fixed table ignores demonstrations. This is acceptable as specialisation of the genuine rule colours, provided the evidence check above is enforced."
+      ],
+      "required_context_checks": [
+        "Add a c0f76784 episode check: for every frame side L in {3,4,5} present in any query input, require at least one demonstration whose output fills an L x L frame interior. Equivalently, the colour palette[L+3] must appear in some demonstration output inside a frame. Otherwise reject or resample the episode.",
+        "Confirm the palette is applied as a permutation after generation, so that gray()+k corresponds to palette[5+k]."
+      ],
+      "task_id": "c0f76784",
+      "factory_sha256": "d378f2527df3c349daeeb5b0d027db6c81a618656981383da3ba09fbf8fbc887",
+      "constructor_sha256": "6194a3a003a40097bdd8acd9a19a590280e691d8268f36665e4f230d90d40d80"
+    },
+    "host_review": "Reviewed mechanism, evidence, limitations and checks. Shared bijective palette and horizontal-reflection-then-clockwise-rotation convention confirmed. All eight D4 indices audited, with d4=7 being the final loop index. Per-episode execution and context checks remain required. Added and regression-tested required query mapping evidence using only demonstration answers and query inputs, across all eight D4 transformations with nonidentity palette. Unseen mappings now reject the episode."
+  }
+}

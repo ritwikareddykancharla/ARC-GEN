@@ -1,0 +1,45 @@
+{
+  "task_id": "b4a43f3b",
+  "factory_sha256": "ad0f0f59c49f06b2b0d7fbec9a0a3ff461a34973b540e34543e16fb15012bc7c",
+  "constructor_sha256": "62217bdcedb23b02fef3dce69643bdf6dd86853741e25c77b62453195337896d",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 95950958577562,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 7.348099791910499,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The constructor builds a 13x6 input. The top 6 rows hold a 3x3 motif drawn as 2x2 blocks. Row 6 is a divider of colour 5. The bottom 6x6 is a placement map of colour 2 on background 0. The output is 18x18: the motif is stamped into every 3x3 tile whose map cell is non-background.\n\nA D4 transform applied to this block structure gives the same structure in the visible frame: the visible map selects tiles, and each tile holds the visible (transformed) motif. So the emitted program works directly on visible coordinates.\n\n- **Divider orientation:** for d4%4 even it is a horizontal row; for odd it is a vertical column. It is found as the line made entirely of palette[5]. A line is preferred when the colour's total count equals the line length, which separates it from motif rows that happen to be uniform. If no line qualifies, it falls back to the first uniform non-background line.\n- **Motif side:** chosen from d4. Clockwise turns move the original top to top, right, bottom, then left. A horizontal flip does not change top/bottom.\n- **Motif extraction:** the motif region is downsampled by size//3 on each axis, giving the visible 3x3 motif.\n- **Map region:** the other side of the divider is the placement map. Every cell that is not palette[0] gets a copy of the motif.\n- **Background:** the output is filled with palette[0].\n\nNo grid rotation, inverse transform or colour un-permutation is performed.",
+    "limitations": "The motif is assumed to be 3x3 with integer upscaling, matching the constructor. The motif side is fixed by d4 rather than inferred, so a scene whose layout does not match the declared D4 would be misread. I found no constructor defects and no contradictions between the fixtures and the rule.\n\nThe divider check relies on palette[5] appearing only on the divider. The constructor guarantees this: motif colours come from {1,2,3,6}, the map uses 2, and the background is 0. If two full divider-coloured lines existed, the program would take the first qualifying one.\n\nThe pair-3 failure described in the archived notes was a solver bug (a uniform motif row taken as the divider), not a fixture inconsistency. The divider check above handles that case. I have not run any tests.",
+    "independent_source_review": {
+      "verdict": "accept",
+      "mechanism": "The constructor builds a 13x6 input in three parts. Rows 0-5 hold a 3x3 motif drawn as 2x2 blocks, using colours {1,2,3,6} from a diagonally connected sprite. Row 6 is a divider of colour 5. Rows 7-12 hold a 6x6 placement map of colour 2. The 18x18 output contains the full 3x3 motif, zeros included, in every tile whose map cell is non-zero. The factory works in visible coordinates. It finds the single line made entirely of palette[5]. HORIZONTAL is d4%4 even, and MOTIF_FIRST picks which side of the divider holds the motif from k in {0,3}. It takes the 6x6 motif region with stride 2 on each axis and stamps the visible motif into each 3x3 tile of the visible map that is not palette[0]. This is correct under D4: tiles map to tiles, and each tile's contents become the transformed motif.",
+      "evidence": [
+        "Constructor: the divider is set only by `grid[6][c] = 5`. Motif colours come from `common.choice([1, 2, 3, 6])`, map cells are 2 and the background is 0. So palette[5] fills exactly one line in every orientation, and `cands[0]` is the true divider.",
+        "conway_sprite skips deletions that would empty a row or column. This does not affect correctness, because the stride-2 sampling `mreg[::2, ::2]` reads every 2x2 block exactly, whatever its content.",
+        "The map always has at least one cell, since each of the 3 lines has length >= 1. No colour lookup is needed: every visible colour in the output is copied from the visible motif, and nothing depends on hidden latents.",
+        "The output size is (6*3)x(6*3) = 18x18 in all orientations, matching the constructor. Tiles are disjoint, so the order of stamping cannot matter.",
+        "Test fixture check: map row 0 is `2 0 2 0 0 0`, giving tiles at output columns 0-2 and 6-8 in output rows 0-2, which matches the fixture. Pair 3 has rows 4-5 of colour 3, but 3 is never the divider colour, which resolves the archived bug.",
+        "The host audit passed 8000 augmented checks, i.e. 1000 checks across 8 D4 variants. This indicates the factory's D4 convention matches the host's: flip-then-rotate keeps the motif side determined by k alone."
+      ],
+      "blocking_issues": [],
+      "nonblocking_limits": [
+        "`_find_divider` loops `for i in cands: if total == L: return i`. `total` is the same on every iteration, so this always returns `cands[0]` whether or not the uniqueness test holds. The count-based disambiguation described in the notes therefore has no effect. It is harmless because the constructor never produces a second full palette[5] line.",
+        "The motif side and divider orientation come from d4 rather than being inferred. This is an allowed orientation constant, since the demonstrations show the layout, but it would misread layouts the declared transform does not produce.",
+        "The fallbacks (first uniform non-background line, then n//2) are out-of-domain and the constructor excludes them.",
+        "Correctness of the D4 composition order for d4>=4 rests on the host convention that a flip is applied before rotation. I infer this from the passing audit; the source alone does not show it."
+      ],
+      "required_context_checks": [],
+      "task_id": "b4a43f3b",
+      "factory_sha256": "ad0f0f59c49f06b2b0d7fbec9a0a3ff461a34973b540e34543e16fb15012bc7c",
+      "constructor_sha256": "62217bdcedb23b02fef3dce69643bdf6dd86853741e25c77b62453195337896d"
+    },
+    "host_review": "Read the independent mechanism, evidence, limitations and context requirements. D4 uses horizontal reflection then clockwise rotation, with the same bijective palette throughout the episode; contradictory D4 contexts are rejected. Native-domain checks and per-episode execution remain mandatory. No hidden output access or normalization wrapper was identified."
+  }
+}

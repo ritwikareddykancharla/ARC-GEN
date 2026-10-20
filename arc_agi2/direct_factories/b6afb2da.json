@@ -1,0 +1,47 @@
+{
+  "task_id": "b6afb2da",
+  "factory_sha256": "15152b9ffe4ed0243c549031aa94e16d55b49dbff8a8db168120bce820df06e9",
+  "constructor_sha256": "f132c791549602054a41460ca6f16ef9188cf25831c633f15c13f7838334da1e",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 231448501518058,
+  "d4": 7,
+  "unique_base_inputs": 938,
+  "seconds": 4.053383500082418,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "This puzzle repaints each solid gray (5) rectangle in place as a framed tile. Each of its four bounding-box corners becomes blue (1). Every other border cell becomes yellow (4). Interior cells become red (2). Nothing else changes. The mechanism is the same under every D4 transform: rotating or reflecting a rectangle still gives a rectangle, and corners, edges and interior keep their roles. So the program needs no axis or direction specialization and works directly in visible coordinates. The palette is handled by baking the constants into the emitted program as palette[5] (rectangle colour), palette[1] (corner), palette[4] (edge) and palette[2] (interior). The program finds rectangles by taking 4-connected components of the visible rectangle colour, rather than assuming it is the most common colour. For each component it computes the bounding box and classifies each cell by whether it lies on a min/max row and/or a min/max column. This matches the archived solver's mechanism, re-expressed in pure Python.",
+    "limitations": "The constructor always places a one-cell empty column between the two rectangles (col0+w0 = 9-w1 and col1 = 10-w1), possibly transposed. So the rectangles never touch, even diagonally, and 4-connectivity separates them; rectangles that touched each other would merge into one component. All rectangles have both sides between 3 and 6, so every rectangle has an interior, and rectangles at the grid boundary are handled naturally. Non-rectangular components fall outside the generator's domain; for them, only the cells of the component are repainted, classified against its bounding box. No fixture contradictions, generator indexing bugs or hidden tie-breaks were found. The 'teaching stages' (emitting after each rectangle) in the rule text are not part of the answer and are not reproduced. The constructor's docstrings for rows/cols are loosely worded but harmless.",
+    "independent_source_review": {
+      "verdict": "accept",
+      "mechanism": "Each 4-connected component of the rectangle colour (palette[5]) is repainted in place, classified against its bounding box. Cells on both a min/max row and a min/max column become palette[1] (corner). Cells on exactly one of them become palette[4] (edge). All other cells become palette[2] (interior). Every other cell is copied unchanged. The emitted solver does this directly on the visible grid, with no D4 untransform or retransform.",
+      "evidence": [
+        "Constructor placement: wides are drawn from 3..6 with sum in {8,9}, and cols = [9 - sum(wides), size - wides[1]]. Rect0 spans columns col0..8-w1 and rect1 starts at column 10-w1. Column 9-w1 is therefore always empty, so the two rectangles can never touch orthogonally or diagonally, whatever rows are chosen independently. 4-connectivity always separates them.",
+        "talls and wides are both drawn from 3..6, so every rectangle has a non-empty interior. rows are drawn from randint(0, size-tall), so each rectangle stays inside the 10x10 grid.",
+        "The constructor's output loop sets red, then overwrites with yellow on the border, then with blue at the corners. The solver's if/elif/else on on_y/on_x gives exactly the same classification.",
+        "xpose only transposes input and output together. Corner, edge and interior roles are invariant under all of D4, so the solver needs no orientation constants.",
+        "validate() reproduces the approved fixtures. Train (rows=[2,5], cols=[1,6], wides=[4,4], talls=[4,5], xpose=0) matches the second approved train pair. Test (rows=[1,4], cols=[0,7], wides=[6,3], talls=[4,6], xpose=1) transposes to rectangles at rows 0-5/cols 1-4 and rows 7-9/cols 4-9, matching the approved test output.",
+        "Factory colour handling: GRAY, CORNER, EDGE and INTERIOR are taken from palette[5], palette[1], palette[4] and palette[2]. These are the genuine rule colours shown in every demonstration, not an arbitrary per-episode lookup. Background cells are copied, so palette[0] needs no handling.",
+        "The solver does not use the most-common colour. This matters because in the first approved train pair colour 5 covers more than half the grid; the solver finds the colour-5 components directly instead.",
+        "Host audit passed: 1000 fresh pairs, 8000 augmented checks, 16 fixture variants, no sampler rejections."
+      ],
+      "blocking_issues": [],
+      "nonblocking_limits": [
+        "Rectangles that touched each other would merge into one component and be mis-framed. The constructor's forced one-column gap excludes this case.",
+        "Non-rectangular gray components would be classified against their bounding box. This is out of the generator's domain.",
+        "The 'teaching stages' in the rule text (emitting after each rectangle) are not reproduced. They do not affect the final answer.",
+        "The order of the approved train pairs differs from the order in validate(). This has no effect on the rule."
+      ],
+      "required_context_checks": [],
+      "task_id": "b6afb2da",
+      "factory_sha256": "15152b9ffe4ed0243c549031aa94e16d55b49dbff8a8db168120bce820df06e9",
+      "constructor_sha256": "f132c791549602054a41460ca6f16ef9188cf25831c633f15c13f7838334da1e"
+    },
+    "host_review": "Read the independent mechanism, evidence, limitations and context requirements. D4 uses horizontal reflection then clockwise rotation, with the same bijective palette throughout the episode; contradictory D4 contexts are rejected. Native-domain checks and per-episode execution remain mandatory. No hidden output access or normalization wrapper was identified."
+  }
+}

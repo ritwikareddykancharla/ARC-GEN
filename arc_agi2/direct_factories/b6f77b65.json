@@ -1,0 +1,53 @@
+{
+  "task_id": "b6f77b65",
+  "factory_sha256": "c47abd91acbd29c3d0cba550cc6285670b71ba66524f0e5ffcfe6f6359c90644",
+  "constructor_sha256": "c620fe9ccd2b353a8cd3acdc861c500f9e4595c45ad12966eb973d19d043bce5",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 182877807743485,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 15.478554541943595,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The factory computes two visible step vectors and bakes them into the emitted program as constants. DOWN is the visible gravity direction, the image of original (+1,0). SIDE is the image of original +x, (0,1). For d4>=4, SIDE starts as (0,-1) because of the row reversal. Each clockwise turn maps a vector (dy,dx) to (dx,-dy). BG is palette[0].\n\nThe emitted solve works directly on visible cells using these vectors:\n- The legend line is the edge whose cells have no neighbour against gravity. Its non-background colours are the deletion set.\n- The scaffold is everything off that line. It is split into 4-connected single-colour components.\n- Poles are runs along DOWN of length 2 or more. The pole's bottom is the last cell along DOWN.\n- The remaining cells are cut into runs along SIDE. A run whose -SIDE or +SIDE end neighbour is a pole's bottom cell becomes that pole's rigid foot. If several poles fit, the archived order is used: smallest original-x, expressed as the projection onto SIDE.\n- Any other run is its own piece. It is flagged as a free bar when its component has no pole.\n- The archived quirk is kept: a pole whose bottom+DOWN cell lies in a free bar of a different colour gains that cell.\n- Pieces of legend colours are deleted. If no legend colour occurs in the scaffold, the grid is returned unchanged.\n\nGravity then repeats until everything settles. First a support fixpoint is built. A piece is supported if it touches the floor (bottom+DOWN is outside the grid), rests on or overlaps a supported cell, or has a SIDE-run with supported cells just beyond both ends. Every unsupported piece then shifts one step along DOWN.\n\nRendering paints all pole cells first and all bar or foot cells second, so a bar hides the extension cell. The legend line is then restored from the input. Every rule is symmetric under the D4 maps and colour permutations, so this matches the archived solver in every orientation and palette.",
+    "limitations": "- **Background colour.** It is taken as palette[0]. The archived solver uses the most frequent colour instead. These agree under the generator, which keeps colour 0 as the strict plurality.\n- **Multi-pole foot tie.** When two same-object poles could both claim one foot, the tie is broken by original-x order, matching the archived fits[0]. This cannot arise in the constructor's domain: each component is a single latent post with one pole. It is not a visible rule.\n- **Pole-tip extension quirk.** The constructor and archived program lengthen a pole by one cell when its tip sits on a free beam of another colour. This is reproduced deliberately because the fixtures depend on it: train pair 2 shows five 2-cells in a column. However, it is not inferable from the visible demonstrations. It should be flagged for host review as a constructor-defined quirk rather than an intended visible mechanism.\n- **Fixture vs. task prose.** The task prose disagrees with the fixtures in two places; the fixtures match the program:\n  - Test 1: the prose says the right part sinks, but the fixture shows only the 7 cells removed and nothing moving.\n  - Train pair 2: the prose says the 2 pole drops 3 rows, but in the fixture it drops 2 because of its hidden extension cell.\n- **Iteration cap.** The settling loop is capped at extent*(pieces+1)+1 steps. If that cap were ever hit, the current state is returned rather than an exception raised; the archived bound cannot actually be exceeded.\n- **Untested.** I have not run any tests on this factory.",
+    "independent_source_review": {
+      "verdict": "accept",
+      "mechanism": "Row 0 (in visible coordinates, the edge facing against gravity) is a legend of colours to delete. The rest of the grid is split into 4-connected single-colour components. In each component, vertical runs of length 2 or more are poles. A horizontal run whose end touches a pole's bottom cell is that pole's rigid foot. Every other horizontal run, including a top bar, is its own piece, and it is flagged as a free bar when its component has no pole. A pole whose tip sits directly on a free bar of another colour gains that bar cell; this is an occlusion extension. Pieces of legend colours are deleted. Gravity then repeats until settled: supported pieces are found by fixpoint (floor contact, resting on or overlapping a supported piece, or a horizontal run wedged at both ends), and all unsupported pieces drop one row together. If no legend colour is present, the grid is returned unchanged. The factory bakes in DOWN as the image of +y, SIDE as the image of +x, and BG, and runs the same procedure directly on visible cells.",
+      "evidence": [
+        "Constructor _pieces mirrors archived transform. Posts give a column 'v' plus an optional foot 'h' (rigid); a topbar is a separate non-free piece (bar False); a latent 'bar' gives bar True. The extension uses the same condition as archived: (y+1,x) is in q['h'], q has a different colour, and q['bar'] is true.",
+        "The latent-to-grid parse matches because _colour forbids equal colours on 8-adjacent objects. Each 4-connected component is therefore exactly one latent object, and archived `bar = not poles` equals the latent 'bar' kind.",
+        "No spurious extra poles. A topbar and a foot on the same column would need a 2-cell pole. Shift-1 (short) poles cannot own topbars (owners require shifts[j]==0), and pole height is at least 2 because hb>=3 and shift<=1.",
+        "Wedged-L construction (lfeet) is sound. The pole at slot end a or b with its foot filling the slot forms a deck-row run flanked by the lower band's flush pole tops. The archived parse attaches that foot via the before/after neighbour equal to the pole bottom.",
+        "Labels come only from _simulate/_settle on latent pieces, which are equivalent to the visible parse. _stable/_settle are synchronous, set-based and order-independent, as in the archived program. The initial scaffold is required to be stable.",
+        "Canonical fixtures are reproduced unchanged. Train pair 2 shows the extension: five 2-cells in column 5 after the free 4 beam is deleted. Train pair 3 shows that a topbar does not trigger the extension and is not rigid: the 9 pole falls 2 and the 5 topbar separates. So the quirk's condition is demonstrated in the original episode.",
+        "Test 1: the 5 topbar at row 6 is wedged between the 6 pole at x=2 and the 5 pole at x=7, and the 8 pole stands on it. Deleting 7 therefore moves nothing, as in the fixture.",
+        "Factory emitted solve works natively in visible coordinates. The legend is the edge where -DOWN leaves the grid. Poles are _runs along DOWN with bot=run[-1]. Feet are SIDE runs whose end neighbour equals bot, which is equivalent to archived `max y == y and end neighbour in p['v']`. The extension is at bot+DOWN. The floor test is 'bot+DOWN outside grid'. Wedging uses SIDE runs checked at both ends. Rendering paints 'v' then 'h' and restores the legend. There is no untransform/retransform wrapper.",
+        "The foot tie order uses lat = projection on SIDE, which equals original x, so it matches archived fits[0]. It cannot be reached in the constructor domain anyway.",
+        "Host audit passed: 1000 fresh pairs, 8000 augmented checks, 16 fixture variants, no sampler rejections."
+      ],
+      "blocking_issues": [],
+      "nonblocking_limits": [
+        "The pole-tip occlusion extension is subtle. A sampled episode may contain a 'reveal' query whose demonstrations never show the extension. It is a deterministic visible-structure rule, not a colour lookup or hidden latent, and the canonical pair 2 does evidence it.",
+        "BG is fixed to palette[0], whereas archived uses the most frequent colour. These agree because the generator enforces a strict majority of 0 via (len(owner)+extra)*2 < w*h.",
+        "The factory settle loop silently exits at the cap instead of raising. The cap is larger than the archived bound, so this is unreachable in the domain.",
+        "The multi-pole foot tie-break is unreachable in the domain because each component has one post.",
+        "The mode mix weights are design targets, not measured rates. The relaxation after 250 and 450 attempts can skew toward 'motion' or 'any'.",
+        "The task prose in the archived rule mis-describes test 1 and the train pair 2 drop distances. The constructor docstring documents this; the fixtures are authoritative."
+      ],
+      "required_context_checks": [
+        "Optional: decide whether episodes whose query reveals a hidden extension cell should require at least one demonstration that shows a revealed extension. This is not a colour association, so the supplied evidence checks do not cover it. The task is not in require_colour_evidence's list, which is appropriate."
+      ],
+      "task_id": "b6f77b65",
+      "factory_sha256": "c47abd91acbd29c3d0cba550cc6285670b71ba66524f0e5ffcfe6f6359c90644",
+      "constructor_sha256": "c620fe9ccd2b353a8cd3acdc861c500f9e4595c45ad12966eb973d19d043bce5"
+    },
+    "host_review": "Read the independent mechanism, evidence, limitations and context requirements. D4 uses horizontal reflection then clockwise rotation, with the same bijective palette throughout the episode; contradictory D4 contexts are rejected. Native-domain checks and per-episode execution remain mandatory. No hidden output access or normalization wrapper was identified."
+  }
+}

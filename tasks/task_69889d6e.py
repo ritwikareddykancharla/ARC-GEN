@@ -15,6 +15,21 @@
 import common
 
 
+def _in_bounds(vals):
+  """True iff the staircase never writes to a negative row index.
+
+  A step taken while already on row 0 would either climb to row -1 or place
+  its blue blocker on row -1; Python wraps both to the bottom row.
+  """
+  row = 9
+  for val in vals:
+    if row == 0:
+      return False
+    if val == 0:
+      row -= 1
+  return True
+
+
 def generate(vals=None):
   """Returns input and output grids according to the given parameters.
 
@@ -23,7 +38,16 @@ def generate(vals=None):
   """
 
   if vals is None:
-    vals = [common.randint(0, 1) for _ in range(common.randint(7, 10))]
+    length = common.randint(7, 10)
+    for _ in range(1000):
+      cand = [common.randint(0, 1) for _ in range(length)]
+      if _in_bounds(cand):
+        vals = cand
+        break
+    if vals is None:
+      raise RuntimeError("could not sample an in-bounds staircase")
+  elif not _in_bounds(vals):
+    raise ValueError("staircase would leave the top of the grid")
 
   grid, output = common.grids(10, 10)
   row, col = 9, 10 - len(vals)

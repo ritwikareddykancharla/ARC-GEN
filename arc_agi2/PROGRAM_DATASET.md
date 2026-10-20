@@ -35,7 +35,7 @@ recorded. Passing finite audits does not prove unrestricted generalization.
 
 - 213 native direct-coordinate certificates admitted after fresh audits and
   supplied-fixture checks.
-- 535 admitted factories. Each passed 1,000 fresh pairs, 8,000 augmented pair
+- 583 admitted factories. Each passed 1,000 fresh pairs, 8,000 augmented pair
   checks and 16 supplied-fixture variants. Their audit records retain draft
   limitations and source/constructor hashes. These checks are finite evidence,
   not proof of correctness on every generated input.
@@ -46,7 +46,7 @@ recorded. Passing finite audits does not prove unrestricted generalization.
   counts must be computed as a union, not added.
 - Local exporter test: 18 fresh base episodes, 144 augmented PNG/program/grid
   records. It requested 20 bases and reported a two-episode shortfall.
-- The union currently admits 754 of 1,120 families; 366 still need direct
+- The union currently admits 802 of 1,120 families; 318 still need direct
   augmented program admission. Constructor coverage and program coverage are
   different gates.
 - Synthetic labels for `00d62c1b` now fill every enclosed background component,
@@ -105,7 +105,7 @@ The finite default domains of `17cae0c1`, `25ff71a9`, `28e73c20`, `332efdb3`,
 These counts are recorded as limits, not inflated by repeated random draws.
 Ambiguous random-label cases and disputed fixture mechanisms stay outside
 admission until reviewed. Drafting workers cannot admit or publish their own
-programs. The regression suite passed 269 tests at this checkpoint.
+programs. The regression suite passed 273 tests at this checkpoint.
 
 
 ## Visible evidence and latest verification
@@ -134,9 +134,9 @@ for the current exporter test, not the still-unresolved scalable TAR converter.
 
 ## Additional program review and episode evidence
 
-Program coverage is now **754/1,120** (535 factory certificates plus overlapping
-native/manual targets). Eight subscription-only Opus 5.5 CLI workers independently
-review remaining drafts. A review does not admit a program: admission requires
+Program coverage is now **802/1,120** (583 factory certificates plus overlapping
+native/manual targets). Subscription-only Opus 5.5 CLI workers completed 247 independent
+reviews before reaching the session limit. No API fallback was used. A review does not admit a program: admission requires
 host review, source-hash agreement, full fixture checks and fresh execution.
 
 `colour_evidence.py` rejects query-required associations absent from demonstration
@@ -162,8 +162,28 @@ Finite domains additionally exhausted: `995c5fa3` (64), `a9f96cdd` (15),
 `a416fc5b` (16), `a85d4709` (6). Each is checked with eight orientations and two
 palettes. Duplicate draws do not increase these counts.
 
-Native ImageFolder ZIP packaging (PNG plus metadata.jsonl **inside** the archive)
-now loads all 144 test rows locally in both streaming and downloaded modes. The
-optional public `archive-check` config contains those same rows, not extra data.
-Hosted conversion is queued at this checkpoint; the last successful default
-viewer verification predates this upload. Full expanded generation remains pending.
+Native ImageFolder ZIP packaging (PNG plus internal metadata.jsonl) loads all
+144 test rows locally and converts on HF, but the hosted row renderer returns
+HTTP 500 for its `zip://` image paths. The failed optional archive-check config
+has been removed from the public viewer selector; experiment files remain.
+The default individual-PNG config returned HTTP 200 with 144 rows before this
+card cleanup. Expanded archive publishing still requires a working solution.
+
+## Latest reviewed additions and repairs
+
+48 further factories were admitted after source review and fresh checks, bringing
+the union to 802/1,120. Two synthetic constructor repairs preserve fixtures:
+- `69889d6e`: reject sequences that wrap to negative rows, retaining the initially
+  sampled sequence length. Test both path painting and obstacle placement.
+- `b2862040`: reject latent open/closed labels that disagree with visible holes,
+  retaining object count. A concrete two-box/barnacle counterexample tests the
+  rejection rather than relying only on random audits.
+
+New evidence gates require a demonstrated fill mapping for each queried square
+frame size (`c0f76784`) and a demonstrated crossing colour (`bcb3040b`). They read
+no query answers and are tested across D4 and a nonidentity palette.
+
+Five further finite native domains were exhausted with all orientations and two
+palettes: `b7fb29bc` (49), `ba26e723` (22), `bdad9b1f` (18), `be03b35f` (14),
+`c1990cce` (13). They remain subject to adaptive quotas. Full regression suite:
+273 tests passed. No expanded generation or model training launched.

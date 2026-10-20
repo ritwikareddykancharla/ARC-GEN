@@ -1,0 +1,26 @@
+{
+  "task_id": "69889d6e",
+  "factory_sha256": "670e96351b5a3958e637b92f0c2d302b3f362ae075570977b220e4e93e99aaa3",
+  "constructor_sha256": "5162d85064a861a9a8c1e7e1cd7e999fce75d9dbedb3c9754351b2fac5447b71",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 63465577657117,
+  "d4": 7,
+  "unique_base_inputs": 671,
+  "seconds": 1.8583581669954583,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The factory first maps the canonical 'up' vector (-1,0) and 'right' vector (0,1) into visible coordinates. For d4>=4 it negates the column component, because each row is reversed. It then applies the clockwise rotation (dr,dc)->(dc,-dr) d4%4 times. The colour roles become constants: BG=palette[0] and RED=palette[2]. The emitted solve() runs the staircase walk directly in visible coordinates:\n1. Find the red seed.\n2. In the 'up' phase, try to step along UP.\n3. If that cell is non-background, slide one step along RT and retry up.\n4. After a successful up step, take one RT step.\n5. Paint every visited cell red.\n6. Stop when a move would leave the grid, or when a right step is blocked (a safety stop).\n\nThe previous candidate's special branch, which re-created the constructor's negative-index wraparound, is removed. The program now matches the archived solver's visible rule exactly. The proposed constructor repair keeps the mechanism, grid size, sequence lengths and fixture calls unchanged. It only rejects sampled step sequences that would index row -1. It resamples, with a bounded 1000 tries.",
+    "limitations": "Host verified 1000 fresh pairs, 8000 augmented checks and 16 fixture variants. Finite random testing does not establish arbitrary-input correctness. Per-episode verification remains required.",
+    "diagnosis": "The supplied host audit reports passed=true and contains no explicit counterexample. The candidate's failure is therefore the review violation, not a numeric mismatch. The factory intentionally reproduced an accidental generator indexing bug. When vals has length 10 and is all 0, the constructor executes output[-1][9]=2. Python wraps this to the bottom-right cell, (9,9) in canonical coordinates. The candidate emitted a 'wrap' branch that paints the far cell along the reverse up-axis to match. That turns a coding bug into a puzzle rule, which the instructions forbid. The visible mechanism, and the archived solver, simply stop when the climb would leave the grid. The fix is to delete the wrap branch and emit the plain staircase walk.",
+    "constructor_issue": "The constructor has a negative-index defect. It occurs when length-10 vals begin with nine 0s, so the path reaches row 0 at column 9 with one value left.\n\n(a) If the last value is 0, row becomes -1 and output[-1][9]=2 paints a red cell at the bottom-right. The visible staircase rule cannot produce that label, so it is inconsistent with the mechanism.\n\n(b) If the last value is 1, grid[-1][9]=output[-1][9]=1 places a stray blue cell in the bottom row. The visible rule stays consistent here, but the blocker is a wrap artifact rather than an intended obstacle.\n\nThe proposed repair rejects any sequence whose walk would act while already on row 0. That is exactly these 2 of the 1024 length-10 sequences, about 0.05% of draws. Resampling from scratch shifts the length distribution by a negligible amount. None of the approved fixtures hit this case, so the explicit fixture inputs and outputs are unchanged. Explicit vals that would wrap now raise ValueError instead of producing wrapped grids. This needs host review before it is applied.",
+    "draft_limitations_before_host_testing": "No tests have been run; this analysis comes from reading the code. The factory assumes the background is palette[0] rather than inferring it. If several red cells exist, it uses the first one in row-major order. The blocked-right safety stop never occurs in constructor scenes. With the original, unrepaired constructor, about 1/2048 of fresh pairs (length-10 sequences that are all zeros) have an output with a spurious red cell at the bottom-right. This factory will deliberately disagree with those labels. The host should run against the repaired constructor, or should treat those pairs as constructor defects.",
+    "host_review": "Rejected negative-index wrap while retaining the initially sampled sequence length. Regression covers both wrapped obstacle and wrapped path; canonical fixtures unchanged.",
+    "host_changes_supersede_draft": "The initial length/object count is retained across resampling; draft statements about resampling it do not describe the final constructor."
+  }
+}

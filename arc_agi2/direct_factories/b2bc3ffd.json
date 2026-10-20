@@ -1,0 +1,50 @@
+{
+  "task_id": "b2bc3ffd",
+  "factory_sha256": "dce565c28d685ccd887544d5ec6eb44ec7271569806582a378d41a66ccb62202",
+  "constructor_sha256": "9c87952ab47555e3dff25df6471578e381298a718e99d558d60cb40d2e377e85",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 96373735145573,
+  "d4": 7,
+  "unique_base_inputs": 940,
+  "seconds": 3.0746192920487374,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The generator builds an 8x8 grid. It has background 7 and a floor line of colour 8 along one edge (originally the bottom row). Each object above the floor has its own distinct colour, is a single connected piece, and touches the floor. In the output, each object moves away from the floor by exactly its own cell count. This equals the generator's per-colour count, because colours are unique per object. The old cells are erased and the floor stays put.\n\nThe factory works out the visible movement direction by transforming the original 'up' vector (-1,0). A reflection negates the column part, and each clockwise rotation maps (dr,dc) to (dc,-dr). It also fixes the colour roles as constants: background = palette[7], floor = palette[8].\n\nThe emitted program works directly in visible coordinates. It finds the 4-connected single-colour components that are neither background nor floor. It erases all of them, then redraws each one shifted by its size along the computed direction.",
+    "limitations": "Movement direction and colour roles are fixed from d4 and the palette rather than inferred from the demonstrations. Objects are identified as 4-connected single-colour components. Within the generator's domain this matches its per-colour count, since each colour is used for one connected object and corner trimming never disconnects a shape.\n\nCells that would be shifted off the grid are dropped, matching the archived solver. This never happens in the generator domain: the largest shift is 6, for a 1-tall object sitting next to the floor.\n\nThe fixtures agree with the uniform rule, and I found no constructor defects. One quirk: the constructor's 'hack' truncation can cut an object at the grid edge. The rule still holds there, because the shift uses the truncated cell count, which is also the visible count.",
+    "independent_source_review": {
+      "verdict": "accept",
+      "mechanism": "The scene is an 8x8 grid with background 7 and a floor row of 8 along the bottom (row 7). Each column-run object has its own unique colour, is connected, and rests on the floor. In the output, each object is translated away from the floor by its own cell count. The constructor uses color_to_count[color], summed over the columns of that colour. Because colours are unique per object, this equals the object's cell count. The factory rotates or reflects the original up-vector (-1,0) into visible coordinates. The emitted solver finds the 4-connected single-colour components that are neither BG nor FLOOR, erases them all, then redraws each one shifted by len(cells)*(DR,DC).",
+      "evidence": [
+        "Colour uniqueness: random_color(exclude=colors + [7, 8]) is called once per object. Gap columns get colour 8 with height 0, so they draw no cells and add 0 to color_to_count[8]. Objects never share a colour, never use 7, and never use 8.",
+        "Object budget: each object plus its gap uses at least 2 columns, and the while loop runs while len(heights) <= 8. That allows at most 5 objects against 7 available colours (1-9 minus 7 and 8), so random_color never runs out.",
+        "Connectivity and size: trimming only applies when wide>=2 and tall>=2. Tall is then 2, so trimmed columns drop to height 1, never 0. Every column has a bottom cell at row 6, so shapes stay connected along row 6. Different objects are separated by 1-2 empty columns, so a 4-connected same-colour component equals one generator object.",
+        "Shift bound: 6x1 shifts 6, from row 6 to row 0. 3x2 is always trimmed at least once (randint(1,2)>=1), giving at most 5 cells; rows 5-6 move to rows 0-1. 1x3 moves rows 4-6 to rows 1-3. 2x2 trimmed gives 3 cells; rows 5-6 move to rows 2-3. r - count is therefore never negative, so the constructor has no Python negative-index wraparound. The solver's off-grid drop branch is never reached in-domain.",
+        "Truncation: the 'hack' pop can cut an object, or drop one starting at column 8. Both the constructor count and the solver's component size use the truncated visible cells, so they agree.",
+        "No overlap: objects occupy disjoint columns and move only along columns, so moved objects cannot collide.",
+        "Fixtures: all four fixture pairs match the uniform size-shift rule, e.g. pair 3: 1-shape of 5 cells, up 5; 4 and 3 of 3 cells each, up 3; test 5-bar of 6 cells to row 0 and single 6 up 1. No fixture-specific branch exists in the constructor or solver.",
+        "Visible coordinates: the emitted solver works on the visible grid with constant DR/DC, BG=palette[7] and FLOOR=palette[8]. There is no untransform/solve/retransform wrapper. The colour roles and direction are genuine rule constants.",
+        "Direction convention: the factory applies the reflection before the rotations. That order matters for a vertical vector, which is the one non-trivial point here. The host audit reports 8000 augmented checks (1000 x 8 D4 variants) plus 16 fixture variants, all passing, which is consistent with the factory's convention matching the host's augmentation."
+      ],
+      "blocking_issues": [],
+      "nonblocking_limits": [
+        "The direction (DR,DC) and the BG/FLOOR colours are fixed from d4 and the palette, not inferred from the demonstrations. This is acceptable as specialization of genuine rule axes and colours. Each demonstration also visibly shows the floor side and the motion direction.",
+        "Objects are identified as 4-connected single-colour components. That matches the constructor only because colours are unique per object and objects are column-separated. Out-of-domain inputs, such as two same-colour objects or diagonal-only contact, would be handled differently from color_to_count, but the constructor excludes them.",
+        "Shifted cells that fall off the grid are silently dropped. This is a defensive branch that is unreachable in-domain."
+      ],
+      "required_context_checks": [
+        "Confirm that the host D4 augmentation order (reflect then rotate, versus rotate then reflect) matches the factory's composition. The passing 8000-check audit across all 8 variants suggests it does.",
+        "No colour-association evidence check is needed: b2bc3ffd is not in require_colour_evidence's task list, and the rule involves no arbitrary colour lookup."
+      ],
+      "task_id": "b2bc3ffd",
+      "factory_sha256": "dce565c28d685ccd887544d5ec6eb44ec7271569806582a378d41a66ccb62202",
+      "constructor_sha256": "9c87952ab47555e3dff25df6471578e381298a718e99d558d60cb40d2e377e85"
+    },
+    "host_review": "Reviewed source analysis and domain restrictions. Confirmed palette remaps finished grids bijectively, reflection precedes clockwise rotation, all eight D4 variants are checked on fixtures and fresh inputs. Original fixture query grids are included. Per-episode verification remains mandatory. D4 ambiguous visible supervision is rejected; defensive out-of-domain cases do not establish broader validity."
+  }
+}

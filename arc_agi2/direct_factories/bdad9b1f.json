@@ -1,0 +1,56 @@
+{
+  "task_id": "bdad9b1f",
+  "factory_sha256": "e6a29d0271c2d999e83faed5107b94908211b635c0aace2f82cb80803d82154f",
+  "constructor_sha256": "4511a36725038b005a91589cd1e1a1090990319811efc9a7c5f288f19e6434d7",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 119743513712206,
+  "d4": 7,
+  "unique_base_inputs": 18,
+  "seconds": 2.538354165968485,
+  "finite_default_domain": {
+    "exhaustive": true,
+    "cases_checked": 18,
+    "augmented_checks": 288,
+    "definition": "Three row positions times three columns times two horizontal orientations: 18 native inputs.",
+    "query_distinct_from_demos": true,
+    "scope": "Default native parameter distribution only; finite input count is not inflated by repeated sampling."
+  },
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "In the original task, the colour-8 segment is vertical and gets extended to fill its whole column. The colour-2 segment is horizontal and gets extended to fill its whole row. The cell where the two lines cross becomes 4. Applying the episode transform (reverse rows for d4>=4, then d4%4 clockwise rotations) keeps lines as lines. An odd number of quarter turns swaps rows and columns. So the factory sets swap = (d4%4) odd. Without swap, the emitted program fills each column containing palette[8] with palette[8] and each row containing palette[2] with palette[2]. With swap, it fills rows containing palette[8] and columns containing palette[2] instead. Reflections do not affect which axis a full-line extension uses, so they need no special handling. Every crossing of the two line sets is painted palette[4]. The program works directly on the visible grid using the palette-mapped colour constants. It handles rectangular grids and multiple lines in the same way as the archived solver.",
+    "limitations": "Colour roles are fixed constants taken from palette[8], palette[2] and palette[4]; the program does not infer them from the demonstrations. Because the extension fills the whole line, the result does not depend on segment length or where the segment touches the edge. If an input ever had both colours in a cell's row and column in an unexpected arrangement, every matching line would be extended, as the archived solver also does. No constructor defects were found: the 8 and 2 segments never overlap (rows 0-1 versus row 2-4 and columns 0-1 versus column 2-4), and the fixtures follow the rule consistently.",
+    "independent_source_review": {
+      "verdict": "accept",
+      "mechanism": "The input has a vertical palette[8] segment and a horizontal palette[2] segment. Every column containing palette[8] is filled with palette[8], and every row containing palette[2] is filled with palette[2]. Each crossing becomes palette[4]. Under D4 the line axes either stay or swap; they swap exactly when the transform has an odd number of quarter turns, so the factory sets swap = (d4%4) odd and swaps the row/column roles of the two colours.",
+      "evidence": [
+        "Constructor: row and col are each randint(2,4). For i<2 it sets grid[i][col]=cyan (rows 0-1 of column col) and grid[row][i]=red (columns 0-1 of row row). The output fills column col with cyan and row row with red, then sets output[row][col]=yellow. Both segments are placed in the shared loop, so they never overlap: the 8 cells sit in rows 0-1 while the 2 row is 2-4, and the 2 cells sit in columns 0-1 while the 8 column is 2-4. flip_horiz keeps lines vertical or horizontal.",
+        "Every label is determined by visible input cells. row, col and flip are all recoverable from the input, so no hidden latent decides the answer. There are 3*3*2 = 18 distinct base inputs, which matches the host's unique_base_inputs=18.",
+        "validate() reproduces the approved fixtures. generate(2,4,0) gives fixture pair 2. generate(3,4,1) flips column 4 to column 1 with the 2 cells at columns 4-5 of row 3, giving pair 1. generate(4,3,0) gives the test. The order of the two train pairs differs, which is immaterial.",
+        "Factory, non-swap branch: columns are taken from np.where(g==C_A)[1] and rows from np.where(g==C_B)[0]. Painting goes columns, then rows, then crossings. This matches the constructor's paint order and final crossing overwrite.",
+        "Factory, swap branch: rows are taken from C_A and columns from C_B, and crossings become C_X. This is correct after an odd quarter turn, because 8 then forms a horizontal line and 2 a vertical one. For d4>=4 the transform is a row reversal followed by rotations. The row reversal preserves line axes, so only k%4 parity matters, as the factory assumes.",
+        "The emitted solver works directly on the visible grid using palette-mapped constants and has no untransform wrapper. Background is preserved because out = g.copy().",
+        "Specialising the palette[4] crossing colour is supported by the episode: both demonstrations show the new crossing colour at the intersection. The palette[8] and palette[2] roles are visible in the inputs and their axes are shown by the demos. No arbitrary lookup association is needed, which is consistent with bdad9b1f not appearing in episode_evidence_checks.",
+        "Host audit passed: 1000 fresh pairs, 8000 augmented checks and 16 fixture variants, with no sampler rejections."
+      ],
+      "blocking_issues": [],
+      "nonblocking_limits": [
+        "Colour roles and the line axis are fixed per episode from palette and d4 rather than inferred from the demonstrations. This is allowed, since the D4 orientation and colours are taught by consistent demos.",
+        "The constructor domain is small: one segment of each colour, segment length 2, 6x6 grids. The solver generalises to multiple lines and rectangular grids in the same way the archived solver does, but that generalisation is not exercised by the generator.",
+        "The solver's behaviour when both colours share a line, or when the segment orientation is inconsistent, lies outside the constructor's domain."
+      ],
+      "required_context_checks": [
+        "Confirm that the D4 conflict policy (rejecting variants that share visible demos and query input but have conflicting answers) is applied. No conflicts are expected, because the axis is fully revealed by the demonstrations."
+      ],
+      "task_id": "bdad9b1f",
+      "factory_sha256": "e6a29d0271c2d999e83faed5107b94908211b635c0aace2f82cb80803d82154f",
+      "constructor_sha256": "4511a36725038b005a91589cd1e1a1090990319811efc9a7c5f288f19e6434d7"
+    },
+    "host_review": "Read mechanism, evidence, domain limits and contextual requirements. Host uses horizontal reflection then clockwise rotation, all eight indices tested, and shared bijective palette. Source audit d4=7 is the last completed loop index, not the sole tested transform. Standard conflicting-context rejection and per-episode verification required. No unresolved mechanism blocker identified within the sampled native domain."
+  }
+}

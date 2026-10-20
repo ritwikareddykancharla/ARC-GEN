@@ -1,0 +1,48 @@
+{
+  "task_id": "bf32578f",
+  "factory_sha256": "5143dc6ecc0c47017f98851f8c08bc9680183babf342b56a21d285bb15792a5a",
+  "constructor_sha256": "1778bd1fd1fe485750c61804e5fbea6c0b319c87445d8148e0a20e0e3edb0d7d",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 42023511175476,
+  "d4": 7,
+  "unique_base_inputs": 999,
+  "seconds": 9.405279416008852,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "In the canonical task, the bracket opens to the right (+column). The factory works out where that opening points in the visible grid. It starts with (dr,dc)=(0,+1). For d4>=4 it negates dc to apply the row reversal. Then it applies the clockwise rotation (dr,dc)->(dc,-dr) d4%4 times. The emitted program contains only the scan for the resulting direction, in visible coordinates.\n\nFor each scan line crossing the bracket's bounding box (rows when the opening is horizontal, columns when it is vertical), the program finds the stroke cell farthest toward the opening. It fills every cell from just past that stroke to the bounding-box edge on the open side. It then reflects each filled cell across the line just beyond that edge:\n- right: c' = 2*cmax+1-c\n- left: c' = 2*cmin-1-c\n- down: r' = 2*rmax+1-r\n- up: r' = 2*rmin-1-r\n\nThe original strokes are erased. The background colour is the constant palette[0]. The bracket colour is read from the query's non-background pixels. Demonstrations are not needed and are ignored.",
+    "limitations": "The program assumes the constructor's domain:\n- exactly one single-colour bracket on a palette[0] background\n- an opening direction fixed for the episode by d4\n- a mirrored blob that fits inside the grid\n\nIf a mirrored cell ever fell outside the grid it would be clipped silently, matching the archived solver; the constructor never produces this case. A scan line with no stroke cells is skipped, which cannot occur for the constructor's connected brackets.\n\nThe fixtures are consistent with the uniform rule, and I found no constructor defects or hidden tie-breaks. I have not executed this code.",
+    "independent_source_review": {
+      "verdict": "accept",
+      "mechanism": "There is one single-colour bracket that hugs one side of its bounding box and opens toward the opposite side; in canonical coordinates it opens right. The solver erases the strokes. On each row it fills the cells from just past the rightmost stroke up to the bbox right edge x1, then reflects each filled cell across the line just beyond x1 using mx = 2*x1+1-x. The emitted solver bakes in the D4-mapped opening direction (right/left/down/up) and scans rows or columns directly in visible coordinates, using the matching reflection formula.",
+      "evidence": [
+        "Fixture reconstruction checked by hand against _rows. [0,0,0] odd cap=2 gives rows (0,2),(0,0),(0,0),(0,0),(0,2), which is pair 1. [0,1,2] even cap=0 at left=2 top=3 gives strokes at cols 4,3,2,2,3,4 on rows 3-8, which is pair 2. [0,1,3] even gives runs (3,3),(1,2),(0,0),(0,0),(1,2),(3,3), which is the test input including the 2-cell runs. The outputs then follow from the fills plus mirroring.",
+        "Rightmost-stroke monotonicity: inner b_i = max(o_i, o_{i+1}-1) <= o_{i+1} <= b_{i+1}, and the outer b = o_last+cap. So x1 is always the outer row's end, and every row's fill is a contiguous run b+1..x1. This matches the archived per-row definition exactly. Irregular or zero-step profiles follow the same rule and need no special case.",
+        "Mirror fit: x0 <= W-need_w with need_w = 2*x1-min(open_ends)+1, so the largest mirrored column is x0+need_w-1 <= W-1. The explicit-left and explicit-width paths check need_w <= wb = wmax-lx, and _pick_size enforces W >= need_w+lx. Clipping is therefore unreachable, and the solver's bounds guard is only a harmless defensive fallback.",
+        "Degenerate brackets with no interior (all open_ends equal x1) return None from _scene and are resampled. cap=0 forces d>=1.",
+        "The 2*strokes < W*H condition is enforced, so the background is the majority colour. The factory's BG=palette[0] constant is consistent with constructor background 0.",
+        "Factory direction mapping: dc negation for d4>=4, then clockwise (dr,dc)->(dc,-dr), maps right->down->left->up. The left branch fills c0..min-1 with mirror 2*c0-1-c. The down and up branches are the correct transposes. No whole-grid untransform wrapper is used.",
+        "Colour is read from the query's own non-background pixel (single colour by construction), so no arbitrary colour or shape lookup is involved. Orientation is a deterministic spatial constant, and every demo in the episode shows it."
+      ],
+      "blocking_issues": [],
+      "nonblocking_limits": [
+        "Out of scope: clipped mirrors, multiple objects, mixed opening directions within an episode, and concave (non-monotone) profiles. The constructor excludes all of these.",
+        "A scan line with no stroke cells is skipped. This cannot occur for constructor brackets, which have a stroke in every bbox row (canonical).",
+        "The canonical fixtures cover only small 5-6 row brackets. Large or irregular step profiles and non-square grids are synthetic extensions of the same per-row rule, not native evidence."
+      ],
+      "required_context_checks": [
+        "Confirm that the host's D4 index convention (d4>=4 = column reflection applied before d4%4 clockwise quarter-turns) matches the factory's direction derivation. The 8000 augmented checks (8 per pair) passing suggests it does, but the convention itself was not visible to this review.",
+        "Confirm that the context policy rejects episodes where D4 variants share visible demos/query but conflict on answers. That should not arise here, because opening direction is visible from the demos."
+      ],
+      "task_id": "bf32578f",
+      "factory_sha256": "5143dc6ecc0c47017f98851f8c08bc9680183babf342b56a21d285bb15792a5a",
+      "constructor_sha256": "1778bd1fd1fe485750c61804e5fbea6c0b319c87445d8148e0a20e0e3edb0d7d"
+    },
+    "host_review": "Read mechanism, evidence, domain limits and contextual requirements. Host uses horizontal reflection then clockwise rotation, all eight indices tested, and shared bijective palette. Source audit d4=7 is the last completed loop index, not the sole tested transform. Standard conflicting-context rejection and per-episode verification required. No unresolved mechanism blocker identified within the sampled native domain."
+  }
+}

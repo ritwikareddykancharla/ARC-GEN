@@ -1,0 +1,47 @@
+{
+  "task_id": "bf89d739",
+  "factory_sha256": "35118b521b5ef9ee279ebf923f1d2f8bbd31544aa3dd668348013d711145ff6e",
+  "constructor_sha256": "3258862798e985fb70b673d792bfb519aaee3f76ac19c37db52838be186b920f",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 189109578448514,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 10.449985124985687,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "Dots have colour palette[2], the background is palette[0] and the fill is palette[3]. All three are baked in as constants. The emitted program works directly on the visible grid.\n\n1. It groups the dots by row and by column.\n2. The single row or column that holds two dots is the spine. In the generator, every other dot has a distinct row, and all columns are distinct.\n3. The background cells strictly between the two spine dots are filled.\n4. For every other dot, the background cells strictly between it and the spine are filled along the perpendicular direction. The dot and the spine cell are never overwritten.\n\nThe constructor already emits both orientations through its xpose flag, so the mechanism is symmetric under D4. Rotation or reflection only changes whether the spine is a row or a column, and the program detects that from the pixels. For that reason d4 needs no further specialization; only the palette roles are substituted. Boundary dots, such as a spine endpoint at column 0 or a branch dot at the edge, need no special handling. The program never writes outside the span between a dot and the spine.",
+    "limitations": "The program assumes the constructor's domain: exactly one pair of dots is collinear, and every branch dot is at least two cells from the spine. If some input broke that and had several collinear pairs, the program would use a deterministic fallback: it picks the orientation with fewer candidate lines, then the lowest index. That case is outside the generator's domain and is not a learned rule.\n\nThe constructor contains `if col == cols[-1] + 1`, which forces adjacent branches to point in opposite directions. It only affects which scenes get sampled, not the visible rule, so it is not reproduced.\n\nI checked the approved fixtures by hand against this rule and they are consistent. I did not execute any code.",
+    "independent_source_review": {
+      "verdict": "accept",
+      "mechanism": "Red dots (palette[2]) on a background (palette[0]). Exactly one pair of dots shares a row or a column, and that pair forms the spine. The background cells strictly between the two spine dots are filled with palette[3]. Every other dot then gets a perpendicular fill of palette[3] over the cells strictly between it and the spine line. The emitted solver groups dots by row and by column, picks the line that holds two dots, and paints only background cells. It runs directly on the visible grid and detects horizontal versus vertical from the pixels. Only palette roles are baked in as constants.",
+      "evidence": [
+        "Constructor domain, uniqueness of the spine: branch columns come from `range(cols[0]+2, cols[1]-1)`, so each branch column is distinct and strictly inside the spine span. The check `len(set(rows))+1 != len(rows)` rejects any repeated branch row. Branch rows are drawn from [0,trunk-2] or [trunk+2,height-1], so none equals trunk. The result is exactly one row holding two dots and no column holding two dots, or the reverse after xpose/D4. The solver's `rcand`/`ccand` selection is therefore unambiguous on every reachable input.",
+        "Branches always reach the spine: branch columns lie in [cols[0]+2, cols[1]-2], strictly between the spine endpoints. The constructor's fill `range(min(row,trunk)+1, max(row,trunk))` matches the solver's `range(a+1, b)` after `sorted((r, line))`.",
+        "No overwrite conflicts: each fill path contains only background in the input. The spine row holds no dots between its endpoints, and each branch column holds only its own dot. Restricting `_paint` to BG cells therefore matches the constructor's unconditional writes. The branch-to-spine junction cell is painted by the spine fill in both implementations.",
+        "Orientation: the constructor's xpose and the host's D4 variants only swap whether the spine is a row or a column. The solver's else-branch, which fills `(r, cc)` for `cc` between the dot column and the spine column, is the correct transpose of the horizontal branch. There is no untransform/retransform wrapper, and d4 is unused, which is legitimate here.",
+        "Rejection loop: the `cols[-1]+1` constraint forcing adjacent branches to opposite sides affects only sampling. Small widths (e.g. length 5 gives one candidate column) just retry and still terminate with probability 1. Grid sizes are at most 20x24, within 30.",
+        "The fixtures are consistent with the rule. The test output matches a horizontal spine on row 8, columns 2\u201311, plus vertical branches for the dots at columns 4, 6, 8 and 10.",
+        "Host audit passed: 1000 fresh pairs, 8000 augmented checks and 16 fixture variants, with no rejections."
+      ],
+      "blocking_issues": [],
+      "nonblocking_limits": [
+        "The fallback for several collinear pairs (fewer candidate lines first, then lowest index) is outside the constructor's domain, which guarantees exactly one collinear pair. It is not exercised and not a learned rule.",
+        "The solver assumes palette[0], palette[2] and palette[3] are distinct, as they are under a palette permutation. The solver uses fixed BG rather than the most common colour, which is consistent with how the constructor builds the grids.",
+        "The forced opposite-direction constraint for adjacent branches is not reproduced. It only restricts which scenes are sampled and does not change the input-to-output mapping."
+      ],
+      "required_context_checks": [
+        "No arbitrary colour or shape lookup is involved: the dot, fill and background roles are shown in every demonstration, and bf89d739 is not in the list of tasks with colour-evidence checks. The only context check needed is the host's standard rejection of D4 variants with conflicting answers."
+      ],
+      "task_id": "bf89d739",
+      "factory_sha256": "35118b521b5ef9ee279ebf923f1d2f8bbd31544aa3dd668348013d711145ff6e",
+      "constructor_sha256": "3258862798e985fb70b673d792bfb519aaee3f76ac19c37db52838be186b920f"
+    },
+    "host_review": "Read mechanism, evidence, domain limits and contextual requirements. Host uses horizontal reflection then clockwise rotation, all eight indices tested, and shared bijective palette. Source audit d4=7 is the last completed loop index, not the sole tested transform. Standard conflicting-context rejection and per-episode verification required. No unresolved mechanism blocker identified within the sampled native domain."
+  }
+}

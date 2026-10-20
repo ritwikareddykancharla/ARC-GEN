@@ -1,0 +1,217 @@
+{
+  "task_id": "c64f1187",
+  "factory_sha256": "a97eb9dfd4ea9690ddfb9290895470c1cb822a785cd2c8ccce11eb5234b8cc95",
+  "constructor_sha256": "4047827317f63b1c5c308225ed27abd90a7815ddc44f294e2b92389e06ee1faa",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [
+    {
+      "seed": 215896760752282,
+      "error": "empty range in randrange(0, 0)"
+    },
+    {
+      "seed": 36269880145970,
+      "error": "empty range in randrange(0, 0)"
+    },
+    {
+      "seed": 10522480119627,
+      "error": "empty range in randrange(0, 0)"
+    },
+    {
+      "seed": 97621721343623,
+      "error": "empty range in randrange(0, 0)"
+    },
+    {
+      "seed": 254542457881967,
+      "error": "empty range in randrange(0, 0)"
+    },
+    {
+      "seed": 171950876407638,
+      "error": "empty range in randrange(0, 0)"
+    },
+    {
+      "seed": 231963078075045,
+      "error": "empty range in randrange(0, 0)"
+    },
+    {
+      "seed": 70262080464879,
+      "error": "empty range in randrange(0, 0)"
+    },
+    {
+      "seed": 158151373833729,
+      "error": "empty range in randrange(0, 0)"
+    },
+    {
+      "seed": 136193221371564,
+      "error": "empty range in randrange(0, 0)"
+    },
+    {
+      "seed": 58458038837318,
+      "error": "empty range in randrange(0, 0)"
+    },
+    {
+      "seed": 124875506221387,
+      "error": "empty range in randrange(0, 0)"
+    },
+    {
+      "seed": 61678125776769,
+      "error": "empty range in randrange(0, 0)"
+    },
+    {
+      "seed": 4094820444894,
+      "error": "empty range in randrange(0, 0)"
+    },
+    {
+      "seed": 71994081791603,
+      "error": "empty range in randrange(0, 0)"
+    },
+    {
+      "seed": 261622830692635,
+      "error": "empty range in randrange(0, 0)"
+    },
+    {
+      "seed": 86040514443131,
+      "error": "empty range in randrange(0, 0)"
+    },
+    {
+      "seed": 87225256980923,
+      "error": "empty range in randrange(0, 0)"
+    },
+    {
+      "seed": 201362347910728,
+      "error": "empty range in randrange(0, 0)"
+    },
+    {
+      "seed": 83354421372546,
+      "error": "empty range in randrange(0, 0)"
+    },
+    {
+      "seed": 234054125940804,
+      "error": "empty range in randrange(0, 0)"
+    },
+    {
+      "seed": 141059369509046,
+      "error": "empty range in randrange(0, 0)"
+    },
+    {
+      "seed": 238725492999861,
+      "error": "empty range in randrange(0, 0)"
+    },
+    {
+      "seed": 23639853750088,
+      "error": "empty range in randrange(0, 0)"
+    },
+    {
+      "seed": 7486832488935,
+      "error": "empty range in randrange(0, 0)"
+    },
+    {
+      "seed": 192413780517186,
+      "error": "empty range in randrange(0, 0)"
+    },
+    {
+      "seed": 199155682039869,
+      "error": "empty range in randrange(0, 0)"
+    },
+    {
+      "seed": 163621403957167,
+      "error": "empty range in randrange(0, 0)"
+    },
+    {
+      "seed": 36585636288222,
+      "error": "empty range in randrange(0, 0)"
+    },
+    {
+      "seed": 51744303023401,
+      "error": "empty range in randrange(0, 0)"
+    },
+    {
+      "seed": 85323270076261,
+      "error": "empty range in randrange(0, 0)"
+    },
+    {
+      "seed": 268086875563974,
+      "error": "empty range in randrange(0, 0)"
+    },
+    {
+      "seed": 252688121082810,
+      "error": "empty range in randrange(0, 0)"
+    },
+    {
+      "seed": 100485916219994,
+      "error": "empty range in randrange(0, 0)"
+    },
+    {
+      "seed": 221102546301808,
+      "error": "empty range in randrange(0, 0)"
+    },
+    {
+      "seed": 162410366659951,
+      "error": "empty range in randrange(0, 0)"
+    },
+    {
+      "seed": 62920481716229,
+      "error": "empty range in randrange(0, 0)"
+    },
+    {
+      "seed": 275060959473319,
+      "error": "empty range in randrange(0, 0)"
+    },
+    {
+      "seed": 188339027920567,
+      "error": "empty range in randrange(0, 0)"
+    },
+    {
+      "seed": 183117664609565,
+      "error": "empty range in randrange(0, 0)"
+    },
+    {
+      "seed": 117975262449340,
+      "error": "empty range in randrange(0, 0)"
+    }
+  ],
+  "seed": 78524457803076,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 7.024761124979705,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "In the original frame, each legend marker sits diagonally up-left of a 2x2 window of colour-1 cells. That window is the marker's shape. The canvas is a lattice of 2x2 colour-5 blocks at pitch 3, and some blocks carry one legend-coloured cell. The output is the 5-bounding box, cleared to background. Each tagged block is replaced by its colour's shape; plain blocks become background.\n\nUnder D4, the marker-to-window displacement (+1,+1) changes with orientation. The factory computes the transformed displacement: a row reversal negates the column component, and each clockwise rotation maps (dr,dc) to (dc,-dr). It then derives the visible offset from the marker to the window's top-left corner: +1 for a positive component, -2 for a negative one.\n\nThe emitted program works directly in visible coordinates:\n1. It finds the bounding box of palette[5].\n2. Every cell outside that box whose colour is not palette[0], palette[1] or palette[5] is treated as a marker. Its shape is the mask of palette[1] cells in the oriented window.\n3. It crops the box and clears it to palette[0].\n4. It walks the block lattice at pitch 3 from the box corner. This works in every orientation because the lattice is D4-symmetric.\n5. Each block's non-5, non-background colour selects the shape to stamp. The tagged cell's position inside the block varies with orientation, so the program searches the whole block for it.\n\nThe legend window and the output block undergo the same linear transform. So the mask is copied with matching visible top-left corners, and no rotation of the shape is needed.\n\nColour roles are fixed by palette constants: background, the shape-ink colour and the block colour. Legend colours are inferred from pixels.",
+    "limitations": "- The marker direction is specialised from d4. It is not inferred from demonstrations, so the program relies on the host applying the stated D4 convention.\n- I could not verify that legend markers never fall inside the 5-bounding box. Legend and canvas do not overlap in the original frame (legend in rows 0..3, canvas from row 7), and D4 preserves that. A marker outside the box with its window clipped by the grid edge is skipped; the constructor's bounds analysis shows this cannot happen.\n- If a block's colour has no legend entry, the block is left as background, matching the archived solver. The constructor ensures every block colour is in the legend.\n- If no colour 5 is present, the program returns a 1x1 background grid. This is outside the constructor's domain.\n- No constructor defects or fixture contradictions were found. The fixtures are consistent with the uniform rule.",
+    "independent_source_review": {
+      "verdict": "accept",
+      "mechanism": "Each legend marker (any colour other than background, 1 or 5, lying outside the colour-5 bounding box) owns the 2x2 window of colour-1 cells next to it, diagonally offset by +1/+1 in the original frame. The output is the 5-bounding box cleared to background. The solver walks the 2x2 blocks at pitch 3 from the box corner. Each block's single non-5 tag colour stamps that colour's legend mask; untagged blocks stay background. The emitted solver works in visible coordinates. Only the marker-to-window diagonal offset (WY, WX) is specialised from d4, and the role colours BG/ONE/FIVE come from the palette.",
+      "evidence": [
+        "Constructor: the legend occupies rows lrow..lrow+2 <= 3 and the canvas starts at brow=7. Legend cells are therefore strictly outside the 5-bounding box along one axis, and every D4 transform preserves this. The solver's bbox exclusion cleanly separates markers from block tags.",
+        "Legend bounds: the last window column is lcol_max + (n-1)(ls+3) + 2 = width - ls <= width-1. Window rows are at most 3. Every legend window is in-grid, so the solver's out-of-bounds skip is never triggered in-domain.",
+        "Canvas bounds: tall=4 only when height >= 19, so the last canvas row is 17. The last canvas column is bcol + 3*wide - 2 <= width - 2. The 5-bbox is exactly (3*tall-1) x (3*wide-1), matching the constructor's output size. The pitch-3 lattice from the bbox corner is D4-invariant.",
+        "lcorners is drawn by common.sample without replacement, so legend shapes are distinct. Each shape (full square or one corner removed) has at least 3 ones, so win.any() always holds.",
+        "colors is resampled until len(set(colors)) == len(lcolors)+1. Every block tag colour is therefore in the legend and every legend entry is used. The output depends only on the visible legend masks and the tag positions; there is no hidden latent.",
+        "Legend colours {2,3,4,7,8} never coincide with 0, 1 or 5. Under palette permutation, the roles stay distinct.",
+        "Factory displacement math is correct: a clockwise rotation maps (dr,dc) to (dc,-dr) and a horizontal flip negates dc. The window top-left offset is +1 for a positive component and -2 for a negative one. This matches the window spanning marker + {1,2}*dir.",
+        "The legend window and the output block undergo the same linear D4 part. Copying the visible mask with aligned top-left corners therefore reproduces the transformed output without rotating the mask. No whole-grid untransform/solve/retransform wrapper is used.",
+        "The shape-colour association is read from the query's own legend, so no demonstration-only colour lookup is involved. The demonstrations teach the diagonal orientation constant.",
+        "Host audit passed: 1000 fresh pairs, 8000 augmented checks and 16 fixture variants. This is consistent with the d4 convention assumed by the factory."
+      ],
+      "blocking_issues": [],
+      "nonblocking_limits": [
+        "Sampler defect: lspacing may be 2 when len(lcolors)==4 and width==18. Then lcol = randint(0, 18-20+1) = randint(0,-1) raises 'empty range in randrange(0, 0)'. This explains the 41 sampler rejections. It only discards draws and never produces a bad label.",
+        "The orientation offset is specialised from d4 rather than inferred from the demonstrations. Correctness depends on the host's D4 convention matching the factory's flip-then-clockwise-rotation model. The augmented host checks support this.",
+        "Defensive fallbacks are outside the constructor's domain: a [[BG]] return when no 5 is present, and skipping block colours absent from the legend.",
+        "Each block contains exactly one tag cell by construction. The solver takes cols[0] and would be ambiguous for multi-tag blocks, but the constructor never produces them."
+      ],
+      "required_context_checks": [
+        "Confirm that the host D4 indexing (d4>=4 = horizontal flip, then d4%4 clockwise quarter-turns) matches the factory's displacement model. The augmented audit appears to cover all 8 variants.",
+        "No episode colour-evidence check applies: c64f1187 is not in require_colour_evidence's list, and shapes come from the query's own legend."
+      ],
+      "task_id": "c64f1187",
+      "factory_sha256": "a97eb9dfd4ea9690ddfb9290895470c1cb822a785cd2c8ccce11eb5234b8cc95",
+      "constructor_sha256": "4047827317f63b1c5c308225ed27abd90a7815ddc44f294e2b92389e06ee1faa"
+    },
+    "host_review": "Reviewed mechanism, evidence, limitations and checks. Shared bijective palette and horizontal-reflection-then-clockwise-rotation convention confirmed. All eight D4 indices audited, with d4=7 being the final loop index. Per-episode execution and context checks remain required. Known negative legend-offset random draws remain explicit sampler rejections; do not fit those invalid draws or suppress their counts."
+  }
+}

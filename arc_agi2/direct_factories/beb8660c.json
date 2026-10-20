@@ -1,0 +1,49 @@
+{
+  "task_id": "beb8660c",
+  "factory_sha256": "a14a6718b349918839654e72320369e44351335e08c07c6fe1129f67fbe22c27",
+  "constructor_sha256": "2f59c4ad2d1e2b8f4dc19a6671d868b7894131f132a244c67dcb37abff0d6c38",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 195916159421725,
+  "d4": 7,
+  "unique_base_inputs": 999,
+  "seconds": 5.13373241701629,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "In the original task the floor is the bottom row, filled with colour 8. Each bar of length k ends up right-aligned, and the bars are stacked contiguously on the floor with the longest bar touching it.\n\nThe factory pushes two direction vectors through the D4 map:\n- 'down' (1,0) tells it where the floor is. It is the last or first row when this vector is vertical, and the last or first column when it is horizontal.\n- 'right' (0,1) tells it which end of the bar axis the bars are pushed against.\n- The map applies dc -> -dc for reflections (d4>=4), then (dr,dc) -> (dc,-dr) for each clockwise turn.\n\nThe factory then emits code written for that orientation only:\n- It copies the visible floor line unchanged and masks it out.\n- It splits the remaining cells that are not background (palette[0]) into 4-connected single-colour pieces.\n- It sorts the bars by size, longest first.\n- It writes the bars on consecutive lines moving away from the floor. Each bar is a slice of a row, or of a column, aligned to the pushed-against edge.\n\nThere is no rotation or unrotation and no colour remapping. The only colour constant is the background, palette[0].",
+    "limitations": "- Bar lengths are distinct in the constructor's domain (1..n-1), so length ties never happen. If one did, the emitted program keeps scan order (a stable sort), which is not a rule the puzzle defines.\n- It assumes the background colour is palette[0] and that the floor is the full edge line on the side the D4 map predicts. Both hold for this generator.\n- Bars can touch each other in neighbouring rows, but they always have different colours, so separating pieces by colour keeps them apart.\n- The constructor packs the bars at rows gap..gap+n-2, which matches contiguous stacking on the floor because the lengths are consecutive.\n- I found no constructor defects or contradictions in the fixtures.\n- I have not run any tests.",
+    "independent_source_review": {
+      "verdict": "accept",
+      "mechanism": "The bottom row is a full cyan floor. Above it, n-1 single-row bars of distinct non-zero, non-cyan colours have lengths 1..n-1, one bar per distinct row, at arbitrary columns. The output keeps the floor and stacks the bars contiguously on it, right-aligned, longest bar against the floor. The emitted solver is specialised per D4 variant. It copies the floor line on the side predicted by the mapped 'down' vector and masks it out. It extracts 4-connected same-colour non-BG pieces, sorts them by size descending, and writes them as aligned slices on consecutive lines moving away from the floor, toward the end predicted by the mapped 'right' vector.",
+      "evidence": [
+        "Constructor bar placement: `grid[rows[i]][cols[i]+idx]` with `cols[i] = randint(0, n-1-i)` ensures `cols[i]+i <= n-1 = width-1`, so bars of length i+1 always fit. `rows` comes from `sample(range(n+gap-1), n-1)`, giving distinct rows strictly above the floor at row `n+gap-1 = height-1`. The final colour (cyan, length n, col 0) fills the whole floor row.",
+        "Constructor output: `output[i+gap][width-1-i+idx]` puts the bar of length i+1 on row i+gap, right-aligned. The longest non-floor bar (i=n-2) lands on row height-2, directly on the floor. Lengths are consecutive, so the stack is contiguous with no gaps. The label is a function of visible bar lengths and colours only. `gap` is visible as the empty top rows and does not drive any hidden decision.",
+        "Colours: `random_colors(n-1, exclude=[cyan])` samples distinct values from 1..9. Bars are therefore never background or floor colour. Any bars in adjacent rows have different colours, so same-colour 4-connected components recover each bar exactly.",
+        "Lengths are 1..n-1 and all distinct, so `sort(key=-size)` never hits a tie in the constructor domain.",
+        "Factory identity case (d4=0): down=(1,0) and right=(0,1) give f=H-1, a start line at H-2 moving -1, and slice `W-n:W`. This matches the constructor. The transposed branch uses `out[H-n:H or 0:n, x]` and moves along columns. Both branches act directly in visible coordinates; there is no whole-grid untransform/retransform wrapper.",
+        "BG is fixed to palette[0], which the constructor guarantees is the background (colour 0 mapped). The floor is copied from the input, not hard-coded, so palette remapping of cyan is handled.",
+        "Approved fixtures match `validate()` (e.g. pair 1 = colors [1,3,2,8], rows [0,4,2,6], cols [3,1,0,0], gap 3). The archived rule's test description matches the fixture output.",
+        "Host audit passed 1000 fresh pairs, 8000 augmented checks and 16 fixture variants, with no sampler rejections."
+      ],
+      "blocking_issues": [],
+      "nonblocking_limits": [
+        "Equal-length bars cannot occur in the constructor domain. The emitted stable sort would use scan order on ties, which the puzzle does not define.",
+        "`n = min(n, W)` and the `0 <= y < H` bounds guard are out-of-domain defensive fallbacks. The constructor never needs them because bar count is at most height-1 and lengths are at most width-1.",
+        "The solver assumes the floor is the full edge line on the D4-predicted side and that background is palette[0]. Both hold by construction, but neither is inferred from the demonstrations.",
+        "D4 vector mapping correctness relies on the factory's tf matching the host's augmentation convention. Source reading is consistent, and the host audit across augmented checks corroborates it."
+      ],
+      "required_context_checks": [
+        "None task-specific. beb8660c is not in the colour-evidence list, and the rule involves no arbitrary colour or shape lookup. Orientation is a deterministic spatial constant, and every demonstration shows the floor side and alignment edge."
+      ],
+      "task_id": "beb8660c",
+      "factory_sha256": "a14a6718b349918839654e72320369e44351335e08c07c6fe1129f67fbe22c27",
+      "constructor_sha256": "2f59c4ad2d1e2b8f4dc19a6671d868b7894131f132a244c67dcb37abff0d6c38"
+    },
+    "host_review": "Read mechanism, evidence, domain limits and contextual requirements. Host uses horizontal reflection then clockwise rotation, all eight indices tested, and shared bijective palette. Source audit d4=7 is the last completed loop index, not the sole tested transform. Standard conflicting-context rejection and per-episode verification required. No unresolved mechanism blocker identified within the sampled native domain."
+  }
+}

@@ -1,0 +1,53 @@
+{
+  "task_id": "b15fca0b",
+  "factory_sha256": "5196797123323c1c26953d4faab67327e3f81c79c8c079b7a18ede34c4422b22",
+  "constructor_sha256": "50833aea44cc68b989d12add0101cc13455605a19995a4d6cdf76879393c3e91",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 178011496247893,
+  "d4": 7,
+  "unique_base_inputs": 998,
+  "seconds": 4.4911453750682995,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The emitted program works directly on the visible grid. It finds the two cells whose colour is palette[2]. It then runs a 4-connected breadth-first search between them, moving only through background cells (colour palette[0]). Every cell strictly between the endpoints on the shortest path is painted palette[4]. Walls (palette[1]) and any other colours block movement, and the endpoints keep their colour.\n\nShortest-path search treats all directions the same way, so a D4 transform needs no direction or axis rewrite. The rotated or reflected maze has the unique shortest path at the transformed coordinates, and the search finds it there. d4 is accepted but has no effect. The palette is handled by baking palette[0], palette[2] and palette[4] in as the background, endpoint and paint constants. The demonstrations are not needed and are ignored.\n\nThe generator only accepts a scene when its 1-D crossing-row DP finds exactly one optimal route. It draws that route as the answer, and lane caps only delete cells off that route. So the BFS result is the generator's answer and does not depend on neighbour order. If the two endpoints are adjacent, nothing is painted, which matches the generator's empty painted set.",
+    "limitations": "Correctness relies on the constructor's guarantee that the shortest path is unique. That guarantee comes from the DP's uniqueness filter, the endpoint and crossing-row conditions for wide outer lanes, and the rule that interior lanes are exactly 1 wide. If a fresh scene ever had two equally short routes, the BFS would silently pick one using its fixed neighbour order (right, down, left, up). That would be a constructor defect for host review, not a rule of the puzzle. If there are not exactly two endpoint-coloured cells, or no path exists, the grid is returned unchanged; neither case occurs in the generator's domain. The fixtures are consistent with this uniform rule. No contradictions were found, but I have not run any tests.",
+    "independent_source_review": {
+      "verdict": "accept",
+      "mechanism": "Two endpoint cells (palette[2]) are joined by the unique shortest 4-connected path through background cells. Every interior path cell becomes palette[4]. The constructor builds comb mazes: lanes alternate with walls that have row-interval openings, interior lanes are 1 wide, and outer lanes are 1 or 2 wide. A 1-D DP over crossing rows minimises the sum of |x_{k+1}-x_k| and certifies that exactly one crossing sequence is optimal. The answer is drawn explicitly as a polyline. The emitted solver runs a plain BFS on the visible augmented grid, with palette constants baked in.",
+      "evidence": [
+        "Monotonicity argument holds. After a path's last rightward crossing of wall k it stays in lane k or further right, so it must still cross wall k+1. The last crossings therefore occur in wall order. Vertical cost is then at least the DP optimum, and horizontal cost is at least the monotone minimum. Equality needs a monotone path that never turns back left. So the DP models every shortest path.",
+        "_crossings propagates counts capped at 2 (cnt += k; min(cnt,2)) and rejects when prev[end_row][1] != 1.",
+        "Backtracking indexing in _crossings is correct. history[0] is the start, history[1..n] are the walls and history[n+1] is the end. The loop over idx from n+1 down to 2 recovers the crossing rows of layers n..1.",
+        "Thick walls: a row change inside a 2-wide opening between rows x1 and x2 costs the same as crossing at x1 or at x2. If such a move were optimal, both rows would be optimal crossings, the DP count would reach 2, and the scene would be rejected. The docstring's claim matches the code.",
+        "Wide outer lanes: _build rejects the scene unless the endpoint is in the inner column (so == lane_widths[0]-1 or eo == 0) or level with its crossing row. This rules out staircase ties inside the 2-wide lane. Interior lanes wider than 1 are rejected outright.",
+        "Lane blocks only turn cells into walls. The path cells are checked to stay 0 (out[r][cc] != 0 -> None), and so are the endpoints. Removing cells cannot create a new shortest path, so uniqueness survives the blocks.",
+        "walk(): the vertical leg uses pos[1], which is the inner or chosen lane column, and the horizontal leg goes to lane_cols[i+1]. The final legs reach e. When eo=1, er == xs[-1] is enforced, so the vertical leg there is a no-op.",
+        "There is no hidden latent label. The output is a function of the visible maze alone, because the shortest path is certified unique. The BFS neighbour order therefore never decides the answer inside the constructor domain.",
+        "Solver: it works on raw visible coordinates with an isotropic BFS. There is no untransform/retransform wrapper. BG, EP and PAINT come from the palette. d4 is unused, which is legitimate because shortest-path is D4-invariant.",
+        "Fixtures were reconstructed explicitly in validate(). The test case end=(0,1) in a 2-wide last lane relies on er == xs[-1] == 0, which is consistent with the given output. Fixture 5's lane block (1,0,0) reproduces the closed top of the middle lane.",
+        "Host audit: 1000 fresh pairs, 8000 augmented checks and 16 fixture variants passed, with no sampler rejections."
+      ],
+      "blocking_issues": [],
+      "nonblocking_limits": [
+        "The synthetic distribution is limited to comb-style mazes: parallel walls with openings, optionally transposed. This is narrower than arbitrary mazes, but it preserves the fixture mechanism.",
+        "Correctness depends on the constructor's uniqueness certification. On arbitrary out-of-domain inputs with tied shortest paths, the BFS would silently use its neighbour order (right, down, left, up).",
+        "The defensive fallbacks (endpoint count not equal to 2, or no path) return the grid unchanged. The constructor excludes both cases.",
+        "998 of 1000 base inputs were unique; the minor duplication is harmless.",
+        "No demonstration information is used. This is fine because the rule has no arbitrary colour association beyond the palette roles."
+      ],
+      "required_context_checks": [
+        "None task-specific. b15fca0b is not in the colour-evidence task list, and the rule involves no arbitrary colour or shape lookup. The general D4 conflict policy applies trivially because shortest-path painting is D4-equivariant."
+      ],
+      "task_id": "b15fca0b",
+      "factory_sha256": "5196797123323c1c26953d4faab67327e3f81c79c8c079b7a18ede34c4422b22",
+      "constructor_sha256": "50833aea44cc68b989d12add0101cc13455605a19995a4d6cdf76879393c3e91"
+    },
+    "host_review": "Reviewed source analysis and domain restrictions. Confirmed palette remaps finished grids bijectively, reflection precedes clockwise rotation, all eight D4 variants are checked on fixtures and fresh inputs. Original fixture query grids are included. Per-episode verification remains mandatory. D4 ambiguous visible supervision is rejected; defensive out-of-domain cases do not establish broader validity."
+  }
+}

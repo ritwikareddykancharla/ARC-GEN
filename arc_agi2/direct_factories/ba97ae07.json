@@ -1,0 +1,47 @@
+{
+  "task_id": "ba97ae07",
+  "factory_sha256": "438a815ed977bb843f90174b574a81c131c08cdebe4b8ff77daf6fdb02d7e72d",
+  "constructor_sha256": "dea1d5bc54f9db4cb22e740b4f457de8c6f98b2ff37c4b269e3c59e00c4f0d54",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 49474227557042,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 3.7902773750247434,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The visible grid has two full-length bands on a background, one made of full rows and one made of full columns. The rule is the same under every D4 transform: a rotation only swaps which band runs horizontally, and the swap rule treats the two bands symmetrically. So the emitted program works directly in the visible coordinates. The background is the constant palette[0]; the generator always uses colour 0 for it. I did not use most-common-colour detection, because in small grids (for example 5x5 with two bands of thickness 2) a band colour can outnumber the background. The program first finds the rows with no background cell and the columns with no background cell. Their intersection is the crossing. It reads the row-band colour from a band row at a column outside the crossing, and the column-band colour from a band column at a row outside the crossing. Each crossing cell is then repainted in the colour of the other band. This reverses which band is drawn on top. No demonstration data, generator latents or fixture answers are used.",
+    "limitations": "Assumes the background is palette[0], as in the constructor. The constructor's offset range always leaves at least one background row and column on each side of each band, and it uses two distinct non-background colours. If a grid were all bands, or had no full row or full column, the program returns the input unchanged; the generator never produces such grids. I found no constructor defects or fixture contradictions. The constructor's flip parameter only chooses which band is drawn last, and that choice is visible in the input's crossing. I have not run any tests.",
+    "independent_source_review": {
+      "verdict": "accept",
+      "mechanism": "Each input has a background (palette[0]) with one vertical band of full columns and one horizontal band of full rows, in two distinct non-background colours. The constructor draws `first` then `second` in the input, so `second` is on top. It draws `second` then `first` in the output, so `first` is on top. The output therefore repaints the crossing rectangle in the other band's colour. The emitted solver finds rows with no BG cell and columns with no BG cell, reads each band's colour outside the crossing, and swaps each crossing cell to the other band's colour.",
+      "evidence": [
+        "Constructor offset ranges always leave background on both sides of each band. `offsets[0] in [1, width-thicks[0]-1]` gives column 0 as BG and `offsets[0]+thicks[0] <= width-1`. Rows work the same way. So every non-band row contains BG in a column outside the vertical band, and every non-band column contains BG in a row outside the horizontal band. `full_rows` and `full_cols` are therefore exactly the band rows and band columns.",
+        "Because band rows and columns never cover the whole grid, `outside_cols` and `outside_rows` are never empty. `row_band_colour = g[full_rows[0], outside_cols[0]]` is the horizontal band colour, and `col_band_colour = g[outside_rows[0], full_cols[0]]` is the vertical band colour.",
+        "`common.random_colors(2)` samples without replacement from 1..9, so the two band colours are distinct and never BG. The swap `out = row_colour if g == col_colour else col_colour` is therefore well defined.",
+        "The `flip` latent only sets the drawing order. Its effect is fully visible in the input crossing, and the solver infers the swap from the visible top colour, so no hidden latent determines the label.",
+        "Under D4, transposes and reflections map full rows and full columns onto each other, and the swap is symmetric between the two bands. The solver works directly on the augmented grid and has no untransform/retransform wrapper.",
+        "BG is fixed to palette[0] rather than taken as the most common colour. This is correct: on a 5x5 grid with two thickness-2 bands, band cells number 16 against 9 background cells. The archived `background()` heuristic would misfire there, and the factory avoids it.",
+        "All 4 train fixtures and the test fixture match the swap rule when checked by hand. Host audit: 1000 fresh pairs, 8000 augmented checks, 16 fixture variants, no rejections."
+      ],
+      "blocking_issues": [],
+      "nonblocking_limits": [
+        "Early `return g.tolist()` fallbacks, for no full row or column or no outside row or column, are unreachable within the constructor's domain.",
+        "Assumes exactly one band per orientation with a uniform colour, as the constructor guarantees. Multiple separate bands of different colours are out of domain.",
+        "The archived reference program's most-common-colour background detection can fail on small dense grids. The factory deliberately does not copy it, so this does not affect the emitted solver."
+      ],
+      "required_context_checks": [
+        "None task-specific: ba97ae07 is not in the colour-evidence list. The swap is a deterministic, colour-agnostic spatial rule that needs no learned colour associations, and the BG = palette[0] constant follows the constructor."
+      ],
+      "task_id": "ba97ae07",
+      "factory_sha256": "438a815ed977bb843f90174b574a81c131c08cdebe4b8ff77daf6fdb02d7e72d",
+      "constructor_sha256": "dea1d5bc54f9db4cb22e740b4f457de8c6f98b2ff37c4b269e3c59e00c4f0d54"
+    },
+    "host_review": "Read mechanism, evidence, domain limits and contextual requirements. Host uses horizontal reflection then clockwise rotation, all eight indices tested, and shared bijective palette. Source audit d4=7 is the last completed loop index, not the sole tested transform. Standard conflicting-context rejection and per-episode verification required. No unresolved mechanism blocker identified within the sampled native domain."
+  }
+}

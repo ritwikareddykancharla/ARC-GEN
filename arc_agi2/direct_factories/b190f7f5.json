@@ -1,0 +1,49 @@
+{
+  "task_id": "b190f7f5",
+  "factory_sha256": "fdcb1709f092761788cc823b970cd272d02c03f9278f859b5e5fdc281839b3c0",
+  "constructor_sha256": "e70c36dbca00e1681b201bc1f2a4630535a84e82585e015d6f8149df570a77a9",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 205979194220688,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 3.1705905830021948,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The input is split along its long side into two n x n squares. One square, the stencil, holds only the shape colour (palette[8]). The other square is a multi-colour pattern. The output is the n^2 x n^2 Kronecker product of the pattern with the stencil mask. Each non-background pattern cell of colour c stamps the stencil, recoloured to c, into its own block. Every D4 transform T satisfies T(kron(P,S)) = kron(T(P),T(S)) for square P and S. So the same mechanism holds directly in visible coordinates. Under a transform the stencil may land in either half, or the split may become vertical. The program handles this by testing which way the grid is long and by finding which half contains palette[8]. No rotation of the grid is needed. The background is fixed as palette[0] rather than taken as the most common colour. For size 3, the background count can tie with the cyan count (6 pattern pixels plus 6 stencil pixels in 18 cells), so a most-common-colour rule could pick the wrong colour.",
+    "limitations": "Assumes the generator's domain: n is 3 or 4, the stencil half contains only palette[8], and pattern colours come from palette[1..4] and never include palette[8]. If neither half contains the shape colour, or both do, the program falls back to choosing the half with fewer non-background colours (ties go to the first half). That case cannot occur in the generator's domain. No fixture contradictions or constructor defects were found. The archived solver's most-common-colour background could fail on ties at size 3; this factory avoids that by using palette[0].",
+    "independent_source_review": {
+      "verdict": "accept",
+      "mechanism": "The input is a 2n\u00d7n or n\u00d72n rectangle with n in {3,4}. One n\u00d7n half is a stencil drawn only in the shape colour (palette[8]) on background. The other half is a pattern drawn from 2\u20133 colours of palette[1..4], with at least two distinct colours. The output is the n\u00b2\u00d7n\u00b2 Kronecker product: each pattern cell (r,c) with colour col\u2260BG paints the stencil mask, recoloured to col, into block rows r*n..r*n+n-1 and block cols c*n..c*n+n-1. The emitted solver splits along the long side, picks the half containing SHAPE as the stencil, and stamps the mask (half != BG) per pattern cell. It works directly in visible coordinates.",
+      "evidence": [
+        "Constructor output loop is `output[row*size + r][col*size + c] = color` over pattern pixels \u00d7 plus pixels. This is exactly kron(pattern, mask). Pattern pixels are distinct sampled cells, so blocks never overlap.",
+        "Placement offsets cover all four arrangements. Pairwise 0 puts the pattern left and stencil right. Pairwise 2 puts the stencil left. Pairwise 1 puts the pattern top and stencil bottom. Pairwise 3 puts the stencil top. The solver's `W >= H` split and its SHAPE-presence test handle all four without relying on position.",
+        "The stencil is never empty: num_plusses \u2265 size*size//3 \u2265 3. The pattern never contains cyan: colours are sampled from [1,2,3,4]. So exactly one half contains SHAPE, and the `has0 xor has1` branch always decides. The _ncols fallback is unreachable in the domain.",
+        "D4 equivariance holds. For square P and S, T(kron(P,S)) = kron(T(P), T(S)) under flips and the transpose, because the index (r*n + r') maps to (n-1-r)*n + (n-1-r') under a reversal, and transposition swaps both levels together. A whole-grid D4 transform maps the two halves to two halves along the new long axis and transforms each half individually. So per-half stamping in visible coordinates is correct, with no untransform wrapper.",
+        "BG is fixed to palette[0] rather than taken as the most common colour. This avoids the size-3 tie in the archived `background()`: for example, 6 pattern pixels plus 6 cyan pixels leaves 6 zeros, which can tie with cyan's 6, and Counter's tie-break is order-dependent. The factory's choice is a legitimate specialisation of a genuine rule colour.",
+        "Fixture check by hand: in pair 1, pattern cell (0,1)=4 with shape `0 0 8/8 0 0/8 8 0` gives output row 0, cols 3\u20135 = `0 0 4`, which matches. The test is pairwise=1 (pattern top, stencil bottom), consistent with the fixture.",
+        "There is no hidden latent in the label. The output depends only on visible pattern colours, positions and stencil cells. Diagonal connectivity of the pattern and the colour_list choice only constrain the inputs.",
+        "Host audit passed: 1000 fresh pairs, 8000 augmented checks, 16 fixture variants, no sampler rejections."
+      ],
+      "blocking_issues": [],
+      "nonblocking_limits": [
+        "The _ncols fallback (neither or both halves contain SHAPE) is out of domain and untested, but the constructor excludes it.",
+        "The mask is computed as `halves[si] != BG` rather than `== SHAPE`. The two are equivalent in the domain because the stencil half contains only BG and cyan.",
+        "Approved fixture train order differs from validate() order. This is a canonical ordering difference, not a content discrepancy.",
+        "Stencil pixels are randomly sampled and need not be connected. This is not a correctness problem, but it is a property of synthetic stencils that canonical shapes do not share."
+      ],
+      "required_context_checks": [
+        "No arbitrary colour-lookup association is involved. Stamp colours are copied from visible pattern cells, and the stencil colour (palette[8]) is constant across all demonstrations, so it is taught by context. b190f7f5 is not in the colour-evidence list, and no extra evidence check appears necessary beyond the standard D4 conflicting-answer rejection."
+      ],
+      "task_id": "b190f7f5",
+      "factory_sha256": "fdcb1709f092761788cc823b970cd272d02c03f9278f859b5e5fdc281839b3c0",
+      "constructor_sha256": "e70c36dbca00e1681b201bc1f2a4630535a84e82585e015d6f8149df570a77a9"
+    },
+    "host_review": "Reviewed source analysis and domain restrictions. Confirmed palette remaps finished grids bijectively, reflection precedes clockwise rotation, all eight D4 variants are checked on fixtures and fresh inputs. Original fixture query grids are included. Per-episode verification remains mandatory. D4 ambiguous visible supervision is rejected; defensive out-of-domain cases do not establish broader validity."
+  }
+}

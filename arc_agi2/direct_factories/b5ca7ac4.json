@@ -1,0 +1,51 @@
+{
+  "task_id": "b5ca7ac4",
+  "factory_sha256": "abac36ea323a8ae2ba8d24b2ef45451ac5af52deecc09229c24a15acf8fdb395",
+  "constructor_sha256": "46dd7d9e5df2df9a632d2f15b27c32e5b4f998588d93cd068e4864718be47de3",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 240834489098088,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 18.686197708011605,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "In the original task, squares framed in colour 8 slide left (direction vector (0,-1)) and squares framed in colour 2 slide right. The factory maps this vector through the D4 transform. A row flip negates the column component, and each clockwise rotation sends (dr,dc) to (dc,-dr). So with no flip, 'left' becomes up after one rotation, right after two, and down after three. The 2-frame direction is always the opposite. The frame colours are specialised to palette[8] and palette[2].\n\nThe emitted solve() works directly in visible coordinates:\n- **Background:** the most common colour.\n- **Finding squares:** it scans for 5x5 windows whose border is a single non-background colour and whose 3x3 interior is a single different, non-background colour. Each accepted window marks its cells as used.\n- **Sliding:** within each frame group, squares are sorted by distance to their wall. The coordinate along the motion axis is ascending when moving toward index 0 and descending when moving toward the far wall. Each square is placed flush against the wall, or flush against the nearest already-placed same-colour square whose perpendicular span overlaps (|delta| < 5). The perpendicular coordinate is kept.\n- **Painting:** the original 5x5 block is painted at its new position on a background-filled canvas.\n\nThis is the archived gravity-stacking mechanism, rewritten per axis and direction. The rewrite is valid under every D4 transform because of a scan-order argument:\n- A spurious window cannot exist. Its uniform interior cannot touch a core without being exactly that core. It also cannot consist entirely of frame cells, because every frame cell has an interior cell of its own square among its 8 neighbours.\n- So the parse recovers exactly the latent squares in any scan order.\n- Squares with equal sort keys never overlap perpendicularly, so their relative order cannot affect placement.",
+    "limitations": "1. The background is taken as the most common colour of the query grid. Under the generator's density cap (at most 3-10 squares, area at most about 45%, frames split across two colours), the background always dominates.\n2. Squares whose frame is neither palette[8] nor palette[2] stay in place, matching the archived solver. The generator never produces them.\n3. A slid position outside the grid is not painted rather than raising an error. The constructor rejects such scenes, so this cannot occur in its domain.\n4. Demonstrations are not consulted; the roles come from the palette and D4 constants.\n5. No constructor defects were found. The fixtures are consistent with the uniform rule. The ordering 'nearest-to-wall moves first' is the intended visible mechanism, not a hidden tie-break, because equal keys never interact.\n6. Not executed by me; host verification is pending.",
+    "independent_source_review": {
+      "verdict": "accept",
+      "mechanism": "The grid holds 5x5 squares, each a one-colour frame around a uniform 3x3 core. Squares framed in palette[8] slide toward one wall and squares framed in palette[2] slide toward the opposite wall; with no D4 transform these are left and right. Within one frame colour, squares are processed nearest-wall first. Each square stops flush against the wall or against the nearest already-placed square of its own frame colour whose perpendicular span overlaps (|delta| < 5). Squares of the other frame colour never block it. The emitted solver does this directly in visible coordinates: the axis and sign are specialised per D4, and there is no whole-grid untransform wrapper.",
+      "evidence": [
+        "Constructor _slide sorts each frame group by x, ascending for left and descending for right. Each square goes to max(p[1]+5) or min(p[1]-5) over placed, row-overlapping blockers. This equals true gravity stacking: any same-colour square that can block another lies at least 5 columns closer to the wall, so it is already placed. Also nx <= original x, so no square passes through a same-colour square.",
+        "Sort ties are harmless. Two same-frame squares with equal x and |dy| < 5 would overlap in the input, which the sampler forbids via _overlap. So equal keys never interact, and the order is not a hidden tie-break.",
+        "The parse is scan-order invariant, which justifies the factory scanning in augmented coordinates. A uniform interior that contains a core cell must be exactly that core, because any other 3x3 block containing a core cell also contains a frame cell. An interior made only of frame cells is impossible: its centre is a frame cell whose 8 neighbours lie inside the interior and include a core cell of a different colour. Background is excluded by ic != bg. So every accepted window is exactly a latent square.",
+        "The background is unambiguous. cap = max(3, min(10, w*h//55)) bounds square area at about 45% of the grid (75/165 at the small end, 250/550 at the large end). The background therefore always exceeds any single non-background colour count.",
+        "The constructor rejects off-grid slides and any output overlap, including across colours. This makes the factory's skip of unpaintable positions an excluded out-of-domain fallback.",
+        "Cross-colour non-blocking is demonstrated visibly. In train pair 1, the 8-square at (3,15) slides to x=5 across the lane of the 2-square at (2,9), whose rows overlap.",
+        "The test fixture matches the rule by hand trace. The 8-squares are placed in order (7,2)->0, (8,10)->5, (3,16)->5 and (16,15)->0, which agrees with the archived output.",
+        "Factory direction mapping: v=(0,-1), negated column component for d4>=4, then (dr,dc)->(dc,-dr) per quarter-turn. The palette[2] direction is the opposite. These are genuine rule constants, not lookup associations. The host audit reports 8000 augmented checks passing, consistent with this convention.",
+        "The rule is not an arbitrary colour/shape lookup. The frame roles are fixed rule constants specialised through the palette, so the episode colour-evidence checks are not applicable; the task is not in that check list."
+      ],
+      "blocking_issues": [],
+      "nonblocking_limits": [
+        "The solver does not consult demonstrations. The roles come from the palette and D4 constants, which is acceptable for a deterministic spatial rule taught by the demos.",
+        "Frames other than palette[8] or palette[2] are left in place, and off-grid targets are silently skipped. The constructor never produces either case.",
+        "_parse_ok is redundant given the no-spurious-window argument, but harmless.",
+        "The archived rule's phrase 'does not pass through the other group's lanes' is loose wording. The code and demonstrations both show cross-colour paths may cross, provided final positions do not overlap."
+      ],
+      "required_context_checks": [
+        "Confirm that the host's D4 composition order (flip applied before rotation, and a horizontal rather than vertical flip) matches build_program's vector mapping for every d4 in 0..7. The audit passing with fixture_variants_checked=16 suggests it does, but the summary shows a single sampled d4=7 for fresh pairs.",
+        "Confirm that the D4 conflict policy was applied to the fixture variants (all D4 variants with the same demos and query input must not have conflicting answers)."
+      ],
+      "task_id": "b5ca7ac4",
+      "factory_sha256": "abac36ea323a8ae2ba8d24b2ef45451ac5af52deecc09229c24a15acf8fdb395",
+      "constructor_sha256": "46dd7d9e5df2df9a632d2f15b27c32e5b4f998588d93cd068e4864718be47de3"
+    },
+    "host_review": "Read the independent mechanism, evidence, limitations and context requirements. D4 uses horizontal reflection then clockwise rotation, with the same bijective palette throughout the episode; contradictory D4 contexts are rejected. Native-domain checks and per-episode execution remain mandatory. No hidden output access or normalization wrapper was identified."
+  }
+}

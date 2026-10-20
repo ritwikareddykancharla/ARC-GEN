@@ -1,0 +1,57 @@
+{
+  "task_id": "be03b35f",
+  "factory_sha256": "6f54544c1d73095434b28d0364428920aaac8ebec6994b2f915d2eb6c4a89056",
+  "constructor_sha256": "db67e94a04c9abc1ba63db9a3e6aba1f35e8a31bb9a027ccad4a951f0b2b6593",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 253800224122263,
+  "d4": 7,
+  "unique_base_inputs": 14,
+  "seconds": 2.7130635830108076,
+  "finite_default_domain": {
+    "exhaustive": true,
+    "cases_checked": 14,
+    "augmented_checks": 224,
+    "definition": "All fourteen nonconstant binary four-cell patterns.",
+    "query_distinct_from_demos": true,
+    "scope": "Default native parameter distribution only; finite input count is not inflated by repeated sampling."
+  },
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "Generator analysis: write colors a,b,c,d. Then the input blocks are TL=[[c,a],[d,b]], TR=[[d,c],[b,a]] and BL=[[b,d],[a,c]]. The output is [[a,b],[c,d]]. Each block is the previous one rotated 90 degrees clockwise in the order TL, TR, BL. The output is the next step, CW(BL). The solid 2 block sits in the BR slot, where the missing fourth step would go.\n\nIn visible coordinates the program does three things:\n1. It finds the 2x2 marker block of colour palette[2] and reads the block size from its bounding box.\n2. It takes the corner block that is the image of the original bottom-left corner under the D4 map. The factory computes this by sending the corner-band pair (1,0) through the transform: reversing a row maps (r,c) to (r,1-c), and a clockwise turn maps (r,c) to (c,1-r).\n3. It rotates that block by 90 degrees. Conjugating a clockwise turn by a pure rotation leaves it clockwise, so the program uses clockwise for d4 in 0-3 and counter-clockwise for d4 in 4-7, where the reflection reverses orientation.\n\nThe output pixels are copied directly from the input, so the colours 0 and 1 need no palette constants. Only the marker colour palette[2] is specialised. Check on canonical pair 1: BL=[[1,1],[0,1]] rotated clockwise gives [[0,1],[1,1]], which matches the fixture output.",
+    "limitations": "The program assumes the constructor's fixed layout: a 5x5 grid, 2x2 corner blocks and the marker block in a corner. The block size comes from the marker's bounding box, and the source block is taken flush against the grid edges. It does not use the demonstrations to infer anything. The fixtures match the generator exactly, and I found no constructor defects or hidden tie-breaks. I have not run any tests.",
+    "independent_source_review": {
+      "verdict": "accept",
+      "mechanism": "The constructor writes four free bits a,b,c,d (not all equal) into three 2x2 corner blocks of a 5x5 grid split by a zero cross: TL=[[c,a],[d,b]], TR=[[d,c],[b,a]], BL=[[b,d],[a,c]]. The bottom-right corner is a solid 2x2 block of colour 2. The output is [[a,b],[c,d]]. Each block is the previous one rotated 90\u00b0 clockwise in the order TL\u2192TR\u2192BL, and the output is CW(BL). The emitted solver works in visible coordinates. It reads the block size from the bounding box of the marker colour palette[2]. It takes the corner block that is the D4 image of the native bottom-left corner. It rotates that block clockwise for pure rotations (d4 0-3) and counter-clockwise for reflected variants (d4 4-7).",
+      "evidence": [
+        "Constructor assignments checked by hand. The grid[0..1][0..1] cells are (c,a / d,b). The grid[0..1][3..4] cells are (d,c / b,a). The grid[3..4][0..1] cells are (b,d / a,c). With CW([[p,q],[r,s]]) = [[r,p],[s,q]], CW(BL) = [[a,b],[c,d]], which equals the output. TR = CW(TL) and BL = CW(TR) also hold.",
+        "Row 2 and column 2 are never written, so the zero cross is guaranteed. common.rect(grid,2,2,3,3,2) uses the signature (width,height,row,col,color), so it fills rows 3-4 and cols 3-4 with 2.",
+        "Fixture train 1 is colors [0,1,1,1], i.e. a=0, b=1, c=1, d=1. This gives TL=[[1,0],[1,1]] and BL=[[1,1],[0,1]]. Rotating BL clockwise gives [[0,1],[1,1]], which matches the fixture. The other fixtures follow the same encoding, and the test fixture's BL=[[1,0],[1,1]] rotates clockwise to [[1,1],[1,0]].",
+        "The labels depend only on the visible blocks. There is no hidden latent, tie-break or randomness that affects the output beyond the visible bits. Equivalent readings, such as CCW(TL) or CW^3(TL), give the same answer because the constructor enforces consistency.",
+        "Factory band mapping: a row reversal maps (r,c) to (r,1-c), and a clockwise turn maps (r,c) to (c,1-r). Applied to (1,0), this is consistent with a reflect-then-rotate D4 convention. Rotation direction flips under reflection, which is correct. The host's 8000 augmented checks (1000 pairs \u00d7 8 variants) passing confirms that the convention agrees with the host's D4 implementation.",
+        "The solver slices the visible grid directly with a fixed corner and rotation constant. It has no whole-grid untransform/solve/retransform wrapper. The only rotation is the puzzle operation itself.",
+        "Output cells are copied from the input, so no colour lookup for 0 and 1 is needed. Only the marker colour palette[2] is specialised. This is a genuine rule colour."
+      ],
+      "blocking_issues": [],
+      "nonblocking_limits": [
+        "The source corner is a per-d4 constant, not derived from the marker position. This is valid because the constructor always places the marker in the native BR corner. It is an orientation constant taught by the demonstrations.",
+        "The no-marker fallback (h=w=2) is defensive and unreachable within the constructor's domain.",
+        "The domain is small: 14 unique base inputs, a fixed 5x5 layout and fixed 2x2 blocks. The marker-derived block size and band slicing are not exercised beyond 2x2.",
+        "The archived native program (g[y0:y1+1, 0:w]) is native-only and is not the emitted solver. It is irrelevant to the augmented targets."
+      ],
+      "required_context_checks": [
+        "Confirm that the host D4 index convention is reflect-then-rotate-clockwise, as the factory assumes. The passing augmented checks across all 8 variants indicate it is.",
+        "Confirm that the palette is a permutation, so that palette[2] never coincides with the visible colours of the 0 and 1 cells."
+      ],
+      "task_id": "be03b35f",
+      "factory_sha256": "6f54544c1d73095434b28d0364428920aaac8ebec6994b2f915d2eb6c4a89056",
+      "constructor_sha256": "db67e94a04c9abc1ba63db9a3e6aba1f35e8a31bb9a027ccad4a951f0b2b6593"
+    },
+    "host_review": "Read mechanism, evidence, domain limits and contextual requirements. Host uses horizontal reflection then clockwise rotation, all eight indices tested, and shared bijective palette. Source audit d4=7 is the last completed loop index, not the sole tested transform. Standard conflicting-context rejection and per-episode verification required. No unresolved mechanism blocker identified within the sampled native domain."
+  }
+}

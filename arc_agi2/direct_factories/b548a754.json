@@ -1,0 +1,48 @@
+{
+  "task_id": "b548a754",
+  "factory_sha256": "19a6d93f85fc6ad7475b894290baf01128637ef13d0fe57b306d4a03e149fcd8",
+  "constructor_sha256": "723c1f880b8871b3b7efbef8e793137b2b3d6f17f784b435e42bce3ca533b04d",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 192674241074059,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 6.498379000113346,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The emitted program works directly on the grid as shown. It uses two colour constants: background = palette[0] and marker = palette[8]. It finds the single marker cell and erases it. The bounding box of every other non-background cell is the framed rectangle. The frame colour is read from the box's corner cell and the inner colour from the cell one step in diagonally. The program then checks which axis has the marker outside the box's span: columns (left or right of the box) or rows (above or below it). It extends the box along that axis until the box reaches the marker's coordinate. This covers every growth direction a D4 transform can produce. Finally it repaints the enlarged box in the frame colour and fills the interior, one cell in from each side, with the inner colour. Because the visible marker position determines the direction, the d4 value does not need to set the axis or sign. Both are read from the pixels in visible coordinates, so no grid is rotated or unrotated.",
+    "limitations": "The program assumes the generator's domain: a background of palette[0], one framed box of at least 3x3 whose two colours are neither the background nor palette[8], and exactly one marker cell. The marker is assumed to lie outside the box's span on exactly one axis and inside it on the other, with at least a one-cell gap. If the marker were ever outside on both axes, the program would extend the box on both axes; the generator cannot produce that case. Demonstrations are not needed and are ignored. No fixture contradicts the rule, and I found no constructor defects. I have not run any tests.",
+    "independent_source_review": {
+      "verdict": "accept",
+      "mechanism": "The puzzle has one framed rectangle (an outer frame colour around a solid inner colour, at least 3x3) and one marker cell of palette[8]. The marker lies inside the box's span on one axis and outside it, with at least a one-cell gap, on the other. The output erases the marker and stretches the box along the outside axis until its far edge reaches the marker's coordinate. It then repaints the frame and fills the interior with the inner colour. The emitted solver reads the marker position in visible coordinates and extends the bounding box with min/max toward it, so all four D4-reachable growth directions are handled with no untransform wrapper.",
+      "evidence": [
+        "Constructor: wide and tall are each in 3..5, so the box is always at least 3x3 and has a non-empty interior. The solver's ic = g[y0+1, x0+1] therefore always reads the inner colour, and fc = g[y0, x0] reads the frame corner.",
+        "Constructor: dotrow = row + tall + randint(1, height - tall - row - 1). This puts the marker in rows row+tall+1 .. height-1, strictly below the box with at least one blank row. The upper bound is always at least 2 (max row+tall = 8 and height >= 11), so the randint range is never empty.",
+        "Constructor: dotcol = col + randint(0, wide-1), so the marker's column is always inside the box's column span. The 'outside on both axes' case is unreachable, and the solver's two independent if-branches can fire at most once.",
+        "Constructor: random_colors(2, exclude=[cyan]) draws from 1..9 minus 8, so frame and inner differ from each other and from both the background and the marker. The solver's mask (g != BG) & (g != MARK) therefore isolates exactly the box.",
+        "Constructor output: the frame is drawn over rows row..dotrow, and the inner fill over rows row+1..dotrow-1 and columns col+1..col+wide-2. This is identical to the solver's out[y0:y1+1, x0:x1+1] = fc followed by the interior fill. The marker cell lies on the new far border, so erasing it and then repainting gives the frame colour, consistent with the constructor.",
+        "xpose/flip are applied identically to input and output. Transpose plus vertical flip yields growth to the right, left, down or up. The solver's min/max extension covers each case in visible coordinates.",
+        "validate() reproduces the archived fixtures. Train pair 1 (no transform) matches fixture 2; train pairs 2 and 3 (transposed) match fixtures 1 and 3. The test (flip=1) gives a box at rows 9..12 with the marker at (1,4), matching the canonical test pair.",
+        "Colour constants are only palette[0] (background) and palette[8] (marker), both genuine rule roles shown in every demonstration. No arbitrary colour lookup is involved, and the task is not in episode_evidence_checks.",
+        "Host audit passed: 1000 fresh pairs, 8000 augmented checks, 16 fixture variants, no sampler rejections."
+      ],
+      "blocking_issues": [],
+      "nonblocking_limits": [
+        "The solver assumes exactly one marker cell (it uses pos[0]) and treats every other non-background cell as a single box. Both hold in the constructor's domain.",
+        "The early-return fallbacks (no marker, no box) and the ic = fc fallback for thin boxes are out-of-domain defensive branches the constructor never reaches.",
+        "If the marker were outside the box on both axes, the solver would extend both axes. The constructor excludes this case (dotcol is always within the column span).",
+        "Demonstrations are ignored. That is acceptable because the rule is fully deterministic from the query input under fixed palette roles."
+      ],
+      "required_context_checks": [],
+      "task_id": "b548a754",
+      "factory_sha256": "19a6d93f85fc6ad7475b894290baf01128637ef13d0fe57b306d4a03e149fcd8",
+      "constructor_sha256": "723c1f880b8871b3b7efbef8e793137b2b3d6f17f784b435e42bce3ca533b04d"
+    },
+    "host_review": "Read the independent mechanism, evidence, limitations and context requirements. D4 uses horizontal reflection then clockwise rotation, with the same bijective palette throughout the episode; contradictory D4 contexts are rejected. Native-domain checks and per-episode execution remain mandatory. No hidden output access or normalization wrapper was identified."
+  }
+}

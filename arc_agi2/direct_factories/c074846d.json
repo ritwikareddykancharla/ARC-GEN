@@ -1,0 +1,48 @@
+{
+  "task_id": "c074846d",
+  "factory_sha256": "1e2a80e56c2820f5d7ea798f87ad938c9a628ddc79f343e800924e867a960074",
+  "constructor_sha256": "68dedaeda1f9da78e49f26f00b9a07140ae412573d57ba755c692f703aaccb32",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 279913268703214,
+  "d4": 7,
+  "unique_base_inputs": 978,
+  "seconds": 5.628224999993108,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The program works directly in the visible grid. It finds the single pivot cell (palette[5]) and the arm cells (palette[2]). The arm direction is the sign of the summed offsets from the pivot to the arm cells. The arm length is the number of arm cells. The old arm is recoloured palette[3]. A new arm of the same length is drawn in palette[2], starting next to the pivot and pointing in the turned direction. In the original puzzle the arm turns clockwise, (dy,dx)->(dx,-dy). D4 rotations commute with a 90-degree turn, so for d4 = 0..3 the visible turn is still clockwise. For d4 >= 4, the row reversal flips handedness, so the visible turn is counter-clockwise, (dy,dx)->(-dx,dy). Background cells are left unchanged, so the program never needs palette[0].",
+    "limitations": "The program assumes the constructor's domain: exactly one pivot cell and one straight arm of length 1 to 4. The generator rejects any scene where either the old or the new arm would leave the grid. The bounds check that skips out-of-grid cells is only a safeguard and never fires on generated data. No fixture contradicts the rule. I found no constructor defects: the generator's loop over range(length+1) also writes the pivot cell, which is then overwritten with grey, and this matches the visible rule.",
+    "independent_source_review": {
+      "verdict": "accept",
+      "mechanism": "There is one grey pivot (palette[5]) with a straight red arm (palette[2]) of length 1\u20134 in direction cdir (0=N, 1=E, 2=S, 3=W). In the output the old arm becomes green (palette[3]). A new red arm of the same length is drawn in direction (cdir+1)%4, which is a 90\u00b0 clockwise turn. The pivot stays grey.",
+      "evidence": [
+        "Constructor draw(): dr=[-1,0,1,0], dc=[0,1,0,-1]. For i in range(length+1), the old-arm cell at i gets grid=2 and output=3. The cell at index (cdir+1)%4 gets output=2. The pivot at i=0 is then overwritten to 5 in both grids. N\u2192E\u2192S\u2192W is clockwise, which matches the archived rule's table and all 5 train and 2 test fixtures.",
+        "Both the old and new arms are bounds-checked through common.get_pixel(...) == -1, and draw returns None if either fails. The random loop re-samples until both fit. The pivot row/col is drawn from [1, dim-2], so the pivot is never on an edge. Arms are perpendicular and start at the pivot, so they can never overlap.",
+        "There is no hidden latent beyond what is visible. Direction is recoverable from the red cells relative to the pivot, and length equals the number of red cells. The output is fully determined by the input.",
+        "Solver: the direction is sign(sum of offsets). This is exact because all red cells lie on one ray from the pivot. n=len(reds). Old cells are recoloured GREEN, and new cells are drawn at k=1..n in the turned direction. For d4<4 the turn is (dx,-dy): N(-1,0)\u2192(0,1)=E, which is correct clockwise. For d4>=4 it is (-dx,dy), which is the counter-clockwise image of a reflected clockwise turn. Rotations preserve handedness and reflections invert it, so the specialisation is correct.",
+        "The solver acts directly on visible augmented coordinates. It has no untransform/retransform wrapper. Handedness is a deterministic orientation constant, and every demonstration shows it, because every demo contains a turn.",
+        "Colours come only from palette indices 2, 3 and 5. Background is never written, so not using palette[0] is harmless.",
+        "Host audit passed: 1000 fresh pairs, 8000 augmented checks (consistent with all 8 D4 variants), 16 fixture variants, and no sampler rejections."
+      ],
+      "blocking_issues": [],
+      "nonblocking_limits": [
+        "The solver ignores the demonstrations. The turn handedness is fixed per d4 rather than inferred. This is acceptable because it is a deterministic spatial constant taught by every demo.",
+        "The in-bounds skip and the empty-pivot/empty-red early return are defensive fallbacks. The constructor excludes both cases, because it rejects out-of-grid arms and always draws a pivot and an arm of length \u22651.",
+        "The solver uses pivots[0], which assumes a single grey cell. The constructor guarantees exactly one."
+      ],
+      "required_context_checks": [
+        "Confirm that the host's D4 indexing convention treats indices 4\u20137 as the reflections (handedness-reversing). The passing 8000 augmented checks strongly suggest this, but I cannot verify the convention from source here.",
+        "No colour-association evidence check applies. c074846d is not in the episode_evidence_checks list, and its colour roles (red arm, grey pivot, green trace) appear in every demonstration."
+      ],
+      "task_id": "c074846d",
+      "factory_sha256": "1e2a80e56c2820f5d7ea798f87ad938c9a628ddc79f343e800924e867a960074",
+      "constructor_sha256": "68dedaeda1f9da78e49f26f00b9a07140ae412573d57ba755c692f703aaccb32"
+    },
+    "host_review": "Reviewed mechanism, evidence, limitations and checks. Shared bijective palette and horizontal-reflection-then-clockwise-rotation convention confirmed. All eight D4 indices audited, with d4=7 being the final loop index. Per-episode execution and context checks remain required."
+  }
+}

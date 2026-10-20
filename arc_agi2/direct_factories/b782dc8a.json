@@ -1,0 +1,49 @@
+{
+  "task_id": "b782dc8a",
+  "factory_sha256": "4b6429104eb30af8560b958ccfdefeca1432fc80fa9c186d7eeb23ba16500166",
+  "constructor_sha256": "c7e3447efde5425f0091fbeef07a7814cdfe413eeab9d172389aeab34f22b37f",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 186616895630387,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 9.161957417032681,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The generator's output colours each cell with pair[(r+c)%2]. That pair is collected from the marker's own cells, and the flood starts at the marker cells, passes through black corridor cells and is stopped by cyan walls. The emitted program does the same thing directly in visible coordinates. The corridor colour is the constant palette[0] and the wall colour is palette[8]. Every other colour belongs to the marker. The program records which colour sits on each parity class of the visible marker (the centre and the arms are always on opposite parities). It then runs a 4-neighbour flood through corridor cells from all marker cells and paints each reached cell with the colour recorded for its parity. A D4 transform keeps 4-adjacency and only possibly swaps the two parity classes globally. Because the parity-to-colour map is read from the visible marker, no axis or direction needs specializing, and the program is correct under all eight D4 indices without any normalization. This approach never has to decide which colour is the 'centre'. That matters because the generator can place the centre at a dead-end lattice node with only one open neighbour. Centre and arm colours then each occur exactly once, and the archived solver's 'least frequent colour is the centre' heuristic would tie. The parity mapping gives the intended answer in that case as well.",
+    "limitations": "The program assumes the palette is a bijection, so marker colours never equal palette[0] or palette[8]. It also assumes the marker colours cover both parities, which the constructor guarantees because the cell below the centre is always an open arm. Constructor note for host review: when the marker centre sits at a dead end, the centre and arm colours each appear once. Any solver that identifies the centre by counting colours, as the archived one does, faces an arbitrary tie there. The parity-based rule used here avoids it, and the fixtures are consistent with it. If random_colors were able to return black (0), the generator itself would be ill-defined. This program assumes it cannot. Corridor cells not connected to the marker remain unchanged, as in the generator.",
+    "independent_source_review": {
+      "verdict": "accept",
+      "mechanism": "The input is a maze with cyan (8) walls and black (0) corridors. A plus/partial-plus marker is placed: the centre is pair[0], and arms are pair[1] on each open 4-neighbour. The constructor records pair[(r+c)%2] from the marker cells, flood-fills from them through black cells, and paints each reached cell with the colour recorded for its parity. The emitted solver uses the same parity-to-colour map, read from the visible marker cells in augmented coordinates, and runs a 4-neighbour BFS through palette[0] cells, bounded by everything else.",
+      "evidence": [
+        "Constructor output stage: `pair[(r + c) % 2] = colors[...]` for every non-black, non-cyan cell, then `output[r][c] = pair[(r + c) % 2]` for every flood-reached cell. Output therefore depends only on visible marker colours, visible parity and visible connectivity. No hidden latent decides any label.",
+        "The marker always covers both parities. Placement requires `grid[row+1][col] == 0`, so at least one arm sits on the opposite parity to the centre. The solver's `par_col` is therefore fully defined, and its `c is not None` guard is never needed.",
+        "`random_colors(2, exclude=[cyan])` draws from range(1,10). Marker colours can never be 0 or 8, so the factory's assumption `CORRIDOR=palette[0]`, `WALL=palette[8]` holds under bijective palettes.",
+        "Corridor components cannot touch each other or the marker improperly. Maze carving only clears lattice nodes (r%2==rmod, c%2==cmod) and the edge cells between them. Off-lattice/off-lattice cells stay cyan, and new regions start only at points whose whole 3x3 neighbourhood is cyan. Separate corridor trees are therefore never 4-adjacent. The constructor's `output[r][c]` stop and the solver's `g==CORRIDOR` test traverse the same cell set, and unreached corridors stay 0 in both.",
+        "Marker cells stay unchanged in the solver. They already hold their parity colour, which matches the constructor repainting them with pair[parity].",
+        "D4 handling: transforms preserve 4-adjacency and at most swap the two parity classes globally. Because the solver re-reads the parity-to-colour map from the visible marker, no whole-grid untransform or retransform is used. This is direct solving in augmented coordinates.",
+        "Fixtures check: in train 1 the centre 4 is at (9,4), odd parity. Output (9,6), odd, holds 4, and (9,5), even, holds 1, matching the parity map. The solver ignores demonstrations, and no arbitrary colour lookup is needed because both marker colours are visible in the query. b782dc8a is not in the episode-evidence task list, which is appropriate.",
+        "Host audit passed: 1000 fresh pairs, 8000 augmented checks and 16 fixture variants, with no sampler rejections."
+      ],
+      "blocking_issues": [],
+      "nonblocking_limits": [
+        "Reachable tie in the archived rule. When the centre is a dead-end lattice node whose only open neighbour is below, centre and arm colours each occur once. The archived 'least frequent colour = centre' heuristic, and the rule text 'occurs exactly once', are then ambiguous. The emitted solver never identifies a centre; it maps by parity, so the label is unaffected. The archived program should not be treated as authoritative for that case.",
+        "The solver assumes the palette is a bijection that keeps marker colours distinct from palette[0] and palette[8]. The constructor guarantees this before palette mapping.",
+        "The solver ignores demonstrations. This is acceptable because the rule is fully determined by the query input."
+      ],
+      "required_context_checks": [
+        "Confirm the host palette augmentation is a bijection on 0..9, so that palette[0] and palette[8] remain the corridor and wall colours and marker colours stay distinct from them.",
+        "Confirm the D4 conflict check (identical visible demos and query input with conflicting answers) is applied as stated. No conflict is expected, because the label is a function of the visible query alone."
+      ],
+      "task_id": "b782dc8a",
+      "factory_sha256": "4b6429104eb30af8560b958ccfdefeca1432fc80fa9c186d7eeb23ba16500166",
+      "constructor_sha256": "c7e3447efde5425f0091fbeef07a7814cdfe413eeab9d172389aeab34f22b37f"
+    },
+    "host_review": "Read the independent mechanism, evidence, limitations and context requirements. D4 uses horizontal reflection then clockwise rotation, with the same bijective palette throughout the episode; contradictory D4 contexts are rejected. Native-domain checks and per-episode execution remain mandatory. No hidden output access or normalization wrapper was identified."
+  }
+}

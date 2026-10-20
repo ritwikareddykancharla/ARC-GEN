@@ -1,0 +1,45 @@
+def build_program(d4, palette):
+    bg = int(palette[0])
+    ep = int(palette[2])
+    paint = int(palette[4])
+    lines = [
+        'from collections import deque',
+        '',
+        'BG = %d' % bg,
+        'EP = %d' % ep,
+        'PAINT = %d' % paint,
+        '',
+        'def solve(demonstrations, grid):',
+        '    g = [list(int(v) for v in row) for row in grid]',
+        '    H = len(g)',
+        '    if H == 0:',
+        '        return g',
+        '    W = len(g[0])',
+        '    ends = [(r, c) for r in range(H) for c in range(W) if g[r][c] == EP]',
+        '    if len(ends) != 2:',
+        '        return g',
+        '    s, t = ends[0], ends[1]',
+        '    prev = {s: None}',
+        '    q = deque([s])',
+        '    found = False',
+        '    while q:',
+        '        r, c = q.popleft()',
+        '        if (r, c) == t:',
+        '            found = True',
+        '            break',
+        '        for dr, dc in ((0, 1), (1, 0), (0, -1), (-1, 0)):',
+        '            nr, nc = r + dr, c + dc',
+        '            if 0 <= nr < H and 0 <= nc < W and (nr, nc) not in prev:',
+        '                if g[nr][nc] == BG or (nr, nc) == t:',
+        '                    prev[(nr, nc)] = (r, c)',
+        '                    q.append((nr, nc))',
+        '    if not found:',
+        '        return g',
+        '    cur = prev[t]',
+        '    while cur is not None and cur != s:',
+        '        g[cur[0]][cur[1]] = PAINT',
+        '        cur = prev[cur]',
+        '    return g',
+        ''
+    ]
+    return '\n'.join(lines)

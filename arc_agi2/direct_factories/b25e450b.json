@@ -1,0 +1,50 @@
+{
+  "task_id": "b25e450b",
+  "factory_sha256": "cc985c52e8ad59fa3fe7503dca7fe42009e78aa2d082807e7c68359644f8a55d",
+  "constructor_sha256": "1d39b33d421dc372ffa949ded491025a880b1170a7da5e92938d21108baabee7",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 31506621842771,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 6.699717332958244,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The rule is the same under every D4 transform. A box touching an edge moves to the opposite edge. The full strip it spans across the grid, along its direction of travel, is painted with the fixed fill colour. Rotations and reflections only change which visible edge a box touches. The emitted program reads that edge directly in visible coordinates (left, right, top or bottom) and moves the box straight across in that direction. So no orientation constant is needed, and no grid is ever rotated or reflected.\n\nThe only thing that must be specialised is colour roles. The box colour is palette[0] and the sweep colour is palette[7]. The sweep colour is a fixed constant, not the background, which matters because the noise texture also contains palette[7] and palette[5].\n\nThe emitted solve() works in three steps:\n1. Find the 4-connected components of the box colour and take each one's bounding rectangle.\n2. Paint every box's full-width row strip, or full-height column strip, with the fill colour.\n3. Only after all strips are painted, stamp each rectangle flush against the opposite edge. Painting first lets stamped boxes win over other boxes' strips, as fixture pair 1 shows.",
+    "limitations": "The program assumes each box is a solid rectangle in the box colour that touches exactly one grid edge, and that boxes are not 4-adjacent to each other.\n\nThese hold under the constructor:\n- An edge-anchored box is placed strictly inside along the other axis.\n- Box sizes are at most a third of the grid dimension.\n- The overlaps(..., 1) check keeps boxes apart.\n- The noise uses only colours 5 and 7.\n\nIf a box ever touched two edges, the edge is chosen in the order left, right, top, bottom. The generator never produces such a box, so this is not part of the puzzle rule.\n\nThe generator rejects scenes where destinations collide or boxes face each other across the grid. Such scenes therefore never occur.\n\nNo contradictions with the fixtures were found, and no constructor defects were identified. The program assumes the palette is a permutation, so the box colour differs from both texture colours. I have not run any tests.",
+    "independent_source_review": {
+      "verdict": "accept",
+      "mechanism": "Each solid box-colour rectangle (palette[0]) touches exactly one grid edge. Every box's full strip across the grid, along its direction of travel, is painted with the fixed fill colour palette[7]. Only after all strips are painted is each rectangle stamped flush against the opposite edge, so stamped boxes override other boxes' strips. The emitted solver finds 4-connected box-colour components in visible coordinates, takes each bounding box, and picks the touched edge in the order left, right, top, bottom. It paints all sweeps first, then all destinations. There is no whole-grid untransform or retransform, and it reads H and W from the visible grid, so D4 transposes are handled natively.",
+      "evidence": [
+        "Placement in the constructor guarantees each box touches exactly one edge. Top/bottom boxes get bcol = randint(1, width-wide-1). Left/right boxes get brow = randint(1, height-tall-1). Because wide <= width//3 and tall <= height//3, the box never reaches the opposite edge. So the solver's left/right/top/bottom priority never resolves a real tie.",
+        "draw() sweeps a column strip only when brow is in [0, height-tall], and a row strip only when bcol is in [0, width-wide]. Since the two placement branches are exclusive, each box gets exactly one sweep. That sweep equals the solver's sweep: rows y0..y1 at full width, or columns x0..x1 at full height.",
+        "Destination remapping in draw() (row 0 to height-tall, height-tall to 0, col 0 to width-wide, width-wide to 0) matches the solver's destinations exactly. Left goes to (y0, W-w), right to (y0, 0), top to (H-h, x0), bottom to (0, x0).",
+        "Both the constructor and the solver paint all sweeps first and stamp all boxes afterwards, so the paint order matches. Fixture pair 1 shows why order matters: the 3x2 box lands inside the 3x3 box's swept rows and stays 0.",
+        "common.overlaps(..., spacing=1) requires at least one empty row or column between any two boxes, which also rules out boxes touching at a corner. Noise colours are only 5 and 7 (2*randint(0,1)+5). So each 4-connected component of colour 0 is exactly one solid box, and its bounding box is the box.",
+        "draw() rejects scenes whose destination cells are already 0 in the output, so destinations never collide. The 'good' loop rejects scenes where boxes face each other across the grid in the same row or column. No reachable label depends on a hidden latent; box positions and sizes are fully visible.",
+        "The fill colour is the fixed palette[7], not the local background. Every demonstration shows this, including pair 3 where the strips run through mostly-5 texture. The factory specialises only colour roles (BOX=palette[0], FILL=palette[7]), which is allowed.",
+        "Host audit passed: 1000 fresh pairs, 8000 augmented checks, 16 fixture variants, and no sampler rejections reported."
+      ],
+      "blocking_issues": [],
+      "nonblocking_limits": [
+        "The test fixture contains a 6-wide box in a 14-wide grid, which exceeds the random sampler's bound wide <= width//3. The solver logic is size-agnostic, so this only means fresh synthetic scenes are slightly less extreme than the test fixture.",
+        "The left/right/top/bottom priority for a box touching two edges is an unexercised defensive choice. The constructor excludes such boxes, so it is not part of the demonstrated rule.",
+        "The solver assumes the palette is a permutation, so the box colour differs from both texture colours (palette[5] and palette[7]). This holds under the stated augmentation.",
+        "Scenes with colliding destinations or facing boxes are rejected by the constructor. Solver behaviour on such out-of-domain inputs is unspecified but never reachable."
+      ],
+      "required_context_checks": [
+        "Confirm the augmentation palette is a bijection, so palette[0] never coincides with the noise colours palette[5] or palette[7].",
+        "No colour-association evidence check applies: b25e450b is not in require_colour_evidence's task list, and the fixed fill colour is a deterministic role shown in every demonstration."
+      ],
+      "task_id": "b25e450b",
+      "factory_sha256": "cc985c52e8ad59fa3fe7503dca7fe42009e78aa2d082807e7c68359644f8a55d",
+      "constructor_sha256": "1d39b33d421dc372ffa949ded491025a880b1170a7da5e92938d21108baabee7"
+    },
+    "host_review": "Reviewed source analysis and domain restrictions. Confirmed palette remaps finished grids bijectively, reflection precedes clockwise rotation, all eight D4 variants are checked on fixtures and fresh inputs. Original fixture query grids are included. Per-episode verification remains mandatory. D4 ambiguous visible supervision is rejected; defensive out-of-domain cases do not establish broader validity."
+  }
+}

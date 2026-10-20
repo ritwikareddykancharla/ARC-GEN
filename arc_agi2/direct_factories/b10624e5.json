@@ -1,0 +1,56 @@
+{
+  "task_id": "b10624e5",
+  "factory_sha256": "eb2b051e2697c62ce7bdc6d05116480b74886b484763931f24dbd4dbfe0e9c4f",
+  "constructor_sha256": "487dd65d094259cb0e9dbab07e272e4f4a59d2ef1c9f51d96e2e0163a524aea3",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 268414178672361,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 20.582698999904096,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The emitted program works directly on the visible grid. It finds full uniform non-background rows and columns as the dividers. The template quadrant is the panel containing colours other than background (palette[4]) and block (palette[2]). The template patch P is that panel cropped to its non-background bounding box. Every block-coloured 4-connected component outside the template quadrant is treated as a target square of size s.\n\nThe quadrant mirror rule is D4-invariant. For each visible axis, the template is flipped along that axis if the target lies in the other half along it. So that rule is kept unchanged.\n\nFloor resampling is not reflection-invariant. The factory therefore tracks, for each visible axis, whether it runs reversed relative to the generator's original axis: reversal from d4>=4, then each clockwise rotation maps row<-col and col<-reversed row. On a reversed axis, the program samples from the far end: idx = n-1-((m-1-i)*s0//s). It also computes the block offset as m-((n-(b+s0))*s//s0+s). This reproduces exactly the D4 image of the generator's floor sampling and block alignment.\n\nThe scaled, mirrored stamp is then placed so its block covers the target. Only non-background cells are painted, and anything outside the grid is clipped.",
+    "limitations": "Background and block colours are fixed from the palette (palette[4], palette[2]) rather than inferred from the demonstrations. Dividers are detected as any full uniform non-background row or column, so a degenerate scene where a piece forms a full line would confuse the detection; the constructor never produces one.\n\nThe constructor guarantees lossless resampling: aligned lattice templates with s0=f, or fine templates with integer enlargement only. Under those guarantees, floor sampling is effectively orientation-independent. The axis-aware sampling is still emitted so the program matches the generator exactly in every case.\n\nNo constructor defects or fixture contradictions were found. The canonical fixtures follow the uniform rule. No tests were run.",
+    "independent_source_review": {
+      "verdict": "accept",
+      "mechanism": "Two dividers of colour 1, one full row and one full column, split the grid into four quadrants. The template quadrant is the one whose panel holds colours other than background and block. It holds a solid s0\u00d7s0 block of colour 2 with rectangular attachments. Every lone 2-square of side s in another quadrant gets a copy of the template's tight bounding-box patch P. The copy is floor-resampled (Q[i][j] = P[i*s0//s][j*s0//s]). It is flipped left-right if the target is in the other column half, and up-down if it is in the other row half. It is then aligned so its block covers the target square. Only non-background cells are painted, and cells outside the grid are clipped. The emitted solver does this directly in visible coordinates. It specializes only BG = palette[4], BLOCK = palette[2] and per-axis reversal flags for the sampling direction.",
+      "evidence": [
+        "Mirror rule. Constructor: flip_lr = q[1] != tq[1] and flip_ud = q[0] != tq[0], with tq taken from the template position and q from the target. Solver: the same quadrant tests through quad(), measured in visible coordinates. The rule is defined relative to quadrants, so a D4 transform keeps it unchanged: a transpose swaps which axis flips, and quad() follows that automatically.",
+        "Sampling direction. Random scenes use either aligned mode or fine mode.",
+        "Aligned mode: the template sits on an f-cell lattice, s0 = f, and s is in 1..4. Every sampled index falls inside the correct source unit, and units are uniform. So forward floor sampling and the factory's reversed sampling (idx = n-1-((m-1-i)*s0//s)) pick identical colours.",
+        "Fine mode: s0 = 2 and s is in {2, 4}, i.e. integer enlargement only. Sampling direction again makes no difference.",
+        "Consequence: the REV_R/REV_C flags in the factory cannot change any reachable answer. No hidden orientation latent leaks into labels.",
+        "Block offset. In aligned mode, r2 = br*s//s0 is exact because br is a multiple of f. In fine mode, br*2 is exact. _exact() additionally verifies a solid s\u00d7s block and that every colour is preserved, per target, before the scene is accepted.",
+        "Lossless sampling. _lossless() requires (h*s) % s0 == 0, and for shrinks, that every dropped line duplicates its representative. Explicit fixtures are checked the same way.",
+        "Fixture 1, 1\u00d71 target: t1 resamples to [[8,4],[2,3]], flipped up-down to [[2,3],[8,4]]. It is placed at (20,3), which matches the output.",
+        "Test, 1\u00d71 target: t3 resamples to [[4,8,3],[9,9,2],[4,4,1]], flipped up-down, with r2 = 1 and c2 = 2. This gives (20,5)=1; (21,3..5)=9,9,2; (22,4)=8 and (22,5)=3, which matches the output.",
+        "Pair 2 (template t2, not on a lattice) uses only s \u2265 s0, so its non-lattice shape is harmless.",
+        "Divider detection cannot be fooled. Templates keep a one-cell gap from the dividers (_template_span, _side_ok). The input content of other quadrants is only 2-squares with gaps. So no full uniform non-background line can arise other than the true dividers, even though piece colour 1 equals the divider colour.",
+        "Stamps stay in their own quadrant. _target_span keeps a one-cell gap on the divider side of each stamp: start \u2265 div+2 in the far quadrant, end \u2264 div-2 in the near quadrant. Clipping happens only at the outer border. Stamps therefore never overlap one another, the dividers or the template.",
+        "Visibility and uniqueness of clipped stamps. _stamp_ok guarantees every template colour stays visible, at least half of the attachment cells stay visible, and the visible stamp differs from all three wrong mirror orientations. The template itself is rejected if it is symmetric under a left-right flip, an up-down flip or a 180-degree turn. So the orientation and the content are identifiable from the input.",
+        "Scaling is taught. _sample_sizes forbids aligned scenes in which every target equals s0, and forces at least one size-4 target in fine mode. Scale changes are therefore exhibited in demonstrations.",
+        "Solver fallbacks never fire on constructor output: 'not rows or not cols', 'tpl is None', 'len(two) == 0' and empty idx.",
+        "This task is not in require_colour_evidence's list, and none is needed. Colours are copied from the template; no arbitrary lookup is involved.",
+        "Host audit: 1000 fresh pairs and 8000 augmented checks passed, plus 16 fixture variants, with no sampler rejections. This is consistent with the source review."
+      ],
+      "blocking_issues": [],
+      "nonblocking_limits": [
+        "Background and block colours are fixed from palette[4] and palette[2] rather than inferred. These are genuine rule colours, so this specialization is allowed.",
+        "The factory's per-axis reversal tracking (the rrev/crev rotation bookkeeping) is behaviourally redundant on every reachable scene, because sampling is lattice-aligned or an integer enlargement. Any error in that bookkeeping would therefore go undetected by the audit. It would only matter for templates that are off-lattice and shrinking, which the constructor does not produce.",
+        "Explicit-scene mode accepts any template that passes _lossless/_exact. This review did not prove that every such explicit template is independent of sampling direction. Only the three canonical explicit scenes are used, and they involve lattice shrinks or enlargements only.",
+        "Fine-mode templates are limited to s0 = 2 with targets of size 2 or 4, so no information-destroying resampling is exercised. This scope limit is deliberate."
+      ],
+      "required_context_checks": [],
+      "task_id": "b10624e5",
+      "factory_sha256": "eb2b051e2697c62ce7bdc6d05116480b74886b484763931f24dbd4dbfe0e9c4f",
+      "constructor_sha256": "487dd65d094259cb0e9dbab07e272e4f4a59d2ef1c9f51d96e2e0163a524aea3"
+    },
+    "host_review": "Reviewed source analysis and domain restrictions. Confirmed palette remaps finished grids bijectively, reflection precedes clockwise rotation, all eight D4 variants are checked on fixtures and fresh inputs. Original fixture query grids are included. Per-episode verification remains mandatory. D4 ambiguous visible supervision is rejected; defensive out-of-domain cases do not establish broader validity."
+  }
+}

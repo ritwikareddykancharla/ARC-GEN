@@ -1,0 +1,48 @@
+{
+  "task_id": "bbb1b8b6",
+  "factory_sha256": "3ca504170ba089675c38b52b43bf77ea51be7ace478c753677f8c1712e1d7c96",
+  "constructor_sha256": "bc22b579239b3c227e37d3af6d96b1ceec5e923adcd193acaa88d74cc9c331c5",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 172130547908048,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 5.016439832979813,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "In the original task the grid is 4x9. A column of colour 5 at x=4 splits it into two panels. The base panel (cols 0-3) holds a pattern of colour 1 on background 0. The other panel (cols 5-8) holds a shape in one colour C. The other panel's cell for base cell (r,c) is (r,c+5), so the link between panels is a pure translation.\n\nUnder D4 a translation stays a translation, so no flips of panel contents are needed. Only two things change:\n- **Split axis:** side-by-side for even rotation counts, stacked for odd ones.\n- **Side of the base panel:**\n  - first (left/top) for d4 in {0,1,6,7}\n  - second (right/bottom) for d4 in {2,3,4,5}\n\n**Colour roles.** These become constants:\n- background = palette[0]\n- divider = palette[5]\n\nThe generator guarantees that palette[5] appears only on the divider line.\n\n**What the emitted program does, in visible coordinates:**\n1. Finds the full line of the divider colour running across the split axis. If there are several, it takes the one closest to the middle. If there are none, it falls back to a uniform non-background line whose colour appears only on that line, then to the middle index.\n2. Slices the base and other panels.\n3. Checks for an exact complement: every cell has exactly one of the two panels non-background, and the other panel is not empty.\n4. If the check passes, the output is the base panel with the other panel's coloured cells filled in. This equals the generator's sum, since exactly one of the two values is nonzero. Otherwise the output is the base panel unchanged.\n\nDemonstrations are not needed.\n\n**Fixtures.** I checked several approved fixtures (train 4, train 5, train 7, test 2) by hand against this rule and they agree. These are mental checks, not executed tests. The 'rule' text in the task is a solver debugging note and does not contradict the generator.",
+    "limitations": "The program assumes the constructor's domain: two equal-size panels split by one full line of the original colour 5, a base panel in original colour 1 on background 0, and a single-colour shape in the other panel.\n\nIf the panels ever differed in size, the program returns the base panel unchanged. The generator never produces that case.\n\nThe divider fallbacks (a unique-colour uniform line, then the middle index) never trigger in generator output; they are only defensive.\n\nI found no tie-breaks or constructor indexing defects. The completion condition in the generator is a strict cell-wise complement, and the program reproduces it exactly.\n\nNo tests have been run.",
+    "independent_source_review": {
+      "verdict": "accept",
+      "mechanism": "4x9 grid split by a full column of colour 5 at x=4 into two 4x4 panels. The base panel (cols 0-3) is a 0/1 pattern. The other panel (cols 5-8) is 0/C, with C drawn from {2,3,4,6,7,8,9}. The constructor sets exact=True only when every cell (r,c) has exactly one of grid[r][c] and grid[r][c+5] nonzero. If exact, output = base + other cellwise; otherwise output = base panel. The emitted solver specializes the split axis (HORIZ = d4 even), the base side (BASE_FIRST for d4 in {0,1,6,7}), BG = palette[0] and DIV = palette[5]. It locates the full DIV line, slices the two panels in visible coordinates, applies the strict complement test (np.all(base_on != other_on) and other_on.any()), and outputs np.where(other_on, other, base).",
+      "evidence": [
+        "Divider uniqueness: random_color(exclude=[1,5]) and pattern values in {0,1} mean colour 5 appears only in column 4. `np.all(_line(g,i)==DIV)` therefore yields exactly one candidate, and the tie-break and fallbacks are unreachable.",
+        "D4 consistency: base cell (r,c) and partner (r,c+5) are related by a pure translation across the divider. A reflection across the split axis maps them to (r,8-c) and (r,3-c), which is still a +5 translation between the swapped panels. The solver therefore needs only axis and side constants, with no in-panel flips. This is consistent with host augmented checks (8000) passing.",
+        "Output equivalence: when the complement holds, exactly one of base/other is nonzero per cell. np.where(other_on, other, base) therefore equals the constructor's grid[r][c] + grid[r][c+5].",
+        "other_on.any() guard is harmless: other all-zero plus exact would need a full base (pattern sum 16), and the constructor rejects that via sum<=12. Even then the output would equal the base.",
+        "No hidden latent decides the label. Whether `other` is the complement or random is a hidden coin flip, but the output depends only on the visible exact-complement test. An accidental complement from the random branch is also handled by the same visible test.",
+        "Fixtures checked by hand: train 4 fails the complement at (0,2), where both are 0, so output = left, which matches. Train 7 and test 2 are full complements, filled with 2 and 3 respectively, which matches. Train 2 / train 6 are not complements, so left is unchanged, which matches.",
+        "The fill colour is read directly from the visible other panel. No arbitrary colour lookup is involved, so the episode colour-evidence checks are not relevant (task not listed there).",
+        "No whole-grid untransform/retransform wrapper: the solver slices rows or columns directly in augmented coordinates."
+      ],
+      "blocking_issues": [],
+      "nonblocking_limits": [
+        "The base panel is chosen by position (BASE_FIRST constant) rather than by colour. This is a legitimate orientation constant for this D4 variant; demonstrations always show the base on the same side.",
+        "Unequal panel sizes, multiple divider lines and absent dividers are handled only by defensive fallbacks (unique-colour uniform line, then middle index, then base unchanged). The constructor never produces these cases.",
+        "Assumes a fixed 4x4 panel and 1-cell divider domain from the constructor; not proven for arbitrary ARC-style variants."
+      ],
+      "required_context_checks": [
+        "Confirm the host D4 indexing convention matches the factory mapping: even d4 means side-by-side, and base first for {0,1,6,7}. The host audit reporting passed across 8000 augmented checks is consistent with this."
+      ],
+      "task_id": "bbb1b8b6",
+      "factory_sha256": "3ca504170ba089675c38b52b43bf77ea51be7ace478c753677f8c1712e1d7c96",
+      "constructor_sha256": "bc22b579239b3c227e37d3af6d96b1ceec5e923adcd193acaa88d74cc9c331c5"
+    },
+    "host_review": "Read mechanism, evidence, domain limits and contextual requirements. Host uses horizontal reflection then clockwise rotation, all eight indices tested, and shared bijective palette. Source audit d4=7 is the last completed loop index, not the sole tested transform. Standard conflicting-context rejection and per-episode verification required. No unresolved mechanism blocker identified within the sampled native domain."
+  }
+}

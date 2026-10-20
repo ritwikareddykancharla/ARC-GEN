@@ -1,0 +1,53 @@
+{
+  "task_id": "b8cdaf2b",
+  "factory_sha256": "1259c7164244592409bb554b5c671c4c0f41a5f03c12343e0ace947a36595ce4",
+  "constructor_sha256": "ae602db6e602ad5263fedc76f4898d72b9d4e018f2d9031ee66e5bf05bb3e8a7",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 115061867779587,
+  "d4": 7,
+  "unique_base_inputs": 398,
+  "seconds": 3.164476125035435,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "Canonical scene: the base line (shoulders in the shirt colour, the neck in the antenna colour) lies on the bottom edge. The cap line, in the shirt colour, sits directly above the neck. Two diagonal rays of the antenna colour start one line beyond the cap and one cell outside each end of the cap. They move away from the base and outward until they leave the grid.\n\nThe factory works out where the canonical 'down' vector (1,0) ends up after the D4 transform. Reversing each row leaves vertical vectors unchanged. Each clockwise rotation maps (dr,dc) to (dc,-dr). This tells the factory which visible edge holds the base, and it hard-codes that direction as DR/DC.\n\nThe emitted program addresses cells as (depth from base edge, lateral position). Each orientation is spelled out explicitly in visible coordinates; nothing is rotated back.\n- It finds the non-background cells on the cap line (depth 1).\n- It reads the inner colour from the base cell under the first cap cell.\n- It walks two diagonal rays from depth 2, moving outward laterally until either bound is crossed.\n\nThe ray mechanism is symmetric, so reflections only matter through which edge the base lands on. The background is the colour role palette[0], because the generator always uses b=0. The shirt and antenna colours are read from the pixels.",
+    "limitations": "- Assumes the background is the original colour 0 (as palette[0]), as the generator always produces.\n- Assumes the base and cap are on the edge implied by d4, as the constructor guarantees.\n- Grids produced by the generator are square, but the code handles rectangular grids by bounding rays independently in depth and lateral extent.\n- Grids with no cap cells are returned unchanged.\n- No constructor defects were found: the generator's rays always end exactly at a lateral border, which matches the 'until it leaves the grid' rule.\n- The fixtures are consistent with the uniform rule.",
+    "independent_source_review": {
+      "verdict": "accept",
+      "mechanism": "The base line sits on one edge. Its outer segments are the shirt colour and its middle (neck) segment is the antenna colour. A shirt-coloured cap sits on the line next to the base, over the neck columns. Two antenna-coloured diagonal rays start one line beyond the cap and one cell outside each cap end. They move away from the base and outward until they leave the grid. The factory turns d4 into a hard-coded base-edge direction (DR, DC). The emitted solver addresses cells as (depth from that edge, lateral index) using explicit per-orientation cell() formulas in visible coordinates. It reads the inner colour from the pixels and draws both rays bounded in depth and lateral extent.",
+      "evidence": [
+        "Constructor: size = neck + 2*shoulder with neck in {1,3} and shoulder in 1..3. The cap is row size-2 over columns [shoulder, shoulder+neck). The base row size-1 has the antenna colour under the cap and the shirt colour elsewhere.",
+        "Constructor rays: output[size-2-shoulder+c][c] and output[size-2-shoulder+c][size-1-c] for c in range(shoulder). At c=shoulder-1 this is row size-3, one row above the cap, and the column just outside the cap. The ray ends at column 0 / size-1, in row neck+shoulder-2 >= 0. The ray therefore always hits the lateral border no later than the top border, and the constructor matches 'until it leaves the grid' with no truncation mismatch.",
+        "Solver ray: starts at depth 2, t = t0-1 (and t1+1), and steps depth+1 and t-/+1 while depth<m and t is in bounds. This reproduces exactly shoulder cells, at depths 2..shoulder+1 < m = size.",
+        "Cap detection reads only line depth 1. In generated scenes that line holds only the shirt cap cells. The shirt and antenna colours come from random_colors(2) over 1..9, so both are distinct and nonzero, and bg=0 maps to palette[0].",
+        "The inner colour is cell(0, t0), the base cell under the first cap cell, which is always the antenna colour in the constructor.",
+        "Orientation: canonical down (1,0) is rotated k=d4%4 times via (dr,dc)->(dc,-dr). This matches the clockwise grid rotation mapping, under which the bottom edge goes to the left edge (0,-1). Row reversal leaves vertical vectors unchanged. The rays are laterally symmetric, so reflection only matters through the base edge.",
+        "The four cell() branches (bottom, top, right, left base) each pair correctly with n/m: lateral extent W and depth H for vertical DR, and the reverse for horizontal DC.",
+        "There is no whole-grid untransform/solve/retransform wrapper. The solver acts directly in visible coordinates.",
+        "There is no arbitrary colour lookup: both colours are read from the query pixels, so no episode colour evidence is required. b8cdaf2b is not in the episode evidence check list, which is appropriate.",
+        "Fixtures check: the train/test grids equal validate() outputs. For example, the test case neck=3, shoulder=3 gives rays (6,2),(5,1),(4,0) and (6,6),(5,7),(4,8).",
+        "Host audit: 1000 fresh pairs, 8000 augmented checks (all 8 D4 variants), 16 fixture variants, with no sampler rejections."
+      ],
+      "blocking_issues": [],
+      "nonblocking_limits": [
+        "The background is hard-coded as palette[0]. This is valid because the constructor always uses b=0.",
+        "The base edge is fixed per d4 rather than detected. This is valid because the constructor always places the base on the canonical bottom edge.",
+        "The constructor only produces square grids with odd neck widths (1 or 3) and shoulders 1..3, so solver behaviour on even necks or rectangular grids is untested by the generator. The solver logic is still generic for those cases.",
+        "The empty-cap and m<2 early returns are defensive fallbacks outside the constructor domain.",
+        "The solver does not verify that the cap colour matches the base shirt colour. It only checks that cap cells are non-background, which is sufficient in-domain."
+      ],
+      "required_context_checks": [
+        "Confirm that the host's D4 convention applies the row reversal before rotation (d4>=4 meaning flip then k clockwise turns), consistent with the factory's direction derivation. The passing 8000 augmented checks suggest this, but the source alone does not fix the composition order."
+      ],
+      "task_id": "b8cdaf2b",
+      "factory_sha256": "1259c7164244592409bb554b5c671c4c0f41a5f03c12343e0ace947a36595ce4",
+      "constructor_sha256": "ae602db6e602ad5263fedc76f4898d72b9d4e018f2d9031ee66e5bf05bb3e8a7"
+    },
+    "host_review": "Read the independent mechanism, evidence, limitations and context requirements. D4 uses horizontal reflection then clockwise rotation, with the same bijective palette throughout the episode; contradictory D4 contexts are rejected. Native-domain checks and per-episode execution remain mandatory. No hidden output access or normalization wrapper was identified."
+  }
+}

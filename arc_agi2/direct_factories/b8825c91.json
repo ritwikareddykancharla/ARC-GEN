@@ -1,0 +1,49 @@
+{
+  "task_id": "b8825c91",
+  "factory_sha256": "5ca191cbd822dae130f14910ae28320c39d57a8edf60ab758aaf0a45409e4f00",
+  "constructor_sha256": "aef351291cc7fa55432b333ac35044a42b1798c8ba868a9d1cef3275d6629360",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 118317343678339,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 6.121940042008646,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The constructor builds a 16x16 canvas whose top-left 8x8 quadrant is symmetric about its main diagonal. That quadrant is mirrored into the other three quadrants. As a result, the whole canvas is invariant under all eight square symmetries about its centre. The generator then paints one or two rectangles with yellow (colour 4), and yellow never appears anywhere else in the picture.\n\nThe emitted program works as follows:\n- It treats palette[4] as the unknown mask colour.\n- For each masked cell, it copies the value of any unmasked symmetric partner. The partners are the left-right mirror, the up-down mirror, the 180-degree rotation, the transpose, the anti-transpose and the two quarter-turn images, all computed in visible coordinates.\n- It repeats until no cell changes, which handles cells whose partners were initially masked too.\n\nThe set of eight symmetries is unchanged by any D4 transform of the grid. Because of that, the same partner set is correct in every visible orientation, and d4 needs no special handling. For the same reason no axis needs to be specialised and no normalisation is applied. The palette only fixes the mask constant. Every unmasked partner of a cell holds the same colour, so the order in which partners are tried is not a hidden tie-break.",
+    "limitations": "- Rectangular grids: the constructor only produces square 16x16 grids. If a rectangular grid were given, the program falls back to the left-right, up-down and 180-degree partners only, as the archived solver does.\n- Unrecoverable cells: if every symmetric partner of a cell were masked, that cell stays the mask colour. Under random generation both cutouts lie inside the top-left quadrant, so every orbit keeps unmasked members and this cannot happen.\n- Mask colour from the palette: the mask colour is taken from palette[4] rather than inferred from the demonstrations.\n- Constructor defect for host review: the generator's own TODO about not cutting out the centre is irrelevant, because the cutouts are always recoverable. However, the random path only places cutouts in the top-left quadrant, while the fixtures place them anywhere. The solver handles both cases.\n- Fixtures: no contradictions with the uniform symmetry rule were found.",
+    "independent_source_review": {
+      "verdict": "accept",
+      "mechanism": "The constructor builds an 8x8 quadrant that is symmetric about its diagonal, using colours drawn with yellow excluded. It mirrors that quadrant left-right and up-down to make a 16x16 canvas that is invariant under all of D4. It then paints rectangles with yellow (4) in the input only. The emitted solver treats palette[4] as the mask. For each masked cell it copies any unmasked image of that cell under the 7 non-identity D4 maps, all computed in visible coordinates. It repeats until nothing changes.",
+      "evidence": [
+        "Constructor symmetry. Each colour is written to bitmap[i][j] = bitmap[j][i]. Each quadrant colour is written to (r,c), (2s-1-r, 2s-1-c), (r, 2s-1-c) and (2s-1-r, c). Together these give left-right, up-down and transpose symmetry, which generates all of D4.",
+        "Partner list. The list (y,w-1-x), (h-1-y,x), (h-1-y,w-1-x), (x,y), (x,h-1-y), (w-1-x,y), (w-1-x,h-1-y) is exactly the 7 non-identity D4 images of (y,x) on a square grid. This set is closed under any D4 conjugation, so no whole-grid untransform is needed. The solver acts directly in visible coordinates.",
+        "Mask colour is unambiguous. random_color(exclude=[yellow]) keeps 4 out of the picture, and all fixture outputs contain no 4. So the only non-mask cells are true picture cells, and every unmasked partner of a cell holds the same value. The order in which partners are tried is not a hidden tie-break.",
+        "Random cutouts always recover. Rows are drawn from randint(0, size-tall) and columns from randint(0, size-wide), so both cutouts lie in the top-left quadrant. The left-right partner (y, 15-x) is then always unmasked, so every cell is restored in the first pass.",
+        "In-place propagation is safe. Restored cells receive the correct symmetric value before they are marked known, so later copies from them are also correct. The result equals the archived per-component solver on all inputs in the domain.",
+        "Mask constant. The mask is palette[4]. This specialises a genuine rule colour: 4 is the only colour removed in every demonstration. It is not an arbitrary lookup.",
+        "Fixture check. In each pair, the inferred restorations agree with the outputs. For example, pair 1 (11,2) becomes 7, matching (4,2), and pair 3 (1,10) becomes 5, matching (1,5)."
+      ],
+      "blocking_issues": [],
+      "nonblocking_limits": [
+        "Narrower random distribution. Random cutouts are limited to the top-left quadrant, while the fixtures place them anywhere, including straddling the centre. The solver handles both, and the host audit passed on fixture variants.",
+        "Non-square fallback. On a non-square grid the solver uses only 3 partners. This is out of domain, since the constructor always emits 16x16.",
+        "Unrecoverable orbits. A cell whose whole orbit is masked would keep the mask colour. This is unreachable from both the random path and the fixtures.",
+        "Archived rule wording. The rule calls the test's second patch an 'irregular 9-cell blob'. It is actually a 3x3 rectangle at rows 2-4, cols 6-8. This is cosmetic only."
+      ],
+      "required_context_checks": [
+        "Confirm that b8825c91 needs no colour-association evidence check. It is not in require_colour_evidence's task list, and the mask colour is taught by every demonstration.",
+        "Confirm that the D4-conflict rejection policy is trivially satisfied. The canvas is fully D4-symmetric, so all D4 variants of the same query yield consistent answers."
+      ],
+      "task_id": "b8825c91",
+      "factory_sha256": "5ca191cbd822dae130f14910ae28320c39d57a8edf60ab758aaf0a45409e4f00",
+      "constructor_sha256": "aef351291cc7fa55432b333ac35044a42b1798c8ba868a9d1cef3275d6629360"
+    },
+    "host_review": "Read the independent mechanism, evidence, limitations and context requirements. D4 uses horizontal reflection then clockwise rotation, with the same bijective palette throughout the episode; contradictory D4 contexts are rejected. Native-domain checks and per-episode execution remain mandatory. No hidden output access or normalization wrapper was identified."
+  }
+}

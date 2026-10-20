@@ -1,0 +1,49 @@
+{
+  "task_id": "c4d1a9ae",
+  "factory_sha256": "943f91d721e329f49f6e439a4f34614e8223eef0301537ca3a27fb29f82261b8",
+  "constructor_sha256": "d7369db2bbc1740ca76beb0484ab092b6ac343de2fed5bca7b69d23f93a15826",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 87736356490812,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 6.637233541929163,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "In the native task, the bands are vertical column runs separated by all-background columns. Each band's background cells take the pattern colour of the next band to the right, and the last band wraps to the first.\n\nThe factory tracks the 'next' direction vector (0,+1) through the D4 transform. Row-reversal negates dc, and each clockwise rotation maps (dr,dc) to (dc,-dr). The result fixes both the band axis and the step:\n- d4=0: columns, next is to the right.\n- d4=1: rows, next is below.\n- d4=2: columns, next is to the left.\n- d4=3: rows, next is above.\n- d4=4: columns, next is to the left.\n- d4=5: rows, next is above.\n- d4=6: columns, next is to the right.\n- d4=7: rows, next is below.\n\nThe emitted program works directly in visible coordinates. It finds the background as the most frequent colour. It marks separator lines (all-background columns or rows) along the chosen axis and groups the other lines into contiguous bands in increasing index order. Each band's pattern colour is read from its non-background cells. Background cells in band j are then filled with the colour of band (j+STEP) mod n.\n\nColour roles are inferred from pixels, so no palette constants are needed and any palette permutation works. Nothing is transposed, rotated or recoloured globally.",
+    "limitations": "- **Background ties:** the generator guarantees a strict majority background, so ties should not occur. If one did, the fallback picks the smallest colour value. This is a defensive choice, not a puzzle rule.\n- **Multi-colour bands:** the generator guarantees one pattern colour per band. If a band somehow held several, the most common one is used, with ties going to the smallest colour.\n- **Two-band scenes:** these are symmetric (a colour swap), so the direction does not matter there.\n- **Archived solver:** it failed only because `collections` was not imported, not because of a rule error.\n- **Fixtures:** I traced the D4=0 mechanism by hand against both training pairs and the test output, and they appear consistent with the rule.\n- **Testing:** no tests were run.",
+    "independent_source_review": {
+      "verdict": "accept",
+      "mechanism": "Background is the strict-majority colour. Columns that are entirely background are separators, and the remaining columns form contiguous bands, each with one pattern colour. Every background cell inside band i becomes the colour of band (i+1) mod n, the next band to the right with wrap-around. Under D4 the factory carries the native 'next' vector (0,+1) through the transform. Flip negates dc, and each clockwise quarter-turn maps (dr,dc) to (dc,-dr). This yields BAND_AXIS in {col,row} and STEP=\u00b11. The emitted solver uses these constants to segment and recolour directly in visible coordinates.",
+      "evidence": [
+        "Constructor labels are pure functions of the visible input. out[r][x0+dx] = nxt = cols[(i+1)%n] is written only where pt[i][r][dx]==0, i.e. at background cells inside band i. Pattern cells keep cols[i], and separator and margin columns stay b. No hidden latent affects the label beyond what the input shows.",
+        "_repair guarantees a pattern cell in every band column. Gaps are >=1 and margins are all background. So the solver's all-background column test recovers exactly the constructor's band partition, including margins, which become separators and remain background, consistent with out.",
+        "Strict background majority is enforced by `any(counts.get(c,0) >= counts[b] for c in cols) -> continue`. Pattern colours are sampled distinct from b. So the solver's max(count,-colour) background pick and its per-band colour pick are unambiguous in-domain. Their tie-breaks are defensive only.",
+        "Direction mapping checked by hand. d4=1 is one clockwise turn, which takes right (0,1) to down (1,0), giving rows/below. Under the factory's convention, flip (d4>=4) gives col/left. The host audit passed 8000 augmented-pair checks and 16 fixture variants with this mapping.",
+        "The canonical fixtures match the rule. Pair 1 has separator columns 2 and 5 all 4, bands 2|6|5, and fills 6/5/2. Pair 2 fills 3/9/4. Test cols 0-1 fill 9, cols 3-4 fill 8, cols 6-7 fill 6. validate() rebuilds them through explicit masks.",
+        "The emitted program works in visible coordinates and has no whole-grid untransform/retransform. Its only orientation-specific content is BAND_AXIS and STEP, which are legitimate rule-direction constants taught by demonstrations with >=3 bands.",
+        "The palette is ignored by the factory, and all colour roles are inferred from pixels. There is no arbitrary colour lookup, so the task is correctly absent from episode_evidence_checks."
+      ],
+      "blocking_issues": [],
+      "nonblocking_limits": [
+        "Heights 4-30 and nonzero all-background margins are synthetic extensions beyond the 10-row, margin-free originals. They are consistent with the rule.",
+        "Two-band scenes are reachable only through explicit arguments, because the default counts are 3-7. Such scenes give no evidence of direction or wrap-around, but their labels are still unambiguous.",
+        "The solver's tie-breaks for background and band colour (smallest colour), and its n==0 early return, are out-of-domain defensive fallbacks that the constructor excludes.",
+        "The archived_program contains a _native_solve wrapper. It is not the emitted target and does not affect this review."
+      ],
+      "required_context_checks": [
+        "Confirm that episodes use default sampling, so that demonstrations contain >=3 bands and the step direction is visibly taught. Any explicit two-band demonstrations alone would not disambiguate STEP.",
+        "Confirm that the host's D4 indexing matches the factory's convention: flip = reversal within each row, then k clockwise turns. The host audit pass supports this but was reported for one seed with d4=7."
+      ],
+      "task_id": "c4d1a9ae",
+      "factory_sha256": "943f91d721e329f49f6e439a4f34614e8223eef0301537ca3a27fb29f82261b8",
+      "constructor_sha256": "d7369db2bbc1740ca76beb0484ab092b6ac343de2fed5bca7b69d23f93a15826"
+    },
+    "host_review": "Reviewed mechanism, evidence, limitations and checks. Shared bijective palette and horizontal-reflection-then-clockwise-rotation convention confirmed. All eight D4 indices audited, with d4=7 being the final loop index. Per-episode execution and context checks remain required. Dataset sampler uses default generate(), which has at least three bands."
+  }
+}

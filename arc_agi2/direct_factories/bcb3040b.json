@@ -1,0 +1,48 @@
+{
+  "task_id": "bcb3040b",
+  "factory_sha256": "bb1eb3b73b538a71744fd4995e752617928e62e80ca87b2bc1cbeee29e08bf73",
+  "constructor_sha256": "e74b19797c5e5cddbc90e6f7c3cfffc8032d29a21aaf0c0bf58d05022176c3a4",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 42971804402511,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 7.947364457999356,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The input is a random field of palette[0] and palette[1] cells. It holds exactly two marker cells of palette[2], and they always lie on one shared row, column, main diagonal or anti-diagonal.\n\nThe emitted program works directly in visible coordinates:\n1. It finds the two marker cells.\n2. It takes the step (sign dy, sign dx) between them. This gives a row, column or either diagonal direction.\n3. It walks the cells strictly between the markers. A palette[0] cell becomes palette[2], so the marker line continues. A palette[1] cell becomes palette[3], marking a crossing.\n\nAll other cells are copied unchanged.\n\nD4 maps rows, columns and diagonals onto rows, columns and diagonals. The sign-step walk therefore already handles every orientation in visible coordinates, including the anti-diagonal (+1,-1) case. No direction needs to be specialised, so d4 is intentionally unused. The colour roles are fixed constants taken from the palette: marker, empty, filled and crossing. The walk is symmetric, so the order of the two markers does not matter.",
+    "limitations": "The generator builds only square grids (size 8..18), so rotation never produces a non-square grid. The code still uses separate height and width and bounds-checks every step.\n\nThe program assumes exactly two marker cells. The constructor guarantees this because the random field uses only colours 0 and 1. If there are fewer than two markers, the program returns the input unchanged. If there are more than two, it takes the lexicographically first and last; this case cannot occur under the generator.\n\nThe archived solver has a 'teaching stage' at the half-way point, which is a no-op (pass). It is not reproduced, because it has no effect on the output.\n\nNo constructor defects were found. The fixtures agree with the uniform rule: interior 0 becomes 2, interior 1 becomes 3, and the endpoints stay 2.",
+    "independent_source_review": {
+      "verdict": "accept",
+      "mechanism": "The input is a random binary field of palette[0] and palette[1] cells, holding exactly two palette[2] markers at opposite ends of one full row, column, main diagonal or anti-diagonal. Every cell strictly between the markers is recoloured: palette[0] becomes palette[2] and palette[1] becomes palette[3]. The markers stay palette[2] and all other cells are unchanged. The emitted solver finds the markers, takes the sign step between the lexicographically first and last marker, and recolours the interior cells with the palette-specialised constants.",
+      "evidence": [
+        "Constructor: the field uses only 0/1 (`common.randint(0, 1)`). The only 2s written to `grid` are the two endpoint assignments in each angle branch, so every input has exactly two markers. The solver's `pts[0]`, `pts[-1]` therefore always picks the true pair, and the `len(pts) < 2` fallback is out of domain.",
+        "Angle 0/1: `val` is drawn from `randint(1, size-2)`. The markers sit at `(val,0)/(val,size-1)` or `(0,val)/(size-1,val)` and the interior is walked fully. Angle 2/3: `val` is unused, and the full main or anti-diagonal is used with corner markers. No hidden latent affects the label beyond what is visible from marker placement.",
+        "Constructor output for the row: `3 if output[val][c] else 2` is applied over the whole line, then the endpoints are reset to 2. This equals the solver's interior walk, which maps ZERO to MARK and ONE to CROSS and leaves the endpoints as MARK.",
+        "Anti-diagonal case: the sorted points are `(0,size-1)` and `(size-1,0)`. This gives dy=+1, dx=-1, n=size-1, and the walk visits exactly the interior anti-diagonal cells. This matches the constructor's `output[i][size-1-i]`.",
+        "D4 on a square grid maps rows, columns and both diagonals onto rows, columns and diagonals, with the markers at the line ends. The sign-step walk therefore works directly in augmented visible coordinates, with no untransform wrapper. Leaving `d4` unused is legitimate.",
+        "Palette roles are genuine rule colours specialised as constants (marker, empty, filled, crossing). This is allowed under the policy.",
+        "The canonical fixtures match the rule. For example, test row 1 col 16 is input 1 and output 3, and row 2 col 15 is input 0 and output 2.",
+        "The host audit passed: 1000 fresh pairs, 8000 augmented checks, 16 fixture variants, and no sampler rejections."
+      ],
+      "blocking_issues": [],
+      "nonblocking_limits": [
+        "The crossing colour palette[3] never appears in inputs, so it is learnable only from demonstration outputs. With random binary fields and interior paths of at least 6 cells, demonstrations almost surely show both the 0\u2192MARK and 1\u2192CROSS mappings. However, no explicit episode check enforces this, and the task is not in the `require_colour_evidence` list.",
+        "The solver assumes exactly two markers lying on a common straight line, and takes the lexicographic extremes if there are more than two. The constructor guarantees two collinear markers, so this is a domain assumption and not a defect.",
+        "The archived solver's half-way 'teaching stage' is a no-op (`pass`). Omitting it does not change the output."
+      ],
+      "required_context_checks": [
+        "Optionally confirm that sampled episodes contain at least one demonstration where the marked path crosses a palette[1] cell, so that the palette[3] crossing colour is evidenced. This is near-certain under the sampler but is not enforced."
+      ],
+      "task_id": "bcb3040b",
+      "factory_sha256": "bb1eb3b73b538a71744fd4995e752617928e62e80ca87b2bc1cbeee29e08bf73",
+      "constructor_sha256": "e74b19797c5e5cddbc90e6f7c3cfffc8032d29a21aaf0c0bf58d05022176c3a4"
+    },
+    "host_review": "Reviewed mechanism, evidence, limitations and checks. Shared bijective palette and horizontal-reflection-then-clockwise-rotation convention confirmed. All eight D4 indices audited, with d4=7 being the final loop index. Per-episode execution and context checks remain required. Added and regression-tested required query mapping evidence using only demonstration answers and query inputs, across all eight D4 transformations with nonidentity palette. Unseen mappings now reject the episode."
+  }
+}

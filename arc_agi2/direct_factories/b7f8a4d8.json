@@ -1,0 +1,48 @@
+{
+  "task_id": "b7f8a4d8",
+  "factory_sha256": "13d6fff8170aba75fb96960bdd74d8b058e03dc0ee8db63d9db47e1eafba663c",
+  "constructor_sha256": "933eb9983bb940c1d0b9d048c6349af898d9c5268a6650d2589e0cb0fb48af23",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 99761313516686,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 28.523281625006348,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The emitted program reads the visible grid directly. The background is the constructor's colour 0, which becomes the constant palette[0]. If that colour is absent, it falls back to the most common border colour. The top-left corner is not used, because after a rotation or reflection the corner can land on a frame or interior cell. The frame colour is the non-background colour most often 4-adjacent to background; interiors are always enclosed by frame cells or the grid edge. Interior blocks are the same-colour connected components of the remaining cells. The normal colour is the most frequent component colour. Every other colour is special. For each special colour, any two blocks with the same row extent are joined by painting the background cells between them in that band. Blocks with the same column extent are joined the same way vertically. Frames and other interiors are never overwritten. This matches the generator's output: it draws thick hollow rectangles of width L-2 through the special corners, and the boxes are then redrawn over them. The rule treats rows and columns identically and works in both directions along each axis, so it is closed under all D4 transforms. That is why no axis or direction needs to be specialised and d4 is unused. Colour roles other than the background are inferred from pixels, so random palettes are handled. Demonstrations are not needed.",
+    "limitations": "The generator's own overlap check keeps different special rectangles from sharing corner rows or columns. Each band therefore holds at most two same-coloured blocks, and pairwise joining is exact. Normal-colour ties are broken by total cells and then by colour index. Such ties cannot arise in the constructor's domain: there are at least 16 lattice boxes whenever two special rectangles exist, against at most 4 specials per colour. Truncated boxes at the grid edge only affect normal interiors; special interiors are always complete in the generator. No constructor defects or fixture contradictions were found: the archived solver and all four approved fixtures agree with the rule. The code has not been run; host verification is still required.",
+    "independent_source_review": {
+      "verdict": "accept",
+      "mechanism": "Each grid is a lattice of L\u00d7L framed boxes, offset by L+S, on background palette[0]. For each special rectangle, the generator picks four corner boxes and gives their interiors a unique colour. In the output it draws a hollow rectangle of thickness L-2 in that colour, running from the top-left corner interior to the bottom-right corner interior. It then redraws every frame, normal interior and special interior on top, so only the background gap cells inside the band keep the special colour. The emitted solver detects the same structure directly from the visible grid, in visible coordinates. Background is the constant palette[0]. The frame is the non-background colour most often 4-adjacent to background. Interiors are same-colour components of the remaining cells. The normal colour is the most frequent component colour. For each special colour, any two components with equal row extents (or equal column extents) are joined by painting the background cells between them in that band.",
+      "evidence": [
+        "Band geometry. hollow_rect starts at r = brow*(L+S)+2 with width wide*L+(wide-1)*S-2, which equals (wide-1)(L+S)+L-2. That is exactly the span from the first special interior column to the last. Each of the L-2 inward rings shrinks by 1 per side, so the horizontal sides cover exactly the interior rows of the corner boxes. The vertical sides cover exactly the interior columns. This matches the solver's paint ranges: (a[4]+1 .. b[2]-1) \u00d7 (a[1]..a[3]), and the vertical analogue.",
+        "Unique colours per rectangle. bcolor is popped from a shuffled list without replacement, so each special rectangle has a unique colour. It produces exactly 4 distinct corner boxes because wide and tall are both at least 2. The pairs that share a row band or column band are therefore exactly the four rectangle edges. draw()'s distinct corner-row/column check stops a second rectangle from sharing a band.",
+        "Frame detection. Interiors never touch background. Their in-grid neighbours are always frame cells; truncated boxes at the right or bottom edge only lose frame cells beyond the grid edge. This holds, for example, in fixture 1, where width=29 and box columns 26..29 drop column 29. So the adjacency count always selects the frame colour, unlike the archived 'most common non-bg' or 'top-left corner' heuristics.",
+        "Normal-colour majority. With one rectangle there are at least 9 lattice boxes and 4 specials, so at least 5 normals. With two rectangles, the distinct-corner check forces eff_width and eff_height to be at least 4. That gives at least 16 boxes, 8 specials (4 per colour) and at least 8 normals. The normal colour is therefore a strict majority among components, and the tie-break is unreachable.",
+        "D4 closure. The solver uses no corner reference, axis or direction constants. Joins are symmetric in rows and columns and order-independent, so they act natively in the augmented coordinates. There is no untransform wrapper; d4 is unused legitimately.",
+        "Colour roles. These are recovered from pixel structure, not from arbitrary lookups. task_id b7f8a4d8 is not in the episode colour-evidence list, and no demonstration-taught association is required.",
+        "Host audit. It passed 1000 fresh pairs, 8000 augmented checks and 16 fixture variants with no sampler rejections. This is consistent with the source analysis."
+      ],
+      "blocking_issues": [],
+      "nonblocking_limits": [
+        "The fallback to the most common border colour when palette[0] is absent is out of domain: spacing is at least 1, so row 0 and column 0 are always background.",
+        "The '(count, cells, -colour)' tie-break for the normal colour, and the frame tie-break, cannot be reached in the constructor domain.",
+        "Pairwise joining assumes at most two same-colour blocks per band. That is guaranteed by the constructor but not for arbitrary grids.",
+        "The archived rule text relies on the top-left corner and most-common-colour heuristics, which are not D4-robust. The factory correctly replaces them, so this is a documentation difference, not a defect."
+      ],
+      "required_context_checks": [
+        "Confirm palette[0] maps to the constructor background colour 0 under the host's palette convention."
+      ],
+      "task_id": "b7f8a4d8",
+      "factory_sha256": "13d6fff8170aba75fb96960bdd74d8b058e03dc0ee8db63d9db47e1eafba663c",
+      "constructor_sha256": "933eb9983bb940c1d0b9d048c6349af898d9c5268a6650d2589e0cb0fb48af23"
+    },
+    "host_review": "Read the independent mechanism, evidence, limitations and context requirements. D4 uses horizontal reflection then clockwise rotation, with the same bijective palette throughout the episode; contradictory D4 contexts are rejected. Native-domain checks and per-episode execution remain mandatory. No hidden output access or normalization wrapper was identified."
+  }
+}

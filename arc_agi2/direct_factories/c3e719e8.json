@@ -1,0 +1,48 @@
+{
+  "task_id": "c3e719e8",
+  "factory_sha256": "6d1599b2e924f8f7943e3c547efa13db565d391063a8566c340557f1f6586665",
+  "constructor_sha256": "5e18fd9498379552b81cdb99ce96e6f0a1e9f5edc1ac94209da70459a696c8be",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 26987884174267,
+  "d4": 7,
+  "unique_base_inputs": 999,
+  "seconds": 3.6594180000247434,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "Mechanism: find the most frequent colour in the input (the mode). The output is an (h*h) x (w*w) canvas filled with the empty-tile colour. For every input cell (i, j) holding the mode, a full copy of the input is stamped into tile (i, j). The rule is equivariant under all D4 transforms. Rotating or reflecting the input moves the mode cells and the corresponding tiles identically, and each stamped tile is the transformed input itself. So no axis or direction specialisation is needed, and the emitted code works directly in visible coordinates. Palette mapping permutes colours, so counts and the mode carry over unchanged. The only colour constant is the empty-tile colour, which is original colour 0 and becomes palette[0]. Demonstrations are not needed.",
+    "limitations": "1. The generator (square_with_unique_max_color) guarantees a unique mode on a square grid, typically 3x3. If a tie ever occurs, the emitted program picks the tied colour that appears first in reading order. That choice is deterministic but not D4-invariant. Ties are outside the constructor's domain; if they do appear, a host should review it as a constructor defect, not treat it as a puzzle rule.\n2. For non-square grids, the program follows the archived solver's (h*h) x (w*w) tiling. This also lies outside the generator's square domain.\n3. If an input colour equals the empty-tile colour, empty tiles and stamped content may share a colour. This matches the constructor's behaviour.\n4. No fixture contradictions were observed. The canonical fixtures are consistent with the uniform rule.",
+    "independent_source_review": {
+      "verdict": "accept",
+      "mechanism": "Find the unique most frequent colour (mode) of the 3x3 input. Build a (h*h)x(w*w) canvas filled with the background colour (original 0, emitted as palette[0]). For every input cell (i,j) holding the mode, stamp a full copy of the input into tile (i,j).",
+      "evidence": [
+        "Constructor: colors = square_with_unique_max_color(size, random_colors(randint(3,4))). common.square_with_unique_max_color loops until exactly one colour in color_list reaches the maximum count. Every colour in `colors` comes from color_list, so the mode is unique and `max(set(colors), key=colors.count)` is deterministic. No hidden latent decides the label.",
+        "Constructor output: common.grid(size*size, size*size) is zero-filled. The tile at (r*size+dr, c*size+dc) receives colors[dr*size+dc], which is the input copy, exactly when colors[r*size+c] == mode. The solver's slice out[i*h:(i+1)*h, j*w:(j+1)*w] = g has the same indexing.",
+        "common.random_colors samples from range(1,10), so input colours never include 0. Under a palette permutation, input colours never equal palette[0], so the FILL constant cannot collide with stamped content.",
+        "D4 equivariance: a whole-grid transform T on the 9x9 output sends tile (i,j) to tile T(i,j) and transforms its contents by T. Applying the rule to T(input) stamps T(input) at the transformed mode cells T(i,j). The two agree. Counts are invariant under D4 and under palette bijection, so the solver works directly in visible coordinates and has no untransform/retransform wrapper.",
+        "The only specialised constant is FILL = palette[0], which is a genuine rule colour (the empty tile). The rule needs no demonstration-dependent lookup, and episode_evidence_checks correctly does not list c3e719e8.",
+        "Fixtures checked by hand: pair 1 has mode 8 (6 cells), and its tiles at (0,0),(0,2),(1,2),(2,0),(2,1),(2,2) match. Pair 2 has mode 3 on the diagonal. Pair 3 has mode 9 at (0,1),(0,2),(2,0),(2,1). The test has mode 1 (4 vs 7's 3) at (0,0),(0,1),(1,2),(2,1), and the given output matches.",
+        "Host audit passed: 1000 fresh pairs, 8000 augmented checks, 16 fixture variants, and no sampler rejections."
+      ],
+      "blocking_issues": [],
+      "nonblocking_limits": [
+        "The tie-breaking branch (first tied colour in reading order) is not D4-invariant. It is unreachable because square_with_unique_max_color guarantees a unique mode.",
+        "The non-square (h*h)x(w*w) tiling lies outside the constructor's domain, since size defaults to 3 and the grid is square.",
+        "Prior limitation 3 (an input colour equal to the empty-tile colour) is actually unreachable, because random_colors excludes 0. It only becomes possible if the palette is not a bijection.",
+        "The validate() train order differs from the approved fixture order. This is cosmetic and does not affect the labels."
+      ],
+      "required_context_checks": [
+        "Confirm the host palette is a bijection on 0..9, so palette[0] never coincides with an input colour and the mode stays unique after recolouring."
+      ],
+      "task_id": "c3e719e8",
+      "factory_sha256": "6d1599b2e924f8f7943e3c547efa13db565d391063a8566c340557f1f6586665",
+      "constructor_sha256": "5e18fd9498379552b81cdb99ce96e6f0a1e9f5edc1ac94209da70459a696c8be"
+    },
+    "host_review": "Reviewed mechanism, evidence, limitations and checks. Shared bijective palette and horizontal-reflection-then-clockwise-rotation convention confirmed. All eight D4 indices audited, with d4=7 being the final loop index. Per-episode execution and context checks remain required."
+  }
+}

@@ -1,0 +1,50 @@
+{
+  "task_id": "bae5c565",
+  "factory_sha256": "37592ff3af88d1691412442d2323c3e43d114f7f82aca29dc34696e164720bb2",
+  "constructor_sha256": "10833f32a674beb48a95b442d4ca2274e516ed6add38ec14308f7f493e93ea70",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 172978366545625,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 3.6701357080601156,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "Constructor: grids are square with odd size 9 to 13. Edge row 0 is a palette whose middle cell is background (5). A colour-8 line sits in the middle column, from row m-boost to the far edge. In the output, row 0 is cleared. Each column at distance d from the line is filled with its palette colour from row r0+d to the far edge, and the line itself is kept.\n\nUnder D4, the palette edge depends only on the rotation count d4%4: 0 is top, 1 is right, 2 is bottom and 3 is left. The preceding row-reversal only mirrors positions along the palette, and the staircase is symmetric along that axis, so it needs no handling.\n\nThe factory emits one specialised, direct-coordinate program for the visible palette edge. That program:\n1. Reads the palette from that edge row or column and clears it to the background constant palette[5].\n2. Locates the line among the non-background cells off the palette edge, taking the modal column or row.\n3. Takes the line's end nearest the palette as r0.\n4. Paints each parallel line at distance d with its palette colour, from r0+d (offset toward the far edge) through to the far edge. It stops once that start offset leaves the grid.\n\nThe line colour does not need to be known: the line is the only non-background object off the palette edge. This means the program still works when palette colours equal the line colour. No demonstrations are needed.",
+    "limitations": "The palette edge is fixed by d4 rather than inferred from the pixels. This is valid because the D4 transform applies uniformly to the whole episode.\n\nThe program assumes the generator's domain:\n- exactly one line, perpendicular to the palette edge;\n- the line never touches the palette edge (r0 >= 2 holds because m >= 4 and boost <= 2);\n- the line runs to the far edge;\n- the background is palette[5].\n\nThe palette cell above the line is always background, and the line cells are left unchanged, matching the generator.\n\nNo constructor defects or fixture contradictions were found. All fixtures match the r0+|x-c| staircase. I have not run any tests.",
+    "independent_source_review": {
+      "verdict": "accept",
+      "mechanism": "The top edge is a palette row with its centre cell set to background 5. A colour-8 line runs in the centre column m from row r0 = m - boost to the far edge. In the output, the palette row is cleared and each column at distance d from the line is filled with its palette colour from row r0 + d to the far edge, which makes a symmetric staircase. The line itself is unchanged. The factory emits one direct-coordinate solver for each visible palette edge, chosen by d4 % 4.",
+      "evidence": [
+        "Constructor: for column c, `range(max(c - boost, size - c - 1 - boost), size)` simplifies to start row m + d - boost for both c = m + d and c = m - d. For c = m it gives m - boost. So the start row is exactly r0 + |c - m| with r0 = m - boost. There is no off-by-one and no asymmetry.",
+        "The fill start is at least m - boost >= 2 (m >= 4, boost <= 2), so output row 0 is never written and stays 5. That matches the solver clearing the palette row.",
+        "The deepest fill start is r0 + m = 2m - boost <= 2m = H - 1, so every column always gets at least one painted cell. The solver's `top >= H` break is a defensive fallback that the constructor never reaches.",
+        "Palette colours are drawn from {0,1,2,3,4,6,7,8,9}. None equals background 5, and the middle cell is forced to 5, so BG = palette[5] is a genuine rule constant. Palette entries equal to 8 sit only in row 0, which the solver excludes when it locates the line (`g[1:, :]`, `g[:, 1:]`, etc.).",
+        "Off the palette edge, the input contains only the line, so `bincount(...).argmax()` is unique with no tie. The near-palette end is computed correctly in each branch: `+1` offset for the k=0 and k=3 slices, none needed for k=2 and k=1 because those slices start at index 0.",
+        "The four branches are direct visible-coordinate implementations: bottom palette paints `[:bot+1]`, left palette paints `[y, left:]`, right palette paints `[y, :right+1]`. There is no untransform/solve/retransform wrapper. Palette order is read from visible coordinates, so reflections along the palette need no handling.",
+        "All three fixtures reproduce from the constructor: train1 size 13, boost 1 gives r0 = 5; train2 size 9, boost 1 gives r0 = 3; test size 11, boost 0 gives r0 = 5. Each matches the given outputs.",
+        "No hidden latent determines labels: boost is visible as the line's start row, and size is visible. No arbitrary colour association is involved, so the episode colour-evidence checks correctly do not list this task."
+      ],
+      "blocking_issues": [],
+      "nonblocking_limits": [
+        "The mapping from d4 % 4 to the visible palette edge (0 top, 1 right, 2 bottom, 3 left), and the claim that flips leave the edge unchanged, depend on the host's D4 composition convention, which the source does not state. A wrong mapping would fail grossly, and 8000 augmented checks passed, which supports the mapping being correct.",
+        "The solver ignores the demonstrations. This is acceptable for a deterministic rule whose only constants (background and edge orientation) are fixed per episode.",
+        "The solver assumes the constructor domain: one line perpendicular to the palette, not touching it, running to the far edge, and background = palette[5]. Inputs outside that domain would hit untested fallbacks.",
+        "The rule text says only the test and pair 1 have a background palette cell above the line. In fact the constructor forces it in every instance, including pair 2. This is a minor wording issue only."
+      ],
+      "required_context_checks": [
+        "Confirm the host D4 convention (flip applied before rotation, and rotation direction) matches the factory's edge mapping for all 8 d4 values. The audit's 8000 augmented checks appear to cover this.",
+        "Confirm palette[5] under the host colour permutation is the visible background in every augmented episode."
+      ],
+      "task_id": "bae5c565",
+      "factory_sha256": "37592ff3af88d1691412442d2323c3e43d114f7f82aca29dc34696e164720bb2",
+      "constructor_sha256": "10833f32a674beb48a95b442d4ca2274e516ed6add38ec14308f7f493e93ea70"
+    },
+    "host_review": "Read mechanism, evidence, domain limits and contextual requirements. Host uses horizontal reflection then clockwise rotation, all eight indices tested, and shared bijective palette. Source audit d4=7 is the last completed loop index, not the sole tested transform. Standard conflicting-context rejection and per-episode verification required. No unresolved mechanism blocker identified within the sampled native domain."
+  }
+}

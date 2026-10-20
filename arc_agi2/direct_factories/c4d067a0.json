@@ -1,0 +1,51 @@
+{
+  "task_id": "c4d067a0",
+  "factory_sha256": "c4c43c0ff966762c19c3bbc46617a1400687e14e71b146b657447c1c0520dde2",
+  "constructor_sha256": "3a880cd426de8c5eee4fef25ffd29606e658dc93fcc0150d4cd7f1e659e5089c",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 184759241444992,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 11.04559245891869,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The factory works out where the two canonical directions point on the visible grid. U is the canonical 'down' direction, which steps between legend rows. V is the canonical 'right' direction, which runs along the block row and the legend columns. A horizontal flip negates the x components, and each clockwise turn maps (dy,dx) to (dx,-dy). These four signed constants are written into the emitted program, which then works entirely in visible coordinates. The legend corner is the visible corner from which both U and V point inward, and legend cell (r,c) sits at corner+U+V+2rU+2cV. Background is the most common colour. Same-colour 4-connected components are split by size: single cells are legend cells, recovered by projecting onto U and V. Larger components are blocks; for each one the program records its minimum projections onto U and V (the canonical top-left) and its side length. Blocks are ordered along V. The step is the V-distance between the first two blocks. Their colour sequence is matched against the legend rows to find the anchor (r0,c0). Every non-background legend cell (r,c) is then stamped as a size x size square at projected position (ou + r*step, ov + c*step) and mapped back with cell = u*U + v*V. Cells outside the canvas are skipped, so blocks are clipped on whichever visible edges correspond to the canonical bottom and right. Colour roles come from the pixels, so the palette needs no special handling.",
+    "limitations": "Untested. The program assumes the constructor's guarantees: every legend row and column has a coloured cell, the anchor run appears exactly once, blocks are at least 2x2 and never touch the legend or each other, and there are at least two blocks (with a single block it falls back to step = size+1, as the archived solver does). If no run matches, the input is returned unchanged. The 'teaching stages' (one canvas per legend row) are not emitted; only the final grid is returned. No fixture contradictions or constructor defects were found, and the tie-breaking in the match search is never reached because the constructor makes the run unique.",
+    "independent_source_review": {
+      "verdict": "accept",
+      "mechanism": "The top-left corner holds a legend: a lattice of single pixels at canonical (1+2r, 1+2c). Elsewhere sits one row of k>=2 solid s x s blocks with pitch st, and their colours form a run of consecutive cells in one legend row. The output stamps every non-background legend cell (r,c) as an s x s block at (y0 - r0*st + r*st, x0 - c0*st + c*st), where (r0,c0) is the unique position of that run in the legend. Stamps past the canonical bottom and right edges are clipped. The emitted solver writes four signed axis constants (U = canonical down, V = canonical right) into the program and works entirely in visible coordinates. It finds the legend corner as the visible corner from which U and V both point inward, reads legend cells by projecting single-cell components onto U and V relative to corner+U+V, and reads blocks from components larger than one cell (min U/V projection and side length). It takes the step from the V-gap between the first two blocks, matches the block colour run against the legend rows, and stamps back through (y,x) = u*U + v*V with bounds checks.",
+      "evidence": [
+        "Legend extent is recoverable. _legend_ok rejects any legend with an all-background row or column, so R = max(a)+1 and C = max(b)+1 from the visible single cells give the true legend shape. The archived solver's sorted ys/xs make the same assumption.",
+        "Anchor is not a hidden latent. Both sampling branches require bg not in run and _count_runs(lg, run) == 1. The solver's first-match search covers the same length-k windows, with legend.get defaulting to bg, so it finds the unique (r0,c0). The run excludes bg, so a missing legend entry can never produce a false match.",
+        "Step and size are visible. k >= 2 is forced (range(2, min(3, cols)+1), and validate uses count=2), so step = blocks[1].v - blocks[0].v = st. Input blocks are never clipped (_origin_ok checks y0+s <= h and x0+(k-1)*st+s <= w), so the measured extent equals s.",
+        "Single cells are always legend cells. Blocks have s >= 2 and gap st-s >= 1, so same-colour blocks never merge. Legend pixels are two apart and never touch each other.",
+        "Blocks and stamps stay clear of the legend. _origin_ok requires oy > 2*rows or ox > 2*cols, which leaves a one-cell margin. Since y0 >= oy and x0 >= ox, blocks and stamps never touch or overwrite legend pixels. oy, ox >= 0, so clipping only happens canonically bottom/right; the solver's bounds check handles that in any orientation.",
+        "Background is reliable. At most 3*16 block cells plus 20 legend cells are coloured, against a canvas of at least 196 cells, so the most-common-colour estimate cannot fail.",
+        "Projection algebra holds. U and V are orthonormal axis vectors, so u = p.U and v = p.V invert exactly as p = uU + vV. Using absolute projections for blocks shifts canonical coordinates by a constant, which cancels in ou/ov. Legend projections are corner-relative, giving a = 2r and b = 2c.",
+        "Fixtures check out by hand. Train 2: the 3-cells at legend (2,2)/(3,2) land at (10,16)/(13,16), as shown. Train 3: anchor (2,0) with run [3,4], which is unique. Test: run [4,2] occurs only at (1,1); row 3 = [8,bg,bg] yields one 8-block at rows 20-23, cols 8-11, matching the fixture.",
+        "Host audit passed 1000 fresh pairs, 8000 augmented checks and 16 fixture variants with no sampler rejections."
+      ],
+      "blocking_issues": [],
+      "nonblocking_limits": [
+        "The archived rule text says the test's 8-block 'starts at y=25 and is clipped'. Under the constructor and fixture it starts at y=20 (oy=5, plus 3*5) and is fully visible. This is a prose error only; labels follow the constructor. Partial clipping is reachable in fresh samples, because _origin_ok only bounds each stamp's top-left.",
+        "The 'teaching stages' (one canvas per legend row) described in the rule are not emitted; only the final grid is returned.",
+        "Defensive fallbacks (no legend/blocks, unmatched run, single block giving step = size+1) are out of domain under the constructor's guarantees.",
+        "The correctness of the D4 sign convention in the factory relative to the host's augmentation is confirmed by the host audit (d4 = 7 exercised), not re-derived independently here."
+      ],
+      "required_context_checks": [
+        "No arbitrary colour lookup: colours are copied from visible legend pixels, and c4d067a0 is not in the colour-evidence list, which is appropriate.",
+        "Orientation constants (legend corner, row/column axes) are deterministic spatial conventions shown by every demonstration, because the legend always occupies the same visible corner within an episode."
+      ],
+      "task_id": "c4d067a0",
+      "factory_sha256": "c4c43c0ff966762c19c3bbc46617a1400687e14e71b146b657447c1c0520dde2",
+      "constructor_sha256": "3a880cd426de8c5eee4fef25ffd29606e658dc93fcc0150d4cd7f1e659e5089c"
+    },
+    "host_review": "Reviewed mechanism, evidence, limitations and checks. Shared bijective palette and horizontal-reflection-then-clockwise-rotation convention confirmed. All eight D4 indices audited, with d4=7 being the final loop index. Per-episode execution and context checks remain required."
+  }
+}

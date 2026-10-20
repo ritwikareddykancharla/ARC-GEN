@@ -8,6 +8,8 @@ from tasks import task_78e78cff as leaking
 from tasks import task_780d0b14 as patches
 from tasks import task_855e0971 as strata
 from tasks import task_6ffe8f07 as rays
+from tasks import task_69889d6e as staircase
+from tasks import task_b2862040 as holes
 from .runtime import reference, call, grid
 
 
@@ -32,7 +34,8 @@ class ReviewedConstructorRepairs(unittest.TestCase):
     def test_fixture_labels_unchanged(self):
         for tid, module in (('6ca952ad', falling), ('7039b2d7', panels),
                             ('78e78cff', leaking), ('780d0b14', patches),
-                            ('855e0971', strata), ('6ffe8f07', rays)):
+                            ('855e0971', strata), ('6ffe8f07', rays),
+                            ('69889d6e', staircase), ('b2862040', holes)):
             for split, examples in module.validate().items():
                 self.assertCountEqual(examples, reference(tid)['canonical'][split])
 
@@ -79,3 +82,42 @@ class ReviewedConstructorRepairs(unittest.TestCase):
                 self.assertEqual(set(colours), {1, 2, 8})
         finally:
             random.setstate(state)
+
+    def test_staircase_does_not_wrap_at_top_edge(self):
+        # Both the climb and obstacle placement used to index row -1.
+        for last in (0, 1):
+            with self.assertRaises(ValueError):
+                staircase.generate(vals=[0]*9+[last])
+        # Reaching the top is legal; attempting another step is not.
+        pair = staircase.generate(vals=[0]*9)
+        self.assertEqual(pair['output'][0][9], 2)
+        self.assertEqual(pair['output'][9][9], 0)
+
+    def test_neighbor_barnacles_cannot_hide_a_closed_hole(self):
+        # Two latent "open" boxes jointly seal the lower box's escape route.
+        cells = set()
+        for row, col in ((6, 2), (1, 3)):
+            cells.update((r, c) for r in range(row, row+3)
+                         for c in range(col, col+3)
+                         if r in (row, row+2) or c in (col, col+2))
+        cells.difference_update({(6, 3), (1, 4)})
+        cells.update({(5, 2), (5, 4), (4, 3)})
+        positions = sorted(cells)
+        bad = (12, 12, [r for r, c in positions],
+               [c for r, c in positions], [1]*len(positions))
+        pair = holes._render(*bad)
+        visible = holes._hole_rule_output(pair['input'], 9, 8)
+        self.assertNotEqual(pair['output'], visible)
+        self.assertEqual(visible[7][2], 8)  # Lower box borders the sealed hole.
+        self.assertEqual(visible[4][3], 8)  # Upper box's attached protrusion.
+        # Removing the bridging protrusion opens the route to the border.
+        positions.remove((4, 3))
+        good = (12, 12, [r for r, c in positions],
+                [c for r, c in positions], [1]*len(positions))
+        self.assertEqual(holes._render(*good)['output'],
+                         holes._hole_rule_output(holes._render(*good)['input'], 9, 8))
+        with patch.object(holes.common, 'randint', return_value=2):
+            with patch.object(holes, '_sample_scene', side_effect=[bad, good]) as sample:
+                self.assertEqual(holes.generate(), holes._render(*good))
+                self.assertEqual([args.args for args in sample.call_args_list],
+                                 [(2,), (2,)])

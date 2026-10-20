@@ -1,0 +1,54 @@
+{
+  "task_id": "b527c5c6",
+  "factory_sha256": "f65af66d7f7ac93fc53850b85e5d0592903310de2363900ea4ae86506ed644f1",
+  "constructor_sha256": "02ebed727c7072a6ad97c9ce20803cc5f282533f985c5ea2d6110f5c667cac93",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 249967749294619,
+  "d4": 7,
+  "unique_base_inputs": 999,
+  "seconds": 10.385186917032115,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The emitted program works directly in the visible grid. It takes its colours from the palette as constants: background = palette[0], rectangle = palette[3], marker = palette[2].\n\nSteps for each rectangle:\n1. Find the 4-connected non-background components. Each one is a rectangle carrying a marker cell.\n2. Find which side of the bounding box the marker sits on: top, bottom, left or right.\n3. Grow a road outward from that side, perpendicular to it, until the grid border.\n   - The centre line is the marker colour.\n   - The flanks are the rectangle colour, with half-width equal to the rectangle's thickness perpendicular to that side, minus 1.\n4. Only background cells are painted.\n\nThe direction comes from where the marker sits in the visible grid, so it is correct under any rotation or reflection. For that reason d4 does not need to change any constant: vertical roads become horizontal ones and reflections reverse direction on their own.\n\nThis matches the constructor:\n- The tall box has its marker on its left column and beams left with half-width (wide0-1).\n- The wide box has its marker on its top row and beams up with half-width (tall1-1).\n- In the 'defect' branch, the tall box's marker is moved to its right column and its beam goes right. That beam passes below the partner box without touching it, so it is still explained by the same visible rule.\n\nIn the generator's domain the strips never overlap any object, so 'paint only background' matches the generator's overwriting.",
+    "limitations": "Assumptions taken from the constructor's domain:\n- Rectangles are solid, separated by at least one column, and are at least 2 cells thick.\n- The marker never sits on a corner. If it ever did, the program prefers a side where the marker lies strictly inside the edge, then falls back to the first of top, bottom, left, right. This tie-break is never exercised by the generator.\n- Roads never cross objects or each other. If they did, the earlier road (in reading order) would keep the crossing cells, and roads would pass behind other objects.\n\nOn the constructor:\n- The 'defect' flag (labelled 'Aims at partner!') relocates the marker to the opposite side and reverses the beam. The output still follows the uniform visible rule, so this does not contradict the fixtures. Even so, the host may want to review it as a constructor quirk.\n- No contradictions were found in the supplied fixtures.\n- This code has not been run or tested.",
+    "independent_source_review": {
+      "verdict": "accept",
+      "mechanism": "Each input holds two solid rectangles in palette[3], and each rectangle has one palette[2] marker on one of its sides (never a corner). From the marker, a road grows perpendicular to that side, outward, up to the grid border. Its centre line is the marker colour. Its flanks are the rectangle colour, with half-width equal to the rectangle's thickness perpendicular to the marked side, minus 1. Only background cells are painted. Direction and width come from the visible marker position and the visible bounding box, so the solver works directly in augmented coordinates with no d4-dependent constants.",
+      "evidence": [
+        "Native constructor frame, box 0. Marker at (rows[0]+dotrow, cols[0]), on the left column, with dotrow in [wide0, tall0-wide0] and wide0>=2. The marker is therefore never on the top or bottom row and never on a corner.",
+        "Box 0 road. The constructor's loop covers cols 0..cols[0]-1 with dr in (-wide0+1, wide0). That matches the solver's left option: t = x1-x0+1 = wide0, hw = t-1.",
+        "Native frame, box 1. Marker at (rows[1], cols[1]+dotcol), on the top row, with dotcol in [tall1, wide1-tall1] and tall1>=2. Its road covers rows 0..rows[1]-1 with dc in (-tall1+1, tall1). That matches the solver's top option: t = y1-y0+1 = tall1.",
+        "Defect branch. 'c += wides[0]-1' moves box 0's marker to its right column, and the road spans cols[0]+wide0..size-1. This is still the same visible rule: marker side gives direction.",
+        "Defect geometry. The condition 'rows[1]+talls[1] < rows[0]+dotrow-wides[0]' leaves at least two rows between box 1's bottom and the strip top. The defect strip therefore misses box 1, and box 1's upward road lies on the other side of box 1.",
+        "The defect choice depends on visible geometry only. Under either branch, the label is fixed by where the marker visibly sits, so no hidden latent decides the output.",
+        "Roads have room to grow. cols[0]>=1 (randint lower bound 1 and spacing<=size-sum-1) and rows[1]>=1, so each road has at least one cell. The solver's border guards (y0>0, x1<W-1, etc.) never discard the true option.",
+        "No crossings. Box 0's left road lies left of both boxes. Box 1's road columns satisfy c-(tall1-1) >= cols[1]+1, which is right of box 0. So every painted cell is input background, and 'paint only BG' equals the constructor's unconditional overwrite.",
+        "Box 0's strip never needs clipping. dotrow lies in [wide0, tall0-wide0] and rows[0]>=1, so the strip rows fall inside box 0's row span.",
+        "Single option per marker. Every marker lies on exactly one side, so 'opts' always has exactly one entry and the corner tie-break is never reached.",
+        "The boxes are never 4-connected. spacing>=1 column separates them, so _components returns exactly two marked rectangles.",
+        "Fixtures checked by hand. Pair 1 (left road with hw 4, up road with hw 2), pair 3 (right-edge marker with right road, i.e. the defect branch, after the flip/xpose), and the test (left road with hw 2, up road with hw 5) all agree with the visible rule.",
+        "Host audit passed: 1000 fresh pairs, 8000 augmented checks and 16 fixture variants, with no sampler rejections."
+      ],
+      "blocking_issues": [],
+      "nonblocking_limits": [
+        "Behaviour outside the constructor's domain is untested: corner markers, crossing roads and roads passing behind objects. The 'proper' edge tie-break and the 'earlier road keeps the cell' outcome are both defensive only.",
+        "The archived rule text says pair 3 is clipped by the grid edge. In the constructor, box 0's strip always stays within the box's row span. This is a wording issue only and does not affect labels.",
+        "The archived rule's remark about emitting a canvas per rectangle does not apply to the factory solver. That solver returns only the final grid."
+      ],
+      "required_context_checks": [
+        "None for colour associations. The colours play fixed structural roles (bg = palette[0], box = palette[3], marker = palette[2]), and b527c5c6 is not in the episode colour-evidence list.",
+        "Host D4 conflict policy: since direction is read from the visible grid, no D4 variant should produce conflicting query answers. This only needs confirmation through the host's standard rejection check."
+      ],
+      "task_id": "b527c5c6",
+      "factory_sha256": "f65af66d7f7ac93fc53850b85e5d0592903310de2363900ea4ae86506ed644f1",
+      "constructor_sha256": "02ebed727c7072a6ad97c9ce20803cc5f282533f985c5ea2d6110f5c667cac93"
+    },
+    "host_review": "Read the independent mechanism, evidence, limitations and context requirements. D4 uses horizontal reflection then clockwise rotation, with the same bijective palette throughout the episode; contradictory D4 contexts are rejected. Native-domain checks and per-episode execution remain mandatory. No hidden output access or normalization wrapper was identified."
+  }
+}

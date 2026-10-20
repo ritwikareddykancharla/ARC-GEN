@@ -5,6 +5,46 @@ from .program_targets import make_record
 
 
 class ColourEvidenceTests(unittest.TestCase):
+    def test_each_frame_size_needs_its_own_fill_mapping(self):
+        def pair(side, offset=0):
+            g = [[0]*(side+2) for _ in range(side+2)]
+            out = [row[:] for row in g]
+            for r in range(side):
+                for c in range(side):
+                    if r in (0, side-1) or c in (0, side-1):
+                        g[r+offset][c+offset] = out[r+offset][c+offset] = 5
+                    else:
+                        out[r+offset][c+offset] = side+3
+            return {'input': g, 'output': out}
+        for d4 in range(8):
+            pal = [3, 9, 0, 7, 2, 8, 1, 6, 4, 5]
+            a, teacher, q = apply_episode([pair(3), pair(4), pair(4, 1)], d4, pal)
+            query = {'input': q['input']}  # No query answer is needed.
+            with self.assertRaises(MissingColourEvidence):
+                require_colour_evidence('c0f76784', [a], [query], pal, d4)
+            require_colour_evidence('c0f76784', [a, teacher], [query], pal, d4)
+            # An unchanged frame does not teach the interior fill colour.
+            fake = dict(teacher, output=teacher['input'])
+            with self.assertRaises(MissingColourEvidence):
+                require_colour_evidence('c0f76784', [a, fake], [query], pal, d4)
+
+    def test_path_crossing_needs_a_changed_demo_cell(self):
+        empty = {'input': [[2, 0, 0, 2]], 'output': [[2, 2, 2, 2]]}
+        teacher = {'input': [[2, 1, 0, 2]], 'output': [[2, 3, 2, 2]]}
+        query = {'input': [[2, 0, 1, 2]], 'output': [[2, 2, 3, 2]]}
+        for d4 in range(8):
+            pal = [3, 9, 0, 7, 2, 8, 1, 6, 4, 5]
+            a, t, q = apply_episode([empty, teacher, query], d4, pal)
+            with self.assertRaises(MissingColourEvidence):
+                require_colour_evidence('bcb3040b', [a], [{'input': q['input']}], pal, d4)
+            require_colour_evidence('bcb3040b', [a, t], [{'input': q['input']}], pal, d4)
+            # A 1 elsewhere in the image is not evidence for its path-crossing rule.
+            off_path = {'input': [[2, 0, 0, 2], [1, 0, 0, 0]],
+                        'output': [[2, 2, 2, 2], [1, 0, 0, 0]]}
+            off = apply_episode([off_path], d4, pal)[0]
+            with self.assertRaises(MissingColourEvidence):
+                require_colour_evidence('bcb3040b', [off], [{'input': q['input']}], pal, d4)
+
     def test_parity_rule_requires_relevant_demonstration(self):
         demo = {'input': [[1]*3 for _ in range(3)], 'output': [[1]*2]*2}
         query = {'input': [[1]*4 for _ in range(4)]}

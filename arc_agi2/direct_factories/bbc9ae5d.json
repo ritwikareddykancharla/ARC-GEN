@@ -1,0 +1,46 @@
+{
+  "task_id": "bbc9ae5d",
+  "factory_sha256": "fadc56d9d74e2a063b120c071379bc3eec063a3c6576318ff658c489c59aa461",
+  "constructor_sha256": "33e3f859b516f0807d8028abd0f9dc77ae84e1cb14f8f29e294f5e6412db0e3e",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 121587196891998,
+  "d4": 7,
+  "unique_base_inputs": 386,
+  "seconds": 4.346176250022836,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "In the original task the input is a single 1xW row. It holds a run of colour c, k cells long, anchored at the left edge, on a background of 0. The output has W//2 rows. Row r contains c over its first k+r cells. Under D4 the input becomes either a row (even d4) or a column (odd d4). The run is anchored at the near end (index 0) or the far end. The staircase layers stack either in increasing index order or in reversed order (the original row 0 ends up at the last index). The factory works out three constants from d4: VERTICAL, FAR_ANCHOR and STACK_REVERSED.\n\nFor reference, here is the flip/rotate derivation for each d4:\n- 0: left anchor, layers go down.\n- 1: top anchor, original at the rightmost column, layers go left.\n- 2: right anchor, original at the bottom row, layers go up.\n- 3: bottom anchor, original at column 0, layers go right.\n- 4: right anchor, layers go down.\n- 5: bottom anchor, original at the rightmost column.\n- 6: left anchor, original at the bottom row.\n- 7: top anchor, original at column 0 (transpose).\n\nThe background constant is palette[0]. The run colour is read from the anchor cell of the visible line, and k is counted from the anchor along the line. The emitted program builds a canvas directly in visible coordinates: W x W//2 for a vertical line, or W//2 x W for a horizontal one. It copies the input line into layer 0 and fills layer t with min(W, k+t) run-colour cells starting at the anchor. It does no rotation or colour unpermutation.",
+    "limitations": "The program relies on d4 for the anchor end and the stacking direction rather than inferring them from the demonstrations. That is valid because the constructor always anchors the run at one end and stacks in a fixed direction. The program assumes the generator's domain: an even width of 6 to 18, a single line, and a run of length 1 to W/2+1 that never fills the whole line. For odd widths it uses W//2 layers, matching the archived solver; those widths never occur in this domain. No constructor defects were found, and the fixtures are consistent with the uniform rule. This has not been executed or tested by me.",
+    "independent_source_review": {
+      "verdict": "accept",
+      "mechanism": "The input is a single line of width W, even and between 6 and 18. It holds a run of colour c, k cells long, anchored at one end, with background after it. The output adds a perpendicular axis of length W//2. Layer t holds min(W, k+t) cells of c, measured from the anchor. Layer 0 is the input line copied exactly. The factory turns d4 into three constants: VERTICAL (the line is a column), FAR_ANCHOR (the run starts at index W-1) and STACK_REVERSED (layer 0 is at the far end of the new axis). It then builds the output canvas directly in visible coordinates.",
+      "evidence": [
+        "Constructor: width = 2*randint(3,9) gives W in {6,...,18}. length = randint(1, W//2+1), so 1 <= k <= W/2+1 < W. The run never fills the line, and the background always follows it.",
+        "Constructor: the last layer has length + (H-1) <= W/2+1 + W/2-1 = W cells, so the generator's own range(length+r) never overflows. The factory's min(W, k+t) is therefore only a guard and does not change any label.",
+        "Colour comes from random_color(), which draws from 1..9, on background 0. The factory reads BG = palette[0], so fg = line[anchor] is never BG. The condition `fg != BG` in the while loop is a guard that the domain never triggers.",
+        "Orientation derivation: d4=1 is a rotation. The left end goes to the top and output row 0 goes to the rightmost column, giving VERTICAL=T, FAR=F, REV=T, which matches the code. d4=2 (180\u00b0) gives F,T,T. d4=3 gives T,T,F. d4=4 (horizontal flip) gives F,T,F. d4=5, 6 and 7 are consistent with the prior notes. The tuples `far in (2,3,4,5)` and `rev in (1,2,5,6)` reproduce all eight cases.",
+        "Vertical case: the input is Wx1, the line is read as g[:,0], the output is np.full((W,H)) and cells are written as out[i,p]. Horizontal case: the line is g[0,:] and the output is (H,W). Neither case uses a whole-grid untransform or retransform wrapper.",
+        "Labels depend only on visible quantities: W, c and k. No hidden random latent affects the output. There are no ties and no colour lookups.",
+        "The approved fixtures match the constructor's validate() parameters, listed in a different order. The test case (W=12, k=3, c=1) produces runs of 3 to 8 cells, which is consistent.",
+        "The host audit passed 1000 fresh pairs and 8000 augmented checks, plus 16 fixture variants, with no sampler rejections."
+      ],
+      "blocking_issues": [],
+      "nonblocking_limits": [
+        "The anchor end and the stacking direction are fixed from d4 rather than inferred from the demonstrations. This is legitimate: they are orientation constants of a deterministic spatial rule, and every demonstration in an episode shares that orientation.",
+        "For odd W the program uses W//2 layers, copying the archived solver. Odd widths are unreachable in the constructor.",
+        "The fallbacks for an empty run (k=0 or fg==BG) and for H = max(1, ...) are out-of-domain defensive code. The constructor excludes both cases."
+      ],
+      "required_context_checks": [],
+      "task_id": "bbc9ae5d",
+      "factory_sha256": "fadc56d9d74e2a063b120c071379bc3eec063a3c6576318ff658c489c59aa461",
+      "constructor_sha256": "33e3f859b516f0807d8028abd0f9dc77ae84e1cb14f8f29e294f5e6412db0e3e"
+    },
+    "host_review": "Read mechanism, evidence, domain limits and contextual requirements. Host uses horizontal reflection then clockwise rotation, all eight indices tested, and shared bijective palette. Source audit d4=7 is the last completed loop index, not the sole tested transform. Standard conflicting-context rejection and per-episode verification required. No unresolved mechanism blocker identified within the sampled native domain."
+  }
+}

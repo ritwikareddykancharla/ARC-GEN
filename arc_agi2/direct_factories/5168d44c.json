@@ -1,0 +1,28 @@
+{
+  "task_id": "5168d44c",
+  "factory_sha256": "9f94b6f2da02251b7266424f7f06720b413b809929180760d5bc8c889928ed9a",
+  "constructor_sha256": "6639b56c9ec54b6fac8e86fb692531f8818418c44df387db418a7f49433f4a77",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "context_retries": 81,
+  "sampler_rejections": [],
+  "audit_scope": "250 fresh queries held fixed while resampling3demo context using visible frame motion evidence only; no query labels in admission; all four pairs executed under8D4per acceptedepisode.",
+  "unique_base_inputs": 895,
+  "seconds": 3.5269917919067666,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Host-authored direct program with constructor/source review, source restrictions and execution verification.",
+  "draft_notes": {
+    "author": "host",
+    "explanation": "Fit eight visible motion rules: fixed signed two-cell movement per axis, or movement toward the side with more dots with the demonstrated per-axis sign used on ties. Default axis directions must match every observed demonstration displacement. Keep all rules reproducing every demonstration exactly. Query predictions must agree. No hidden D4 direction defaults.",
+    "limitations": "Finite declared two-mechanism hypothesis class, not universal rule identification. Require consistent demonstrated displacement per axis; majority is a competing heuristic with this observed default on ties. Reject unresolved direction or off-grid alternatives. Native generator unchanged, including majority-opposing motion.",
+    "host_review": {
+      "status": "reviewed",
+      "constructor_unchanged": true,
+      "reason": "Native forward step can oppose the majority of dots. Demonstrations must distinguish fixed direction from dot-count heuristic. Counterfactual demonstrations can select the alternative.",
+      "audit": "Passed 1000 fresh pairs (895 distinct inputs),8000 augmented checks,16 fixture variants. Six focused tests include all native widths/parities/frame indices/axes at height7,row3 across8D4. Full-quota production assembler:1000 fresh episodes,8000 verified records,272 minority-directed queries,319 context retries,zero shortfalls; fixed queries retained."
+    }
+  }
+}

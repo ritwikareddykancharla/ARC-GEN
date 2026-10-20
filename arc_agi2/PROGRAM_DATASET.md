@@ -1580,3 +1580,8 @@ factories. Expanded dataset publication, SFT and RLVR remain outstanding.
 ### Verified program coverage: 1,073 / 1,120
 
 aa300dc3 now learns full-diagonal versus contiguous-run interpretation and visible tie rules from demonstrations. Broken diagonals remain in the native domain; unresolved ties reject instead of choosing scan order. Independent evidence checks never read query outputs. Fresh execution audit passed 1,000 unique pairs, 8,000 augmented checks and 16 fixture variants. Full-quota assembly produced 1,000 base episodes and 8,000 verified combined program/grid records, including 56 broken-line queries; 291 context retries, no shortfalls. All 584 regression tests passed. These are local validation records, not the expanded published corpus. 47 program families remain; bulk generation and model training have not launched.
+
+
+### Verified program coverage: 1,074 / 1,120
+
+5168d44c learns signed frame motion from demonstrations and compares it against the dot-majority heuristic. No default direction from augmentation metadata. Native contrary-majority cases are retained. Audit: 1,000 fresh pairs (895 distinct inputs), 8,000 augmented checks, 16 fixture variants. Full quota: 1,000 bases, 8,000 verified program/grid records, 272 minority-directed queries, 319 context retries, no shortfalls. Six focused tests and all 590 regression tests passed. 46 program families remain. Local audit only; expanded dataset and training have not launched.

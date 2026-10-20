@@ -1492,3 +1492,42 @@ These were temporary local audit records, not bulk dataset publication.
 
 Remaining: 38 semantic/context holds, 9 execution failures and 3 missing
 factories. Expanded dataset publication, SFT and RLVR remain outstanding.
+
+
+## Coverage checkpoint: 1,071 families
+
+Added `a680ac02` while preserving its original constructor and benchmark labels.
+The native rule concatenates hollow frames along the uniquely separated projection
+axis. Overall coordinate spread is an insufficient shortcut: hollow-frame corners
+(0,0), (2,5), (20,10) have row gaps 2 and 18, and column gaps 5 and 5. The native
+rule concatenates horizontally, although total row spread exceeds column spread.
+This is a reachable placement, with non-overlapping boxes and native dimensions.
+
+The direct program fits three hypotheses to complete demonstration pairs:
+projection-gap separation and total spread with either equal-spread tie convention.
+All surviving query predictions must agree. It has no preferred-rule fallback.
+A separate colour-coordinate/border parser performs the same evidence check before
+context selection. Both tie conventions remain present so rotating an episode
+does not silently change whether its context is sufficient. Hard outlier queries
+are retained and their demonstrations supply the distinction.
+
+Validation:
+
+- Source-matched contextual audit: 1,000 unique pairs, 8,000 augmented pair checks,
+  16 fixture variants and 46 demonstration retries, with each query held fixed.
+- Five targeted tests cover reachable outliers, equal spreads under every D4,
+  opposite demonstrated rules for the same query, insufficient context recovery,
+  query-answer poisoning, canonical fixtures and invalid examples.
+- Independent episode audit: 20/20 accepted contexts and 160 verified records.
+- Full-quota assembler: 1,200 unique pool pairs yield 1,000/1,000 bases and
+  8,000 verified combined records. Of the queries, 72 require distinguishing
+  spacing evidence and 928 have agreeing rule predictions. There are 414 context
+  retries, zero shortfalls, and maximum pair reuse 9. Audit records are temporary
+  local artifacts, not a bulk publication.
+- Full regression: 572 tests passed.
+
+Reports: `reports/a680ac02-demonstrated-spacing-evidence.json`,
+`reports/episode-evidence-1071-audit.json`, and
+`reports/query-preserving-assembly-1071-a680ac02.json`.
+Remaining: 37 semantic/context holds, 9 execution failures and 3 missing
+factories. Expanded dataset publication, SFT and RLVR remain outstanding.

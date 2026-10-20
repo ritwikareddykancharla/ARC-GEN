@@ -1,0 +1,70 @@
+{
+  "task_id": "a680ac02",
+  "constructor_unchanged": true,
+  "benchmark_labels_changed": false,
+  "native_mechanism": "Choose the axis whose hollow-frame projections are all separated by at least one background cell, while another pair overlaps in projection on the other axis. Concatenate hollow frames in coordinate order along that axis; drop solid squares.",
+  "competing_rule": "Choose the axis with greater overall coordinate spread, with both possible equal-spread conventions included.",
+  "hypotheses": 3,
+  "independent_gate": "Extract exact single-colour4x4frame borders and solid squares by colour coordinates. Compare all complete demonstrated outputs; surviving query predictions must agree. Source uses4-connected components and NumPy crops independently.",
+  "reachable_counterexample": {
+    "width": 25,
+    "height": 25,
+    "brows": [
+      0,
+      2,
+      20,
+      0,
+      10,
+      10
+    ],
+    "bcols": [
+      0,
+      5,
+      10,
+      15,
+      0,
+      15
+    ],
+    "colors": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "fills": [
+      0,
+      0,
+      0,
+      1,
+      1,
+      1
+    ],
+    "min_row_gap": 2,
+    "min_col_gap": 5,
+    "row_span": 20,
+    "col_span": 10,
+    "native_axis": "horizontal",
+    "spread_axis": "vertical"
+  },
+  "tests": 5,
+  "test_module": "arc_agi2.test_frame_spacing_evidence",
+  "counterfactual": "Opposite demonstrated rule changes output orientation on same query; all8D4variants tested. Equal spans keep both alternatives to avoid orientation-dependent admission.",
+  "execution_audit": {
+    "task_id": "a680ac02",
+    "factory_sha256": "7bcb0ecaad102b1519101773e85763cb9b55eb1adf7e78fb1c030d9b9b23fd20",
+    "constructor_sha256": "d2abd148d06ec95a2e539ecba4bd8451ac378ac75080609d0fe0cf4b547e1e7f",
+    "passed": true,
+    "fresh_pairs_checked": 1000,
+    "augmented_pair_checks": 8000,
+    "fixture_variants_checked": 16,
+    "context_retries": 46,
+    "sampler_rejections": [],
+    "audit_scope": "250 fresh queries held fixed while resampling3demo context using visible frame-spacing evidence only; no query labels in admission; all four pairs executed under8D4per acceptedepisode.",
+    "unique_base_inputs": 1000,
+    "seconds": 7.902799458010122
+  },
+  "assembly_report": "query-preserving-assembly-1071-a680ac02.json",
+  "bounded_scope": "Evidence resolves this3-rule class, not all possible ARC rules. Native random domain and supplied fixtures certified."
+}

@@ -63,6 +63,11 @@ def _hole_count(cells):
 
 
 def require_colour_evidence(task_id, demonstrations, queries, palette=None, d4=0):
+    if task_id == 'a680ac02':
+        from .frame_spacing_evidence import require_spacing_evidence
+        require_spacing_evidence(demonstrations, queries,
+                                 list(range(10)) if palette is None else palette)
+        return
     if task_id == '7b7f7511':
         from .repeat_tile_context import require_repeat_evidence
         require_repeat_evidence(demonstrations, queries)

@@ -10,6 +10,31 @@ from .task_registry import NEW_TASK_IDS
 from .augmentation import apply_episode,settings
 
 class GeneratorTests(unittest.TestCase):
+    def test_ray_components_bar_extents_and_open_shape_labels(self):
+        ray=importlib.import_module('tasks.task_2f767503')
+        # Ray hits one cell; the whole blob disappears, but its diagonal neighbor survives.
+        pattern=['.'*10 for _ in range(10)]
+        pattern[4]='....44....';pattern[3]='......4...'
+        p=ray.generate(center=(8,4),vertical=False,side=1,pattern=pattern)
+        self.assertEqual(p['output'][4][4:6],[7,7])
+        self.assertEqual(p['output'][3][6],4)
+        bars=importlib.import_module('tasks.task_31f7f899')
+        kwargs=dict(width=12,height=11,line_row=5,bars=[(1,1,2,1,9),(4,2,3,4,6),(8,1,4,3,7)])
+        p=bars.generate(**kwargs,vertical=False)
+        self.assertEqual(p['input'][5],p['output'][5])
+        self.assertEqual([sum(row[c]==colour for row in p['output']) for c,colour in [(1,2),(4,3),(8,4)]],[3,5,9])
+        self.assertEqual(bars.generate(**kwargs,vertical=True)['output'],bars._transpose(p['output']))
+        with self.assertRaisesRegex(ValueError,'Equal-length'):
+            bars.generate(width=12,height=11,line_row=5,bars=[(1,1,2,2,6),(4,1,3,3,7)])
+        shapes=importlib.import_module('tasks.task_320afe60')
+        closed=['111','1.1','111'];opened=['1.1','1.1','111']
+        p=shapes.generate(width=12,height=10,objects=[(1,4,closed,'left'),(6,4,opened,'right')])
+        self.assertEqual(p['output'][1][:3],[2,2,2])
+        self.assertEqual(p['output'][6][-3:],[3,4,3])
+        self.assertEqual(sum(v==1 for row in p['input'] for v in row),sum(v in (2,3) for row in p['output'] for v in row))
+        with self.assertRaisesRegex(ValueError,'side must match'):
+            shapes.generate(width=12,height=10,objects=[(1,4,closed,'right')])
+
     def test_wall_outputs_count_actual_background_regions(self):
         module=importlib.import_module('tasks.task_e872b94a')
         for seed in range(50000,50100):

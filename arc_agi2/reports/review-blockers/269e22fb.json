@@ -1,0 +1,19 @@
+{
+  "task_id": "269e22fb",
+  "status": "needs_episode_template_generalization",
+  "candidate_sha256": "7786132546487b905df8959c1d9941e6fa71f4ec12dfbe58b6d2618fd0c4be89",
+  "count_as_new_native_coverage": false,
+  "finding": "The default constructor crops, reorients and recolours a single canonical 20x20 bitmap. This reproduces the supplied task, but does not supply new underlying pictures for mechanism-generalization training.",
+  "evidence": [
+    "The _ROWS constant stores the canonical output drawing.",
+    "_base and _ORIENTATIONS always derive from that constant.",
+    "generate varies only window bounds, D4 orientation and two-colour palette."
+  ],
+  "required_followup": [
+    "Generate a fresh structured binary picture as an episode-level latent template.",
+    "Use that same template for all three demonstrations and the query; vary crops, orientation and colours with unique-placement checks.",
+    "Keep canonical reconstruction separate and labelled.",
+    "Add a contextual verifier based on the episode template; the fixed-template archived solver cannot validate new pictures.",
+    "Add episode-level generator support to the builder before registration; never combine independent-template pairs into one episode."
+  ]
+}

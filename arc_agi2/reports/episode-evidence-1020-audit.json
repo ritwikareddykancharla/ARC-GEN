@@ -1,0 +1,23 @@
+{
+  "checked_at": 1792527217.2941282,
+  "reports": [
+    {
+      "task_id": "6ad5bdfd",
+      "sampled_episodes": 20,
+      "accepted_episodes": 20,
+      "missing_evidence_episodes": 0,
+      "verified_augmented_records": 160,
+      "sampler_rejections": [],
+      "errors": [],
+      "passed": true
+    }
+  ],
+  "production_generation": false,
+  "source_hashes": {
+    "tasks/task_6ad5bdfd.py": "621f1c62916fd87ca84c9e5ccc8bae8650119700bb0adca207e82cbf7378d5a4",
+    "arc_agi2/direct_factories/task_6ad5bdfd.py": "c5685a49f04b5453966d188669c87b4c996a515efa617beb4b774f05e5b66098",
+    "arc_agi2/colour_evidence.py": "86f181eba1ea40597313b56183819264ee31721e125c277566b7244e71b59012",
+    "common.py": "879eb61e360e4a47ee1d569408e8c66114ac068794721fe1de1b59aaa476586a"
+  },
+  "regression_tests": 406
+}

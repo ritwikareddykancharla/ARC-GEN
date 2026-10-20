@@ -54,7 +54,7 @@ def generate(width=None, height=None, brows=None, bcols=None, cdirs=None,
     cdirs = [common.randint(0, 1) for _ in range(num_boxes)]
     colors = [common.random_color(exclude=[2]) for _ in range(num_boxes)]
     flip, xpose = common.randint(0, 1), common.randint(0, 1)
-    while True:
+    for placement_attempt in range(10000):
       wides = [2 - cdir for cdir in cdirs]
       talls = [1 + cdir for cdir in cdirs]
       brows = [common.randint(1, height - tall) for tall in talls]
@@ -70,6 +70,16 @@ def generate(width=None, height=None, brows=None, bcols=None, cdirs=None,
           for dr, dc in [(-1, -1), (-1, 1), (1, -1), (1, 1)]:
             if grid[row + dr][col + dc] == grid[row][col]: good = False
       if good: break
+    else:
+      raise RuntimeError("6ad5bdfd: domino placement retries exhausted")
+    # Drop boxes nearest-to-the-wall first (as in the explicit fixtures), so
+    # the output is the physical stacking and never depends on list order.
+    # Lists are permuted jointly; the scene itself is unchanged.
+    order = sorted(range(num_boxes), key=lambda i: brows[i])
+    brows = [brows[i] for i in order]
+    bcols = [bcols[i] for i in order]
+    cdirs = [cdirs[i] for i in order]
+    colors = [colors[i] for i in order]
 
   grid, output = draw()
   if flip: grid, output = common.flip(grid), common.flip(output)

@@ -35,7 +35,7 @@ recorded. Passing finite audits does not prove unrestricted generalization.
 
 - 213 native direct-coordinate certificates admitted after fresh audits and
   supplied-fixture checks.
-- 800 admitted factories. Each passed 1,000 fresh pairs, 8,000 augmented pair
+- 801 admitted factories. Each passed 1,000 fresh pairs, 8,000 augmented pair
   checks and 16 supplied-fixture variants. Their audit records retain draft
   limitations and source/constructor hashes. These checks are finite evidence,
   not proof of correctness on every generated input.
@@ -46,7 +46,7 @@ recorded. Passing finite audits does not prove unrestricted generalization.
   counts must be computed as a union, not added.
 - Local exporter test: 18 fresh base episodes, 144 augmented PNG/program/grid
   records. It requested 20 bases and reported a two-episode shortfall.
-- The union currently admits 1019 of 1,120 families; 101 still need direct
+- The union currently admits 1020 of 1,120 families; 100 still need direct
   augmented program admission. Constructor coverage and program coverage are
   different gates.
 - Synthetic labels for `00d62c1b` now fill every enclosed background component,
@@ -694,4 +694,23 @@ accepted all 60 bases and verified 480 D4 records. All 402 tests pass. See
 `reports/episode-evidence-1019-audit.json` and the saved counterexamples.
 
 Remaining: 68 semantic/context holds, 30 execution failures and three missing
+factories. Bulk generation and model training remain unlaunched.
+
+## 1020-family checkpoint
+
+`6ad5bdfd` exposed a synthetic-label defect: hidden domino drawing order
+allowed a far piece to pass through an undrawn nearer piece, which could later
+overwrite it. The saved counterexample has identical input but two outputs,
+including one with a lost cell. Random sampling now sorts the accepted dominoes
+nearest-wall first, preserving the sampled scene and giving physical stacking.
+Explicit calls and original fixtures are unchanged. Placement retries are bounded.
+
+The direct visible-coordinate program passed 1,000 fresh pairs, 8,000 augmented
+checks and 16 fixture variants; all 1,000 inputs were unique. Three bounded
+sampler rejections were recorded rather than padded with duplicate examples.
+All 20 complete episodes passed (160 D4 records), and all 406 regression tests
+passed. See the hidden-order
+counterexample and `reports/episode-evidence-1020-audit.json`.
+
+Remaining: 68 semantic/context holds, 29 execution failures and three missing
 factories. Bulk generation and model training remain unlaunched.

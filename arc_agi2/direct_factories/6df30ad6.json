@@ -1,0 +1,24 @@
+{
+  "task_id": "6df30ad6",
+  "factory_sha256": "118c582e6edb4adbeb8e684434cd9b5f6a70aaafc6a33aa51dc1c59a28577f69",
+  "constructor_sha256": "8641ec9d81911f5fca83e1dfdd8360bd52de33e556eb4a9830bc289b5341c1f0",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 168377081589786,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 1.2106031250441447,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Host-authored direct program with constructor/source review, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "Host rewrite of the draft. Compute Chebyshev distance from each non-background, non-grey marker to all grey shape cells. Choose the minimum distance, breaking ties by the native row-major rule projected onto two visible cardinal directions specialized for the episode D4 transform. Repaint the exact grey shape cells with the chosen marker colour, erasing all marker cells. No inverse-grid transformation or colour-ID tie fallback. A separate episode gate compares 96 distance/secondary/scan hypotheses using demonstrations and query inputs only; it prevents silently teaching underdetermined tie conventions.",
+    "limitations": "Fixed constructor roles are background palette[0] and shape palette[5]; one connected grey shape and singleton markers. Random native scenes have a unique nearest marker colour; explicit scenes may contain cross-colour ties and remain supported. Context admission is relative to the documented 96-policy hypothesis class, not every possible rule. Scan orientation is compiler metadata, never student input; ambiguous cases need teaching demonstrations before export.",
+    "host_review": "Replaced incorrect majority-vote target with native Chebyshev distance and scan-order tie rule specialized into visible coordinates using two direction vectors. No inverse-grid wrappers. Native constructor and labels unchanged, including explicit cross-colour ties. Independent gate compares 3 primary distance metrics x4 secondary criteria x8 scan conventions (96 policies), fits complete demonstration outputs, and requires all surviving query colours to agree. Ties remain admitted with teaching context rather than banned. New full pair audit required because factory changed.",
+    "semantic_draft_review": "Do not apply proposed constructor restriction to invariant agreeing tie subsets, and do not use CLI majority/Euclidean/colour-ID fallbacks. Visible scan conventions are valid conjugated rules only when demos distinguish relevant outputs. Kept primary-metric alternatives as additional context check.",
+    "author": "host"
+  }
+}

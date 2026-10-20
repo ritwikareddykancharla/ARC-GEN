@@ -1231,3 +1231,38 @@ combined program/grid verification. See
 All 530 regression tests passed. Remaining: 45 semantic/context holds,
 9 execution failures and 3 missing factories. These are local audit records;
 bulk generation and model training have not launched.
+
+## 1064-family checkpoint
+
+- `6df30ad6`: replace the draft's unsupported majority-vote tie handling with
+  the constructor's actual nearest-marker rule and scan-order tie convention.
+  The emitted program computes Chebyshev distance in visible coordinates and
+  specializes two cardinal scan directions for D4; it does not wrap an inverse
+  grid transform. Native generator and original labels remain unchanged.
+- An independent episode gate compares 96 policies: three primary metrics
+  (Chebyshev, Manhattan, squared Euclidean), four secondary criteria (none,
+  nearest-marker colour count, Manhattan, squared Euclidean), and eight spatial
+  scans. Complete demonstrations filter policies and surviving query answers
+  must agree. This finite comparison is not universal identifiability. Query
+  labels and augmentation direction metadata are not passed to the gate.
+- Keep cross-colour ties rather than applying the CLI proposal to reject
+  all explicit scenes on which invariant alternatives disagree. Tests include
+  a case where majority chooses the wrong colour, a primary-metric ambiguity,
+  recovery with new teaching demonstrations, and 40 explicit tied-marker
+  scenes checked under every D4 transform. No arbitrary colour-ID fallback.
+
+The rewritten factory passed a new 1,000-unique-pair, 8,000-augmented-check,
+16-fixture-variant execution audit. Independent complete-episode auditing
+accepted 16 of 20 native contexts and verified 128 augmented records; four
+contexts lacked sufficient teaching evidence and none had execution errors.
+
+The production-assembler stress audit used 128 native random scenes plus 128
+explicit tied-marker scenes. It completed 83/83 requested base episodes with
+68 demonstration retries and zero query-context shortfalls: 41 cross-colour
+nearest-distance ties and 42 unique-nearest-colour queries. All 664 augmented
+program/grid records verified. See
+`reports/query-preserving-assembly-1064-audit.json`.
+
+All 535 regression tests passed. Remaining: 44 semantic/context holds,
+9 execution failures and 3 missing factories. Bulk generation and training
+have not launched; these records are local validation artifacts.

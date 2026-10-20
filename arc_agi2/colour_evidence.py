@@ -63,6 +63,11 @@ def _hole_count(cells):
 
 
 def require_colour_evidence(task_id, demonstrations, queries, palette=None, d4=0):
+    if task_id == '6df30ad6':
+        from .nearest_marker_evidence import require_marker_evidence
+        require_marker_evidence(demonstrations, queries,
+                                list(range(10)) if palette is None else palette)
+        return
     if task_id == 'd8e07eb2':
         from .catalogue_line_evidence import require_catalogue_evidence
         require_catalogue_evidence(demonstrations, queries,

@@ -10,6 +10,44 @@ from .task_registry import NEW_TASK_IDS
 from .augmentation import apply_episode,settings
 
 class GeneratorTests(unittest.TestCase):
+    def test_stream_clusters_rectangular_panels_and_diagonal_contact(self):
+        stream=importlib.import_module('tasks.task_36a08778')
+        random.seed(30001)
+        p=stream.generate(width=30,height=24,sources=[(2,2),(10,2),(18,2),(27,2)],obstacle_mode='clustered')
+        self.assertEqual((len(p['input']),len(p['input'][0])),(24,30))
+        self.assertEqual(p['output'],grid(call(solver('36a08778'),p['input'])))
+        self.assertEqual([[v==2 for v in row] for row in p['input']],[[v==2 for v in row] for row in p['output']])
+        with patch.object(stream,'_random_scene',return_value=(10,10,[(4,1)],[])):
+            with self.assertRaisesRegex(RuntimeError,'two wrap events'):
+                stream.generate(width=10,height=10)
+        with self.assertRaisesRegex(ValueError,'overwrite sources'):
+            stream.generate(width=10,height=10,sources=[(4,2)],segments=[(1,3,1,6)])
+        panels=importlib.import_module('tasks.task_38007db0')
+        random.seed(30001)
+        p=panels.generate(motif_height=11,motif_width=6,rows=2,cols=3,frame=9,background=7,ink=3,odd_cols=[2,0])
+        self.assertEqual((len(p['input']),len(p['input'][0])),(29,28))
+        self.assertEqual((len(p['output']),len(p['output'][0])),(29,10))
+        self.assertEqual([row[1:-1] for row in p['output'][1:14]],[row[19:27] for row in p['input'][1:14]])
+        self.assertEqual([row[1:-1] for row in p['output'][15:28]],[row[1:9] for row in p['input'][15:28]])
+        with self.assertRaisesRegex(ValueError,'distinct'):
+            panels.generate(frame=3,ink=3)
+        diagonal=importlib.import_module('tasks.task_396d80d7')
+        pixels=[(2,2,1),(2,4,1),(4,2,1),(4,4,1),(3,3,9)]
+        p=diagonal.generate(width=7,height=7,pixels=pixels,inner_color=9)
+        self.assertEqual(p['output'][1][1],9)  # diagonal contact only
+        self.assertEqual(p['output'][1][2],7)  # orthogonal contact blocks painting
+        self.assertEqual(p['output'][3][3],9)  # original inner cell unchanged
+        with self.assertRaisesRegex(ValueError,'smallest bounding box'):
+            diagonal.generate(width=7,height=7,pixels=pixels,inner_color=1)
+        polygons=importlib.import_module('tasks.task_35ab12c3')
+        random.seed(30000)
+        p=polygons.generate(width=30,height=24,num_shapes=4,num_companions=2)
+        counts=Counter(v for row in p['input'] for v in row if v)
+        self.assertEqual(sum(n>=2 for n in counts.values()),4)
+        self.assertEqual((len(p['input']),len(p['input'][0])),(24,30))
+        with self.assertRaisesRegex(ValueError,'require explicit shapes'):
+            polygons.generate(companions=[])
+
     def test_sliding_block_geometry_and_requested_shape_sequence_sizes(self):
         block=importlib.import_module('tasks.task_332f06d7')
         with self.assertRaisesRegex(ValueError,'size >= 2'):

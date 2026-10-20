@@ -35,7 +35,7 @@ recorded. Passing finite audits does not prove unrestricted generalization.
 
 - 213 native direct-coordinate certificates admitted after fresh audits and
   supplied-fixture checks.
-- 695 admitted factories. Each passed 1,000 fresh pairs, 8,000 augmented pair
+- 698 admitted factories. Each passed 1,000 fresh pairs, 8,000 augmented pair
   checks and 16 supplied-fixture variants. Their audit records retain draft
   limitations and source/constructor hashes. These checks are finite evidence,
   not proof of correctness on every generated input.
@@ -46,7 +46,7 @@ recorded. Passing finite audits does not prove unrestricted generalization.
   counts must be computed as a union, not added.
 - Local exporter test: 18 fresh base episodes, 144 augmented PNG/program/grid
   records. It requested 20 bases and reported a two-episode shortfall.
-- The union currently admits 914 of 1,120 families; 206 still need direct
+- The union currently admits 917 of 1,120 families; 203 still need direct
   augmented program admission. Constructor coverage and program coverage are
   different gates.
 - Synthetic labels for `00d62c1b` now fill every enclosed background component,
@@ -289,3 +289,26 @@ launched. Target stays 1.12M fresh base episodes and up to 8.96M augmented rows
 before deduplication/adaptive reductions, with program and grid in each row.
 
 Final regression result for this checkpoint: **302 tests passed**.
+
+## Boundary-repair checkpoint: 917 verified program families
+
+Repaired three native constructors and admitted their direct program factories:
+
+- `39e1d7f9`: cap sampled lattice spacing so logical size eight does not expand to 31×31; all six logical sizes remain supported.
+- `538b439f`: support native width 18 with a valid central divider sampling interval.
+- `2b9ef948`: reject path writes within the source box and its margin, preventing destruction of the evidence needed to infer the translation.
+
+All original supplied fixtures are byte-for-byte unchanged. Each family passed
+1,000 fresh-pair checks, 8,000 D4 checks and 16 fixture variants. A separate
+episode check passed 60 base episodes / 480 augmented records, with no evidence
+rejections or failures (`reports/episode-evidence-917-audit.json`). These are
+validation samples, not the expanded training corpus.
+
+Production remains configured for **1,000 fresh episodes per family**, three
+demonstrations and one query each, with **program and grid in the same record**.
+The target is 1,120,000 base episodes and up to 8,960,000 spatial variants before
+symmetry deduplication. Limited valid input diversity and unsupported size strata
+produce explicit shortfalls; counts are never padded with duplicate episodes.
+Bulk generation and model training have not been launched at this checkpoint.
+
+Regression validation for the boundary-repair checkpoint: **307 tests passed**.

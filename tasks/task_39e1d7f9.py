@@ -38,6 +38,9 @@ def generate(size=None, rows=None, cols=None, colors=None, spacing=None,
       if rows[0] in [0, size - 1] or cols[0] in [0, size - 1]: continue
       if not common.overlaps(rows, cols, lengths, lengths): break
     linecolor, spacing = common.random_color(), 6 - (size - 1) // 2
+    # The expanded lattice has size * (spacing + 1) - 1 cells per side.
+    # Keep every sampled logical size, including eight, within ARC's 30 cells.
+    spacing = min(spacing, 31 // size - 1)
     num = common.randint(1, 2)  # Number of extra colors
     center = common.random_color(exclude=[linecolor])
     ext = [common.random_color(exclude=[linecolor, center]) for _ in range(num)]

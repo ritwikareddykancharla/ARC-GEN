@@ -1,0 +1,30 @@
+{
+  "task_id": "538b439f",
+  "factory_sha256": "64484cde39add48ebaf0644c26c8b8ccbb19852f91a9fff15109c7d04c111d7d",
+  "constructor_sha256": "886234348d0b31c59b03999b9668aeb4fa149d2a0387d05d6b299f3723134d66",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 93880455870129,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 7.548661667038687,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The generator already randomises transpose and horizontal flip for every pair, and it picks fresh random colours per pair. Because of that, no fixed axis or colour constant survives the D4 or palette transform, so the emitted program reads every role directly from the visible grid.\n\nHow the program works:\n- **Background:** the most common colour.\n- **Divider:** a full row or column of one non-background colour. Its index d and colour dc are taken from it, and either a row or a column divider is handled in place.\n- **Box colour:** among the other colours, it is the one whose 4-connected components are all solid rectangles at least 2x2, all strictly on one side of the divider and at least one cell away from it. If no colour or several colours qualify, the colour with the largest component wins, which is the archived solver's rule.\n- **Drawing each box** (bbox x0..x1 along the axis perpendicular to the divider):\n  - The mirror spans 2d-x1..2d-x0.\n  - The whole span between the outer edges of the box and its mirror is painted dc over the box's rows (or columns), which forms the bridge.\n  - The box and its mirror are then painted the box colour.\n  - Everything is clipped to the grid.\n\nThis matches the constructor's rect sequence: a bridge of width 2*(lcol-bcol) from bcol, then the box, then the mirrored box. Noise under the bridge or mirror is overwritten, and nothing else changes.\n\nThe d4 parameter is used only as an irrelevant row-versus-column tie-break preference, and the palette is not needed. Both fixture pairs and the test are consistent with this uniform rule.",
+    "limitations": "- **Clipping is an assumption.** The constructor's domain can place the mirror past the grid edge, for example width 24 with lcol 14 and bcol 1. The program assumes common.rect clips in that case; if common.rect does something else (such as raising an error), those scenes would simply not occur.\n- **Box-colour detection can fail in astronomically rare noise layouts.** Examples are noise of the noise colour forming only solid rectangles of at least 2x2 on one side, or a noise line spanning the full grid.\n- **Divider detection assumes exactly one full uniform non-background line**, which is what the generator produces.",
+    "host_review": "Read full constructor and factory. Divider and source rectangles are detected from visible pixels; reflection coordinates and bridge overwrite match constructor, including clipping. Repaired empty randint range for native width 18 without dropping that size. Rare ambiguous noise remains protected by per-episode exact verification.",
+    "repair_verification": {
+      "fixture_bytes_unchanged": true,
+      "fresh_pairs": 1000,
+      "augmented_pair_checks": 8000,
+      "fixture_variants": 16,
+      "regression_module": "arc_agi2.test_generator_boundaries",
+      "independent_review": "No additional CLI review claimed; constructor and factory reviewed by host."
+    }
+  }
+}

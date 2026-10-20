@@ -39,7 +39,10 @@ def generate(width=None, height=None, lcol=None, lcolor=None, bcolor=None,
 
   if width is None:
     width, height = common.randint(18, 24), common.randint(18, 24)
-    lcol = common.randint(9, width - 10)
+    # An 18-cell canvas has no column in [9, width-10]. Its left central
+    # column still leaves enough space for both the source and reflected box.
+    first_column = min(9, (width - 1) // 2)
+    lcol = common.randint(first_column, max(first_column, width - 10))
     hues = common.random_colors(4)
     lcolor = hues.pop()
     bcolor = hues.pop()

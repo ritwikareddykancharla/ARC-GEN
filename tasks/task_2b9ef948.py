@@ -47,8 +47,14 @@ def generate(width=None, height=None, color=None, brow=None, bcol=None,
       for _ in range(abs(turn) - 1):
         if r < 1 or r > height - 2 or c < 1 or c > width - 2:
           return None, None
+        # A path entirely inside the box evades the outer-ring check below.
+        # Never overwrite the box or its separating margin.
+        if abs(r - brow) <= 2 and abs(c - bcol) <= 2:
+          return None, None
         grid[r][c], r, c = 5, r + rdir, c + cdir
       if r < 1 or r > height - 2 or c < 1 or c > width - 2:
+        return None, None
+      if abs(r - brow) <= 2 and abs(c - bcol) <= 2:
         return None, None
       grid[prow][pcol], grid[r][c] = color, 4
     row, col = brow + r - prow, bcol + c - pcol

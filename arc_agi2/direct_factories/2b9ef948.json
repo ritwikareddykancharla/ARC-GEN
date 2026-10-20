@@ -1,0 +1,30 @@
+{
+  "task_id": "2b9ef948",
+  "factory_sha256": "5c5e9bf9e26ffc0dcfdbd47b5e656ac1c43bb1648916800862b74812c388c9f9",
+  "constructor_sha256": "b71f971fcf70984bf47e0b9894b9cb8ea8c6b85dc3e69e21cae7a587e2c1e1a6",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 79248751119113,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 5.9873237499268726,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "Under any D4 transform this mechanism keeps its form in visible coordinates. A translation is still a translation, a 3x3 ring is still a 3x3 ring, and the four diagonal corner rays map onto the same set of four diagonal rays. So no axis needs specializing. The only constant the factory substitutes is the box/arrow-head colour, palette[4]. The emitted program finds the box as the largest 4-connected component of palette[4] and reads the arrow colour C from the box centre. The arrow tail is the other C cell, and the arrow head is the palette[4] cell outside the box. The program shifts the box by the vector from tail to head, which is computed in visible coordinates. It fills the canvas with C, stamps the ring of palette[4] with a C centre, and casts the four diagonal rays from the corners to the grid edges, clipping at the boundaries.",
+    "limitations": "This has not been tested. It assumes C differs from the input background colour (the generator draws C from non-4/5 colours, presumably not black). It also relies on the generator's 5x5 clearance check, which keeps the arrow-head 4 from touching the box. In a degenerate case the path could end exactly on its start cell, leaving no tail cell; the program then uses zero displacement. If a path lay entirely inside the box area, the ring component would be broken; the archived solver fails in that case too. I found no contradictions between the fixtures and the uniform rule.",
+    "host_review": "Read full constructor and factory. The box centre determines output background, and visible path endpoints determine translation; ring and diagonal rays are D4-equivariant. Reject path writes inside source box or its margin: old margin-only check admitted erased centre labels. Original supplied fixtures unchanged.",
+    "repair_verification": {
+      "fixture_bytes_unchanged": true,
+      "fresh_pairs": 1000,
+      "augmented_pair_checks": 8000,
+      "fixture_variants": 16,
+      "regression_module": "arc_agi2.test_generator_boundaries",
+      "independent_review": "No additional CLI review claimed; constructor and factory reviewed by host."
+    }
+  }
+}

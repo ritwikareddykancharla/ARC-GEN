@@ -1,0 +1,30 @@
+{
+  "task_id": "39e1d7f9",
+  "factory_sha256": "9453e1f600f41e8239e299a4249f43b196936d052c20e435891aa938c5671b60",
+  "constructor_sha256": "e08b7fc1c7d7c6e0583c88014fdb8fc8ada36fffdaf0bb26eae2333f834d9efc",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 83863001176820,
+  "d4": 7,
+  "unique_base_inputs": 998,
+  "seconds": 9.08498604199849,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The emitted solve() works directly on the visible grid. Lattice lines are the full rows and columns of one colour. The two directions are reconciled to a single shared line colour. The spans between the lines become a cell grid, and the most frequent cell value counts as empty. The template is the largest 8-connected non-empty component with more than one cell. Single-cell components are the lone seeds. The template's centre is the colour that appears exactly once in the template and also appears among the singles. For each seed of the centre colour, every template cell is copied at its offset relative to the centre. A copy is written only if the target is inside the cell grid and still empty, which gives the clipping at boundaries. Each write paints the whole lattice cell at full resolution. Every step is defined by geometry and colour roles. There are no fixed axes, directions or colour values, so rotations and reflections permute offsets consistently, and palette permutations relabel the roles consistently. That is why build_program returns the same direct-coordinate mechanism for every d4 and palette, rather than a normalisation wrapper. The generator keeps the seeds' 3x3 boxes from overlapping the template's box. So seeds never 8-touch the template, and stamps never conflict.",
+    "limitations": "This assumes the generator's domain. The line colour differs from the background and from all content colours, and there are no lattice lines on the grid border. The empty cells strictly outnumber every other cell value, which always holds since at most 9 of at least 25 cells are content. If the line colour could equal the background, the lattice would be undetectable and the grid is returned unchanged. The same happens if no template or no centre can be identified. The demonstrations are not used, because the rule is fully determined by the query input. The fixtures are consistent with the uniform rule, and no contradictions were found. No tests have been run.",
+    "host_review": "Read full constructor and factory. Lattice compression, unique centre colour and stamping offsets are geometrically equivariant. Non-overlapping 3x3 footprints preserve marker separation. Capped RANDOM spacing only to keep logical size 8 within 30x30; explicit fixtures unchanged.",
+    "repair_verification": {
+      "fixture_bytes_unchanged": true,
+      "fresh_pairs": 1000,
+      "augmented_pair_checks": 8000,
+      "fixture_variants": 16,
+      "regression_module": "arc_agi2.test_generator_boundaries",
+      "independent_review": "No additional CLI review claimed; constructor and factory reviewed by host."
+    }
+  }
+}

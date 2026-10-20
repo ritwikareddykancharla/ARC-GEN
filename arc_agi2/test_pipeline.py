@@ -2018,4 +2018,28 @@ class GeneratorTests(unittest.TestCase):
             self.assertEqual((len(pair['input']),len(pair['input'][0])),(h,w))
             self.assertEqual(pair['output'],grid(call(solver('984d8a3e'),pair['input'])))
 
+    def test_marked_stacks_partial_width_and_offset(self):
+        m=importlib.import_module('tasks.task_9aaea919')
+        for seed in range(20):
+            random.seed(seed)
+            for kw in ({'width':11,'height':30},{'width':30,'left':19,'height':30}):
+                p=m.generate(**kw)
+                self.assertEqual(len(p['input'][0]),kw['width'])
+                self.assertEqual(p['output'],grid(call(solver('9aaea919'),p['input'])))
+        for kw in ({'colors':5},{'heights':5},{'markers':5},{'colors':[None,1]},
+                   {'heights':[1,None]},{'width':10},{'width':30,'left':20}):
+            with self.assertRaises(ValueError):m.generate(**kw)
+
+    def test_marked_stacks_total_applies_to_each_target(self):
+        m=importlib.import_module('tasks.task_9aaea919')
+        p=m.generate(width=30,height=30,bg=4,colors=[2,3,6,8],
+                     heights=[2,2,1,2],markers=[2,2,3,3])
+        self.assertEqual(sum(row.count(5) for row in p['output']),44)
+        self.assertEqual(sum(row.count(6) for row in p['output']),55)
+        self.assertEqual(sum(row.count(8) for row in p['output']),66)
+        self.assertEqual(p['output'][-1],[4]*30)
+        self.assertEqual(p['output'],grid(call(solver('9aaea919'),p['input'])))
+        p=m.generate(height=30,heights=[6,1,7],markers=[2,3,None])
+        self.assertEqual(p['output'],grid(call(solver('9aaea919'),p['input'])))
+
 if __name__=='__main__':unittest.main()

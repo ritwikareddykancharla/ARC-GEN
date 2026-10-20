@@ -116,6 +116,11 @@ def native_program(task_id):
         source = ast.unparse(tree).replace('grid(', '_check_grid(')
         source += '\ndef _native_solve(demonstrations, query):\n    return solve_demonstrated_motifs(demonstrations, query)\n'
         basis = 'demonstration_conditioned_motifs'
+    elif task_id == 'd6542281':
+        from . import joint_fragments
+        source = inspect.getsource(joint_fragments)
+        source += '\ndef _native_solve(demonstrations, query):\n    return transform(query)\n'
+        basis = 'reviewed_joint_fragment_exact_cover'
     elif task_id in VERIFIERS:
         f = VERIFIERS[task_id]
         source = inspect.getsource(f)

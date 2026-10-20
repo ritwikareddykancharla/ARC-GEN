@@ -1,0 +1,87 @@
+{
+  "task_id": "fea12743",
+  "ready": true,
+  "samples_requested": 1000,
+  "samples_attempted": 1000,
+  "samples_passed": 1000,
+  "unique_inputs": 1000,
+  "seed_start": 30000,
+  "seed_end_exclusive": 31000,
+  "sha256": "1b025d3b33de799da6c39d752e68d6b68666579d15eb0a73f6ad425f87366485",
+  "fixture_basis": {
+    "fixture": "canonical",
+    "corrected": false
+  },
+  "fixture_matches": {
+    "canonical": true,
+    "teaching_fixture": true
+  },
+  "shapes": {
+    "input:16x11": 608,
+    "output:16x11": 608,
+    "input:26x26": 22,
+    "output:26x26": 22,
+    "input:21x21": 19,
+    "output:21x21": 19,
+    "input:26x21": 32,
+    "output:26x21": 32,
+    "input:16x16": 16,
+    "output:16x16": 16,
+    "input:26x16": 16,
+    "output:26x16": 16,
+    "input:21x11": 33,
+    "output:21x11": 33,
+    "input:6x26": 22,
+    "output:6x26": 22,
+    "input:11x21": 22,
+    "output:11x21": 22,
+    "input:26x6": 24,
+    "output:26x6": 24,
+    "input:26x11": 15,
+    "output:26x11": 15,
+    "input:16x21": 22,
+    "output:16x21": 22,
+    "input:21x16": 25,
+    "output:21x16": 25,
+    "input:21x26": 23,
+    "output:21x26": 23,
+    "input:11x16": 16,
+    "output:11x16": 16,
+    "input:6x21": 17,
+    "output:6x21": 17,
+    "input:16x26": 14,
+    "output:16x26": 14,
+    "input:11x26": 29,
+    "output:11x26": 29,
+    "input:21x6": 15,
+    "output:21x6": 15,
+    "input:11x11": 10,
+    "output:11x11": 10
+  },
+  "verifier_mode": "independent_visible_rule_implementation_and_archived_solver",
+  "status": "reviewed_bounded_validation_passed",
+  "scope": "Generator for ARC task fea12743.\n\nRule\n----\nOne-cell background-0 gutters cut the grid into a lattice of 4x4 tiles. Tile\norigins are at row/column 1 + 5k. Each tile holds a pattern of colour-2\ncells. The tile with the unique largest number of filled cells is recoloured\n3. The other tiles whose cells all lie inside the max tile are candidates.\nThe first candidate pair, in reading-order combinations, whose union rebuilds\nthe max tile exactly is recoloured 8. Every other tile keeps colour 2.\n\nScope\n-----\n* Tile size 4 and gutter width 1 are fixed. The canonical lattice is 3x2\n  tiles (a 16x11 grid). When no layout is requested it is used 60% of the\n  time. Other lattices with at least four tiles, up to 5x5 tiles (26x26),\n  are synthetic extensions. The rule is defined for any such lattice.\n* Background 0 stays the strict majority colour, as in every canonical\n  scene. This is enforced with an ink budget: 2 * total ink < grid area.\n* The max tile has 6..15 cells. It is a 4-connected blob, an unconstrained\n  scatter, or a perturbed frame/ring template under a random square\n  symmetry. The templates include the diagonally joined ring of the test.\n* The max tile is split into two strictly smaller parts, which may overlap.\n  In equal-size scenes the parts and every distractor share one cell count,\n  so cell count cannot identify the 8-tiles.\n* Family scenes imitate canonical train 1 and the test. Sizes are equal, and\n  the parts are within 1-2 cells of the max. Every distractor is a perturbed\n  copy of the max tile: a near-complete subset, or a copy with 1-2 cells\n  moved outside the max.\n* Other distractor kinds:\n  - competing subsets of the max tile;\n  - forced near-miss subsets;\n  - near-miss copies that have outside cells;\n  - random blobs or scatters with an outside cell;\n  - duplicated distractors (a synthetic extension).\n* Rejection rules:\n  - A candidate that would complete a new qualifying pair is rejected.\n  - A random scene is rejected if a non-max tile equals the union of two of\n    its strict sub-tiles. Such a scene would allow a competing 'union' reading.\n* Tie scenes need at least five tiles. One part is duplicated, as in\n  canonical pair 2. Exactly two pairs then qualify, and the earlier copy in\n  reading order becomes 8. Ties between disjoint pairs are not generated.\n* Colours 0 / 2 / 3 / 8 are intrinsic and never changed.\n\nCopyright 2026 Ritwika Kancharla\nLicensed under the Apache License, Version 2.0.",
+  "known_limitations": [
+    "Synthetic scope and fixture-supported cases are separated in the generator module docstring.",
+    "Independent host verification covers 1000 fresh unique pairs and every canonical fixture, not every possible parameter combination."
+  ],
+  "semantic_review": {
+    "status": "reviewed",
+    "checks": [
+      "Host independently implemented the pixel rule without constructor latents or reference output lookup.",
+      "Both the independent implementation and archived solver match all 1000 fresh scenes.",
+      "Canonical validate() reproduces all supplied pairs unchanged."
+    ],
+    "limitations": [
+      "Synthetic scope and fixture-supported cases are separated in the generator module docstring.",
+      "Independent host verification covers 1000 fresh unique pairs and every canonical fixture, not every possible parameter combination."
+    ]
+  },
+  "stress_test": {
+    "ready": true,
+    "samples_requested": 1000,
+    "samples_passed": 1000,
+    "unique_inputs": 1000,
+    "sha256": "1b025d3b33de799da6c39d752e68d6b68666579d15eb0a73f6ad425f87366485"
+  }
+}

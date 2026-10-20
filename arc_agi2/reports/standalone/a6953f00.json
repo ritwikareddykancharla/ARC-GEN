@@ -1,0 +1,76 @@
+{
+  "task_id": "a6953f00",
+  "ready": true,
+  "samples_requested": 1000,
+  "samples_attempted": 1000,
+  "samples_passed": 1000,
+  "unique_inputs": 1000,
+  "seed_start": 30000,
+  "seed_end_exclusive": 31000,
+  "sha256": "b5a5971614898882f01924c0eb667b20f424990b645bef220abb811663663d8f",
+  "fixture_basis": {
+    "fixture": "canonical",
+    "corrected": false
+  },
+  "fixture_matches": {
+    "canonical": true,
+    "teaching_fixture": true
+  },
+  "shapes": {
+    "input:3x3": 81,
+    "output:2x2": 1000,
+    "input:7x7": 92,
+    "input:22x22": 19,
+    "input:10x10": 91,
+    "input:18x18": 18,
+    "input:25x25": 19,
+    "input:21x21": 24,
+    "input:24x24": 18,
+    "input:9x9": 80,
+    "input:6x6": 87,
+    "input:17x17": 18,
+    "input:8x8": 76,
+    "input:5x5": 69,
+    "input:4x4": 74,
+    "input:14x14": 20,
+    "input:12x12": 18,
+    "input:20x20": 20,
+    "input:26x26": 15,
+    "input:16x16": 27,
+    "input:29x29": 19,
+    "input:15x15": 17,
+    "input:11x11": 16,
+    "input:23x23": 12,
+    "input:28x28": 14,
+    "input:27x27": 17,
+    "input:13x13": 13,
+    "input:30x30": 13,
+    "input:19x19": 13
+  },
+  "verifier_mode": "independent_visible_rule_implementation_and_archived_solver",
+  "status": "reviewed_bounded_validation_passed",
+  "scope": "Generator for ARC-AGI task a6953f00.\n\nRule: the input is a square mosaic of colours with side n. The output is the\n2x2 block from the top two rows. If n is even, the block comes from the\ntop-right corner (columns n-2..n-1). If n is odd, it comes from the top-left\ncorner (columns 0..1).\n\nScope: square grids with side 3..30, filled from a sampled palette of 2..10\ndistinct colours in 0..9. The fixtures have sides 3, 4, 5 and 8. Larger sides\nare synthetic extensions of the same parity rule. The four 2x2 corner windows\nare pairwise different, so the wrong corner always gives a different answer.\nAll four windows contain at least two colours, so flatness gives no hint\nabout which corner is chosen. For n=3 the windows overlap, and distinctness\nis enforced by bounded rejection sampling. Non-square grids are not\ngenerated. Every original is square, and the rule is only defined by a single\nside length.",
+  "known_limitations": [
+    "Synthetic scope and fixture-supported cases are separated in the generator module docstring.",
+    "Independent host verification covers 1000 fresh unique pairs and every canonical fixture, not every possible parameter combination."
+  ],
+  "semantic_review": {
+    "status": "reviewed",
+    "checks": [
+      "Host independently implemented the pixel rule without constructor latents or reference output lookup.",
+      "Both the independent implementation and archived solver match all 1000 fresh scenes.",
+      "Canonical validate() reproduces all supplied pairs unchanged."
+    ],
+    "limitations": [
+      "Synthetic scope and fixture-supported cases are separated in the generator module docstring.",
+      "Independent host verification covers 1000 fresh unique pairs and every canonical fixture, not every possible parameter combination."
+    ]
+  },
+  "stress_test": {
+    "ready": true,
+    "samples_requested": 1000,
+    "samples_passed": 1000,
+    "unique_inputs": 1000,
+    "sha256": "b5a5971614898882f01924c0eb667b20f424990b645bef220abb811663663d8f"
+  }
+}

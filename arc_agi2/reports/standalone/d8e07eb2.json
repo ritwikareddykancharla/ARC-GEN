@@ -1,0 +1,80 @@
+{
+  "task_id": "d8e07eb2",
+  "samples_requested": 1000,
+  "samples_attempted": 1000,
+  "samples_passed": 1000,
+  "unique_inputs": 1000,
+  "seed_start": 30000,
+  "seed_end_exclusive": 31000,
+  "sha256": "97c225c6489528d80ef5a79a0afdf52673f32b6531e35ef5c0272e60f2651eda",
+  "independent_solver_sha256": "5aab981dd809e192024e9850eb11a97a2a1fb9b478967ea83b52a37ebfcfddc2",
+  "original_pairs": 7,
+  "original_oracle_exact": 7,
+  "fixture_matches": {
+    "canonical": true,
+    "teaching_fixture": true
+  },
+  "native_solver_failures": [],
+  "shapes": {
+    "input:30x12": 50,
+    "output:30x12": 50,
+    "input:30x27": 118,
+    "output:30x27": 118,
+    "input:30x22": 314,
+    "output:30x22": 314,
+    "input:30x17": 46,
+    "output:30x17": 46,
+    "input:25x22": 102,
+    "output:25x22": 102,
+    "input:25x27": 101,
+    "output:25x27": 101,
+    "input:25x17": 48,
+    "output:25x17": 48,
+    "input:20x17": 35,
+    "output:20x17": 35,
+    "input:25x12": 49,
+    "output:25x12": 49,
+    "input:20x27": 56,
+    "output:20x27": 56,
+    "input:20x22": 55,
+    "output:20x22": 55,
+    "input:20x12": 26,
+    "output:20x12": 26
+  },
+  "verifier_mode": "independent_visible_input_solver_plus_saved_reference_solver",
+  "ready": true,
+  "status": "reviewed_bounded_validation_passed",
+  "fixture_basis": {
+    "fixture": "canonical",
+    "corrected": false
+  },
+  "scope": "Glyph catalogue matching and collinear selection with slot-aligned framing",
+  "known_limitations": [
+    "The solver raises ValueError in three cases: (1) an ambiguous query match; (2) a catalogue glyph that cannot be snapped to a unique slot; (3) a missing slot lattice, meaning no 3-tall glyph in some slot row or no 3-wide glyph in some slot column, and gcd-based extrapolation also fails. It does not guess in these cases.",
+    "Partial-line success and missing-query handling follow the generator's documented extension and are not confirmed by the canonical fixtures.",
+    "Glyphs are assumed to be 8-connected, to fit within 3x3, and to be separated by at least one background cell. Disconnected glyphs would be split into several components and mis-matched.",
+    "Frame colour 3 and fail colour 2 are hard-coded task constants. They are not inferred from the input."
+  ],
+  "semantic_review": {
+    "status": "reviewed",
+    "findings": [
+      "Scope: only the d8e07eb2 generator and fixtures were supplied. The cbebaa4b connector-assembly and faa9f03d five-path/ray generators were not provided, so they cannot be reviewed here and no claims are made about them.",
+      "Layout parsing: the background is taken as the most frequent colour. Divider rows are uniform non-background rows; the first and last of these bound the top band and the bottom band. Glyphs never span a full row because the outer columns are always background, so a colour-6 glyph cannot be mistaken for a divider.",
+      "Glyph extraction: glyphs are 8-connected components of non-background cells inside each band. They are compared by a tight-crop key that includes colour, so the in-slot offset is ignored and colour matters. In fixture 3 this distinguishes the 2-coloured X glyph from the recoloured shapes that would otherwise match.",
+      "Slot snapping, the key fix from the reference explanation: the column starts are read from glyphs that are exactly 3 wide, and the row starts from glyphs that are exactly 3 tall. A narrow or short glyph snaps to the unique start s with s <= lo and hi <= s+2. Frames are the background cells of the 5x5 box around the snapped slot. This reproduces the x=11 column of the frame around the narrow colour-6 glyph in fixtures 1 and 4.",
+      "Success test: there must be at least 2 queries, all matched, and all matched slots must share one snapped row start or one snapped column start. On success, the background of the top band and the bottom band becomes 3. Otherwise only the background of the bottom band becomes 2. Frames are drawn in both cases.",
+      "Generator simplification 1: every fixture success fills an entire catalogue line, with 4 of 4 queries. The generator also emits partial collinear successes, for example 2 queries in a row of 5. That is an extrapolation the fixtures do not confirm. The canonical labels never distinguish 'all queries collinear' from 'all queries fill a whole line'. The solver follows the generator's collinear-subset reading, and this is a real semantic ambiguity for fresh scenes.",
+      "Generator simplification 2: every query is guaranteed to be present in the catalogue. The reference's missing-query branch is out of scope, so its exact output is unverified. When a query has no match, the solver frames only the matched queries and reports failure (bottom band 2).",
+      "Generator simplification 3: background 8, divider 6, slot pitch 5, band heights and monochrome 8-connected glyphs are all fixed. Distractors are only recoloured copies. The generator never produces same-colour, same-shape duplicates (they are rejected as duplicate crop keys), and it never uses rotated or mirrored variants. Matching is therefore unique by construction. If a fresh scene has a query matching several slots, the solver raises an error rather than picking one.",
+      "Generator simplification 4: single-query scenes appear only through explicit caller input and are classified as failures. The fixtures never test this case."
+    ],
+    "execution_evidence": "1000 fresh unique inputs matched independent solver and archived solver; canonical fixture outputs unchanged."
+  },
+  "stress_test": {
+    "samples_requested": 1000,
+    "samples_passed": 1000,
+    "unique_inputs": 1000,
+    "sha256": "97c225c6489528d80ef5a79a0afdf52673f32b6531e35ef5c0272e60f2651eda",
+    "ready": true
+  }
+}

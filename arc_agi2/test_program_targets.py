@@ -57,7 +57,7 @@ class ProgramTargets(unittest.TestCase):
 
     def test_standalone_and_all_augmentations(self):
         for tid in ('0692e18c','00dbd492','00576224','f18ec8cc','b74ca5d1','a6f40cea',
-                    '27a28665','9110e3c5','d4469b4b','e12f9a14','f0100645'):
+                    '27a28665','9110e3c5','d4469b4b','e12f9a14','f0100645','f560132c','d6542281'):
             for d4 in range(8):
                 palette=[3,9,0,7,2,8,1,6,4,5]
                 ep=self.episode(tid,d4,palette)
@@ -162,7 +162,7 @@ class ProgramTargets(unittest.TestCase):
 
     def test_unreviewed_augmentation_cannot_fall_back_to_wrapper(self):
         with self.assertRaisesRegex(TargetError, 'rewrite required'):
-            compile_target('f560132c',1)
+            compile_target('cbebaa4b',1)
 
     def test_no_state_retained_between_pairs(self):
         ep=self.episode('0692e18c')

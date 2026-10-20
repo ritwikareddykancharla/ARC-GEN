@@ -83,7 +83,7 @@ def solve(demonstrations, grid):
         raise ValueError("Contradictory demonstrated legend")
     return [row[:] for row in matches[0]]
 '''.replace('BACKGROUND', repr(palette[0])).replace('KEY_BODY', key_body)
-    if task_id in ('a6f40cea', 'e12f9a14'):
+    if task_id in ('a6f40cea', 'e12f9a14', 'f560132c', 'd6542281'):
         # These solvers recover their colour roles and geometry from visible
         # cells. Their reviewed domains support D4/palette changes directly.
         import ast

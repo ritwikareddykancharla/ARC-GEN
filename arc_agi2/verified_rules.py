@@ -139,8 +139,20 @@ def cropped_mirror_patch(grid):
     return check_grid(output)
 
 
-VERIFIERS = {'78332cb0': panel_chain, 'de493100': cropped_mirror_patch}
+from .joint_fragments import transform as joint_fragment_completion
+
+VERIFIERS = {'78332cb0': panel_chain, 'de493100': cropped_mirror_patch,
+             'd6542281': joint_fragment_completion}
 VERIFIER_EVIDENCE = {
+    'd6542281': {
+        'mode': 'reviewed_joint_fragment_exact_cover',
+        'module': 'arc_agi2.joint_fragments.transform',
+        'reason': 'Archived greedy matcher fails on 499/1000 fresh scenes containing jointly disambiguated fragments; independent input-only exact-cover solver passes all 1000 and 8000 D4/palette variants.',
+        'counterexample': 'arc_agi2/reports/review-blockers/d6542281.json',
+        'canonical_data_changed': False,
+        'archived_reference_changed': False,
+        'synthetic_extension': 'Separated multicolour templates and monochrome fragments with globally unique non-touching stamp completions.',
+    },
     '78332cb0': {
         'mode': 'reviewed_complete_chain_verifier',
         'module': 'arc_agi2.verified_rules.panel_chain',

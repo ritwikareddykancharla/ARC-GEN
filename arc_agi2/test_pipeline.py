@@ -11,6 +11,45 @@ from .fixture_policy import fixture_basis
 from .augmentation import apply_episode,settings,exhaustive_variants
 
 class GeneratorTests(unittest.TestCase):
+    def test_frames_reject_unrecoverable_explicit_divider(self):
+        frames=importlib.import_module('tasks.task_89565ca0')
+        kw=dict(height=20,width=20,noise_color=5,
+                frames=[(1,0,0,8,8,[('v',4,0,8)])],
+                noise=[(r,4) for r in range(2,7)]+[(12,c) for c in range(0,20,2)])
+        with self.assertRaisesRegex(ValueError,'visible evidence'):
+            frames.generate(**kw)
+        # A two-cell covered run with a continuing wall is recoverable.
+        kw['noise']=[(3,4),(4,4)]+[(12,c) for c in range(0,20,2)]
+        p=frames.generate(**kw)
+        self.assertEqual(p['output'],[[1,1]])
+        self.assertEqual(p['output'],grid(call(solver('89565ca0'),p['input'])))
+
+    def test_frames_count_survives_rejected_placement(self):
+        frames=importlib.import_module('tasks.task_89565ca0')
+        original=frames._place_frames
+        for seed in range(41000,41008):
+            seen=[]
+            def reject_first(h,w,counts,tie):
+                seen.append(len(counts))
+                return None if len(seen)==1 else original(h,w,counts,tie)
+            expected=random.Random(seed).choice([3,4,5]);random.seed(seed)
+            with patch.object(frames,'_place_frames',side_effect=reject_first):
+                p=frames.generate()
+            self.assertGreaterEqual(len(seen),2)
+            self.assertEqual(set(seen),{expected})
+            self.assertEqual(len(p['output']),expected)
+
+    def test_frames_asymmetric_small_five_frame_controls(self):
+        frames=importlib.import_module('tasks.task_89565ca0')
+        for h,w in [(14,22),(22,14),(18,18)]:
+            random.seed(41000)
+            p=frames.generate(height=h,width=w,num_frames=5)
+            self.assertEqual((len(p['input']),len(p['input'][0])),(h,w))
+            self.assertEqual(len(p['output']),5)
+            self.assertEqual(p['output'],grid(call(solver('89565ca0'),p['input'])))
+        with self.assertRaises(ValueError):
+            frames.generate(height=14,width=21,num_frames=5)
+
     def test_snake_target_rejects_metric_dependent_distractor(self):
         snake=importlib.import_module('tasks.task_88bcf3b4')
         scene=dict(line_colour=1,end=(10,10),direction=(1,0),length=5,

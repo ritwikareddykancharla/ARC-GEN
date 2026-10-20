@@ -1609,3 +1609,8 @@ Eight families added: 22425bda, 337b420f, 4290ef0e, 447fd412, 6e4f6532, 782b5218
 The 80214e03 synthetic domain now explicitly requires every latent mosaic row/column band to remain partly visible, eliminating completely hidden bands. Individual erased blocks remain possible, with ambiguous inputs rejected by an independent gate. This is a documented generator validity change, not proof that the original unconstrained family was identifiable. A 10,000-draw probe observed no whole-band resampling and 97 other ambiguous reconstructions; all original fixtures remain unchanged.
 
 All 703 regression tests pass. 27 program families remain. This is verification coverage, not a claim that the requested 1,000-episode-per-family expanded corpus is already generated or published. Production generation and SFT have not launched.
+
+
+### Verified program coverage: 1,094 / 1,120
+
+de809cff now partitions solid-core fragments into rectangle hypotheses, checks the single/domino-hole grammar, and requires agreement across every surviving complete reconstruction. It preserves the original fragmented-core query and correctly handles a native-valid foreign-pixel bridge that defeated the old run-merging heuristic. Native constructor unchanged. Audit: 1,000 unique native pairs, 8,000 augmentation checks, 16 fixture variants; five focused tests pass in addition to the preceding 703-test suite. 26 families remain; expanded dataset and SFT still await coverage.

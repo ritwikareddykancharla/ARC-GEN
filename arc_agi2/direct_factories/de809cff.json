@@ -1,0 +1,23 @@
+{
+  "task_id": "de809cff",
+  "factory_sha256": "077f2313c9c271ac553c92bfeec8465773a83dbd2bbfbd91bad1a77d9a1da5e0",
+  "constructor_sha256": "da8303ac2f18b46edfe603058a59c6084aa3d40d25654a3a53c6888918bb21fa",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 237996350054977,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 28.56691170798149,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Host-authored direct program with constructor/source review, source restrictions and execution verification.",
+  "draft_notes": {
+    "author": "host",
+    "explanation": "Recover 2x2 solid-core components, enumerate their partitions into same-colour non-touching rectangle candidates, require each rectangle to contain at least nine core cells and only single/domino connected background-hole groups. The canonical query has an eight-cell core fragment split by a hole/foreign pixel; it must attach to the neighbouring large core. False mergers across a true background gap are rejected by the hole grammar. Enumerate all valid partitions and require full output agreement. Paint overlap by strict visible own-colour share, and mark holes. All original fixtures unchanged.",
+    "limitations": "Restricted to the documented two-colour noisy-rectangle family; at most10corecomponents/colour and512combined readings, otherwise rejects. Native unchanged. No hidden drawing-order, source-label, D4 or palette-number tie-break. Pure per-input mechanism does not need demonstrations.",
+    "evidence": "1000 unique native pairs/8000D4/palette checks/16fixturevariants. Regression includes native-valid foreign-pixel bridge adversary and canonical fragmented core. The native recognisability check requires connected cores, while explicit canonical query does not; the partition grammar handles both uniformly."
+  }
+}

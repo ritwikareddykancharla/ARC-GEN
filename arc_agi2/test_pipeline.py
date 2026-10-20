@@ -292,6 +292,48 @@ class GeneratorTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError,'do not fit'):
             lanes.generate(lanes=[[lanes._solid(3,8),lanes._solid(4,8)]]*2,width=11)
 
+    def test_water_conservation_and_jigsaw_translation(self):
+        water=importlib.import_module('tasks.task_28a6681f')
+        jigsaw=importlib.import_module('tasks.task_16b78196')
+        # Both nearest drops are one cell away: local tie-break must go left.
+        terrain=[[0]*5 for _ in range(4)];terrain[2][2]=5
+        p=water.generate(terrain=terrain,water=[(1,2)])
+        self.assertEqual(p['output'][3][1],1)
+        self.assertEqual(sum(v==1 for row in p['output'] for v in row),1)
+        for ramp in (False,True):
+            for style in ('blob','columns'):
+                random.seed(30000+int(ramp))
+                p=call(lambda:water.generate(width=30,height=24,ramp=ramp,water_style=style,water_count=40),seconds=3)
+                self.assertEqual((len(p['input']),len(p['input'][0])),(24,30))
+                for field in ('input','output'):
+                    self.assertEqual(sum(v==1 for row in p[field] for v in row),40)
+                erase=lambda g:[[0 if v==1 else v for v in row] for row in g]
+                self.assertEqual(erase(p['input']),erase(p['output']))
+                self.assertEqual(p['output'],grid(call(solver('28a6681f'),p['input'])))
+        for vertical in (False,True):
+            random.seed(30001)
+            p=call(lambda:jigsaw.generate(width=24,height=30,wall_color=8,vertical=vertical),seconds=3)
+            self.assertEqual((len(p['input']),len(p['input'][0])),(24,30) if vertical else (30,24))
+            counts=lambda g:Counter(v for row in g for v in row)
+            self.assertEqual(counts(p['input']),counts(p['output']))
+            self.assertEqual([[v==8 for v in row] for row in p['input']],[[v==8 for v in row] for row in p['output']])
+            self.assertEqual(p['output'],grid(call(solver('16b78196'),p['input'])))
+            if not vertical:native=p
+            else:
+                for field in ('input','output'):
+                    self.assertEqual(p[field],[list(row) for row in zip(*native[field])])
+        with self.assertRaisesRegex(ValueError,'explicit terrain'):
+            water.generate(water=[(0,0)])
+        with self.assertRaisesRegex(ValueError,'Duplicate water'):
+            water.generate(terrain=terrain,water=[(0,0),(0,0)])
+        with self.assertRaisesRegex(ValueError,'empty cells'):
+            water.generate(terrain=terrain,water=[(2,2)])
+        with self.assertRaisesRegex(ValueError,'explicit chains'):
+            jigsaw.generate(wall_top=10)
+        with self.assertRaisesRegex(ValueError,'position required'):
+            jigsaw.generate(width=30,height=30,wall_color=8,wall_top=14,wall_thickness=5,
+                            top_notches={5:1},chains=[('top',4,[[2,2,2]],[2])],positions=[])
+
     def test_colour_cycles_are_simultaneous_and_episode_wide(self):
         palette=[1,2,0,3,4,5,6,7,8,9]
         self.assertEqual(b.transformed([[0,1,2]],0,palette),[[1,2,0]])

@@ -2606,4 +2606,30 @@ class GeneratorTests(unittest.TestCase):
         self.assertEqual(p['output'][5][5],2)
         self.assertEqual(p['output'],grid(call(solver('b99e7126'),p['input'])))
 
+    def test_lattice_compression_rejects_fixed_bad_paths_before_render(self):
+        m=importlib.import_module('tasks.task_b71a7747')
+        with patch.object(m,'_render',side_effect=AssertionError('must fail before rendering')):
+            for kw in (
+                dict(block_size=3,gap=1,rows=3,cols=3,strokes=[
+                    [(0,0),(0,2)],[(1,0),(1,2)],[(2,0),(2,8)]]),
+                dict(block_size=3,gap=1,rows=2,cols=2,margins=[1,1,1,1],
+                     colors=[1,2,3,4],strokes=[[(0,0),(0,1)]],noise=[]),
+                dict(noise=[5]),dict(strokes=[5]),dict(margins=5),dict(colors=7)):
+                with self.assertRaises(ValueError):m.generate(**kw)
+
+    def test_lattice_compression_thin_large_and_zero_margin_layouts(self):
+        m=importlib.import_module('tasks.task_b71a7747')
+        for kw,shape in (
+            (dict(block_size=3,rows=1,cols=4),(3,12)),
+            (dict(block_size=13,gap=2),(26,26)),
+            (dict(block_size=9,gap=1,rows=3,cols=3,margins=[0,0,0,0]),(27,27)),
+            (dict(block_size=11,gap=1,rows=2,cols=2,margins=[5,1,1,1],
+                  distractor='rect',noise_color=9),(22,22))):
+            random.seed(97000)
+            p=m.generate(**kw)
+            self.assertEqual((len(p['output']),len(p['output'][0])),shape)
+            self.assertEqual(p['output'],grid(call(solver('b71a7747'),p['input'])))
+            if kw.get('distractor')=='rect':
+                self.assertGreater(sum(row.count(9) for row in p['input']),121)
+
 if __name__=='__main__':unittest.main()

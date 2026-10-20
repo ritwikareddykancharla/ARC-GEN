@@ -1,0 +1,28 @@
+{
+  "task_id": "afe3afe9",
+  "factory_sha256": "1dfc6b35c7cfa3c92c1f910bdf876984acd5d2e745be991460c10fc39cd6fd65",
+  "constructor_sha256": "47dab0604f93a2c09de709ffa014a2cbe1c0f4ba5ae122d4d911f525522fd569",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "context_retries": 39,
+  "sampler_rejections": [],
+  "audit_scope": "250 fresh queries held fixed while resampling3demo context using visible lattice packing evidence only; no query labels in admission; all four pairs executed under8D4per acceptedepisode.",
+  "unique_base_inputs": 1000,
+  "seconds": 11.992284082924016,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "author": "cli_with_host_repairs",
+    "explanation": "Based on reviewed CLI draft; detect hollow squares on the visible seven-by-seven lattice, remove its central separator, then compare packing toward the distinguished colour side against clockwise/counterclockwise packing relative to the marked edge. All demonstrations must fit; surviving query predictions must agree. No preferred mode or malformed-input fallback.",
+    "limitations": "Fixed native30x30/lattice7x7 geometry; three explicit mechanism hypotheses, not universal ARC rule identification. Palette identifies distinguished roles. Native independent reflections/transposes retained.",
+    "host_review": {
+      "status": "reviewed",
+      "constructor_unchanged": true,
+      "reason": "Original fixtures make distinguished-side and clockwise rules agree; native odd-handed cases distinguish them. Rejecting odd-handedness would discard half the orientation domain. Use informative demonstrations instead.",
+      "audit": "1000 unique fresh pairs,8000 augmented checks,16 fixture variants;39 context retries. Six focused tests cover all8native flip/flop/transpose combinations crossed with8D4, counterfactual clockwise contexts and query-label poisoning. Full quota:1000bases/8000records,515clockwise-aligned and485counterclockwise-aligned queries,134demo retries,zero shortfalls. All596regression tests passed."
+    }
+  }
+}

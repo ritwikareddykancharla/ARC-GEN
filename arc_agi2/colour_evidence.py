@@ -63,6 +63,11 @@ def _hole_count(cells):
 
 
 def require_colour_evidence(task_id, demonstrations, queries, palette=None, d4=0):
+    if task_id == 'afe3afe9':
+        from .lattice_pack_evidence import require_pack_evidence
+        require_pack_evidence(demonstrations, queries,
+                              list(range(10)) if palette is None else palette)
+        return
     if task_id == '5168d44c':
         from .frame_motion_evidence import require_frame_motion_evidence
         require_frame_motion_evidence(demonstrations, queries,

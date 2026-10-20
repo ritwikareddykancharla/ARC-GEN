@@ -1585,3 +1585,8 @@ aa300dc3 now learns full-diagonal versus contiguous-run interpretation and visib
 ### Verified program coverage: 1,074 / 1,120
 
 5168d44c learns signed frame motion from demonstrations and compares it against the dot-majority heuristic. No default direction from augmentation metadata. Native contrary-majority cases are retained. Audit: 1,000 fresh pairs (895 distinct inputs), 8,000 augmented checks, 16 fixture variants. Full quota: 1,000 bases, 8,000 verified program/grid records, 272 minority-directed queries, 319 context retries, no shortfalls. Six focused tests and all 590 regression tests passed. 46 program families remain. Local audit only; expanded dataset and training have not launched.
+
+
+### Verified program coverage: 1,075 / 1,120
+
+afe3afe9 uses demos to distinguish packing toward the marked colour from clockwise/counterclockwise packing relative to the border. Both native handednesses remain. Independent component decoder checks the vectorized target. Audit: 1,000 unique fresh pairs, 8,000 augmented checks, 16 fixture variants. Full quota: 1,000 bases, 8,000 verified combined records, 515 clockwise-aligned and 485 counterclockwise-aligned queries, 134 context retries, zero shortfalls. Six focused tests and all 596 regression tests passed. 45 program families remain. Expanded bulk generation and training have not launched.

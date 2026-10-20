@@ -1,0 +1,89 @@
+{
+  "task_id": "afe3afe9",
+  "constructor_unchanged": true,
+  "rule_class": "Based on reviewed CLI draft; detect hollow squares on the visible seven-by-seven lattice, remove its central separator, then compare packing toward the distinguished colour side against clockwise/counterclockwise packing relative to the marked edge. All demonstrations must fit; surviving query predictions must agree. No preferred mode or malformed-input fallback.",
+  "limitations": "Fixed native30x30/lattice7x7 geometry; three explicit mechanism hypotheses, not universal ARC rule identification. Palette identifies distinguished roles. Native independent reflections/transposes retained.",
+  "evidence_decoder": "Independent colour-component bounding boxes; target uses vectorized hollow-square stencil. Both compare complete packed output grids.",
+  "audit": {
+    "task_id": "afe3afe9",
+    "factory_sha256": "1dfc6b35c7cfa3c92c1f910bdf876984acd5d2e745be991460c10fc39cd6fd65",
+    "constructor_sha256": "47dab0604f93a2c09de709ffa014a2cbe1c0f4ba5ae122d4d911f525522fd569",
+    "passed": true,
+    "fresh_pairs_checked": 1000,
+    "augmented_pair_checks": 8000,
+    "fixture_variants_checked": 16,
+    "context_retries": 39,
+    "sampler_rejections": [],
+    "audit_scope": "250 fresh queries held fixed while resampling3demo context using visible lattice packing evidence only; no query labels in admission; all four pairs executed under8D4per acceptedepisode.",
+    "unique_base_inputs": 1000,
+    "seconds": 11.992284082924016
+  },
+  "assembly": {
+    "task_id": "afe3afe9",
+    "scope": "Local full-quota production-assembler audit only.1200unique native pool pairs,1000requested fresh bases. Grid pool then combined program/grid make_record on every augmented row; temporary audit rows removed,no public dataset or training launched.",
+    "pool_pairs": 1200,
+    "pool_draws": 1200,
+    "constructor_sha256": "47dab0604f93a2c09de709ffa014a2cbe1c0f4ba5ae122d4d911f525522fd569",
+    "metrics": {
+      "shards": [],
+      "episodes": 8000,
+      "fresh_episodes": 1000,
+      "requested_fresh_episodes": 1000,
+      "spatial_variant_upper_bound": 8000,
+      "symmetric_variants_removed": 0,
+      "variants_per_fresh_episode": {
+        "8": 1000
+      },
+      "query_histograms": {
+        "input": {
+          "height": {
+            "30": 8000
+          },
+          "width": {
+            "30": 8000
+          },
+          "longest": {
+            "30": 8000
+          },
+          "shapes": {
+            "30x30": 8000
+          }
+        },
+        "output": {
+          "height": {
+            "7": 4000,
+            "6": 4000
+          },
+          "width": {
+            "6": 4000,
+            "7": 4000
+          },
+          "longest": {
+            "7": 8000
+          },
+          "shapes": {
+            "7x6": 4000,
+            "6x7": 4000
+          }
+        }
+      },
+      "relations": {
+        "shrink": 8000
+      },
+      "failures": {
+        "missing_colour_evidence_attempts": 134
+      },
+      "query_context_shortfalls": [],
+      "max_query_reuse_in_fresh_episodes": 1,
+      "max_pair_reuse_in_fresh_episodes": 10,
+      "distinct_inputs_used": 1185
+    },
+    "base_query_types": {
+      "native_matches_clockwise": 515,
+      "native_matches_counterclockwise": 485
+    },
+    "verified_program_grid_records": 8000,
+    "seconds": 67.56137133296579
+  },
+  "tests": "Odd-handed native cases, counterfactual clockwise context, all native and external transforms, hypothesis-set D4 closure, canonical fixtures, malformed/conflicting demonstrations. Query output unavailable to evidence selector."
+}

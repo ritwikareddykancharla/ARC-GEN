@@ -34,6 +34,34 @@ class GeneratorTests(unittest.TestCase):
         frame=importlib.import_module('tasks.task_d4c90558')
         with self.assertRaisesRegex(ValueError,'minimum frame'):
             frame.generate(width=3,height=3)
+    def test_new_generators_honor_overrides_and_hole_connectivity(self):
+        figures=importlib.import_module('tasks.task_c7f57c3e')
+        bars=importlib.import_module('tasks.task_b0039139')
+        holes=importlib.import_module('tasks.task_8698868d')
+        for seed in range(10):
+            random.seed(seed)
+            pair=call(lambda:figures.generate(width=28,height=24,background=8,shape='plus'),seconds=3)
+            self.assertEqual((len(pair['input']),len(pair['input'][0])),(24,28))
+            self.assertEqual(Counter(v for row in pair['input'] for v in row).most_common(1)[0][0],8)
+            pair=call(lambda:bars.generate(color_a=7),seconds=3)
+            self.assertIn(7,{v for row in pair['output'] for v in row})
+            pair=call(lambda:bars.generate(color_b=9),seconds=3)
+            self.assertIn(9,{v for row in pair['output'] for v in row})
+        with self.assertRaisesRegex(ValueError,'complete latent'):
+            figures.generate(figures=[(1,1,1,True)])
+        with self.assertRaisesRegex(ValueError,'explicit motif'):
+            bars.generate(len2=5)
+        with self.assertRaisesRegex(ValueError,'explicit shapes'):
+            holes.generate(origin=(0,0))
+        diagonal=False
+        for seed in range(100):
+            random.seed(seed)
+            cells=holes._make_panel_holes(7,5)
+            self.assertEqual(len(cells),5)
+            self.assertTrue(all(abs(r-y)+abs(c-x)>1 for i,(r,c) in enumerate(cells) for y,x in cells[i+1:]))
+            diagonal |= any(abs(r-y)==abs(c-x)==1 for i,(r,c) in enumerate(cells) for y,x in cells[i+1:])
+        self.assertTrue(diagonal,'native examples must include diagonally touching holes')
+
     def test_registered_standalone_sources_and_fixtures(self):
         # Validate the registered files, not only the older research registry.
         for tid in NEW_TASK_IDS:

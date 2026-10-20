@@ -14,11 +14,11 @@ This fork adds a reference-guided generator workflow and an adaptive episode bui
 
 - All **1,120** canonical tasks inventoried with saved Opus/Fable explanations, `transform(grid)` programs, provenance and separately labelled teaching fixtures.
 - **891 existing upstream generators** reproduce the canonical pair sets (pair ordering can differ between releases).
-- **188 new constructive implementations** have passed bounded validation, covering counting, selection, geometry, legends, relational motion, scaling, pattern construction and repair. Standalone conversion and review are tracked separately below.
+- **189 new constructive implementations** have passed bounded validation, covering counting, selection, geometry, legends, relational motion, scaling, pattern construction and repair. Standalone conversion and review are tracked separately below.
 - **Two variable-size extensions**: `0692e18c` (inverse self-tiling) and `00576224` (three-by-three tiling with mirrored middle band).
-- All 190 constructors (188 new families plus two size extensions) passed **300 bounded randomized checks each**: 187 use the archived pair solver, `78332cb0` uses the documented complete-chain verifier, `de493100` uses the dimension-aware reflection verifier, and `269e22fb` uses a demonstration-conditioned episode verifier. Of these, 189 reproduce all original examples; `581f7754` uses the explicitly approved, hash-pinned eight-cell teaching correction. Its unchanged canonical replay is reported separately as 4/5, versus 5/5 on the teaching copy. Outputs are constructed independently from latent parameters. New pictures in `269e22fb` are compared with an independent contextual verifier; its original fixtures still match the archived fixed-picture transform.
+- All 191 constructors (189 new families plus two size extensions) passed **300 bounded randomized checks each**: 188 use the archived pair solver, `78332cb0` uses the documented complete-chain verifier, `de493100` uses the dimension-aware reflection verifier, and `269e22fb` uses a demonstration-conditioned episode verifier. Of these, 190 reproduce all original examples; `581f7754` uses the explicitly approved, hash-pinned eight-cell teaching correction. Its unchanged canonical replay is reported separately as 4/5, versus 5/5 on the teaching copy. Outputs are constructed independently from latent parameters. New pictures in `269e22fb` are compared with an independent contextual verifier; its original fixtures still match the archived fixed-picture transform.
 - **22 additional fixed-size families / 111 size-parameter configurations** passed bounded 12-seed differential tests. Every such generated pair is checked again during generation. This is agreement evidence, not proof of semantic correctness.
-- **41 tasks still need constructive generators**. A saved transform is not itself an input generator. Reference packets and `reports/generator-roadmap.csv` provide the task-by-task backlog.
+- **40 tasks still need constructive generators**. A saved transform is not itself an input generator. Reference packets and `reports/generator-roadmap.csv` provide the task-by-task backlog.
 
 ## Inspect
 
@@ -74,7 +74,7 @@ The authoring campaign uses eight concurrent Claude CLI processes under the user
 
 A zero-error differential check is a bounded agreement test. It does not prove the saved solver is universally correct or that every original mechanism variant is covered.
 
-**182 standalone modules are now reviewed and registered** (the exact list lives in `task_registry.py`). Each passed 1,000 seed checks and exact reconstruction of its approved validation fixture: canonical for 181 modules, the labelled teaching copy for `581f7754`. The first sixteen used seeds 0..999 (including their 300 author-validation seeds); the next one hundred and sixty-six used independent seeds 20,000..20,999. The regression suite also checks registered source hashes and seeds 10,000..10,019.
+**183 standalone modules are now reviewed and registered** (the exact list lives in `task_registry.py`). Each passed 1,000 seed checks and exact reconstruction of its approved validation fixture: canonical for 182 modules, the labelled teaching copy for `581f7754`. The first sixteen used seeds 0..999 (including their 300 author-validation seeds); the next one hundred and sixty-seven used independent seeds 20,000..20,999. The regression suite also checks registered source hashes and seeds 10,000..10,019.
 
 Twenty-four conversions replace earlier research constructors with the upstream task-file interface. The total is now 188 new constructive families, with 6 still awaiting standalone conversion/review. Remaining CLI drafts are authored and validated locally. Restricted shape and dimension ranges are documented per file and in `reports/standalone/`; the size-matching builder must respect those ranges.
 
@@ -574,3 +574,12 @@ Explicit paths now obey the same minimum-three-touched-block and free-block cons
 The square-selection rule uses whole connected components, not arbitrary square patches inside rectangles. Random line-centred lattices and bounded path growth remain scope restrictions. Default positive margins limit blocks of size9+ to 2x2; zero margins allow 3x3 blocks of size9 with gap1, which is explicitly tested. Coverage is **1,079/1,120**, with **41 missing**, **182 reviewed standalone additions**, and six older constructors awaiting standalone review. Bulk generation and training remain stopped pending complete coverage.
 
 All **165 regression tests** pass after this addition.
+
+
+## Scaffold deletion and rigid settling — reviewed checkpoint
+
+Registered `b6f77b65` after all seven original pairs, 1,000 independent seed checks and an independent input-derived support-graph audit of **1,951 distinct scenes** passed. The oracle separately handles floor support, contact/overlap, two-sided wedging and simultaneous falling. Both four- and eight-connected parses agree on the checked scenes.
+
+The audit includes all 484 canvas shapes from 9..30 per side, 400 forced-mode/extreme-size cases and 60 eight-colour legends. Of 1,000 defaults, 853 cause movement and 78 release a wedged foot; 54 identity cases and 93 nonmoving deletions remain intentional. Some deletions expose a hidden pole tip without moving it. Across the full audit, 191 scenes release wedged feet, the longest pole has 11 cells and the longest fall spans 20 rows. No late mode relaxation was reached. Thirteen malformed controls reject; duplicate legend colours intentionally reject despite two older critic expectations.
+
+Band-based layouts, interior columns, top-left legends and a restricted pole/bar/foot vocabulary remain documented limitations. Hidden pole-tip extension follows the archived task rule, not a general physical law. Two regression tests cover exposed extensions and lost wedge support. **167 regression tests pass. Coverage: 1,080/1,120; 40 missing; 183 reviewed standalone additions.** Six older constructors still need standalone conversion. Bulk generation and model training remain stopped pending coverage.

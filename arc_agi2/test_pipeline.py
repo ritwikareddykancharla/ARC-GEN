@@ -2632,4 +2632,27 @@ class GeneratorTests(unittest.TestCase):
             if kw.get('distractor')=='rect':
                 self.assertGreater(sum(row.count(9) for row in p['input']),121)
 
+    def test_scaffold_deleted_free_beam_reveals_pole_extension(self):
+        m=importlib.import_module('tasks.task_b6f77b65')
+        objs=[('post',1,1,5,8,None,None),('post',3,5,5,8,None,None),
+              ('bar',2,5,2,4),('post',4,3,2,4,None,None)]
+        p=m.generate(width=10,height=9,objects=objs,legend=[2],mode='reveal')
+        self.assertEqual(sum(row.count(4) for row in p['input']),3)
+        self.assertEqual(sum(row.count(4) for row in p['output']),4)
+        self.assertEqual([r for r,row in enumerate(p['output']) if row[3]==4],[5,6,7,8])
+        self.assertEqual(p['output'],grid(call(solver('b6f77b65'),p['input'])))
+        identity=m.generate(width=10,height=9,objects=objs,legend=[9],mode='identity')
+        self.assertEqual(identity['input'],identity['output'])
+
+    def test_scaffold_losing_one_wedge_support_drops_rigid_foot(self):
+        m=importlib.import_module('tasks.task_b6f77b65')
+        objs=[('post',1,1,6,9,None,None),('post',3,6,6,9,None,None),
+              ('post',4,2,3,6,None,(3,5))]
+        p=m.generate(width=12,height=10,objects=objs,legend=[1],mode='foot')
+        self.assertEqual([r for r,row in enumerate(p['output']) if row[2]==4],[6,7,8,9])
+        self.assertEqual(p['output'][9][2:6],[4,4,4,4])
+        self.assertEqual(p['output'],grid(call(solver('b6f77b65'),p['input'])))
+        with self.assertRaisesRegex(ValueError,'distinct'):
+            m.generate(legend=[7,7])
+
 if __name__=='__main__':unittest.main()

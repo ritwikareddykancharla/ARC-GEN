@@ -1,0 +1,46 @@
+{
+  "task_id": "ed98d772",
+  "factory_sha256": "78d16108971d16a830604af68af0f1d14070b607018c8d1065ae6a4c300080e9",
+  "constructor_sha256": "a8a7ddf2746a8021fb1f80e7781830b716164744d23e4a6262e6eb0706b6f116",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 166191351566543,
+  "d4": 7,
+  "unique_base_inputs": 878,
+  "seconds": 2.275140583049506,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "In the original task the output is a 2x2 block arrangement. The top-left block is the input. The top-right block is the input rotated 90 degrees counter-clockwise, the bottom-left is rotated 180 degrees, and the bottom-right is rotated 270 degrees counter-clockwise.\n\nApplying a D4 element to the whole episode does two things. It moves the blocks to new quadrant positions. It also maps each rotated copy to a rotation of the visible input: for pure rotations the turn count is kept, and for reflections the turn direction is reversed.\n\nThe factory works this out once. It takes a symbolic 3x3 grid of distinct labels, builds the canonical layout, and applies the D4 view to both the input and the output. For each visible quadrant it then finds the quarter-turn count k with rot90(visible_input, k) equal to that quadrant's block. The emitted program holds only these per-quadrant constants. It builds the doubled canvas and stamps np.rot90(g, k) into each quadrant, directly in visible coordinates. It does not undo the D4 view on the input or rotate the output back.\n\nThe palette does not matter: every cell is copied, so no colour role needs a constant. The background fill (most common colour) is always fully overwritten.",
+    "limitations": "The constructor only makes 3x3 inputs (two colours, one hue plus 0), and the emitted program assumes a square input; it handles any square size, but not non-square ones. A non-square input raises an error, because odd quarter-turns change the block shape and the 2x2 tiling is then undefined. This matches the native solver, which would also fail on non-square inputs. The demonstrations are not consulted, since the layout is fully determined by d4. No fixture contradictions or constructor defects were found: the generator's index formulas match rot90 by 0, 1, 2 and 3 for the four quadrants, and all fixtures agree with this.",
+    "independent_source_review": {
+      "verdict": "accept",
+      "mechanism": "The output is a 2x2 tiling of the 3x3 input. In canonical coordinates the quadrants hold, in order TL, TR, BL, BR: rot90(g,0), rot90(g,1) (CCW), rot90(g,2), rot90(g,3). Under a D4 view of the whole episode, each quadrant moves as a block. Its content stays a quarter-turn rotation of the visible input, with the turn direction reversed for reflections. The factory derives a 2x2 table QUAD_ROT of per-quadrant quarter-turn counts. The emitted solver stamps np.rot90(visible_g, QUAD_ROT[r][c]) into each visible quadrant.",
+      "evidence": [
+        "Constructor index formulas check out. TR: output[2-col][row+3]=g[row][col] gives B[i][j]=g[j][2-i], which equals np.rot90(g,1)[i][j]. BR: output[col+3][5-row] gives B[i][j]=g[2-j][i], which equals np.rot90(g,3). BL: output[5-row][2-col] gives B[i][j]=g[2-i][2-j], which equals rot180. These agree with the archived transform and the rule text.",
+        "Every output cell is overwritten, so the background (most-common) fill in the archived program and in the emitted solver never affects the label. The constructor's 3x3 two-colour inputs leave no tie that matters.",
+        "Factory derivation uses symbolic distinct labels np.arange(9) and no fixture data. A whole-grid D4 element maps quadrants to quadrants and applies the same D4 element inside each block. It also conjugates rot90^k to rot90^{\u00b1k}, so a unique k always exists and the 'layout derivation failed' branch is unreachable.",
+        "The emitted solver works directly in visible coordinates. It rotates the visible input locally and stamps it, using only per-quadrant constants. There is no untransform/native-solve/retransform wrapper. Rotation here is the puzzle operation itself.",
+        "There is no colour-role lookup: the palette is irrelevant because cells are copied verbatim. The task is not in the colour-evidence list, which is appropriate.",
+        "Host audit: passed on 1000 fresh pairs, 8000 augmented checks and 16 fixture variants, with no sampler rejections."
+      ],
+      "blocking_issues": [],
+      "nonblocking_limits": [
+        "The solver raises ValueError on non-square inputs. The constructor only emits 3x3 grids, so this branch is out of domain, and the native solver is equally undefined there.",
+        "Demonstrations are not consulted. The quadrant layout is a deterministic spatial constant fixed by d4, and every demonstration shows the full layout, so this is a legitimate orientation constant.",
+        "The constructor uses one hue plus 0 on 3x3 inputs only. The solver generalises to any square size, but this has not been exercised by the generator."
+      ],
+      "required_context_checks": [
+        "Confirm the host applies the D4 view to input and output jointly, i.e. the same element acts on the 6x6 output as on the 3x3 input, as assumed by _view in the factory."
+      ],
+      "task_id": "ed98d772",
+      "factory_sha256": "78d16108971d16a830604af68af0f1d14070b607018c8d1065ae6a4c300080e9",
+      "constructor_sha256": "a8a7ddf2746a8021fb1f80e7781830b716164744d23e4a6262e6eb0706b6f116"
+    },
+    "host_review": "Quarter-turn stamping is the task operation. Symbolic derivation sets visible quadrant rotations without runtime inverse-grid wrappers. JointD4 on input/output is guaranteed by apply_episode; palettes copy verbatim."
+  }
+}

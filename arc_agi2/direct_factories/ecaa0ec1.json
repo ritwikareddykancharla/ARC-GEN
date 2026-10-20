@@ -1,0 +1,48 @@
+{
+  "task_id": "ecaa0ec1",
+  "factory_sha256": "7364fbd8d3059bd0ba7a974ef21f0c253224bb1e656798f49c2e146fce0861a9",
+  "constructor_sha256": "cd2423c5f3e8664eb8e6c65a33aef8fb70b03fb0e3b8d53f7d6a12fad32cedd4",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 98481204243685,
+  "d4": 7,
+  "unique_base_inputs": 999,
+  "seconds": 6.517330375034362,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The mechanism works the same way under every D4 transform. A 3x3 block is made of palette[1] and palette[8]. There are four palette[4] marks. Three marks form an L: its corner shares a row with one mark and a column with another. The fourth mark is isolated and sits diagonally off one block corner (the source).\n\nThe answer applies the unique quarter-turn rotation of the block that carries the source corner onto the corner the L-corner points at, measured from the block centre (the target). The program then erases all marks and places one mark diagonally outside the target corner.\n\nSuppose the episode is transformed by a D4 element T. The visible rotation is then T R T^-1, which is exactly the rotation taking T(source) to T(target). A rotation of a square is fixed by where one corner goes, so the visible rule reads directly from visible pixels:\n- Corners are ordered counter-clockwise in visible coordinates (TL, BL, BR, TR).\n- k = (target - source) mod 4.\n- The block is rotated with np.rot90(block, k), which is counter-clockwise in visible coordinates.\n\nReflections are handled automatically: the mirrored corner pair yields the opposite turning direction. Colour roles are specialised constants: background is palette[0] and the marker is palette[4]. The block is the bounding box of every other non-background cell. The d4 argument needs no specialisation because the rule is already expressed in visible geometry.",
+    "limitations": "- The program assumes a permutation palette in which background, marker and the two block colours are distinct.\n- It assumes the constructor's domain: exactly one full 3x3 block and four marks, with the lone mark sharing no row or column with the L (true for all generator parameters).\n- The block is found as the bounding box of non-background, non-marker cells, so stray extra colours would break it.\n- If the output mark position would fall outside the grid, it is skipped. The generator never produces that case (brow, bcol >= 3).\n- I found no fixture contradictions and no tie-break defects in the constructor. The archived solver's rule matches the generator's CCW rotation for every angle and flip combination.",
+    "independent_source_review": {
+      "verdict": "accept",
+      "mechanism": "A 3x3 block of two colours (palette[1] and palette[8]) and four marker cells (palette[4]). Three markers form an L whose corner points at the target block corner, measured from the block centre. The fourth marker sits diagonally off the source corner. The output rotates the block by the unique quarter-turn that carries the source corner to the target corner, erases all markers, and places one marker diagonally outside the target corner. The emitted solver computes this in visible coordinates: corners ordered counter-clockwise (TL=0, BL=1, BR=2, TR=3), k=(t-s)%4, then np.rot90(block,k).",
+      "evidence": [
+        "Base frame of the constructor. L marks are at (brow-2,bcol-2), (brow-2,bcol) and (brow,bcol-2), so the L corner is up-left of the block centre (brow+1,bcol+1), which is TL (index 0). The output mark is at (brow-1,bcol-1), the TL diagonal.",
+        "The lone mark per angle: angle 1 gives (brow-1,bcol+3), TR (3), so k=1. Angle 2 gives (brow+3,bcol+3), BR (2), so k=2. Angle 3 gives (brow+3,bcol-1), BL (1), so k=3. Hence k == angle in every case.",
+        "The constructor's rotation loop is CCW: for col in 2..0, for row 0..2, append colors[3*row+col], so new row 0 is old column 2 read top to bottom. That equals np.rot90(A) with numpy's CCW convention. Applying it `angle` times equals rot90(block, angle), which matches the solver's k.",
+        "common.flip reverses rows and common.flop reverses columns. Both are applied identically to input and output, and the D4 augmentations behave the same way. The rule 'the rotation maps the visible source corner to the visible target corner' is conjugation-invariant. Under reflections the counter-clockwise corner indexing automatically yields the inverse turn, so no orientation-specific constant is needed.",
+        "Lone uniqueness: the lone mark's row and column (brow-1 or brow+3; bcol+3 or bcol-1) never equal the L rows (brow-2, brow) or L columns (bcol-2, bcol). The L corner is the only mark that shares both a row and a column with other marks. Neither marker identification step in the solver can tie.",
+        "Bounds: brow and bcol are in 3..5 and the grid size is 10..12. Every mark, the block, and the output mark are in range, and no mark lies on the block's centre row or column. The colour sampler forces 3 to 6 cells of colour 1, so all nine block cells are non-background and the bounding box is exactly the 3x3 block.",
+        "The solver uses only the palette-specialised constants BG=palette[0] and MARK=palette[4] and ignores d4. It has no untransform/native-solve/retransform wrapper. The archived program agrees: it finds the lone mark by the diagonal-distance test, and the factory uses that test only as a fallback.",
+        "Fixture spot check, test pair: the lone mark (7,3) is BL and the L corner (2,8) is TR, so k=2. The output mark at (3,7) and the 180-degree block match the fixture."
+      ],
+      "blocking_issues": [],
+      "nonblocking_limits": [
+        "The defensive early returns (no block, no marks, no L corner or lone mark, a non-square rotation shape, an out-of-bounds output mark) are never triggered by the constructor's domain.",
+        "In the constructor's native frame the L always targets TL. Diversity of target corner comes only from flip/flop and D4 augmentation. This is acceptable because the rule is expressed in visible geometry.",
+        "The solver assumes a distinct-colour permutation palette and a single full 3x3 block, as the prior limitations state."
+      ],
+      "required_context_checks": [
+        "No arbitrary colour or shape lookup is involved. The rotation is fully determined by the visible marker geometry, so no demonstration-evidence check beyond the standard D4 conflicting-answer rejection is needed. The host audit passed, with 8000 augmented checks and no sampler rejections."
+      ],
+      "task_id": "ecaa0ec1",
+      "factory_sha256": "7364fbd8d3059bd0ba7a974ef21f0c253224bb1e656798f49c2e146fce0861a9",
+      "constructor_sha256": "cd2423c5f3e8664eb8e6c65a33aef8fb70b03fb0e3b8d53f7d6a12fad32cedd4"
+    },
+    "host_review": "Unique L corner and lone marker determine the local source/target corner rotation. The rule is reflection-equivariant, copies block colours and requires no arbitrary lookup. Joint augmentation is verified by augmentation.apply_episode."
+  }
+}

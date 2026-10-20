@@ -1,0 +1,47 @@
+{
+  "task_id": "f1cefba8",
+  "factory_sha256": "2f8a1eceb3eda1e2b6f869bf7b4c782aa38e0ba747f132dc96b81e85a6343b7c",
+  "constructor_sha256": "890ea130f1e1edcf39eeaa23f3b9bc7e8c710450847dd2ecb50dbffefb76f1e0",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 32475233482278,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 8.772540208068676,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The emitted program works directly on the visible grid. The rule does not depend on orientation. A bump on a horizontal side of the inner rectangle marks a column. A bump on a vertical side marks a row. Rotating or reflecting the grid only turns rows into columns or reverses their order, and the same detection handles both. So the factory only fixes one constant: background = palette[0], because the constructor always uses 0 as background. The other two colours are read from the pixels. A is the non-background colour that touches the background (the frame). B is the enclosed colour. The program finds the bounding box of all non-background cells, which is the frame's outer edge. It then measures frame thickness as the largest offset from each box edge to the first row or column containing B. There are at most 3 bumps and 4 sides, so at least one side has no bump and gives the true thickness. Shrinking the box by that thickness gives the clean inner rectangle. Bumps are the B cells outside it. A bump above or below the inner rectangle marks its column. A bump left or right of it marks its row. On each marked line, using the input as the source, B becomes A and background becomes B, while A stays A. This matches the generator: the stripes run across the whole line, the frame is redrawn as A over them, and the inner cells on the line become A.",
+    "limitations": "Constructor and solver review notes: (1) The archived solver finds bumps as B cells with exactly one B neighbour. The generator can place two barnacles side by side, or two at the same position. Side-by-side barnacles each have two B neighbours, so the archived solver would miss them. The core-rectangle method used here avoids that. A duplicate barnacle just repeats the same line, which is harmless. (2) The archived solver takes the most common colour as background. In generator scenes where the box nearly fills the grid (e.g. a 16x16 box in a 20x20 grid), the frame or inner colour can outnumber the background, and that guess fails. This program uses palette[0] instead, since the constructor always uses 0 as background. (3) The program assumes the constructor's domain: one rectangular frame that does not touch the grid border, at most 3 bumps, and bumps that lie inside the frame ring next to the inner rectangle. Frame thickness is inferred rather than hard-coded to 2. The demonstrations are not used, because the colour roles can be read from the query itself. No fixture contradicts the uniform rule. I have not run any tests on this factory.",
+    "independent_source_review": {
+      "verdict": "accept",
+      "mechanism": "Scene: a thick frame of colour A (thickness 2) around a filled inner rectangle of colour B. There are 2\u20133 single-cell B bumps in the frame ring next to the inner rectangle. A top or bottom bump marks its column. A left or right bump marks its row. On each marked line, input B becomes A and input background becomes B. Frame cells stay A.",
+      "evidence": [
+        "Constructor: top/bottom barnacles use rows -1 or tall-4 and cols in [0, wide-5]. Left/right barnacles use cols -1 or wide-4 and rows in [0, tall-5]. Stripes are drawn only for indices in the inner ranges [brow+2, brow+tall-2) and [bcol+2, bcol+wide-2), so the -1 and tall-4/wide-4 values never create spurious stripes. The frame is then redrawn as A over the stripes, and inner cells on any marked line become A. Bump cells end up as frame A in the output. This matches the rule: bump B becomes A.",
+        "Row and column stripes intersect only inside the box, where both give A. They never meet in the background, so there is no ordering conflict.",
+        "Factory colour roles: B never touches the background. Bumps sit in frame row/col 1, so frame row/col 0 separates them from the background. The frame touches the background because brow, bcol >= 1 and there is a margin of at least 1 at the bottom and right. So touch[B]=0 < touch[A], and the A/B choice is unambiguous with exactly two non-background colours.",
+        "Thickness: the bbox of non-background cells is the frame's outer edge. Bumps can only reduce a side's offset (to 1). There are at most 3 bumps on 4 sides, so at least one side gives the true offset of 2. The max offset therefore recovers t=2 and the clean inner rectangle.",
+        "Line detection: line_rows checks B cells outside [c0,c1] within inner rows, which are the left/right bumps. line_cols checks B cells outside [r0,r1] within inner cols, which are the top/bottom bumps. Bump coordinates always fall inside the inner span, so every bump is detected on its own line. Adjacent or duplicate bumps are handled. This avoids the archived solver's one-neighbour detection, which fails for side-by-side bumps.",
+        "Recolouring always reads the input grid g. Cells where a row line and a column line meet are inner B cells and become A in both passes, so the result is consistent.",
+        "Visible-coordinate operation: the logic is symmetric under transpose and reflection. Rows and columns swap roles naturally, and there is no untransform wrapper. The only specialised constant is BG = palette[0], which is valid because the constructor always uses background 0.",
+        "Episode evidence: no arbitrary colour association is needed, since A and B are read structurally from the query. The default branch of the evidence check needs lines with exactly 2 separated non-background cells. Such lines do not occur here, because lines are either all background or cross the frame with many non-background cells. So nothing is required.",
+        "Host audit passed: 1000 fresh pairs, 8000 augmented checks, 16 fixture variants, with no sampler rejections."
+      ],
+      "blocking_issues": [],
+      "nonblocking_limits": [
+        "The solver assumes the constructor domain: exactly one frame not touching the border, thickness >= 1 with at least one bump-free side, and bumps only in the ring next to the inner rectangle. Defensive early returns are unreachable under the constructor.",
+        "The archived solver's majority-colour background and one-B-neighbour bump detection can fail on generator scenes (box nearly filling the grid, adjacent barnacles). The factory deliberately does not copy these flaws.",
+        "Demonstrations are unused. This is acceptable because all roles are inferable from the query structure."
+      ],
+      "required_context_checks": [],
+      "task_id": "f1cefba8",
+      "factory_sha256": "2f8a1eceb3eda1e2b6f869bf7b4c782aa38e0ba747f132dc96b81e85a6343b7c",
+      "constructor_sha256": "890ea130f1e1edcf39eeaa23f3b9bc7e8c710450847dd2ecb50dbffefb76f1e0"
+    },
+    "host_review": "Frame colour touches background; innercolourdoesnot. Atmost3bumpson4sidesleaveonecleanthicknessmeasurement. All roles are observable; row/column updates read originalinput and agree atcrossings. No extra association gate."
+  }
+}

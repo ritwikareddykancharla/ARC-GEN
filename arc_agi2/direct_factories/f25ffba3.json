@@ -1,0 +1,48 @@
+{
+  "task_id": "f25ffba3",
+  "factory_sha256": "675a17dd3fc3a516b7e7d3d6a7958301b835091f534f7994011d8cb3cb2e0164",
+  "constructor_sha256": "8bd24b8e3da7187b037eba1acf3f760efec1e3e6597eddc39ad6cb665d91f939",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 202461531588699,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 1.528266708017327,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The native mechanism mirrors the grid about its centre line along the long (stacking) axis. It then overlays the mirror onto the original: a mirrored non-background colour fills a cell only if that cell is background. Already-coloured cells are never overwritten.\n\nHow D4 changes the flip:\n- Mirroring rows is conjugated by the transform. Reversing each row leaves a top-to-bottom flip unchanged.\n- A 180-degree turn also leaves it unchanged.\n- A 90- or 270-degree turn changes it into a left-to-right flip.\n\nSo the emitted program reverses row order when d4%4 is even and reverses column order when d4%4 is odd. It works directly on the visible grid.\n\nBackground is the constant palette[0]. In this generator, colour 0 is always the majority colour: there are at least 22 zero cells out of 40, against at most 18 coloured cells. This matches the archived solver's most-common-colour background without having to infer it at runtime.\n\nThe overlay works at any grid size, so rectangular shapes and objects touching the border are handled. The mirror operation fixes cell correspondence exactly, so there are no tie-breaks.",
+    "limitations": "- The program assumes the background is palette[0], as in the constructor's domain. It does not re-infer the background from demonstrations.\n- Columns never cross the midline in this generator, because each stack is at most 5 cells in a half of height 5. So overlap conflicts cannot arise. If they did, the original cell would be kept, matching the archived solver.\n- The constructor's optional horizontal flip (flip_horiz) is a symmetry of the rule, not a parameter, so no special handling is needed.\n- I found no fixture contradictions or constructor defects.",
+    "independent_source_review": {
+      "verdict": "accept",
+      "mechanism": "Each input is a 10x4 grid. Coloured column stacks rest on one short edge and occupy at most half the long axis. The output adds the mirror image of the grid along the long axis, so the empty half becomes a reflected copy of the occupied half. The emitted solver mirrors the grid along the visible long axis (row reversal when d4%4 is even, column reversal when odd). It then writes mirrored non-background cells only into cells that are background (BG = palette[0]).",
+      "evidence": [
+        "Constructor: input sets grid[2*height-1-r][col] = colors[idx]. Output sets both output[r][col] and output[2*height-1-r][col] to the same colour. So output = input overlaid with its vertical flip. This matches the archived rule.",
+        "Stack heights stay below the midline. Columns 0 and 1 get length at most 5. Column 2 gets randint(1,2) plus at most one extra randint(1,2), so at most 4. Column 3 gets randint(0,2) plus at most one extra, so at most 4. common.sample([2,3], k) draws without replacement, so each extra column is added at most once. Every stack is therefore at most 5 = height, and the occupied half never crosses the midline.",
+        "Consequence: the mirrored cells landing on the occupied half come from the all-background half. The mask (g==BG)&(mirrored!=BG) therefore only fills the empty half, and no conflict or tie case is reachable.",
+        "The optional flip_horiz in the constructor reverses columns. This commutes with the row-reversal rule, so it adds variety without changing the mechanism.",
+        "Background is always colour 0 in the constructor: random_colors draws stack colours from 1..9. The palette mapping makes palette[0] the visible background. This also agrees with the archived solver's most-common-colour choice: at most 18 coloured cells against at least 22 zero cells.",
+        "D4 handling: a vertical mirror stays a vertical mirror under 180-degree rotation and under left-right reflection. It becomes a horizontal mirror under odd quarter turns and transposes. So choosing the axis by k = d4%4 parity is correct. The solver works directly on the visible grid, with no untransform/retransform wrapper.",
+        "Host audit passed: 1000 fresh pairs, 8000 augmented checks, and 16 fixture variants, with no sampler rejections.",
+        "Approved fixtures agree with the constructor's validate() parameters and with the rule. Train 1, train 2 and the test top halves are exact row reversals of the bottom halves."
+      ],
+      "blocking_issues": [],
+      "nonblocking_limits": [
+        "BG is fixed to palette[0] rather than inferred. This is valid because the constructor always uses background 0.",
+        "The mask's overwrite-protection branch is never exercised in-domain, because stacks never cross the midline. Behaviour there would match the archived solver (original kept), but the constructor gives no evidence for it.",
+        "The axis is chosen from d4 parity, not from grid shape. This is equivalent in-domain, since the long axis is always the mirror axis."
+      ],
+      "required_context_checks": [
+        "None needed for colour associations. The rule is a deterministic geometric mirror with no arbitrary colour mapping. f25ffba3 is not in the episode evidence list, and none is required. The mirror axis is fixed by the augmented orientation and is visible from the occupied half in every demonstration."
+      ],
+      "task_id": "f25ffba3",
+      "factory_sha256": "675a17dd3fc3a516b7e7d3d6a7958301b835091f534f7994011d8cb3cb2e0164",
+      "constructor_sha256": "8bd24b8e3da7187b037eba1acf3f760efec1e3e6597eddc39ad6cb665d91f939"
+    },
+    "host_review": "Stacks occupy at most half the long axis; reflected filling never overwrites an occupied input cell. Copies visible colours and needs no additional association gate."
+  }
+}

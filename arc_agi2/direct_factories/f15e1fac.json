@@ -1,0 +1,49 @@
+{
+  "task_id": "f15e1fac",
+  "factory_sha256": "6650afef5b243d200ecdfc89af6cf6354c8343e389787c88810e16fe3b03244c",
+  "constructor_sha256": "53751d45ffbecf9ad83aeefa78a0cb43277f975b511aa9aa02117f2680fa8b34",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 277930115253270,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 8.809607291943394,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "Mechanism, in visible coordinates: seed cells (colour palette[8]) all lie on one border, and marker cells (colour palette[2]) lie on a perpendicular border. Each seed grows a line straight inward, away from its own border, until it reaches the opposite border. At every step k along the way, the line is offset sideways by the number of markers whose distance from the seed border is at most k. The count is inclusive, and markers at distance 0 are excluded. The sideways shift points away from the marker border. Cells that land outside the grid are dropped. Nothing else changes.\n\nWhy the emitted program reads the grid instead of using d4: the constructor already chooses a random flip and gravity rotation for each pair. So border roles have to be found from the visible pixels of each grid. The program finds them as follows:\n- It lists every border (top, bottom, left, right) that contains all the seeds, and does the same for the markers.\n- It keeps only seed/marker border pairs that are perpendicular.\n- Among those, it prefers the pair where the cells are most spread out along the border. This settles corner seeds, which can occur when a seed column equals the last index.\n\nDirections then follow from the chosen borders:\n- Travel direction: top means +y, bottom means -y, left means +x, right means -x.\n- Shift direction: the same mapping, applied to the marker border.\n\nThe palette only sets the seed and marker colour constants. Rows of different lengths, a single marker, and clipping at the border are all handled. The program was checked by hand against all three train pairs and the test fixture, which match one uniform rule. No contradictions were found.",
+    "limitations": "Inputs outside the constructor's domain fall back to simple behaviour. If there are no seeds, or the seeds share no border, the input is returned unchanged. If the markers share no border perpendicular to the seed border, they are ignored and the lines are drawn straight. A single marker sitting in a corner, which the generator never produces because markers stay in rows 4..H-2, is resolved by a fixed preference order rather than by any visible cue. The program never overwrites marker cells, but the generator never makes a line cross a marker anyway. The d4 argument is not used: per-pair orientation already varies inside the generator, so it is inferred from the pixels. No constructor defects or fixture contradictions were found. I have not run any tests myself.",
+    "independent_source_review": {
+      "verdict": "accept",
+      "mechanism": "Seed cells (palette[8]) lie on one border and marker cells (palette[2]) lie on a perpendicular border. Each seed draws a line inward to the opposite border. At step k the line is shifted sideways, away from the marker border, by the number of markers whose distance from the seed border is in (0, k]. Cells that land off the grid are dropped. The constructor builds this in native coordinates (seeds on the top row, markers on the left column), then applies a random horizontal flip and apply_gravity. The emitted solver reads the border roles from the visible pixels of each grid.",
+      "evidence": [
+        "Constructor markers: `row += randint(4,7)` with `break` when `row+1 >= height`. So every marker row is in [4, H-2] and there is at least one marker (first row is at most 7, and H >= 10). Markers sit in column 0, so they are never on the top or bottom border and never on a corner.",
+        "Constructor seeds: `col` starts at -1 and grows by randint(2,4), so seed columns are in [1, W-1]. Since W >= 10, there are at least two distinct seed columns. In the solver, seed `xs` can never be a single value, so `_edges(seeds)` returns exactly one border. A corner seed at (0, W-1) is therefore harmless.",
+        "Constructor offset: `inc += 1 if r in rows` is counted from r=1, so the shift takes effect at the marker row itself. Solver offset: `inc = sum(0 < dd <= k)` with `dd = abs(m[a] - base)` and `base` set to the seed border index. For top seeds y=k, which gives the same inclusive count.",
+        "Shift direction: the solver uses `_DIR[e2]`, which gives left\u2192+x, right\u2192-x, top\u2192+y, bottom\u2192-y. For left markers this matches the constructor's `c + inc`. Flip and gravity are applied identically to input and output, so the mapping stays consistent under every transform.",
+        "Clipping: the constructor's `if c+inc >= width: continue` matches the solver's bounds check. Lines start at c >= 1 with inc >= 0, so they never land on the marker column. The solver's `!= MARK` guard is therefore never triggered in-domain.",
+        "All seeds share one inc per step and have distinct columns, so lines never overlap. There are no order or tie effects.",
+        "Hand check of the test fixture: seeds at x=16; markers at x=2, 6, 11 give dists 14, 10, 5. For the row-2 seed, k=0..4 gives row 2 at x=16..12. k=5..9 gives row 1 at x=11..7. k=10..13 gives row 0 at x=6..3. k=14..16 gives row -1, which is dropped. This matches the fixture output. Train pair 3 (left seeds, bottom markers at 4 and 8, shift up) also matches.",
+        "The solver works directly in visible coordinates and has no untransform wrapper. Only the role colours are taken from the palette. d4 is unused because the constructor already randomises orientation per pair, so orientation must come from the pixels.",
+        "The host audit passed: 1000 fresh pairs, 8000 augmented checks, and 16 fixture variants, with no sampler rejections."
+      ],
+      "blocking_issues": [],
+      "nonblocking_limits": [
+        "There are out-of-domain fallbacks: no seeds, no common seed border, or no perpendicular marker border. These return the input unchanged or draw straight lines. The constructor never produces such inputs.",
+        "The spread-based tie-break between candidate border pairs only matters when there is a single seed or a single corner marker. Neither is reachable from the constructor, which always makes at least two seeds and places markers in rows 4..H-2.",
+        "Which colour is the seed and which is the marker is fixed by the palette rather than inferred structurally. Demonstrations visibly show which colour grows, and the task is not in the colour-evidence list."
+      ],
+      "required_context_checks": [
+        "Confirm the host D4/palette augmentation keeps seed and marker roles consistent across the demonstrations and the query in an episode. Every demonstration shows the seed colour growing, so the role should be taught."
+      ],
+      "task_id": "f15e1fac",
+      "factory_sha256": "6650afef5b243d200ecdfc89af6cf6354c8343e389787c88810e16fe3b03244c",
+      "constructor_sha256": "53751d45ffbecf9ad83aeefa78a0cb43277f975b511aa9aa02117f2680fa8b34"
+    },
+    "host_review": "Two or more seeds and interior noncorner markers make border roles unique; inclusive marker-distance counting matches the constructor. Shared palette and D4 are applied to all demo/query pairs by apply_episode, teaching which colour grows."
+  }
+}

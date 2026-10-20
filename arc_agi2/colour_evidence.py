@@ -73,7 +73,8 @@ def require_colour_evidence(task_id, demonstrations, queries, palette=None, d4=0
                        'd631b094', 'd5d6de2d', 'd90796e8', 'd364b489',
                        'dbc1a6ce', 'dc1df850', 'dd6b8c4b', 'dce56571',
                        'e45ef808', 'e345f17b', 'e3497940',
-                       'e760a62e', 'e8593010', 'e99362f0', 'e6de6e8f',
+                       'e760a62e', 'e8593010', 'e99362f0', 'ea9794b1', 'e6de6e8f',
+                       'ed74f2f2', 'f2829549', 'ef135b50', 'f0afb749',
                        '37d3e8b2', 'ba9d41b8', 'd2abd087', 'e39e9282'):
         return
     palette = list(range(10)) if palette is None else palette
@@ -197,19 +198,62 @@ def require_colour_evidence(task_id, demonstrations, queries, palette=None, d4=0
             seen.update(ties(demo['input']))
         for query in queries:
             required.update(ties(query['input']))
-    elif task_id == 'e345f17b':
+    elif task_id == 'ed74f2f2':
+        from .augmentation import transformed
+        mask = transformed([[int(1 <= r <= 3 and 1 <= c <= 3)
+                             for c in range(9)] for r in range(5)],
+                           d4, list(range(10)))
+        positions = [(r, c) for r, row in enumerate(mask) for c, v in enumerate(row) if v]
+        def glyph(g):
+            return tuple(g[r][c] != bg for r, c in positions)
+        for demo in demonstrations:
+            if len(colours(demo['output'])) == 1:
+                seen.add(glyph(demo['input']))
+        required.update(glyph(q['input']) for q in queries)
+    elif task_id in ('e345f17b', 'f2829549'):
+        gap, mark = (0, palette[4]) if task_id == 'e345f17b' else (1, palette[3])
         def has_nor(g):
             if d4 % 2:
                 half = len(g)//2
-                return any(a == b == bg for x, y in zip(g[:half], g[half:])
+                return any(a == b == bg for x, y in zip(g[:half], g[half+gap:])
                            for a, b in zip(x, y))
             half = len(g[0])//2
-            return any(row[c] == row[c+half] == bg for row in g for c in range(half))
+            return any(row[c] == row[c+half+gap] == bg for row in g for c in range(half))
         if any(has_nor(q['input']) for q in queries):
             required.add('nor-mark-colour')
-        if any(has_nor(d['input']) and any(palette[4] in row for row in d['output'])
+        if any(has_nor(d['input']) and any(mark in row for row in d['output'])
                for d in demonstrations):
             seen.add('nor-mark-colour')
+    elif task_id == 'ef135b50':
+        red, fill = palette[2], palette[9]
+        def has_gap(g):
+            a = list(zip(*g)) if d4 % 2 else g
+            for r, row in enumerate(a):
+                reds = [c for c, v in enumerate(row) if v == red]
+                for left, right in zip(reds, reds[1:]):
+                    if right <= left + 1: continue
+                    if all(row[c] == bg and (r == 0 or a[r-1][c] != red)
+                           and (r == len(a)-1 or a[r+1][c] != red)
+                           for c in range(left+1, right)):
+                        return True
+            return False
+        if any(has_gap(q['input']) for q in queries): required.add('gap-fill-colour')
+        if any(has_gap(d['input']) and fill in colours(d['output']) for d in demonstrations):
+            seen.add('gap-fill-colour')
+    elif task_id == 'f0afb749':
+        anti = (d4 % 4 + int(d4 >= 4)) % 2
+        def has_ray(g):
+            h, w = 2 * len(g), 2 * len(g[0])
+            for r, row in enumerate(g):
+                for c, v in enumerate(row):
+                    if v == bg: continue
+                    starts = ((2*r+2, 2*c-1), (2*r-1, 2*c+2)) if anti else (
+                        (2*r+2, 2*c+2), (2*r-1, 2*c-1))
+                    if any(0 <= y < h and 0 <= x < w for y, x in starts): return True
+            return False
+        if any(has_ray(q['input']) for q in queries): required.add('ray-colour')
+        if any(has_ray(d['input']) and palette[1] in colours(d['output']) for d in demonstrations):
+            seen.add('ray-colour')
     elif task_id == 'e3497940':
         def variants(g):
             if d4 % 2:
@@ -615,15 +659,16 @@ def require_colour_evidence(task_id, demonstrations, queries, palette=None, d4=0
             seen.update(c for row in demo['output'] for c in row if c in legend)
         for query in queries:
             required.update(c for row in query['input'] for c in row if c in legend)
-    elif task_id in ('a68b268e', 'e99362f0'):
+    elif task_id in ('a68b268e', 'e99362f0', 'ea9794b1'):
         # The four panels share a coordinate system. A demonstrated overlap
         # establishes winner > loser; transitive precedence is also evidence.
         edges = set()
         def overlays(g):
             h, w = len(g)//2, len(g[0])//2
+            gap = 0 if task_id == 'ea9794b1' else 1
             for r in range(h):
                 for c in range(w):
-                    yield r, c, {g[y+r][x+c] for y in (0, h+1) for x in (0, w+1)} - {bg}
+                    yield r, c, {g[y+r][x+c] for y in (0, h+gap) for x in (0, w+gap)} - {bg}
         for demo in demonstrations:
             for r, c, inks in overlays(demo['input']):
                 winner = demo['output'][r][c]

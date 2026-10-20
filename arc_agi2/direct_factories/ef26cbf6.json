@@ -1,0 +1,52 @@
+{
+  "task_id": "ef26cbf6",
+  "factory_sha256": "870655e80bb2e9a3c67a5019a6792285d7c26c34ef5cfa29a5b839af727f2749",
+  "constructor_sha256": "19cb06109ae952653509ecda1afb912cf64e7d4af5e4adc1ce8ae96703f7986a",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 26498392649501,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 5.448329332983121,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "In the constructor the native scene is a 7x11 grid. Full divider lines of colour 4 split it into 2x3 panels of size 3x3. One whole panel-line holds key panels, each with a single coloured centre cell. The opposite line holds pattern panels drawn in colour 1. Every 1 in a pattern panel is recoloured with the key that sits in the same perpendicular line. The generator's own flip and transpose latents already put the key line on any of the four sides. A D4 transform only permutes those sides, so the visible mechanism is symmetric. The emitted program therefore infers the geometry from pixels instead of from d4.\n\nThe factory specialises the colour roles as constants: background = palette[0], pattern = palette[1], divider = palette[4]. The emitted program works as follows:\n(1) It finds visible full rows and full columns made entirely of the divider colour, and splits the grid into panel spans.\n(2) It classifies each panel. A panel is a key panel if it holds a unique dominant colour outside {background, pattern, divider}. Otherwise it is a pattern panel if it contains pattern-colour cells.\n(3) It decides whether the key panels form a single panel-row or a single panel-column. Each pattern panel then takes the key in its own panel-column (if the keys form a row) or its own panel-row (if the keys form a column).\n(4) It repaints only the pattern-colour cells of that panel with the key colour. Shapes, dividers and keys are unchanged.\n\nA fallback handles any other layout. It gathers keys from the panel's own row and column and applies the key only if exactly one distinct colour is found. This avoids the archived solver's hidden row-before-column preference, which would become orientation-dependent under D4. Rectangular grids in either orientation (7x11 or 11x7) and keys on any side are handled natively.",
+    "limitations": "No tests have been run; the host must verify. d4 is accepted but not needed. The key line is found from pixels because, even before D4, the constructor's flip and transpose latents put the key line on any side. The program assumes key colours are never the background colour 0. The constructor calls random_colors(3, exclude=[1, 4]); if that helper could return 0, the key would be invisible and the task would be ill-posed. This is a constructor concern for host review. Key colours do not need to be distinct, since each pattern panel uses its own aligned key. Out-of-domain layouts leave a pattern panel unchanged rather than applying a hidden tie-break. These include a pattern panel whose row and column hold different keys, and a key panel with tied multiple non-role colours. The archived solver's teaching-stage canvases are not emitted; solve returns only the final grid. The fixtures are consistent with the uniform rule; no contradictions were found.",
+    "independent_source_review": {
+      "verdict": "accept",
+      "mechanism": "Full divider lines (constructor colour 4, emitted as palette[4]) split the grid into a 2x3 or 3x2 arrangement of 3x3 panels. One panel-line holds key panels, each with a single centre colour. The opposite line holds pattern panels in colour 1 (palette[1]). Each pattern cell takes the key colour of the panel aligned with it across the key line. Shapes, dividers and keys are unchanged.",
+      "evidence": [
+        "Constructor: `common.grids(11, 7)` gives width 11 and height 7. Row 3 and columns 3 and 7 are set to 4. Keys go at `output[1][4*group+1]`, the panel centres. Pattern cells go at `grid[row+4][4*group+col] = 1`, and the output places `colors[group]` at the same cell. So each pattern panel is recoloured with the key in the same panel-column, before flip/transpose.",
+        "Key colours come from `random_colors(3, exclude=[1, 4])`, which samples from `range(1, 10)` without replacement. They are therefore never 0, 1 or 4, and they are distinct. The prior note's concern that a key could be 0 is unreachable.",
+        "`conway_sprite` never removes the last pixel of any row or column. Every pattern panel is therefore non-empty, so every pattern panel is detected.",
+        "`common.flip` is `ingrid[::-1]` and `transpose` swaps axes. Together they put the key line on any of the four sides, so the constructor already varies orientation natively. Classifying geometry from pixels, rather than from d4, is consistent with this.",
+        "Emitted solver, divider detection: `drows`/`dcols` require an entire line to equal DIV. Key rows and pattern rows always contain BG or PAT cells, so only the real dividers qualify. `_spans` yields (0,2), (4,6), (8,10) along the long axis and (0,2), (4,6) along the short axis.",
+        "Emitted solver, panel classification: a key panel has one non-role colour with count 1, so `_key_of` returns it. A pattern panel holds only BG/PAT, so `_key_of` returns None and the panel goes to `pats`. Under a palette permutation, keys map to palette[c] with c not in {0,1,4}, so they stay distinct from all three role constants.",
+        "Emitted solver, key lookup: in every generated scene the keys occupy exactly one panel-row (with 3 or 2 panel-columns), or the transposed case. Panel counts are 3 and 2, so both `len(krows)==1 and len(kcols)>=2` and its mirror are satisfied. The lookup `keys.get((krow, j))` or `keys.get((i, kcol))` always hits.",
+        "The emitted solver operates directly in visible augmented coordinates. It has no whole-grid untransform/retransform wrapper, and d4 only goes through range validation.",
+        "No arbitrary lookup association exists: the colour for each pattern comes from the visible key in the query itself. Context colour-evidence checks therefore do not apply. Since each pattern lies on exactly one key line, D4 variants cannot produce conflicting answers.",
+        "The archived solver's row-before-column preference would be orientation-dependent in general. It is moot here: the pattern panel's own row never contains a key unless the keys lie in that row, which the constructor never does. Both solvers agree on all reachable inputs.",
+        "Host audit passed: 1000 fresh pairs, 8000 augmented checks and 16 fixture variants, with no sampler rejections."
+      ],
+      "blocking_issues": [],
+      "nonblocking_limits": [
+        "The archived rule's teaching-stage intermediate canvases are not emitted; `solve` returns only the final grid.",
+        "The fallback (a unique candidate from the panel's row and column) and the tie handling in `_key_of` are unreachable defensive paths. On out-of-domain layouts they leave a panel unchanged rather than applying a tie-break.",
+        "The d4 argument is accepted but unused. This is legitimate because the geometry is inferred from visible pixels.",
+        "The prior limitations note wrongly suggests key colour 0 might be possible. `random_colors` draws from 1..9 excluding 1 and 4, so it is not."
+      ],
+      "required_context_checks": [
+        "None beyond the standard check that D4 variants do not produce conflicting query answers. Key colours are read from the query input itself, so no colour-association evidence from demonstrations is needed."
+      ],
+      "task_id": "ef26cbf6",
+      "factory_sha256": "870655e80bb2e9a3c67a5019a6792285d7c26c34ef5cfa29a5b839af727f2749",
+      "constructor_sha256": "19cb06109ae952653509ecda1afb912cf64e7d4af5e4adc1ce8ae96703f7986a"
+    },
+    "host_review": "Per-query aligned legend cells supply every output paint. Constructor random_colors excludes0/1/4 and sprites span each3x3panel; divider and orientation geometry uniquely identify aligned keys. No arbitrary cross-demo lookup."
+  }
+}

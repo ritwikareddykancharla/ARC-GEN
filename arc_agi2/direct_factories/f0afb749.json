@@ -1,0 +1,48 @@
+{
+  "task_id": "f0afb749",
+  "factory_sha256": "6bf914494dcf36b555abea5c89747259570014498c48baa3e026dcfdb775f194",
+  "constructor_sha256": "0a95bcfd9be15fee98f24b2efc55b81d1108b9a79680a2c635350576136680fe",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 252385290332977,
+  "d4": 7,
+  "unique_base_inputs": 696,
+  "seconds": 2.5618892499478534,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "Original mechanism: scale the input by 2, so each cell becomes a 2x2 block. For each non-background cell, the block lies on a main diagonal (down-right). That diagonal is extended with colour 1 in both directions to the grid edges, painting only background cells. Upscaling commutes with every D4 transform, so the emitted program upscales directly in visible coordinates. Only the diagonal orientation changes. A row reversal maps direction (1,1) to (1,-1). Each clockwise rotation maps (dr,dc) to (dc,-dr). The visible diagonal is therefore the anti-diagonal when (d4%4 + flip) is odd, and the main diagonal otherwise. For the main diagonal, the rays start at (2y+2, 2x+2) going down-right and at (2y-1, 2x-1) going up-left. For the anti-diagonal, the line passes through the block's top-right and bottom-left cells. Its rays start at (2y+2, 2x-1) going down-left and at (2y-1, 2x+2) going up-right. Colour roles are constants: background is palette[0] and the ray colour is palette[1]. Any other colour is treated as an object pixel and keeps its own colour. Rectangular grids are handled because H and W are used independently.",
+    "limitations": "Background is fixed to palette[0] and the ray colour to palette[1], rather than inferred from the demos. The constructor rejects scenes where rays overlap each other or cross blocks. Under that domain the order of painting does not matter. Out of domain, the ray passes through blocks without overwriting them and skips over other rays' cells, matching the archived solver. The constructor only produces square grids, but the emitted program also works on rectangular ones. No fixture contradictions or constructor defects were found. In the constructor, a full-length line is drawn and then overwritten by the block, which is equivalent to the visible rule of rays plus block. I have not run any tests.",
+    "independent_source_review": {
+      "verdict": "accept",
+      "mechanism": "Each input cell is scaled to a 2x2 block. For every non-background cell, the diagonal through its block's two diagonal corners is extended outward to the grid edges in the ray colour, painting only background cells. The emitted solver upscales directly in visible coordinates and picks the main or anti diagonal from D4 parity. Main-diagonal rays start at (2y+2,2x+2) going down-right and at (2y-1,2x-1) going up-left. Anti-diagonal rays start at (2y+2,2x-1) going down-left and at (2y-1,2x+2) going up-right. BG is palette[0] and RAY is palette[1].",
+      "evidence": [
+        "Constructor rejection analysis. The line drawn for pixel (row,col) is c = r - 2*(row-col), so it lies on even offset r-c = 2(row-col). Off-diagonal block cells (2row,2col+1) and (2row+1,2col) have odd r-c and can never collide with any line. Diagonal block cells lie on the pixel's own line. So `get_pixel(...) not in [-1,0]` rejects exactly when two pixels share a main diagonal (equal row-col). Parallel distinct diagonals never intersect, so in-domain rays never cross blocks or each other.",
+        "Painting order is therefore irrelevant in domain. The constructor's 'full line then block overwrite' equals 'block plus outward rays painting background only', which is what the solver does.",
+        "No hidden latents leak into labels. Size, rows, cols and colour are all visible in the input. The background is always 0, and colour comes from random_color(exclude=[1]), which draws from 1..9, so it is never 0 or 1. rows always contains 0, so every input has at least one pixel.",
+        "Fixtures were checked by hand against the constructor. Pair 2 diagonal offsets are -3, 0 and 2, all distinct. For the test, the block at (4-5,0-1) has its diagonal entirely inside the block (up-left (3,-1) and down-right (6,2) are out of bounds), so it gets no 1s. The block at (0-1,2-3) gets 1s at (2,4) and (3,5). Both match the approved output.",
+        "D4 handling. Row reversal maps direction (1,1) to (-1,1), and each quarter turn maps (dr,dc) to (dc,-dr). So the visible diagonal is the anti-diagonal iff (d4%4 + flip) is odd. The anti-diagonal ray start cells are the outward neighbours of the block's top-right (2y,2x+1) and bottom-left (2y+1,2x) corners, which is correct.",
+        "Host audit passed: 1000 fresh pairs, 8000 augmented checks, 16 fixture variants, no sampler rejections. This is consistent with the factory's parity convention matching the host's D4 indexing.",
+        "The solver is a direct visible-coordinate program. Upscaling commutes with D4, and only the diagonal orientation constant is specialised. There is no untransform/native-solve/retransform wrapper."
+      ],
+      "blocking_issues": [],
+      "nonblocking_limits": [
+        "BG and RAY are fixed palette constants rather than inferred from the demos. The constructor's background is always 0, and the ray colour is the task's constant new colour 1.",
+        "Ray-free pairs are reachable. For example, size=2 with rows=[0] and col=1 gives a single pixel at the anti-corner, whose diagonal lies wholly inside its block. An episode in which every demo is ray-free could leave the ray colour visually undemonstrated. This is unlikely given that ray-bearing scenes dominate. This task is not in the episode_evidence_checks list, so no host check guards it.",
+        "Out of domain (two pixels on the same diagonal), the solver skips non-background cells and passes through blocks, matching the archived solver. The constructor excludes this case.",
+        "The constructor produces only square grids. The solver uses H and W independently, so it also handles rectangular grids."
+      ],
+      "required_context_checks": [
+        "Optionally confirm that sampled episodes include at least one demonstration showing a RAY-coloured cell whenever the query output contains rays. This is the ray-free-demo edge case noted above."
+      ],
+      "task_id": "f0afb749",
+      "factory_sha256": "6bf914494dcf36b555abea5c89747259570014498c48baa3e026dcfdb775f194",
+      "constructor_sha256": "0a95bcfd9be15fee98f24b2efc55b81d1108b9a79680a2c635350576136680fe"
+    },
+    "host_review": "Direct2xupscale and outward diagonal rays; distinct native diagonal offsets avoid overwrite ambiguity. Added gate requiring demonstrated ray colour whenever query geometry has an in-bounds ray cell. Ray-free demos cannot silently supply a new palette role."
+  }
+}

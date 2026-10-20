@@ -35,7 +35,7 @@ recorded. Passing finite audits does not prove unrestricted generalization.
 
 - 213 native direct-coordinate certificates admitted after fresh audits and
   supplied-fixture checks.
-- 738 admitted factories. Each passed 1,000 fresh pairs, 8,000 augmented pair
+- 760 admitted factories. Each passed 1,000 fresh pairs, 8,000 augmented pair
   checks and 16 supplied-fixture variants. Their audit records retain draft
   limitations and source/constructor hashes. These checks are finite evidence,
   not proof of correctness on every generated input.
@@ -46,7 +46,7 @@ recorded. Passing finite audits does not prove unrestricted generalization.
   counts must be computed as a union, not added.
 - Local exporter test: 18 fresh base episodes, 144 augmented PNG/program/grid
   records. It requested 20 bases and reported a two-episode shortfall.
-- The union currently admits 957 of 1,120 families; 163 still need direct
+- The union currently admits 979 of 1,120 families; 141 still need direct
   augmented program admission. Constructor coverage and program coverage are
   different gates.
 - Synthetic labels for `00d62c1b` now fill every enclosed background component,
@@ -580,3 +580,18 @@ The production target remains 1,000 fresh episodes per family, program and grid
 in the same row, with shared D4/colour augmentation afterward. These audit
 counts are not production dataset counts. Bulk generation and training remain
 unlaunched while coverage is incomplete.
+
+## 979-family checkpoint
+
+22 independently reviewed factories were admitted after host source review. The
+complete-episode audit sampled 440 bases, accepted 436, and verified all 3,488
+D4 records. Four `ed74f2f2` episodes lacked a demonstrated query glyph and were
+excluded. Evidence gates also cover overlay precedence and emitted fill/ray
+colours; they read query inputs, never query answers. All 372 regression tests
+passed. See `reports/episode-evidence-979-audit.json`.
+
+Two small default domains were exhaustively checked: `ea786f4a` has 54 distinct
+inputs (864 orientation/palette checks), and `eb281b96` has 36 (576 checks).
+They require explicit diversity shortfalls, not padding to 1,000 unique inputs.
+All 306 independent source reviews are now complete; review completion does not
+automatically admit a program. Bulk generation and model training remain unlaunched.

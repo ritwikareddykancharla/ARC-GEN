@@ -1,0 +1,73 @@
+{
+  "task_id": "ea786f4a",
+  "factory_sha256": "2759d2dca283d8b2679887b213ef33a749ae31d1db6484cbf43824448ef3cdee",
+  "constructor_sha256": "7582c1ff77c393cca0d43c59d8c08f93ecea5bc4e9dc216eb1c35742015cf39d",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 149823564551036,
+  "d4": 7,
+  "unique_base_inputs": 54,
+  "seconds": 4.126626041950658,
+  "finite_default_domain": {
+    "exhaustive": true,
+    "parameters": {
+      "size": [
+        5,
+        7,
+        9,
+        11,
+        13,
+        15
+      ],
+      "color": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ]
+    },
+    "cases_checked": 54,
+    "augmented_checks": 864,
+    "scope": "Entire default sampler domain. Explicit fixture parameters outside this range are separately checked; no duplicate padding for production."
+  },
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The generator makes an odd square grid of one background colour with a single black (original colour 0) seed at the centre. The output paints both full diagonals through the seed in black. Every element of the D4 group maps the set of four diagonal directions {(-1,-1),(-1,1),(1,-1),(1,1)} onto itself, so the same diagonal-ray mechanism works directly in visible coordinates for any d4. The emitted program finds the background as the most common input colour, and on a count tie it prefers a colour other than the seed colour. It treats cells of colour palette[0] that differ from the background as seeds. If there are none, it falls back to any non-background cell. From each seed it casts four diagonal rays in the seed's colour until each ray leaves the grid. This handles off-centre seeds and rectangular grids naturally: each ray simply stops at the border.",
+    "limitations": "The constructor's domain is only odd square grids with one centred seed. The generalisations to off-centre seeds, several seeds or rectangular grids follow the archived solver's behaviour and are not exercised by the generator. If there are several seeds, overlapping rays are painted in scan order, so a later seed's colour wins; this cannot arise in the constructor's domain. A grid with no non-background cell is returned unchanged. I found no constructor defects and no contradictions with the fixtures. In the 3x3 output the seed colour outnumbers the background, but the program takes the background from the input, so this does not matter. No tests were run.",
+    "independent_source_review": {
+      "verdict": "accept",
+      "mechanism": "One seed cell (original colour 0, visible palette[0]) sits at the centre of an odd square grid filled with a single background colour. The output paints both full diagonals through the seed in the seed colour. The emitted solver finds the background as the most common input colour, preferring a non-seed colour on a count tie. It takes as seeds the cells that equal SEED_COLOUR and differ from the background. From each seed it casts four diagonal rays in the seed's own colour to the grid border. It works directly on the visible grid; there is no untransform/native-solve/retransform wrapper.",
+      "evidence": [
+        "Constructor: size = 2*randint(2,7)+1 gives odd sizes 5..15. color = random_color() is drawn from 1..9, so the background never equals black(). The seed is placed at grid[size//2][size//2]. The loop over i paints output[i][i] and output[i][size-1-i] (its mirrored writes are redundant). Together these are exactly the four diagonal rays from the centre to the corners. Nothing depends on a hidden latent.",
+        "Background identification: the input has size^2-1 >= 24 background cells against one seed cell (8 vs 1 in the 3x3 fixture), so the mode is unique. The tie branch in _background is never reached in the domain.",
+        "Seed identification: the background is the visible palette image of a colour in 1..9, and SEED_COLOUR = palette[0] is the image of black. Under a palette permutation these differ, so the seed list is exactly the centre cell. The `if not seeds` fallback is out of domain.",
+        "D4 handling: every D4 element maps the centre of an odd square grid to itself and maps the diagonal direction set onto itself. The fixed DIRS list is therefore correct in visible coordinates for every d4, with no orientation constant needed.",
+        "The ray colour is read from the seed cell (c = g[sy,sx]), not hard-coded. The only specialised constant, SEED_COLOUR, is used solely to pick the seed and is shown in every demonstration input and output.",
+        "Fixtures: the 5x5, 3x3, 7x7 and 11x11 pairs all match full-diagonal painting through the centre. The 3x3 output has more 0s than 1s, but the solver reads the background from the input, so this is harmless.",
+        "Episode evidence: ea786f4a is not in the special list, so it falls through to the generic two-cell line check. Inputs here have a single non-background cell, so nothing is required. No arbitrary colour association needs demonstration, because the ray colour is the seed's own visible colour.",
+        "Host audit passed: 1000 fresh pairs, 8000 augmented checks and 16 fixture variants, with no sampler rejections."
+      ],
+      "blocking_issues": [],
+      "nonblocking_limits": [
+        "The constructor domain is narrow: one centred black seed on an odd square grid of size 5..15, with nine background colours (63 base inputs; the host reports 54 unique ones seen). This low diversity is inherent to the original task, not a defect.",
+        "Generalisations to off-centre seeds, multiple seeds (scan order decides overlapping rays), rectangular grids and empty grids are solver-only behaviour that the generator never exercises.",
+        "Fixture size 3 lies outside the random size range (5..15) but is produced by the same generate() path with explicit parameters, so the behaviour is consistent."
+      ],
+      "required_context_checks": [],
+      "task_id": "ea786f4a",
+      "factory_sha256": "2759d2dca283d8b2679887b213ef33a749ae31d1db6484cbf43824448ef3cdee",
+      "constructor_sha256": "7582c1ff77c393cca0d43c59d8c08f93ecea5bc4e9dc216eb1c35742015cf39d"
+    },
+    "host_review": "Input mode identifies the background; centred seed defines both diagonals. No association gate needed. Corrected reviewer arithmetic: six odd sizes5..15 times nine colours =54, not63. Exhaustively checked all54native cases across8D4 and2palettes; production must report adaptive low-diversity quota."
+  }
+}

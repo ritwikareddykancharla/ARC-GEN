@@ -1,0 +1,49 @@
+{
+  "task_id": "f0df5ff0",
+  "factory_sha256": "d3eb4c59d0ed4767f992ba87cb9de46c6266d6929f79a5eb8e423a966c45b270",
+  "constructor_sha256": "df76beda51cd578c92874de3457086aa71845949a4ca3f6b77e69dea34205dba",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 86975885167442,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 8.049030416994356,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "Each seed cell becomes the centre of a 3x3 square. Seed cells are those with original colour 1, which is palette[1] after the palette mapping. Inside each square, every background cell (original 0, now palette[0]) is painted with the seed colour. Cells holding any other colour keep it. Seeds are read from the input grid, not the growing output, so newly painted cells never spawn squares of their own. Squares are clipped at the grid edges, so rectangular grids and seeds on a border are handled. A centred 3x3 square looks the same under every rotation and reflection, so the emitted program needs no orientation change and works directly in visible coordinates for every d4 value. The palette is handled only by specialising the background and seed colours as constants. This matches the generator: it draws a 3x3 rect of 1s around each seed, then overwrites it with the non-zero confetti. The net effect is that only zero cells inside a box turn to 1.",
+    "limitations": "The generator places seeds only at rows and columns 1 to 13, so a full 3x3 box always fits. Clipping at the grid edge is therefore never exercised by the generator, but it is handled anyway. The generator's validity check reads output[i//15 + row] with no bounds guard. It would wrap negative indices for a seed in row 0 and fail for one in the last row. This is unreachable under the generator's own seed placement and is not reproduced as a rule. The generator also forbids overlapping boxes, so the result of overlapping boxes is not covered by the generator's domain. The emitted program would simply paint the union of the boxes. The fixtures show no contradictions with the rule.",
+    "independent_source_review": {
+      "verdict": "accept",
+      "mechanism": "Every input cell of the seed colour (original 1, palette[1]) is the centre of a 3x3 box clipped to the grid. Inside each box, every background cell (original 0, palette[0]) becomes the seed colour. All other cells keep their input value. Seeds are read from the input only.",
+      "evidence": [
+        "Constructor draw() starts from a zero output and calls common.rect(output, 3, 3, r-1, c-1, 1) for each colour-1 cell. Then, for every nonzero entry, it writes output[i] = grid[i] = colour. The net output is therefore: the input colour if nonzero, else 1 if inside any seed box, else 0. This matches the factory's rule exactly.",
+        "Confetti colours come from common.choices(range(2,10), 6). So the only 1s in the input are the explicitly placed seeds, and there is no hidden latent separating seeds from other cells.",
+        "common.rect uses common.draw, which checks bounds. Seeds are placed at (brow+1, bcol+1) with brow and bcol in 0..12, so seeds sit in rows and columns 1..13. Boxes are always fully inside the grid, and the unguarded index in the validity check is never reached out of bounds.",
+        "The rejection test (at least 3 blue cells visible per box) and the box non-overlap test only filter scenes. Neither changes how labels are computed.",
+        "Factory: seeds come from np.where(inp == SEED). The fill condition is out == BG, which is equivalent to checking the input, because only BG cells ever change and they change to SEED. The output colour is SEED = palette[1], which is visible in the query input, so no unseen colour association is needed.",
+        "A centred, clipped 3x3 box is invariant under all D4 transforms. The emitted solver therefore works directly in visible coordinates with no untransform or retransform wrapper. Only the BG and SEED colours are specialised.",
+        "The fixtures agree with the rule. For example, test seed (13,13) fills (12,13), (12,14), (13,12), (14,12) and (14,13), and keeps (13,14)=3 and (14,14)=6. In train pair 3, the (8,6) box keeps its 8 at (9,5).",
+        "Host audit passed: 1000 fresh pairs, 8000 augmented checks and 16 fixture variants, with no sampler rejections."
+      ],
+      "blocking_issues": [],
+      "nonblocking_limits": [
+        "The generator never places a seed on a border row or column and never overlaps boxes. Edge clipping and union-of-overlap behaviour in the solver are therefore defensive extrapolations, not generator-verified behaviour. Clipping is still the natural reading of the rule.",
+        "The archived rule narrative has minor coordinate slips. In pair 3 it names '(3,1)/(4,1)' and '(2,13)/(3,13)', but the actual seeds are (4,1) and (3,13). The program does not depend on this text.",
+        "The generator relies on confetti never using colour 1. Under a palette permutation, palette[1] is likewise absent from confetti. A query outside the generator's domain that had extra seed-colour cells would be treated as additional seeds."
+      ],
+      "required_context_checks": [
+        "f0df5ff0 is not in the explicit list in require_colour_evidence, so it falls into the generic else branch. That branch keys on lines with exactly two non-bg cells forming a palette pair {4,7} or {1,8}. In these dense confetti grids such lines are rare, and any line containing a seed changes in the demos. The check should therefore only rarely reject episodes and cannot create wrong labels. The host should confirm that rejection rates from this branch are acceptable.",
+        "Confirm that the D4-conflict context policy finds no conflicts. The rule is D4-invariant, so none are expected."
+      ],
+      "task_id": "f0df5ff0",
+      "factory_sha256": "d3eb4c59d0ed4767f992ba87cb9de46c6266d6929f79a5eb8e423a966c45b270",
+      "constructor_sha256": "df76beda51cd578c92874de3457086aa71845949a4ca3f6b77e69dea34205dba"
+    },
+    "host_review": "Seed3x3dilation preserves confetti; fill colour is already visible in query seeds. No arbitrary output-colour lookup. The task is not in colour_evidence whitelist, so contrary to reviewer wording it returns early rather than accidentally taking the generic pair branch; this is appropriate."
+  }
+}

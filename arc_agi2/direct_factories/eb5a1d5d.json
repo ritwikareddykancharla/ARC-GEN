@@ -1,0 +1,51 @@
+{
+  "task_id": "eb5a1d5d",
+  "factory_sha256": "6d742120b727f05905e78d3e7d1766bc03c171b77d8c2fe605a87aec5e94ec59",
+  "constructor_sha256": "ad6e5edd3d99283c73b20ae1a934fcea7bf34fd52d9b3fc97b06c6fbe7ff667c",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 33104703356026,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 7.719510999973863,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The input is a chain of solid rectangles. Each one sits strictly inside the previous one, with a gap of at least 1 cell on every side, and its colour differs from its parent's colour. The program starts with the whole grid as the current box and the corner colour as the current colour. It then repeats one step: inside the current box, take the bounding box of all cells whose colour differs from the current colour. That box is exactly the child rectangle. Its corner gives the next layer colour. Inner descendants cannot widen the box, because the child's own border cells already span it. This depth-based walk handles colours that repeat at non-adjacent depths, such as A,B,A or a background-coloured core. The output is a (2n-1)x(2n-1) square with ring k coloured by layer k. Rotations and reflections keep rectangles axis-aligned and strictly nested, and any bounding-box corner is still inside the rectangle. The output is D4-symmetric and every colour comes from the pixels. So the same visible-coordinate mechanism is correct for every d4 and palette, and no orientation or colour constants are needed.",
+    "limitations": "Constructor/solver defect for host review: the archived solver picks the background as the most common colour. The generator allows the first inner rectangle to be as large as (W-2)x(H-2), which can cover more cells than the background border. Example: a 20x20 grid with an 18x18 inner box has 76 background cells and 324 inner cells. The archived solver would then pick the wrong outer colour. This program instead reads the background from the grid corner, which the generator guarantees is the outermost layer. The program assumes the generator's domain: solid, strictly nested rectangles, each child colour different from its parent. If the input breaks that domain, an iteration cap and a strict-shrink guard stop the loop. The approved fixtures are consistent with the uniform rule. I have not run any tests.",
+    "independent_source_review": {
+      "verdict": "accept",
+      "mechanism": "The solver walks the nesting depth in visible coordinates. It starts with the whole grid as the current box and the corner pixel g[0,0] as the current colour. At each step it takes the bounding box of cells inside the current box whose colour differs from the current colour, and reads that box's top-left corner as the next layer colour. It stops when no cell differs. The output is a (2n-1)x(2n-1) square where ring k has the colour of layer k.",
+      "evidence": [
+        "Layer 0: the constructor draws the full width x height rectangle at (0,0) with a colour from random_color() (1..9). This overwrites the zero canvas, so g[0,0] is always the outermost layer colour.",
+        "Strict nesting: row = randint(1, talls[-1]-tall-1) and col = randint(1, wides[-1]-wide-1). Every child therefore has a gap of at least 1 cell on all four sides inside its parent, and offsets accumulate through r_off/c_off.",
+        "Bounding box equals the child: the descendants of a child lie strictly inside it, and the child's own border cells all carry the child colour. So the bbox of cells != the parent colour is exactly the child rectangle. Its corner is also the child colour, because the grandchild is offset by at least 1.",
+        "Repeated colours: color = random_color(exclude=[colors[-1]]) only forbids matching the immediate parent. Non-adjacent repeats (for example the background-coloured core in the test, or patterns like A,B,A) occur only strictly inside an intermediate layer whose border spans the bbox. Counting depth rather than distinct colours is therefore correct.",
+        "Guards are unreachable in-domain. The strict-shrink guard cannot fire because every child box is strictly smaller than its parent. Depth stays at most 14: width shrinks by at least 2 per level from at most 30 and the loop stops when a side drops below 5. This is far below the 64-iteration cap, and the output side is at most 27, within 30.",
+        "The constructor's output loop paints the square [idx, 2n-idx-1) for each idx, which matches the solver's out[k:size-k, k:size-k] construction.",
+        "D4 and palette: a D4 image of strictly nested axis-aligned solid rectangles is again strictly nested, and every grid corner is still the background. The concentric output is D4-invariant. All colours are read from pixels and nothing is untransformed. Palette permutations, including onto 0, are harmless because no colour constants are used.",
+        "The solver does not copy the archived solver's most-common-colour background. With W x H up to 30x30 and a first child up to (W-2)x(H-2), the inner area can exceed the border area, so the archived choice is genuinely wrong there. Reading the corner avoids this.",
+        "Fixtures: the approved train and test examples match the validate() parameters. The test has a background-coloured 4x4 core inside the 8 layer and expects a 9x9 output. Both are consistent with the depth walk.",
+        "The host audit passed 1000 fresh pairs, 8000 augmented checks and 16 fixture variants with no sampler rejections."
+      ],
+      "blocking_issues": [],
+      "nonblocking_limits": [
+        "Outside the constructor domain (non-solid layers, children touching the parent edge, or hollow rings), the corner and bbox reads are unspecified. Only the iteration cap and the strict-shrink guard prevent a runaway loop. The constructor excludes all of these cases.",
+        "The archived reference transform's most-common-colour background is wrong for reachable large first children. The factory correctly diverges from it, so archived-program agreement should not be used as an oracle for those inputs.",
+        "This accept is a source review, not proof of unrestricted correctness."
+      ],
+      "required_context_checks": [
+        "None blocking. No arbitrary colour or shape association is involved: every output colour and the ring order are read directly from the query's visible nesting. eb5a1d5d is not in the colour-evidence task list, and none is needed.",
+        "The output is D4-symmetric, so D4 variants cannot produce conflicting query answers under the context policy."
+      ],
+      "task_id": "eb5a1d5d",
+      "factory_sha256": "6d742120b727f05905e78d3e7d1766bc03c171b77d8c2fe605a87aec5e94ec59",
+      "constructor_sha256": "ad6e5edd3d99283c73b20ae1a934fcea7bf34fd52d9b3fc97b06c6fbe7ff667c"
+    },
+    "host_review": "Strictly nested solid rectangles with different adjacent colours give an observable depth sequence. Corner background avoids erroneous majority selection. Nonadjacent repeated colours are handled by successive bounding boxes; no arbitrary association required."
+  }
+}

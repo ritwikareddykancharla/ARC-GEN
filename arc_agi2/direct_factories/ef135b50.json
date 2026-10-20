@@ -1,0 +1,51 @@
+{
+  "task_id": "ef135b50",
+  "factory_sha256": "0f52dae57165508ca521e621b0cfa1257ce2369aead1eeeb5be865278f15c9a6",
+  "constructor_sha256": "42ffeb40464c1c8e2e6d33513ca22caec688394a36c5485c63b4dcb0002fffdb",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 180775934414052,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 74.87274387502111,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The generator draws non-touching red (2) boxes on a black (0) background. In each original row it looks at every run of non-red cells that has a red cell at both ends. That run becomes maroon (9) unless some cell in it has a red cell directly above or below it. A run that touches red that way stays black.\n\nThe rule is symmetric under left-right and up-down reflection, so the only effect of D4 is to choose the scan axis. Reversing each row (d4>=4) does not change the axis. An odd number of clockwise rotations turns original rows into visible columns. So when d4%4 is odd, the emitted program scans columns and checks the left and right neighbours. Otherwise it scans rows and checks the cells above and below.\n\nColours are baked in as constants: RED=palette[2], FILL=palette[9], BG=palette[0]. The program fills only runs that consist entirely of background between two consecutive red cells. Any neighbour that falls outside the grid counts as not red, which matches common.get_pixel at the boundary. Grid dimensions are read at run time, so rectangular grids are handled.",
+    "limitations": "Nothing here has been tested; I did not run the factory or the emitted programs, and the host's verification is still pending.\n\nThe emitted solver ignores the demonstrations and relies on the fixed colour roles taken from the palette constants.\n\nThe generator's rejection filters (no maroon in the top or bottom row, no unfilled gap between reds in interior rows) only restrict which scenes get produced; they do not change the rule, so they are not encoded.\n\nThe generator's danger flag is computed on the output grid while fills are being written. Fills are never red, so the result is the same as checking the input, which is what this program does.\n\nThe validate() fixtures bypass draw's acceptance check. For example, train pair 3 has a black-retained gap in its bottom row. They still follow the same uniform rule, and I found no contradiction between the fixtures and the rule.\n\nNo constructor defect or hidden random tie-break affects the answer.",
+    "independent_source_review": {
+      "verdict": "accept",
+      "mechanism": "Red (palette[2]) solid rectangles that do not touch sit on a background (palette[0]). Scanning each original row, every run of cells between two consecutive red cells is examined. The run becomes FILL (palette[9]) unless some cell in it has a red cell directly above or below; a blocked run stays background. The rule is unchanged by left-right and up-down reflection, so D4 only decides whether the emitted solver scans visible rows (checking vertical neighbours) or visible columns (checking horizontal neighbours).",
+      "evidence": [
+        "Constructor draw(): `danger` builds up over the non-red cells since `last_red` using get_pixel(output, r\u00b11, c) == red. When the next red cell is reached, cells range(last_red+1, c) get maroon if not danger, otherwise black. The initial `last_red = size` makes the range before the first red empty, and `danger` is reset at every red. This is exactly 'gap between consecutive reds, blocked if any gap cell touches red vertically'.",
+        "`danger` reads the output grid while it is being written. Row r-1 has already been processed and row r+1 has not, and fills are never red, so red cells are identical in input and output. The danger flag therefore equals the input-based check the emitted program uses.",
+        "get_pixel returns -1 when out of bounds, so off-grid neighbours count as not red. The emitted guards `y > 0` / `y < h-1` (and `x > 0` / `x < w-1`) match this.",
+        "Inputs contain only red and background, so the emitted check `all(g[y][x] == BG ...)` always holds within the domain. It is harmless.",
+        "Writing black for a blocked gap leaves background unchanged, so it matches the emitted `continue`.",
+        "The emitted solver works directly in visible coordinates. It specialises only the scan axis and the colour constants. There is no untransform/native-solve/retransform wrapper.",
+        "No hidden random latent affects the labels. The output is a deterministic function of the visible red pixels. The spacing-1 non-overlap only shapes the scenes.",
+        "Checked against the fixtures: pair 3 row 9 (x4\u20138 lies under the middle block in row 8) stays 0, and the test fills row 1 x3\u20135, row 3 x4\u20135 and rows 5\u20136 x4, all of which are unblocked. This matches the program. The archived rule text says the test output has only a single cell filled, which is wrong, but the approved fixture output and the emitted program are correct.",
+        "Host audit passed: 1000 fresh pairs, 8000 augmented checks (consistent with all 8 D4 variants), and 16 fixture variants."
+      ],
+      "blocking_issues": [],
+      "nonblocking_limits": [
+        "Interior rows: draw() rejects any red\u2192black\u2192red sequence in rows 1..size-2. Top/bottom rows: draw() rejects any maroon in row 0 and row size-1. Together these mean generated scenes have blocked gaps only in the top or bottom generator row, and every top/bottom gap is blocked. A rule such as 'fill every gap except in edge rows' therefore agrees with the labels on the generator's distribution. Episodes whose demonstrations show no blocked gap could leave the naive 'fill all gaps' rule undistinguished from the true one for a query that has an edge-row blocked gap. This is a finite-demonstration learnability limit, not a labelling defect. The emitted rule is the constructor's real labelling rule.",
+        "The validate() fixtures bypass draw()'s acceptance filter. They still obey the same danger rule.",
+        "The archived rule prose misstates the test answer as a single filled cell, and its 'only gap bounded by 2' claim is wrong. The approved test output, constructor and program all agree with each other, so this is a documentation error only.",
+        "The emitted solver ignores the demonstrations and relies on palette-role constants. That is acceptable because the only non-input colour (FILL) appears whenever an unblocked gap exists, and interior gaps are always unblocked in generated data."
+      ],
+      "required_context_checks": [
+        "Confirm that the augmentation's d4 encoding is d4%4 = number of quarter-turns, with d4>=4 adding a horizontal or vertical flip rather than a transpose, so that 'odd d4%4 \u21d2 column scan' holds for all 8 variants. The host's 8000 augmented checks and 16 fixture variants suggest this was exercised, but the augmentation source was not supplied.",
+        "ef135b50 is not in require_colour_evidence's task list, so it falls into the generic default branch. That branch keys only on lines containing exactly two non-bg cells forming the {palette[4], palette[7]} or {palette[1], palette[8]} pairs. Neither pair occurs in this task's inputs (red and background only), so `required` is empty and nothing is enforced. The host should accept that the fill colour is taught implicitly through demonstrations, which almost always contain fills."
+      ],
+      "task_id": "ef135b50",
+      "factory_sha256": "0f52dae57165508ca521e621b0cfa1257ce2369aead1eeeb5be865278f15c9a6",
+      "constructor_sha256": "42ffeb40464c1c8e2e6d33513ca22caec688394a36c5485c63b4dcb0002fffdb"
+    },
+    "host_review": "Input red cells alone determine blocked gaps; fills never change red support. Added gate requiring demonstrated palette9 fill when query has an unblocked gap on the visible scan axis. Direction convention verified; no query answer read."
+  }
+}

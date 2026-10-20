@@ -1,0 +1,60 @@
+{
+  "task_id": "edb79dae",
+  "factory_sha256": "92e65f0c52b7eef533e886e64dfefae66e9649f9e4628f045aea0ee102643c57",
+  "constructor_sha256": "1e7cab62581f394862b17d036dc3630fc830bb08fec05530ef6e5a648b18db54",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 88353285749882,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 18.79784412495792,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The factory works out where the 3x4 legend tile ends up under the given D4 transform. The original tile is a a b b / a a a b / a a b b, with a = source colour and b = target colour. The factory reverses each row if d4>=4, then rotates the mask clockwise d4%4 times in the visible frame, and embeds the result as a literal boolean mask. It also embeds the frame colour constant palette[5]. No colour unpermuting and no rotation wrappers are emitted.\n\nThe emitted program works directly on the visible grid:\n1. It finds the frame as the bounding box of the FRAME colour and crops it.\n2. It reads the background from the cell just inside the frame's corner. The constructor guarantees a one-cell background margin there, which is more robust than taking the most common colour.\n3. It scans every window with the transformed tile shape. A window counts as a legend tile only if it matches the two-colour pattern exactly, with a != b and neither equal to the background or frame colour. Each match records 'a becomes b' and marks the tile's cells.\n4. For each source colour c, the template is the bounding box of the c-cells that lie outside the frame and outside any legend tile. These templates are already in visible orientation, so they line up with the visible squares.\n5. Inside the cropped frame, it finds the 4-connected components of colour c in the original crop. Any component that is a solid rectangle exactly the template's size is replaced by the template: filled cells get mapping[c], holes get the background.\n\nDetection always uses the unmodified crop. This means a square that has already been redrawn in a colour that is also a source colour can never be redrawn a second time.",
+    "limitations": "These assumptions come from the constructor's domain:\n- Legend tiles are exactly the transformed 3x4 pattern, and they are separated from other objects by at least one background cell.\n- Each source colour has exactly one template outside the frame, and its bounding box is the full k x k square.\n- Squares inside the frame are separated by background gaps, so each square is its own connected component.\n- The frame is the only object in palette[5].\n\nHow this differs from the archived solver:\n- The archived solver picks the most common colour as background. That could choose the wrong colour in dense frames with few source colours. This program reads the background from the frame's inner margin instead.\n- The archived solver mutates its output while matching squares colour by colour. This program matches squares against the original crop instead, so a redrawn square can never be matched again. The two should agree on valid scenes.\n\nFixtures and constructor:\n- No contradictions were found between the fixtures and the stated rule.\n- No hidden random tie-break or indexing defect in the constructor affects the intended answer.\n- I have not run any tests.",
+    "independent_source_review": {
+      "verdict": "accept",
+      "mechanism": "Each input defines everything it needs. 3x4 legend tiles (a a b b / a a a b / a a b b) give the mappings a->b. Exactly one hollow k x k template per source colour sits outside a colour-5 frame. The frame interior holds a lattice of solid k x k source-colour squares with background gaps. The output is the frame crop with each solid c-square replaced by c's template: filled cells take mapping[c] and holes become background. The emitted solver works directly in visible coordinates. It embeds the D4-transformed legend mask and the frame colour palette[5]. It reads bg from crop[1,1], scans for exact legend windows, and takes each template as the bounding box of c-cells outside the frame box and outside the legend tiles. It then redraws solid components of the template's shape, matching against the unmodified crop.",
+      "evidence": [
+        "Placement uses _free with `r < R+H+1 ... C < c+w+1`, which enforces at least one background cell between the frame rectangle, legend tiles and templates.",
+        "Legend window uniqueness: every row and column of the legend pattern is non-bg and uses two distinct colours.",
+        "Inside the frame, a fully non-bg 3x4 window can only lie within one single-colour square, so the a != b check rejects it.",
+        "Windows touching the border include 5, which is excluded. Templates are single-colour with bg holes. Gaps are bg. So spurious legend matches are not reachable.",
+        "In blank_frame and the square offsets (y = 2 + i*(k+1), fh = nr*(k+1)+3), row/column 1 and row/column fh-2 are always bg. crop[1,1] is therefore the true background under any D4 transform, since the frame is D4-symmetric.",
+        "Template bounding box: _random_mask requires a filled cell in the first/last row and first/last column, so the bbox is the full k x k.",
+        "Template hollowness: _random_mask also requires total < k*k.",
+        "Both fallbacks also span the full k x k and contain a hole. So t.shape == (k, k) always matches the solid squares.",
+        "Every source colour gets at least one square (positions[idx] for idx < n_src, with n_src <= nr*nc). Every source has a template and a legend tile.",
+        "Targets come from a palette that excludes bg and 5, and differ from their source, so the legend filters never drop a real tile.",
+        "Chained mappings such as 3->9 and 9->2 are handled correctly. The constructor writes `out` directly from the input cells, and the solver detects squares on the original crop, so no double rewrite occurs. Even the archived solver's mutate-in-place approach is safe here, because redrawn templates are hollow and never form solid k x k components.",
+        "The labels depend only on visible content (legend, templates, squares). The random latents (cell fill probability, mask density, placement) do not affect the answer beyond what they draw.",
+        "The validate() fixtures reproduce the canonical train and test pairs with consistent explicit latents.",
+        "The factory has no untransform/retransform wrapper. It only specializes the legend mask orientation (flip, then rotate) and the frame colour.",
+        "The host audit passed 8000 augmented checks. If the mask orientation were wrong, no legend would be found and the output would equal the unchanged crop, so a wrong orientation would show up as failures."
+      ],
+      "blocking_issues": [],
+      "nonblocking_limits": [
+        "The domain is restricted to a regular lattice with one background cell of margin and gap.",
+        "k is limited to 3..5, the lattice to 2..4 per side (2..3 for k=5), and the number of legend pairs to 2..5.",
+        "Templates always have a full k x k bounding box and are 4-connected. The solver does not need connectivity but does rely on the full bounding box.",
+        "All objects are separated by at least one background cell. Legend tiles touching other non-bg cells are outside the domain.",
+        "The solver relies on the frame being the only palette[5] object and on crop[1,1] being background. Both are guaranteed by the constructor but are not general ARC assumptions.",
+        "Squares whose shape does not match the template are silently left unchanged. This defensive path is never reached in the constructor domain.",
+        "The no-frame fallback returns the input unchanged. This is out of domain and excluded by the constructor."
+      ],
+      "required_context_checks": [
+        "None for colour associations. Each query's mappings and templates are given by its own legend tiles and its own off-frame shapes, so no cross-demonstration lookup is needed. The task is not in the episode_evidence_checks list.",
+        "Confirm that the host's augmentation D4 index convention (flip then clockwise rotation) matches the factory's mask construction for all eight d4 values. The reported 8000 augmented checks suggest it does."
+      ],
+      "task_id": "edb79dae",
+      "factory_sha256": "92e65f0c52b7eef533e886e64dfefae66e9649f9e4628f045aea0ee102643c57",
+      "constructor_sha256": "1e7cab62581f394862b17d036dc3630fc830bb08fec05530ef6e5a648b18db54"
+    },
+    "host_review": "All mappings and templates appear in query; separated legend windows and full template bounding boxes make source-target replacement observable. Original crop is used for matches, avoiding cascade. D4 mask convention verified against augmentation source."
+  }
+}

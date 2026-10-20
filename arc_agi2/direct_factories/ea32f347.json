@@ -1,0 +1,47 @@
+{
+  "task_id": "ea32f347",
+  "factory_sha256": "4cea615f847a4918fc61d0b7b4d14c993652fc18b33a932d4e549be467e8acfd",
+  "constructor_sha256": "8bb241f34d0f1af1496558b5add1a0e22fc5c589ab0822b1de5024bd89874848",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 181538632920275,
+  "d4": 7,
+  "unique_base_inputs": 999,
+  "seconds": 8.569879624992609,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The input contains three separated grey bars (palette[5]) on a palette[0] background. Each bar is one 4-connected component. The program ranks the bars by cell count. The longest becomes palette[1], the middle becomes palette[4] and the shortest becomes palette[2]. Every other cell is left unchanged. Under D4 the bars keep their lengths, and their colours stay distinct from the background and from each other. So the mechanism is identical in visible coordinates and needs no axis or direction choice. Only the colour constants are specialised from the palette. The generator keeps bars apart, including at corners, by at least one cell. It samples lengths without replacement from 2..9, so the ranking never ties. Bars may touch the grid edge, and the component search handles that by bounds checks.",
+    "limitations": "This relies on the generator's guarantees: exactly three non-touching bars with distinct lengths. If two components had equal size, the stable sort would order them by reading order. That case cannot occur in the constructor's domain and should not be read as a rule. If there were more than three components, the extras would get the shortest-bar colour, as the archived solver does. The demonstrations are not consulted because the colour roles are fixed by palette constants. No constructor defect affecting the visible rule was found. The overlap check for a vertical bar against a horizontal one is conservative and covers both orderings, despite the comment 'Don't need to handle fourth case'. The fixtures are consistent with the uniform rank rule. This factory has not been run or tested.",
+    "independent_source_review": {
+      "verdict": "accept",
+      "mechanism": "The input has exactly three straight grey (palette[5]) bars on a palette[0] background. Each bar is one 4-connected component. Bars are ranked by cell count: the longest becomes palette[1], the middle palette[4] and the shortest palette[2]. All other cells are unchanged. The emitted solver finds GREY components in the visible grid, sorts them by descending size and recolours them with RANK_COLOURS = [pal[1], pal[4], pal[2]]. It uses no whole-grid untransform or retransform.",
+      "evidence": [
+        "Constructor: `lengths = common.sample(range(2, 10), 3); lengths.sort()` gives three distinct lengths in ascending order. Default `colors=(2, 4, 1)` paints index 0 (shortest) as 2, index 1 (middle) as 4 and index 2 (longest) as 1. So the label depends only on visible bar length rank, not on a hidden latent.",
+        "Bounds: `var` lies in [0, size-length] and `val` lies in [0, size-1], so every bar fits on the grid.",
+        "Overlap check, same orientation: two vertical bars are rejected when their columns differ by less than 2, and two horizontal bars when their rows differ by less than 2. This is conservative.",
+        "Overlap check, mixed orientation: the `ups[i]==1 and ups[j]==0` branch runs for every mixed pair because the double loop covers all ordered (i, j) with i != j. Its continue conditions accept a pair only when the bars are at least one cell apart on some axis. They allow no edge contact and are stricter than needed on the trailing ends. So the three bars are always separate 4-components, and the remark about the 'fourth case' is harmless.",
+        "Distinct lengths of at least 2 mean no size ties, so the stable-sort reading-order tiebreak in the solver is never used.",
+        "Rank by cell count does not change under D4, and the bars stay separated after D4. So no axis or direction constant is needed, and only palette constants are specialised.",
+        "Approved fixtures match the rule. Train pairs have size sets {6,5,3}, {6,4,2}, {7,5,4} and {6,5,3}, each mapped to 1/4/2 by rank. The test has 6 (row 5) -> 1, 5 (row 8) -> 4 and 3 (column 3) -> 2, which matches the fixture output.",
+        "Colour evidence: every generated pair contains all three ranks, so any demonstration shows the full rank-to-colour mapping. ea32f347 falls into the default branch of require_colour_evidence. That branch keys on lines containing palette pairs {4,7} or {1,8}. Query inputs contain only bg and grey, so `required` stays empty and nothing is wrongly required or missing.",
+        "Host audit passed: 1000 fresh pairs, 8000 augmented checks, 16 fixture variants, no sampler rejections."
+      ],
+      "blocking_issues": [],
+      "nonblocking_limits": [
+        "The solver does not read the demonstrations. The rank colours are fixed palette constants, which is legitimate because every demonstration displays all three rank colours.",
+        "Outside the constructor domain, the solver behaves defensively in ways that are not part of the rule. Equal-size components would fall back to reading order, and a fourth or later component would get the shortest colour. The constructor excludes both cases.",
+        "The overlap rejection is stricter than needed: parallel bars in adjacent columns or rows are always rejected, even when they do not overlap along their length. This limits scene variety slightly but does not affect labels."
+      ],
+      "required_context_checks": [],
+      "task_id": "ea32f347",
+      "factory_sha256": "4cea615f847a4918fc61d0b7b4d14c993652fc18b33a932d4e549be467e8acfd",
+      "constructor_sha256": "8bb241f34d0f1af1496558b5add1a0e22fc5c589ab0822b1de5024bd89874848"
+    },
+    "host_review": "Exactly three separated distinct-length bars show all three rank-to-colour associations in every pair. Native overlap rejection ensures separate components, so no reading-order tie is reachable."
+  }
+}

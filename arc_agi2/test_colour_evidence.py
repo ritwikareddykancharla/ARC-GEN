@@ -5,6 +5,46 @@ from .program_targets import make_record
 
 
 class ColourEvidenceTests(unittest.TestCase):
+    def test_new_reviewed_roles_need_demonstrated_output_colours(self):
+        from tasks import task_ed74f2f2 as glyph, task_f2829549 as nor
+        from tasks import task_ef135b50 as gap, task_f0afb749 as ray
+        cases = [
+            ('ed74f2f2', glyph.generate(color=1, shape=[1]*9),
+             glyph.generate(color=2, shape=[1]*9)),
+            ('f2829549', nor.generate(rows=[r for r in range(4) for c in range(3)],
+                                     cols=[c for r in range(4) for c in range(3)], idxs=[0]*12),
+             nor.generate(rows=[], cols=[], idxs=[])),
+            ('ef135b50', gap.generate(rows=[3], cols=[1], wides=[1], talls=[1]),
+             gap.generate(rows=[3, 3], cols=[1, 5], wides=[1, 1], talls=[1, 1])),
+            ('f0afb749', ray.generate(size=2, rows=[0], cols=[1], color=2),
+             ray.generate(size=3, rows=[0], cols=[0], color=2)),
+        ]
+        for tid, weak, teacher in cases:
+            for d4 in range(8):
+                with self.subTest(task=tid, d4=d4):
+                    pal = [3, 9, 0, 7, 2, 8, 1, 6, 4, 5]
+                    a, t = apply_episode([weak, teacher], d4, pal)
+                    query = {'input': t['input']}
+                    with self.assertRaises(MissingColourEvidence):
+                        require_colour_evidence(tid, [a], [query], pal, d4)
+                    require_colour_evidence(tid, [a, t], [query], pal, d4)
+                    fake = dict(t, output=[[pal[0]] * len(t['output'][0]) for _ in t['output']])
+                    with self.assertRaises(MissingColourEvidence):
+                        require_colour_evidence(tid, [a, fake], [query], pal, d4)
+
+    def test_separator_free_overlay_requires_demonstrated_priority(self):
+        from tasks import task_ea9794b1 as gen
+        def pair(inks):
+            return gen.generate(**{key: [int(colour in inks)]+[0]*24
+                                   for key, colour in (('top', 4), ('upper', 3),
+                                                       ('lower', 9), ('bottom', 8))})
+        for d4 in range(8):
+            pal = [3, 9, 0, 7, 2, 8, 1, 6, 4, 5]
+            a, t, q = apply_episode([pair({9, 4}), pair({3, 9}), pair({3, 4})], d4, pal)
+            with self.assertRaises(MissingColourEvidence):
+                require_colour_evidence('ea9794b1', [a], [{'input': q['input']}], pal, d4)
+            require_colour_evidence('ea9794b1', [a, t], [{'input': q['input']}], pal, d4)
+
     def test_command_strip_requires_query_command_shapes(self):
         from tasks import task_e6de6e8f as gen
         weak = gen.generate(commands=[-1, -1, -1, 0, 0])

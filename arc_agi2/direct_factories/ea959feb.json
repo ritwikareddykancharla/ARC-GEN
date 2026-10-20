@@ -1,0 +1,51 @@
+{
+  "task_id": "ea959feb",
+  "factory_sha256": "6b9b6e060dcb5d807d595ed22e9fe0fe1e8122f0401390735e39464ead515a27",
+  "constructor_sha256": "95bb236760fd4416232136260877a2e712e5319061cc6f64915d188935993877",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 50374536359693,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 16.383147625019774,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The input is a wallpaper that repeats along both axes. In the native frame the rows repeat with period px, and each row steps the colour cycle by +1, so the vertical period is n. Solid rectangles of original colour 1 are pasted over it. Under the palette map the mask colour becomes the constant MASK = palette[1]. MASK cells are treated as unknown, because MASK is also a genuine wallpaper colour.\n\nThe emitted program works directly on the visible grid, along both visible axes:\n- **Finding the periods.** For each axis it finds the smallest shift p such that every pair of non-MASK cells p apart agrees, with at least one such pair compared.\n- **Why no D4 branching is needed.** Rotations swap which axis carries the colour cycle. Reflections keep translation periods, since g[y][x] = g[y+p][x] is reflection-invariant. So searching both visible axes covers every D4 orientation. The d4 value only labels which axis carries the cycle.\n- **Repairing.** Every MASK cell gets the value shared by the non-MASK cells in its residue class (y mod py, x mod px). If a class has no non-MASK witness, its true colour is MASK, so the cell stays MASK. Non-MASK cells are copied unchanged.\n- **Ties.** At the correct periods all witnesses in a class agree, so there is no real tie. A deterministic count-then-first-seen rule is used only as a safeguard.\n\nThe constructor's conditions 1\u20134 (shorter shifts show contradictions, the true shifts have comparable pairs, every non-1 class has a witness) mean this finds exactly the true periods and wallpaper. That holds for rectangular grids and for masks touching the border or each other.",
+    "limitations": "The demonstrations are not used, because the mask colour is fixed by the palette as palette[1].\n\nIf a scene broke the constructor's recoverability conditions, the search would fall back to the full grid size as the period and leave MASK cells unrepaired. Examples are a missing witness, or a shorter shift with no visible contradiction. The generator rejects such scenes.\n\nNo contradiction between the fixtures and the uniform rule was found. No constructor defect was found that affects the answer: generator randomness only chooses latents, and the visible mechanism fully determines the output.\n\nThe archived solver also overwrites non-mask cells that differ from the tile. This program only rewrites MASK cells. The two give identical results on valid scenes.\n\nNot executed by me. Host verification is required.",
+    "independent_source_review": {
+      "verdict": "accept",
+      "mechanism": "The input is a doubly periodic wallpaper. In the native frame, g[y][x] = (base[x%px]-1+y)%n+1, so the horizontal period is px (base is minimally cyclic) and the vertical period is n. Solid rectangles of colour 1 are pasted over it, and 1 is also a genuine wallpaper colour. The emitted solver uses a constant MASK = palette[1] and treats MASK cells as unknown. Along each visible axis it takes the smallest shift p that has at least one comparable non-MASK pair and no disagreement. It then fills each MASK cell with the value of its (y mod py, x mod px) residue class, taken from that class's non-MASK cells. If a class has no non-MASK witness, the cell stays MASK, because its true colour is the mask colour.",
+      "evidence": [
+        "Constructor _scene_ok/_periods_recoverable require, for every horizontal p<px and vertical p<n, a mismatch between two non-1 cells. The solver's _shift_ok therefore rejects every shorter shift.",
+        "At the true shifts px and n, every visible non-1 cell is genuine wallpaper, so no mismatch can occur. The constructor also requires that at least one comparable pair exists. The solver therefore returns exactly px and n, matching the constructor's ordering of checks.",
+        "_witnesses_ok requires every residue class whose true colour is not 1 to keep an unmasked cell. All visible non-1 members of a class are genuine and equal, so the count/first-seen tie-break is never exercised on valid scenes.",
+        "A class whose true colour is 1 consists only of genuine 1 cells, all visible as MASK, so it has no counts entry. tile.get(..., MASK) then correctly leaves those cells as MASK. Random scenes force at least one masked genuine-1 cell (_masks_hit_genuine_one), so the demonstrations show the 'a 1 stays 1' behaviour.",
+        "Constructor labels come from the wallpaper itself (output = wall), not from hidden latents the solver cannot see. Mask placement only affects the input, and the recoverability conditions are checked on the visible grid.",
+        "D4 handling: transposition swaps which axis carries which period, and reflections preserve translation periods along each axis. The solver searches both visible axes directly, with no untransform wrapper. The d4 value is used only in a comment string.",
+        "Spot-checked the fixtures: in the test, the 'stray' (7,7) and (7,13) cells and the 1s at row 9, cols 2\u20133 are genuine wallpaper 1s outside or beside the masks. The validate() mask lists match the visible 1-blocks in train pair 1 and the test.",
+        "Host audit passed: 1000 fresh pairs, 8000 augmented checks, 16 fixture variants, and no sampler rejections."
+      ],
+      "blocking_issues": [],
+      "nonblocking_limits": [
+        "The demonstrations are unused. The mask colour is specialized as palette[1], which is a genuine rule colour, so this is permitted.",
+        "Defensive fallback: on scenes that violate conditions 1\u20133, the period search would return the full grid size and leave MASK cells unrepaired. The constructor excludes such scenes on both its random and explicit paths.",
+        "Unlike the emitted program, the archived solver also rewrites non-mask cells that differ from the tile. On valid scenes the two are equivalent, because every non-1 visible cell is genuine.",
+        "Synthetic sizes (15..30, or caller-chosen down to 4) extend beyond the native 22x25. This affects only the sizes the solver is tested on; the mechanism is size-independent."
+      ],
+      "required_context_checks": [
+        "Confirm the palette augmentation is a bijection, so palette[1] never collides with another wallpaper colour.",
+        "Confirm that one D4 and palette transform is applied consistently to every demonstration and query in an episode. The emitted MASK constant must match the mask colour seen in the demonstrations.",
+        "Confirm that the D4 transform used by the host maps rows and columns as whole lines (pure transpose/reflection). The axis-wise shift checks rely on this property."
+      ],
+      "task_id": "ea959feb",
+      "factory_sha256": "6b9b6e060dcb5d807d595ed22e9fe0fe1e8122f0401390735e39464ead515a27",
+      "constructor_sha256": "95bb236760fd4416232136260877a2e712e5319061cc6f64915d188935993877"
+    },
+    "host_review": "Visible period mismatch witnesses exclude shorter periods, and every non-mask residue class retains a visible colour. Palette bijection and joint row/column D4 transformations are enforced by augmentation.transformed/apply_episode. Missing classes are genuinely mask-coloured under the constructor checks."
+  }
+}

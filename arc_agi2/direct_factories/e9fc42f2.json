@@ -1,0 +1,51 @@
+{
+  "task_id": "e9fc42f2",
+  "factory_sha256": "65be1e6a6a8376281438766161d71bdbe7390d0cb28cbab49e306d17b40b990a",
+  "constructor_sha256": "0d3f64d12dd5686308796de6cc995c6dd2f7d223b1e767d355fc8b8a0c4bcd26",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 111801848512818,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 11.540909667033702,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The emitted program works directly on the visible grid.\n\n1. **Pieces.** It finds the 4-connected non-background pieces. Background is palette[2]; if that colour is absent, it falls back to the most common colour.\n2. **Markers.** Body colour is palette[1]. Any other non-background cell is a marker. A marker colour that occurs on exactly two different pieces is a join.\n3. **Join direction.** It is the unit step d such that marker A + d lies outside A's bounding box and marker B - d lies outside B's bounding box. All four unit directions are considered symmetrically, so a rotation or reflection of the scene simply changes which direction is chosen. No coordinate normalisation is needed.\n4. **Assembly.** Starting from the first piece in reading order, linked pieces are translated so the paired markers become orthogonally adjacent, skipping placements that would overlap. The result is cropped to the union of placed cells, with background elsewhere, and each piece is stamped unchanged.\n\nThe constructor guarantees three things: the joins form a tree, each join has a unique valid direction, and assemblies do not overlap. Because the output is a translation-invariant crop, the result does not depend on which piece is the root or on the BFS order. That makes it D4-equivariant. Palette handling only substitutes the background and body constants. Lone markers, whose colour occurs once, stay on their piece and link nothing.",
+    "limitations": "This has not been tested by me.\n\n- **Assumptions.** It relies on the constructor's invariants:\n  - Pieces are separated by background in the input.\n  - Background is the majority colour.\n  - Each join colour occurs exactly twice, on different pieces, with exactly one valid join direction.\n  - Joins connect all pieces into a tree.\n- **Outside those invariants.** If a join had several valid directions, or the joins were disconnected, the program would take the first non-overlapping direction in a fixed order or drop unreached pieces. That behaviour is not D4-equivariant, but the constructor's _check_scene rejects such scenes.\n- **Constants.** The body colour is taken from palette[1] rather than inferred from the demonstrations.\n- **Constructor review.** I found no constructor defects or fixture contradictions.",
+    "independent_source_review": {
+      "verdict": "accept",
+      "mechanism": "Pieces are the 4-connected non-background components, all colours counted together. Every colour other than BG (palette[2]) and BODY (palette[1]) is a marker. A marker colour found on exactly two different pieces is a join. The join direction is the unique unit step d where marker A + d lies outside A's bounding box and marker B - d lies outside B's bounding box. Starting from component 0, the solver translates pieces along the joins (no rotation) so each pair of markers becomes orthogonally adjacent. It then crops to the union of placed cells, fills the rest with background and stamps every piece.",
+      "evidence": [
+        "Constructor join markers are always on non-corner side cells (`_side_cells`). Such a cell has exactly one out-of-box neighbour. Boxes are at least 2 in the marker's normal direction, and `h = max(h, 3)` / `w = max(w, 3)` enforce at least 3 along the marker's side. So each join has at most one valid d, and `_check_scene` asserts exactly one (`len(valid) != 1` raises).",
+        "`_make_shape` never removes marker cells. It only removes a cell when `_spans` and `_connected` still hold, so the solver's component bounding box equals the latent box. Rim-start shapes contain the markers because side cells lie on the rim.",
+        "Join colours come from `random.sample(MARKERS, n-1)` and give one join per tree edge. The lone marker uses a colour from `spare` (not in `colours`) and overwrites only a BODY cell, so it can never create or corrupt a link. `_check_scene` also rejects any colour that occurs more than twice, any join colour twice on one piece, and any join set that does not connect all pieces.",
+        "Latent placement rejects overlap (`placed & occupied`), and `_check_scene` re-checks overlap and marker adjacency. The solver's placement of each child is determined by the tree and the unique direction. Any subset of an overlap-free assembly is overlap-free, so the solver's `if cells & occupied: continue` never fires in-domain. The output is a translation-invariant crop, so the choice of root (component 0 in augmented reading order) does not matter.",
+        "Input boxes are separated by at least one background cell, both in random scattering (`r + h < br` etc.) and in shelf packing (`+1` gaps). `_check_scene` re-verifies that pieces do not touch and that background is the majority colour, so components equal latent pieces.",
+        "The emitted solver works on the visible augmented grid. All four directions are treated symmetrically and there is no untransform wrapper. `d4` is unused, which is correct because the rule is direction-symmetric. The palette only substitutes the genuine BG and BODY roles.",
+        "Original fixtures are consistent with the rule. Lone markers appear in the originals: the 8 in train 1 and the 4 in test 1.",
+        "The host audit passed: 1000 fresh pairs, 8000 augmented checks and 16 fixture variants, with no sampler rejections."
+      ],
+      "blocking_issues": [],
+      "nonblocking_limits": [
+        "BODY is the specialised constant palette[1] rather than inferred. This is legitimate as a genuine rule colour.",
+        "Out-of-domain fallbacks are excluded by `_check_scene`: majority-colour background when BG is absent, first-direction or overlap-skip behaviour for ambiguous joins, and dropping unreached pieces.",
+        "Synthetic extensions go beyond the demonstrated regime: non-13x13 canvases (10..20), star trees with up to three joins on one piece, and 4-piece scenes. All are rule-consistent.",
+        "A synthetic episode may include a lone side-cell distractor without any demonstration in that episode showing a lone marker. Staying put is the default reading of 'only paired colours link', so this is not treated as an arbitrary association.",
+        "The simple-phase fallback (3x3 straight chains) is low-variety but rule-consistent."
+      ],
+      "required_context_checks": [
+        "e9fc42f2 is not in the episode-evidence task list. Confirm the host does not need a lone-marker or star-tree demonstration in the context. Source review finds no arbitrary colour or shape lookup that would require one.",
+        "Confirm palette augmentation is a permutation, so palette[1] (body) and the marker colours never collide with palette[2] (background)."
+      ],
+      "task_id": "e9fc42f2",
+      "factory_sha256": "65be1e6a6a8376281438766161d71bdbe7390d0cb28cbab49e306d17b40b990a",
+      "constructor_sha256": "0d3f64d12dd5686308796de6cc995c6dd2f7d223b1e767d355fc8b8a0c4bcd26"
+    },
+    "host_review": "Read complete independent review and _check_scene. Connected spanning pieces, unique paired-marker direction, nonoverlapping assembly, and connected joins make root/order irrelevant. Lone markers preserve input by default and need no arbitrary lookup. Augmentation.transformed checks bijective ten-colour mapping, so marker/body/background roles remain distinct. No additional context gate needed for star trees or lone markers under the stated join rule."
+  }
+}

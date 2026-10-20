@@ -1,0 +1,33 @@
+def build_program(d4, palette):
+    bg = int(palette[0])
+    ray = int(palette[1])
+    flip = 1 if d4 >= 4 else 0
+    anti = ((d4 % 4) + flip) % 2 == 1
+    lines = []
+    lines.append('import numpy as np')
+    lines.append('')
+    lines.append('BG = %d' % bg)
+    lines.append('RAY = %d' % ray)
+    lines.append('ANTI = %s' % ('True' if anti else 'False'))
+    lines.append('')
+    lines.append('def solve(demonstrations, grid):')
+    lines.append('    g = np.array(grid, dtype=int)')
+    lines.append('    h, w = g.shape')
+    lines.append('    out = np.repeat(np.repeat(g, 2, axis=0), 2, axis=1)')
+    lines.append('    H, W = out.shape')
+    lines.append('    for y in range(h):')
+    lines.append('        for x in range(w):')
+    lines.append('            if g[y, x] == BG:')
+    lines.append('                continue')
+    lines.append('            if not ANTI:')
+    lines.append('                rays = [(2 * y + 2, 2 * x + 2, 1, 1), (2 * y - 1, 2 * x - 1, -1, -1)]')
+    lines.append('            else:')
+    lines.append('                rays = [(2 * y + 2, 2 * x - 1, 1, -1), (2 * y - 1, 2 * x + 2, -1, 1)]')
+    lines.append('            for r, c, dr, dc in rays:')
+    lines.append('                while 0 <= r < H and 0 <= c < W:')
+    lines.append('                    if out[r, c] == BG:')
+    lines.append('                        out[r, c] = RAY')
+    lines.append('                    r += dr')
+    lines.append('                    c += dc')
+    lines.append('    return out.tolist()')
+    return '\n'.join(lines) + '\n'

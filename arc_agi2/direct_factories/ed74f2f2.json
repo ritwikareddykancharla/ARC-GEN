@@ -1,0 +1,50 @@
+{
+  "task_id": "ed74f2f2",
+  "factory_sha256": "ec26acfc255d65fc7b2a8115c9ab784a139bb5e554529cfb0d43504016059d6b",
+  "constructor_sha256": "97a3a3c16026be8393d81c151e71b4065f5f28d8eabc589e949893260d5fde04",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 26084550664780,
+  "d4": 7,
+  "unique_base_inputs": 472,
+  "seconds": 6.345392292016186,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "In the native frame the input is 5x9. A key glyph sits at rows 1-3, cols 1-3 and a pattern sits at rows 1-3, cols 5-7. The key is always a vertical stem plus two corners. Top corners mean colour 1, the TL/BR diagonal means colour 2, and the BL/TR diagonal means colour 3. The output is the pattern block with its foreground cells recoloured in the key's colour.\n\nThe factory maps every native coordinate through the D4 transform: optional row reversal first, then k clockwise rotations, with the grid dimensions tracked at each step. From this it computes where the key and pattern 3x3 blocks land in the visible grid. It also maps the three key glyphs to their visible relative cell sets and pairs each with palette[colour].\n\nThe whole episode, including the output, is transformed by the same D4. So the visible output is exactly the visible pattern subgrid, read in place, with no re-orientation needed. Its non-background cells (background is palette[0]) are painted with the looked-up colour. If the key shape is not in the table, the program learns the colour from any demo that has the same key shape, and only then falls back to palette[1].",
+    "limitations": "Block positions are fixed by the constructor (5x9 canvas, blank border), so the emitted program assumes the visible grid is the D4 image of that layout. The final fallback to palette[1] for an unrecognised key mirrors the archived solver's default of 1. The constructor never produces such keys, so this is not part of the puzzle rule. The fixtures are consistent with the uniform rule and no constructor defects were found. No tests were run.",
+    "independent_source_review": {
+      "verdict": "hold",
+      "mechanism": "Native frame: a 5x9 grid. A key glyph sits at rows 1-3, cols 1-3 and is a vertical stem at col 2 plus two corners. Corners (1,1),(1,3) mean colour 1 (T). Corners (1,1),(3,3) mean colour 2 (Z). Corners (3,1),(1,3) mean colour 3 (S). A random diagonally-connected 3x3 sprite sits at rows 1-3, cols 5-7. The output is that sprite with its 5-cells recoloured to the key's colour and 0 left as 0. The factory maps all native coordinates through mp (optional column mirror c -> w-1-c, then k clockwise turns (r,c) -> (c,h-1-r) with h,w swapped each turn). From this it finds the visible key and pattern block origins and builds TABLE from the visible relative cell set of each glyph to palette[colour]. The emitted solve reads the visible key block, looks up the colour, and paints the visible pattern block in place.",
+      "evidence": [
+        "Constructor: grid[1..3][2]=5 plus colour-specific corners. Output cell i is color*hue and input cell i is 5*hue, at grid[1+i//3][5+i%3]. So the output is exactly the right block recoloured. No hidden latent other than colour, and the key glyph renders colour.",
+        "Archived TABLE {T:1, S:3, Z:2} agrees with the constructor extras {1:[(1,1),(1,3)], 2:[(1,1),(3,3)], 3:[(3,1),(1,3)]}. All six train fixtures and the test fixture agree.",
+        "diagonally_connected_sprite -> conway_sprite never deletes the last cell in any row or column, so the pattern is never empty. Every output therefore shows its colour.",
+        "mp is a bijection, so the three glyphs stay distinct visible cell sets under every D4. The keys use relative offsets (minus kr0,kc0), matching _shape's (i,j) offsets from KR,KC.",
+        "The whole episode, output included, gets the same D4. A D4 of the full grid restricted to the 3x3 pattern block equals the block's D4 up to translation. So reading the pattern in place is correct, and there is no untransform/native-solve/retransform wrapper.",
+        "Only 0 and 5 appear in inputs, so the BG=palette[0] test is exact. The TABLE miss path, with demo lookup and then FALLBACK, is unreachable because the constructor only emits the three glyphs.",
+        "Host audit passed 1000 fresh pairs and 8000 augmented checks."
+      ],
+      "blocking_issues": [
+        "The key glyph to colour association (T->palette[1], Z->palette[2], S->palette[3]) is an arbitrary lookup with no geometric derivation; the archived rule itself says so. Episode evidence is not enforced for this task. In episode_evidence_checks.require_colour_evidence, 'ed74f2f2' is absent from the task_id whitelist, so the function returns immediately. The D4-conflict context_policy does not cover this either. D4 does not change which palette colour a glyph maps to, and palette relabelling makes an unseen glyph's colour unguessable.",
+        "Why this is reachable: the generator picks color = randint(1,3) independently for each pair. A query whose glyph appears in no demonstration is therefore common, about (2/3)^n for n demos. In that case the emitted solver answers correctly only through its hardcoded TABLE, and the visible episode does not determine the answer colour."
+      ],
+      "nonblocking_limits": [
+        "Block positions are fixed by the constructor's 5x9 layout. The solver assumes the visible grid is a D4 image of that layout.",
+        "The solver never consults demonstrations in-domain, because TABLE always hits. The demo-learning and palette[1] fallback paths are out-of-domain defensive code only.",
+        "The prior notes describe the flip as 'row reversal'. The factory code actually mirrors columns (c = w-1-c) before rotating. The host checks pass, so this is a documentation mismatch, not a logic error."
+      ],
+      "required_context_checks": [
+        "Add an ed74f2f2 evidence check. For each query, take the visible key-block glyph: the relative non-background cell set at the D4-mapped key origin, or equivalently the three-cell stem plus corner pattern. Require at least one demonstration with the same glyph whose output non-background colour shows the association. Otherwise reject the episode."
+      ],
+      "task_id": "ed74f2f2",
+      "factory_sha256": "ec26acfc255d65fc7b2a8115c9ab784a139bb5e554529cfb0d43504016059d6b",
+      "constructor_sha256": "97a3a3c16026be8393d81c151e71b4065f5f28d8eabc589e949893260d5fde04"
+    },
+    "host_review": "Independent review hold resolved: added demonstration-only exact visible glyph evidence. Each query glyph must occur in a demonstration with a nonempty single-colour output. SameD4 maps5x9key positions; no query output is read. Regression test rejects missing glyph or empty teaching output across8D4/nonidentitypalette. Factory and constructor unchanged."
+  }
+}

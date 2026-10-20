@@ -369,6 +369,49 @@ class GeneratorTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError,'match family'):
             sequence.generate(family='mirror',params=sequence._FIXTURES['train'][0])
 
+    def test_path_phase_panel_period_and_containment_controls(self):
+        paths=importlib.import_module('tasks.task_195c6913')
+        panels=importlib.import_module('tasks.task_2ccd9fef')
+        trees=importlib.import_module('tasks.task_2d0172a1')
+        terrain=[[8]*12 for _ in range(10)]
+        cells=[(7,c) for c in range(4)]+[(r,3) for r in (6,5,4,3)]+[(3,c) for c in range(4,12)]
+        for r,c in cells:terrain[r][c]=0
+        p=paths.generate(terrain=terrain,pattern=[1,1,2],marker_color=9,
+                         marker_pos=(8,9),seed_rows=[7],legend_row=0)
+        for i,(r,c) in enumerate(cells):self.assertEqual(p['output'][r][c],[1,1,2][i%3])
+        self.assertEqual(p['output'][7][4],9)
+        self.assertEqual(p['output'][2][3],9)
+        self.assertEqual(p['output'][8][9],8)
+        for axis in (0,1):
+            for q in (1,2):
+                n=3 if q==1 else 5
+                ph,pw=(30//n,30) if axis==0 else (30,30//n)
+                random.seed(30000+axis+q)
+                p=call(lambda:panels.generate(axis=axis,num_panels=n,panel_height=ph,panel_width=pw,sequence_period=q),seconds=3)
+                self.assertEqual((len(p['input']),len(p['input'][0])),(30,30))
+                self.assertEqual((len(p['output']),len(p['output'][0])),(ph,pw))
+                self.assertEqual(p['output'],grid(call(solver('2ccd9fef'),p['input'])))
+        for style in trees._STYLES:
+            random.seed(30000)
+            p=call(lambda:trees.generate(bg=8,fg=3,style=style,outside=2,width=30,height=30),seconds=3)
+            self.assertEqual((len(p['input']),len(p['input'][0])),(30,30))
+            _,_,roots=trees._parse(p['input'])
+            self.assertEqual(sum(not n['kids'] for n in roots),2)
+            self.assertEqual(sum(bool(n['kids']) for n in roots),2 if style=='pair' else 1)
+            self.assertEqual(p['output'],grid(call(solver('2d0172a1'),p['input'])))
+        with self.assertRaisesRegex(ValueError,'distinct'):
+            paths.generate(background=1,path_color=1)
+        with self.assertRaisesRegex(ValueError,'explicit terrain'):
+            paths.generate(seed_rows=[4])
+        with self.assertRaisesRegex(ValueError,'both template and objects'):
+            panels.generate(template=[[0]*5 for _ in range(5)])
+        with self.assertRaisesRegex(ValueError,'five panels'):
+            panels.generate(num_panels=3,sequence_period=2)
+        with self.assertRaisesRegex(ValueError,'Unknown containment'):
+            trees.generate(style='typo')
+        with self.assertRaisesRegex(ValueError,'outside must'):
+            trees.generate(outside=3)
+
     def test_colour_cycles_are_simultaneous_and_episode_wide(self):
         palette=[1,2,0,3,4,5,6,7,8,9]
         self.assertEqual(b.transformed([[0,1,2]],0,palette),[[1,2,0]])

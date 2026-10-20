@@ -2520,4 +2520,66 @@ class GeneratorTests(unittest.TestCase):
                         odd_pattern=['8888','8288','8888','2222'])):
             with self.assertRaises(ValueError):m.generate(**kw)
 
+    def test_minority_reflection_counts_cells_not_objects(self):
+        m=importlib.import_module('tasks.task_ad3b40cf')
+        p=m.generate(height=14,width=15,kind='vertical',line=7,objects=[
+            (2,[(1,1),(1,2)]),(2,[(5,1),(5,2)]),
+            (3,[(9,1),(9,2),(9,3),(10,1),(10,2)])])
+        self.assertEqual(sum(row.count(2) for row in p['input']),4)
+        self.assertEqual(sum(row.count(2) for row in p['output']),8)
+        self.assertEqual(sum(row.count(3) for row in p['output']),5)
+        self.assertEqual(p['output'],grid(call(solver('ad3b40cf'),p['input'])))
+
+    def test_minimum_diagonal_reflection_has_constructive_fallback(self):
+        m=importlib.import_module('tasks.task_ad3b40cf')
+        random.seed(93000)
+        with patch.object(m,'_place_random',return_value=None):
+            p=m.generate(height=6,width=6,kind='diagonal',
+                         hard=False,smallbreak=False,tight=True)
+        self.assertEqual(p['output'],grid(call(solver('ad3b40cf'),p['input'])))
+        cells=[(r,c) for r,row in enumerate(p['input']) for c,v in enumerate(row)
+               if v not in (1,8)]
+        self.assertTrue(any(abs(r-c)==2 for r,c in cells))
+        with self.assertRaises(ValueError):
+            m.generate(height=6,width=6,kind='diagonal',hard=True,smallbreak=True)
+
+    def test_gravity_noncontact_cross_support_requires_explicit_opt_in(self):
+        m=importlib.import_module('tasks.task_ac2e8ecf')
+        kw=dict(width=10,height=10,objects=[
+            ('cross',2,0,0,3,3,1,1),('cross',3,4,1,3,3,1,1),
+            ('frame',5,5,6,3,3,0,0)])
+        with self.assertRaisesRegex(ValueError,'bar contact'):m.generate(**kw)
+        p=m.generate(**kw,cross_contact='box_gap')
+        self.assertEqual(p['output'],grid(call(solver('ac2e8ecf'),p['input'])))
+
+    def test_gravity_dense_and_required_pass_through_requests(self):
+        m=importlib.import_module('tasks.task_ac2e8ecf')
+        for h,w,nf,nc in ((10,10,3,3),(11,10,6,1),(30,30,6,6)):
+            random.seed(94000)
+            p=m.generate(height=h,width=w,num_frames=nf,num_crosses=nc,
+                         require_stack=True,require_pass_through=True)
+            self.assertEqual((len(p['input']),len(p['input'][0])),(h,w))
+            self.assertNotEqual(p['input'],p['output'])
+            self.assertEqual(p['output'],grid(call(solver('ac2e8ecf'),p['input'])))
+
+    def test_quadrant_scaling_extremes_keep_requested_mode(self):
+        m=importlib.import_module('tasks.task_b10624e5')
+        for mode in ('fine','aligned'):
+            for q in ((0,0),(0,1),(1,0),(1,1)):
+                for top,bottom in ((7,7),(22,7)):
+                    random.seed(95000)
+                    p=m.generate(top=top,bottom=bottom,left=7,right=22,
+                                 mode=mode,template_quadrant=q,num_targets=3)
+                    self.assertEqual((len(p['input']),len(p['input'][0])),
+                                     (top+bottom+1,30))
+                    self.assertEqual(p['output'],grid(call(solver('b10624e5'),p['input'])))
+
+    def test_quadrant_scaling_rejects_clipping_that_erases_a_colour(self):
+        m=importlib.import_module('tasks.task_b10624e5')
+        t=[[8,8,4,4],[8,8,4,4],[2,2,3,3],[2,2,3,3]]
+        with self.assertRaisesRegex(ValueError,'hides a colour'):
+            m.generate(template=t,template_pos=(4,5),targets=[(0,16,1)])
+        with self.assertRaisesRegex(ValueError,'raw template'):
+            m.generate(template=t,template_pos=(-1,5),targets=[(5,20,2)])
+
 if __name__=='__main__':unittest.main()

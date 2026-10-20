@@ -753,13 +753,13 @@ abc82100,evaluation,False,True,extension_validated,tasks/task_abc82100.py,object
 ac0a08a4,training,False,True,upstream_fixture_verified,tasks/task_ac0a08a4.py,template;count;crop;scale,references/ac0a08a4.json,3x3->12x12,Expand semantic and boundary-case tests
 ac0c2ac3,training,False,True,upstream_fixture_verified,tasks/task_ac0c2ac3.py,layers,references/ac0c2ac3.json,13x13->13x13,Expand semantic and boundary-case tests
 ac0c5833,training,False,True,upstream_fixture_verified,tasks/task_ac0c5833.py,rigid;template,references/ac0c5833.json,27x27->27x27,Expand semantic and boundary-case tests
-ac2e8ecf,training,False,True,generator_missing,,topology;dynamics;crop;layers,references/ac2e8ecf.json,16x15->16x15,"Construct, validate and review standalone generator"
+ac2e8ecf,training,False,True,extension_validated,tasks/task_ac2e8ecf.py,topology;dynamics;crop;layers,references/ac2e8ecf.json,16x15->16x15,Expand semantic and boundary-case tests
 ac3e2b04,training,False,True,upstream_fixture_verified,tasks/task_ac3e2b04.py,template;layers,references/ac3e2b04.json,16x18->16x18,Expand semantic and boundary-case tests
 ac605cbb,training,False,True,upstream_fixture_verified,tasks/task_ac605cbb.py,selection;template;count,references/ac605cbb.json,11x11->11x11,Expand semantic and boundary-case tests
 ac6f9922,training,False,True,upstream_fixture_verified,tasks/task_ac6f9922.py,selection;topology;count;order;crop;scale,references/ac6f9922.json,19x19->3x3,Expand semantic and boundary-case tests
 ad173014,training,False,True,upstream_fixture_verified,tasks/task_ad173014.py,recolour;rigid;order,references/ad173014.json,27x27->27x27,Expand semantic and boundary-case tests
 ad38a9d0,training,False,True,upstream_fixture_verified,tasks/task_ad38a9d0.py,objects;selection;legend;recolour;repeat;crop,references/ad38a9d0.json,9x9->9x9,Expand semantic and boundary-case tests
-ad3b40cf,training,False,True,generator_missing,,selection;rigid;template;dynamics;count,references/ad3b40cf.json,17x17->17x17,"Construct, validate and review standalone generator"
+ad3b40cf,training,False,True,extension_validated,tasks/task_ad3b40cf.py,selection;rigid;template;dynamics;count,references/ad3b40cf.json,17x17->17x17,Expand semantic and boundary-case tests
 ad7e01d0,training,False,True,upstream_fixture_verified,tasks/task_ad7e01d0.py,repeat;template;topology;order;crop,references/ad7e01d0.json,5x5->25x25,Expand semantic and boundary-case tests
 ae3edfdc,training,False,True,upstream_fixture_verified,tasks/task_ae3edfdc.py,movement,references/ae3edfdc.json,15x15->15x15,Expand semantic and boundary-case tests
 ae4f1146,training,False,True,upstream_fixture_verified,tasks/task_ae4f1146.py,objects;repeat;count;crop,references/ae4f1146.json,9x9->3x3,Expand semantic and boundary-case tests
@@ -774,7 +774,7 @@ b0039139,evaluation,True,True,extension_validated,tasks/task_b0039139.py,panels;
 b0722778,training,False,True,upstream_fixture_verified,tasks/task_b0722778.py,recolour;rigid;crop;analogy,references/b0722778.json,8x9->8x2,Expand semantic and boundary-case tests
 b0c4d837,training,False,True,upstream_fixture_verified,tasks/task_b0c4d837.py,topology;paths;count;crop,references/b0c4d837.json,9x9->3x3,Expand semantic and boundary-case tests
 b0f4d537,training,False,True,upstream_fixture_verified,tasks/task_b0f4d537.py,legend;repeat;count;order;crop;layers,references/b0f4d537.json,12x15->12x7,Expand semantic and boundary-case tests
-b10624e5,evaluation,False,True,generator_missing,,rigid;movement;template;dynamics;scale,references/b10624e5.json,27x27->27x27,"Construct, validate and review standalone generator"
+b10624e5,evaluation,False,True,extension_validated,tasks/task_b10624e5.py,rigid;movement;template;dynamics;scale,references/b10624e5.json,27x27->27x27,Expand semantic and boundary-case tests
 b15fca0b,training,False,True,extension_validated,tasks/task_b15fca0b.py,objects;selection;paths,references/b15fca0b.json,10x10->10x10,Expand semantic and boundary-case tests
 b190f7f5,training,False,True,upstream_fixture_verified,tasks/task_b190f7f5.py,recolour;template;crop;scale,references/b190f7f5.json,8x4->16x16,Expand semantic and boundary-case tests
 b1948b0a,training,False,True,upstream_fixture_verified,tasks/task_b1948b0a.py,recolour,references/b1948b0a.json,4x4->4x4,Expand semantic and boundary-case tests

@@ -585,10 +585,10 @@ task_id,split,former_holdout,training_eligible,status,standalone_module,candidat
 891232d6,training,False,True,upstream_fixture_verified,tasks/task_891232d6.py,movement;paths,references/891232d6.json,27x25->27x25,Expand semantic and boundary-case tests
 89565ca0,evaluation,False,True,extension_validated,tasks/task_89565ca0.py,objects;panels;selection;count;order;crop;layers,references/89565ca0.json,29x30->5x6,Expand semantic and boundary-case tests
 896d5239,training,False,True,upstream_fixture_verified,tasks/task_896d5239.py,selection,references/896d5239.json,15x18->15x18,Expand semantic and boundary-case tests
-898e7135,evaluation,False,True,generator_missing,,selection;rigid;topology;scale;assembly,references/898e7135.json,30x30->30x30,"Construct, validate and review standalone generator"
+898e7135,evaluation,False,True,extension_validated,tasks/task_898e7135.py,selection;rigid;topology;scale;assembly,references/898e7135.json,30x30->30x30,Expand semantic and boundary-case tests
 8a004b2b,training,False,True,upstream_fixture_verified,tasks/task_8a004b2b.py,movement;template;crop;scale,references/8a004b2b.json,19x18->14x18,Expand semantic and boundary-case tests
 8a371977,training,False,True,upstream_fixture_verified,tasks/task_8a371977.py,objects;selection;topology;count;crop,references/8a371977.json,30x30->30x30,Expand semantic and boundary-case tests
-8a6d367c,training,False,True,generator_missing,,panels;legend;topology;crop;scale;instructions,references/8a6d367c.json,27x21->14x18,"Construct, validate and review standalone generator"
+8a6d367c,training,False,True,extension_validated,tasks/task_8a6d367c.py,panels;legend;topology;crop;scale;instructions,references/8a6d367c.json,27x21->14x18,Expand semantic and boundary-case tests
 8abad3cf,training,False,True,upstream_fixture_verified,tasks/task_8abad3cf.py,selection;movement;template;count;order;crop,references/8abad3cf.json,5x10->4x9,Expand semantic and boundary-case tests
 8b28cd80,training,False,True,upstream_fixture_verified,tasks/task_8b28cd80.py,recolour;repeat;rays;count;scale;layers,references/8b28cd80.json,3x3->9x9;3x3->9x9,Expand semantic and boundary-case tests
 8b7bacbf,evaluation,False,True,extension_validated,tasks/task_8b7bacbf.py,objects;topology;paths;layers,references/8b7bacbf.json,30x30->30x30;22x26->22x26,Expand semantic and boundary-case tests

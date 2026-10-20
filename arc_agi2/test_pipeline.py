@@ -11,6 +11,67 @@ from .fixture_policy import fixture_basis
 from .augmentation import apply_episode,settings,exhaustive_variants
 
 class GeneratorTests(unittest.TestCase):
+    def test_scaled_assembly_retains_scale_after_rejected_render(self):
+        m=importlib.import_module('tasks.task_898e7135');original=m._zero_majority
+        for seed in range(41000,41008):
+            calls=[]
+            def reject_first(g):
+                calls.append(True)
+                return False if len(calls)==1 else original(g)
+            expected=random.Random(seed).choice([2,2,3]);random.seed(seed)
+            with patch.object(m,'_zero_majority',side_effect=reject_first):
+                params=m._sample(None,None,None,None,None)
+            self.assertGreaterEqual(len(calls),2)
+            self.assertEqual(params[2],expected)
+
+    def test_scaled_assembly_explicit_noise_and_scale_extensions(self):
+        m=importlib.import_module('tasks.task_898e7135')
+        cases=[dict(height=30,width=30,k=2,
+                    board=['#####','#1###','#####','###1#','#####'],
+                    board_colour=2,board_pos=[0,0],
+                    pieces=[[0,7,1,['1']],[3,7,1,['1']]],noise_colour=7,
+                    noise=[[25,25],[25,26],[26,25],[26,26],[20,20]]),
+               dict(height=20,width=20,k=5,
+                    board=['######','#1####','######','######','######','######'],
+                    board_colour=2,board_pos=[0,0],pieces=[[0,8,1,['1']]],
+                    noise_colour=7,noise=[[18,18]])]
+        for kw in cases:
+            p=m.generate(**kw)
+            self.assertEqual(p['output'],grid(call(solver('898e7135'),p['input'])))
+        self.assertEqual(len(p['output']),30)
+        # Without an isolated dot the blob does not identify itself as noise.
+        cases[0]['noise'].pop()
+        with self.assertRaisesRegex(ValueError,'isolated single dot'):
+            m.generate(**cases[0])
+
+    def test_partial_glyph_requires_joint_hint_evidence(self):
+        m=importlib.import_module('tasks.task_8a6d367c')
+        glyphs=[['101','010','101'],['001','010','101'],['101','010','100']]
+        kw=dict(width=20,height=20,glyphs=glyphs,colors=[1,2,3],
+                glyph_cols=[1,5,9],glyph_top=1,frame_top=6,frame_left=2,
+                cell_h=2,cell_w=2,frame_color=4,fill_color=5,target=0,
+                hints=[(0,0),(2,2)])
+        p=m.generate(**kw)
+        self.assertEqual(p['output'],grid(call(solver('8a6d367c'),p['input'])))
+        for hint in kw['hints']:
+            with self.assertRaisesRegex(ValueError,'more than one glyph'):
+                m.generate(**{**kw,'hints':[hint]})
+        for field,value in [('hints',5),('hints',(0,0)),('colors',1),
+                            ('glyph_cols',2),('glyphs',[[1,0,1]]),
+                            ('num_glyphs',3.0),('num_hints',2.0),
+                            ('glyph_h',3.0),('glyph_w',3.0)]:
+            with self.subTest(field=field),self.assertRaises(ValueError):
+                m.generate(**{**kw,field:value})
+
+    def test_partial_glyph_dense_requested_controls(self):
+        m=importlib.import_module('tasks.task_8a6d367c')
+        random.seed(41000)
+        p=m.generate(glyph_h=3,glyph_w=3,num_glyphs=6,num_hints=6)
+        self.assertEqual(p['output'],grid(call(solver('8a6d367c'),p['input'])))
+        for kw in [dict(num_hints=1),dict(cell_h=6,cell_w=6,num_hints=2)]:
+            random.seed(41000);p=m.generate(**kw)
+            self.assertEqual(p['output'],grid(call(solver('8a6d367c'),p['input'])))
+
     def test_frames_reject_unrecoverable_explicit_divider(self):
         frames=importlib.import_module('tasks.task_89565ca0')
         kw=dict(height=20,width=20,noise_color=5,

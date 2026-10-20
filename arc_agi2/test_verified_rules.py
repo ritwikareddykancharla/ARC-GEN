@@ -1,4 +1,4 @@
-"""Independent evidence for complete-chain verification over greedy matching."""
+"""Independent evidence for documented verifier improvements."""
 import copy
 import importlib
 import itertools
@@ -82,5 +82,63 @@ class CompleteChainTests(unittest.TestCase):
                 self.assertTrue(any(grid(self.old(p['input']))!=p['output'] for p in rows))
                 for p in rows:self.assertEqual(self.solve(p['input']),p['output'])
 
+
+
+class CroppedMosaicTests(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        cls.module=importlib.import_module('tasks.task_de493100')
+        cls.old=staticmethod(solver('de493100'))
+        cls.solve=staticmethod(verification_solver('de493100'))
+
+    def test_canonical_replay_and_all_supported_sizes(self):
+        original=reference('de493100')['canonical']
+        self.assertEqual(self.module.validate(),original)
+        for pair in original['train']+original['test']:
+            self.assertEqual(self.solve(pair['input']),pair['output'])
+            self.assertEqual(grid(self.old(pair['input'])),pair['output'])
+        for size in range(12,31,2):
+            random.seed(70000+size)
+            pair=self.module.generate(size=size)
+            self.assertEqual(len(pair['input']),size)
+            self.assertEqual(self.solve(pair['input']),pair['output'])
+
+    def test_saved_counterexample_and_inconsistent_orbit(self):
+        import json
+        evidence=json.loads((Path(__file__).parent/'reports/review-blockers/de493100.json').read_text())['counterexample']
+        self.assertEqual(self.solve(evidence['input']),evidence['output'])
+        self.assertNotEqual(grid(self.old(evidence['input'])),evidence['output'])
+        bad=copy.deepcopy(reference('de493100')['canonical']['test'][0]['input'])
+        bad[2][2]=next(v for v in [0,1,2,3,4,5,6,8,9] if v!=bad[2][2])
+        with self.assertRaisesRegex(ValueError,'Visible reflection partners disagree'):
+            self.solve(bad)
+
+    def test_partial_mask_controls_and_unrecoverable_scene(self):
+        for seed in range(5):
+            random.seed(seed)
+            pair=self.module.generate(mask_height=14,mask_width=14)
+            self.assertEqual(len(pair['input']),30)
+            self.assertEqual((len(pair['output']),len(pair['output'][0])),(14,14))
+            self.assertEqual(self.solve(pair['input']),pair['output'])
+        pair=self.module.generate(size=12,mask_height=1,mask_width=1)
+        self.assertEqual((len(pair['output']),len(pair['output'][0])),(1,1))
+        self.assertEqual(self.solve(pair['input']),pair['output'])
+        q=[[1+(r+c)%2 for c in range(7)] for r in range(7)]
+        with self.assertRaisesRegex(ValueError,'no valid visible reconstruction cue'):
+            self.module.generate(quadrant=q,mask=[0,0,2,2])
+        for kwargs in [{'size':True},{'size':13},{'size':18.0},{'mask_height':True}]:
+            with self.assertRaises(ValueError):self.module.generate(**kwargs)
+
+    def test_pool_builder_retains_variable_sizes(self):
+        from . import build_million as builder
+        import pyarrow.parquet as pq
+        with tempfile.TemporaryDirectory() as tmp:
+            with patch.object(builder,'OUT',Path(tmp)),patch.object(builder,'POOL_SIZE',24):
+                report=builder.make_pool('de493100')
+                self.assertEqual(report['pairs'],24)
+                self.assertNotIn('reference_disagreement',report['rejections'])
+                rows=pq.read_table(Path(tmp)/'pools/de493100.parquet').to_pylist()
+                self.assertGreater(len({len(p['input']) for p in rows}),1)
+                for pair in rows:self.assertEqual(self.solve(pair['input']),pair['output'])
 
 if __name__=='__main__':unittest.main()

@@ -92,7 +92,54 @@ def panel_chain(grid):
     return check_grid(result)
 
 
-VERIFIERS = {'78332cb0': panel_chain}
+def cropped_mirror_patch(grid):
+    """Recover a rectangle masked in an N-wide crop of an (N+2)-wide mosaic.
+
+    The canonical N=30 gives mirror coordinate 31. Smaller even sizes are
+    labelled synthetic extensions of the same two-cell crop geometry.
+    Visible cells in each horizontal/vertical reflection orbit must agree.
+    A transpose-orbit fallback preserves the weak cue used by the original
+    first demonstration. No constructor, hidden quadrant or target is read.
+    """
+    from .runtime import grid as check_grid
+    a = check_grid(grid)
+    n = len(a)
+    if n != len(a[0]) or n % 2 or not 12 <= n <= 30:
+        raise ValueError('Expected an even square crop of side 12..30')
+    mask = {(r,c) for r,row in enumerate(a) for c,v in enumerate(row) if v == 7}
+    if not mask:
+        raise ValueError('Missing mask rectangle')
+    r0,r1 = min(r for r,c in mask),max(r for r,c in mask)
+    c0,c1 = min(c for r,c in mask),max(c for r,c in mask)
+    if len(mask) != (r1-r0+1)*(c1-c0+1):
+        raise ValueError('Mask must be one complete rectangle')
+    axis = n+1
+    def key(r,c):
+        return min(r,axis-r),min(c,axis-c)
+    visible = {}
+    for r,row in enumerate(a):
+        for c,value in enumerate(row):
+            if value == 7:
+                continue
+            orbit = key(r,c)
+            if orbit in visible and visible[orbit] != value:
+                raise ValueError('Visible reflection partners disagree')
+            visible[orbit] = value
+    output = []
+    for r in range(r0,r1+1):
+        row = []
+        for c in range(c0,c1+1):
+            orbit = key(r,c)
+            if orbit not in visible:
+                orbit = orbit[::-1]
+            if orbit not in visible:
+                raise ValueError('Masked cell lacks a visible reconstruction cue')
+            row.append(visible[orbit])
+        output.append(row)
+    return check_grid(output)
+
+
+VERIFIERS = {'78332cb0': panel_chain, 'de493100': cropped_mirror_patch}
 VERIFIER_EVIDENCE = {
     '78332cb0': {
         'mode': 'reviewed_complete_chain_verifier',
@@ -101,5 +148,14 @@ VERIFIER_EVIDENCE = {
         'counterexample': 'arc_agi2/reports/review-blockers/78332cb0.json',
         'canonical_data_changed': False,
         'archived_reference_changed': False,
-    }
+    },
+    'de493100': {
+        'mode': 'reviewed_dimension_aware_mirror_verifier',
+        'module': 'arc_agi2.verified_rules.cropped_mirror_patch',
+        'reason': 'Archived program fixes mirror coordinate 31; synthetic even-sized crops preserve the two-cell crop geometry with coordinate N+1.',
+        'counterexample': 'arc_agi2/reports/review-blockers/de493100.json',
+        'canonical_data_changed': False,
+        'archived_reference_changed': False,
+        'synthetic_extension': 'Even square sizes 12..30; original size 30 and its weak transpose fallback preserved.',
+    },
 }

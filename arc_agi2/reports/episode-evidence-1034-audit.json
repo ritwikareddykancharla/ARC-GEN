@@ -1,0 +1,44 @@
+{
+  "checked_at": 1792529104.57616,
+  "reports": [
+    {
+      "task_id": "b9630600",
+      "sampled_episodes": 20,
+      "accepted_episodes": 20,
+      "missing_evidence_episodes": 0,
+      "verified_augmented_records": 160,
+      "sampler_rejections": [],
+      "errors": [],
+      "passed": true
+    },
+    {
+      "task_id": "896d5239",
+      "sampled_episodes": 20,
+      "accepted_episodes": 20,
+      "missing_evidence_episodes": 0,
+      "verified_augmented_records": 160,
+      "sampler_rejections": [],
+      "errors": [],
+      "passed": true
+    }
+  ],
+  "summary": {
+    "families": 2,
+    "sampled_base_episodes": 40,
+    "accepted_base_episodes": 40,
+    "excluded_missing_evidence": 0,
+    "sampler_rejections": 0,
+    "verified_augmented_records": 320,
+    "errors": 0
+  },
+  "production_generation": false,
+  "source_hashes": {
+    "common.py": "879eb61e360e4a47ee1d569408e8c66114ac068794721fe1de1b59aaa476586a",
+    "arc_agi2/colour_evidence.py": "86f181eba1ea40597313b56183819264ee31721e125c277566b7244e71b59012",
+    "tasks/task_b9630600.py": "68779c89e29ea41f7a7a9b49a0fa5f675018403c8b44363b99036fb5bf1c3ad4",
+    "arc_agi2/direct_factories/task_b9630600.py": "ccdca36693699f044d13a6b1a372bbd2d7d99d76206f8da4661b91b7b4c2ce8e",
+    "tasks/task_896d5239.py": "ce1e856e4cd7c3fbaed57f50b2927ebcdbdfe09ed161abff0650ac80731ee74a",
+    "arc_agi2/direct_factories/task_896d5239.py": "044631dc5358a9db4381e104d4a048004c88d486f78982faa74b5112ce74e461"
+  },
+  "regression_tests": 442
+}

@@ -16,6 +16,74 @@
 
 import common
 
+_MAX_SCENES = 100000
+
+
+def _box_candidates(wides, talls, brows, bcols, grid):
+  """Lists nested pipe candidates as (dist, i, j, lines_clear)."""
+  n = len(wides)
+  cands = []
+  for i in range(n):
+    for j in range(i + 1, n):
+      ri0, ri1 = brows[i], brows[i] + talls[i] - 1
+      rj0, rj1 = brows[j], brows[j] + talls[j] - 1
+      ci0, ci1 = bcols[i], bcols[i] + wides[i] - 1
+      cj0, cj1 = bcols[j], bcols[j] + wides[j] - 1
+      rows_nested = (ri0 >= rj0 and ri1 <= rj1) or (rj0 >= ri0 and rj1 <= ri1)
+      cols_nested = (ci0 >= cj0 and ci1 <= cj1) or (cj0 >= ci0 and cj1 <= ci1)
+      if rows_nested:
+        lo, hi = min(ci1, cj1), max(ci0, cj0)
+        a, b = max(ri0, rj0) + 1, min(ri1, rj1) - 1
+        span = range(lo + 1, hi)
+        lines = all(grid[r][c] == 0 for r in (a, b) for c in span)
+        cands.append((hi - lo, i, j, lines))
+      if cols_nested:
+        lo, hi = min(ri1, rj1), max(ri0, rj0)
+        a, b = max(ci0, cj0) + 1, min(ci1, cj1) - 1
+        span = range(lo + 1, hi)
+        lines = all(grid[r][c] == 0 for c in (a, b) for r in span)
+        cands.append((hi - lo, i, j, lines))
+  return cands
+
+
+def _unique_spanning_tree(n, edges):
+  """True iff the minimum spanning tree over edges (w, i, j) exists and is unique."""
+  parent = list(range(n))
+  def find(x):
+    while parent[x] != x:
+      parent[x] = parent[parent[x]]
+      x = parent[x]
+    return x
+  tree = [[] for _ in range(n)]
+  rest, count = [], 0
+  for w, i, j in sorted(edges):
+    ri, rj = find(i), find(j)
+    if ri == rj:
+      rest.append((w, i, j))
+      continue
+    parent[ri] = rj
+    tree[i].append((j, w))
+    tree[j].append((i, w))
+    count += 1
+  if count != n - 1: return False
+  for w, i, j in rest:
+    best, stack = {i: 0}, [i]
+    while stack:
+      u = stack.pop()
+      for v, wv in tree[u]:
+        if v not in best:
+          best[v] = max(best[u], wv)
+          stack.append(v)
+    if best[j] >= w: return False  # An equal-weight swap gives another tree.
+  return True
+
+
+def _visibly_determined(wides, talls, brows, bcols, grid):
+  """Rejects scenes whose answer depends on hidden tie-breaks."""
+  cands = _box_candidates(wides, talls, brows, bcols, grid)
+  edges = [(d, i, j) for d, i, j, lines in cands if lines]
+  return _unique_spanning_tree(len(wides), edges)
+
 
 def generate(wides=None, talls=None, brows=None, bcols=None):
   """Returns input and output grids according to the given parameters.
@@ -86,9 +154,9 @@ def generate(wides=None, talls=None, brows=None, bcols=None):
     return grid, output
 
   if wides is None:
-    while True:
+    for _ in range(_MAX_SCENES):
       wide, tall = common.randint(3, 12), common.randint(3, 12)
-      brow, bcol = common.randint(0, 30 - wide), common.randint(0, 30 - tall)
+      brow, bcol = common.randint(0, 30 - tall), common.randint(0, 30 - wide)
       wides, talls, brows, bcols = [wide], [tall], [brow], [bcol]
       queue = [(wide, tall, brow, bcol)]
       def maybe_add(w, t, r, c):
@@ -114,7 +182,9 @@ def generate(wides=None, talls=None, brows=None, bcols=None):
         r, c = brow + tall + 1 + common.randint(0, 6), bcol + (wide - w) // 2
         maybe_add(w, t, r, c)
       grid, _ = draw()
-      if grid: break
+      if grid and _visibly_determined(wides, talls, brows, bcols, grid): break
+    else:
+      raise RuntimeError("No visibly determined scene within sampling budget")
 
   grid, output = draw()
   return {"input": grid, "output": output}

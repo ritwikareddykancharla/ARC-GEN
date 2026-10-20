@@ -35,7 +35,7 @@ recorded. Passing finite audits does not prove unrestricted generalization.
 
 - 213 native direct-coordinate certificates admitted after fresh audits and
   supplied-fixture checks.
-- 813 admitted factories. Each passed 1,000 fresh pairs, 8,000 augmented pair
+- 815 admitted factories. Each passed 1,000 fresh pairs, 8,000 augmented pair
   checks and 16 supplied-fixture variants. Their audit records retain draft
   limitations and source/constructor hashes. These checks are finite evidence,
   not proof of correctness on every generated input.
@@ -46,7 +46,7 @@ recorded. Passing finite audits does not prove unrestricted generalization.
   counts must be computed as a union, not added.
 - Local exporter test: 18 fresh base episodes, 144 augmented PNG/program/grid
   records. It requested 20 bases and reported a two-episode shortfall.
-- The union currently admits 1032 of 1,120 families; 88 still need direct
+- The union currently admits 1034 of 1,120 families; 86 still need direct
   augmented program admission. Constructor coverage and program coverage are
   different gates.
 - Synthetic labels for `00d62c1b` now fill every enclosed background component,
@@ -841,3 +841,29 @@ have regression coverage. Remaining: 70 semantic/context holds, 15 execution
 failures and three missing factories. Bulk generation has not launched.
 
 All 434 regression tests passed for this checkpoint.
+
+## 1034-family checkpoint
+
+- `b9630600`: infer pipe connections using the unique minimum spanning tree
+  of visible, line-clear candidates. Equal lengths remain allowed when they
+  do not create competing trees. A saved witness changes only hidden rectangle
+  order and produces different labels for the same input; random generation
+  and emitted programs reject those ambiguous cases. Corrected swapped initial
+  rectangle bounds. The CLI draft's whole-gap-empty restriction was removed: a
+  pipe can enclose another box when its two drawn lines are clear.
+- `896d5239`: replace distance clustering with an exact cover of cone markers.
+  Missing arm cells can leave a valid marker three cells from its neighbours,
+  so distance alone cannot identify the objects. Search compares completed
+  output grids, allowing multiple latent covers if their outputs agree. It
+  raises on search exhaustion or conflicting outputs rather than returning
+  the first cover or unchanged input. Corrected swapped apex row/column bounds;
+  clipped cones remain supported.
+
+Both passed 1,000 distinct fresh inputs, 8,000 augmented pair checks and
+16 fixture variants each. All 40 complete episodes passed, producing 320 D4
+records without sampler rejections. Original fixture hashes are unchanged.
+Remaining: 70 semantic/context holds, 13 execution failures and three missing
+factories. Parallel CLI drafts still need host review and execution checks.
+Bulk generation and model training have not launched.
+
+All 442 regression tests passed for this checkpoint.

@@ -1,0 +1,29 @@
+{
+  "task_id": "896d5239",
+  "factory_sha256": "044631dc5358a9db4381e104d4a048004c88d486f78982faa74b5112ce74e461",
+  "constructor_sha256": "ce1e856e4cd7c3fbaed57f50b2927ebcdbdfe09ed161abff0650ac80731ee74a",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 223708327760315,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 33.635433083050884,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "diagnosis": "The failing check is the third demonstration of the host counterexample (d4=0, palette maps 3->0 and 8->4). That scene contains a length-4 cone with apex (10,7) opening left, extent 3. One arm is complete: (9,6), (8,5), (7,4). On the other arm both ring-1 and ring-2 cells were dropped by the 1-in-5 deletion, so only the ring-3 cell (13,4) is present. That cell is at Chebyshev distance 3 from the apex and from every other marker. The archived and candidate solvers link markers only at distance 2 or less, so (13,4) became a singleton cluster and was skipped. The remaining cluster is a straight diagonal. Their cone test accepts a cone with markers on only one side, so the first sorted apex (7,4) 'opening down, extent 3' was accepted and the wrong triangle was filled. The candidate also differs from the expected label at (13,4)'s ring. The underlying cause is structural, not one unlucky case. Inside one generated sprite, consecutive gaps can reach Chebyshev distance 3: the apex plus ring-3 markers only, or an arm with only its ring-3 cell. Meanwhile the generator only guarantees that distinct sprites have bounding boxes separated by 2 empty rows or columns, which is Chebyshev distance 3 or more. No pure distance threshold can separate sprites correctly. The repair replaces clustering with a decomposition that uses the generator's own visible validity conditions. A candidate cone is (apex marker, direction, extent e). Every ring e must hold a marker, and both sides (offset < 0 and offset > 0) must hold markers. Every marker inside the cone's unclipped bounding box, expanded by the spacing of 2, must lie on that cone's arms; otherwise another sprite's box would violate common.overlaps(spacing=2). The marker set must then be exactly covered by candidates whose boxes are pairwise separated by 2 or more. In the counterexample this forces apex (10,7) opening left, because the one-sided straight-line readings are rejected and (13,4) must be covered. I checked all four canonical fixtures by hand under this criterion. Each has exactly one cover, and it equals the latent cones. Train 1: (5,3) right e3 and (12,4) down e2. Train 2: (2,4) down e2 and (8,5) down e3. Train 3: (2,5) down e2, (10,14) up e2 and (11,5) right e3. Test: (1,3) down e2, (5,15) up e2, (11,3) left e2 and (12,6) right e3. In the test, the left cone and the right cone are exactly 2 columns apart, which is allowed. This hand check is not a test run.",
+    "constructor_issue": "Requires separated cone bounding boxes, observed apex and last ring, and markers on both arms. These are native constructor invariants. Exact cover has a 200000-node limit; exhaustion is explicit. Random samples must match the sole completed output; same-output multiple covers remain eligible. No row-order fallback or unchanged-grid fallback. All dataset episodes still require exact verification.",
+    "explanation": "Replaced distance clustering with exact cover. Enumerate distinct completed grids, accepting multiple latent covers if outputs agree. Both constructor and program reject distinct-output ambiguity; search exhaustion raises instead of silently choosing first cover. Swapped row/column sampling bounds corrected; explicit fixtures unchanged.",
+    "limitations": "Requires separated cone bounding boxes, observed apex and last ring, and markers on both arms. These are native constructor invariants. Exact cover has a 200000-node limit; exhaustion is explicit. Random samples must match the sole completed output; same-output multiple covers remain eligible. No row-order fallback or unchanged-grid fallback. All dataset episodes still require exact verification.",
+    "host_review": {
+      "fixture_sha256": "001b7e873788eacfa3324ed3274d79e99d597947b71597181a6683df10074608",
+      "fixtures_unchanged": true,
+      "review": "Replaced distance clustering with exact cover. Enumerate distinct completed grids, accepting multiple latent covers if outputs agree. Both constructor and program reject distinct-output ambiguity; search exhaustion raises instead of silently choosing first cover. Swapped row/column sampling bounds corrected; explicit fixtures unchanged."
+    },
+    "original_cli_draft_notes": "outputs/research/arcgen-coverage-cli/direct-program-rewrites/execution-repairs-v2/896d5239/notes.json"
+  }
+}

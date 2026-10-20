@@ -10,6 +10,42 @@ from .task_registry import NEW_TASK_IDS
 from .augmentation import apply_episode,settings
 
 class GeneratorTests(unittest.TestCase):
+    def test_sliding_block_geometry_and_requested_shape_sequence_sizes(self):
+        block=importlib.import_module('tasks.task_332f06d7')
+        with self.assertRaisesRegex(ValueError,'size >= 2'):
+            block.generate(size=1,reachable=False)
+        with self.assertRaisesRegex(ValueError,'positions require layout'):
+            block.generate(start=(1,1))
+        with self.assertRaisesRegex(ValueError,'fit fully'):
+            block.generate(size=2,layout=['..####','..####','####..','####..'],start=(0,1),goal=(2,4))
+        for reachable in (True,False):
+            random.seed(30001)
+            p=block.generate(size=3,width=30,height=24,topology='rooms',reachable=reachable)
+            self.assertEqual((len(p['input']),len(p['input'][0])),(24,30))
+            self.assertEqual(p['output'],grid(call(solver('332f06d7'),p['input'])))
+            self.assertEqual(sum(v==0 for row in p['output'] for v in row),9)
+        swap=importlib.import_module('tasks.task_3391f8c0')
+        random.seed(30001)
+        p=swap.generate(width=30,height=24,shape_height=5,shape_width=5,num_copies=8,packing='tight',rep_color=3,odd_color=8)
+        before=Counter(v for row in p['input'] for v in row);after=Counter(v for row in p['output'] for v in row)
+        self.assertEqual((len(p['input']),len(p['input'][0])),(24,30))
+        self.assertEqual(after[8],8*before[8]);self.assertEqual(8*after[3],before[3])
+        with self.assertRaisesRegex(ValueError,'supplied together'):
+            swap.generate(odd_pos=(1,1))
+        sequence=importlib.import_module('tasks.task_351d6448')
+        for family in ('bar','slide','stair'):
+            random.seed(30000)
+            p=sequence.generate(family=family,height=9,width=30,num_panels=3,step=2)
+            self.assertEqual((len(p['input']),len(p['input'][0])),(29,30))
+            self.assertEqual(len(p['output']),9)
+            self.assertEqual(p['output'],grid(call(solver('351d6448'),p['input'])))
+        with self.assertRaisesRegex(ValueError,'within 30'):
+            sequence.generate(height=9,num_panels=4)
+        with self.assertRaisesRegex(ValueError,'matching explicit family'):
+            sequence.generate(family='bar',tile=[[1,0]]*3)
+        with self.assertRaisesRegex(ValueError,'Unknown sequence'):
+            sequence.generate(family='typo')
+
     def test_ray_components_bar_extents_and_open_shape_labels(self):
         ray=importlib.import_module('tasks.task_2f767503')
         # Ray hits one cell; the whole blob disappears, but its diagonal neighbor survives.

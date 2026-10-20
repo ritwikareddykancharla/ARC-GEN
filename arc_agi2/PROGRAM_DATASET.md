@@ -1100,3 +1100,33 @@ All 501 regression tests passed. Remaining: 52 semantic/context holds,
 9 execution failures and 3 missing factories. Bulk generation and model
 training have not launched; production remains 1,000 fresh bases per family
 plus consistent D4 augmentation, with program and grid together.
+
+## 1058-family checkpoint
+
+- `8e5c0c38`: preserve default tied-axis sampling (20%), split groups and
+  horizontal-symmetry distractors. Independently compare sixteen hypotheses:
+  row-only, column-only, or best of both with either orientation priority,
+  each with independent low/high axis ties. Demonstrations filter hypotheses;
+  survivors must agree on the same query. The canonical first query has four
+  cells whose labels depend on a tie convention absent from its demos. The
+  second query is unambiguous under these candidates. Save this evidence in
+  `8e5c0c38-canonical-axis-tie-evidence.json`, preserve the original labels,
+  and require a distinguishing synthetic demonstration before exporting a
+  tied query. No default tie-free narrowing was applied.
+- `a32d8b75`: preserve soft tiles, up arrows, rectangular tiles and multiple
+  legends. Independently parse the visible legend sections, corner, arrow,
+  tile and shape. Compare 32 tile hypotheses: colour swap/no swap, eight fixed
+  tile D4 transforms, and following/not following the arrow rotation. Fit
+  demonstration answers; query geometry can eliminate hypotheses whose full
+  stamp boxes do not fit or overlap. No clipping is used. Remaining predictions
+  must agree. Tests demonstrate soft-only and up-arrow-only ambiguity, recovery
+  with teaching examples, and all-D4 equivalence of complete hypothesis sets.
+
+Neither constructor nor direct program source changed. Their current hashes
+match the existing 1,000-pair, 8,000-D4-check, 16-fixture-variant certificates.
+New auditing accepted 38 of 40 complete base episodes, excluded two missing-
+evidence symmetry assemblies and verified 304 augmented records, with no
+sampler rejections or execution errors. All 507 regression tests passed.
+
+Remaining: 50 semantic/context holds, 9 execution failures and 3 missing
+factories. Bulk generation and training remain pending complete coverage.

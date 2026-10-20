@@ -1,0 +1,23 @@
+{
+  "task_id": "a32d8b75",
+  "factory_sha256": "9345de98783cf24081f69851299074693c537205b4b0ed1ef81b98a1fe7bd232",
+  "constructor_sha256": "8b4af5ab805469f0b6e46f906f89e9efe7dbf12d0286d1e40e049bdce0ef3420",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 4340721102417,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 20.12727325002197,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The factory works out where the original downward direction (1,0) ends up after the D4 transform. A reflection negates the column component, and each clockwise quarter turn maps (dr,dc) to (dc,-dr). This gives three constants:\n- VERT: the visible dividers are full columns of palette[6] when the original down axis is still vertical, and full rows otherwise.\n- DOWN_POS: whether original 'down' increases or decreases the visible index along that axis.\n- UP: the visible image of the original up vector.\n\nThe emitted program works directly on the visible grid.\n- It splits the grid at full divider lines of palette[6]. The widest strip is the canvas, which is cropped as is with no rotation. Every other strip is a legend.\n- In each legend, it finds the full palette[6] lines perpendicular to the dividers and orders them along the visible 'down' direction. The area before the first line is the upper area, then come box 1 and box 2.\n- Anchor: the position of palette[4] inside the visible box 1 (bottom or right half) picks the visible corner of the canvas. Box and canvas transform together, so no remapping is needed.\n- Arrow: the summed offset of the palette[7] cells from the centre of box 2 gives a visible arrow vector.\n- Shape rotation: the original rule rotates the shape by the rotation that takes 'up' to the arrow. Conjugating by D4 gives the visible rule: rotate the visible shape by the number of clockwise quarter turns that takes UP to the visible arrow.\n- Tile: it is not rotated. The visible tile, with its two colours swapped, is stamped as it appears, because D4 commutes with the block (Kronecker) structure.\n- Objects in the upper area are the 8-connected components of non-palette[0] cells. The tile is the two-colour component and the shape is the one-colour component.\n- The stamp is placed flush in the anchor corner, and only shape cells are painted.\n\nColour roles are constants: palette[6] for dividers, palette[0] for the legend background, palette[4] for the anchor and palette[7] for the arrow. The tile swap does not depend on the palette.",
+    "limitations": "- Not executed or tested by me.\n- The program assumes the constructor's domain: one canvas strictly wider than every legend; each legend has two 3x3 boxes framed by 6 with two full separator lines; one solid two-colour tile and one single-colour 8-connected shape that do not touch; stamps that fit and do not overlap.\n- Malformed legends are skipped silently.\n- Stamp cells that would fall outside the canvas are clipped. The generator never produces them.\n- The demonstrations are ignored, because the mechanism is fully determined by the query input.\n- Fixture ambiguity: the canonical test tile [[2,4],[4,2]] is a 'soft' tile. Its colour swap equals a mirror image, so demos alone cannot tell swapping from mirroring. The rule as implemented (swap, no tile rotation) is consistent with all approved fixtures.\n- No constructor indexing bugs or hidden random tie-breaks affect the answer. The archived solver's unused 'dname' variable is harmless.",
+    "host_review": "Retain native constructor including soft tiles, up arrows, rectangles, both legend sides and multiple legends. Independently parse visible legend sections, marker corner, arrow, tile and shape. Compare 32 tile rules (swap/no swap x 8 fixed D4 x follow-arrow/not); fit all demos. Geometry eliminates hypotheses whose complete stamp boxes do not fit or overlap, never clips them. Surviving rules must agree on every same query. Counterexamples cover soft-only and up-only demos, distinguishing evidence recovery, unchanged canonical episodes and all-D4 hypothesis-set equivalence. Native source and direct program unchanged.",
+    "semantic_draft_review": "Reviewed semantic-repairs-v2 reasoning. Use independent episode evidence; do not apply proposed tie-free constructor narrowing or silently prefer a hidden rule on ambiguous episodes. Reuse unchanged hash-matched 1000-pair/8000-D4/16-fixture audit; new complete-episode audit follows."
+  }
+}

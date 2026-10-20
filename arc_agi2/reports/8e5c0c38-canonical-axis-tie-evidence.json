@@ -1,0 +1,75 @@
+{
+  "task_id": "8e5c0c38",
+  "finding": "The canonical demonstrations select vertical-axis-only removal but do not distinguish low/high equal-score axis ties. First query predictions differ; second query predictions agree. A tied synthetic demonstration teaches the convention. This is ambiguity among the stated sixteen candidates, not a universal identifiability claim.",
+  "hypotheses_surviving_demos": [
+    4,
+    5,
+    6,
+    7
+  ],
+  "queries": [
+    {
+      "distinct_query_predictions": 2,
+      "original_label_matches": [
+        4,
+        6
+      ],
+      "differing_cells": [
+        {
+          "row": 16,
+          "col": 19,
+          "input": 3,
+          "candidate_values": [
+            3,
+            1
+          ],
+          "original_label": 3
+        },
+        {
+          "row": 16,
+          "col": 20,
+          "input": 3,
+          "candidate_values": [
+            1,
+            3
+          ],
+          "original_label": 1
+        },
+        {
+          "row": 17,
+          "col": 20,
+          "input": 3,
+          "candidate_values": [
+            1,
+            3
+          ],
+          "original_label": 1
+        },
+        {
+          "row": 18,
+          "col": 18,
+          "input": 3,
+          "candidate_values": [
+            3,
+            1
+          ],
+          "original_label": 3
+        }
+      ]
+    },
+    {
+      "distinct_query_predictions": 1,
+      "original_label_matches": [
+        4,
+        5,
+        6,
+        7
+      ],
+      "differing_cells": []
+    }
+  ],
+  "fixture_labels_changed": false,
+  "training_gate_exemption": false,
+  "constructor_distribution_changed": false,
+  "fixture_sha256": "6758b81430540572e281787273226419a314f6346a69691ff609659b3f5a7481"
+}

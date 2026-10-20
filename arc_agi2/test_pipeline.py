@@ -7,9 +7,76 @@ from . import build_million as b
 from .generators.registry import GENERATORS,generate
 from .runtime import BASE,reference,solver,call,grid,check_reference
 from .task_registry import NEW_TASK_IDS
+from .fixture_policy import fixture_basis
 from .augmentation import apply_episode,settings,exhaustive_variants
 
 class GeneratorTests(unittest.TestCase):
+    def test_long_walk_large_mover_and_marker_line_controls(self):
+        walk=importlib.import_module('tasks.task_5545f144')
+        arrow=[(0,0),(-1,-1),(-1,1)]
+        random.seed(30000)
+        # Choose the downward quadrant, which has room for this long lattice.
+        with patch.object(walk.random,'choice',return_value=1):
+            path=walk._lattice_path(30,30,arrow,(3,3),(0,1),20)
+        self.assertEqual(len(path),20)
+        self.assertEqual(walk._walk((3,3),(0,1),path,30,30),(path,set()))
+        p=walk.generate(height=30,width=14,num_panels=2,num_eats=12)
+        self.assertEqual((len(p['input'][0]),len(p['output'][0])),(29,14))
+        self.assertEqual(p['output'],grid(call(solver('5545f144'),p['input'])))
+        push=importlib.import_module('tasks.task_5623160b')
+        random.seed(30000)
+        p=push.generate(width=30,height=30,num_anchors=1,num_movers=2,num_distractors=0,mover_size=19)
+        counts=Counter(v for row in p['input'] for v in row if v not in (7,9))
+        self.assertEqual(sorted(counts.values()),[19,19])
+        self.assertEqual(p['output'],grid(call(solver('5623160b'),p['input'])))
+        marker=importlib.import_module('tasks.task_581f7754')
+        with self.assertRaisesRegex(ValueError,'exactly one border'):
+            marker.generate(width=10,height=10,background=0,markers=[(0,0,2)],shapes=[(3,3,['12'])])
+        corner=importlib.import_module('tasks.task_54dc2872')
+        with self.assertRaisesRegex(ValueError,'overlap or touch'):
+            corner.generate(width=10,height=10,shapes=[(3,3,1,1,3,3,2,4,(3,4))])
+
+    def test_episode_labels_preserve_approved_correction_provenance(self):
+        with tempfile.TemporaryDirectory() as directory:
+            previous=b.OUT;b.OUT=Path(directory);(b.OUT/'pools').mkdir()
+            try:
+                tid='581f7754';module=importlib.import_module('tasks.task_'+tid);rows=[]
+                for seed_ in range(30):
+                    random.seed(seed_);p=module.generate(width=30,height=24)
+                    rows.append(dict(task_id=tid,**p,seed=seed_,parameters='{}',generator_mode='standalone_constructor',input_hash=b.digest(p['input']),canonical_input_hash=b.canonical_input(p['input']),split='train',stratum=b.stratum(p)))
+                pq.write_table(b.pa.Table.from_pylist(rows),b.OUT/'pools'/f'{tid}.parquet')
+                report=b.make_episodes((tid,{'train':{rows[0]['stratum']:2}}))
+                self.assertEqual(report['splits']['train']['fresh_episodes'],2)
+                saved=pq.read_table(b.OUT/'data'/'train'/f'{tid}.parquet').to_pylist()
+                self.assertTrue(saved)
+                for row in saved:
+                    self.assertEqual(row['fixture_basis'],'teaching_fixture')
+                    self.assertTrue(row['corrected_teaching_fixture'])
+                    self.assertEqual(row['correction_source'],fixture_basis(tid)['source'])
+                    self.assertNotIn('corrected_teaching_fixture',row['prompt'])
+            finally:b.OUT=previous
+
+    def test_corrected_teaching_fixture_requires_exact_approved_versions(self):
+        import copy
+        packet=reference('581f7754')
+        basis=fixture_basis('581f7754',packet)
+        self.assertEqual(basis['fixture'],'teaching_fixture')
+        differences=[]
+        for split in ('train','test'):
+            for i,(a,b_) in enumerate(zip(packet['canonical'][split],packet['teaching_fixture'][split])):
+                for field in ('input','output'):
+                    for y,(ra,rb) in enumerate(zip(a[field],b_[field])):
+                        for x,(va,vb) in enumerate(zip(ra,rb)):
+                            if va!=vb:differences.append(dict(split=split,pair=i,field=field,row=y,col=x,canonical=va,teaching=vb))
+        self.assertEqual(differences,basis['changed_cells'])
+        scores=check_reference('581f7754')
+        self.assertEqual(scores['canonical']['correct'],4)
+        self.assertEqual(scores['teaching_fixture']['correct'],5)
+        changed=copy.deepcopy(packet);changed['teaching_fixture']['train'][1]['output'][3][8]=2
+        with self.assertRaisesRegex(ValueError,'hashes changed'):
+            fixture_basis('581f7754',changed)
+        self.assertEqual(fixture_basis('unapproved',changed)['fixture'],'canonical')
+
     def test_panel_style_clean_line_recovery_and_periodic_strip_controls(self):
         panels=importlib.import_module('tasks.task_4e45f183')
         with patch.object(panels,'_motif_patterns',return_value=None):
@@ -485,7 +552,7 @@ class GeneratorTests(unittest.TestCase):
             self.assertEqual(hashlib.sha256(source).hexdigest(),report['stress_test']['sha256'],tid)
             self.assertTrue(report['stress_test']['ready'],tid)
             actual=call(module.validate,seconds=30)
-            expected=reference(tid)['canonical']
+            expected=reference(tid)[fixture_basis(tid)['fixture']]
             key=lambda p:json.dumps(p,sort_keys=True)
             for split in ['train','test']:
                 self.assertEqual(sorted(map(key,actual[split])),sorted(map(key,expected[split])),(tid,split))
@@ -710,7 +777,7 @@ class GeneratorTests(unittest.TestCase):
         self.assertEqual(seen,set(range(8)))
     def test_original_and_independent_construction(self):
         for tid in GENERATORS:
-            self.assertTrue(check_reference(tid)['canonical']['all_exact'],tid)
+            self.assertTrue(check_reference(tid)[fixture_basis(tid)['fixture']]['all_exact'],tid)
             solve=solver(tid)
             for s in range(20):
                 p=generate(tid,s)

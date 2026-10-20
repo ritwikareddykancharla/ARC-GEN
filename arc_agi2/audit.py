@@ -4,6 +4,7 @@ from collections import Counter
 from pathlib import Path
 from .runtime import BASE,reference,solver,check_reference,call,grid,pairs
 from .generators.registry import GENERATORS,generate
+from .fixture_policy import fixture_basis
 ROOT=BASE.parent
 UPSTREAM_IDS=set(json.loads((BASE/'upstream_task_ids.json').read_text()))
 
@@ -27,9 +28,9 @@ def extension_check(tid):
             assert grid(call(f,p['input']))==p['output'],'reference mismatch'
             shapes[f"{len(p['input'])}x{len(p['input'][0])}->{len(p['output'])}x{len(p['output'][0])}"]+=1
         except Exception as e:errors.append({'seed':seed,'error':str(e)})
-    orig=check_reference(tid)
+    orig=check_reference(tid);basis=fixture_basis(tid)
     return {'task_id':tid,'sampled':n,'passed':n-len(errors),'errors':errors,'shapes':dict(shapes),'original_replay':orig,
-        'ready':not errors and orig['canonical']['all_exact'],
+        'ready':not errors and orig[basis['fixture']]['all_exact'], 'fixture_basis':basis,
         'scope':'Independent constructor vs saved solver and original fixtures; agreement does not prove semantic completeness.'}
 
 def summarise(ps):
@@ -69,7 +70,9 @@ def main():
                 'standalone_review':{k:review.get(k) for k in ['scope','known_limitations','semantic_review','stress_test']} if review else None,
                 'candidate_tactics':list(r['candidate_tactics']),'explanation':r['explanation'],
                 'fixture':fj.get(tid),'extension_validation':ej.get(tid),'teaching_variant':r['teaching_variant'],
-                'canonical':r['canonical'],'teacher_models':r['teacher_models']}
+                'canonical':r['canonical'],'teacher_models':r['teacher_models'],
+                'fixture_basis':fixture_basis(tid),
+                'approved_teaching_fixture':r['teaching_fixture'] if fixture_basis(tid)['corrected'] else None}
         registry.append(record)
     for tag,meta in index['taxonomy'].items():
         tagged=[r for r in registry if tag in r['candidate_tactics']]
@@ -93,6 +96,7 @@ def main():
        'upstream_fixture_mismatches':[x for x in fixtures if x['task_id'] in UPSTREAM_IDS and not x['matches_pair_set']],
        'new_extensions_pass':sum(x['ready'] and x['task_id'] not in UPSTREAM_IDS for x in exts),
        'reviewed_standalone_additions':sum(not r['upstream'] and r.get('standalone_review',{}).get('semantic_review',{}).get('status')=='reviewed' for r in registry if r.get('standalone_review')),
+       'corrected_teaching_extensions':[x['task_id'] for x in exts if x['ready'] and x['fixture_basis']['corrected']],
        'size_extensions_pass':sum(x['ready'] and x['task_id'] in UPSTREAM_IDS for x in exts),
        'missing_upstream':sum(not r['upstream'] for r in registry),'holdouts':index['holdout_ids'],
        'active_excluded_ids':[],'training_family_target':1120,

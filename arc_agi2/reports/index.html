@@ -19,7 +19,39 @@ function showReview(r){
  const list=el('ul');for(const item of review.known_limitations||[])list.append(el('li',item));box.append(list);
  if(r.standalone_module){const link=el('a','Read the generator .py file');link.href='https://github.com/ritwikareddykancharla/ARC-GEN/blob/arc2-diversity-and-reference-generators/'+r.standalone_module;link.target='_blank';link.rel='noopener';box.append(link);}
 }
-function choose(r){showReview(r);$('selected').textContent=r.task_id+' · '+r.split;$('tags').replaceChildren(...r.candidate_tactics.map(t=>{let p=el('span',D.taxonomy[t].name);p.className='pill';return p}));$('task-meta').textContent=r.status+' · '+(r.held_out?'Former holdout — now training-eligible':'Eligible after validation')+' · teacher: '+r.teacher_models.join(', ');$('explanation').textContent=r.explanation;$('grids').replaceChildren();for(const [kind,ps] of Object.entries(r.canonical))for(const [i,p] of ps.entries()){let group=el('div');group.append(el('h4',(kind==='train'?'Demonstration ':'Query ')+(i+1)));let row=el('div');row.className='cols';for(const which of ['input','output']){let box=el('div'),a=p[which];box.append(el('p',`${which} · ${a.length} × ${a[0].length}`));let wrap=el('div');wrap.className='scroll';let cv=el('canvas'),cell=16;cv.width=a[0].length*cell*3;cv.height=a.length*cell*3;cv.style.width=a[0].length*cell+'px';cv.style.height=a.length*cell+'px';let ctx=cv.getContext('2d');a.forEach((r,y)=>r.forEach((v,x)=>{ctx.fillStyle=arc[v];ctx.fillRect(x*cell*3,y*cell*3,cell*3-2,cell*3-2)}));wrap.append(cv);box.append(wrap);row.append(box)}group.append(row);$('grids').append(group)}history.replaceState(null,'','#'+r.task_id)}
+function gridBox(a,label){
+ const box=el('div');box.append(el('p',`${label} · ${a.length} × ${a[0].length}`));
+ const wrap=el('div');wrap.className='scroll';const cv=el('canvas'),cell=16;
+ cv.width=a[0].length*cell*3;cv.height=a.length*cell*3;
+ cv.style.width=a[0].length*cell+'px';cv.style.height=a.length*cell+'px';
+ const ctx=cv.getContext('2d');a.forEach((row,y)=>row.forEach((v,x)=>{
+  ctx.fillStyle=arc[v];ctx.fillRect(x*cell*3,y*cell*3,cell*3-2,cell*3-2);
+ }));wrap.append(cv);box.append(wrap);return box;
+}
+function choose(r){
+ showReview(r);$('selected').textContent=r.task_id+' · '+r.split;
+ $('tags').replaceChildren(...r.candidate_tactics.map(t=>{const p=el('span',D.taxonomy[t].name);p.className='pill';return p}));
+ $('task-meta').textContent=r.status+' · '+(r.held_out?'Former holdout — now training-eligible':'Eligible after validation')+' · teacher: '+r.teacher_models.join(', ');
+ const basis=r.fixture_basis||{};
+ if(basis.corrected){
+  const scores=r.extension_validation?.original_replay;
+  const notice=el('p','Approved corrected teaching copy: '+basis.description+
+   (scores?` Solver replay: original ${scores.canonical.correct}/${scores.canonical.total}; teaching copy ${scores.teaching_fixture.correct}/${scores.teaching_fixture.total}.`:''));
+  const link=el('a','Correction source');link.href=basis.source;link.target='_blank';link.rel='noopener';
+  $('generator-review').prepend(notice,link);
+ }
+ $('explanation').textContent=r.explanation;$('grids').replaceChildren();
+ for(const [kind,ps] of Object.entries(r.canonical))for(const [i,p] of ps.entries()){
+  const group=el('div');group.append(el('h4',(kind==='train'?'Demonstration ':'Query ')+(i+1)));
+  const row=el('div');row.className='cols';row.append(gridBox(p.input,'Input'),gridBox(p.output,'Original benchmark output'));
+  const teaching=r.approved_teaching_fixture?.[kind]?.[i]?.output;
+  if(teaching&&JSON.stringify(teaching)!==JSON.stringify(p.output)){
+   row.append(gridBox(teaching,'Approved teaching output · corrected'));
+  }
+  group.append(row);$('grids').append(group);
+ }
+ history.replaceState(null,'','#'+r.task_id);
+}
 function tasks(){let q=$('search').value.toLowerCase(),c=$('coverage').value,t=$('tag').value,rs=D.tasks.filter(r=>r.task_id.includes(q)&&(c==='all'||r.status===c)&&(t==='all'||r.candidate_tactics.includes(t)));$('task-count').textContent=rs.length+' tasks';let table=$('tasks');table.replaceChildren();let head=el('tr');['Task','Split','Generator status','Candidate tactics'].forEach(s=>head.append(el('th',s)));table.append(head);rs.forEach(r=>{let tr=el('tr'),td=el('td'),b=el('button',r.task_id);b.onclick=()=>choose(r);td.append(b);tr.append(td,el('td',r.split+(r.held_out?' · former holdout':'')),el('td',r.status.replaceAll('_',' ')),el('td',r.candidate_tactics.join(', ')));table.append(tr)})}
 try{let res=await fetch('inventory.json');if(!res.ok)throw Error('Inventory unavailable');D=await res.json();$('status').textContent='Measured on canonical data · generated snapshot '+D.generated_snapshot?.slice(0,12);let s=D.summary;for(let [n,t] of [[s.total_tasks,'original tasks inventoried'],[s.upstream_fixture_pass,'upstream generators: fixtures verified'],[s.new_extensions_pass,'new research generators validated'],[s.reviewed_standalone_additions??0,'reviewed standalone .py additions'],[s.status_counts.generator_missing,'tasks still missing generators']]){let d=el('div');d.className='card';d.append(el('b',n),el('small',t));$('cards').append(d)}let tt=$('taxonomy'),head=el('tr');['Candidate family','Training','Evaluation','Still missing generator'].forEach(t=>head.append(el('th',t)));tt.append(head);for(let [key,v] of Object.entries(D.taxonomy)){let r=el('tr');[v.name,v.training,v.evaluation,v.missing].forEach(x=>r.append(el('td',x)));tt.append(r);let o=el('option',v.name);o.value=key;$('tag').append(o)}for(let i of ['grid','axis','kind','scale'])$(i).onchange=draw;$('heat-source').onchange=heat;for(let i of ['search','coverage','tag'])$(i).oninput=tasks;draw();tasks();choose(D.tasks.find(r=>r.task_id===location.hash.slice(1))||D.tasks.find(r=>r.task_id==='e4888269'))}catch(e){$('status').textContent=e.message}
 </script></body></html>

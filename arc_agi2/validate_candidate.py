@@ -8,6 +8,8 @@ from pathlib import Path
 import numpy as np
 from .runtime import reference,solver,grid,call,pairs,check_reference
 
+from .fixture_policy import fixture_basis
+
 ALLOWED={'random','math','collections','itertools','functools','copy','heapq','statistics','numpy','common'}
 
 def screen(source):
@@ -71,10 +73,11 @@ def validate(tid,path,samples=300,seed_start=0):
         except Exception as e:
             errors.append({'seed':seed,'error':str(e)[:16000]})
             if len(errors)>=3:break
-    ready=not errors and len(seen)>=20 and changed>=20 and replays<=samples//10
+    basis=fixture_basis(tid,r)
+    ready=not errors and len(seen)>=20 and changed>=20 and replays<=samples//10 and matches[basis['fixture']] and original[basis['fixture']]['all_exact']
     return {'task_id':tid,'ready':ready,'samples_requested':samples,'samples_attempted':attempted,'samples_passed':passed,
             'seed_start':seed_start,'seed_end_exclusive':seed_start+attempted,
-            'unique_inputs':len(seen),'changed_pairs':changed,'fixture_replays':replays,
+            'fixture_basis':basis,'unique_inputs':len(seen),'changed_pairs':changed,'fixture_replays':replays,
             'shapes':[list(s) for s in sorted(shapes)],'fixture_matches':matches,'original_solver_replay':original,
             'errors':errors,'sha256':hashlib.sha256(source.encode()).hexdigest(),
             'status':'validated_candidate_needs_semantic_review' if ready else 'needs_repair',

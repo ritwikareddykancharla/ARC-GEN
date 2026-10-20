@@ -17,6 +17,7 @@ import pyarrow as pa
 import pyarrow.parquet as pq
 from huggingface_hub import HfApi,CommitOperationAdd,snapshot_download
 from .runtime import BASE,reference,solver,call,grid
+from .fixture_policy import fixture_basis,APPROVED_CORRECTIONS
 from .generators.registry import GENERATORS,generate
 from .task_registry import NEW_TASK_IDS
 from .audit import relation,UPSTREAM_IDS
@@ -57,7 +58,7 @@ def input_stats(g):
 
 def pool_signature(tid,configs):
     # Invalidate cached pools after constructor, verifier, policy or selection changes.
-    files=[Path(__file__),BASE/'runtime.py',BASE/'helpers.py',BASE/'training_policy.json',
+    files=[Path(__file__),BASE/'runtime.py',BASE/'fixture_policy.py',BASE/'helpers.py',BASE/'training_policy.json',
            BASE/'references'/f'{tid}.json',BASE.parent/'common.py',BASE/'task_registry.py']
     files+=sorted((BASE/'generators').glob('*.py'))
     native=BASE.parent/'tasks'/f'task_{tid}.py'
@@ -140,7 +141,7 @@ def allocate(reports,split,target,desired):
     return {t:dict(v) for t,v in allocation.items() if v},{'requested':target,'allocated':sum(used.values()),'shortfall_by_stratum':missing,'desired':budgets}
 
 def make_episodes(arg):
-    tid,allocs=arg;pool=pq.read_table(OUT/'pools'/f'{tid}.parquet').to_pylist();result={};all_hashes=set()
+    tid,allocs=arg;basis=fixture_basis(tid);pool=pq.read_table(OUT/'pools'/f'{tid}.parquet').to_pylist();result={};all_hashes=set()
     for split,quota in allocs.items():
         rows=[r for r in pool if r['split']==split];bins=defaultdict(list)
         for p in rows:bins[p['stratum']].append(p)
@@ -188,6 +189,9 @@ def make_episodes(arg):
                               'prompt':prompt,'completion':compact({'outputs':[query['output']]}),
                               'pair_seeds':[p['seed'] for p in four],'pair_parameters':[p['parameters'] for p in four],
                               'pair_generator_modes':[p['generator_mode'] for p in four],
+                              'fixture_basis':basis['fixture'],
+                              'corrected_teaching_fixture':basis['corrected'],
+                              'correction_source':basis.get('source',''),
                               'base_input_hashes':[p['input_hash'] for p in four],
                               'canonical_input_hashes':[p['canonical_input_hash'] for p in four],
                               'base_episode_sha256':basehash,'d4_transform':d4,'color_permutation':palette,
@@ -275,6 +279,8 @@ Quantity-controlled dimensions and pattern composition:
 
 [Manifest](manifest.json), [pool reports](pool_reports), [episode reports](episode_reports), [allocation targets](allocation.json). Master seed {SEED}. Published partial shards are complete episodes; failed families and shortfalls remain visible. No model training or LLM calls occur in this job.
 
+Corrected teaching fixtures are explicitly approved and hash-pinned; episode metadata records `fixture_basis`, `corrected_teaching_fixture` and `correction_source`. Canonical benchmark data is preserved unchanged.
+
 The reference packets include saved Opus/Fable solutions; they guide input construction and validation but are not exposed in episode prompts. Public evaluation tasks used in generation are training data for subsequent models, not independent evaluation. The historical holdout list is retained as provenance only; the active exclusion list is empty.
 
 ARC-GEN upstream code is Copyright Google LLC, Apache-2.0. This is an independent derivative. Original benchmark grids remain unchanged.
@@ -318,6 +324,7 @@ def main():
        'source_commit':os.environ.get('ARCGEN_SOURCE_COMMIT','local'),'seed':SEED,'workers':WORKERS,
        'task_ids':eligible,'excluded_task_ids':POLICY['excluded_task_ids'],
        'former_holdout_ids':inv['summary']['holdouts'],'training_policy':POLICY,
+       'approved_teaching_corrections':APPROVED_CORRECTIONS,
        'completed_pools':0,'train_episodes':0,'validation_episodes':0,
        'train_fresh_episodes':0,'validation_fresh_episodes':0,
        'train_symmetric_variants_removed':0,'validation_symmetric_variants_removed':0,

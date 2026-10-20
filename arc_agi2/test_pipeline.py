@@ -2272,4 +2272,28 @@ class GeneratorTests(unittest.TestCase):
         self.assertEqual((len(p['input']),len(p['input'][0])),(13,11))
         self.assertEqual(p['output'],grid(call(solver('a32d8b75'),p['input'])))
 
+    def test_socket_dense_three_pair_placement_regression(self):
+        m=importlib.import_module('tasks.task_a25697e4')
+        for h,w in ((12,30),(30,12),(20,20),(30,30)):
+            for seed in (91580,91597,91620):
+                random.seed(seed)
+                p=m.generate(height=h,width=w,num_pairs=3,hard_negative=True)
+                self.assertEqual((len(p['input']),len(p['input'][0])),(h,w))
+                self.assertNotEqual(p['input'],p['output'])
+                self.assertEqual(p['output'],grid(call(solver('a25697e4'),p['input'])))
+
+    def test_socket_rejects_zero_fit_and_invalid_dense_controls(self):
+        m=importlib.import_module('tasks.task_a25697e4')
+        with self.assertRaises(ValueError):
+            m.generate(height=12,width=12,bg=0,
+                       sockets=[(0,0,['1.1','1.1'])],chains=[(6,6,['222','333'])])
+        for kw in ({'height':10,'width':10,'num_pairs':3},{'hard_negative':1},
+                   {'height':True},{'num_pairs':4}):
+            with self.assertRaises(ValueError):m.generate(**kw)
+        for coordinate in (True,1.0):
+            with self.assertRaises(ValueError):
+                m.generate(height=10,width=10,bg=0,
+                           sockets=[(coordinate,1,['111','1.1','111'])],
+                           chains=[(5,5,['22','33'])])
+
 if __name__=='__main__':unittest.main()

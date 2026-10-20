@@ -14,11 +14,11 @@ This fork adds a reference-guided generator workflow and an adaptive episode bui
 
 - All **1,120** canonical tasks inventoried with saved Opus/Fable explanations, `transform(grid)` programs, provenance and separately labelled teaching fixtures.
 - **891 existing upstream generators** reproduce the canonical pair sets (pair ordering can differ between releases).
-- **174 new constructive implementations** have passed bounded validation, covering counting, selection, geometry, legends, relational motion, scaling, pattern construction and repair. Standalone conversion and review are tracked separately below.
+- **175 new constructive implementations** have passed bounded validation, covering counting, selection, geometry, legends, relational motion, scaling, pattern construction and repair. Standalone conversion and review are tracked separately below.
 - **Two variable-size extensions**: `0692e18c` (inverse self-tiling) and `00576224` (three-by-three tiling with mirrored middle band).
-- All 176 constructors (174 new families plus two size extensions) passed **300 bounded randomized checks each**: 173 use the archived pair solver, `78332cb0` uses the documented complete-chain verifier, `de493100` uses the dimension-aware reflection verifier, and `269e22fb` uses a demonstration-conditioned episode verifier. Of these, 175 reproduce all original examples; `581f7754` uses the explicitly approved, hash-pinned eight-cell teaching correction. Its unchanged canonical replay is reported separately as 4/5, versus 5/5 on the teaching copy. Outputs are constructed independently from latent parameters. New pictures in `269e22fb` are compared with an independent contextual verifier; its original fixtures still match the archived fixed-picture transform.
+- All 177 constructors (175 new families plus two size extensions) passed **300 bounded randomized checks each**: 174 use the archived pair solver, `78332cb0` uses the documented complete-chain verifier, `de493100` uses the dimension-aware reflection verifier, and `269e22fb` uses a demonstration-conditioned episode verifier. Of these, 176 reproduce all original examples; `581f7754` uses the explicitly approved, hash-pinned eight-cell teaching correction. Its unchanged canonical replay is reported separately as 4/5, versus 5/5 on the teaching copy. Outputs are constructed independently from latent parameters. New pictures in `269e22fb` are compared with an independent contextual verifier; its original fixtures still match the archived fixed-picture transform.
 - **22 additional fixed-size families / 111 size-parameter configurations** passed bounded 12-seed differential tests. Every such generated pair is checked again during generation. This is agreement evidence, not proof of semantic correctness.
-- **55 tasks still need constructive generators**. A saved transform is not itself an input generator. Reference packets and `reports/generator-roadmap.csv` provide the task-by-task backlog.
+- **54 tasks still need constructive generators**. A saved transform is not itself an input generator. Reference packets and `reports/generator-roadmap.csv` provide the task-by-task backlog.
 
 ## Inspect
 
@@ -74,9 +74,9 @@ The authoring campaign uses eight concurrent Claude CLI processes under the user
 
 A zero-error differential check is a bounded agreement test. It does not prove the saved solver is universally correct or that every original mechanism variant is covered.
 
-**168 standalone modules are now reviewed and registered** (the exact list lives in `task_registry.py`). Each passed 1,000 seed checks and exact reconstruction of its approved validation fixture: canonical for 167 modules, the labelled teaching copy for `581f7754`. The first sixteen used seeds 0..999 (including their 300 author-validation seeds); the next one hundred and fifty-two used independent seeds 20,000..20,999. The regression suite also checks registered source hashes and seeds 10,000..10,019.
+**169 standalone modules are now reviewed and registered** (the exact list lives in `task_registry.py`). Each passed 1,000 seed checks and exact reconstruction of its approved validation fixture: canonical for 168 modules, the labelled teaching copy for `581f7754`. The first sixteen used seeds 0..999 (including their 300 author-validation seeds); the next one hundred and fifty-three used independent seeds 20,000..20,999. The regression suite also checks registered source hashes and seeds 10,000..10,019.
 
-Twenty-four conversions replace earlier research constructors with the upstream task-file interface. The total is now 174 new constructive families, with 6 still awaiting standalone conversion/review. Remaining CLI drafts are authored and validated locally. Restricted shape and dimension ranges are documented per file and in `reports/standalone/`; the size-matching builder must respect those ranges.
+Twenty-four conversions replace earlier research constructors with the upstream task-file interface. The total is now 175 new constructive families, with 6 still awaiting standalone conversion/review. Remaining CLI drafts are authored and validated locally. Restricted shape and dimension ranges are documented per file and in `reports/standalone/`; the size-matching builder must respect those ranges.
 
 Independent validation exposed a background-inference failure in the saved `d4c90558` solver: a thick frame can dominate a small grid, causing the checker to interpret the wrong colour as background. The constructor now samples the explicit domain where 0 strictly outnumbers every other colour. The failing examples are retained in `reports/standalone/d4c90558-counterexamples.json`. This restriction is not evidence that the conceptual counting rule fails on denser scenes.
 
@@ -473,3 +473,16 @@ Three more reviewed generators are registered. Each reconstructs every canonical
 The three generators retain explicit restrictions: separated glyphs with fixed foreground colour; motifs from a small <=3×3 library; and one or two non-overlapping legend stamps with bounded tile sizes. These are constructive subfamilies, not a proof of exhaustive mechanism or difficulty coverage. The socket constructor `a25697e4` is still excluded after a dense three-pair placement failure; repair is ongoing.
 
 The regression suite passes **137 tests**. Coverage is **1,065/1,120**, with **55 missing**, **168 reviewed standalone additions**, and six older constructors awaiting standalone review. Bulk generation and model training remain stopped pending full coverage.
+
+
+## Constraint-aware socket seating and dense placement repair — 2026-10-20
+
+Registered `a25697e4`: rigidly transform two-colour chains to fill socket holes, swap their colours only for reflected placements, and reject alternatives blocked by the border or occupied cells. `hard_negative=True` forces at least one shape-matching but illegal alternative. All five canonical examples reconstruct exactly.
+
+The first revised source failed seed 91597 on a 12×30 canvas with three pairs and a forced hard negative. The failure and source are archived. The repair plans sockets first, checks fit uniqueness incrementally, then places loose chains into enumerated free positions. It reduces padding on cramped canvases and reduces the work budget rather than merely extending retries. The failed seed now passes, along with **164 dense regression cases** across 12×30, 30×12, 20×20 and 30×30 canvases.
+
+A separate parser and signed-coordinate isometry oracle passes **1,726 distinct scenes**, including every 10..30 rectangular shape with a forced hard negative, multiple pairs and every background colour. The scenes contain **2,869 chain/socket pairs**, **1,452 reflected placements** and **4,125 blocked geometric alternatives**. The largest piece has nine cells; the longest measured targeted generation call took 0.565 seconds. One thousand independent archived-solver seeds also pass. Fifteen invalid controls reject. Explicit zero-fit identity scenes now correctly reject rather than being counted as training examples.
+
+The generator retains a finite constructive scope: one to three pairs; spaced objects; rectangular socket envelopes with cut-out holes; unique final seating; and size-conditioned piece/padding limits. Bounded search still has a theoretical exhaustion case, so failures must remain visible during bulk generation.
+
+The regression suite passes **139 tests**. Coverage is **1,066/1,120**, with **54 missing**, **169 reviewed standalone additions**, and six older constructors awaiting standalone review. Bulk generation and model training remain stopped pending full coverage.

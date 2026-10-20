@@ -11,6 +11,42 @@ from .fixture_policy import fixture_basis
 from .augmentation import apply_episode,settings,exhaustive_variants
 
 class GeneratorTests(unittest.TestCase):
+    def test_line_repairs_reject_unjustified_explicit_edits(self):
+        lines=importlib.import_module('tasks.task_7b80bb43')
+        base=dict(width=10,height=10,background=0,color=5)
+        with self.assertRaisesRegex(ValueError,'at least one line'):
+            lines.generate(**base,lines=[],diagonals=[(2,2,1,1,2)])
+        with self.assertRaisesRegex(ValueError,'declared edits'):
+            lines.generate(**base,lines=[('h',4,0,9)],
+                           diagonals=[(4,4,1,1,1)])
+        with self.assertRaisesRegex(ValueError,'declared edits'):
+            lines.generate(**base,lines=[('h',4,0,9)],
+                           diagonals=[(1,1,1,1,2)],bridges=[('h',2,5,6)])
+        p=lines.generate(**base,lines=[('h',4,0,9)],diagonals=[(1,1,1,1,2)])
+        self.assertEqual(p['output'][4],[5]*10)
+        self.assertEqual(p['output'][1][1],0)
+        self.assertEqual(p['output'],grid(call(solver('7b80bb43'),p['input'])))
+
+    def test_gravity_gap_stacking_and_explicit_domain(self):
+        gravity=importlib.import_module('tasks.task_825aa9e9')
+        p=gravity.generate(width=5,height=8,heights=[1]*5,ground_colors=5,
+                          movers=[(3,[(0,2)]),(3,[(2,2)])])
+        self.assertEqual(p['output'][4][2],3)
+        self.assertEqual(p['output'][5][2],3)
+        self.assertEqual(p['output'][6][2],7)
+        self.assertEqual(p['output'][7][2],5)
+        lateral=gravity.generate(width=5,height=6,heights=[4,0,0,0,4],
+                                 ground_colors=5,movers=[(3,[(0,1)])])
+        self.assertEqual(lateral['output'][4][1],3)
+        self.assertEqual(lateral['output'][4][0],5)
+        self.assertEqual(lateral['output'],
+                         grid(call(solver('825aa9e9'),lateral['input'])))
+        with self.assertRaisesRegex(ValueError,'visible ground'):
+            gravity.generate(heights=[0]*5,ground_colors=3)
+        with self.assertRaisesRegex(ValueError,'eight movers'):
+            gravity.generate(width=30,height=10,heights=[1]*30,ground_colors=5,
+                             movers=[(3,[(0,2*k)]) for k in range(9)])
+
     def test_diamond_endpoint_rays_and_clipped_segments(self):
         rays=importlib.import_module('tasks.task_80a900e0')
         p=rays.generate(width=14,height=20,

@@ -1,0 +1,85 @@
+{
+  "task_id": "aa300dc3",
+  "constructor_unchanged": true,
+  "rule_class": "Enumerate full diagonal sets of region cells and contiguous diagonal runs. For each mode consider five visible tie criteria:none,centre offset,corner distance,and both priority orders. Retain every tied prediction. A rule must uniquely reproduce each demonstration; all surviving query predictions must agree. No scan-order fallback or preferred full-line rule.",
+  "limitations": "Native random sampler requires a unique full-line maximum and connected zero region. Explicit fixtures can contain ties. This ten-rule hypothesis class handles the documented central-line fixture tie but does not claim arbitrary hidden constructor scan-order ties are inferable; unresolved ties reject. Both broken and unbroken winning lines retained.",
+  "audit": {
+    "task_id": "aa300dc3",
+    "factory_sha256": "7965c1e0b3e88d1134ca601f1d9e6c0497deea089fa0758b2614b833c736f937",
+    "constructor_sha256": "402ceacca81c428ea0d83fa996905f68693e9ee731d67695b9bf216cac1771af",
+    "passed": true,
+    "fresh_pairs_checked": 1000,
+    "augmented_pair_checks": 8000,
+    "fixture_variants_checked": 16,
+    "context_retries": 113,
+    "sampler_rejections": [],
+    "audit_scope": "250 fresh queries held fixed while resampling3demo context using visible diagonal evidence only; no query labels in admission; all four pairs executed under8D4per acceptedepisode.",
+    "unique_base_inputs": 1000,
+    "seconds": 8.473512375028804
+  },
+  "assembly": {
+    "task_id": "aa300dc3",
+    "scope": "Local full-quota production-assembler audit only.1200unique native pool pairs,1000requested fresh bases. Grid pool then combined program/grid make_record on every augmented row; temporary audit rows removed,no public dataset or training launched.",
+    "pool_pairs": 1200,
+    "pool_draws": 1200,
+    "constructor_sha256": "402ceacca81c428ea0d83fa996905f68693e9ee731d67695b9bf216cac1771af",
+    "metrics": {
+      "shards": [],
+      "episodes": 8000,
+      "fresh_episodes": 1000,
+      "requested_fresh_episodes": 1000,
+      "spatial_variant_upper_bound": 8000,
+      "symmetric_variants_removed": 0,
+      "variants_per_fresh_episode": {
+        "8": 1000
+      },
+      "query_histograms": {
+        "input": {
+          "height": {
+            "10": 8000
+          },
+          "width": {
+            "10": 8000
+          },
+          "longest": {
+            "10": 8000
+          },
+          "shapes": {
+            "10x10": 8000
+          }
+        },
+        "output": {
+          "height": {
+            "10": 8000
+          },
+          "width": {
+            "10": 8000
+          },
+          "longest": {
+            "10": 8000
+          },
+          "shapes": {
+            "10x10": 8000
+          }
+        }
+      },
+      "relations": {
+        "same_shape": 8000
+      },
+      "failures": {
+        "missing_colour_evidence_attempts": 291
+      },
+      "query_context_shortfalls": [],
+      "max_query_reuse_in_fresh_episodes": 1,
+      "max_pair_reuse_in_fresh_episodes": 9,
+      "distinct_inputs_used": 1178
+    },
+    "base_query_types": {
+      "unbroken_winner_rules_agree": 944,
+      "broken_winner_requires_evidence": 56
+    },
+    "verified_program_grid_records": 8000,
+    "seconds": 39.35141050000675
+  },
+  "tests": "Broken-line evidence, counterfactual run rule, demonstrated tie policy, unresolved symmetric ties, all-ten-rule D4 closure, canonical/invalid demonstrations. Query outputs excluded from evidence selection."
+}

@@ -1575,3 +1575,8 @@ Reports: `reports/a1aa0c1e-demonstrated-ladder-evidence.json`,
 These were temporary local audit records, not expanded dataset publication.
 Remaining: 36 semantic/context holds, 9 execution failures and 3 missing
 factories. Expanded dataset publication, SFT and RLVR remain outstanding.
+
+
+### Verified program coverage: 1,073 / 1,120
+
+aa300dc3 now learns full-diagonal versus contiguous-run interpretation and visible tie rules from demonstrations. Broken diagonals remain in the native domain; unresolved ties reject instead of choosing scan order. Independent evidence checks never read query outputs. Fresh execution audit passed 1,000 unique pairs, 8,000 augmented checks and 16 fixture variants. Full-quota assembly produced 1,000 base episodes and 8,000 verified combined program/grid records, including 56 broken-line queries; 291 context retries, no shortfalls. All 584 regression tests passed. These are local validation records, not the expanded published corpus. 47 program families remain; bulk generation and model training have not launched.

@@ -1,0 +1,29 @@
+{
+  "task_id": "aa300dc3",
+  "factory_sha256": "7965c1e0b3e88d1134ca601f1d9e6c0497deea089fa0758b2614b833c736f937",
+  "constructor_sha256": "402ceacca81c428ea0d83fa996905f68693e9ee731d67695b9bf216cac1771af",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "context_retries": 113,
+  "sampler_rejections": [],
+  "audit_scope": "250 fresh queries held fixed while resampling3demo context using visible diagonal evidence only; no query labels in admission; all four pairs executed under8D4per acceptedepisode.",
+  "unique_base_inputs": 1000,
+  "seconds": 8.473512375028804,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Host-authored direct program with constructor/source review, source restrictions and execution verification.",
+  "draft_notes": {
+    "author": "host",
+    "explanation": "Enumerate full diagonal sets of region cells and contiguous diagonal runs. For each mode consider five visible tie criteria:none,centre offset,corner distance,and both priority orders. Retain every tied prediction. A rule must uniquely reproduce each demonstration; all surviving query predictions must agree. No scan-order fallback or preferred full-line rule.",
+    "limitations": "Native random sampler requires a unique full-line maximum and connected zero region. Explicit fixtures can contain ties. This ten-rule hypothesis class handles the documented central-line fixture tie but does not claim arbitrary hidden constructor scan-order ties are inferable; unresolved ties reject. Both broken and unbroken winning lines retained.",
+    "host_review": {
+      "status": "reviewed",
+      "constructor_unchanged": true,
+      "reason": "Reachable broken winner has7emptycells but longest contiguousrun6. Droppingbrokenlines would remove real native cases; instead teach line-vs-run via context. Originaltrain2has3tiedantidiagonals;demonstrations must establish a visible tie rule rather than arbitrary scan order.",
+      "independent_gate": "Group region coordinates by diagonal equations; split runs by coordinate gaps. Target program instead walks border-started diagonals. Both return every tied prediction and use only demonstration outputs and query inputs.",
+      "audit": "Passed 1000 unique fresh pairs, 8000 augmented checks, 16 fixture variants; six focused tests. Full-quota assembly:1000 bases,8000 verified combined records,56 broken-line queries,291 context retries,zero shortfalls. Query fixed during demo resampling."
+    }
+  }
+}

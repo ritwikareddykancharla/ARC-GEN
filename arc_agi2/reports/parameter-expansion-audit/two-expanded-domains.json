@@ -1,0 +1,1234 @@
+[
+  {
+    "task_id": "6f8cd79b",
+    "native_source_sha256": "a8202458cc44e57ddbff4d9ab25be775e56a94cc5f5bb6857b0411cf42b66ca4",
+    "fixture_exact": true,
+    "distinct_pairs_exhaustively_verified": 784,
+    "native_input_domain_sha256": "468a0d4c8a7d83966ef2c1f388192e9cf86e054cf2dd9d17d7e9ee72c994f4b1",
+    "training_inputs": 737,
+    "validation_inputs": 47,
+    "program_sha256": "d7aac6e7443001a0a4fce4a661e63d235deb0675d904cc363e7582be61bb8781",
+    "checked_fresh_episodes": 20,
+    "checked_distinct_d4_records": 40,
+    "episodes": [
+      {
+        "input_hashes": [
+          "4ec8fc7702e5abdc5c2ad58e6b256d96267601f6fb1feedd23d06163c50157fd",
+          "55eb5974991b53015ff60e8774d4435d3f83793bab6ecdf57185132e4a7490a1",
+          "285acc1564d556fcee54fadff3016a799272e58681c5c13456a19a5702d4ff73",
+          "e909332eefb06035cd7b4897789a15c6b15b835b66cb8e5a368cd5e03288b79b"
+        ],
+        "palette": [
+          0,
+          2,
+          4,
+          3,
+          1,
+          8,
+          7,
+          5,
+          9,
+          6
+        ],
+        "represented_d4": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7
+        ]
+      },
+      {
+        "input_hashes": [
+          "927ce195e61213099de2acd61e123bbbba97af76cfe57bc11052c4f27bc68ea5",
+          "bcbf419c820b73a09a976e3bd19648b98621fde4eaff4ae002e89160c2c3224f",
+          "1a97236f25694840a2cd852283f1d486c4824a641483a438a68051eebf4f347f",
+          "f6cc2e8efc7101fc8217681d17b3fe555d2e7cf687239c27cd1979b3305e2742"
+        ],
+        "palette": [
+          5,
+          2,
+          7,
+          4,
+          8,
+          6,
+          3,
+          1,
+          0,
+          9
+        ],
+        "represented_d4": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7
+        ]
+      },
+      {
+        "input_hashes": [
+          "471f1f3b956605294262d715ca4bf1efec5f1560aab0750870ddaf055c7287e6",
+          "71f37612e6c46653c2d20ab8352e8c2449aa377e665e02564fac4825247f91c3",
+          "7f56b3329214fc51e9940a88d81797ab69640dac28bd8f279ff425b1f291d030",
+          "ff76f3b362c5d2480d181595292a80c74eef93dcce242811c93e6768a2358682"
+        ],
+        "palette": [
+          4,
+          7,
+          3,
+          6,
+          8,
+          2,
+          5,
+          9,
+          1,
+          0
+        ],
+        "represented_d4": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7
+        ]
+      },
+      {
+        "input_hashes": [
+          "dd96b173305cfe8bb25a16880140035bfc08cb4bd2e277e94b200e265b5e3ea6",
+          "f4be48cd2f566cf49483d6049cf478918a126da16a4fd649149bd00972dc09bf",
+          "28c79fddfadfe9d42320aae97d25d6cdf63f9d73e012fe14a6996a336d53112a",
+          "e363678ae52c89ba67857ea52d8379e3f98728c49780fe20dacbf894baebcc13"
+        ],
+        "palette": [
+          9,
+          5,
+          4,
+          6,
+          3,
+          7,
+          0,
+          2,
+          1,
+          8
+        ],
+        "represented_d4": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7
+        ]
+      },
+      {
+        "input_hashes": [
+          "b653dca4407da9c09a4e165fdff6d2445542c21ccfd93c055c814167ba2f902c",
+          "566d044e1f24a21fb605538d46e955ff48a015219c4176409bce173efb523db7",
+          "be1cdf98946e510d662bce21d82a22c215d9c926b4a9233566ec4df9467231b4",
+          "f2cd7df835086678fbb2302edc98f4abc76f19ec8f489764d5286ab07d5cb51a"
+        ],
+        "palette": [
+          8,
+          4,
+          7,
+          2,
+          1,
+          0,
+          5,
+          3,
+          9,
+          6
+        ],
+        "represented_d4": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7
+        ]
+      },
+      {
+        "input_hashes": [
+          "aeb3297da73f944af6dcc32d645a6b36db0681b7d4d2e4eb62fd953d29d75b46",
+          "8e560b0203720fa023e19ad3afd2f01617487e1d1a2bb7c1e5958e57fa43b817",
+          "0ca3935f41e63449ca86950ef1d7330f203a5b002bf77ddacb907b412fa59f7f",
+          "a801b38d5639db04146a2c12f630712d2a3aae436250c9f53e375fdc6bae4115"
+        ],
+        "palette": [
+          7,
+          0,
+          9,
+          6,
+          2,
+          8,
+          5,
+          3,
+          4,
+          1
+        ],
+        "represented_d4": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7
+        ]
+      },
+      {
+        "input_hashes": [
+          "f72f881f796cae1fa6065abc37d5f8439a4b7ce399816e6bfec490b0f0287001",
+          "8661f6c925f943a397ca6f5b74d980bf51521dcb40439cfbad45b182139165fa",
+          "d5835f87134b10db9da45ff8a129fafb9f0bdfff7b1c642e090f6b7a586a5ee7",
+          "1a208aed2e25876f7ca9f1080d00a1c81e4c32671e9b3d5e3070c13c6681226b"
+        ],
+        "palette": [
+          2,
+          6,
+          3,
+          9,
+          4,
+          0,
+          7,
+          5,
+          8,
+          1
+        ],
+        "represented_d4": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7
+        ]
+      },
+      {
+        "input_hashes": [
+          "a6f8f65787bae7d08e0eedbae28cac0df18eb285902cf410f0b383f8474b5c9a",
+          "80787c6d9cef3d9256be6cc626cf6a713c603d61726ecfed1f94d5508d0d5a82",
+          "4307e00578083033cb7145865e6d4a69844e97436177f0f75193999811c1d64f",
+          "3add7d83590de542ab4191074c8860cf22dba275e1efb01811760d7b3d7bfe64"
+        ],
+        "palette": [
+          0,
+          5,
+          9,
+          8,
+          4,
+          6,
+          1,
+          2,
+          3,
+          7
+        ],
+        "represented_d4": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7
+        ]
+      },
+      {
+        "input_hashes": [
+          "ebf69d3d10f78043bd13e73b46142d6c14b48582a02216532c02fc4d6fe53655",
+          "0bcbaf4b37a33b9be26b99e86b0cdcdc554802ea41407e64e970dcbd7f436875",
+          "7539858c347b191cb277c9adb2260e484327e19342b8914d4664c422466d9aa8",
+          "9093204ab48da7c1e7ba25bdffbde34e3dfa671655488cc1e08b18b276853446"
+        ],
+        "palette": [
+          2,
+          4,
+          6,
+          1,
+          0,
+          9,
+          8,
+          5,
+          7,
+          3
+        ],
+        "represented_d4": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7
+        ]
+      },
+      {
+        "input_hashes": [
+          "e363678ae52c89ba67857ea52d8379e3f98728c49780fe20dacbf894baebcc13",
+          "6e58ecf34971ee55799440dc52aca3fcfd68db1f28d1076fd6e0ce34322f1ce3",
+          "f74c59dd41851e0e954a0175500c0bdbed297b7391ee2eb0d0b12eca494f4380",
+          "28c79fddfadfe9d42320aae97d25d6cdf63f9d73e012fe14a6996a336d53112a"
+        ],
+        "palette": [
+          6,
+          0,
+          9,
+          8,
+          2,
+          5,
+          3,
+          4,
+          1,
+          7
+        ],
+        "represented_d4": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7
+        ]
+      },
+      {
+        "input_hashes": [
+          "3617767540b8448db33b3f8ca59cca07057f03bda989763f3d48968a9a8c33e2",
+          "a656331f5243ed4b76ec2f4ee6945322d0c8240f620b74b2157603b2c28b4b16",
+          "27ed7989bf0a15c4bce4a551ddf2da3d562c305f886ec3a64ebc5a27de35e164",
+          "269edd7e63588b592440a1061dca2bdf75afd457d11750582a418a9413134d70"
+        ],
+        "palette": [
+          2,
+          3,
+          7,
+          5,
+          1,
+          9,
+          6,
+          0,
+          8,
+          4
+        ],
+        "represented_d4": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7
+        ]
+      },
+      {
+        "input_hashes": [
+          "c6c56f0ce4cf90daecd0419f93bc78fcd065e5b7c7d06d33e0503ff37f918729",
+          "4f675910e50b9af5f687cfb2e908a48a083630f24ad2b1e66b807578c88fe26c",
+          "337fec3b5a38bd5a1f2f003e8ac5b2a656b20f6761eb6e6676032c81b45cf1f9",
+          "8a36a914fd04ad425e7d6104c3c1c7aa04107d203b73bc960b4ac1737c1cb28d"
+        ],
+        "palette": [
+          0,
+          7,
+          4,
+          2,
+          9,
+          5,
+          6,
+          8,
+          1,
+          3
+        ],
+        "represented_d4": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7
+        ]
+      },
+      {
+        "input_hashes": [
+          "196d1bbc614453eb73642cfc6669bcde4c04c58558dd26aafe0c23ad9a35273d",
+          "f05c9015375f80ef5a8a941ec9b3bc50db07df092027f33241322b28b9ed873d",
+          "49934fbe412a5e9d9bf11fd3c4c943d1586c46839d1c7d3b8c41ceee5c3d7e70",
+          "a4de6cdb881827622b76c2e3a54597341cdfc1b1192e7d0831164d3e5bc47d3e"
+        ],
+        "palette": [
+          6,
+          8,
+          9,
+          3,
+          4,
+          7,
+          2,
+          0,
+          1,
+          5
+        ],
+        "represented_d4": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7
+        ]
+      },
+      {
+        "input_hashes": [
+          "25e02144f45e55db0d75acf3f75de10d6af3c96697da19a8a0142b802bf64977",
+          "a22d4715ca43fa053e0d58dacd6276e7ab87635b3cf457bf572066adc5fb7613",
+          "2651582998220bd9e591a070361fd6e91018d9fd464328609a868e636461a3b6",
+          "28d09d5f2aaa1c2a1c4718b664a2db5ba541f7583f19c19fc9929848475add47"
+        ],
+        "palette": [
+          4,
+          2,
+          3,
+          9,
+          7,
+          8,
+          0,
+          1,
+          6,
+          5
+        ],
+        "represented_d4": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7
+        ]
+      },
+      {
+        "input_hashes": [
+          "5a3d9f6bc5dfe7a1340b19be377a021b80e7f4434234d8508495366778b25fdc",
+          "f10964deb7a263dc5e5c26845ee4f5be4c9c044ef85b6c71e2d36def02b6632c",
+          "9df8db680512c4218795dcca655122bd3b0932946f8a5f6cd9989251eaf35805",
+          "619f61c29791f339633902c718e349274f7928a70499273a91fa30adbce6d984"
+        ],
+        "palette": [
+          3,
+          9,
+          8,
+          2,
+          0,
+          5,
+          1,
+          7,
+          6,
+          4
+        ],
+        "represented_d4": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7
+        ]
+      },
+      {
+        "input_hashes": [
+          "a0ef622f601ce04e628d68b42b863153cbef3ba4ec91fe2e846e4accf0c532bb",
+          "74d4c0dfb9262f46084e9e205d0909828493c1f2ed75eae42faa93a17fe8db6f",
+          "16485914f11e6b3fa7e9d15fb235d451adbe353fc9d27cc3203a2fa994d7ba94",
+          "8f57ce38827acf49b05fe6cb46a7d08f0491a1dd86d258931b2902adcdba3598"
+        ],
+        "palette": [
+          4,
+          5,
+          0,
+          7,
+          1,
+          9,
+          8,
+          2,
+          3,
+          6
+        ],
+        "represented_d4": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7
+        ]
+      },
+      {
+        "input_hashes": [
+          "be1ad21315f3817d4ba3555c90546678ed53957f63f004c21cbe4cbe21a7b03a",
+          "d6c6bb5657170cc10a0bc521728c48c6fe56b669389178d6d58fd2996140c698",
+          "f5556e85314ba5cd111a16e38fd21878730675218a3220e1cb75d002e3162f79",
+          "145005dc511a56b06d010e369fdaae085606758fbbd9ffa0f1c11485f30be6e1"
+        ],
+        "palette": [
+          9,
+          1,
+          5,
+          0,
+          4,
+          8,
+          2,
+          6,
+          3,
+          7
+        ],
+        "represented_d4": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7
+        ]
+      },
+      {
+        "input_hashes": [
+          "72c13027713f79c13ad80b91fe98588ea66545543df59dc0b450c804fbaf92b8",
+          "cc3cd68eeddcd83b916e9071f10cc7713286d52f02ff0268b7cb76f6fcfde814",
+          "5a3d9f6bc5dfe7a1340b19be377a021b80e7f4434234d8508495366778b25fdc",
+          "82578941b81cddd42e8195190fd7edfa9b6d94a1dcd248d53e385fbb00a5f27b"
+        ],
+        "palette": [
+          7,
+          5,
+          2,
+          3,
+          6,
+          8,
+          0,
+          4,
+          1,
+          9
+        ],
+        "represented_d4": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7
+        ]
+      },
+      {
+        "input_hashes": [
+          "466390194f9a7f7499db7fc7fb0c6d8f01fe76e0c7e0f0c6dcf8bd3ba3aa8732",
+          "d869115e2fbee08b62708739a1471ccecc193fb3ffb23a969a9d07f2f0f0fc29",
+          "e0d0a24dffd3aa15c375d62fd8bc318b61bc1fc1eb065f42286211db36fd10d1",
+          "0c3c54cc15ffba461cd66abb21f2e0c5d3fac3c8240efca8fb48eb0260878dcc"
+        ],
+        "palette": [
+          2,
+          1,
+          7,
+          0,
+          6,
+          4,
+          5,
+          9,
+          8,
+          3
+        ],
+        "represented_d4": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7
+        ]
+      },
+      {
+        "input_hashes": [
+          "4ba27715d039e37073a29871600632f7fe03576ff4e3977603f8e80502d7e515",
+          "c79cab9bd5d22eea1141dbe41d343a8287d016899314581827d450d67558aaa1",
+          "8ada85d7360ae258e3ef143086702b68150c511161e7656df1726eb66d3150b1",
+          "6e25a0aa622af93320aac115f1673217b7ddd3efd7d7d17493c6106db78c5b57"
+        ],
+        "palette": [
+          8,
+          0,
+          3,
+          6,
+          4,
+          2,
+          9,
+          7,
+          1,
+          5
+        ],
+        "represented_d4": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7
+        ]
+      }
+    ],
+    "model_training_launched": false,
+    "published": false
+  },
+  {
+    "task_id": "794b24be",
+    "native_source_sha256": "28fc4c4ecc68f9c6533de0e7101396614d3ec51488df23d2cd1b43a250b68596",
+    "fixture_exact": true,
+    "distinct_pairs_exhaustively_verified": 2516,
+    "native_input_domain_sha256": "db85cdb63146b5af44a17efd980091fe71decbc4e003495130ebd5292290b19f",
+    "training_inputs": 2420,
+    "validation_inputs": 96,
+    "program_sha256": "c110cdbc341cb109dd28f33ec52624ea5a4fc334e37d60b53137c8830fe5adb1",
+    "checked_fresh_episodes": 20,
+    "checked_distinct_d4_records": 160,
+    "episodes": [
+      {
+        "input_hashes": [
+          "166c60d8871d574b378077349f16bc5e41da4d7e2e4794aef53a03777d6fc4da",
+          "a0cf7a79ebc4832a02d2804b1acd421da91a0e5afa684880037cbb7fdf63074a",
+          "fad565e52bbd0951aafb094ade2f773a50deed6e08f925d545120128e29aecb4",
+          "9a71067d4e1f18e4c3a5f30c77b42a3cb0ac6fe5662c35242ce9132c5e050c62"
+        ],
+        "palette": [
+          0,
+          2,
+          4,
+          3,
+          1,
+          8,
+          7,
+          5,
+          9,
+          6
+        ],
+        "represented_d4": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7
+        ]
+      },
+      {
+        "input_hashes": [
+          "266516867cd09928198ad9480c09cd9b17144e67f9f714c052c4670fe46edf89",
+          "ae094f18cf058eabb1a62dcc878e771e7521b5baa13d5d4173b0f784092dfa93",
+          "7248264afc828bedf938272c86b613086dc6135405256e9602f80bdd8c4ca6ce",
+          "6ba39843de036fba7913f5f526b3420270ab0769ec7e5810a385b5c7c91d8682"
+        ],
+        "palette": [
+          5,
+          2,
+          7,
+          4,
+          8,
+          6,
+          3,
+          1,
+          0,
+          9
+        ],
+        "represented_d4": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7
+        ]
+      },
+      {
+        "input_hashes": [
+          "8c0e846c761d2785d3f5798aa6ba1d1e963a01208cb94383c88cdb79bd4fc4cd",
+          "01ef1b92ceefdb525e3694eef9c40edc10649880c72ca714cc5b01c513821bb2",
+          "ba183bef77a4350c9910f41617cf7479fd791a1f3ea102de32014652f59afeb1",
+          "bfeb0b041adebc5284158d10ed03aeb0c029348413a867ffe66a8c22aa3cbca1"
+        ],
+        "palette": [
+          4,
+          7,
+          3,
+          6,
+          8,
+          2,
+          5,
+          9,
+          1,
+          0
+        ],
+        "represented_d4": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7
+        ]
+      },
+      {
+        "input_hashes": [
+          "e3a7fc7ac95dc3a0e1dd0932c7408e0cdfe6caecd5449f27c24da327c6f66ec4",
+          "30cf16fb959e50d498fde7703a4e7f1bf4e12b426535a0fbaf5b4a4b23af9b29",
+          "2341f25a4a5595b3e0aea1c5a19c23f55a0406526dfee04abcc1b987c819d9ec",
+          "fdc67de737736c61561f3a6ea94cf181ce26a1c856cd945bb37ccda92ac3f0ec"
+        ],
+        "palette": [
+          9,
+          5,
+          4,
+          6,
+          3,
+          7,
+          0,
+          2,
+          1,
+          8
+        ],
+        "represented_d4": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7
+        ]
+      },
+      {
+        "input_hashes": [
+          "695f15592d4021eeb458644d85413b69edefa64ded6f7106a9d47f893f78185c",
+          "962da5bc2fd14c6d544c3bf65c675e2a0c6de9c413cd773387c31789c676410d",
+          "5e38ae0c463e09cba329b343ebf4dfb94d52ad6e02d91fe02b89da10014816ea",
+          "a8a2738d60f42bec8bcbd1d4ae8329dc44f0440808468558ccf3b811ece174c1"
+        ],
+        "palette": [
+          9,
+          7,
+          8,
+          5,
+          4,
+          2,
+          1,
+          0,
+          3,
+          6
+        ],
+        "represented_d4": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7
+        ]
+      },
+      {
+        "input_hashes": [
+          "49ad72383f3fb8cedddaae1e6a844d1cae619b275266ec3c70737e0b387c346a",
+          "ce1df895578333eabfee6a5f986b23b296810897358c52595203535444382398",
+          "d69ce188a43348249dbcca57889ba8daf042a76639354487ab0f27da7d216475",
+          "59f8925b7c05fe72cdb0b1913558bb9e9913e27b00658462dd4153adc90be1a6"
+        ],
+        "palette": [
+          3,
+          7,
+          6,
+          0,
+          1,
+          8,
+          2,
+          4,
+          5,
+          9
+        ],
+        "represented_d4": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7
+        ]
+      },
+      {
+        "input_hashes": [
+          "5185ed63e92ca55719b37b100442d09285147d392f2698c188c3c197379a2ffa",
+          "6acaeb3a6ba93b0f5f5bcbd53bd6d60c4dec64ef4a7a2f01704233352a928d97",
+          "d22756a1cbd0da5393983120c7679aebcb4fa6af42cd28c2817d19bd0acd81b6",
+          "3896d2f2e73be120306b3b3583840289fbcfc4c79695b24799e70ce1498a583f"
+        ],
+        "palette": [
+          7,
+          6,
+          0,
+          4,
+          9,
+          5,
+          2,
+          3,
+          8,
+          1
+        ],
+        "represented_d4": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7
+        ]
+      },
+      {
+        "input_hashes": [
+          "1de628f2c227eb5c35eab4571123331a679d2d5326c50394c41c678d6f55e330",
+          "98b702f34390737dc9bb89569b0732020d4da6a6d8b816203a7c743d06fa5d10",
+          "d734bebc6389352836c2d8e5df136ed01718d91ef446d480dc9da8f28ed81eef",
+          "23e109754ac3838dda571cc9c625b4e22517d6b68e14e6038308d770b88f4084"
+        ],
+        "palette": [
+          3,
+          0,
+          6,
+          5,
+          1,
+          8,
+          4,
+          7,
+          9,
+          2
+        ],
+        "represented_d4": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7
+        ]
+      },
+      {
+        "input_hashes": [
+          "38d53f4b3e156f04982dc830083ddd625193d0bca8c24ec94fa8c6d09b063f54",
+          "3a4a7f2590c18c09a17fc97e6b73e76e315be34644eb7f837c00ca3783574593",
+          "3896d2f2e73be120306b3b3583840289fbcfc4c79695b24799e70ce1498a583f",
+          "80c988b82b7fc64d16b5131e5069f36bde0f3742f741029fb2a0bd6a1fe3dc8e"
+        ],
+        "palette": [
+          9,
+          4,
+          3,
+          7,
+          5,
+          8,
+          1,
+          6,
+          2,
+          0
+        ],
+        "represented_d4": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7
+        ]
+      },
+      {
+        "input_hashes": [
+          "61f22b4c6ca9b3f1782db8a46874f64b000ec1b07df46ce9aea7498f9ec7ec58",
+          "d6b6fe8a7ed0109d2a31edd2575c452e3e837350f0072686e0f8f7b37fec02e6",
+          "649388f4ee14c47c19f18bbcdd69307d3e0511d0203c16cff5474e1b6565a862",
+          "b0e0f6e796e793fb5020f557aefbf55ffabc23a36a6ecc778c8ebc201795c397"
+        ],
+        "palette": [
+          7,
+          6,
+          8,
+          4,
+          9,
+          1,
+          0,
+          5,
+          3,
+          2
+        ],
+        "represented_d4": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7
+        ]
+      },
+      {
+        "input_hashes": [
+          "1de628f2c227eb5c35eab4571123331a679d2d5326c50394c41c678d6f55e330",
+          "c23f680db8bc44e185acc72b975526ba4f9d0cc7c4a92a5ef06bfe8bf0535b81",
+          "b6c356db588debeb8ce90749d0f426cb96ced891b4f158fd909c35ddd7cf400b",
+          "b4d17887a6560751e0aa312c12f5f8d93fd4903035c1df77daa1698e96c29668"
+        ],
+        "palette": [
+          2,
+          6,
+          3,
+          8,
+          9,
+          7,
+          5,
+          1,
+          0,
+          4
+        ],
+        "represented_d4": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7
+        ]
+      },
+      {
+        "input_hashes": [
+          "881ba2878be9423c8e19dc3d7d3a07710b3f98534a835a243aa584998fc1f888",
+          "429f0b013b21863328fd450a625dd6263e94839d9838ae4ac873a8ce5130c45f",
+          "00c7c2a5bd86960e4d123912279bee2cdda6343747c81920332b70057983e614",
+          "1873bc78299059bc06d9da405f91a9146e98c95b42c2217e5aa1789679d0122a"
+        ],
+        "palette": [
+          9,
+          3,
+          1,
+          7,
+          0,
+          6,
+          2,
+          4,
+          8,
+          5
+        ],
+        "represented_d4": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7
+        ]
+      },
+      {
+        "input_hashes": [
+          "4f45a376901dad8dd739334efa264eb2e953c426db61c870bc2c4b85115f30c0",
+          "767abf39ae52146650f3d595a234f3c44a9c45ddfce28085ce3bf89ace931c67",
+          "3df834c29367eb18de1ed71f0f3b408681e0bfe335cbfbbf22c0153ad284481a",
+          "e83cf62299f14a7c5ab09baf0ad59d79123e02e704c631b219e3bd9c277ccda7"
+        ],
+        "palette": [
+          1,
+          6,
+          5,
+          7,
+          8,
+          9,
+          2,
+          0,
+          3,
+          4
+        ],
+        "represented_d4": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7
+        ]
+      },
+      {
+        "input_hashes": [
+          "bc00d3a1c47767a00585bd1adf352b1a0bc97086dbc4bde87ac5e7d1a7b2cf22",
+          "36f3515e7f949a522917bcf7f9dd03859046ad4df3cbde5436fc82a1a8625648",
+          "7185aef42d0aef567329fd418f22979f015ae1c79557ea655640616dcb4f98ca",
+          "ba183bef77a4350c9910f41617cf7479fd791a1f3ea102de32014652f59afeb1"
+        ],
+        "palette": [
+          7,
+          5,
+          0,
+          6,
+          3,
+          9,
+          4,
+          1,
+          2,
+          8
+        ],
+        "represented_d4": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7
+        ]
+      },
+      {
+        "input_hashes": [
+          "520b5ac5ce47c9206c7e69dd400b453c7a42321a6605e022226224af8d6838c7",
+          "830e17f5e0c6da79d1e16f47ac8f7ffdab8d502653ccecedcd842ccb157ea2e5",
+          "248620b9240c50fe0d4b897f0b4d66ad1e1c8a603a54c785054da5cb0b48b8ea",
+          "6ad09ab34b0e245b998e22d5e19a5512918b155e308f264809bb31afcbc9f6f5"
+        ],
+        "palette": [
+          9,
+          5,
+          0,
+          4,
+          3,
+          8,
+          1,
+          6,
+          7,
+          2
+        ],
+        "represented_d4": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7
+        ]
+      },
+      {
+        "input_hashes": [
+          "27457f0f20a6a60eccd25922177fc6700f912b35115aef8e1e1567a36b5313ea",
+          "e350e6e9368d525f1843632c6d45294dba2fc963a95cae1e5e39872cb00c9b11",
+          "edadaf8cf5ef2e4cc5e422586b4eeb75c139bcf5adad187086bb269766f7b38d",
+          "24a717b2dd94637cb5f9af529236357671a71e06244bfeb447a9e6af416eb567"
+        ],
+        "palette": [
+          4,
+          0,
+          6,
+          2,
+          3,
+          9,
+          8,
+          7,
+          1,
+          5
+        ],
+        "represented_d4": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7
+        ]
+      },
+      {
+        "input_hashes": [
+          "278f734dcd42f1a310b444743593a8ae37033d11ece0133422cbf8d095088ce9",
+          "847ec8f5e4396f50a437eade7b5e75bcce33e684914c8a806dc6a5be8ab9a0ef",
+          "25890f1fa186f6b986fb44d1f20be7418606d7600e1903c4479cd83d102470d4",
+          "59e35ea4aeee1e9d8f6d761242c4206e7963338083b8756bc3c57115b339a3df"
+        ],
+        "palette": [
+          9,
+          6,
+          4,
+          5,
+          7,
+          0,
+          2,
+          1,
+          3,
+          8
+        ],
+        "represented_d4": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7
+        ]
+      },
+      {
+        "input_hashes": [
+          "ac0ea74715c4dbe7e78cb817644a7d7a51c22e3cf24435ed098e15c1ee418061",
+          "729f47e539cc54a514c4ebae58d77a4737af735165f0a7f8fe2fa0533356edde",
+          "ab47976da28f34080c54f70072042505407bb1f8aeeb241813191638e28adfca",
+          "61f22b4c6ca9b3f1782db8a46874f64b000ec1b07df46ce9aea7498f9ec7ec58"
+        ],
+        "palette": [
+          2,
+          1,
+          7,
+          0,
+          6,
+          4,
+          5,
+          9,
+          8,
+          3
+        ],
+        "represented_d4": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7
+        ]
+      },
+      {
+        "input_hashes": [
+          "00b6f2593f563d4cd884e8477713b95d901ea180b2f65b24d8910ec2cde2f767",
+          "5757b76f5860a599af5affcdd9a330fb5f508ead7d0db2c7bddaa0da5e9366ff",
+          "6be5b20e592e41cdcd68e6f9e58d5aac4fd2a38b23eff04a38e0053c47622aee",
+          "7ecb7bdf206fca87b2db6d785b1308f4ca7ee6a42dffd307cfda94a51f9cb190"
+        ],
+        "palette": [
+          8,
+          0,
+          3,
+          6,
+          4,
+          2,
+          9,
+          7,
+          1,
+          5
+        ],
+        "represented_d4": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7
+        ]
+      },
+      {
+        "input_hashes": [
+          "fc55888b5f6e586be36be5e0378b87b9e66a43475d8c47dd195961e06152994b",
+          "60b1800cd52a18a19cd3fced015ae7f1e4a8d1f153a6c782c1d7dabb813246bf",
+          "98aee18c379b9628628baae8c1426a8a3e43dc9f7df53e320732ec0cd18b4123",
+          "862a23b10ea1ccfd65ef3fcd27988782728780395d4a9245bba9f61e1973a803"
+        ],
+        "palette": [
+          0,
+          1,
+          9,
+          2,
+          4,
+          8,
+          6,
+          7,
+          5,
+          3
+        ],
+        "represented_d4": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7
+        ]
+      }
+    ],
+    "model_training_launched": false,
+    "published": false
+  }
+]

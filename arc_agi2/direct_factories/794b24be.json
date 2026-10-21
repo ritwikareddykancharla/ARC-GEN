@@ -1,21 +1,17 @@
 {
   "task_id": "794b24be",
-  "factory_sha256": "95ed1c4f6bd7fe35383b9d97616ab20db4f9a5b9407ec87dd006f84b1024c62e",
+  "factory_sha256": "69762251f255dd2f58d4d94739989a2756c839d38789fba282bb9dffd6248d3c",
   "constructor_sha256": "28fc4c4ecc68f9c6533de0e7101396614d3ec51488df23d2cd1b43a250b68596",
   "passed": true,
-  "fresh_pairs_checked": 1000,
-  "augmented_pair_checks": 8000,
+  "fresh_pairs_checked": 2771,
+  "unique_base_inputs": 2771,
+  "augmented_pair_checks": 44336,
   "fixture_variants_checked": 16,
-  "sampler_rejections": [],
-  "seed": 135987990506075,
-  "d4": 7,
-  "unique_base_inputs": 235,
-  "seconds": 1.8572462500305846,
-  "factory_version": 1,
+  "factory_version": 2,
   "requires_per_episode_verification": true,
-  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
-  "draft_notes": {
-    "explanation": "The canonical rule counts the non-background cells, n. It then paints the first n cells of the fixed fill order (0,0)->(0,1)->(0,2)->(1,1) on a blank canvas. Those cells make a T: the top row left to right, then the centre. The factory moves this fill order into the visible coordinates of the 3x3 grid, using the same D4 rule as the episode. For d4>=4 it first mirrors the column (c -> 2-c). It then rotates clockwise d4%4 times, each time mapping (r,c) -> (c, 2-r). So the T's bar lies along whichever visible edge the canonical top row is mapped to. The bar is filled in the matching visible direction, and the stem cell sits at the centre. Colour roles are fixed constants: the background is palette[0] and the paint colour is palette[2]. The emitted program counts cells that differ from the background, which in this domain are always palette[1]. It builds a background canvas the same size as the input and paints the first min(n, 4) cells of the transformed order. It does not use rotation wrappers or global colour permutation.",
-    "limitations": "The constructor's domain is always 3x3 with 1 to 4 input pixels, so the order is fixed for that size. Larger or rectangular grids are outside the domain. In that case the program still runs: it uses the 3x3-based coordinates and skips any cell that falls outside the grid. If there are more than 4 non-background pixels, painting stops at the end of the four-cell order, the same as the archived solver. All 12 approved fixtures match the uniform rule, and no constructor defects or hidden tie-breaks were found. I have not run any tests."
-  }
+  "provenance": "Exhaustive native size3 and size4 occupancy domains, all8D4 transforms,2 colour permutations; all original fixtures replayed under16variants. Dynamic visible-coordinate edge offsets fix the previous fixed3x3 compiler.",
+  "test_source_sha256": "a8db2c429a31d98dd3335fb62e86b405ce1c23246fb6df11b17c0912a808a52f",
+  "validation_command": "python -m pytest -q arc_agi2/test_small_domain_expansions.py",
+  "tests_passed": 3,
+  "scope": "2771 distinct native inputs at sizes3 and4 exhaustively checked. Additional sizes5,12,30 have bounded regression tests only. Program acts directly in visible coordinates; no augmentation wrappers."
 }

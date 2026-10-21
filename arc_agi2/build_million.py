@@ -16,6 +16,7 @@ from pathlib import Path
 import numpy as np
 import pyarrow as pa
 import pyarrow.parquet as pq
+from .context_budget import bounds as context_bounds, reuse_limits, VERSION as CONTEXT_BUDGET_VERSION
 from huggingface_hub import HfApi,CommitOperationAdd,snapshot_download
 from .runtime import BASE,reference,solver,verification_solver,call,grid
 from .fixture_policy import fixture_basis,APPROVED_CORRECTIONS
@@ -127,6 +128,8 @@ def repartition_pool(rows, report):
         result[split+'_strata']=counts(updated,split)
         result[split+'_canonical']=len({p['canonical_input_hash'] for p in selected})
         result[split+'_context_episodes']=len(selected) if report.get('contextual') else 0
+        result[split+'_distinct_context_upper_by_stratum']=context_bounds(selected,identity_key(report['task_id']),bool(report.get('contextual')))
+    result['context_budget_version']=CONTEXT_BUDGET_VERSION
     if 'requested_pool_size' in result:
         result['quota_complete']=len(updated)>=result['requested_pool_size']
         result['pool_shortfall']=max(0,result['requested_pool_size']-len(updated))
@@ -311,10 +314,15 @@ def make_pool(tid):
        'validation_context_episodes':sum(r['split']=='validation' for r in rows) if tid in STORED_CONTEXT_TASK_IDS else 0,
        'modes':dict(Counter(r['generator_mode'] for r in rows)),'rejections':dict(reject),'seconds':time.monotonic()-start,
        'sha256':hashlib.sha256(file.read_bytes()).hexdigest(),**sampling_report}
+    for split in ('train','validation'):
+        report[split+'_distinct_context_upper_by_stratum']=context_bounds(
+            [r for r in rows if r['split']==split],identity_key(tid),tid in STORED_CONTEXT_TASK_IDS)
+    report['context_budget_version']=CONTEXT_BUDGET_VERSION
     dump(report_path,report);return report
 
 def allocate(reports,split,target,desired):
     from arc_agi2.finite_input_policy import capacity_basis, FINITE_INPUT_TASK_IDS
+    from arc_agi2.context_budget import VERSION as CONTEXT_BUDGET_VERSION
     # Fresh episode quotas, before augmentation. The histogram is a preference,
     # not a reason to withhold a family's otherwise feasible 1,000 episodes.
     if target < 0 or any(v < 0 for v in desired.values()):
@@ -323,8 +331,8 @@ def allocate(reports,split,target,desired):
     # Canonical classes decide within-episode eligibility, not corpus size.
     # Ordinary episodes retain four distinct canonical inputs, but different
     # exact queries/context sets can form fresh episodes from the same orbits.
-    # Match make_episodes' existing query-use limit; this is an upper budget,
-    # never a claim that context/semantic checks will realize the full quota.
+    # Legacy reports keep their historical reuse budget. Re-audited reports
+    # instead carry an exact combinatorial upper bound before semantic gates.
     multipliers={r['task_id']:1 if r.get('contextual') or r['task_id'] in FINITE_INPUT_TASK_IDS else 4
                  for r in reports}
     capacity={r['task_id']:min(ceiling,r[split+'_context_episodes'] if r.get('contextual') else
@@ -334,6 +342,11 @@ def allocate(reports,split,target,desired):
     contextual={r['task_id']:r.get('contextual',False) for r in reports}
     limits={t:{k:multipliers[t]*n for k,n in support[t].items()}
             for t in capacity}
+    for report in reports:
+        tid=report['task_id']
+        if tid in capacity and report.get('context_budget_version')==CONTEXT_BUDGET_VERSION:
+            limits[tid]={k:min(ceiling,n) for k,n in report[split+'_distinct_context_upper_by_stratum'].items()}
+            capacity[tid]=min(ceiling,sum(limits[tid].values()))
     capacity={t:min(c,sum(limits[t].values())) for t,c in capacity.items()}
     budgets={};keys=sorted(k for k in desired if desired[k]);total=sum(desired.values())
     for k in keys:budgets[k]=int(target*desired[k]/total)
@@ -386,9 +399,9 @@ def allocate(reports,split,target,desired):
         'family_capacity_shortfall':{r['task_id']:ceiling-capacity.get(r['task_id'],0)
                                     for r in reports if capacity.get(r['task_id'],0)<ceiling},
         'family_unused_capacity':{t:c-used[t] for t,c in capacity.items() if c>used[t]},
-        'capacity_policy':'exact-query-reuse-budget-v2',
+        'capacity_policy':CONTEXT_BUDGET_VERSION if all(r.get('context_budget_version')==CONTEXT_BUDGET_VERSION for r in reports) else 'exact-query-reuse-budget-v2',
         'capacity_is_verified_episode_count':False,
-        'policy':'Canonical identity gates eligibility; exact query support and existing reuse limits bound allocation. Context/semantic verification still determines realized fresh episodes.'}
+        'policy':'Audited distinct demo-set/query combinations bound allocation where available; legacy reports use exact-query reuse budgets. Context/semantic verification determines realized fresh episodes.'}
 
 def make_episodes(arg):
     tid,allocs=arg;basis=fixture_basis(tid);pool=pq.read_table(OUT/'pools'/f'{tid}.parquet').to_pylist();result={};all_hashes=set()
@@ -404,6 +417,8 @@ def make_episodes(arg):
         identity_total=len({p[identity] for p in rows})
         rng=random.Random(seed(tid,split,'episodes'));query_uses=Counter();pair_uses=Counter();failures=Counter()
         accepted_contexts=defaultdict(set)
+        _,pair_reuse_limit=reuse_limits(sum(quota.values()),len(rows),finite=tid in FINITE_INPUT_TASK_IDS,
+                                       stored_context=tid in STORED_CONTEXT_TASK_IDS)
         query_context_shortfalls=[];query_rejections=[];quarantined_queries=set();shape_counts=Counter()
         hist={which:{axis:Counter() for axis in ['height','width','longest','shapes']} for which in ['input','output']};relations=Counter()
         path=OUT/'data'/split/f'{tid}.parquet';path.parent.mkdir(parents=True,exist_ok=True)
@@ -433,6 +448,8 @@ def make_episodes(arg):
         try:
             for k,n in quota.items():
                 candidates=bins[k][:];rng.shuffle(candidates)
+                query_reuse_limit,_=reuse_limits(n,len(candidates),finite=tid in FINITE_INPUT_TASK_IDS,
+                                                stored_context=tid in STORED_CONTEXT_TASK_IDS)
                 if len(rows)<4 or identity_total<minimum_class_requirement(tid) or not candidates:
                     failures['insufficient_distinct_inputs']+=n;continue
                 for j in range(n):
@@ -442,7 +459,7 @@ def make_episodes(arg):
                     # silently bias the dataset toward easier query cases.
                     q=next((candidates[(j+offset)%len(candidates)]
                             for offset in range(len(candidates))
-                            if query_uses[candidates[(j+offset)%len(candidates)]['input_hash']]<(1 if tid in FINITE_INPUT_TASK_IDS else 4)
+                            if query_uses[candidates[(j+offset)%len(candidates)]['input_hash']]<query_reuse_limit
                             and candidates[(j+offset)%len(candidates)]['input_hash'] not in quarantined_queries),None)
                     if q is None:
                         failures['query_reuse_exhausted']+=1
@@ -463,11 +480,11 @@ def make_episodes(arg):
                             demos=q['context_pairs']
                             if len(demos)!=3 or any(p['split']!=split for p in demos):
                                 raise ValueError('Invalid stored episode context')
-                            if tid == '7b7f7511' and any(pair_uses[p['input_hash']]>=32 for p in demos):
+                            if tid == '7b7f7511' and any(pair_uses[p['input_hash']]>=pair_reuse_limit for p in demos):
                                 failures['stored_context_reuse_exhausted']+=1
                                 break
                         else:
-                            ds=[p for p in rows if p[identity]!=q[identity] and pair_uses[p['input_hash']]<32]
+                            ds=[p for p in rows if p[identity]!=q[identity] and pair_uses[p['input_hash']]<pair_reuse_limit]
                             if len(ds)<3:break
                             if tid == 'b7cb93ac':
                                 from .packing_evidence import select_packing_demonstrations
@@ -610,7 +627,8 @@ def make_episodes(arg):
             'query_context_shortfalls':query_context_shortfalls,
             'query_rejections':query_rejections,'quarantined_query_count':len(quarantined_queries),
             'max_query_reuse_in_fresh_episodes':max(query_uses.values(),default=0),
-            'max_pair_reuse_in_fresh_episodes':max(pair_uses.values(),default=0),'distinct_inputs_used':len(pair_uses)}
+            'max_pair_reuse_in_fresh_episodes':max(pair_uses.values(),default=0),'distinct_inputs_used':len(pair_uses),
+            'context_budget_version':CONTEXT_BUDGET_VERSION,'pair_reuse_limit':pair_reuse_limit}
     report={'task_id':tid,'splits':result,'finite_input_policy_signature':FINITE_INPUT_POLICY_SIGNATURE,
             'within_episode_input_identity':identity,
             'finite_input_provenance':dict(FAMILY_PROVENANCE[tid]) if tid in FINITE_INPUT_TASK_IDS else None}
@@ -647,7 +665,7 @@ Three demonstration pairs and one query per episode, with generator-produced out
 ## What changes
 
 - All fixture-verified ARC-GEN generators whose task IDs occur in ARC-AGI-2, plus independently constructed, tested extensions.
-- Adaptive fresh quotas: ordinary families receive a construction budget of up to four episodes per exact query input; audited finite-orbit families use at most one episode per exact query input. Canonical classes gate within-episode diversity, and semantic/context checks determine the actual accepted count. The family ceiling is {POLICY['planned_dataset']['fresh_episodes_per_family']:,} before augmentation. Families with little variation receive fewer examples.
+- Adaptive fresh quotas: re-audited pools count distinct demo-set/query combinations, excluding demonstration-order permutations. Stored-context families retain their original bundles. Older pool reports retain their legacy query-reuse allocation until re-audited. These are construction upper bounds; semantic/context checks determine the accepted count. Query/pair reuse and shape deviations are recorded per family. The family ceiling is {POLICY['planned_dataset']['fresh_episodes_per_family']:,} before augmentation. Families with little variation receive fewer examples.
 - Target query longest-side distribution at each integer size 1–30 jointly with output expansion/shrinkage/same-shape, measured on all 1,120 public tasks. Exact height, width and rectangular-shape histograms are reported separately. Unsupported targets become explicit shortfalls; difficulty is not proven equal by dimensions.
 - Size overrides require original replay and differential seed checks. Overridden/extended pairs use saved teacher solvers with documented verifier improvements: `78332cb0` checks the unique complete panel chain because the archived greedy program fails on valid panel permutations. `de493100` uses a dimension-aware reflection-orbit verifier for labelled even-sized crop extensions; its archived program hardcodes the original coordinate 31. Episode-shared picture family `269e22fb` uses an independent verifier conditioned on a demonstration output, since its archived solver contains only the original picture. Original teacher programs and benchmark data remain unchanged. Default upstream generators have fixture checks, not full semantic proofs.
 - Fresh input pool, no duplicated full native episodes, and no repeated exact inputs inside an episode. Inputs must also be inequivalent under D4/palette except in the {len(FINITE_INPUT_TASK_IDS)} source-audited finite-orbit families listed in `arc_agi2/finite_input_policy.py`; these still require four exact-distinct inputs and all semantic checks. Every fresh episode expands into all eight D4 transforms. Symmetric identical episodes are stored once, with every represented transform recorded in `equivalent_d4`; fresh and augmented counts remain separate. Colours are generated natively and an additional shared palette permutation follows the recorded augmentation policy. One transformation applies consistently to all demonstration inputs/outputs and the query input/output.

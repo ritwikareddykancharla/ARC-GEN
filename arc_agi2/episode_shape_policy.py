@@ -5,6 +5,7 @@ Semantic evidence gates must still validate the selected demonstrations. Only
 input dimensions are examined; query answers are never required.
 """
 from collections import defaultdict
+from itertools import combinations
 
 VERSION = 'input-shape-pattern-v1'
 
@@ -145,5 +146,19 @@ def select_demonstrations(candidates, query_input, rng, profile, identity_key=No
         report['matched'] = report['observed'] == report['requested']
         report['fallback'] = 'preferred_shape_context_sampling_exhausted'
         return demos, report
+    # Small finite pools can be searched exactly; otherwise the last unused
+    # context can be missed by random draws even though it still exists.
+    if len(candidates) <= 40:
+        choices = []
+        for triplet in combinations(candidates, 3):
+            ids = [p[identity_key] if identity_key else tuple(map(tuple, p['input'])) for p in triplet]
+            if len(set(ids)) == 3 and key(triplet) not in excluded_contexts:
+                choices.append(triplet)
+        if choices:
+            demos = list(rng.choice(choices))
+            report['observed'] = describe(demos, query_input)
+            report['matched'] = report['observed'] == report['requested']
+            report['fallback'] = 'preferred_shape_context_sampling_exhausted'
+            return demos, report
     report['fallback'] = 'unique_demonstration_context_search_exhausted'
     return None, report

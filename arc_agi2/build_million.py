@@ -403,6 +403,15 @@ def allocate(reports,split,target,desired):
         'capacity_is_verified_episode_count':False,
         'policy':'Audited distinct demo-set/query combinations bound allocation where available; legacy reports use exact-query reuse budgets. Context/semantic verification determines realized fresh episodes.'}
 
+def verified_variant(row):
+    """Return a target or its normal rejection, preserving input order in workers."""
+    try:
+        return make_record(row, source_repo='ritwikareddykancharla/ARC-GEN',
+                           source_revision=row['source_commit']), None
+    except (TargetError,ValueError,TypeError,IndexError,TimeoutError) as exc:
+        return None, str(exc)
+
+
 def make_episodes(arg):
     tid,allocs=arg;basis=fixture_basis(tid);pool=pq.read_table(OUT/'pools'/f'{tid}.parquet').to_pylist();result={};all_hashes=set()
     identity=identity_key(tid)
@@ -574,17 +583,22 @@ def make_episodes(arg):
                               'query_output_height':len(query['output']),'query_output_width':len(query['output'][0]),
                               'query_relation':relation(query),'source_commit':os.environ.get('ARCGEN_SOURCE_COMMIT','local')}
                             assert json.loads(row['completion'])=={'outputs':row['solutions']}
-                            if OUTPUT_FORMAT == 'program-grid-png':
-                                try:
-                                    row.update(make_record(row,source_repo='ritwikareddykancharla/ARC-GEN',source_revision=row['source_commit']))
-                                except (TargetError,ValueError,TypeError,IndexError,TimeoutError) as exc:
+                            pending.append(row)
+                        if OUTPUT_FORMAT == 'program-grid-png':
+                            # An optional caller-owned process executor parallelizes
+                            # independent D4 checks. Selection and acceptance stay
+                            # ordered and use precisely the same target verifier.
+                            executor=globals().get('VARIANT_EXECUTOR')
+                            results=executor.map(verified_variant,pending) if executor else map(verified_variant,pending)
+                            for row,(target,error) in zip(pending,results):
+                                if error is not None:
                                     # This stage may compare against the hidden answer.
                                     # Never redraw demos to search for a context that passes it.
-                                    quarantine_query('post_gate_program_rejected',exc,retry+1)
+                                    quarantine_query('post_gate_program_rejected',ValueError(error),retry+1)
                                     dump(OUT/'rejections'/split/tid/f"{q['input_hash']}.json",
-                                         {'task_id':tid,'error':str(exc),'episode':row})
+                                         {'task_id':tid,'error':error,'episode':row})
                                     pending=[];break
-                            pending.append(row)
+                                row.update(target)
                         if terminal_rejection:break
                         if not pending:continue
                         for row in pending:

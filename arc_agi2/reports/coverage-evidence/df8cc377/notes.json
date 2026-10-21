@@ -1,0 +1,73 @@
+{
+  "task_id": "df8cc377",
+  "author": "host parallel CLI execution worker",
+  "status": "host_reviewed_context_enriched_teaching_fixture",
+  "certified": false,
+  "native_changed": false,
+  "labels_changed": false,
+  "factory_sha256": "f7802b0c7ff7d87c218c3bf77f145d9d8ebc83588293c403fb7254f6beb23517",
+  "constructor_sha256": "9aeb75967681f5c35eceb02827885afbe01724e7e78f2cefcb637c5d2a04f8b6",
+  "gate_sha256": "e109844cb836a815895d981577850767f88068b1c3c4a77d2d89ef90e70156fc",
+  "mechanism": "Direct visible-coordinate program. Background = palette[0] (the only specialised constant; d4 is unused, and the emitted source is identical for all 8 D4 indices). Frame-capable colour: its cells are exactly the border of its >=3x3 bounding box, and the ring just inside that border is background (the native constructor reserves that ring). Role readings: every split into k frame colours and k pixel colours, k=2 if min(H,W)<=20 else 3, where the frames' ceil(area/2) needs are distinct and equal the pixel counts as a multiset; boxes are <= side//2 and separated by >=1 cell. Output: erase all pixel colours, then fill each interior with a checkerboard in the matched colour. Phase hypotheses are the 4 anchor corners (the D4 orbit of the native top-left rule). A corner survives only if it reproduces EVERY demo exactly under some role reading. A demo that no hypothesis explains makes the program return None: no skipping and no reset. The program answers only if every (query reading x surviving corner) renders the identical full grid; otherwise it returns None. There is no first-candidate, majority or d4 fallback. Pixels deep inside an interior (a native quirk: only the interior border is reserved) and adjacent same-colour pixels are both handled.",
+  "independent_gate": "df8cc377_gate.py uses a majority background, flood-fill frames, bitmask role enumeration, and GF(2) elimination of one parity equation per demo frame, with the phase read from the demo output. Its statuses are: unique / phase_context_shortfall (context) / role_ambiguous (intrinsic) / demo_*. It sees demos plus the query input only.",
+  "fixture_conflict": {
+    "summary": "The canonical (immutable, uncorrected) fixture is intrinsically ambiguous under the D4 family. Every demo interior width is odd (3,7,5,5,1,3), so the demos fix top-vs-bottom anchoring but not left-vs-right. The test's 2x2 interior (colour 8, rows 11-12, cols 3-4 at d4=0) depends on left-vs-right. Result on all 16 fixture variants: demos 3/3 exact, query abstains, gate=phase_context_shortfall.",
+    "native_constructor_witness": "Episode E0 is the canonical episode at d4=0 with the identity palette. E4 regenerates every pair with the NATIVE generate() on mirrored parameters (bcol->W-bcol-wide, pcol->W-1-pcol; all random-branch constraints verified) and augments by d4=4, or equivalently uses preimage d4=3 with augment d4=1. E4's visible inputs and all 3 visible demo outputs are identical to E0's, but the query labels differ at (11,3),(11,4),(12,3),(12,4): label 8,0,0,8 vs alt 0,8,8,0.",
+    "evidence_files": [
+      "df8cc377_evidence.json (fixture.witnesses, fixture.variants)",
+      "counterexample.json (written by audit.py fixture stage, d4=0 identity palette)"
+    ],
+    "host_action_required": "Exempt or replace the df8cc377 canonical test fixture in the fixture stage, or approve a labelled teaching variant via fixture_policy (for example, add a demo with an even interior width). This worker cannot change fixtures. Alternatively, the host can accept a d4-mapped top-left convention as a declared policy exception. That is exactly the previously accepted factory (cb5cdf4b...), which the hold rejected as a hidden D4 choice."
+  },
+  "fresh_audit_gated": {
+    "fresh_pairs_checked": 1000,
+    "augmented_pair_checks": 8000,
+    "accepted_episodes": 250,
+    "queries_drawn": 250,
+    "demo_resamples_context_shortfall": 10,
+    "queries_rejected_intrinsic_role_ambiguity": 0,
+    "queries_rejected_resample_exhausted": 0,
+    "other_gate_rejections": {},
+    "sampler_rejections": 0,
+    "shortfall_abstention_checks": 80,
+    "gate_solver_disagreements": 0,
+    "gate_d4_invariance_failures": 0,
+    "unique_base_inputs": 1000
+  },
+  "fresh_audit_gated_scope": "Seeds sha256('df8cc377-gated:i'). Each query is drawn from native generate(). Demos are 3 independent native draws, resampled (query preserved) only while the independent gate reports phase_context_shortfall; a role_ambiguous query is rejected as intrinsic. Accepted episodes are verified with program_targets.verify under all 8 D4 with a seeded random palette. Gate/solver agreement (answer iff gate unique) was checked on every evaluated demo set under all 8 D4, and gate D4-invariance was checked too. The first 5 shortfall rejections each have native-constructor identical-input/different-output witnesses (see df8cc377_evidence.json).",
+  "ungated_audit_protocol_rate": {
+    "episodes": 1000,
+    "query_exact": 961,
+    "query_abstain": 39,
+    "query_wrong": 0,
+    "demo_not_exact": 0,
+    "abstain_status": {
+      "phase_context_shortfall": 39
+    }
+  },
+  "ungated_note": "Same seeds as audit.py ('factory-fresh:df8cc377:i'), 1000 episodes, one D4 per episode. Results: 961 query exact, 39 abstained (all phase_context_shortfall), 0 wrong; every demo was exact. Under audit.py itself, these 3.9% of episodes would also fail verify, because demo context is missing, not because the program is wrong.",
+  "official_audit": "audit.py --only df8cc377 gives passed=false, failure_stage=fixtures, error 'ValueError: Invalid ARC grid' (the solver returned None on the ambiguous canonical query). host-audit.json is left as written by audit.py; it is not a certification.",
+  "intrinsic_ambiguity_proof": "test_intrinsic_role_ambiguity_witness builds two native draws with identical input and different output: a 3x3 pixel ring of colour 4 versus a frame of colour 1, with matching counts. The solver abstains and the gate reports role_ambiguous. No such case occurred in the 250 gated or 1000 ungated fresh queries.",
+  "tests": [
+    "PYTHONPATH=/Users/ritwika/projects/ARC-GEN /Users/ritwika/projects/arc-agi2/.venv/bin/python ROOT/df8cc377/df8cc377_tests.py -v  -> 8 tests OK (~1.2s)",
+    "PYTHONPATH=/Users/ritwika/projects/ARC-GEN /Users/ritwika/projects/arc-agi2/.venv/bin/python ROOT/df8cc377/df8cc377_evidence.py  -> 45.3s",
+    "PYTHONPATH=/Users/ritwika/projects/ARC-GEN /Users/ritwika/projects/arc-agi2/.venv/bin/python ROOT/audit.py --only df8cc377  -> passed=false at fixtures (0.06s); also wrote ROOT/host-summary-1792540703.json"
+  ],
+  "assumptions": [
+    "The hypothesis family is the 4-corner D4 orbit of the native anchor rule; global-parity or other anchors are not in the augmented distribution.",
+    "Original background 0 maps to palette[0].",
+    "The constructor's visible layout constraints are used as hard domain constraints. True native draws always satisfy them, so they only remove spurious readings."
+  ],
+  "source_paths": [
+    "/Users/ritwika/projects/ARC-GEN/tasks/task_df8cc377.py",
+    "/Users/ritwika/projects/ARC-GEN/common.py",
+    "ROOT/audit.py",
+    "ROOT/coverage-repairs-v3/df8cc377/{factory.py,notes.json,evidence.py,request.json}"
+  ],
+  "changes_vs_v3_proposal": "v3 required an all-background interior, which wrongly rejects real frames when a pixel lands deep inside an interior (the native quirk). It also silently ignored demos that no hypothesis explained, and kept a non-strict fallback tier. Here the interior check is limited to the reserved ring, an unexplained demo causes abstention, and there is no tier fallback.",
+  "constructor_notes": "The random layout loop is unbounded (operational only). The archived solver's size>1 frame split breaks on adjacent same-colour pixels; that defect is not reproduced here.",
+  "original_fixture_context_passed": false,
+  "original_labels_changed": false,
+  "teaching_context": "One native demonstration supplies missing horizontal checkerboard phase. Original context still abstains. Production contexts require independent evidence gate; query remains fixed while demos are resampled.",
+  "gate_integration": "arc_agi2/checkerboard_phase_evidence.py via require_colour_evidence"
+}

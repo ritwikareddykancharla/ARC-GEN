@@ -1,0 +1,78 @@
+{
+  "task_id": "e5062a87",
+  "reviewer": "host parallel CLI execution worker (second independent reviewer, v6)",
+  "passed": true,
+  "certification_basis": "gated audit (e5062a87_audit.py), not plain ROOT/audit.py",
+  "native_changed": false,
+  "source_changed_by_review": false,
+  "fixture": {"fixture": "canonical", "corrected": false, "immutable": true},
+  "source_hashes": {
+    "factory.py": "e8bea25635829a35a63c060be9d86a47dc1042efc2ee47adb8fb5485accfa40a",
+    "native tasks/task_e5062a87.py": "81f24acd5c627c4b4d153caeb3c098f21e815193db3b9df9c93acf399e706603",
+    "common.py (helpers conway_sprite/diagonally_connected/shuffle)": "879eb61e360e4a47ee1d569408e8c66114ac068794721fe1de1b59aaa476586a",
+    "e5062a87_gate.py": "f278cf89f816e3c68442ac5b187fa756f9d205994b19a2b645e5bc9be099bc2c",
+    "e5062a87_audit.py": "e668f2e097e3c96f0b128585d49dc0d977226fe52f33ab93dfd57db42d006e35",
+    "e5062a87_tests.py": "9f8488edce72b63fb996ae4aa3318ef5c445cddfedde1e5a7bfc18543d79b4c4",
+    "e5062a87_stamp_evidence.py (new, v6)": "afc88306219371c01e387254127d2366b0d827d10d813161d2c5d2926ee1a3ac",
+    "e5062a87_review_v6_tests.py (new, v6)": "4e9e3c022f5bc2b95a5b68fb54097017c9fc4153c4d1f901ad19ffc57d130d8d",
+    "host_audit_hashes_confirmed": "host-audit.json factory_sha256, constructor_sha256, gate_sha256 and audit_script_sha256 equal the current files (asserted in test_hashes_match_host_audit)"
+  },
+  "audit_rerun_v6": {
+    "command": "cd ROOT/e5062a87 && /Users/ritwika/projects/arc-agi2/.venv/bin/python -I e5062a87_audit.py",
+    "runtime_seconds": 80.3,
+    "passed": true, "fresh_pairs_checked": 1000, "augmented_pair_checks": 8000,
+    "fixture_variants_checked": 16, "unique_base_inputs": 1000, "sampler_rejections": 0,
+    "queries_drawn": 250, "queries_identified_first_try": 214, "queries_needing_demo_resample": 36,
+    "demo_resamples_total": 51, "max_resamples_for_one_query": 3, "queries_unresolved_after_cap": 0,
+    "rejected_demo_sets": 51, "program_abstained_on_rejected_demo_sets": 51,
+    "reproducible": "all counts identical to the author's run; only seconds differ"
+  },
+  "plain_audit_py_rerun_v6": {
+    "command": "isolated copy at ROOT/e5062a87/plain_audit_rerun_v6/ (audit.py + factory.py), audit.check('e5062a87')",
+    "passed": false, "fixture_variants_checked": 16,
+    "error": "Abstain: surviving hypotheses disagree on the query (fresh seed index 0)",
+    "interpretation": "intended abstention on a context-shortfall episode; matches the author's e5062a87_plain_audit_py_result.json"
+  },
+  "tests": [
+    {"command": "cd ROOT/e5062a87 && /Users/ritwika/projects/arc-agi2/.venv/bin/python -I e5062a87_tests.py -v", "result": "11 tests OK", "seconds": 5.6},
+    {"command": "cd ROOT/e5062a87 && /Users/ritwika/projects/arc-agi2/.venv/bin/python -I e5062a87_review_v6_tests.py -v", "result": "9 tests OK", "seconds": 19.8,
+     "covers": [
+       "evidence gate called as require_stamp_fit_evidence(demos, queries=[{'input': grid}], palette), with a LabelFree query dict that raises if any key except 'input' is read; all 16 canonical variants pass",
+       "gate rejects unexplained demos and empty demos",
+       "300 fresh native episodes under D4 x shuffled palette, gate evaluated in augmented coordinates: gate-identified implies program exact and equal to a third minimal all-fits implementation; gate-rejected implies program abstains",
+       "truth hypothesis (none, no thick, no line, union) reproduces every native pair (800 pairs); native fits never overlap; hole/centre attributes never fire",
+       "exhaustive native shape domain (boxes 1x4/2x3/3x2/4x1, full marginals, diagonally connected): no enclosed holes and no odd x odd box, so hole/centre filters can never fire on native data",
+       "d4 unused (8 identical sources), palette enters only as two constants, no random/solutions/eval/exec/d4/transformed in the emitted program, audit_target passes",
+       "hard case: real bar copies off the template row (line filter fires) are answered exactly once demos refute the filter",
+       "concrete ambiguity counterexample saved: e5062a87_review_v6_ambiguity_counterexample.json (2 distinct query outputs, 30 survivors each, truth among survivors)"
+     ]}
+  ],
+  "review_findings": {
+    "output_leakage": "none. solve() gets demos plus the query grid. The gate and evidence wrapper read only query['input'] (proved with LabelFree). Labels are used only by verify() after the program runs.",
+    "hidden_parameter_inference": "none. d4 is unused, and palette only sets ZERO=palette[0] and TCOL=palette[2]. The template is read from visible TCOL cells.",
+    "fallbacks": "none. There is no first, majority or intersection pick, no demo skipping and no reset. The program raises Abstain when there are no survivors, when a survivor is undefined on the query, or when survivors disagree.",
+    "d4_choice": "none. The 8 raster scans are included as a full D4-closed set, and unanimity is required.",
+    "domain_narrowing": "none. The query is never resampled (250 queries drawn, 0 dropped). Only demos are resampled, from the unmodified native generator, and only when the gate finds survivor disagreement. Native size and sprite domain are unrestricted.",
+    "correctness_argument": "Every native random-branch label equals 'paint every open fit': draw() rejects unplanned fits and overlaps, and duplicate sprite cells trip the red check. That truth hypothesis is in the family and survives every native demo set, so any unanimous answer on native data equals the native label.",
+    "ambiguity_class": "Context shortfall, not intrinsic. Rivals differ only through the thick/line filters, and native demos with thin or bar templates refute them with positive probability. The data agree: 0 queries unresolved after the cap, and at most 3 resamples were needed.",
+    "constructor_note": "validate() ignores draw()'s legality result. Canonical train pairs 0 (bar) and 1 (diamond) are latent-labelled, illegal draws. A witness with identical input and a different output is shown in e5062a87_tests.py. The fixture is kept unchanged: its own demos refute all-fits, and all 30 fixture survivors agree on the canonical test. No constructor change is required for certification. The optional host fix would be to assert draw()'s return value in validate().",
+    "non_blocking_remarks": [
+      "The 120-hypothesis family (holes/centre/thick/line/resolution) was chosen so that it could explain the latent-labelled canonical demos. It is a finite stated scope, not a proof of universal identifiability.",
+      "About 14% of fresh native episodes need demo resampling. Without the evidence gate in dispatch, those episodes would fail verify(), because the program abstains, and would be dropped. Wiring the gate makes the rejection explicit and label-free."
+    ]
+  },
+  "issues": [],
+  "recommended_integration": {
+    "factory": "ROOT/e5062a87/factory.py -> arc_agi2/direct_factories/task_e5062a87.py (sha256 e8bea256...a40a)",
+    "certificate_report": "ROOT/e5062a87/host-audit.json -> arc_agi2/direct_factories/e5062a87.json (host action; qualifies(): passed, 1000 fresh, 8000 augmented, 1000 unique, 16 fixture variants)",
+    "gate": "ROOT/e5062a87/e5062a87_gate.py -> arc_agi2/e5062a87_gate.py",
+    "evidence": "ROOT/e5062a87/e5062a87_stamp_evidence.py -> arc_agi2/e5062a87_stamp_evidence.py",
+    "tests": ["ROOT/e5062a87/e5062a87_tests.py", "ROOT/e5062a87/e5062a87_review_v6_tests.py"]
+  },
+  "required_dispatch_signature": "in colour_evidence.require_colour_evidence: if task_id == 'e5062a87': from .e5062a87_stamp_evidence import require_stamp_fit_evidence; require_stamp_fit_evidence(demonstrations, queries, list(range(10)) if palette is None else palette); return",
+  "dispatch_signature_notes": "queries is a list of {'input': grid}, with no labels read. palette is the episode colour permutation. d4 is not needed because the family is D4-closed. The function raises MissingColourEvidence (ValueError) when demos are unexplained or survivors disagree.",
+  "assumptions": [
+    "Template colour = palette[2], open colour = palette[0] (native red/black after permutation).",
+    "Identifiability is claimed only relative to the stated 120-hypothesis family."
+  ]
+}

@@ -1,0 +1,28 @@
+{
+  "task_id": "985ae207",
+  "rng": "C++ mt19937; different random stream from Python. No seed-for-seed identity claimed.",
+  "outer_distribution": {
+    "size": "P(20)=3/4; P(25)=1/4",
+    "boxes": "4 for25; uniform{2,3}for20",
+    "pixels": "boxes+Bernoulli(1/2)",
+    "frame": "uniform from{1,...,9}excluding8",
+    "bar_colours": "uniform ordered sample without replacement from{1,...,9}excluding8andframe",
+    "pixel_colours": "iid uniform bar colours, rejection-conditioned on every bar appearing at least once"
+  },
+  "geometry_proposal": {
+    "short_sides": "iid UniformInteger[2,4]",
+    "long_sides": "iid UniformInteger[5,18]",
+    "orientations": "iid Bernoulli(1/2)",
+    "bar_positions": "row uniform[0,S-tall],col uniform[0,S-wide]",
+    "pixel_centres": "independent rows/cols uniform[2,S-3]",
+    "mass": "q(z)=(1/(3*14*2))^B * product_b[1/((S-tall_b+1)*(S-wide_b+1))] * (1/(S-4))^(2P)"
+  },
+  "acceptance": {
+    "spacing": "Exact common.overlaps(...,spacing=1) comparison for bars and original3x3tiles",
+    "initial_tiles": "Spacing guarantees all original tile footprints are background, so omitted redundant initial-input-canvas work cannot change acceptance.",
+    "output_draw": "Literal native per-cell output painting: require inbounds and background/own bar colour; recompute direction from centre after stamping; stop only when centre enters bar; reject diagonal or direction change.",
+    "early_alignment": "Necessary rejects only: centre inside both bands violates initial background requirement; centre in neither band is diagonal. All geometry random variables have already been drawn."
+  },
+  "equivalence": "Both sample the same proposal massq and acceptance indicatorA, hence accepted parameter law q(z)*A(z)/sum_z q(z)*A(z). No aligned-offset constraints or selected family templates.",
+  "verification": "2000 raw compiled proposals checked against Python common.overlaps plus unchanged native.generate explicit acceptance. Every1000accepted parameter set is likewise checked accepted before native labels are used. Four untouched Python-RNG samples are independently checked underall8D4. Counts and hashes in host-audit.json."
+}

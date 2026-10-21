@@ -1,0 +1,40 @@
+{
+  "sources": [
+    {
+      "file": "atlas-notes.json",
+      "url": "https://raw.githubusercontent.com/yhay81/arc-agi-2-solution-atlas/main/notes/963c33f8.json",
+      "sha256": "f98dd82c622f707f58ead916c54601a8abc72408100d070f7a647f31cb55e0e3",
+      "fetched_utc": "2026-10-20T23:58:54.100931+00:00"
+    },
+    {
+      "file": "atlas-corrections.json",
+      "url": "https://raw.githubusercontent.com/yhay81/arc-agi-2-solution-atlas/main/metadata/label_corrections.json",
+      "sha256": "c82d7bd0a96ec01e4e3b0aa631c35f6a13936a4c5c54f6e0e9f6a7700151e0fa",
+      "fetched_utc": "2026-10-20T23:58:54.547452+00:00"
+    }
+  ],
+  "issue_searches": [
+    {
+      "url": "https://api.github.com/search/issues?q=repo%3Aarcprize%2FARC-AGI-2+963c33f8",
+      "status": 200,
+      "result": {
+        "total_count": 0,
+        "incomplete_results": false,
+        "items": [],
+        "search_type": "lexical"
+      }
+    },
+    {
+      "url": "https://api.github.com/search/issues?q=repo%3Agoogle%2FARC-GEN+963c33f8",
+      "status": 200,
+      "result": {
+        "total_count": 0,
+        "incomplete_results": false,
+        "items": [],
+        "search_type": "lexical"
+      }
+    }
+  ],
+  "kaggle_discussion": "https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-2/discussion/731040",
+  "kaggle_status": "Previously opened with web tool; no readable discussion body returned. Do not treat as confirmed official correction."
+}

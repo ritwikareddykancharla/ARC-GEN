@@ -1,0 +1,45 @@
+{
+  "task_id": "d931c21c",
+  "canonical_sha256": "34200461c67f8bd4dc547fb156a7d8721730e7cf535579d0e3074e00ec81932b",
+  "teaching_sha256": "a7124274c4de361383de34fffdc79a4073af665f68003b03b38474e2dfd52c72",
+  "source": "https://github.com/arcprize/ARC-AGI-2/pull/75",
+  "approval": "User requested corrected teaching copies and delegated investigation/finalization on 2026-10-20; host reviewed evidence and finalized this explicitly labelled copy on 2026-10-21.",
+  "evidence_status": "upstream_proposed_unmerged_correction",
+  "description": "One extraneous red cell in train[2] removed, exactly matching the unmerged PR75 patch. Canonical benchmark data and scoring remain unchanged.",
+  "changed_cells": [
+    {
+      "split": "train",
+      "pair": 2,
+      "field": "output",
+      "row": 13,
+      "col": 3,
+      "canonical": 2,
+      "teaching": 0
+    }
+  ],
+  "previous_curated_teaching": null,
+  "review_notes": {
+    "status": "proposed teaching copy; awaiting fixture-policy integration",
+    "canonical_difference": [
+      {
+        "split": "train",
+        "pair_index": 2,
+        "row": 13,
+        "col": 3,
+        "canonical": 2,
+        "proposed": 0
+      }
+    ],
+    "upstream": {
+      "url": "https://github.com/arcprize/ARC-AGI-2/pull/75",
+      "state": "open, merged=false",
+      "issue": "https://github.com/arcprize/ARC-AGI-2/issues/58",
+      "exact_pr_diff_matches_reference_teaching_copy": true
+    },
+    "mechanism": "Leave open blue components unchanged. Closed components get red exterior Chebyshev-adjacent halos. Native lining paints boundary of one or two constituent interior rectangles. A second visible hypothesis paints only cells touching blue; demos must identify lining or query outputs must agree.",
+    "native_decomposition_proof": "Rectangle union has one horizontal/vertical split except L-shaped aligned-end union with two. The native tiniest-chunk constraint selects the split with strictly smaller minimum piece area; ties are rejected by constructor. Direct source enumerates cuts; independent gate enumerates corner-anchored rectangles with rectangular complements and selects same unique minimum-area partition.",
+    "constructor_proposal": "No native constructor change. Archived touch-only solution disagrees on 10/100 initial native samples with long interior seams. Uniform piece-lining model matches 1000/1000 fresh draws before context gate. Do not suppress these harder seam cases. Instead supply discriminating demonstrations.",
+    "independent_gate": "arc_agi2.outline_teaching_evidence.require_outline_teaching_evidence. It never reads query outputs and rejects contradictory demos or unresolved seam hypotheses. Source has no least-mismatch fallback and no D4 parameter oracle.",
+    "fixture_claim": "Only proposed teaching fixture audited. Canonical third demonstration intentionally rejected. Exact upstream patch saved locally, no canonical labels or fixture policy edited."
+  }
+}

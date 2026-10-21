@@ -1,0 +1,129 @@
+{
+  "task_id": "c6e1b8da",
+  "factory_sha256": "eb46fc90d63c6aa1c9e534cfb6157281da2b161601e2601460c334c6babdc455",
+  "constructor_sha256": "7373350a8e68de14ce950aa8ab902d0693797988c82283ae228597d558e049a3",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "query_identifiability_rejections": [
+    {
+      "seed": 61860021,
+      "reason": "intrinsic stacking ambiguity",
+      "valid_orders": 2,
+      "distinct_outputs": 2,
+      "witness_calls": [
+        {
+          "wides": [
+            6,
+            8,
+            4,
+            5
+          ],
+          "talls": [
+            9,
+            9,
+            4,
+            6
+          ],
+          "brows": [
+            4,
+            9,
+            9,
+            1
+          ],
+          "bcols": [
+            12,
+            5,
+            12,
+            6
+          ],
+          "colors": [
+            6,
+            7,
+            2,
+            4
+          ],
+          "angles": [
+            -1,
+            -1,
+            0,
+            3
+          ],
+          "lengths": [
+            0,
+            0,
+            4,
+            4
+          ],
+          "downs": [
+            0,
+            0,
+            2,
+            1
+          ]
+        },
+        {
+          "wides": [
+            8,
+            6,
+            4,
+            5
+          ],
+          "talls": [
+            9,
+            9,
+            4,
+            6
+          ],
+          "brows": [
+            9,
+            4,
+            9,
+            1
+          ],
+          "bcols": [
+            5,
+            12,
+            12,
+            6
+          ],
+          "colors": [
+            7,
+            6,
+            2,
+            4
+          ],
+          "angles": [
+            -1,
+            -1,
+            0,
+            3
+          ],
+          "lengths": [
+            0,
+            0,
+            4,
+            4
+          ],
+          "downs": [
+            0,
+            0,
+            2,
+            1
+          ]
+        }
+      ]
+    }
+  ],
+  "demo_identifiability_rejections": 1,
+  "rejected_query_raise_checks": 8,
+  "gate_label_agreements": 1000,
+  "multi_order_identifiable_pairs": 357,
+  "context_retries": 0,
+  "audit_scope": "Native constructor unchanged. Independent pure-Python parameter recovery + native generate() replay over all still-box orders gates each grid from its input alone. Intrinsically ambiguous queries rejected (factory must raise under all 8 D4); queries otherwise preserved, ambiguous demos resampled. 250 episodes x 4 pairs, all 8 D4, shuffled palette; no labels in gate or program.",
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 78.92756724997889
+}

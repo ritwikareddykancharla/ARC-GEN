@@ -1,0 +1,74 @@
+{
+  "task_id": "d5c634a2",
+  "reviewer": "second independent reviewer (host parallel CLI execution worker)",
+  "passed": false,
+  "passed_meaning": "false: native certification is impossible on the LIVE constructor (hidden duplicates). The factory, gate and proposed constructor all pass every check below. Conditional verdict: ready for integration once root applies the proposed constructor.",
+  "conditional_on_proposed_constructor": true,
+  "native_changed": false,
+  "source_hashes": {
+    "factory": "7889f3129f3eef90574126600fa30be1423350815f9a1b364786ec323496060d",
+    "direct_factory_copy": "7889f3129f3eef90574126600fa30be1423350815f9a1b364786ec323496060d",
+    "native_constructor": "ae4815e88a27242fb6e08e91429d78f071dcf63f71c2f5b972ffc70ba4d1e04d",
+    "proposed_constructor": "d15fb53f8087e521da2f26f8f818dc564c462041924dc69ebb7b040627ae1d29",
+    "gate": "35dfcc585c5a1c210c7189dfc74bf9bc694dc0cfe740be1180103baed1357c04",
+    "portable_test": "2184021dcd765f8e5e0664a7fb11d18960a179c27c5bb3377c919187800800dc",
+    "review_script": "ab0b3f440c44fd42351029deb3ba9a01551661727913d83c769b0c5a3c9e73df"
+  },
+  "review_findings": {
+    "output_leakage": "none. solve() takes no demos and no labels; verify() compares labels after execution. The gate reads demo pairs and query INPUTS only, and a test passes a bogus query output and gets the same result.",
+    "hidden_parameter_inference": "none. The factory takes (d4, palette) explicitly and runs no D4 search. The gate takes no d4/palette (accepted for the signature, then ignored). It recovers stem directions, colours and slots from visible grids.",
+    "rule_specific_hardcoding": "none. The 4 canonical corner slots per colour are the task rule and are mapped forward through transformed(). No fixture literals appear (audit_target passes).",
+    "ambiguous_fallbacks": "none in the factory: no first/majority/intersection choice and no demo skipping. Tally clipping at 4 is unreachable within the constructor bounds, and the gate rejects any unobserved prefix. The gate needs every demo-consistent rule to agree on the full query grid.",
+    "domain_narrowing": "none. The proposed fix rejects only exact duplicate (row,col,cdir) latents, which are invisible. Overlapping and touching border bars are kept: in the gated audit, 244/4000 pairs have border runs of 5-9 cells. The explicit/validate path is byte-identical, and the canonical fixture is unchanged.",
+    "hard_cases": "6000 explicit native latents with border rows over-sampled (runs of 5-12 cells on border rows): the factory is exact on all 6000 under 8 D4 x 2 palettes, and the independent 4-direction exact-cover parse is unique and correct on all 6000.",
+    "issues_found_and_fixed": [
+      "Prior gate (d5c634a2_evidence.gate) worked only in the canonical frame, needed latent_explanations on 0/2 colours, and was not portable to augmented demos. It was replaced by a frame-free visible gate, arc_agi2/t_tally_d5c634a2_evidence.py.",
+      "The first version of the new gate gave a rule-enumeration-order-dependent reason string across D4 frames (the decision was the same). It now collects all missing prefixes, so the reason is frame-invariant."
+    ],
+    "remaining_issue": "LIVE native constructor labels count invisible exact-duplicate Ts (171/1000 audit-seed pairs). The visible gate catches such demos (demonstrations_fit_no_tally_rule), but it cannot detect a bad QUERY label without reading labels: 37 mismatches in 250 native episodes. Root must apply proposed_constructor.diff before any count is admitted."
+  },
+  "tests": [
+    {
+      "cmd": "PYTHONPATH=/Users/ritwika/projects/ARC-GEN /Users/ritwika/projects/arc-agi2/.venv/bin/python arc_agi2/test_d5c634a2_independent_review_v8.py  (cwd fork; also pytest-compatible)",
+      "result": "9/9 passed",
+      "seconds": 1.6
+    },
+    {
+      "cmd": "PYTHONPATH=/Users/ritwika/projects/ARC-GEN /Users/ritwika/projects/arc-agi2/.venv/bin/python ROOT/d5c634a2/d5c634a2_review_v8.py",
+      "result": "fixtures 16/16; stress 6000/6000; proposed gated 1000/1000 episodes, 4000 pairs, 32000 augmented checks, 3900 unique inputs, 0 intrinsic, 0 unresolved, 0 gate/label mismatches; native 37 query-label mismatches/250",
+      "seconds": 223
+    },
+    {
+      "cmd": "cd ROOT; PYTHONPATH=/Users/ritwika/projects/ARC-GEN /Users/ritwika/projects/arc-agi2/.venv/bin/python -c \"import audit; audit.check('d5c634a2')\"",
+      "result": "native FAIL at fresh_program after 8 pairs (hidden duplicate); fixtures 16/16",
+      "seconds": 0.6
+    },
+    {
+      "cmd": "PYTHONPATH=/Users/ritwika/projects/ARC-GEN /Users/ritwika/projects/arc-agi2/.venv/bin/python ROOT/d5c634a2/d5c634a2_proposed_hostaudit.py",
+      "result": "PROPOSED pass 1000 fresh/8000 augmented/16 fixtures, 992 unique inputs, 0 sampler rejections",
+      "seconds": 24
+    },
+    {
+      "cmd": "proposed validate() == native validate() == canonical fixture",
+      "result": "True"
+    }
+  ],
+  "ambiguity_evidence": {
+    "association": "test_association_ambiguity_concrete_counterexample: demos with tallies (2,2) and (1,1) and a query (2,1). Both colour maps are consistent and predict different grids. Adding a (1,2) demo pins the map.",
+    "prefix": "test_each_tally_prefix_needs_visible_evidence: a query with 4 up is rejected until some demo shows 4 up. Down prefix 3 is checked independently.",
+    "intrinsic_vs_context": "Every proposed-constructor rejection was a context shortfall (594 resolved by resampling demos with the query kept, 2012 draws). No query was intrinsically ambiguous.",
+    "native_defect_witness": "test_native_hidden_duplicate_witness_is_invisible: native generate() gives an identical input with two different labels."
+  },
+  "recommended_integration_paths": {
+    "factory": "/Users/ritwika/projects/ARC-GEN/arc_agi2/direct_factories/task_d5c634a2.py (already identical to ROOT/d5c634a2/factory.py)",
+    "gate": "/Users/ritwika/projects/ARC-GEN/arc_agi2/t_tally_d5c634a2_evidence.py",
+    "test": "/Users/ritwika/projects/ARC-GEN/arc_agi2/test_d5c634a2_independent_review_v8.py",
+    "constructor_patch": "ROOT/d5c634a2/proposed_constructor.diff -> tasks/task_d5c634a2.py (root applies; not applied here)"
+  },
+  "required_dispatch_signature": "In arc_agi2/colour_evidence.require_colour_evidence(task_id, demonstrations, queries, palette=None, d4=0): if task_id == 'd5c634a2': from .t_tally_d5c634a2_evidence import require_t_tally_evidence; require_t_tally_evidence(demonstrations, queries, palette, d4); return.  Entry: require_t_tally_evidence(demonstrations, queries, palette=None, d4=None) with queries=[{'input': grid}]. It raises MissingTTallyEvidence (a subclass of MissingColourEvidence) with .reason and .intrinsic.",
+  "assumptions": [
+    "Output marks are one cell per object, as a nested chain per colour (|S(n)|=n, S(0)=empty).",
+    "Background is the strict majority colour of demo outputs and equals the input background.",
+    "Objects are T-tetrominoes in any of the 4 orientations; overlaps are allowed but each T must own a private cell."
+  ]
+}

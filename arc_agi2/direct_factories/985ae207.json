@@ -1,0 +1,71 @@
+{
+  "task_id": "985ae207",
+  "factory_sha256": "7ccce579ecc9b185bd231139866c621f9da7d81b5e7d94af179de5f7a6f4b7b6",
+  "constructor_sha256": "5707648d96eac485e2dc9d319edf38c9519ca3bc54ab77a76704a3515f33ac64",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "entry_offsets": {
+    "1": 882,
+    "0": 1761,
+    "2": 706
+  },
+  "far_edge_overshoot_runs": 554,
+  "compiled_sampler_sha256": "d5d77dbfaf556204a345b8e67df783f241f7b2da6a887eaebacc94c745de7fef",
+  "audit_scope": "1000 fresh parameter samples from compiled rejection sampler with unchanged native proposal/acceptance law, different RNG stream; unchanged native.generate(**params) produces labels; every pair checked under8D4/palette.4 additional untouched native-random samples baseline. No offset filtering.",
+  "proposal_parity": {
+    "rejected": 2000
+  },
+  "native_random_baseline": [
+    {
+      "seed": 10900000,
+      "grid_size": 20,
+      "seconds": 0.04010204190853983,
+      "all8passed": true
+    },
+    {
+      "seed": 10900001,
+      "grid_size": 25,
+      "seconds": 4.710112917004153,
+      "all8passed": true
+    },
+    {
+      "seed": 10900002,
+      "grid_size": 20,
+      "seconds": 0.009096916997805238,
+      "all8passed": true
+    },
+    {
+      "seed": 10900003,
+      "grid_size": 25,
+      "seconds": 5.064224959001876,
+      "all8passed": true
+    }
+  ],
+  "unique_base_inputs": 1000,
+  "grid_sizes": {
+    "20": 770,
+    "25": 230
+  },
+  "compiled_geometry_proposals": 716445131,
+  "seconds": 259.62983387499116,
+  "acceptance_crosschecks": {
+    "raw_proposals": 2000,
+    "raw_native_rejections": 2000,
+    "accepted_parameter_draws": 1000,
+    "total": 3000
+  },
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Host-authored direct program with constructor/source review, source restrictions and execution verification.",
+  "draft_notes": {
+    "author": "host",
+    "explanation": "Uniform centre-entry stamping. Detect3x3rings and coloured centres; locate each matching unique solid bar. Step the entire motif by3cells along the visible centre-to-bar axis. Stamp the first copy whose CENTRE is inside the bar, then stop, even if its border crosses the far edge. Invalid diagonal, jump-over, off-grid or colliding scenes reject. NumPy target uses components and patch writes; independent gate subtracts tile-centre coordinates from per-colour cell sets, identifies rectangles and simulates a coordinate canvas. Only BG=palette[8] is specialised.",
+    "constructor_review": "Matches unchanged native draw(). Archived far-edge guard is a solver defect that stops the tile before it reaches a thin bar. Fixtures are aligned; native samples additionally contain offsets1and2. Tests preserve both overshoot cases and no aligned-only restriction is imposed.",
+    "limitations": "Declared intended mechanism is centre-entry. Aligned fixture demos alone do not refute every alternative stop convention; this limitation is explicit. Requires the native exclusive frame colour, unique solid bar per centre colour and noncolliding paths. No query-label access.",
+    "sampling": "Native joint rejection is slow. Audit uses distribution-equivalent compiled rejection proposals followed by unchanged native explicit rendering, plus4 untouched native-RNG samples. Proposal laws, acceptance parity, source hashes, rejection attempts and entry-offset histogram are retained. Native generator source unchanged.",
+    "validation": "Six tests passed: fixtures acrossD4/palette; thin-bar overshoot and thick offset2; query-label poisoning; reject archived wrong-stop demo; reject diagonal/jumped-bar inputs; D4-argument independence.1000sample audit recorded separately."
+  }
+}

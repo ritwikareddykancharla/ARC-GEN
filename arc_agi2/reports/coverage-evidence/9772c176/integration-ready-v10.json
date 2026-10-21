@@ -1,0 +1,61 @@
+{
+  "task_id": "9772c176",
+  "author": "host parallel CLI execution worker",
+  "date": "2026-10-21",
+  "status": "integration_ready",
+  "basis": "independent-review-v6 passed; factory unchanged since (hashes re-verified); full ROOT/audit.py not re-run because no hashed source changed",
+  "fork_head": "ae174e8605884d468bf2bde7ca07716b7858c7d6",
+  "source_hashes_sha256": {
+    "ROOT/9772c176/factory.py": "fbf24129a496744a802b52c1b6819a3d6e8f314ec5605b82179b8e91f61c8297",
+    "fork arc_agi2/direct_factories/task_9772c176.py (untracked)": "fbf24129a496744a802b52c1b6819a3d6e8f314ec5605b82179b8e91f61c8297",
+    "fork tasks/task_9772c176.py (native, unchanged, tracked clean)": "9f90c0054eb9393617df788cce8730cf4c2f04a32301394bb97b878716b8b70f",
+    "fork common.py": "879eb61e360e4a47ee1d569408e8c66114ac068794721fe1de1b59aaa476586a",
+    "fork arc_agi2/references/9772c176.json (unchanged)": "55e30488ed8fc27ebdd5577ce079947d4b48a7695d6530afe9f2e1c193d103b2",
+    "canonical fixture digest (fixture_policy.digest)": "fd24427a4ff04325391107a2349b9ac1d5472519c21bba66fb1a00c950a04970",
+    "fork arc_agi2/test_9772c176_integration_v10.py (new, untracked)": "98abc094c7514f2fe539a0cfa0f4401c2f3695d04ef8f653636ae6486392c57b",
+    "fork arc_agi2/direct_factories/9772c176.json (root manifest, not edited)": "509ff0799fa5262669497e9d8764623ad5252f600ef44c4f4b5c4601530ccb9b",
+    "fork arc_agi2/program_targets.py (shared, not edited)": "ad58872c1a60fc89657d489a3de7f627a5d17ef5567949e5d6d25fcc54a15cb4",
+    "fork arc_agi2/fixture_policy.py (shared, not edited)": "3bd04b1b65f551e1f47985f588170050640858fd10cc2f0928e7b5fa5d2a13bc",
+    "ROOT/audit.py": "801b9b65a420a1ddcd6c0900aa8e28df4b42b7853a4f284ff3bd9b31062ed532"
+  },
+  "signatures": {
+    "build_program": "build_program(d4, palette) -> str ; emitted source identical for all 8 d4 (d4 unused), colour roles bg=palette[0], blob=palette[8], roof=palette[4]",
+    "emitted solve": "solve(demonstrations, grid) -> list[list[int]] ; raises ValueError when no cap axis explains every demo or when query admits !=1 distinct output",
+    "dispatch": "program_targets.compile_target('9772c176', d4, palette) already returns build_program(d4, palette) (checked 8 D4, basis reviewed_direct_coordinate_rewrite)"
+  },
+  "portable_tests": {
+    "module": "arc_agi2/test_9772c176_integration_v10.py",
+    "command": "cd /Users/ritwika/projects/ARC-GEN && PYTHONPATH=. /Users/ritwika/projects/arc-agi2/.venv/bin/python -m unittest arc_agi2.test_9772c176_integration_v10 -v",
+    "result": "9/9 OK, 13.2s (also 9/9 OK run from /tmp with python -I)",
+    "covers": [
+      "hash pins: fork factory, native constructor, canonical fixture digest; fixture_basis == canonical, uncorrected",
+      "canonical fixture verify() exact under 8 D4 x 2 palettes",
+      "poisoned query output -> verify raises TargetError (8 D4 x 2 palettes)",
+      "answer label-independent: solve(demos,q) == solve([],q) == truth on fixture, 8 D4 x 2 palettes",
+      "poisoned demo output -> ValueError (no guessing / no demo skipping)",
+      "demos on mixed cap axes -> ValueError",
+      "emitted source d4-invariant; contains no 'solutions', 'open(', 'import ', 'd4'",
+      "12 fresh native episodes x 8 D4 x shuffled palette exact via verify()"
+    ],
+    "no ROOT paths": true
+  },
+  "input_only_context_gate": {
+    "needed": false,
+    "reason": "Emitted solve's answer is a function of the query input alone: it unions hypotheses over BOTH cap axes and returns only if every constructor scene that redraws the query implies one identical output; demos only reject inconsistent axes. Hence there is no context-shortfall failure mode: demo-free uniqueness 16000/16000 (gate_9772c176.py, 1000 random + 1000 fused queries x 8 D4) and 2600/2600 in independent-review-v6 (incl. 1500 adversarial explicit-param scenes); intrinsic ambiguity found 0. Any intrinsically ambiguous query makes solve raise, so make_record/verify fails closed. require_colour_evidence returns None for this task (no colour gate required: all three roles visible in fixture and every native output).",
+    "label_access": "solve receives only JSON copies of demos and query input via program_targets.verify; build_program takes only (d4, palette); test_answer_independent_of_labels proves demo-free answer equals demo-backed answer"
+  },
+  "prior_evidence": [
+    "host-audit.json (passed, fresh_pairs_checked 1000, augmented_pair_checks 8000, fixture_variants_checked 16, unique_base_inputs 1000, sampler_rejections 0)",
+    "independent-review-v6.json (passed)",
+    "evidence-9772c176.json, tests_9772c176.py, test_review_v6_9772c176.py, review_v6_adversarial_9772c176.py, gate_9772c176.py, brute_9772c176.py"
+  ],
+  "required_root_actions": [
+    "Admit (git add) arc_agi2/direct_factories/task_9772c176.py (sha fbf24129...) and arc_agi2/test_9772c176_integration_v10.py (sha 98abc094...)",
+    "Admit root-authored manifest arc_agi2/direct_factories/9772c176.json if intended (not edited by this worker)",
+    "Add any certificate / PROGRAM_DATASET entry per root policy (not done here)",
+    "No fixture correction, no constructor change, no policy change required"
+  ],
+  "native_changed": false,
+  "shared_files_changed": false,
+  "full_audit_rerun": false
+}

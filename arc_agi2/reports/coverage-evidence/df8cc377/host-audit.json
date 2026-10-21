@@ -1,0 +1,1417 @@
+{
+  "task_id": "df8cc377",
+  "factory_sha256": "f7802b0c7ff7d87c218c3bf77f145d9d8ebc83588293c403fb7254f6beb23517",
+  "constructor_sha256": "9aeb75967681f5c35eceb02827885afbe01724e7e78f2cefcb637c5d2a04f8b6",
+  "gate_sha256": "e109844cb836a815895d981577850767f88068b1c3c4a77d2d89ef90e70156fc",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "unique_base_inputs": 1000,
+  "sampler_rejections": 0,
+  "original_fixture_context_passed": false,
+  "fixture_kind": "context_enriched",
+  "original_labels_changed": false,
+  "native_changed": false,
+  "fresh_episode_count": 250,
+  "audit_scope": "Fresh native episodes gated by independent phase/role evidence; query fixed while insufficient demos are resampled. Fixture counts refer ONLY to approved context-enriched teaching copy, not original canonical context.",
+  "gated_fresh": {
+    "fresh_pairs_checked": 1000,
+    "augmented_pair_checks": 8000,
+    "accepted_episodes": 250,
+    "queries_drawn": 250,
+    "demo_resamples_context_shortfall": 10,
+    "queries_rejected_intrinsic_role_ambiguity": 0,
+    "queries_rejected_resample_exhausted": 0,
+    "other_gate_rejections": {},
+    "sampler_rejections": 0,
+    "shortfall_abstention_checks": 80,
+    "shortfall_witnesses": [
+      {
+        "seed": 172781926159973,
+        "attempt": 0,
+        "gate": {
+          "status": "phase_context_shortfall",
+          "rank": 1,
+          "unresolved_frames": [
+            [
+              6,
+              7,
+              10,
+              10
+            ],
+            [
+              0,
+              6,
+              3,
+              11
+            ]
+          ]
+        },
+        "witnesses": [
+          {
+            "augment_d4": 1,
+            "native_preimage_d4": 3,
+            "query_label_diff_cells[y,x,label,alt]": [
+              [
+                1,
+                7,
+                6,
+                0
+              ],
+              [
+                1,
+                8,
+                0,
+                6
+              ],
+              [
+                1,
+                9,
+                6,
+                0
+              ],
+              [
+                1,
+                10,
+                0,
+                6
+              ],
+              [
+                2,
+                7,
+                0,
+                6
+              ],
+              [
+                2,
+                8,
+                6,
+                0
+              ],
+              [
+                2,
+                9,
+                0,
+                6
+              ],
+              [
+                2,
+                10,
+                6,
+                0
+              ],
+              [
+                7,
+                8,
+                7,
+                0
+              ],
+              [
+                7,
+                9,
+                0,
+                7
+              ],
+              [
+                8,
+                8,
+                0,
+                7
+              ],
+              [
+                8,
+                9,
+                7,
+                0
+              ],
+              [
+                9,
+                8,
+                7,
+                0
+              ],
+              [
+                9,
+                9,
+                0,
+                7
+              ]
+            ]
+          },
+          {
+            "augment_d4": 4,
+            "native_preimage_d4": 4,
+            "query_label_diff_cells[y,x,label,alt]": [
+              [
+                1,
+                7,
+                6,
+                0
+              ],
+              [
+                1,
+                8,
+                0,
+                6
+              ],
+              [
+                1,
+                9,
+                6,
+                0
+              ],
+              [
+                1,
+                10,
+                0,
+                6
+              ],
+              [
+                2,
+                7,
+                0,
+                6
+              ],
+              [
+                2,
+                8,
+                6,
+                0
+              ],
+              [
+                2,
+                9,
+                0,
+                6
+              ],
+              [
+                2,
+                10,
+                6,
+                0
+              ],
+              [
+                7,
+                8,
+                7,
+                0
+              ],
+              [
+                7,
+                9,
+                0,
+                7
+              ],
+              [
+                8,
+                8,
+                0,
+                7
+              ],
+              [
+                8,
+                9,
+                7,
+                0
+              ],
+              [
+                9,
+                8,
+                7,
+                0
+              ],
+              [
+                9,
+                9,
+                0,
+                7
+              ]
+            ]
+          }
+        ]
+      },
+      {
+        "seed": 258430049481677,
+        "attempt": 0,
+        "gate": {
+          "status": "phase_context_shortfall",
+          "rank": 1,
+          "unresolved_frames": [
+            [
+              13,
+              0,
+              15,
+              3
+            ]
+          ]
+        },
+        "witnesses": [
+          {
+            "augment_d4": 1,
+            "native_preimage_d4": 3,
+            "query_label_diff_cells[y,x,label,alt]": [
+              [
+                14,
+                1,
+                5,
+                0
+              ],
+              [
+                14,
+                2,
+                0,
+                5
+              ]
+            ]
+          },
+          {
+            "augment_d4": 4,
+            "native_preimage_d4": 4,
+            "query_label_diff_cells[y,x,label,alt]": [
+              [
+                14,
+                1,
+                5,
+                0
+              ],
+              [
+                14,
+                2,
+                0,
+                5
+              ]
+            ]
+          }
+        ]
+      },
+      {
+        "seed": 168616825254483,
+        "attempt": 0,
+        "gate": {
+          "status": "phase_context_shortfall",
+          "rank": 1,
+          "unresolved_frames": [
+            [
+              4,
+              14,
+              8,
+              21
+            ]
+          ]
+        },
+        "witnesses": [
+          {
+            "augment_d4": 1,
+            "native_preimage_d4": 3,
+            "query_label_diff_cells[y,x,label,alt]": [
+              [
+                5,
+                15,
+                4,
+                0
+              ],
+              [
+                5,
+                16,
+                0,
+                4
+              ],
+              [
+                5,
+                17,
+                4,
+                0
+              ],
+              [
+                5,
+                18,
+                0,
+                4
+              ],
+              [
+                5,
+                19,
+                4,
+                0
+              ],
+              [
+                5,
+                20,
+                0,
+                4
+              ],
+              [
+                6,
+                15,
+                0,
+                4
+              ],
+              [
+                6,
+                16,
+                4,
+                0
+              ],
+              [
+                6,
+                17,
+                0,
+                4
+              ],
+              [
+                6,
+                18,
+                4,
+                0
+              ],
+              [
+                6,
+                19,
+                0,
+                4
+              ],
+              [
+                6,
+                20,
+                4,
+                0
+              ],
+              [
+                7,
+                15,
+                4,
+                0
+              ],
+              [
+                7,
+                16,
+                0,
+                4
+              ],
+              [
+                7,
+                17,
+                4,
+                0
+              ],
+              [
+                7,
+                18,
+                0,
+                4
+              ],
+              [
+                7,
+                19,
+                4,
+                0
+              ],
+              [
+                7,
+                20,
+                0,
+                4
+              ]
+            ]
+          },
+          {
+            "augment_d4": 4,
+            "native_preimage_d4": 4,
+            "query_label_diff_cells[y,x,label,alt]": [
+              [
+                5,
+                15,
+                4,
+                0
+              ],
+              [
+                5,
+                16,
+                0,
+                4
+              ],
+              [
+                5,
+                17,
+                4,
+                0
+              ],
+              [
+                5,
+                18,
+                0,
+                4
+              ],
+              [
+                5,
+                19,
+                4,
+                0
+              ],
+              [
+                5,
+                20,
+                0,
+                4
+              ],
+              [
+                6,
+                15,
+                0,
+                4
+              ],
+              [
+                6,
+                16,
+                4,
+                0
+              ],
+              [
+                6,
+                17,
+                0,
+                4
+              ],
+              [
+                6,
+                18,
+                4,
+                0
+              ],
+              [
+                6,
+                19,
+                0,
+                4
+              ],
+              [
+                6,
+                20,
+                4,
+                0
+              ],
+              [
+                7,
+                15,
+                4,
+                0
+              ],
+              [
+                7,
+                16,
+                0,
+                4
+              ],
+              [
+                7,
+                17,
+                4,
+                0
+              ],
+              [
+                7,
+                18,
+                0,
+                4
+              ],
+              [
+                7,
+                19,
+                4,
+                0
+              ],
+              [
+                7,
+                20,
+                0,
+                4
+              ]
+            ]
+          }
+        ]
+      },
+      {
+        "seed": 231281452875560,
+        "attempt": 0,
+        "gate": {
+          "status": "phase_context_shortfall",
+          "rank": 1,
+          "unresolved_frames": [
+            [
+              18,
+              1,
+              21,
+              3
+            ]
+          ]
+        },
+        "witnesses": [
+          {
+            "augment_d4": 3,
+            "native_preimage_d4": 1,
+            "query_label_diff_cells[y,x,label,alt]": [
+              [
+                19,
+                2,
+                8,
+                0
+              ],
+              [
+                20,
+                2,
+                0,
+                8
+              ]
+            ]
+          },
+          {
+            "augment_d4": 6,
+            "native_preimage_d4": 6,
+            "query_label_diff_cells[y,x,label,alt]": [
+              [
+                19,
+                2,
+                8,
+                0
+              ],
+              [
+                20,
+                2,
+                0,
+                8
+              ]
+            ]
+          }
+        ]
+      },
+      {
+        "seed": 15847804624680,
+        "attempt": 0,
+        "gate": {
+          "status": "phase_context_shortfall",
+          "rank": 1,
+          "unresolved_frames": [
+            [
+              3,
+              1,
+              5,
+              4
+            ]
+          ]
+        },
+        "witnesses": [
+          {
+            "augment_d4": 1,
+            "native_preimage_d4": 3,
+            "query_label_diff_cells[y,x,label,alt]": [
+              [
+                4,
+                2,
+                9,
+                0
+              ],
+              [
+                4,
+                3,
+                0,
+                9
+              ]
+            ]
+          },
+          {
+            "augment_d4": 4,
+            "native_preimage_d4": 4,
+            "query_label_diff_cells[y,x,label,alt]": [
+              [
+                4,
+                2,
+                9,
+                0
+              ],
+              [
+                4,
+                3,
+                0,
+                9
+              ]
+            ]
+          }
+        ]
+      }
+    ],
+    "role_ambiguity_examples": [],
+    "gate_solver_disagreements": 0,
+    "gate_d4_invariance_failures": 0,
+    "unique_base_inputs": 1000
+  },
+  "ungated_original_context_rate": {
+    "episodes": 1000,
+    "query_exact": 961,
+    "query_abstain": 39,
+    "query_wrong": 0,
+    "demo_not_exact": 0,
+    "abstain_status": {
+      "phase_context_shortfall": 39
+    }
+  },
+  "context_enrichment": {
+    "task_id": "df8cc377",
+    "status": "proposal_only_not_canonical_fixture_certification",
+    "factory_sha256": "f7802b0c7ff7d87c218c3bf77f145d9d8ebc83588293c403fb7254f6beb23517",
+    "gate_sha256": "e109844cb836a815895d981577850767f88068b1c3c4a77d2d89ef90e70156fc",
+    "native_sha256": "9aeb75967681f5c35eceb02827885afbe01724e7e78f2cefcb637c5d2a04f8b6",
+    "canonical_content_sha256": "705ece7136e4dde52f38b2d6b6026ccb42e6222bdc8539d069e606b315c16ee3",
+    "existing_phase_equations": [
+      [
+        0,
+        0,
+        0
+      ],
+      [
+        1,
+        0,
+        0
+      ],
+      [
+        1,
+        0,
+        0
+      ],
+      [
+        1,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0
+      ]
+    ],
+    "added_phase_equations": [
+      [
+        0,
+        1,
+        0
+      ],
+      [
+        0,
+        0,
+        0
+      ]
+    ],
+    "phase_rank_before": 1,
+    "phase_rank_after": 2,
+    "extra_demo_parameters": {
+      "width": 10,
+      "height": 10,
+      "wides": [
+        4,
+        3
+      ],
+      "talls": [
+        3,
+        5
+      ],
+      "brows": [
+        0,
+        4
+      ],
+      "bcols": [
+        0,
+        6
+      ],
+      "bgcolors": [
+        1,
+        2
+      ],
+      "fgcolors": [
+        3,
+        4
+      ],
+      "prows": [
+        6,
+        8,
+        9
+      ],
+      "pcols": [
+        1,
+        2,
+        4
+      ],
+      "pcolors": [
+        3,
+        4,
+        4
+      ]
+    },
+    "original_pairs_retained": 4,
+    "fixture_variants": 16,
+    "retained_original_pair_checks": 64,
+    "added_demo_checks": 16,
+    "original_context_query_abstentions": 16,
+    "canonical_query_labels_modified": false,
+    "native_changed": false,
+    "d4_argument_invariance_comparisons": 128,
+    "variants": [
+      {
+        "d4": 0,
+        "palette": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9
+        ],
+        "original_demos_exact": 3,
+        "original_queries_abstained": 1,
+        "original_pairs_exact_with_added_demo": 4,
+        "added_demo_exact": 1,
+        "gate_results": [
+          {
+            "status": "unique",
+            "rank": 2
+          },
+          {
+            "status": "unique",
+            "rank": 2
+          },
+          {
+            "status": "unique",
+            "rank": 2
+          },
+          {
+            "status": "unique",
+            "rank": 2
+          }
+        ]
+      },
+      {
+        "d4": 1,
+        "palette": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9
+        ],
+        "original_demos_exact": 3,
+        "original_queries_abstained": 1,
+        "original_pairs_exact_with_added_demo": 4,
+        "added_demo_exact": 1,
+        "gate_results": [
+          {
+            "status": "unique",
+            "rank": 2
+          },
+          {
+            "status": "unique",
+            "rank": 2
+          },
+          {
+            "status": "unique",
+            "rank": 2
+          },
+          {
+            "status": "unique",
+            "rank": 2
+          }
+        ]
+      },
+      {
+        "d4": 2,
+        "palette": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9
+        ],
+        "original_demos_exact": 3,
+        "original_queries_abstained": 1,
+        "original_pairs_exact_with_added_demo": 4,
+        "added_demo_exact": 1,
+        "gate_results": [
+          {
+            "status": "unique",
+            "rank": 2
+          },
+          {
+            "status": "unique",
+            "rank": 2
+          },
+          {
+            "status": "unique",
+            "rank": 2
+          },
+          {
+            "status": "unique",
+            "rank": 2
+          }
+        ]
+      },
+      {
+        "d4": 3,
+        "palette": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9
+        ],
+        "original_demos_exact": 3,
+        "original_queries_abstained": 1,
+        "original_pairs_exact_with_added_demo": 4,
+        "added_demo_exact": 1,
+        "gate_results": [
+          {
+            "status": "unique",
+            "rank": 2
+          },
+          {
+            "status": "unique",
+            "rank": 2
+          },
+          {
+            "status": "unique",
+            "rank": 2
+          },
+          {
+            "status": "unique",
+            "rank": 2
+          }
+        ]
+      },
+      {
+        "d4": 4,
+        "palette": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9
+        ],
+        "original_demos_exact": 3,
+        "original_queries_abstained": 1,
+        "original_pairs_exact_with_added_demo": 4,
+        "added_demo_exact": 1,
+        "gate_results": [
+          {
+            "status": "unique",
+            "rank": 2
+          },
+          {
+            "status": "unique",
+            "rank": 2
+          },
+          {
+            "status": "unique",
+            "rank": 2
+          },
+          {
+            "status": "unique",
+            "rank": 2
+          }
+        ]
+      },
+      {
+        "d4": 5,
+        "palette": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9
+        ],
+        "original_demos_exact": 3,
+        "original_queries_abstained": 1,
+        "original_pairs_exact_with_added_demo": 4,
+        "added_demo_exact": 1,
+        "gate_results": [
+          {
+            "status": "unique",
+            "rank": 2
+          },
+          {
+            "status": "unique",
+            "rank": 2
+          },
+          {
+            "status": "unique",
+            "rank": 2
+          },
+          {
+            "status": "unique",
+            "rank": 2
+          }
+        ]
+      },
+      {
+        "d4": 6,
+        "palette": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9
+        ],
+        "original_demos_exact": 3,
+        "original_queries_abstained": 1,
+        "original_pairs_exact_with_added_demo": 4,
+        "added_demo_exact": 1,
+        "gate_results": [
+          {
+            "status": "unique",
+            "rank": 2
+          },
+          {
+            "status": "unique",
+            "rank": 2
+          },
+          {
+            "status": "unique",
+            "rank": 2
+          },
+          {
+            "status": "unique",
+            "rank": 2
+          }
+        ]
+      },
+      {
+        "d4": 7,
+        "palette": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9
+        ],
+        "original_demos_exact": 3,
+        "original_queries_abstained": 1,
+        "original_pairs_exact_with_added_demo": 4,
+        "added_demo_exact": 1,
+        "gate_results": [
+          {
+            "status": "unique",
+            "rank": 2
+          },
+          {
+            "status": "unique",
+            "rank": 2
+          },
+          {
+            "status": "unique",
+            "rank": 2
+          },
+          {
+            "status": "unique",
+            "rank": 2
+          }
+        ]
+      },
+      {
+        "d4": 0,
+        "palette": [
+          3,
+          9,
+          0,
+          7,
+          2,
+          8,
+          1,
+          6,
+          4,
+          5
+        ],
+        "original_demos_exact": 3,
+        "original_queries_abstained": 1,
+        "original_pairs_exact_with_added_demo": 4,
+        "added_demo_exact": 1,
+        "gate_results": [
+          {
+            "status": "unique",
+            "rank": 2
+          },
+          {
+            "status": "unique",
+            "rank": 2
+          },
+          {
+            "status": "unique",
+            "rank": 2
+          },
+          {
+            "status": "unique",
+            "rank": 2
+          }
+        ]
+      },
+      {
+        "d4": 1,
+        "palette": [
+          3,
+          9,
+          0,
+          7,
+          2,
+          8,
+          1,
+          6,
+          4,
+          5
+        ],
+        "original_demos_exact": 3,
+        "original_queries_abstained": 1,
+        "original_pairs_exact_with_added_demo": 4,
+        "added_demo_exact": 1,
+        "gate_results": [
+          {
+            "status": "unique",
+            "rank": 2
+          },
+          {
+            "status": "unique",
+            "rank": 2
+          },
+          {
+            "status": "unique",
+            "rank": 2
+          },
+          {
+            "status": "unique",
+            "rank": 2
+          }
+        ]
+      },
+      {
+        "d4": 2,
+        "palette": [
+          3,
+          9,
+          0,
+          7,
+          2,
+          8,
+          1,
+          6,
+          4,
+          5
+        ],
+        "original_demos_exact": 3,
+        "original_queries_abstained": 1,
+        "original_pairs_exact_with_added_demo": 4,
+        "added_demo_exact": 1,
+        "gate_results": [
+          {
+            "status": "unique",
+            "rank": 2
+          },
+          {
+            "status": "unique",
+            "rank": 2
+          },
+          {
+            "status": "unique",
+            "rank": 2
+          },
+          {
+            "status": "unique",
+            "rank": 2
+          }
+        ]
+      },
+      {
+        "d4": 3,
+        "palette": [
+          3,
+          9,
+          0,
+          7,
+          2,
+          8,
+          1,
+          6,
+          4,
+          5
+        ],
+        "original_demos_exact": 3,
+        "original_queries_abstained": 1,
+        "original_pairs_exact_with_added_demo": 4,
+        "added_demo_exact": 1,
+        "gate_results": [
+          {
+            "status": "unique",
+            "rank": 2
+          },
+          {
+            "status": "unique",
+            "rank": 2
+          },
+          {
+            "status": "unique",
+            "rank": 2
+          },
+          {
+            "status": "unique",
+            "rank": 2
+          }
+        ]
+      },
+      {
+        "d4": 4,
+        "palette": [
+          3,
+          9,
+          0,
+          7,
+          2,
+          8,
+          1,
+          6,
+          4,
+          5
+        ],
+        "original_demos_exact": 3,
+        "original_queries_abstained": 1,
+        "original_pairs_exact_with_added_demo": 4,
+        "added_demo_exact": 1,
+        "gate_results": [
+          {
+            "status": "unique",
+            "rank": 2
+          },
+          {
+            "status": "unique",
+            "rank": 2
+          },
+          {
+            "status": "unique",
+            "rank": 2
+          },
+          {
+            "status": "unique",
+            "rank": 2
+          }
+        ]
+      },
+      {
+        "d4": 5,
+        "palette": [
+          3,
+          9,
+          0,
+          7,
+          2,
+          8,
+          1,
+          6,
+          4,
+          5
+        ],
+        "original_demos_exact": 3,
+        "original_queries_abstained": 1,
+        "original_pairs_exact_with_added_demo": 4,
+        "added_demo_exact": 1,
+        "gate_results": [
+          {
+            "status": "unique",
+            "rank": 2
+          },
+          {
+            "status": "unique",
+            "rank": 2
+          },
+          {
+            "status": "unique",
+            "rank": 2
+          },
+          {
+            "status": "unique",
+            "rank": 2
+          }
+        ]
+      },
+      {
+        "d4": 6,
+        "palette": [
+          3,
+          9,
+          0,
+          7,
+          2,
+          8,
+          1,
+          6,
+          4,
+          5
+        ],
+        "original_demos_exact": 3,
+        "original_queries_abstained": 1,
+        "original_pairs_exact_with_added_demo": 4,
+        "added_demo_exact": 1,
+        "gate_results": [
+          {
+            "status": "unique",
+            "rank": 2
+          },
+          {
+            "status": "unique",
+            "rank": 2
+          },
+          {
+            "status": "unique",
+            "rank": 2
+          },
+          {
+            "status": "unique",
+            "rank": 2
+          }
+        ]
+      },
+      {
+        "d4": 7,
+        "palette": [
+          3,
+          9,
+          0,
+          7,
+          2,
+          8,
+          1,
+          6,
+          4,
+          5
+        ],
+        "original_demos_exact": 3,
+        "original_queries_abstained": 1,
+        "original_pairs_exact_with_added_demo": 4,
+        "added_demo_exact": 1,
+        "gate_results": [
+          {
+            "status": "unique",
+            "rank": 2
+          },
+          {
+            "status": "unique",
+            "rank": 2
+          },
+          {
+            "status": "unique",
+            "rank": 2
+          },
+          {
+            "status": "unique",
+            "rank": 2
+          }
+        ]
+      }
+    ],
+    "interpretation": "Original three demos leave left-versus-right checkerboard phase unidentified. One extra native demo supplies the missing horizontal parity equation. All original demo/query labels remain unchanged. This is context augmentation for a teaching fixture, not a solution to the original underidentified context."
+  },
+  "source_files": {
+    "factory.py": "f7802b0c7ff7d87c218c3bf77f145d9d8ebc83588293c403fb7254f6beb23517",
+    "df8cc377_gate.py": "e109844cb836a815895d981577850767f88068b1c3c4a77d2d89ef90e70156fc",
+    "df8cc377_evidence.py": "751b0cf16aa7257d597e1a5a03daae2849baa4ef3da991d81eca758de4e1faea",
+    "context_enrichment_audit.py": "5d4fd10014a450a7e8ce2156da244c09b63b77db34eef043750f4817cebeb10d",
+    "proposed-context-enriched-fixture.json": "259fc8cd9eb084d516d56545a553c8e82b64790c5d6190b30f758408bd485242"
+  },
+  "extra_demo_provenance": {
+    "source": "unchanged native task_df8cc377.generate(**parameters)",
+    "native_random_domain_supported": true,
+    "parameters": {
+      "width": 10,
+      "height": 10,
+      "wides": [
+        4,
+        3
+      ],
+      "talls": [
+        3,
+        5
+      ],
+      "brows": [
+        0,
+        4
+      ],
+      "bcols": [
+        0,
+        6
+      ],
+      "bgcolors": [
+        1,
+        2
+      ],
+      "fgcolors": [
+        3,
+        4
+      ],
+      "prows": [
+        6,
+        8,
+        9
+      ],
+      "pcols": [
+        1,
+        2,
+        4
+      ],
+      "pcolors": [
+        3,
+        4,
+        4
+      ]
+    },
+    "selected_using_query_output": false,
+    "selected_using": "Existing demonstration parity rank; added demo completes rank 2",
+    "count": 1
+  },
+  "unit_tests_passed": 8,
+  "seconds": 95.27427445806097
+}

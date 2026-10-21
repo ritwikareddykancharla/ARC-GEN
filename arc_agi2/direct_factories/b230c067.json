@@ -1,0 +1,73 @@
+{
+  "task_id": "b230c067",
+  "factory_sha256": "592be1cdc28dc78023323caef07a3d2bdde4116ce2eefc9511855a85eacc01f2",
+  "constructor_sha256": "8f80a74422544af94741a220c0747b97595dd9d606c8c4fe9775a7a8c29b2169",
+  "passed": true,
+  "fresh_pairs_checked": 4120,
+  "augmented_pair_checks": 32960,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "gate_sha256": "a30d38eced550937fd4b430879f3c33b8e94e48a4329fe235ac6d34688723213",
+  "unique_base_inputs": 4095,
+  "seconds": 223.9862359999679,
+  "gate_stats": {
+    "natural_determined": 1000,
+    "hard_context_shortfall": 30,
+    "hard_resample_draws": 76957,
+    "hard_shortfall_resolved": 30,
+    "hard_verified_episodes": 30,
+    "hard_query_screen_draws": 49936
+  },
+  "audit_scope": "ROOT/audit.py protocol (same fresh seeds/palettes, all 8 D4, 16 fixture variants) over 1000 natural episodes, plus 30 rejection-sampled hard repeated-fragment queries; independent evidence gate gate_b230c067.py decides context_shortfall (query preserved, last demo resampled) vs intrinsic ambiguity (query rejected); gate never sees query outputs",
+  "rejection_stats": {
+    "intrinsic_ambiguity_queries": 0,
+    "not_constructor_queries": 0,
+    "context_shortfall_episodes": 30,
+    "resample_budget_exhausted": 0,
+    "sampler_rejections": 0
+  },
+  "author": "host parallel CLI execution worker",
+  "native_changed": false,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "task_id": "b230c067",
+    "author": "host parallel CLI execution worker",
+    "model": "claude-opus-5-5 (subscription CLI)",
+    "native_changed": false,
+    "status": "passed_gated_audit_pending_host_admission",
+    "explanation": "Native mechanism: template T (hollow box, or 4-connected creature grown from (0,0) and touching column w-1) is drawn twice, and T with one column deleted is drawn once. The placements are separated by >=1 cell. The T copies become palette[1]; all derived material becomes palette[2], even when the deletion splits it into several 8-components. The program works in visible coordinates: it finds 8-components of non-BG cells and keys them by cropped mask. It enumerates three readings: pair_template (the constructor parse: the unique largest repeated mask occurs exactly twice, and the union of all other material equals that mask minus one line along DEL_AXIS), all_repeated (the archived rule) and exactly_twice. It keeps only readings that reproduce every demo exactly, then requires every survivor to be defined on the query and to agree on the full query output. Otherwise it raises. BG/ONE/TWO come from palette[0,1,2]. DEL_AXIS is the visible axis of the native column, explicitly specialised from d4: an odd number of rotations swaps the axes, and the row reversal does not.",
+    "removed_from_previous_drafts": [
+      "the v3 'any' fallback and its no-survivor reset to all rules",
+      "the v3 witness-based tie-break when readings disagree (a hidden selection)",
+      "the old factory's hard-coded max-repeated choice with no demo check"
+    ],
+    "ambiguity_analysis": {
+      "intrinsic": "None. The exhaustive enumeration (evidence_exhaustive_b230c067.py, 21861 reachable template x badcol cases) shows that every fragment is strictly smaller than T and that T occurs exactly twice. The independent all-pairs constructor-parse enumeration is unique in every case. A cell-count argument covers any placement: a pair of fragments would leave >=2|T| cells for a remainder that must have <|F| cells.",
+      "context_shortfall": "In 39 of 21861 template cases (about 0.034% of native pairs, measured as 68/200000), the deletion splits the derived sprite into 2 identical fragments. On such a query, all_repeated and exactly_twice disagree with the constructor. They are refuted only by a demo that also has repeated fragments. Concrete counterexample: context-shortfall-counterexample-b230c067.json (canonical demos plus a native-generated hard query). Both readings reproduce every demo, the outputs differ at 2 cells, and the program raises on all 16 variants. Max identical fragments is 2, so all_repeated == exactly_twice on the whole domain.",
+      "resolution": "Keep the query and resample demos from the native generator until the independent gate reports 'determined'. The generator is not narrowed and hard queries are kept."
+    },
+    "tests": {
+      "focused": "PYTHONPATH=/Users/ritwika/projects/ARC-GEN /Users/ritwika/projects/arc-agi2/.venv/bin/python test_b230c067.py -> fixture 16/16 exact; shortfall query raises 16/16; resolved with a refuting demo 16/16 exact; opposite DEL_AXIS fails loudly 8/8; unexplained demo raises (no fallback). Runtime about 2s.",
+      "exhaustive": ".venv/bin/python -I evidence_exhaustive_b230c067.py -> exhaustive-template-domain-b230c067.json (about 7s)",
+      "plain_protocol": "python -c 'import audit; audit.check(\"b230c067\")' run from ROOT -> host-audit-plain-protocol.json: passed, 1000 fresh pairs, 8000 augmented checks, 16 fixture variants, 999 unique inputs (68s wall). No shortfall query occurred in those seeds.",
+      "gated": "PYTHONPATH=/Users/ritwika/projects/ARC-GEN .venv/bin/python audit_gated_b230c067.py -> host-audit.json: passed, 4120 fresh pairs, 32960 augmented checks, 16 fixture variants, 4095 unique inputs, 224s. The 1000 natural episodes were all determined. 30 rejection-sampled hard queries were all context_shortfall; the program raised on each before resampling, and each was resolved by resampling the last demo slot (76957 draws total) and then verified exact on all 8 D4 variants. Intrinsic rejections: 0. Budget exhaustion: 0."
+    },
+    "assumptions": [
+      "Placements never 8-touch (constructor spacing=1).",
+      "Any non-BG cell is figure material.",
+      "Demos are well-formed dicts or pairs; malformed demos raise rather than being skipped."
+    ],
+    "source_paths": {
+      "factory": "ROOT/b230c067/factory.py (identical copy at ARC-GEN/arc_agi2/direct_factories/task_b230c067.py)",
+      "gate": "ROOT/b230c067/gate_b230c067.py",
+      "native": "ARC-GEN/tasks/task_b230c067.py (unchanged)",
+      "helpers": "ARC-GEN/common.py continuous_creature/overlaps (read only)"
+    },
+    "limitations": [
+      "Admission requires the episode builder to apply the evidence gate (resample demos when the gate reports context_shortfall). Under the plain ungated protocol, about 0.034% of queries would make the program raise by design. No certificate or shared dispatch was edited; host admission is pending.",
+      "The archived rule text ('repeated shapes -> 1') mis-specifies repeated-fragment scenes. This is a text issue only; no label or constructor change is proposed."
+    ]
+  }
+}

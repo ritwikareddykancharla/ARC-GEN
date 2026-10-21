@@ -1,0 +1,32 @@
+{
+  "task_id": "ac0c5833",
+  "factory_sha256": "047c0e2161a02bbd2413d3d6161ca5e61859e1e8e6f27085f60c8c956c2fe5a0",
+  "constructor_sha256": "36d9ed3711cb27f90df0c74901ab37bffc24e29dc1758a575a906a8988586f9d",
+  "passed": true,
+  "original_fixture_context_passed": true,
+  "fixture_kind": "canonical",
+  "hypothesis_scope": "finite demo-selected competing mechanisms; no intended-rule proof claimed",
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "changes": [],
+  "native_changed": false,
+  "context_resamples": 163,
+  "sampler_rejections": [],
+  "failure": null,
+  "unique_base_inputs": 1000,
+  "seconds": 227.37312295893207,
+  "independent_gate_sha256": "08d8690792564f2cc27d17fde097d277cfac4f3f6377be322bebe705347e24c7",
+  "independent_gate_checked": true,
+  "unit_tests_passed": 11,
+  "original_labels_changed": false,
+  "fresh_episode_count": 250,
+  "all_supplied_inputs_independently_checked": true,
+  "hypothesis_scope_evidence": "hypothesis-scope-and-ambiguity.json",
+  "source_artifact_sha256": {
+    "factory.py": "047c0e2161a02bbd2413d3d6161ca5e61859e1e8e6f27085f60c8c956c2fe5a0",
+    "independent_gate.py": "08d8690792564f2cc27d17fde097d277cfac4f3f6377be322bebe705347e24c7",
+    "hypothesis-scope-and-ambiguity.json": "00ae4f2e89cca34389139a38e1b0241352da6598a0d76dd7ddbf0d66925a0cde",
+    "test_competing.py": "25f119ce1e8ecd077ce6d9b0e53652162918f06bdc51a5ef0ff690b7c82340d4"
+  }
+}

@@ -1,0 +1,42 @@
+{
+  "task_id": "a3f84088",
+  "canonical_sha256": "8d3777b00a4c5aa3b80c8e313336a6ea07d244669c4ac9eba66679f557f3d132",
+  "teaching_sha256": "7e159ee4b32abae2c7b6304d3a7f2b413ec785aabf913a378c1310950c688b69",
+  "source": "https://github.com/fchollet/ARC-AGI/issues/132",
+  "approval": "User requested corrected teaching copies and delegated investigation/finalization on 2026-10-20; host reviewed evidence and finalized this explicitly labelled copy on 2026-10-21.",
+  "evidence_status": "upstream_reported_locally_reviewed_not_official_correction",
+  "description": "One center cell in train[3] follows the same repeating ring rule. Open issue132 supports the discrepancy; no adopted official correction. Canonical benchmark data and scoring remain unchanged.",
+  "changed_cells": [
+    {
+      "split": "train",
+      "pair": 3,
+      "field": "output",
+      "row": 5,
+      "col": 5,
+      "canonical": 0,
+      "teaching": 5
+    }
+  ],
+  "previous_curated_teaching": null,
+  "review_notes": {
+    "status": "proposed teaching copy; awaiting fixture-policy integration",
+    "canonical_difference": [
+      {
+        "split": "train",
+        "pair_index": 3,
+        "row": 5,
+        "col": 5,
+        "canonical": 0,
+        "proposed": 5
+      }
+    ],
+    "upstream": {
+      "url": "https://github.com/fchollet/ARC-AGI/issues/132",
+      "state": "open issue; not official adopted correction"
+    },
+    "mechanism": "Paint concentric square rings with repeating frame,new,frame,background cycle. The final center follows the same depth rule on every canvas.",
+    "constructor_proposal": "Remove size==13 center omission and width==13 remap. Proposed constructor saved separately; active constructor untouched. All 351 size,width configurations in documented native ranges independently match the uniform ring gate. Four canvas13/odd-width settings previously omit a non-background center.",
+    "independent_gate": "arc_agi2.outline_teaching_evidence.require_ring_teaching_evidence. Direct source uses minimum side distance; gate peels and paints rectangular perimeter layers. Both validate demos and only read query inputs.",
+    "fixture_claim": "Only proposed teaching fixture audited. Canonical fourth demonstration intentionally rejected. No canonical pass claimed."
+  }
+}

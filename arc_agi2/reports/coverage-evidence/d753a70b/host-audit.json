@@ -1,0 +1,19 @@
+{
+  "task_id": "d753a70b",
+  "scope": "Approved labelled concentric teaching hypothesis; original canonical context explicitly not passed.",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "native_draws": 1000,
+  "visible_ambiguities": 0,
+  "sampler_rejections": [],
+  "factory_sha256": "5b4e004a82aa009cb3f27aefb751d1e979079639d485484553fdabe9796401f9",
+  "constructor_sha256": "360f67408c7686994bc653a66cee51883ee45034ef4311b140a24389aa05d103",
+  "audit_optimization": "Independent gate checks all fresh base pairs and all fixture D4/palette variants. Target checks all eight D4 with per-batch emitted-source execution and shared color-independent geometry cache. This avoids repeating invariant exact-cover gate work eight times.",
+  "unique_base_inputs": 1000,
+  "seconds": 58.861244291998446,
+  "original_fixture_context_passed": false,
+  "proposed_teaching_fixture_context_passed": true,
+  "fixture_basis": "teaching_fixture"
+}

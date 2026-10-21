@@ -1,0 +1,9 @@
+{
+  "explanation": "A red seed on a non-corner edge visibly determines the inward ray direction. At an obstacle, the initial ray splits into its two perpendicular directions. Subsequent rays split only if their run has at least k steps. All integer thresholds from0 through max grid dimension+1 are considered; larger thresholds are behaviorally equivalent. The direct source keeps every threshold fitting all demonstrations and returns only their unanimous query output. No smallest-threshold preference or fallback exists.",
+  "evidence": "The native random generator is threshold0. Original train[1] differs through hidden split-suppression coordinates, but the entire canonical fixture episode fits a uniform nonzero threshold. This is a clean, demonstration-conditioned family of branching mechanisms; no claim that one threshold is an authoritative intended rule. The independent atlas has extra depth5 and blank-row-fill clauses; neither is copied.",
+  "verification": "Independent gate constructs all obstacle-to-obstacle directed segments and computes reachable painted cells after pruning edges by threshold. This differs from the target sequential trace implementation. Query-fixed resampling of three demos handles genuinely underdetermined thresholds without dropping hard queries. Native constructor and original fixtures unchanged.",
+  "tests": "Five focused tests cover all original pairs, absence of fallback, weak-context rejection, different demonstrated rule giving different output on the same visible grid, and all D4/palette variants.",
+  "integration": "Copy evidence.py to a dedicated arc_agi2 module and dispatch require_ray_evidence(demos,queries,palette). Direct source uses visible edge position, not D4, for direction. Full audit recorded in host-audit.json; unresolved contexts retained.",
+  "author": "host",
+  "authoring_note": "Host collaboration worker repair; previous CLI drafts and archived references retained as evidence."
+}

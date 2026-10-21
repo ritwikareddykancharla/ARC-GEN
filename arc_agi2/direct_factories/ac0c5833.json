@@ -1,0 +1,57 @@
+{
+  "task_id": "ac0c5833",
+  "factory_sha256": "047c0e2161a02bbd2413d3d6161ca5e61859e1e8e6f27085f60c8c956c2fe5a0",
+  "constructor_sha256": "36d9ed3711cb27f90df0c74901ab37bffc24e29dc1758a575a906a8988586f9d",
+  "passed": true,
+  "original_fixture_context_passed": true,
+  "fixture_kind": "canonical",
+  "hypothesis_scope": "finite demo-selected competing mechanisms; no intended-rule proof claimed",
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "changes": [],
+  "native_changed": false,
+  "context_resamples": 163,
+  "sampler_rejections": [],
+  "failure": null,
+  "unique_base_inputs": 1000,
+  "seconds": 227.37312295893207,
+  "independent_gate_sha256": "08d8690792564f2cc27d17fde097d277cfac4f3f6377be322bebe705347e24c7",
+  "independent_gate_checked": true,
+  "unit_tests_passed": 11,
+  "original_labels_changed": false,
+  "fresh_episode_count": 250,
+  "all_supplied_inputs_independently_checked": true,
+  "hypothesis_scope_evidence": "hypothesis-scope-and-ambiguity.json",
+  "source_artifact_sha256": {
+    "factory.py": "047c0e2161a02bbd2413d3d6161ca5e61859e1e8e6f27085f60c8c956c2fe5a0",
+    "independent_gate.py": "08d8690792564f2cc27d17fde097d277cfac4f3f6377be322bebe705347e24c7",
+    "hypothesis-scope-and-ambiguity.json": "00ae4f2e89cca34389139a38e1b0241352da6598a0d76dd7ddbf0d66925a0cde",
+    "test_competing.py": "25f119ce1e8ecd077ce6d9b0e53652162918f06bdc51a5ef0ff690b7c82340d4"
+  },
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "author": "host coverage_period",
+    "task_id": "ac0c5833",
+    "status": "ready for root integration;1000 fresh pairs/8000 D4-palette checks/16 original canonical variants",
+    "native_changed": false,
+    "original_labels_changed": false,
+    "mechanism": [
+      "Copy the visible square template unchanged at every three-dot marker.",
+      "If the template is exactly a hollow square outline, remove the non-corner cells from its two sides farthest from the owning missing-corner anchor, then copy that shape at every marker. Other templates remain unchanged."
+    ],
+    "context_policy": "Every demonstration must match a candidate full output. Query answered only when all surviving candidates agree. No shape-remap dictionary, nearest-owner selection, first tie break, or demo skipping.",
+    "domain": "The owning marker is unique. Marker triples explain every marker-colour pixel. Template span2 or3 is guaranteed by unchanged native random domain. All target squares must be in bounds. Copies combine by nonzero-pixel union, including legitimate zero-cell overlap.",
+    "independent_gate": "independent_gate.py uses Chebyshev-connected marker components and signed anchor-offset pixel sets, independently of factory neighbourhood triples and reflected masks. require_evidence checks all demo/query inputs and ignores query output fields.",
+    "regression": "Original failing demo owner region grew from4 to5 template-colour pixels because another copy overlapped a zero cell. Old learning table misinterpreted this as a shape change. New code constructs stamp union directly.",
+    "limitations": "Two explicitly declared uniform geometric mechanisms; finite hypothesis class, not proof of unique original intended rule.",
+    "provenance": [
+      "Original Opus rationale acknowledges an unexplained ring edit.",
+      "Saved Atlas description states geometric hollow-outline trimming.",
+      "Both rules are kept; a native ring is preserved when demonstrations support plain copying."
+    ],
+    "tests": "11 focused tests, including original fresh regression, all16 canonical variants, native-ring preservation, missing evidence, double-owner rejection, contradictory demos, poisoned query labels."
+  }
+}

@@ -9,6 +9,7 @@ from .audit_direct_candidates import candidate
 from .augmentation import transformed
 from .program_targets import verify
 from .runtime import reference
+from .fixture_policy import fixture_basis
 
 
 class Certificates(unittest.TestCase):
@@ -24,7 +25,9 @@ class Certificates(unittest.TestCase):
         palette = [3, 9, 0, 7, 2, 8, 1, 6, 4, 5]
         for path in sorted((cert.BASE / "direct_factories").glob("????????.json")):
             tid = path.stem
-            task = reference(tid)["canonical"]
+            # Explicitly approved teaching fixtures are hash-pinned; this is
+            # program/data coverage, not an original-benchmark scoring test.
+            task = reference(tid)[fixture_basis(tid)["fixture"]]
             for d4 in range(8):
                 source, _ = compile_target(tid, d4, palette)
                 audit_target(tid, source)

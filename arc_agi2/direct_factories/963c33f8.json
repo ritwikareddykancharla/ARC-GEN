@@ -1,0 +1,24 @@
+{
+  "task_id": "963c33f8",
+  "factory_sha256": "ab00e9417a4c2818e52d4528485fdba5d52dd2949bab2ac24fb6c444a611877d",
+  "constructor_sha256": "777a109a7b7d648d1c243301872d6eca656f3d87a2724178f3d167f327adb97f",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 246903860046477,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 14.700051874970086,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "Three adjacent 3-cell sticks fall along their own columns. A blue-tipped stick stops immediately before the first gray obstacle; an unlit stick reaches the floor and overwrites cells in its path. Before placement, unlit sticks clear the floor within two columns of their own column. The emitted program uses visible transformed directions, remapped colors and a uniform rule, without fixture coordinates or query labels.",
+    "fixture_hypothesis": "Six-cell minimal teaching correction: undo the one-column lateral displacement of the unlit stick in canonical train[2]. Preserve canonical train[1] floor clearing at (13,8),(13,9). This is a native-compatible, minimal-change hypothesis with ambiguous intent, NOT an authoritative correction. Canonical benchmark remains unchanged.",
+    "independent_evidence": "Canonical train[1] itself exhibits floor clearing. Native random generation applies it uniformly. A third-party atlas proposes the competing eight-cell plain-gravity interpretation and explicitly restores those two floor cells. The linked Kaggle discussion could not be read; no matching official GitHub issue or PR was found. Existing Opus reasoning was generated against the eight-cell curated copy and is not independent evidence about original labels.",
+    "validation": "Native-compatible source passes 1000 distinct native pairs,8000 D4/palette pair checks,16 proposed-six-cell fixture variants. Five focused tests cover floor clearing, shift derived from input column, unchanged other original pairs, D4/palette and floor width. Alternative eight-cell source independently passes the same-sized audit after regenerating synthetic labels; it changes172/1000 native random labels. Both alternatives and cell diffs retained in label-review.",
+    "limitations": "Neither floor clearing nor the two-cell-error alternative is authoritatively established. Radius2 has only limited original-example evidence. No ad hoc visible exception was added to explain the sideways shift. The old eight-cell teaching candidate and its independent provenance are retained for comparison."
+  }
+}

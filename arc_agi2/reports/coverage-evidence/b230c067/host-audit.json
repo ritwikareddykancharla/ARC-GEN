@@ -1,0 +1,31 @@
+{
+  "task_id": "b230c067",
+  "factory_sha256": "592be1cdc28dc78023323caef07a3d2bdde4116ce2eefc9511855a85eacc01f2",
+  "constructor_sha256": "8f80a74422544af94741a220c0747b97595dd9d606c8c4fe9775a7a8c29b2169",
+  "passed": true,
+  "fresh_pairs_checked": 4120,
+  "augmented_pair_checks": 32960,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "gate_sha256": "a30d38eced550937fd4b430879f3c33b8e94e48a4329fe235ac6d34688723213",
+  "unique_base_inputs": 4095,
+  "seconds": 223.9862359999679,
+  "gate_stats": {
+    "natural_determined": 1000,
+    "hard_context_shortfall": 30,
+    "hard_resample_draws": 76957,
+    "hard_shortfall_resolved": 30,
+    "hard_verified_episodes": 30,
+    "hard_query_screen_draws": 49936
+  },
+  "audit_scope": "ROOT/audit.py protocol (same fresh seeds/palettes, all 8 D4, 16 fixture variants) over 1000 natural episodes, plus 30 rejection-sampled hard repeated-fragment queries; independent evidence gate gate_b230c067.py decides context_shortfall (query preserved, last demo resampled) vs intrinsic ambiguity (query rejected); gate never sees query outputs",
+  "rejection_stats": {
+    "intrinsic_ambiguity_queries": 0,
+    "not_constructor_queries": 0,
+    "context_shortfall_episodes": 30,
+    "resample_budget_exhausted": 0,
+    "sampler_rejections": 0
+  },
+  "author": "host parallel CLI execution worker",
+  "native_changed": false
+}

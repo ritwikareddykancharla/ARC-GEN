@@ -1,0 +1,81 @@
+{
+  "task_id": "e5062a87",
+  "auditor": "e5062a87_audit.py (gated mirror of ROOT/audit.py)",
+  "factory_sha256": "e8bea25635829a35a63c060be9d86a47dc1042efc2ee47adb8fb5485accfa40a",
+  "constructor_sha256": "81f24acd5c627c4b4d153caeb3c098f21e815193db3b9df9c93acf399e706603",
+  "gate_sha256": "f278cf89f816e3c68442ac5b187fa756f9d205994b19a2b645e5bc9be099bc2c",
+  "audit_script_sha256": "e668f2e097e3c96f0b128585d49dc0d977226fe52f33ab93dfd57db42d006e35",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "fixture": {
+    "fixture": "canonical",
+    "corrected": false
+  },
+  "sampler_rejections": [],
+  "queries_drawn": 250,
+  "queries_identified_first_try": 214,
+  "queries_needing_demo_resample": 36,
+  "demo_resamples_total": 51,
+  "max_resamples_for_one_query": 3,
+  "queries_unresolved_after_cap": 0,
+  "program_abstained_on_rejected_demo_sets": 51,
+  "rejected_demo_sets": 51,
+  "gate_unexplained_demo_sets": 0,
+  "native_changed": false,
+  "fixture_survivor_count": 30,
+  "seed": 219742967848562,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 80.33222329092678,
+  "audit_scope": "canonical fixture 16 variants (2 palettes x 8 D4) verified exactly incl. train-as-query; fresh native episodes with audit.py seeds, all 8 D4 x shuffled palette; query preserved, demos resampled only when the independent gate finds surviving hypotheses disagree (context shortfall); program must abstain on every rejected demo set",
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "task_id": "e5062a87",
+    "author": "host parallel CLI execution worker",
+    "status": "repaired_with_gated_audit",
+    "native_changed": false,
+    "fixture": "canonical (immutable, unmodified)",
+    "mechanism": "Emitted program, in visible coordinates: the template is the palette[2] object and open cells are palette[0]. It enumerates a fixed D4-closed family of 120 stamping hypotheses: hole filter {none, enclosed-holes, odd-box centre} x thin-template open-2x2 'thick' filter {off,on} x bar same-line filter {off,on} x overlap resolution {union, strict min-extra, 8 visible raster scans}. It keeps only the hypotheses that reproduce every demonstration exactly, and answers only if all survivors give the same full query grid. Otherwise it raises Abstain. There is no fallback, first/majority choice, demo skipping, or reset. d4 is unused (build_program output is identical for all 8 d4). Palette only sets the two role constants.",
+    "why_family": "On legal native draws the label is 'paint every all-0 fit' (draw() rejects unplanned fits and overlaps). That is hypothesis (none,off,off,union). Canonical train pair 0 (1x4 bar) leaves the all-0 fit at row 1, x=3..6 unpainted. Canonical pair 1 (diamond) leaves the overlapping fit (2,6) and the hole-violating fit (5,1) unpainted. So all-fits is refuted inside the fixture episode. 30 of the 120 hypotheses survive the canonical demos, and all of them give the canonical test answer. Filters that never fire on legal draws (holes are impossible in 1x4/2x3/3x2/4x1 boxes, and fits never overlap) cannot hurt fresh scenes. The thick and same-line filters can fire on real copies, so fresh demos must refute them before the program answers.",
+    "constructor_defect": "validate() calls generate(colors=..., brows=..., bcols=...) and ignores draw()'s legality result. Canonical train pairs 0 and 1 are illegal draws whose labels depend on the latent brows/bcols. Identical-input/different-output witness: pair-0 colours with brows=[5,5,1], bcols=[1,6,3] form a LEGAL draw (reachable by the random branch). It gives exactly the canonical pair-0 input but paints row 1, x=3..6 (test_pair0_identical_input_different_output). Pair 1: unplanned fits (2,6) and (5,1). Train pair 2 and the test pair are legal. No label change is proposed: the canonical fixture is preserved exactly in context, because its own demos supply the evidence that refutes all-fits.",
+    "ambiguity": "Context shortfall, not intrinsic: on fresh native episodes the survivors disagree when no demo exercises the thick or same-line filters while the query does. Example: audit.py seed index 0. Synthetic witness: a single solid 2x3 demo, then a bar query beside an open 2x2 window. The program abstains in that case. Resampling only the demos while keeping the query resolved every case: 36/250 queries, 51 resamples total, at most 3 for one query, 0 unresolved. The program abstained on all 51 rejected demo sets, matching the independent gate. Hard cases are preserved: queries where a real copy sits beside an open 2x2 window are answered once the demos refute the filter (test_hard_case_preserved_thin_copy_beside_open_window).",
+    "plain_audit_py": "ROOT/audit.py check() FAILS on its first fresh episode (seed index 0) with 'Abstain: surviving hypotheses disagree on the query'. That is the intended abstention on a context-shortfall episode. Saved as e5062a87_plain_audit_py_result.json and e5062a87_plain_audit_context_shortfall_counterexample.json. host-audit.json comes from e5062a87_audit.py: the same seeds, fixture checks and verify(), plus query-preserving demo resampling. It is NOT a plain audit.py pass.",
+    "metrics": {
+      "passed": true,
+      "fresh_pairs_checked": 1000,
+      "augmented_pair_checks": 8000,
+      "fixture_variants_checked": 16,
+      "unique_base_inputs": 1000,
+      "queries_drawn": 250,
+      "queries_needing_demo_resample": 36,
+      "demo_resamples_total": 51,
+      "max_resamples_for_one_query": 3,
+      "queries_unresolved_after_cap": 0,
+      "rejected_demo_sets": 51,
+      "program_abstained_on_rejected_demo_sets": 51,
+      "fixture_survivor_count": 30,
+      "seconds": 55.79693191696424
+    },
+    "commands": [
+      "cd ROOT/e5062a87 && /Users/ritwika/projects/arc-agi2/.venv/bin/python -I e5062a87_audit.py   # ~56 s, writes host-audit.json",
+      "cd ROOT/e5062a87 && /Users/ritwika/projects/arc-agi2/.venv/bin/python -I e5062a87_tests.py -v   # 11 tests OK, ~5.6 s"
+    ],
+    "sources": {
+      "factory.py": "e8bea25635829a35a63c060be9d86a47dc1042efc2ee47adb8fb5485accfa40a",
+      "e5062a87_gate.py": "f278cf89f816e3c68442ac5b187fa756f9d205994b19a2b645e5bc9be099bc2c",
+      "e5062a87_audit.py": "e668f2e097e3c96f0b128585d49dc0d977226fe52f33ab93dfd57db42d006e35",
+      "e5062a87_tests.py": "9f8488edce72b63fb996ae4aa3318ef5c445cddfedde1e5a7bfc18543d79b4c4",
+      "native": "/Users/ritwika/projects/ARC-GEN/tasks/task_e5062a87.py sha256 81f24acd5c627c4b4d153caeb3c098f21e815193db3b9df9c93acf399e706603"
+    },
+    "assumptions": [
+      "Demos are dicts with input/output; template colour = palette[2], open colour = palette[0].",
+      "The hypothesis family is the explicit identifiability scope. A hypothesis outside it is not considered.",
+      "Query answers are used only by verify() after the program runs. The gate sees demos and the query input only."
+    ],
+    "superseded": "previous_factory_e5062a87.py.txt (demo-conditioned direct/filtered branch with a d4-chosen greedy order). It is kept for provenance only."
+  }
+}

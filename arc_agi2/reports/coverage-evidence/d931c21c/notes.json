@@ -1,0 +1,75 @@
+{
+  "status": "Ready for root integration under approved labelled teaching-copy policy",
+  "canonical_difference": [
+    {
+      "split": "train",
+      "pair_index": 2,
+      "row": 13,
+      "col": 3,
+      "canonical": 2,
+      "proposed": 0
+    }
+  ],
+  "upstream": {
+    "url": "https://github.com/arcprize/ARC-AGI-2/pull/75",
+    "state": "open, merged=false",
+    "issue": "https://github.com/arcprize/ARC-AGI-2/issues/58",
+    "exact_pr_diff_matches_reference_teaching_copy": true
+  },
+  "mechanism": "Leave open blue components unchanged. Closed components get red exterior Chebyshev-adjacent halos. Native lining paints boundary of one or two constituent interior rectangles. A second visible hypothesis paints only cells touching blue; demos must identify lining or query outputs must agree.",
+  "native_decomposition_proof": "Rectangle union has one horizontal/vertical split except L-shaped aligned-end union with two. The native tiniest-chunk constraint selects the split with strictly smaller minimum piece area; ties are rejected by constructor. Direct source enumerates cuts; independent gate enumerates corner-anchored rectangles with rectangular complements and selects same unique minimum-area partition.",
+  "constructor_proposal": "No native constructor change. Archived touch-only solution disagrees on 10/100 initial native samples with long interior seams. Uniform piece-lining model matches 1000/1000 fresh draws before context gate. Do not suppress these harder seam cases. Instead supply discriminating demonstrations.",
+  "independent_gate": "arc_agi2.outline_teaching_evidence.require_outline_teaching_evidence. It never reads query outputs and rejects contradictory demos or unresolved seam hypotheses. Source has no least-mismatch fallback and no D4 parameter oracle.",
+  "fixture_claim": "Only proposed teaching fixture audited. Canonical third demonstration intentionally rejected. Exact upstream patch saved locally, no canonical labels or fixture policy edited.",
+  "gate_query_schema": "Accepts input dictionaries; ignores query output fields, covered by poisoned-answer unit test.",
+  "demonstrated_colour_check": "Reject query output colours absent from demonstration outputs and query input. Cannot invent halo/lining colours from all-open demos.",
+  "exhaustive_decomposition_audit": {
+    "native_vertical_parameter_configurations": 180648,
+    "distinct_translation_normalized_shapes": 24912,
+    "all_direct_and_independent_partitions_match": true,
+    "horizontal_case": "transpose of exhaustive vertical case, same area comparison",
+    "native_bounds": "width <=10, height <=10; aligned-end native strict area filters preserved",
+    "seconds": 95.25489966699388
+  },
+  "native_validate_fixture_note": "Native validate() still supplies its canonical hard-coded colour list, including disputed red cell. This worker did not alter it. Teaching-copy fixture tests read the separately labelled reference teaching_fixture; random native constructor outputs need no label correction.",
+  "full_gate_audit": {
+    "task_id": "d931c21c",
+    "scope": "labelled teaching-copy audit; canonical data unchanged and NOT a canonical fixture pass",
+    "fresh_pairs_checked": 1000,
+    "unique_base_inputs": 1000,
+    "augmented_pair_checks": 8000,
+    "proposed_fixture_variants_checked": 16,
+    "ambiguous_demo_contexts_retried": 66,
+    "sampler_failures": 0,
+    "passed": true,
+    "seconds": 472.36339120799676,
+    "factory_sha256": "df03be953e38fffb92422bdf6ac97a2c4da53bccf12a96651185b682bd0a8799",
+    "constructor_sha256": "d584c4b6714bf6582d5c6de40f72f5c5480ea05494b7bdad525eb37ba046e2de",
+    "unique_generated_inputs_including_discarded_demo_contexts": 1198,
+    "fixture_basis": {
+      "fixture": "teaching_fixture",
+      "corrected": true,
+      "canonical_sha256": "34200461c67f8bd4dc547fb156a7d8721730e7cf535579d0e3074e00ec81932b",
+      "teaching_sha256": "a7124274c4de361383de34fffdc79a4073af665f68003b03b38474e2dfd52c72",
+      "source": "https://github.com/arcprize/ARC-AGI-2/pull/75",
+      "approval": "User requested corrected teaching copies and delegated investigation/finalization on 2026-10-20; host reviewed evidence and finalized this explicitly labelled copy on 2026-10-21.",
+      "evidence_status": "upstream_proposed_unmerged_correction",
+      "description": "One extraneous red cell in train[2] removed, exactly matching the unmerged PR75 patch. Canonical benchmark data and scoring remain unchanged.",
+      "changed_cells": [
+        {
+          "split": "train",
+          "pair": 2,
+          "field": "output",
+          "row": 13,
+          "col": 3,
+          "canonical": 2,
+          "teaching": 0
+        }
+      ]
+    },
+    "fixture_variants_checked": 16,
+    "evidence_sha256": "4ef27eab12af21dc3c1cd2408566023aebc8951e053c31c48c40c2814e7c278f",
+    "query_contract": "Raw-grid audit plus dict-input poisoned-answer unit test; gate ignores query output fields",
+    "retry_contract": "Retained each sampled query; only demonstration contexts resampled for ambiguous seam rules or unobserved output colours. All accepted pair inputs globally unique."
+  }
+}

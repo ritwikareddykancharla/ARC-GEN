@@ -1,0 +1,22 @@
+{
+  "author": "host coverage_period",
+  "task_id": "ac0c5833",
+  "status": "ready for root integration;1000 fresh pairs/8000 D4-palette checks/16 original canonical variants",
+  "native_changed": false,
+  "original_labels_changed": false,
+  "mechanism": [
+    "Copy the visible square template unchanged at every three-dot marker.",
+    "If the template is exactly a hollow square outline, remove the non-corner cells from its two sides farthest from the owning missing-corner anchor, then copy that shape at every marker. Other templates remain unchanged."
+  ],
+  "context_policy": "Every demonstration must match a candidate full output. Query answered only when all surviving candidates agree. No shape-remap dictionary, nearest-owner selection, first tie break, or demo skipping.",
+  "domain": "The owning marker is unique. Marker triples explain every marker-colour pixel. Template span2 or3 is guaranteed by unchanged native random domain. All target squares must be in bounds. Copies combine by nonzero-pixel union, including legitimate zero-cell overlap.",
+  "independent_gate": "independent_gate.py uses Chebyshev-connected marker components and signed anchor-offset pixel sets, independently of factory neighbourhood triples and reflected masks. require_evidence checks all demo/query inputs and ignores query output fields.",
+  "regression": "Original failing demo owner region grew from4 to5 template-colour pixels because another copy overlapped a zero cell. Old learning table misinterpreted this as a shape change. New code constructs stamp union directly.",
+  "limitations": "Two explicitly declared uniform geometric mechanisms; finite hypothesis class, not proof of unique original intended rule.",
+  "provenance": [
+    "Original Opus rationale acknowledges an unexplained ring edit.",
+    "Saved Atlas description states geometric hollow-outline trimming.",
+    "Both rules are kept; a native ring is preserved when demonstrations support plain copying."
+  ],
+  "tests": "11 focused tests, including original fresh regression, all16 canonical variants, native-ring preservation, missing evidence, double-owner rejection, contradictory demos, poisoned query labels."
+}

@@ -1,0 +1,64 @@
+{
+  "task_id": "85fa5666",
+  "reviewer": "host parallel CLI execution worker (second independent reviewer, v6)",
+  "passed": true,
+  "verdict": "Pass, within gated scope. The current ROOT factory and gate are correct and leak-free and need no source change. Certification holds only with the evidence gate: demonstrations are resampled and the query is kept. The unmodified ungated ROOT/audit.py fails by design, because the program refuses ambiguous raw episodes instead of guessing. native_changed:false.",
+  "source_hashes": {
+    "factory_ROOT/85fa5666/factory.py": "d26a891e00b020cce00dc49f119e3056810f29aa1cd5fd6da5949599a4f2d34f",
+    "fork_copy_arc_agi2/direct_factories/task_85fa5666.py": "d26a891e00b020cce00dc49f119e3056810f29aa1cd5fd6da5949599a4f2d34f",
+    "native_constructor_tasks/task_85fa5666.py": "edfea3ae35337ba857c7a286833aedd896ac672c6c7053117df9c044da7d3f22",
+    "gate_ROOT/85fa5666/gate_85fa5666.py": "3c01dc7124bf412fedce06ed88c74525cfb02607da48607045acc588d91c3030",
+    "audit_ROOT/85fa5666/audit_85fa5666.py": "ecbfa8fb24b73c5a374ec2f85562929e5f3727ad97617c9b9571cff819329493",
+    "fork_evidence_arc_agi2/corner_rays_85fa5666_evidence.py": "6accea9561a8ac1038ee595e8a289e6842f0a5a6f0156821c7ce1ceacdf1a0fc",
+    "fork_test_arc_agi2/test_corner_rays_85fa5666_evidence.py": "b30a90f111ea59ae28522fb8a6005a0153c98f5a83943aeeb79630e658910919",
+    "host-audit.json_hashes_confirmed": true
+  },
+  "tests": [
+    {"cmd": "cd ROOT/85fa5666 && PYTHONPATH=/Users/ritwika/projects/ARC-GEN /Users/ritwika/projects/arc-agi2/.venv/bin/python -m unittest -v test_85fa5666", "result": "7 tests OK, 6.9s (extra-seed gate stats identified 109 / ambiguous 11)"},
+    {"cmd": "cd /Users/ritwika/projects/ARC-GEN && PYTHONPATH=. /Users/ritwika/projects/arc-agi2/.venv/bin/python -m unittest -v arc_agi2.test_corner_rays_85fa5666_evidence", "result": "7 tests OK, 6.8s (new portable tests: fixture 16 variants with the gate called as queries=[{'input': grid}], with and without palette/d4; query label ignored; constructor patch conflict; missing join evidence refused; obstacle hard case refused without evidence and solved exactly in 16 D4/palette variants with it; native == continuation; no-survivor raises)"},
+    {"cmd": "cd ROOT/85fa5666 && PYTHONPATH=/Users/ritwika/projects/ARC-GEN /Users/ritwika/projects/arc-agi2/.venv/bin/python audit_85fa5666.py review-v6-rerun-host-audit.json", "result": "independent rerun reproduces host-audit.json: passed, fresh_pairs_checked 1000, augmented_pair_checks 8000, fixture_variants_checked 16, unique_base_inputs 1000, raw identified 224 / ambiguous 26 / no_survivor 0, all 26 resolved by demo resampling (max 11 draws), unresolved 0, factory raised on all 26 raw ambiguous episodes in all 8 D4, 61s"},
+    {"cmd": "/Users/ritwika/projects/arc-agi2/.venv/bin/python ROOT/85fa5666/review_v6_geometry_rates_85fa5666.py", "result": "3000 native samples (sizes 8-12 uniform). The gate's continuation reading equals the native output in 3000/3000. Pairs where a reading differs from continuation: join 58%, graze 42%, obstacle-stop 0.73% (22/3000)"},
+    {"cmd": "/Users/ritwika/projects/arc-agi2/.venv/bin/python ROOT/85fa5666/review_v6_fixture_touch_probe_85fa5666.py", "result": "Fixture ray cells next to a same-coloured corner: pair 1 (4,10),(5,11) continue past corner (4,11), whose own ray has no free cell. Pair 1 (7,2) stops next to joinable corner (7,1). This justifies the free-first-cell condition and refutes plain any-touch or ring-touch stopping."},
+    {"cmd": "verify(coverage-repairs-v3 factory, canonical fixture)", "result": "fails [true,false,true,true,true]: continuation-only cannot reproduce canonical pair 2, so the v3 draft is correctly superseded"}
+  ],
+  "review_findings": {
+    "output_leakage": "None. solve() reads only the demonstrations and the query grid. The gate reads demo pairs and query inputs only, and the tests confirm a bogus query 'output' key is ignored.",
+    "hidden_parameter_inference": "None. The program takes bg=palette[0], box=palette[2] and chirality from the d4 argument (reflections 4-7 run counter-clockwise). There is no D4 search. The gate infers bg, box and chirality from pixels, so it works with palette=None (the build_million call).",
+    "ambiguous_fallbacks": "None. All 6 readings consistent with every demo must agree on the full query grid. Otherwise ValueError('ambiguous'). With no survivor, ValueError('no reading'). No vote, priority, first pick, demo skipping or reset.",
+    "rule_specific_hardcoding": "The join/graze readings, including the joinable-corner free-first-cell condition, were fitted to canonical pair 2. That is unavoidable because the fixture is a constructor patch (extra_rows). They are exposed as explicit demo-selected hypotheses, not hardcoded outputs.",
+    "domain_narrowing": "None. The gated audit preserves every query and resamples only demos. Native sizes 8-12 and all box counts are sampled.",
+    "hard_cases": "Join geometry (58% of native pairs) and obstacle-pass geometry (0.73%, where a ray crosses a later box's corner) are both exercised. The obstacle case is refused without evidence and solved exactly with it, in all 16 variants (new test)."
+  },
+  "issues": [
+    "Constructor/fixture conflict (not task-owned; proven, not fixed). validate() train pair 2 applies extra_rows=[8,9], extra_cols=[1,0], which erases two ray cells. The random path continues the same geometry (witness generate(size=8,brows=[1,5],bcols=[4,2],colors=[3,6,8,7,3,8,7,6]) keeps (5,1),(6,0)=7). A program that ignores demos cannot fit both. Host options: (a) accept the gated scope (recommended, no native change); (b) root-approved teaching fixture or constructor change dropping extra_rows. The factory needs no change in either case.",
+    "Ungated ROOT/audit.py fails at fresh index 3 by design (ambiguity refusal). See ungated-official-protocol-85fa5666.json. Certification must use the gated audit (host-audit.json) and a dispatched evidence gate.",
+    "Builder capacity: build_million tries 50 context draws per fixed query. For the rare obstacle-geometry queries (about 0.7%), a demo set holds evidence with p about 2.2% per draw, so about 33% of those queries will be rejected as missing evidence. That is roughly 0.25% of queries: a small, reported bias, not a correctness issue. Raising context attempts for this task would remove it.",
+    "Hypothesis family is finite. Other exotic stop rules cannot be excluded in principle. Natural alternatives (any-touch stop, ring-touch stop) are refuted by fixture pair 1 cells (4,10),(5,11).",
+    "Without dispatch, ambiguous raw episodes still fail safely in verify() (the program raises), so there is no false label, but they are lost as TargetErrors instead of being resampled."
+  ],
+  "changes_by_reviewer": {
+    "ROOT/85fa5666/factory.py": "unchanged",
+    "ROOT/85fa5666/gate_85fa5666.py": "unchanged",
+    "new_fork_files": [
+      "arc_agi2/corner_rays_85fa5666_evidence.py (portable gate; same assessment logic as ROOT gate, verified by diff; adds require_corner_rays_evidence)",
+      "arc_agi2/test_corner_rays_85fa5666_evidence.py",
+      "arc_agi2/direct_factories/task_85fa5666.py (byte-identical copy of ROOT factory; inert until a host certificate 85fa5666.json is registered)"
+    ],
+    "new_ROOT_files": ["review-v6-rerun-host-audit.json", "review_v6_geometry_rates_85fa5666.py", "review_v6_fixture_touch_probe_85fa5666.py", "independent-review-v6.json"],
+    "native_changed": false,
+    "shared_dispatch_certificates_policy_changed": false
+  },
+  "recommended_integration": {
+    "factory": "/Users/ritwika/projects/ARC-GEN/arc_agi2/direct_factories/task_85fa5666.py (sha d26a891e...)",
+    "certificate_to_create_by_host": "/Users/ritwika/projects/ARC-GEN/arc_agi2/direct_factories/85fa5666.json from ROOT/85fa5666/host-audit.json (gated scope; factory_sha256 d26a891e..., constructor_sha256 edfea3ae...)",
+    "evidence_gate": "/Users/ritwika/projects/ARC-GEN/arc_agi2/corner_rays_85fa5666_evidence.py",
+    "tests": "/Users/ritwika/projects/ARC-GEN/arc_agi2/test_corner_rays_85fa5666_evidence.py",
+    "required_dispatch_signature": "require_corner_rays_evidence(demonstrations, queries, palette=None, d4=0) -> None, raises MissingColourEvidence. queries=[{'input': grid}] (labels never read). Proposed host edit in arc_agi2/colour_evidence.require_colour_evidence: if task_id == '85fa5666': from .corner_rays_85fa5666_evidence import require_corner_rays_evidence; require_corner_rays_evidence(demonstrations, queries, palette, d4); return"
+  },
+  "runtime_seconds": {"root_tests": 6.9, "fork_tests": 6.8, "gated_audit_rerun": 61.3, "geometry_probe": 10},
+  "assumptions": [
+    "bg=palette[0], box=palette[2]; chirality from d4 parity (program) or from pixels (gate)",
+    "Finite reading family: chirality x obstacle{pass,stop} x join{none,join,graze}",
+    "Canonical fixture reference('85fa5666')['canonical'] is immutable and was not modified"
+  ]
+}

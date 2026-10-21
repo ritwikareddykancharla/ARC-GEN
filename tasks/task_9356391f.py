@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""Generator."""
+"""Concentric square rings; clipped rings have gray legend swatches."""
 
 import common
 
@@ -24,7 +24,7 @@ def generate(colors=None, row=None, col=None, last=None):
     colors: A list of colors to use.
     row: The row of the pixel.
     col: The column of the pixel.
-    last: The color of the last pixel (for the ambiguous case)
+    last: Deprecated compatibility argument; the visible clipping rule sets swatches.
   """
 
   if colors is None:
@@ -40,10 +40,13 @@ def generate(colors=None, row=None, col=None, last=None):
     output[0][i] = grid[0][i] = color
   for c in range(16):
     output[1][c] = grid[1][c] = 5
-  if last: output[0][len(colors) - 1] = last
   output[row][col] = grid[row][col] = colors[0]
   for i, color in enumerate(colors):
     common.hollow_rect(output, 2 * i + 1, 2 * i + 1, row - i, col - i, color)
+  # Gray the swatch of every ring clipped by the drawing canvas.
+  for i in range(len(colors)):
+    if row - i < 2 or row + i >= 16 or col - i < 0 or col + i >= 16:
+      output[0][i] = 5
   return {"input": grid, "output": output}
 
 

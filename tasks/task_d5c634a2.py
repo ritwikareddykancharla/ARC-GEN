@@ -64,6 +64,8 @@ def generate(width=None, height=None, rows=None, cols=None, cdirs=None):
       if cdirs.count(1) < 1 or cdirs.count(1) > 4: continue
       rows = [common.randint(cdir, height - 2 + cdir) for cdir in cdirs]
       cols = [common.randint(1, width - 2) for _ in cdirs]
+      # Identical placements are invisible but would be counted twice.
+      if len(set(zip(rows, cols, cdirs))) < len(cdirs): continue
       grid, _ = draw()
       if grid: break
 

@@ -1,0 +1,11 @@
+{
+  "task_id": "d753a70b",
+  "passed": true,
+  "gate_sha256": "21eff746447b1ab8799af9249dbd64a125675a5d65da6dd96dd6d60052a250fa",
+  "focused_tests": 7,
+  "query_output_poisoning_invariant": true,
+  "query_output_access_and_membership_forbidden_test_passed": true,
+  "previous_audit_retained": "proposed-copy-audit.json",
+  "previous_audit_applicability": "Existing 1000/8000/16 audit supplied queries as input-only; ring_readings and demo validation unchanged. Query-output access fix has no effect on those prior audited inputs.",
+  "full_audit_repeated": false
+}

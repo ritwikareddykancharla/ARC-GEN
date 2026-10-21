@@ -1,0 +1,210 @@
+{
+  "task_id": "c6e1b8da",
+  "factory_sha256": "eb46fc90d63c6aa1c9e534cfb6157281da2b161601e2601460c334c6babdc455",
+  "constructor_sha256": "7373350a8e68de14ce950aa8ab902d0693797988c82283ae228597d558e049a3",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "query_identifiability_rejections": [
+    {
+      "seed": 61860021,
+      "reason": "intrinsic stacking ambiguity",
+      "valid_orders": 2,
+      "distinct_outputs": 2,
+      "witness_calls": [
+        {
+          "wides": [
+            6,
+            8,
+            4,
+            5
+          ],
+          "talls": [
+            9,
+            9,
+            4,
+            6
+          ],
+          "brows": [
+            4,
+            9,
+            9,
+            1
+          ],
+          "bcols": [
+            12,
+            5,
+            12,
+            6
+          ],
+          "colors": [
+            6,
+            7,
+            2,
+            4
+          ],
+          "angles": [
+            -1,
+            -1,
+            0,
+            3
+          ],
+          "lengths": [
+            0,
+            0,
+            4,
+            4
+          ],
+          "downs": [
+            0,
+            0,
+            2,
+            1
+          ]
+        },
+        {
+          "wides": [
+            8,
+            6,
+            4,
+            5
+          ],
+          "talls": [
+            9,
+            9,
+            4,
+            6
+          ],
+          "brows": [
+            9,
+            4,
+            9,
+            1
+          ],
+          "bcols": [
+            5,
+            12,
+            12,
+            6
+          ],
+          "colors": [
+            7,
+            6,
+            2,
+            4
+          ],
+          "angles": [
+            -1,
+            -1,
+            0,
+            3
+          ],
+          "lengths": [
+            0,
+            0,
+            4,
+            4
+          ],
+          "downs": [
+            0,
+            0,
+            2,
+            1
+          ]
+        }
+      ]
+    }
+  ],
+  "demo_identifiability_rejections": 1,
+  "rejected_query_raise_checks": 8,
+  "gate_label_agreements": 1000,
+  "multi_order_identifiable_pairs": 357,
+  "context_retries": 0,
+  "audit_scope": "Native constructor unchanged. Independent pure-Python parameter recovery + native generate() replay over all still-box orders gates each grid from its input alone. Intrinsically ambiguous queries rejected (factory must raise under all 8 D4); queries otherwise preserved, ambiguous demos resampled. 250 episodes x 4 pairs, all 8 D4, shuffled palette; no labels in gate or program.",
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 78.92756724997889,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "task_id": "c6e1b8da",
+    "author": "host parallel CLI execution worker",
+    "status": "host_audited_passed_with_identifiability_gate",
+    "native_changed": false,
+    "source_paths": {
+      "factory": "/Users/ritwika/projects/ARC-GEN/arc_agi2/direct_factories/task_c6e1b8da.py (copied byte-identical to ROOT/c6e1b8da/factory.py)",
+      "independent_gate": "ROOT/c6e1b8da/evidence_c6e1b8da.py",
+      "focused_tests": "ROOT/c6e1b8da/test_c6e1b8da_stacking.py",
+      "gated_audit": "ROOT/audit_stacking_c6e1b8da.py",
+      "counterexamples": "ROOT/c6e1b8da/ambiguity-counterexamples-c6e1b8da.json",
+      "standard_audit_record": "ROOT/c6e1b8da/host-audit-standard-c6e1b8da.json",
+      "prior_draft_backup": "ROOT/c6e1b8da/prior-draft/",
+      "native": "/Users/ritwika/projects/ARC-GEN/tasks/task_c6e1b8da.py (unchanged, sha256 7373350a...)",
+      "dispatch_gate": "ROOT/c6e1b8da/slide_stack_c6e1b8da_evidence.py (proposed arc_agi2/slide_stack_c6e1b8da_evidence.py)"
+    },
+    "explanation": "Direct visible-coordinate program. Each non-background colour (BG=palette[0]) is analysed separately. The program trims bounding-box edge lines that hold exactly one interior cell; this is the stick. Its side and count give the slide direction and distance in visible coordinates, so the same code works under all 8 D4 transforms with no D4 constant. Domain checks raise and never repair: a pulled box must be solid with an exact stick, still boxes need at least 3 visible corners, moved boxes must stay in the grid and must not overlap. The only hidden latent is the stacking order of the still boxes (pulled boxes are on top in both grids). The program enumerates every still-box order that re-renders the visible input exactly. It keeps the orders whose output is a constructor-valid scene, meaning every box shows at least 3 output corners as draw() requires. It answers only if all surviving hypotheses give the same full output grid. Otherwise it raises ValueError. Removed from the drafts: the frac/position tie-break order, the fallback topological order, the 'no valid -> use all' reset and output clipping. Demonstrations are checked: each demo output must be one of its own valid hypotheses, or solve raises.",
+    "independent_gate": "evidence_c6e1b8da.gate(generate, input) uses pure Python. It recovers box parameters from row/column counts, not edge trimming. It replays the UNCHANGED native generate(...) with explicit parameters for every permutation of still boxes, keeps the replays that draw() accepts and that reproduce the input byte-for-byte, and accepts only if they give exactly one output. It never sees labels. Why the reordering is exhaustive: still boxes can never overwrite pulled cells in either grid, so moving all still boxes before the pulled ones leaves both grids unchanged. Pulled boxes are pairwise disjoint, so their order is immaterial.",
+    "ambiguity": "Intrinsic, not a context shortfall. The still-box order is drawn independently for each scene, and no demonstration constrains it. Concrete witnesses are in ambiguity-counterexamples-c6e1b8da.json. (a) The v3 explicit pair, A/B swapped: identical input, outputs differ at rows 5-7, cols 8-10. (b) A plain native sampler draw: random.seed(61860021); generate(). Two native-valid orders reproduce its input and differ at 4 output cells, (9..12,12): colour 7 vs 6. The factory raises on both under all 8 D4 x palettes. Rate is about 1 per 1000-3000 native pairs; none occur in the fixture or in the standard audit.py seed stream.",
+    "metrics": {
+      "gated_audit": {
+        "passed": true,
+        "fresh_pairs_checked": 1000,
+        "augmented_pair_checks": 8000,
+        "fixture_variants_checked": 16,
+        "unique_base_inputs": 1000,
+        "query_identifiability_rejections": 1,
+        "rejected_query_raise_checks": 8,
+        "demo_identifiability_rejections": 1,
+        "gate_label_agreements": 1000,
+        "multi_order_identifiable_pairs": 357,
+        "context_retries": 0,
+        "seconds": 47
+      },
+      "standard_audit_py_check": {
+        "passed": true,
+        "fresh_pairs_checked": 1000,
+        "augmented_pair_checks": 8000,
+        "fixture_variants_checked": 16,
+        "unique_base_inputs": 1000,
+        "seconds": 62
+      },
+      "focused_tests": {
+        "dense_overlap_scenes": 3000,
+        "accepted": 2999,
+        "accepted_multi_order": 98,
+        "rejected": 1,
+        "factory_vs_gate_mismatches_over_16_variants": 0,
+        "seconds": 116
+      },
+      "unbiased_native_crosscheck": {
+        "draws": 3000,
+        "accepted": 3000,
+        "factory_exact": 3000
+      }
+    },
+    "test_commands": [
+      "cd ROOT && PYTHONPATH=/Users/ritwika/projects/ARC-GEN /Users/ritwika/projects/arc-agi2/.venv/bin/python audit_stacking_c6e1b8da.py",
+      "cd ROOT && PYTHONPATH=/Users/ritwika/projects/ARC-GEN /Users/ritwika/projects/arc-agi2/.venv/bin/python -c \"import audit; audit.check('c6e1b8da')\"  (standard protocol; saved as host-audit-standard-c6e1b8da.json, then gated audit re-run to own host-audit.json)",
+      "cd /Users/ritwika/projects/ARC-GEN && PYTHONPATH=. /Users/ritwika/projects/arc-agi2/.venv/bin/python ROOT/c6e1b8da/test_c6e1b8da_stacking.py"
+    ],
+    "assumptions": [
+      "Background is palette[0], a factory argument.",
+      "At most 6 still boxes are enumerated; the domain has at most 3. More raises and never guesses.",
+      "The output-corner validity filter is the constructor's own draw() check. It removes only rival latents that the constructor could not emit. In this audit it was never needed to break a tie that the input already decides."
+    ],
+    "constructor_issue": "Synthetic-only proposal for host review; NOT applied. In generate()'s random branch, after draw() succeeds, also reject the scene if some permutation of the still boxes (placed before the pulled boxes) passes draw() with an identical input and a different output. This costs at most 3! = 6 extra draws. It removes exactly the draws evidence_c6e1b8da.gate rejects. Explicit validate() fixtures, ranges and counts stay unchanged, and every hard identifiable case is kept: hidden still corners, sticks over still boxes, visible still/still overlaps, and multi-order inputs whose outputs agree (357 of 1000 audited pairs). Alternatively, keep the native constructor and apply evidence_c6e1b8da.gate as the episode-builder filter, as the gated audit does.",
+    "limitations": "The standard audit.py passes today only because its seed stream contains no ambiguous draw. Under other seeds, an unfiltered native draw has about 1/1000-1/3000 chance per pair of making solve raise, which is correct behaviour but fails verify(). Dataset builders must apply the gate or the constructor repair.",
+    "independent_review_v6": {
+      "passed": true,
+      "file": "ROOT/c6e1b8da/independent-review-v6.json",
+      "dispatch_gate": "ROOT/c6e1b8da/slide_stack_c6e1b8da_evidence.py",
+      "tests": "ROOT/c6e1b8da/test_c6e1b8da_review_v6.py",
+      "audit": "ROOT/c6e1b8da/audit_review_v6_c6e1b8da.py -> host-audit-review-v6-c6e1b8da.json",
+      "factory_changed": false,
+      "native_changed": false
+    }
+  }
+}

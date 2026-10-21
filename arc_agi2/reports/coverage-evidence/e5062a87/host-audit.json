@@ -1,0 +1,33 @@
+{
+  "task_id": "e5062a87",
+  "auditor": "e5062a87_audit.py (gated mirror of ROOT/audit.py)",
+  "factory_sha256": "e8bea25635829a35a63c060be9d86a47dc1042efc2ee47adb8fb5485accfa40a",
+  "constructor_sha256": "81f24acd5c627c4b4d153caeb3c098f21e815193db3b9df9c93acf399e706603",
+  "gate_sha256": "f278cf89f816e3c68442ac5b187fa756f9d205994b19a2b645e5bc9be099bc2c",
+  "audit_script_sha256": "e668f2e097e3c96f0b128585d49dc0d977226fe52f33ab93dfd57db42d006e35",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "fixture": {
+    "fixture": "canonical",
+    "corrected": false
+  },
+  "sampler_rejections": [],
+  "queries_drawn": 250,
+  "queries_identified_first_try": 214,
+  "queries_needing_demo_resample": 36,
+  "demo_resamples_total": 51,
+  "max_resamples_for_one_query": 3,
+  "queries_unresolved_after_cap": 0,
+  "program_abstained_on_rejected_demo_sets": 51,
+  "rejected_demo_sets": 51,
+  "gate_unexplained_demo_sets": 0,
+  "native_changed": false,
+  "fixture_survivor_count": 30,
+  "seed": 219742967848562,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 80.33222329092678,
+  "audit_scope": "canonical fixture 16 variants (2 palettes x 8 D4) verified exactly incl. train-as-query; fresh native episodes with audit.py seeds, all 8 D4 x shuffled palette; query preserved, demos resampled only when the independent gate finds surviving hypotheses disagree (context shortfall); program must abstain on every rejected demo set"
+}

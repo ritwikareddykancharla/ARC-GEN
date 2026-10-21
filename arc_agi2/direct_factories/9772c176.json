@@ -1,0 +1,80 @@
+{
+  "task_id": "9772c176",
+  "factory_sha256": "fbf24129a496744a802b52c1b6819a3d6e8f314ec5605b82179b8e91f61c8297",
+  "constructor_sha256": "9f90c0054eb9393617df788cce8730cf4c2f04a32301394bb97b878716b8b70f",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 201602636106441,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 121.49603891698644,
+  "audit_scope": {
+    "protocol": "ROOT/audit.py check() invoked directly for 9772c176 only (no host-summary written)",
+    "fixture": "reference(tid)[canonical] x 8 D4 x 2 palettes, immutable",
+    "fresh": "250 native episodes x 4 pairs x 8 D4, shuffled palette per episode",
+    "native_changed": false,
+    "reviewer_rerun": "independent-review-v6 reran ROOT/audit.py check(9772c176) on 2026-10-21: passed, seconds=121.5"
+  },
+  "rejection_stats": {
+    "sampler_rejections": 0,
+    "solver_raises_on_in_distribution": 0,
+    "note": "solver raises ValueError (never guesses) when no hypothesis or >1 distinct outputs; observed 0 times in-distribution"
+  },
+  "ambiguity_gates": {
+    "random_queries": 1000,
+    "fused_queries": 1000,
+    "checks_each": 8000,
+    "demo_free_unique": 16000,
+    "resampled_demo_exact": 16000,
+    "failures": 0,
+    "brute_force_crosscheck_samples": 600,
+    "brute_force_disagreements": 0,
+    "intrinsic_ambiguity_found": 0,
+    "context_shortfall_found": 0
+  },
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "task_id": "9772c176",
+    "author": "host parallel CLI execution worker",
+    "status": "host_audited_passed",
+    "program": "Direct visible-coordinate scene enumerator. Colour roles from palette (bg=palette[0], blob=palette[8], roof=palette[4]); d4 is NOT used (emitted source identical for all 8 D4). For each cap axis (rows or columns of the visible grid) it enumerates every pair of constructor blobs (rect+cap octagons obeying wide/tall/brow/bcol/trim ranges) whose cells lie in the blob mask, keeps ordered pairs whose exact re-drawing (spacing-5 rect test, cap/roof collision rejection, rect overwrite) reproduces the input, and collects implied outputs. An axis survives only if every demonstration output is reproduced (no demo skipping). Output is returned only if all surviving hypotheses imply one identical full grid; otherwise ValueError. No first/majority/intersection fallback, no D4 tie-break, no reset.",
+    "candidate_lemma": "Each rect interior row is bounded by its own first side-roof layer, which the constructor keeps free of 8 (own B-checks; A side roofs unreachable by B rect by spacing, B caps rejected on 4). Hence interior rows are an exact maximal run [t0,t1], and rect first/last row is the end of or one beyond the maximal block of identical exact runs. Verified empirically against an independent brute force over ALL sub-rectangles and native renderer on 600 samples (480 fused): identical hypothesis sets.",
+    "hard_cases_preserved": "Fused scenes (blob caps touching/penetrating the other blob, ~2.1% of native samples, 2097/100000) are solved, not filtered; constructor not narrowed.",
+    "ambiguity": "No intrinsic ambiguity and no context shortfall found: 100000 native inputs, 0 with >1 output on the true axis, 0 where the other-axis hypotheses imply a different output; query alone identifies the output (demo-free gate 16000/16000).",
+    "tests": {
+      "unit": "/Users/ritwika/projects/arc-agi2/.venv/bin/python -I ROOT/9772c176/tests_9772c176.py  (7 tests, ~5s)",
+      "audit": "cd /tmp && PY -c \"import sys;sys.path.insert(0,ROOT);import audit;audit.check('9772c176')\"  (193s)",
+      "gate": "PY -I ROOT/9772c176/gate_9772c176.py LO HI {0|1}  (5x200 each, ~66s/proc)",
+      "brute": "PY -I ROOT/9772c176/brute_9772c176.py 60 SEED {1|0}  (~300s/proc)",
+      "stats": "PY -I ROOT/9772c176/stats_9772c176.py 25000 SEED (~48s/proc)"
+    },
+    "evidence": [
+      "host-audit.json",
+      "evidence-9772c176.json",
+      "tests_9772c176.py",
+      "counterexample-prior-fused.json (prior failing fused episode, now passes)",
+      "independent-review-v6.json",
+      "test_review_v6_9772c176.py",
+      "review_v6_adversarial_9772c176.py"
+    ],
+    "assumptions": [
+      "exactly two blobs per scene (constructor invariant)",
+      "input contains only bg and blob colours"
+    ],
+    "source_paths": [
+      "ROOT/9772c176/factory.py",
+      "/Users/ritwika/projects/ARC-GEN/tasks/task_9772c176.py",
+      "/Users/ritwika/projects/ARC-GEN/common.py",
+      "ROOT/audit.py"
+    ],
+    "native_changed": false,
+    "constructor_fix_proposed": false,
+    "note_stale_file": "counterexample.json is the previous factory failure artifact (kept unmodified, copy in counterexample-prior-fused.json)",
+    "independent_review_v6": "independent-review-v6.json (passed; factory unchanged; audit rerun passed)"
+  }
+}

@@ -1,0 +1,196 @@
+{
+  "task_id": "d753a70b",
+  "status": "locally_reviewed_uncertain_concentric_teaching_hypothesis_not_official",
+  "canonical_unchanged": true,
+  "original_fixture_context_passed": false,
+  "canonical_content_sha256": "388e9ae29018272a34b65076f3ae47d3db109f01d18e41b0edeb1af3a5a26b57",
+  "proposed_content_sha256": "a03a9f3f00d34993369efe51ec7f887c184353bec9361e410b13eb5e7054a41a",
+  "proposed_file_sha256": "fa009b11894d7510f00a0eaada883075c849954c0085bda764683484b047196b",
+  "changed_cells": [
+    {
+      "part": "train",
+      "pair_index": 0,
+      "row": 13,
+      "col": 4,
+      "old": 7,
+      "new": 5
+    },
+    {
+      "part": "train",
+      "pair_index": 0,
+      "row": 13,
+      "col": 5,
+      "old": 5,
+      "new": 7
+    },
+    {
+      "part": "train",
+      "pair_index": 0,
+      "row": 14,
+      "col": 3,
+      "old": 7,
+      "new": 5
+    },
+    {
+      "part": "train",
+      "pair_index": 0,
+      "row": 14,
+      "col": 4,
+      "old": 5,
+      "new": 7
+    },
+    {
+      "part": "train",
+      "pair_index": 0,
+      "row": 14,
+      "col": 5,
+      "old": 7,
+      "new": 5
+    },
+    {
+      "part": "train",
+      "pair_index": 0,
+      "row": 14,
+      "col": 6,
+      "old": 5,
+      "new": 7
+    },
+    {
+      "part": "train",
+      "pair_index": 0,
+      "row": 15,
+      "col": 2,
+      "old": 7,
+      "new": 5
+    },
+    {
+      "part": "train",
+      "pair_index": 0,
+      "row": 15,
+      "col": 3,
+      "old": 5,
+      "new": 7
+    },
+    {
+      "part": "train",
+      "pair_index": 0,
+      "row": 15,
+      "col": 6,
+      "old": 7,
+      "new": 5
+    },
+    {
+      "part": "train",
+      "pair_index": 0,
+      "row": 15,
+      "col": 7,
+      "old": 5,
+      "new": 7
+    }
+  ],
+  "changed_cell_count": 10,
+  "rationale": "Uniform concentric radius change matches native random mechanism and all other original rings. One canonical boundary ring is translated one column. Third-party atlas encodes a special three-cell boundary V shift, not an independently established general law; intent remains uncertain. This copy deliberately removes the translation for teaching and never changes benchmark scoring.",
+  "domain": "Centers inside grid; 3\u20136 rings as sampled natively; all radii up to grid-visible limit considered, covering larger canonical rings. All geometric partitions under these constraints must agree. No minimum-object-count preference.",
+  "parent_decision": "Parent approved preparing the labelled concentric hypothesis conditional on full independent audit; shared policy/reference update remains parent-owned.",
+  "approval": {
+    "canonical_sha256": "388e9ae29018272a34b65076f3ae47d3db109f01d18e41b0edeb1af3a5a26b57",
+    "teaching_sha256": "a03a9f3f00d34993369efe51ec7f887c184353bec9361e410b13eb5e7054a41a",
+    "source": "arc_agi2/reports/label-reviews/d753a70b.json",
+    "approval": "User delegated investigation/finalization of labelled teaching copies; host finalized audited concentric hypothesis on 2026-10-21.",
+    "evidence_status": "locally_reviewed_uncertain_concentric_hypothesis_not_official_correction",
+    "description": "Uniform concentric radius change matches native random mechanism and all other original rings. One canonical boundary ring is translated one column. Third-party atlas encodes a special three-cell boundary V shift, not an independently established general law; intent remains uncertain. This copy deliberately removes the translation for teaching and never changes benchmark scoring.",
+    "changed_cells": [
+      {
+        "split": "train",
+        "pair": 0,
+        "field": "output",
+        "row": 13,
+        "col": 4,
+        "canonical": 7,
+        "teaching": 5
+      },
+      {
+        "split": "train",
+        "pair": 0,
+        "field": "output",
+        "row": 13,
+        "col": 5,
+        "canonical": 5,
+        "teaching": 7
+      },
+      {
+        "split": "train",
+        "pair": 0,
+        "field": "output",
+        "row": 14,
+        "col": 3,
+        "canonical": 7,
+        "teaching": 5
+      },
+      {
+        "split": "train",
+        "pair": 0,
+        "field": "output",
+        "row": 14,
+        "col": 4,
+        "canonical": 5,
+        "teaching": 7
+      },
+      {
+        "split": "train",
+        "pair": 0,
+        "field": "output",
+        "row": 14,
+        "col": 5,
+        "canonical": 7,
+        "teaching": 5
+      },
+      {
+        "split": "train",
+        "pair": 0,
+        "field": "output",
+        "row": 14,
+        "col": 6,
+        "canonical": 5,
+        "teaching": 7
+      },
+      {
+        "split": "train",
+        "pair": 0,
+        "field": "output",
+        "row": 15,
+        "col": 2,
+        "canonical": 7,
+        "teaching": 5
+      },
+      {
+        "split": "train",
+        "pair": 0,
+        "field": "output",
+        "row": 15,
+        "col": 3,
+        "canonical": 5,
+        "teaching": 7
+      },
+      {
+        "split": "train",
+        "pair": 0,
+        "field": "output",
+        "row": 15,
+        "col": 6,
+        "canonical": 7,
+        "teaching": 5
+      },
+      {
+        "split": "train",
+        "pair": 0,
+        "field": "output",
+        "row": 15,
+        "col": 7,
+        "canonical": 5,
+        "teaching": 7
+      }
+    ],
+    "original_fixture_context_passed": false
+  }
+}

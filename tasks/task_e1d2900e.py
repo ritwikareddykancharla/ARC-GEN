@@ -17,6 +17,29 @@
 import common
 
 
+def _visible_output(grid):
+  """Chebyshev-nearest square governs attraction, even when not aligned."""
+  height, width = len(grid), len(grid[0])
+  squares = [(r, c) for r in range(height - 1) for c in range(width - 1)
+             if all(grid[y][x] == 2 for y in (r, r + 1) for x in (c, c + 1))]
+  out = [[0 if v == 1 else v for v in row] for row in grid]
+  for row in range(height):
+    for col in range(width):
+      if grid[row][col] != 1: continue
+      # Coordinate order is the explicit native convention for exact ties.
+      sr, sc = min(squares, key=lambda b: (
+          max(max(b[0] - row, 0, row - b[0] - 1),
+              max(b[1] - col, 0, col - b[1] - 1)), b[0], b[1]))
+      if sr <= row <= sr + 1:
+        dst = (row, sc - 1 if col < sc else sc + 2)
+      elif sc <= col <= sc + 1:
+        dst = (sr - 1 if row < sr else sr + 2, col)
+      else:
+        dst = (row, col)
+      out[dst[0]][dst[1]] = 1
+  return out
+
+
 def generate(width=None, height=None, brows=None, bcols=None, rrows=None,
              rcols=None, extra_idxs=None):
   """Returns input and output grids according to the given parameters.
@@ -28,10 +51,12 @@ def generate(width=None, height=None, brows=None, bcols=None, rrows=None,
     bcols: The columns of the blue pixels.
     rrows: The rows of the red blocks.
     rcols: The columns of the red blocks.
-    extra_idxs: Extra indices to fix a broken / ambiguous case.
+    extra_idxs: Deprecated compatibility argument; never alters visible-rule labels.
   """
 
   def draw():
+    # Preserve the historical native input rejection distribution. These temporary
+    # aligned-slide labels are used only by the sampler, never as returned labels.
     grid, output = common.grids(width, height)
     # Draw the red blocks.
     for rrow, rcol in zip(rrows, rcols):
@@ -43,7 +68,6 @@ def generate(width=None, height=None, brows=None, bcols=None, rrows=None,
       grid[brow][bcol] = 1
       best_dist, rows, cols = 60, [], []
       for rrow, rcol in zip(rrows, rcols):
-        if extra_idxs is not None and i in extra_idxs: continue
         row, col = None, None
         if brow in [rrow, rrow + 1] and bcol < rcol: row, col = brow, rcol - 1
         if brow in [rrow, rrow + 1] and bcol > rcol: row, col = brow, rcol + 2
@@ -101,7 +125,7 @@ def generate(width=None, height=None, brows=None, bcols=None, rrows=None,
       if grid: break
 
   grid, output = draw()
-  return {"input": grid, "output": output}
+  return {"input": grid, "output": _visible_output(grid) if grid else None}
 
 
 def validate():

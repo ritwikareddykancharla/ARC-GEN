@@ -1,0 +1,18 @@
+{
+  "coverage": 1107,
+  "total": 1120,
+  "regression": {
+    "total_cases": 748,
+    "initial_passed": 747,
+    "initial_failed": 1,
+    "failed_case": "test_factories_produce_direct_programs_for_all_orientations",
+    "reason": "Legacy test always selected canonical even for approved hash-pinned teaching copies",
+    "fix": "Select fixture_basis(tid); canonical data remains unchanged",
+    "rerun_passed": true,
+    "rerun_seconds": 112.97
+  },
+  "additional_integration_cases": 27,
+  "additional_integration_passed": true,
+  "training_launched": false,
+  "production_generation_launched": false
+}

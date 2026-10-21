@@ -1,0 +1,19 @@
+{
+  "task_id": "b7955b3c",
+  "factory_sha256": "e42dc8893ce179d4a823806019d6f1a0da53690d649b274888f34ba34d7561be",
+  "constructor_sha256": "93b95647789c3fd910eed53b8712d7ccea29f7fdfc5375a54dbe641b693c651f",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "context_retries": 0,
+  "intrinsic_query_rejections": 0,
+  "sampler_rejections": [],
+  "audit_scope": "250 query-fixed episodes (3 independently sampled native demos + 1 native query); independent gate on every pair input; all 4 pairs solved and verified under all 8 D4 with a shuffled palette, plus program_targets.verify on each augmented episode; canonical fixture 2 palettes x 8 D4; native generator unchanged.",
+  "unique_base_inputs": 1000,
+  "seconds": 148.75269091699738,
+  "rejected_query_witnesses": [],
+  "native_changed": false,
+  "requires_per_episode_verification": true,
+  "provenance": "Parallel CLI execution worker; host-run gated audit of direct visible-coordinate program."
+}

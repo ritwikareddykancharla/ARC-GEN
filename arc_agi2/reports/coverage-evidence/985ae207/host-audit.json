@@ -1,0 +1,60 @@
+{
+  "task_id": "985ae207",
+  "factory_sha256": "7ccce579ecc9b185bd231139866c621f9da7d81b5e7d94af179de5f7a6f4b7b6",
+  "constructor_sha256": "5707648d96eac485e2dc9d319edf38c9519ca3bc54ab77a76704a3515f33ac64",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "entry_offsets": {
+    "1": 882,
+    "0": 1761,
+    "2": 706
+  },
+  "far_edge_overshoot_runs": 554,
+  "compiled_sampler_sha256": "d5d77dbfaf556204a345b8e67df783f241f7b2da6a887eaebacc94c745de7fef",
+  "audit_scope": "1000 fresh parameter samples from compiled rejection sampler with unchanged native proposal/acceptance law, different RNG stream; unchanged native.generate(**params) produces labels; every pair checked under8D4/palette.4 additional untouched native-random samples baseline. No offset filtering.",
+  "proposal_parity": {
+    "rejected": 2000
+  },
+  "native_random_baseline": [
+    {
+      "seed": 10900000,
+      "grid_size": 20,
+      "seconds": 0.04010204190853983,
+      "all8passed": true
+    },
+    {
+      "seed": 10900001,
+      "grid_size": 25,
+      "seconds": 4.710112917004153,
+      "all8passed": true
+    },
+    {
+      "seed": 10900002,
+      "grid_size": 20,
+      "seconds": 0.009096916997805238,
+      "all8passed": true
+    },
+    {
+      "seed": 10900003,
+      "grid_size": 25,
+      "seconds": 5.064224959001876,
+      "all8passed": true
+    }
+  ],
+  "unique_base_inputs": 1000,
+  "grid_sizes": {
+    "20": 770,
+    "25": 230
+  },
+  "compiled_geometry_proposals": 716445131,
+  "seconds": 259.62983387499116,
+  "acceptance_crosschecks": {
+    "raw_proposals": 2000,
+    "raw_native_rejections": 2000,
+    "accepted_parameter_draws": 1000,
+    "total": 3000
+  }
+}

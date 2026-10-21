@@ -63,6 +63,87 @@ def _hole_count(cells):
 
 
 def require_colour_evidence(task_id, demonstrations, queries, palette=None, d4=0):
+    if task_id == 'ac0c5833':
+        from .marker_template_evidence import require_evidence
+        require_evidence(demonstrations, queries, list(range(10)) if palette is None else palette)
+        return
+    if task_id == 'd5c634a2':
+        from .t_tally_d5c634a2_evidence import require_t_tally_evidence
+        require_t_tally_evidence(demonstrations, queries, palette, d4)
+        return
+    if task_id == 'c6e1b8da':
+        from .slide_stack_c6e1b8da_evidence import require_c6e1b8da_evidence
+        require_c6e1b8da_evidence(demonstrations, queries, palette, d4)
+        return
+    if task_id == 'd753a70b':
+        from .diamond_ring_evidence_d753a70b import require_ring_evidence
+        require_ring_evidence(demonstrations, queries, list(range(10)) if palette is None else palette)
+        return
+    if task_id == 'b1986d4b':
+        from .square_stack_hypothesis_evidence import require_evidence
+        require_evidence(demonstrations, queries, palette)
+        return
+    if task_id == 'f3e14006':
+        from .weave_hypothesis_evidence import require_evidence
+        require_evidence(demonstrations, queries,
+                    list(range(10)) if palette is None else palette)
+        return
+    if task_id == 'e048c9ed':
+        from .bar_length_hypothesis_evidence import require_evidence
+        require_evidence(demonstrations, queries,
+                    list(range(10)) if palette is None else palette)
+        return
+    if task_id == 'e5062a87':
+        from .e5062a87_stamp_evidence import require_stamp_fit_evidence
+        require_stamp_fit_evidence(demonstrations, queries, palette)
+        return
+    if task_id == '85fa5666':
+        from .corner_rays_85fa5666_evidence import require_corner_rays_evidence
+        require_corner_rays_evidence(demonstrations, queries, palette, d4)
+        return
+    if task_id == 'b7955b3c':
+        from .occluded_boxes_b7955b3c_evidence import require_occluded_boxes_evidence
+        require_occluded_boxes_evidence(demonstrations, queries, list(range(10)) if palette is None else palette)
+        return
+    if task_id == 'b942fd60':
+        from .branching_ray_evidence_b942fd60 import require_ray_evidence
+        require_ray_evidence(demonstrations, queries,
+                    list(range(10)) if palette is None else palette)
+        return
+    if task_id == 'dd2401ed':
+        from .cursor_recolour_evidence import require_evidence
+        require_evidence(demonstrations, queries,
+                    list(range(10)) if palette is None else palette)
+        return
+    if task_id == 'df8cc377':
+        from .checkerboard_phase_evidence import require_checkerboard_phase_evidence
+        require_checkerboard_phase_evidence(demonstrations, queries)
+        return
+    if task_id == 'e1d2900e':
+        from .nearest_square_evidence import require_nearest_square_evidence
+        require_nearest_square_evidence(demonstrations, queries,
+                    list(range(10)) if palette is None else palette)
+        return
+    if task_id == 'b230c067':
+        from .repeated_fragment_evidence import require_fragment_evidence
+        require_fragment_evidence(demonstrations, queries,
+                    list(range(10)) if palette is None else palette,d4)
+        return
+    if task_id == '985ae207':
+        from .tile_bar_evidence import require_tile_bar_evidence
+        require_tile_bar_evidence(demonstrations, queries,
+                    list(range(10)) if palette is None else palette)
+        return
+    if task_id == 'a3f84088':
+        from .outline_teaching_evidence import require_ring_teaching_evidence
+        require_ring_teaching_evidence(demonstrations, queries,
+                    list(range(10)) if palette is None else palette)
+        return
+    if task_id == 'd931c21c':
+        from .outline_teaching_evidence import require_outline_teaching_evidence
+        require_outline_teaching_evidence(demonstrations, queries,
+                    list(range(10)) if palette is None else palette)
+        return
     if task_id == '7e2bad24':
         from .beam_endpoint_evidence import require_endpoint_evidence
         require_endpoint_evidence(demonstrations, queries,

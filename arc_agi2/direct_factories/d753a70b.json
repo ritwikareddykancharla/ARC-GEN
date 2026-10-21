@@ -1,0 +1,31 @@
+{
+  "task_id": "d753a70b",
+  "scope": "Approved labelled concentric teaching hypothesis; original canonical context explicitly not passed.",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "native_draws": 1000,
+  "visible_ambiguities": 0,
+  "sampler_rejections": [],
+  "factory_sha256": "5b4e004a82aa009cb3f27aefb751d1e979079639d485484553fdabe9796401f9",
+  "constructor_sha256": "360f67408c7686994bc653a66cee51883ee45034ef4311b140a24389aa05d103",
+  "audit_optimization": "Independent gate checks all fresh base pairs and all fixture D4/palette variants. Target checks all eight D4 with per-batch emitted-source execution and shared color-independent geometry cache. This avoids repeating invariant exact-cover gate work eight times.",
+  "unique_base_inputs": 1000,
+  "seconds": 58.861244291998446,
+  "original_fixture_context_passed": false,
+  "proposed_teaching_fixture_context_passed": true,
+  "fixture_basis": "teaching_fixture",
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Host-authored direct program with constructor/source review, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "Find all exact decompositions into 3\u20136 hollow Manhattan rings with in-grid centers, as in the native family. All input interiors must be background; shrinking rings have radius at least1. Red radius decreases by1; gray increases by1; other colours/radii are static. Every output ring must have a clear interior and not overlap another output ring. Return only if all complete valid interpretations produce the same entire output. No smallest count, first choice, clipping translation, off-grid fallback or greedy fallback.",
+    "family_domain": "3\u20136 is the native generator object-count range, not the hidden actual count. Every count in that range is allowed. All in-grid center/radius candidates are enumerated, including the radius6 canonical ring; random radius0\u20133 is not used to restrict fixture interpretation. Budget exhaustion explicitly rejects rather than guessing.",
+    "independent_gate": "Target uses bitset shells/interiors and minimum-compatible-pixel exact cover. Independent gate derives radius from nearest occupied-cell distance, builds coordinate-set perimeters/interiors, and uses first-uncovered-pixel backtracking. Both enumerate complete valid interpretations; all-different outputs cause visible-ambiguity rejection. The native constructor supplies fresh output checks independently.",
+    "fixture_status": "Uncertain ten-cell concentric teaching hypothesis only. Canonical train[0] has a one-column translated gray boundary ring; canonical source and scoring remain unchanged. No independently established uniform law explains the translation. Third-party atlas uses a special three-cell V clause. Original fixture context is explicitly not passed; the proposed teaching copy has exact diffs, hashes and retained failing canonical context.",
+    "validation": "Full independent audit passed1000 unique native pairs /8000 D4 pair checks /16 proposed-fixture variants. No sampler rejection and no visible ambiguity encountered among1000 native draws. Seven portable focused tests pass. Independent gate checks all fresh base pairs and all16 fixture variants; target checks all8D4 with bijective palette permutations. Geometry-only cache shared in audit for speed. Original canonical context remains false.",
+    "integration": "Dedicated target task_d753a70b.py; independent diamond_ring_evidence_d753a70b.require_ring_evidence; tests test_diamond_rings_d753a70b.py. Native constructor untouched. Parent manages explicitly labelled teaching policy/reference and shared admission only after full audit.",
+    "author": "host"
+  }
+}

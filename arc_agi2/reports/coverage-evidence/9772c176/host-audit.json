@@ -1,0 +1,38 @@
+{
+  "task_id": "9772c176",
+  "factory_sha256": "fbf24129a496744a802b52c1b6819a3d6e8f314ec5605b82179b8e91f61c8297",
+  "constructor_sha256": "9f90c0054eb9393617df788cce8730cf4c2f04a32301394bb97b878716b8b70f",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 201602636106441,
+  "d4": 7,
+  "unique_base_inputs": 1000,
+  "seconds": 121.49603891698644,
+  "audit_scope": {
+    "protocol": "ROOT/audit.py check() invoked directly for 9772c176 only (no host-summary written)",
+    "fixture": "reference(tid)[canonical] x 8 D4 x 2 palettes, immutable",
+    "fresh": "250 native episodes x 4 pairs x 8 D4, shuffled palette per episode",
+    "native_changed": false,
+    "reviewer_rerun": "independent-review-v6 reran ROOT/audit.py check(9772c176) on 2026-10-21: passed, seconds=121.5"
+  },
+  "rejection_stats": {
+    "sampler_rejections": 0,
+    "solver_raises_on_in_distribution": 0,
+    "note": "solver raises ValueError (never guesses) when no hypothesis or >1 distinct outputs; observed 0 times in-distribution"
+  },
+  "ambiguity_gates": {
+    "random_queries": 1000,
+    "fused_queries": 1000,
+    "checks_each": 8000,
+    "demo_free_unique": 16000,
+    "resampled_demo_exact": 16000,
+    "failures": 0,
+    "brute_force_crosscheck_samples": 600,
+    "brute_force_disagreements": 0,
+    "intrinsic_ambiguity_found": 0,
+    "context_shortfall_found": 0
+  }
+}

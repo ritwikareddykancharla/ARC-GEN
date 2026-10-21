@@ -1,0 +1,30 @@
+{
+  "task_id": "b7955b3c",
+  "author": "host parallel CLI execution worker",
+  "status": "host_audited_passed",
+  "native_changed": false,
+  "explanation": "Direct visible-coordinate program. PLUS=palette[8] is the only role constant; d4 selects nothing because bboxes, containment and the H-2/W-2 extent limits are D4-equivariant. solve enumerates every background hypothesis bg in the 9 non-plus colours (visible or unseen). For each, every other visible colour is a box equal to its visible bbox; a reading is valid only if extents<=W-2/H-2, >=3 corner checks show the box colour, exactly one colour of each overlapping pair is visible in the overlap, the stacking relation is acyclic, and re-rendering reproduces every non-plus cell. All valid readings must render the identical full grid, else ValueError. Demos are only checked (each demo output must equal some valid reading of its input, else ValueError); they never select a reading. No frequency vote, tie-break, fallback, hidden D4 choice or demo skipping.",
+  "gate": "arc_agi2/occluded_boxes_b7955b3c_evidence.py: independent NumPy implementation; plus colour re-derived from demos and cross-checked with palette[8]; stacking by top-down peeling with per-cell topmost lookup; raises IntrinsicAmbiguity with witness or MissingColourEvidence. Query labels unused.",
+  "ambiguity": "Intrinsic (query-only), never context shortfall: the rule needs no demo evidence. Witness in ambiguous-background-witness.json: native-valid scene whose background survives only under a plus; bg 4 vs 5 give identical input/different output; 9 valid readings. Rate 0/20000 native, 0/55767 biased search; gated audit 0 intrinsic rejections, 0 context retries. Constructor fix proposed in constructor-proposal.md (not applied).",
+  "hard_cases_preserved": "Scenes with several agreeing valid readings are solved (e.g. HARD params in tests: 7 valid backgrounds, unique output); 4 found in biased search, all solved.",
+  "assumptions": [
+    "num_boxes(W*H) latent not used: canonical fixtures violate it (5 boxes at area 252, 4 at 140).",
+    "Plus colour is palette[8] in solver; gate re-derives it."
+  ],
+  "tests": [
+    "PYTHONPATH=. .venv/bin/python -m unittest arc_agi2.test_occluded_boxes_b7955b3c_evidence  (9 tests, ~2.5s)",
+    "cd ROOT; PYTHONPATH=FORK:. python audit_occluded_boxes_b7955b3c.py  (gated, 88s) -> host-audit.json / host-audit-gated.json",
+    "python -c \"import audit;audit.check('b7955b3c')\"  (standard, 55s) -> host-audit-standard.json",
+    "python -m arc_agi2.search_b7955b3c_hard_cases 600000 2 investigations/biased-search.json (~5 min)",
+    "PYTHONPATH=. .venv/bin/python -m unittest arc_agi2.test_b7955b3c_independent_review_v6  (5 tests, ~22s)"
+  ],
+  "source_paths": [
+    "arc_agi2/direct_factories/task_b7955b3c.py (== ROOT/b7955b3c/factory.py)",
+    "arc_agi2/occluded_boxes_b7955b3c_evidence.py",
+    "arc_agi2/test_occluded_boxes_b7955b3c_evidence.py",
+    "arc_agi2/search_b7955b3c_hard_cases.py",
+    "ROOT/audit_occluded_boxes_b7955b3c.py"
+  ],
+  "limitations": "Ambiguous queries (unreachable in 75k sampled scenes but constructible) raise instead of answering; they must be rejected by the gate or the proposed constructor fix.",
+  "independent_review_v6": "independent-review-v6.json (passed; factory unchanged; added arc_agi2/test_b7955b3c_independent_review_v6.py)"
+}

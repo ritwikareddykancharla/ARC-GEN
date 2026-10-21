@@ -1,0 +1,27 @@
+{
+  "mechanism": "Demo-selected always versus odd-blue-count recolouring; cursor motion and direction inferred from visible wall/source-colour side. No hidden D4 choice.",
+  "scope": "Explicit competing-hypothesis model, not proof that parity is intended. Preserves canonical labels and native random constructor.",
+  "audit": {
+    "task_id": "dd2401ed",
+    "passed": true,
+    "fresh_pairs_checked": 1000,
+    "augmented_pair_checks": 8000,
+    "fixture_variants_checked": 16,
+    "context_retries": 29,
+    "sampler_failures": [],
+    "canonical_labels_unchanged": true,
+    "native_constructor_unchanged": true,
+    "unique_base_inputs": 1000,
+    "unique_generated_inputs": 1087,
+    "seconds": 15.382176332990639,
+    "factory_sha256": "3f0c7eb45ba55218db8b7ebcfd4c68bc22b5bc460ac72a7be0fef69a80596ede",
+    "evidence_sha256": "e7a63bd051a1945d8cd4d179e6e9aff75a07b37bda89dcb7091acdb211e6b33e",
+    "constructor_sha256": "9ff751409428594666a4d19be417f26d750c230efe85c1fab1c1f998f69c50a8"
+  },
+  "independent_evidence": "Independent atlas and archived Opus both explicitly label parity tentative; upstream issue123 reports anomalous red pixels.",
+  "admissibility": "Exact demo fit, then query unanimity; fixed query retained while insufficient demos resampled.",
+  "gate": "arc_agi2.cursor_recolour_evidence.require_evidence(demonstrations, queries, palette)",
+  "status": "Ready for root integration; completed exact-source audit",
+  "author": "host",
+  "authoring_note": "Host collaboration worker repair; previous CLI drafts and archived references retained as evidence."
+}

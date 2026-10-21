@@ -1,0 +1,266 @@
+{
+ "task_id": "9772c176",
+ "reviewer": "host parallel CLI execution worker (second independent reviewer, v6)",
+ "passed": true,
+ "verdict": "Factory is a real direct visible-coordinate program; no source change needed. Certified on host checks re-run by reviewer.",
+ "source_hashes": {
+  "ROOT/9772c176/factory.py": "fbf24129a496744a802b52c1b6819a3d6e8f314ec5605b82179b8e91f61c8297",
+  "arc_agi2/direct_factories/task_9772c176.py": "fbf24129a496744a802b52c1b6819a3d6e8f314ec5605b82179b8e91f61c8297",
+  "native tasks/task_9772c176.py": "9f90c0054eb9393617df788cce8730cf4c2f04a32301394bb97b878716b8b70f",
+  "common.py": "879eb61e360e4a47ee1d569408e8c66114ac068794721fe1de1b59aaa476586a",
+  "ROOT/audit.py": "801b9b65a420a1ddcd6c0900aa8e28df4b42b7853a4f284ff3bd9b31062ed532",
+  "review_v6_adversarial_9772c176.py": "119e74a5e03f10ea69cf01c9e707274d81fb4585bb0672692b3a5193db122aa8",
+  "test_review_v6_9772c176.py": "e96ea7d8f716b7540d2352a04793400fd1a8c9c36490ec5e70fd6df3d45cd451",
+  "tests_9772c176.py": "5e8a3b2ec1096a80b549b2c31e26fd8fd923e1f88d2a34fe12d0460674eec397"
+ },
+ "host_audit_rerun": {
+  "passed": true,
+  "factory_sha256": "fbf24129a496744a802b52c1b6819a3d6e8f314ec5605b82179b8e91f61c8297",
+  "constructor_sha256": "9f90c0054eb9393617df788cce8730cf4c2f04a32301394bb97b878716b8b70f",
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "unique_base_inputs": 1000,
+  "sampler_rejections": [],
+  "seconds": 121.49603891698644
+ },
+ "tests": [
+  {
+   "cmd": "cd /tmp && PYTHONPATH=/Users/ritwika/projects/ARC-GEN /Users/ritwika/projects/arc-agi2/.venv/bin/python -c \"import sys;sys.path.insert(0,ROOT);import audit;audit.check('9772c176')\"",
+   "result": "passed",
+   "seconds": 121.5
+  },
+  {
+   "cmd": "PY -I ROOT/9772c176/tests_9772c176.py",
+   "result": "7/7 ok",
+   "seconds": 4.1
+  },
+  {
+   "cmd": "PY -I ROOT/9772c176/test_review_v6_9772c176.py",
+   "result": "4/4 ok (corner-contact scenes x8 D4 x palettes vs independent brute, label-free gate, axis-mismatched demos raise, label-free/D4-free source, timing)",
+   "seconds": 21.3
+  },
+  {
+   "cmd": "PY -I ROOT/9772c176/review_v6_adversarial_9772c176.py 500 {11..14}  (4 procs)",
+   "result": "2000 scenes (1500 adversarial explicit-param native scenes + 500 plain native), agree=2000 disagree=0 truth_missing=0 intrinsic=0 cross_axis_diff=0 gate_ok=2000 fused=37",
+   "seconds": 218
+  },
+  {
+   "cmd": "PY -I ROOT/9772c176/review_v6_adversarial_9772c176.py 150 {21..24} fused  (4 procs)",
+   "result": "600 fused native scenes, agree=600 disagree=0 gate_ok=600",
+   "seconds": 247
+  },
+  {
+   "cmd": "PY -I /tmp/rv6_timing_9772c176.py (inline, 400 native episodes, 3 demos)",
+   "result": "solve median 0.007s p99 0.069s max 0.099s (verify timeout 3s)"
+  }
+ ],
+ "independent_crosscheck_totals": {
+  "scenes": 2600,
+  "agree": 2600,
+  "disagree": 0,
+  "truth_missing": 0,
+  "true_axis_multiple_outputs": 0,
+  "other_axis_different_output": 0,
+  "label_free_gate_exact": 2600,
+  "label_free_gate_fail": 0,
+  "fused": 637,
+  "shards": {
+   "11": {
+    "n": 500,
+    "adversarial": 375,
+    "native": 125,
+    "agree": 500,
+    "disagree": 0,
+    "truth_missing": 0,
+    "true_axis_multi": 0,
+    "cross_axis_diff": 0,
+    "gate_ok": 500,
+    "gate_fail": 0,
+    "fused": 15,
+    "kinds": [
+     30,
+     80,
+     247,
+     18
+    ],
+    "seconds": 206.79608297348022
+   },
+   "12": {
+    "n": 500,
+    "adversarial": 375,
+    "native": 125,
+    "agree": 500,
+    "disagree": 0,
+    "truth_missing": 0,
+    "true_axis_multi": 0,
+    "cross_axis_diff": 0,
+    "gate_ok": 500,
+    "gate_fail": 0,
+    "fused": 7,
+    "kinds": [
+     46,
+     86,
+     228,
+     15
+    ],
+    "seconds": 187.115079164505
+   },
+   "13": {
+    "n": 500,
+    "adversarial": 375,
+    "native": 125,
+    "agree": 500,
+    "disagree": 0,
+    "truth_missing": 0,
+    "true_axis_multi": 0,
+    "cross_axis_diff": 0,
+    "gate_ok": 500,
+    "gate_fail": 0,
+    "fused": 4,
+    "kinds": [
+     41,
+     84,
+     234,
+     16
+    ],
+    "seconds": 195.53922986984253
+   },
+   "14": {
+    "n": 500,
+    "adversarial": 375,
+    "native": 125,
+    "agree": 500,
+    "disagree": 0,
+    "truth_missing": 0,
+    "true_axis_multi": 0,
+    "cross_axis_diff": 0,
+    "gate_ok": 500,
+    "gate_fail": 0,
+    "fused": 11,
+    "kinds": [
+     44,
+     83,
+     233,
+     15
+    ],
+    "seconds": 218.37374305725098
+   },
+   "21": {
+    "n": 150,
+    "adversarial": 0,
+    "native": 150,
+    "agree": 150,
+    "disagree": 0,
+    "truth_missing": 0,
+    "true_axis_multi": 0,
+    "cross_axis_diff": 0,
+    "gate_ok": 150,
+    "gate_fail": 0,
+    "fused": 150,
+    "kinds": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "seconds": 203.47630095481873
+   },
+   "22": {
+    "n": 150,
+    "adversarial": 0,
+    "native": 150,
+    "agree": 150,
+    "disagree": 0,
+    "truth_missing": 0,
+    "true_axis_multi": 0,
+    "cross_axis_diff": 0,
+    "gate_ok": 150,
+    "gate_fail": 0,
+    "fused": 150,
+    "kinds": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "seconds": 219.09797286987305
+   },
+   "23": {
+    "n": 150,
+    "adversarial": 0,
+    "native": 150,
+    "agree": 150,
+    "disagree": 0,
+    "truth_missing": 0,
+    "true_axis_multi": 0,
+    "cross_axis_diff": 0,
+    "gate_ok": 150,
+    "gate_fail": 0,
+    "fused": 150,
+    "kinds": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "seconds": 191.56843495368958
+   },
+   "24": {
+    "n": 150,
+    "adversarial": 0,
+    "native": 150,
+    "agree": 150,
+    "disagree": 0,
+    "truth_missing": 0,
+    "true_axis_multi": 0,
+    "cross_axis_diff": 0,
+    "gate_ok": 150,
+    "gate_fail": 0,
+    "fused": 150,
+    "kinds": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "seconds": 246.81782293319702
+   }
+  }
+ },
+ "review_findings": {
+  "output_leakage": "none: emitted solve(demonstrations, grid) reads only demo outputs (single ['output'] access, used for exact demo checks); no imports/IO; audit_target passes",
+  "hidden_parameter_inference": "none: d4 unused (8 D4 emit identical source); palette used only for colour roles bg=palette[0], blob=palette[8], roof=palette[4], an explicit build_program argument; demos must still be reproduced exactly in those roles",
+  "fallbacks": "none: no first/majority/intersection, no D4 tie-break, no reset; ValueError when no axis explains all demos or when surviving hypotheses imply !=1 full output",
+  "demo_skipping": "none: an axis survives only if every demo output is in its hypothesis set (test_demos_are_required_to_be_explained)",
+  "domain_narrowing": "none: parameter ranges equal native (wide 5..2W//3, tall 3..H//2, brow/bcol >=1 with 1-cell margin, trim 1..(wide-3)//2, ordered pairs, spacing-5 overlaps, cap/roof collision rejection, later rect overwrite, off-grid caps clipped); fused and corner-contact scenes solved",
+  "renderer_equivalence": "line-by-line vs native draw(): identical overlap test, cap layer columns range(bcol+1+i, bcol+wide-1-i), checks-before-draw ordering equivalent (native returns None on any failing check), get_pixel OOB=-1, draw clips",
+  "candidate_lemma_proof": "Interior rect rows brow+1..brow+tall-2 are flanked at bcol-1 and bcol+wide by the blob's own first side-roof layer; those cells were checked free of 4/8 in output when drawn (input-8 implies output-8 at all times), the other rect cannot reach them (spacing 5), and the other blob's caps are rejected on 4. So interior rows are exact maximal runs. Rows brow-1/brow+tall (own cap layer 0, width wide-2) cannot be an exact [bcol,bcol+wide-1] run because the other blob contributes at most one contiguous segment per row and covering both ends would collide with the cap. Hence the block of identical exact runs is interior rows plus optionally the two corner rows, and ra0 in {i0-1,i0}, ra1 in {i1,i1+1} always contains the truth. Empirically confirmed by brute over all sub-rectangles (corner-contact witnesses in test_review_v6).",
+  "ambiguity": "no intrinsic ambiguity or context shortfall observed (prior 100000-sample stats + 2600 reviewer scenes). Transpose-symmetric blobs (e.g. wide=tall+2, trim=1) admit an other-axis reading but imply the same roof set. If demos ever left both axes alive with different query outputs the program raises (not guesses); axis-mismatched demos raise in test.",
+  "evidence_gate": "callable label-free as [solve(demos, q['input']) for q in queries] with queries=[{'input': grid}], also with demos=[] (demo-free unique)"
+ },
+ "issues": [
+  "host-audit.json was overwritten by the reviewer's audit rerun; prior audit_scope/rejection_stats/ambiguity_gates fields were merged back verbatim with a reviewer_rerun note",
+  "counterexample.json in ROOT/9772c176 is a stale artifact of an older factory (kept; prior-fused test now passes on it)",
+  "arc_agi2/direct_factories/9772c176.json (certificate report read by certified_factory_source) does not exist; it is outside this worker's write scope",
+  "roof colour in demo-free use comes from palette[4]; shared colour_evidence has no task-specific gate for 9772c176 (demo outputs always contain roof, since side roofs are always drawn)"
+ ],
+ "recommended_integration": {
+  "factory": "arc_agi2/direct_factories/task_9772c176.py (already byte-identical to ROOT/9772c176/factory.py, sha256 fbf24129a496744a802b52c1b6819a3d6e8f314ec5605b82179b8e91f61c8297)",
+  "certificate_report": "host: copy ROOT/9772c176/host-audit.json to arc_agi2/direct_factories/9772c176.json (qualifies(): passed, fresh 1000, augmented 8000, unique 1000, fixture_variants 16, hashes match)",
+  "tests": [
+   "ROOT/9772c176/tests_9772c176.py",
+   "ROOT/9772c176/test_review_v6_9772c176.py",
+   "ROOT/9772c176/review_v6_adversarial_9772c176.py"
+  ]
+ },
+ "required_dispatch_signature": "build_program(d4:int, palette:list[int]) -> str; emitted source defines solve(demonstrations:list[{'input','output'}], grid) -> grid, raising ValueError when unidentified; gate use: [solve(demos, q['input']) for q in queries]",
+ "native_changed": false,
+ "constructor_fix_proposed": false,
+ "factory_changed_by_reviewer": false,
+ "assumptions": [
+  "exactly two blobs per scene (native invariant)",
+  "input contains only bg and blob colours; otherwise ValueError"
+ ],
+ "runtime_note": "native sampling is fast here (0 sampler rejections); not a slow-sampler task"
+}

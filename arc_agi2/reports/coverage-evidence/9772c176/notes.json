@@ -1,0 +1,41 @@
+{
+  "task_id": "9772c176",
+  "author": "host parallel CLI execution worker",
+  "status": "host_audited_passed",
+  "program": "Direct visible-coordinate scene enumerator. Colour roles from palette (bg=palette[0], blob=palette[8], roof=palette[4]); d4 is NOT used (emitted source identical for all 8 D4). For each cap axis (rows or columns of the visible grid) it enumerates every pair of constructor blobs (rect+cap octagons obeying wide/tall/brow/bcol/trim ranges) whose cells lie in the blob mask, keeps ordered pairs whose exact re-drawing (spacing-5 rect test, cap/roof collision rejection, rect overwrite) reproduces the input, and collects implied outputs. An axis survives only if every demonstration output is reproduced (no demo skipping). Output is returned only if all surviving hypotheses imply one identical full grid; otherwise ValueError. No first/majority/intersection fallback, no D4 tie-break, no reset.",
+  "candidate_lemma": "Each rect interior row is bounded by its own first side-roof layer, which the constructor keeps free of 8 (own B-checks; A side roofs unreachable by B rect by spacing, B caps rejected on 4). Hence interior rows are an exact maximal run [t0,t1], and rect first/last row is the end of or one beyond the maximal block of identical exact runs. Verified empirically against an independent brute force over ALL sub-rectangles and native renderer on 600 samples (480 fused): identical hypothesis sets.",
+  "hard_cases_preserved": "Fused scenes (blob caps touching/penetrating the other blob, ~2.1% of native samples, 2097/100000) are solved, not filtered; constructor not narrowed.",
+  "ambiguity": "No intrinsic ambiguity and no context shortfall found: 100000 native inputs, 0 with >1 output on the true axis, 0 where the other-axis hypotheses imply a different output; query alone identifies the output (demo-free gate 16000/16000).",
+  "tests": {
+    "unit": "/Users/ritwika/projects/arc-agi2/.venv/bin/python -I ROOT/9772c176/tests_9772c176.py  (7 tests, ~5s)",
+    "audit": "cd /tmp && PY -c \"import sys;sys.path.insert(0,ROOT);import audit;audit.check('9772c176')\"  (193s)",
+    "gate": "PY -I ROOT/9772c176/gate_9772c176.py LO HI {0|1}  (5x200 each, ~66s/proc)",
+    "brute": "PY -I ROOT/9772c176/brute_9772c176.py 60 SEED {1|0}  (~300s/proc)",
+    "stats": "PY -I ROOT/9772c176/stats_9772c176.py 25000 SEED (~48s/proc)"
+  },
+  "evidence": [
+    "host-audit.json",
+    "evidence-9772c176.json",
+    "tests_9772c176.py",
+    "counterexample-prior-fused.json (prior failing fused episode, now passes)",
+    "independent-review-v6.json",
+    "test_review_v6_9772c176.py",
+    "review_v6_adversarial_9772c176.py",
+    "integration-ready-v10.json"
+  ],
+  "assumptions": [
+    "exactly two blobs per scene (constructor invariant)",
+    "input contains only bg and blob colours"
+  ],
+  "source_paths": [
+    "ROOT/9772c176/factory.py",
+    "/Users/ritwika/projects/ARC-GEN/tasks/task_9772c176.py",
+    "/Users/ritwika/projects/ARC-GEN/common.py",
+    "ROOT/audit.py"
+  ],
+  "native_changed": false,
+  "constructor_fix_proposed": false,
+  "note_stale_file": "counterexample.json is the previous factory failure artifact (kept unmodified, copy in counterexample-prior-fused.json)",
+  "independent_review_v6": "independent-review-v6.json (passed; factory unchanged; audit rerun passed)",
+  "integration_ready_v10": "integration-ready-v10.json (portable fork tests arc_agi2/test_9772c176_integration_v10.py 9/9 OK; input-only context gate not needed; factory unchanged)"
+}

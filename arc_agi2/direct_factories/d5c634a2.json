@@ -1,0 +1,54 @@
+{
+  "task_id": "d5c634a2",
+  "factory_sha256": "7889f3129f3eef90574126600fa30be1423350815f9a1b364786ec323496060d",
+  "constructor_sha256": "3cf515b79b114b5be10e62a1565cd698470ad43e759ab6b898d0cac7970bc841",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 20018975484890,
+  "d4": 7,
+  "unique_base_inputs": 992,
+  "seconds": 24.000271875062026,
+  "scope": "Live constructor with reviewed exact-duplicate placement rejection; immutable original fixture passes.",
+  "constructor_fix": "Reject identical latent (row,col,cdir) placements only in random sampling; explicit fixture path unchanged.",
+  "independent_gate": "arc_agi2/t_tally_d5c634a2_evidence.py",
+  "gate_scope": "Demo sufficient direction-to-colour and tally-prefix evidence; queries supplied as input only.",
+  "review_report": "arc_agi2/reports/coverage-evidence/d5c634a2/independent-review-v8.json",
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "task_id": "d5c634a2",
+    "author": "host parallel CLI execution worker",
+    "status": "unresolved_native_constructor_defect; factory exact on canonical fixtures and on proposed constructor",
+    "native_changed": false,
+    "factory_sha256": "7889f3129f3eef90574126600fa30be1423350815f9a1b364786ec323496060d",
+    "native_constructor_sha256": "ae4815e88a27242fb6e08e91429d78f071dcf63f71c2f5b972ffc70ba4d1e04d",
+    "proposed_constructor_sha256": "d15fb53f8087e521da2f26f8f818dc564c462041924dc69ebb7b040627ae1d29",
+    "mechanism": "Count the T-tetrominoes by stem direction. Ts with the stem on the canonical up side (stem at row-1) produce palette[3] marks at corners (0,0),(2,0),(0,2),(2,2) of a 3x6 canvas, in that order. Ts with the stem on the down side produce palette[1] marks at the same corners +3 columns. Background is palette[0] and objects are palette[2]. The factory maps the up vector (-1,0), the bar vector (0,1) and all 8 tally cells forward through the transformed() D4 convention: column reversal when d4>=4, then (d4%4) clockwise turns. The emitted solve() runs on visible coordinates. It counts a stem cell s for direction d when s-d and its two bar neighbours are FG, the two bar-axis neighbours of s are not FG, and s+d is not FG. This handles bars that touch or share a cell on the same border row, which native allows because its adjacency check only looks at interior cells. There is no first/majority fallback, no D4 search, no demo skipping and no label use.",
+    "constructor_defect": "The random branch samples (row,col,cdir) with replacement. An exact duplicate paints the same cells and its ids overwrite its twin, so the interior adjacency check passes. cdirs.count() still tallies it, so the label counts an object that is invisible in the input. Two identical-input/different-label witnesses are in d5c634a2-evidence-report.json native_witnesses, both produced by native generate() with legal random-branch latents. No visible-coordinate program can match the native labels on these inputs.",
+    "proposed_fix": "proposed_constructor.py (see proposed_constructor.diff): in the random branch, reject a draw if len(set(zip(rows, cols, cdirs))) < len(cdirs). Nothing else changes. Size range, num_boxes, count bounds, border-row merges (235/4000 proposed pairs keep merged border bars) and the explicit validate() fixture path are all preserved, so the canonical fixtures are byte-identical.",
+    "independent_verification": "d5c634a2_evidence.py works in the generator frame, independently of the factory. It enumerates every set of distinct native-legal placements whose union equals the input and which pass a replay of native draw() adjacency in some draw order (overlapping placements are permuted). Under the proposed constructor every one of 4000 base pairs has exactly one tally, and it equals the label. Demo-evidence gate hypothesis space: orientation<->(colour,block) bijection x arbitrary per-block fill order over all block cells. 406/1000 queries pass with the original demos. 594 were context shortfalls, resolved by resampling demos while keeping the query (2012 draws). 0 stayed unresolved, and none was intrinsic. Unit tests cover touching and shared-cell border bars under 8 D4 x 2 palettes.",
+    "tests": [
+      "PYTHONPATH=/Users/ritwika/projects/ARC-GEN /Users/ritwika/projects/arc-agi2/.venv/bin/python -c \"import audit; audit.check('d5c634a2')\"  (cwd ROOT; 0.12s; native FAIL at fresh_program after 8 pairs, 16/16 fixtures pass)",
+      "PYTHONPATH=/Users/ritwika/projects/ARC-GEN /Users/ritwika/projects/arc-agi2/.venv/bin/python ROOT/d5c634a2/d5c634a2_evidence.py  (~47s)",
+      "PYTHONPATH=/Users/ritwika/projects/ARC-GEN /Users/ritwika/projects/arc-agi2/.venv/bin/python ROOT/d5c634a2/d5c634a2_proposed_hostaudit.py  (~18s; PROPOSED pass 1000/8000/16, 992 unique inputs)"
+    ],
+    "source_paths": {
+      "factory": "ROOT/d5c634a2/factory.py",
+      "direct_factory_copy": "/Users/ritwika/projects/ARC-GEN/arc_agi2/direct_factories/task_d5c634a2.py (no .json certificate written)",
+      "native": "/Users/ritwika/projects/ARC-GEN/tasks/task_d5c634a2.py",
+      "proposed": "ROOT/d5c634a2/proposed_constructor.py"
+    },
+    "assumptions": [
+      "The tally clips at 4 per type. Both native bounds and the fixtures stay within 1..4.",
+      "The num_boxes=(W+H)//4 formula is not treated as a puzzle rule, because the canonical fixtures contradict it.",
+      "The gate is evaluated in the canonical frame. It is D4/palette invariant because transformed() is a bijection on cells and colours."
+    ],
+    "remaining_issue": "Native certification is impossible without the host applying the proposed constructor fix (or excluding hidden-duplicate draws). host-audit.json passed=false is the honest native result.",
+    "independent_review_v8": "See independent-review-v8.json. Second reviewer verified the factory unchanged (sha 7889f312...). Added the portable frame-free gate arc_agi2/t_tally_d5c634a2_evidence.py and the test arc_agi2/test_d5c634a2_independent_review_v8.py. Retained-query gated audit on the proposed constructor: 1000/1000 episodes, 4000 pairs, 32000 augmented checks, 3900 unique inputs, 0 intrinsic. Native stays unresolved.",
+    "live_constructor_update": "Host applied duplicate-placement fix on2026-10-21 and reran1000/8000/16 audit with live constructor SHA3cf515b79b114b5be10e62a1565cd698470ad43e759ab6b898d0cac7970bc841. Proposed-only statuses in earlier reviews are historical."
+  }
+}

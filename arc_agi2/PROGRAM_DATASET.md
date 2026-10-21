@@ -1,5 +1,7 @@
 # Combined program and grid dataset
 
+**Current status (2026-10-21): 1,115 / 1,120 families admitted for program-target generation; 5 remain.** Production generation and SFT await completion. The dated entries below are historical progress. Coverage includes explicitly labelled teaching contexts, not a claim of solving every original benchmark context.
+
 Exports use **one episode per row**, containing a lossless PNG and a
 JSON record with both the program and the output grids. Images include query
 answers for human inspection; only `prompt` and `completion` are model inputs
@@ -23,8 +25,8 @@ unsupported size strata produce explicit shortfalls, not padding.
 3. Every exported demonstration and query must match exactly. If any spatial
    variant fails, none of that base episode's variants are accepted.
 4. Original benchmark labels are unchanged. Approved teaching corrections keep
-   explicit provenance. Three unresolved native-label conflicts remain outside
-   the admitted program set.
+   explicit provenance. Remaining native-label conflicts stay outside
+   the admitted program set until reviewed.
 
 Fresh native-program audits distinguish sampler failures from program failures.
 They do not retry mismatching programs until an easy example passes. Five
@@ -35,7 +37,7 @@ recorded. Passing finite audits does not prove unrestricted generalization.
 
 - 213 native direct-coordinate certificates admitted after fresh audits and
   supplied-fixture checks.
-- 820 admitted factories. Each passed 1,000 fresh pairs, 8,000 augmented pair
+- 896 admitted factories. Each passed 1,000 fresh pairs, 8,000 augmented pair
   checks and 16 supplied-fixture variants. Their audit records retain draft
   limitations and source/constructor hashes. These checks are finite evidence,
   not proof of correctness on every generated input.
@@ -46,7 +48,7 @@ recorded. Passing finite audits does not prove unrestricted generalization.
   counts must be computed as a union, not added.
 - Local exporter test: 18 fresh base episodes, 144 augmented PNG/program/grid
   records. It requested 20 bases and reported a two-episode shortfall.
-- The union currently admits 1039 of 1,120 families; 81 still need direct
+- The union currently admits 1115 of 1,120 families; 5 still need direct
   augmented program admission. Constructor coverage and program coverage are
   different gates.
 - Synthetic labels for `00d62c1b` now fill every enclosed background component,
@@ -1614,3 +1616,46 @@ All 703 regression tests pass. 27 program families remain. This is verification 
 ### Verified program coverage: 1,094 / 1,120
 
 de809cff now partitions solid-core fragments into rectangle hypotheses, checks the single/domino-hole grammar, and requires agreement across every surviving complete reconstruction. It preserves the original fragmented-core query and correctly handles a native-valid foreign-pixel bridge that defeated the old run-merging heuristic. Native constructor unchanged. Audit: 1,000 unique native pairs, 8,000 augmentation checks, 16 fixture variants; five focused tests pass in addition to the preceding 703-test suite. 26 families remain; expanded dataset and SFT still await coverage.
+
+
+### Verified program coverage: 1,102 / 1,120
+
+Eight more families: 9356391f, 963c33f8, 985ae207, a3f84088, b230c067, d931c21c, df8cc377, e1d2900e. Each has 1,000 fresh pair checks and 8,000 augmentation checks; these audits are not the requested production quota of 1,000 episodes per family. Reports retain distinct-input counts and any sampling rejections.
+
+9356391f now marks clipped rings consistently; e1d2900e selects the nearest square using Chebyshev distance, with demonstrated tie conventions. Their original fixtures are unchanged. The 963c33f8 six-cell teaching hypothesis, a3f84088 one-cell teaching correction and d931c21c one-cell upstream-proposed correction are explicitly labelled and hash-pinned; original benchmark labels stay unchanged. Competing interpretations for 963c33f8 remain documented.
+
+df8cc377 requires a context-enriched teaching fixture: one native demonstration identifies checkerboard phase. All original pairs remain unchanged, but the original three-demo context still abstains and is NOT counted as an unaided benchmark solution. Its 16 fixture checks refer to the enriched context. Fresh queries retain their inputs while phase-insufficient demonstrations are resampled.
+
+985ae207 retains its slow native domain. A compiled proposal sampler preserves its proposal/acceptance rules and is checked against the unchanged native renderer; the audit required about 716 million proposals. Production acceleration remains separate work.
+
+18 program families remain under parallel repair/review. Production dataset generation and SFT have not launched.
+
+
+### Verified program coverage: 1,107 / 1,120
+
+Five more families: b942fd60, dd2401ed, b7955b3c, 85fa5666, e5062a87. Original labels and native constructors remain unchanged. Demonstrations select explicit ray thresholds, cursor recolouring and stamping hypotheses. Missing context triggers demo resampling with the query retained; intrinsic box-occlusion ambiguity rejects the query with a witness. Hypothesis agreement is relative to the documented candidate rules, not proof that no other ARC interpretation exists.
+
+All five pass 1,000 fresh pair checks, 8,000 augmented checks and 16 canonical fixture variants. Three also passed a second independent Claude CLI review and repeated audits. The 748-test regression had one outdated canonical-only fixture test: it now follows the explicit hash-pinned teaching-fixture policy and passes across the current factory set. The other 747 tests passed unchanged. Additional integrated gate/program tests pass. Thirteen program families remain; production dataset generation and model training remain pending coverage.
+
+
+### Verified program coverage: 1,109 / 1,120
+
+e048c9ed and f3e14006 now select between explicit visible mechanisms using demonstrations, retaining every original label. Each passes 1,000 fresh pair checks, 8,000 D4/palette checks and 16 canonical variants; 21 focused tests pass together. Context-only retries retain queries. e048c9ed has 913 distinct inputs and 68 context retries; f3e14006 has 1,000 distinct inputs and 123 retries.
+
+The e048c9ed hypothesis family excludes marker-coloured bars when choosing a repeated-length reference. This is an explicit scope assumption: including the rival that counts those bars makes the original query ambiguous. The retained report demonstrates that ambiguity; no universal-rule claim is made. f3e14006 enumerates plain weave and nearest-marker parity-boundary variants, including tied markers and orientations.
+
+Eleven program families remain. Production data and SFT still await coverage.
+
+
+### Verified program coverage: 1,114 / 1,120
+
+b1986d4b, 9772c176, d753a70b, c6e1b8da and d5c634a2 are admitted. Each has 1,000 fresh-pair checks, 8,000 augmentation checks and16 fixture variants. c6 additionally passed12,000 independently examined native/dense scenes; intrinsically ambiguous visible inputs are rejected rather than assigned contradictory targets. b198 enumerates possible visible backgrounds instead of assuming the majority colour.
+
+d753 uses an explicitly labelled ten-cell concentric teaching hypothesis. Its original canonical context remains unsolved; original labels and query answers are unchanged in the benchmark. d5's random sampler now rejects exact duplicate latent placements, which were invisible but counted twice in outputs. Its explicit fixture branch is unchanged, and the live patched source passed a new full audit. These are finite checks under the documented rule hypotheses and context gates.
+
+This is coverage work, not production episode counts. The dataset quota remains1,000 fresh base episodes per family with program AND grid in each record, followed by consistent D4/colour augmentation. SFT has not launched.
+
+
+### Verified program coverage: 1,115 / 1,120
+
+ac0c5833 passes1,000 unique fresh pairs,8,000 augmentation checks,16 original fixture variants and11 tests. It distinguishes ordinary template copies from a geometric hollow-outline trim using demonstrations. Overlapping stamps combine their painted pixels; there is no learned per-shape lookup table. Original labels and native constructor remain unchanged. Context resampling retains the query; the gate consumes query inputs only. Five families remain.

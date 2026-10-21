@@ -1,0 +1,36 @@
+{
+  "status": "proposed teaching copy; awaiting fixture-policy integration",
+  "canonical_difference": [
+    {
+      "split": "train",
+      "pair_index": 3,
+      "row": 5,
+      "col": 5,
+      "canonical": 0,
+      "proposed": 5
+    }
+  ],
+  "upstream": {
+    "url": "https://github.com/fchollet/ARC-AGI/issues/132",
+    "state": "open issue; not official adopted correction"
+  },
+  "mechanism": "Paint concentric square rings with repeating frame,new,frame,background cycle. The final center follows the same depth rule on every canvas.",
+  "constructor_proposal": "Root approved applying proposed constructor: active native now removes only size13-center omission and width13 exclusion. Canonical reference labels untouched; proposed teaching fixture still separately labelled.",
+  "independent_gate": "arc_agi2.outline_teaching_evidence.require_ring_teaching_evidence. Direct source uses minimum side distance; gate peels and paints rectangular perimeter layers. Both validate demos and only read query inputs.",
+  "fixture_claim": "Only proposed teaching fixture audited. Canonical fourth demonstration intentionally rejected. No canonical pass claimed.",
+  "gate_query_schema": "Accepts input dictionaries; ignores query output fields, covered by poisoned-answer unit test.",
+  "live_teaching_policy_audit": {
+    "task_id": "a3f84088",
+    "factory_sha256": "49b860717d5974fd9ceb45b4af3c8b443bf699e190243c4384ad27ab430a6ced",
+    "constructor_sha256": "331df537ec28cc6096a4fc371e5c46f85f497897758f95351d45246c7145ac00",
+    "passed": true,
+    "fresh_pairs_checked": 1000,
+    "augmented_pair_checks": 8000,
+    "fixture_variants_checked": 16,
+    "sampler_rejections": [],
+    "seed": 250638992149778,
+    "d4": 7,
+    "unique_base_inputs": 767,
+    "seconds": 16.825791208073497
+  }
+}

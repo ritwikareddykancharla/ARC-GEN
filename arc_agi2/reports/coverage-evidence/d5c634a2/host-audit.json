@@ -1,0 +1,19 @@
+{
+  "task_id": "d5c634a2",
+  "factory_sha256": "7889f3129f3eef90574126600fa30be1423350815f9a1b364786ec323496060d",
+  "constructor_sha256": "3cf515b79b114b5be10e62a1565cd698470ad43e759ab6b898d0cac7970bc841",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "seed": 20018975484890,
+  "d4": 7,
+  "unique_base_inputs": 992,
+  "seconds": 24.000271875062026,
+  "scope": "Live constructor with reviewed exact-duplicate placement rejection; immutable original fixture passes.",
+  "constructor_fix": "Reject identical latent (row,col,cdir) placements only in random sampling; explicit fixture path unchanged.",
+  "independent_gate": "arc_agi2/t_tally_d5c634a2_evidence.py",
+  "gate_scope": "Demo sufficient direction-to-colour and tally-prefix evidence; queries supplied as input only.",
+  "review_report": "arc_agi2/reports/coverage-evidence/d5c634a2/independent-review-v8.json"
+}

@@ -1,0 +1,155 @@
+{
+ "task_id": "c6e1b8da",
+ "reviewer": "host parallel CLI execution worker (second independent reviewer, v6)",
+ "passed": true,
+ "native_changed": false,
+ "factory_changed_by_review": false,
+ "verdict": "Factory is a correct direct visible-coordinate program. No output leakage, no D4 constant, no tie-break/fallback/clipping, demos checked (contradictions raise), only latent (still-box stacking order) handled by all-hypotheses-agree-or-raise. Certified only together with the label-free identifiability gate: native generate() emits intrinsically ambiguous queries at ~1/2000 pairs.",
+ "source_hashes": {
+  "factory_ROOT": "eb46fc90d63c6aa1c9e534cfb6157281da2b161601e2601460c334c6babdc455",
+  "factory_integrated": "eb46fc90d63c6aa1c9e534cfb6157281da2b161601e2601460c334c6babdc455",
+  "native_constructor": "7373350a8e68de14ce950aa8ab902d0693797988c82283ae228597d558e049a3",
+  "host_audit_factory_sha256": "eb46fc90d63c6aa1c9e534cfb6157281da2b161601e2601460c334c6babdc455",
+  "host_audit_constructor_sha256": "7373350a8e68de14ce950aa8ab902d0693797988c82283ae228597d558e049a3",
+  "dispatch_gate": "c076dd896302073bfe2795240329dc17383260a9639fdcf8206cdd927c4e93de",
+  "native_replay_gate": "8375d31c33f5d0d7d011eb7aa1049a4c242852214383f2fc3b83d5d217cf79f6",
+  "hashes_match": true
+ },
+ "tests": [
+  {
+   "name": "gated host audit rerun (author script, unchanged)",
+   "command": "cd ROOT && PYTHONPATH=FORK /Users/ritwika/projects/arc-agi2/.venv/bin/python audit_stacking_c6e1b8da.py",
+   "result": {
+    "passed": true,
+    "fresh_pairs_checked": 1000,
+    "augmented_pair_checks": 8000,
+    "fixture_variants_checked": 16,
+    "unique_base_inputs": 1000,
+    "demo_identifiability_rejections": 1,
+    "rejected_query_raise_checks": 8,
+    "gate_label_agreements": 1000,
+    "multi_order_identifiable_pairs": 357,
+    "query_identifiability_rejections": 1,
+    "seconds": 78.9,
+    "identical_to_prior_record_except_seconds": true
+   }
+  },
+  {
+   "name": "review-v6 audit via dispatch-style gate, fresh seed stream",
+   "command": "PYTHONPATH=FORK /Users/ritwika/projects/arc-agi2/.venv/bin/python ROOT/c6e1b8da/audit_review_v6_c6e1b8da.py",
+   "result": {
+    "passed": true,
+    "fresh_pairs_checked": 1000,
+    "augmented_pair_checks": 8000,
+    "fixture_variants_checked": 16,
+    "unique_base_inputs": 1000,
+    "gate_calls": 1000,
+    "context_shortfall_demo_resamples": 0,
+    "rejected_query_raise_checks": 0,
+    "seconds": 92.6,
+    "intrinsic_query_rejections": 0
+   }
+  },
+  {
+   "name": "review-v6 focused tests (3 implementations: factory / pure-Python dispatch gate / native replay)",
+   "command": "PYTHONPATH=FORK /Users/ritwika/projects/arc-agi2/.venv/bin/python ROOT/c6e1b8da/test_c6e1b8da_review_v6.py 6000 6000",
+   "result": {
+    "hashes": {
+     "factory": "eb46fc90d63c6aa1c9e534cfb6157281da2b161601e2601460c334c6babdc455",
+     "constructor": "7373350a8e68de14ce950aa8ab902d0693797988c82283ae228597d558e049a3"
+    },
+    "fixture_variants": 16,
+    "intrinsic_witness_checks": 48,
+    "agreement": {
+     "native": 6000,
+     "dense": 6000,
+     "accepted": 11994,
+     "accepted_multi_order": 2247,
+     "rejected_intrinsic": 6,
+     "mismatches": 0
+    },
+    "seconds": 699.1
+   },
+   "covers": [
+    "host-audit hashes equal current factory/integrated/native bytes",
+    "audit_target + verify on fixture x16 with gate called on queries=[{input}] only",
+    "3 intrinsic witnesses x16 variants: gate raises IntrinsicAmbiguity, _recover and solve raise",
+    "ambiguous demo -> MissingColourEvidence (context shortfall), not intrinsic",
+    "corrupted demo output -> gate rejects and solve raises (no silent skip)",
+    "query label presence/value never changes gate decision",
+    "6000 unbiased native draws + 6000 dense-overlap scenes, canonical + random D4/palette each: 0 mismatches, 2247 accepted multi-order hard cases, 6 intrinsic rejections"
+   ]
+  },
+  {
+   "name": "author focused test rerun",
+   "command": "cd FORK && PYTHONPATH=. /Users/ritwika/projects/arc-agi2/.venv/bin/python ROOT/c6e1b8da/test_c6e1b8da_stacking.py",
+   "result": {
+    "scenes": 3000,
+    "accepted": 2999,
+    "accepted_multi_order": 98,
+    "rejected": 1,
+    "mismatches": 0,
+    "seconds": 89.3
+   }
+  },
+  {
+   "name": "standard audit.py record (not rerun: it overwrites host-audit.json; factory/native hashes unchanged)",
+   "result": {
+    "passed": true,
+    "fresh_pairs_checked": 1000,
+    "augmented_pair_checks": 8000,
+    "fixture_variants_checked": 16,
+    "unique_base_inputs": 1000,
+    "factory_sha256": "eb46fc90d63c6aa1c9e534cfb6157281da2b161601e2601460c334c6babdc455",
+    "constructor_sha256": "7373350a8e68de14ce950aa8ab902d0693797988c82283ae228597d558e049a3"
+   }
+  }
+ ],
+ "review_checks": {
+  "output_leakage": "none: solve reads demo outputs only to check consistency; query label never enters program or gates (tested by label-swap test).",
+  "hidden_parameter_inference": "none: only palette[0] (background) is specialised; d4 unused; stick side/length read from visible grid.",
+  "rule_specific_hardcoding": "MAX_STILL=6 enumeration bound (native max 3 still) raises beyond; no coordinates or colours hardcoded.",
+  "ambiguous_fallbacks": "none: len(outputs)!=1 raises; no first/majority/intersection, no reset, no clipping.",
+  "domain_narrowing": "none in program; gate rejects only intrinsically ambiguous queries (6/12000 scenes); hidden still corners, sticks over still boxes, visible still/still overlaps and multi-order-agreeing scenes (2247/12000) are kept.",
+  "hard_cases": "agreement with native replay of every still order exact on all 11994 accepted scenes under canonical + random D4/palette."
+ },
+ "issues": [
+  {
+   "id": "gate-signature",
+   "severity": "integration",
+   "status": "fixed (new task-named file)",
+   "detail": "Author gate evidence_c6e1b8da.gate(generate, grid) needs the native generator and native coordinates; it cannot be dispatched as require_colour_evidence(tid, demos, [{\"input\": q}], palette, d4). Added slide_stack_c6e1b8da_evidence.py (pure Python, visible coordinates, no native import) with the dispatch signature; agrees with native replay on 12000 scenes."
+  },
+  {
+   "id": "intrinsic-ambiguity",
+   "severity": "dataset",
+   "status": "open, documented, not hidden",
+   "detail": "Unfiltered native draws make the (correct) program raise about once per ~2000 pairs (6/12000 here; seed 61860021 witness). The standard audit.py seed stream happens to avoid them (~60% chance for a 1000-pair stream). Builders MUST call the gate; or host may apply the constructor proposal in notes.json (reject draws where another still-box order passes draw() with identical input and different output)."
+  },
+  {
+   "id": "demo-identifiability",
+   "severity": "context",
+   "status": "handled",
+   "detail": "verify() solves each demo as a query, so ambiguous demos are a context shortfall: gate raises MissingColourEvidence (resample demos, keep query), distinct from IntrinsicAmbiguity on the query (drop query)."
+  }
+ ],
+ "recommended_integration": {
+  "factory": "arc_agi2/direct_factories/task_c6e1b8da.py (already byte-identical to ROOT/c6e1b8da/factory.py, sha above)",
+  "evidence_module": "arc_agi2/slide_stack_c6e1b8da_evidence.py <- copy of ROOT/c6e1b8da/slide_stack_c6e1b8da_evidence.py (relative import of .colour_evidence.MissingColourEvidence already supported)",
+  "tests": "arc_agi2/test_slide_stack_c6e1b8da_evidence.py <- adapt ROOT/c6e1b8da/test_c6e1b8da_review_v6.py (portable via ARC_GEN_FORK)",
+  "audit": "ROOT/c6e1b8da/audit_review_v6_c6e1b8da.py, ROOT/audit_stacking_c6e1b8da.py"
+ },
+ "required_dispatch_signature": "in arc_agi2.colour_evidence.require_colour_evidence: if task_id == 'c6e1b8da': from .slide_stack_c6e1b8da_evidence import require_c6e1b8da_evidence; require_c6e1b8da_evidence(demonstrations, queries, list(range(10)) if palette is None else palette, d4); return  -- raises IntrinsicAmbiguity (subclass of MissingColourEvidence) for a non-identifiable query (drop query), plain MissingColourEvidence for demo shortfall (resample demos). Callable as require_c6e1b8da_evidence(demos, [{'input': grid}]) with no labels.",
+ "assumptions": [
+  "background = palette[0]",
+  "native constructor unchanged (changed:false)",
+  "gate validity = constructor draw() output 3-corner check; order-independent native bounds checks are irrelevant to the latent"
+ ],
+ "runtime_seconds": {
+  "review_test": 699.1,
+  "review_audit": 92.6,
+  "gated_audit_rerun": 78.9,
+  "author_test": 89.3
+ },
+ "remaining_issue": "Integration requires the gate (or constructor proposal); host must register dispatch. No task-owned bug found in factory."
+}

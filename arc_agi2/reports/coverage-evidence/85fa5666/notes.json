@@ -1,0 +1,49 @@
+{
+  "task_id": "85fa5666",
+  "author": "host parallel CLI execution worker",
+  "status": "certified_gated_scope (ROOT/audit.py ungated protocol fails by design; see limitations)",
+  "factory_sha256": "d26a891e00b020cce00dc49f119e3056810f29aa1cd5fd6da5949599a4f2d34f",
+  "constructor_sha256": "edfea3ae35337ba857c7a286833aedd896ac672c6c7053117df9c044da7d3f22",
+  "native_changed": false,
+  "fixture": "canonical (immutable, unmodified)",
+  "explanation": "Direct visible-coordinate rule. Find isolated 2x2 boxes of palette[2] on palette[0]. Rotate the four diagonal corner colours one step (clockwise for d4 0-3, counter-clockwise for reflected d4 4-7). Each new corner casts a diagonal ray away from its box, painting background until a box cell or border. Two stop details are not fixed by the constructor as a whole. (a) Obstacle: pass over another box corner cell, as the random path does, or stop there. (b) Join: never stop (random path); stop after painting a cell orthogonally next to a same-coloured corner whose own first ray cell is free (canonical pair 2, archived/Opus explanation); or the same, but only when the next diagonal step clips a box cell. The emitted solve() keeps every one of the 6 readings that reproduces all demonstrations exactly. It returns the query output only if all survivors agree on the full grid; otherwise it raises ValueError. No voting, no prior ordering, no first or majority pick, no demo skipping, no reset when nothing survives (also ValueError). No hidden D4 search: chirality comes from the given d4, roles from palette.",
+  "diagnosis": "Constructor conflict, proven with concrete evidence in test_85fa5666.py. validate() train pair 2 uses extra_rows=[8,9], extra_cols=[1,0]: the same input yields two outputs that differ only at (8,1),(9,0). The random path produces the same geometry and colours with continuation: witness generate(size=8,brows=[1,5],bcols=[4,2],colors=[3,6,8,7,3,8,7,6]) keeps (5,1),(6,0)=7. No input-only rule fits both, so the solver has to be demo-conditional. On the canonical fixture, continuation is refuted by pair 2; join and graze (each with pass or stop obstacle) survive and agree on every query, so the fixture is identified in all 16 variants. On native random episodes, continuation always survives. About 10% of raw episodes (26/250 on audit seeds; 11/120 on extra seeds) have demos that do not refute a join reading while the query contains the geometry. Those episodes are genuinely ambiguous: context shortfall, not intrinsic. Resampling only the 3 demos with the native generator, query kept, resolved all 26 within 1-11 draws.",
+  "previous_drafts": "ROOT/85fa5666 earlier factory chose join if join_ok>cont_ok, a demo vote, and fell back to continuation otherwise: a hidden prior. It passed ROOT/audit.py only because of that prior. coverage-repairs-v3 factory ignored demos (continuation only) and fails canonical train pair 2 under verify(), which also checks the demo pairs. Both replaced.",
+  "tests": {
+    "commands": [
+      "cd ROOT/85fa5666 && PYTHONPATH=/Users/ritwika/projects/ARC-GEN /Users/ritwika/projects/arc-agi2/.venv/bin/python -m unittest -v test_85fa5666  (7 tests OK, ~9s)",
+      "cd ROOT/85fa5666 && PYTHONPATH=/Users/ritwika/projects/ARC-GEN /Users/ritwika/projects/arc-agi2/.venv/bin/python audit_85fa5666.py  (gated audit -> host-audit.json, ~41s)",
+      "unmodified ROOT/audit.py check() run on /tmp copy of ROOT containing only this factory -> ungated-official-protocol-85fa5666.json (fails at fresh index 3: ambiguity refusal)"
+    ],
+    "gated_audit": {
+      "passed": true,
+      "fixture_variants_checked": 16,
+      "fresh_pairs_checked": 1000,
+      "augmented_pair_checks": 8000,
+      "unique_base_inputs": 1000,
+      "raw_ambiguous": 26,
+      "resolved_by_resampling": 26,
+      "unresolved": 0
+    }
+  },
+  "source_paths": {
+    "factory": "/Users/ritwika/projects/arc-agi2/outputs/research/arcgen-coverage-cli/direct-program-rewrites/85fa5666/factory.py",
+    "gate_independent": "/Users/ritwika/projects/arc-agi2/outputs/research/arcgen-coverage-cli/direct-program-rewrites/85fa5666/gate_85fa5666.py",
+    "audit": "/Users/ritwika/projects/arc-agi2/outputs/research/arcgen-coverage-cli/direct-program-rewrites/85fa5666/audit_85fa5666.py",
+    "tests": "/Users/ritwika/projects/arc-agi2/outputs/research/arcgen-coverage-cli/direct-program-rewrites/85fa5666/test_85fa5666.py",
+    "ungated_evidence": "/Users/ritwika/projects/arc-agi2/outputs/research/arcgen-coverage-cli/direct-program-rewrites/85fa5666/ungated-official-protocol-85fa5666.json",
+    "native": "/Users/ritwika/projects/ARC-GEN/tasks/task_85fa5666.py",
+    "fixture": "arc_agi2.runtime.reference(85fa5666)[canonical]"
+  },
+  "assumptions": [
+    "bg=palette[0], box=palette[2]; chirality from d4 parity (reflections 4-7)",
+    "Hypothesis family = native random rule plus every reading in the obstacle x join grid that is consistent with the canonical fixture; refuted readings J2 (any same-colour touch), graze-only and any-corner touch fail the fixture and are excluded",
+    "Gate is an independent pure-Python implementation that infers bg, box and chirality from pixels and uses demos plus query input only"
+  ],
+  "limitations": [
+    "ROOT/audit.py (ungated) does not pass. The factory refuses about 10% of raw native episodes as ambiguous instead of guessing. Certification here holds only under the gated scope, where demos are resampled and the query is kept.",
+    "The join readings are exercised only by the canonical fixture. The native random path never emits them. Mixing fixture demos with a native query of the join geometry gives the join answer (test documents this), which differs from the native label.",
+    "Host decision options: accept gated scope; or have root approve a teaching fixture or constructor change dropping extra_rows. The factory needs no change for either, since continuation alone then survives on pair 2 as well.",
+    "No arc_agi2/direct_factories/task_85fa5666.py written; host to register."
+  ]
+}

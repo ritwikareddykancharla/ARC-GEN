@@ -951,7 +951,8 @@ class GeneratorTests(unittest.TestCase):
                 tid='581f7754';module=importlib.import_module('tasks.task_'+tid);rows=[]
                 for seed_ in range(30):
                     random.seed(seed_);p=module.generate(width=30,height=24)
-                    rows.append(dict(task_id=tid,**p,seed=seed_,parameters='{}',generator_mode='standalone_constructor',input_hash=b.digest(p['input']),canonical_input_hash=b.canonical_input(p['input']),split='train',stratum=b.stratum(p)))
+                    canonical=b.canonical_input(p['input'])
+                    rows.append(dict(task_id=tid,**p,seed=seed_,parameters='{}',generator_mode='standalone_constructor',input_hash=b.digest(p['input']),canonical_input_hash=canonical,split=b.input_split(canonical),stratum=b.stratum(p)))
                 pq.write_table(b.pa.Table.from_pylist(rows),b.OUT/'pools'/f'{tid}.parquet')
                 report=b.make_episodes((tid,{'train':{rows[0]['stratum']:2}}))
                 self.assertEqual(report['splits']['train']['fresh_episodes'],2)
@@ -1753,7 +1754,7 @@ class GeneratorTests(unittest.TestCase):
     def test_finite_capacity_and_missing_sizes_are_not_fabricated(self):
         rs=[{'task_id':'a','train_canonical':5,'train_strata':{'15|same_shape':5}}]
         alloc,stats=b.allocate(rs,'train',100,{'15|same_shape':1,'30|same_shape':1})
-        self.assertEqual(sum(alloc['a'].values()),10)
+        self.assertEqual(sum(alloc['a'].values()),20)
         self.assertEqual(stats['shortfall_by_stratum']['30|same_shape'],50)
         rs=[{'task_id':'rich','train_canonical':2000,'train_strata':{'15|same_shape':2000}}]
         alloc,stats=b.allocate(rs,'train',2000,{'15|same_shape':1})
@@ -1887,14 +1888,17 @@ class GeneratorTests(unittest.TestCase):
             try:
                 tid='f931b4a8';rows=[]
                 for s in range(300):
-                    p=generate(tid,s);c=b.canonical_input(p['input']);split='validation' if int(c[:8],16)%20==0 else 'train'
+                    p=generate(tid,s);c=b.canonical_input(p['input']);split=b.input_split(c)
                     rows.append(dict(task_id=tid,**p,seed=s,parameters='{}',generator_mode='extension',input_hash=b.digest(p['input']),canonical_input_hash=c,split=split,stratum=b.stratum(p)))
                 pq.write_table(b.pa.Table.from_pylist(rows),b.OUT/'pools'/f'{tid}.parquet')
                 alloc={split:dict(Counter(r['stratum'] for r in rows if r['split']==split)) for split in ['train','validation']}
-                report=b.make_episodes((tid,alloc));used={}
+                report=b.make_episodes((tid,alloc));used={};fallbacks=[]
                 for split in ['train','validation']:
                     self.assertGreater(report['splits'][split]['episodes'],0)
-                    saved=pq.read_table(b.OUT/'data'/split/f'{tid}.parquet').to_pylist();used[split]=set()
+                    table=pq.read_table(b.OUT/'data'/split/f'{tid}.parquet')
+                    self.assertEqual(table.schema.field('episode_input_shape_pattern').type.field('fallback').type,b.pa.string())
+                    saved=table.to_pylist();used[split]=set()
+                    fallbacks.extend(r['episode_input_shape_pattern']['fallback'] for r in saved)
                     families=defaultdict(list)
                     for r in saved:
                         self.assertEqual(len(r['train']),3);self.assertEqual(len(r['test']),1)
@@ -1920,6 +1924,8 @@ class GeneratorTests(unittest.TestCase):
                             self.assertEqual(row['solutions'],[wanted[-1]['output']])
                     self.assertLessEqual(stats['max_query_reuse_in_fresh_episodes'],4)
                     self.assertLessEqual(stats['max_pair_reuse_in_fresh_episodes'],32)
+                self.assertIn(None,fallbacks)
+                self.assertTrue(any(isinstance(v,str) and v for v in fallbacks))
                 self.assertFalse(used['train'] & used['validation'])
             finally:b.OUT=previous
     def test_clipped_motif_decoys_and_cup_capacity_controls(self):

@@ -66,6 +66,40 @@ class RepairShortfallsTests(unittest.TestCase):
         builder.make_episodes = Mock(side_effect=run)
         return builder
 
+    def test_refresh_adds_old_quota_fulfilled_family_without_changing_validation(self):
+        from . import build_million as builder
+        old = {'train_by_family': {TID: {'3|same': 98}, OTHER: {'3|same': 1000}},
+               'validation_by_family': {TID: {'3|same': 10}},
+               'train': {'desired': {'3|same': 2000}}, 'validation': {'allocated': 10}}
+        manifest = {'seed': 17, 'target_train_fresh_episodes': 2000, 'errors': []}
+        pools = {TID: {'task_id': TID, 'complete': True, 'train_canonical': 49,
+                       'train_strata': {'3|same': 1167}},
+                 OTHER: {'task_id': OTHER, 'complete': True, 'train_canonical': 1000,
+                         'train_strata': {'3|same': 1200}}}
+        reports = {TID: report(TID,98,10), OTHER: report(OTHER,1000,0)}
+        self.assertEqual(repair.selection(manifest,old,reports),{})
+        refreshed = repair.refresh_training_allocation(old,manifest,pools,builder)
+        self.assertEqual(refreshed['train_by_family'][TID],{'3|same':1000})
+        self.assertEqual(refreshed['train']['family_capacity'][TID],1000)
+        self.assertEqual(refreshed['train_by_family'][OTHER],old['train_by_family'][OTHER])
+        self.assertEqual(refreshed['validation_by_family'],old['validation_by_family'])
+        self.assertEqual(refreshed['validation'],old['validation'])
+        self.assertEqual(set(repair.selection(manifest,refreshed,reports)),{TID})
+        self.assertFalse(refreshed['training_quota_refresh']['shortfall_approval'])
+        self.assertEqual(old['train_by_family'][TID],{'3|same':98})
+
+    def test_refresh_rejects_quota_regression_and_never_pads_ineligible_pool(self):
+        from . import build_million as builder
+        old={'train_by_family':{TID:{'3|same':98}},'train':{'desired':{'3|same':1000}}}
+        manifest={'seed':17,'target_train_fresh_episodes':1000}
+        pools={TID:{'task_id':TID,'complete':True,'train_canonical':3,'train_strata':{'3|same':1200}}}
+        with self.assertRaisesRegex(ValueError,'reduce'):
+            repair.refresh_training_allocation(old,manifest,pools,builder)
+        old['train_by_family'][TID]={}
+        refreshed=repair.refresh_training_allocation(old,manifest,pools,builder)
+        self.assertEqual(refreshed['train_by_family'][TID],{})
+        self.assertEqual(refreshed['train']['allocation_shortfall'],1000)
+
     def test_selects_actual_shortfalls_and_errors_not_completed_families(self):
         with tempfile.TemporaryDirectory() as temp:
             manifest, allocation, reports = self.fixture(Path(temp))

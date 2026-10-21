@@ -255,6 +255,66 @@ def finite_allocation(original, manifest, recounted, affected, builder):
     return result
 
 
+
+def refresh_training_allocation(original, manifest, recounted, builder):
+    """Recover artificial low quotas from audited pools, preserving validation.
+
+    Call only AFTER global repartition/hash verification. This does not generate
+    pools, prove domain exhaustion, or approve any adaptive shortfall.
+    """
+    result = deepcopy(original)
+    ceiling = builder.POLICY['planned_dataset']['fresh_episodes_per_family']
+    previous = original.get('train_by_family', {})
+    affected = {t for t, r in recounted.items() if r.get('complete')
+                and sum(previous.get(t, {}).values()) < ceiling}
+    retained = {t: q for t, q in previous.items() if t not in affected}
+    target = manifest['target_train_fresh_episodes']
+    remaining = target - sum(sum(q.values()) for q in retained.values())
+    if remaining < 0:
+        raise ValueError('Retained training allocation exceeds target')
+    desired = original['train']['desired']
+    with patch.object(builder, 'SEED', manifest['seed']):
+        replacement, audit = builder.allocate([recounted[t] for t in sorted(affected)],
+                                               'train', remaining, desired)
+    combined = dict(retained)
+    changes = {}
+    for t in sorted(affected):
+        old, new = previous.get(t, {}), replacement.get(t, {})
+        if sum(new.values()) < sum(old.values()):
+            raise ValueError('Quota refresh would reduce a training family: ' + t)
+        combined[t] = new
+        if sum(new.values()) > sum(old.values()):
+            changes[t] = {'old': sum(old.values()), 'new': sum(new.values())}
+    actual = Counter()
+    for quota in combined.values(): actual.update(quota)
+    used = {t: sum(q.values()) for t, q in combined.items()}
+    if sum(used.values()) > target:
+        raise ValueError('Refreshed training allocation exceeds target')
+    result['train_by_family'] = combined
+    capacities = {**original['train'].get('family_capacity', {}), **audit['family_capacity']}
+    result['train'] = {'requested': target, 'desired': desired,
+                       'allocated': sum(used.values()),
+                       'allocation_shortfall': target - sum(used.values()),
+                       'actual': dict(actual), 'family_allocated': used,
+                       'family_capacity': capacities,
+                       'family_capacity_shortfall': {t: ceiling-capacities.get(t,0) for t in recounted
+                                                     if capacities.get(t,0)<ceiling},
+                       'family_unused_capacity': {t: c-used.get(t,0) for t,c in capacities.items()
+                                                  if c>used.get(t,0)},
+                       'shortfall_by_stratum': {k: n-actual[k] for k,n in desired.items() if n>actual[k]},
+                       'histogram_surplus_by_stratum': {k: n-desired.get(k,0) for k,n in actual.items()
+                                                        if n>desired.get(k,0)},
+                       'capacity_policy': audit.get('capacity_policy'),
+                       'capacity_is_verified_episode_count': False,
+                       'policy': 'Refresh undersized training quotas from hash-verified globally repartitioned exact-query support; validation quotas retained.'}
+    result['training_quota_refresh'] = {
+        'source_allocation_sha256': hashlib.sha256(json.dumps(original, sort_keys=True).encode()).hexdigest(),
+        'changed_families': changes, 'allocation_audit': audit,
+        'shortfall_approval': False,
+        'note': 'Allocation is a construction budget, not verified episode support or native-domain exhaustion.'}
+    return result
+
+
 def validation_removal_evidence(snapshot, report, policy_signature):
     """Hash-check old TARs; count only explicitly invalidated validation rows."""
     from .finite_input_policy import GLOBAL_TRAIN_ORBITS, POLICY_SIGNATURE
@@ -454,11 +514,14 @@ def main():
     ap.add_argument("--namespace")
     ap.add_argument("--tasks", nargs="+")
     ap.add_argument("--finite-policy", action="store_true", help="Globally audit/re-split all saved pools and rebuild every affected family")
+    ap.add_argument("--refresh-training-quotas", action="store_true", help="With --finite-policy, repair artificial low allocations using verified exact-query support")
     args = ap.parse_args()
     if not re.fullmatch("[0-9a-f]{40}", args.revision):
         ap.error("--revision must be an exact commit SHA, never main or a moving tag")
     if args.offline and args.publish:
         ap.error("--publish requires online head/job checks")
+    if args.refresh_training_quotas and not args.finite_policy:
+        ap.error("--refresh-training-quotas requires --finite-policy so every pool is hash-verified and globally re-split first")
     if args.finite_policy and args.tasks:
         ap.error("--finite-policy is global and cannot be restricted with --tasks")
     from huggingface_hub import HfApi, snapshot_download, hf_hub_download
@@ -487,6 +550,7 @@ def main():
         print(json.dumps({"mode": "plan_only", "source_status": manifest["status"], "families": chosen,
                           "finite_policy": args.finite_policy,
                           "global_pool_scan_pending": args.finite_policy,
+                          "training_quota_refresh_pending": args.refresh_training_quotas,
                           "note": "Finite-policy execution scans ALL saved pools and adds every affected family before repair." if args.finite_policy else ""}, indent=2))
         return
     terminal = require_terminal(manifest, api, args.source_job_id, args.namespace)
@@ -507,6 +571,8 @@ def main():
         overrides, recounted, required, finite_audit = prepare_finite_pools(
             args.snapshot, prepared, manifest, args.revision, builder)
         allocation = finite_allocation(allocation, manifest, recounted, required, builder)
+        if args.refresh_training_quotas:
+            allocation = refresh_training_allocation(allocation, manifest, recounted, builder)
         chosen = sorted(set(selection(manifest, allocation, reports)) | required)
         for tid in required:
             old = reports.get(tid, {"task_id": tid, "splits": {}})

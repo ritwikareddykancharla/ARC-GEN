@@ -50,16 +50,33 @@ class AllocationTests(unittest.TestCase):
     def test_limited_diversity_remains_explicit_and_cannot_pad_rich_family(self):
         rows=[report('tiny',{'3|same':5}),report('rich',{'30|same':2000})]
         allocation,stats=allocator()(rows,'train',2000,{'20|same':1})
-        self.assertEqual(sum(allocation['tiny'].values()),10)
+        self.assertEqual(sum(allocation['tiny'].values()),20)
         self.assertEqual(sum(allocation['rich'].values()),1000)
-        self.assertEqual(stats['allocation_shortfall'],990)
-        self.assertEqual(stats['family_capacity_shortfall'],{'tiny':990})
+        self.assertEqual(stats['allocation_shortfall'],980)
+        self.assertEqual(stats['family_capacity_shortfall'],{'tiny':980})
 
-    def test_canonical_equivalence_cap_is_not_relaxed(self):
+    def test_canonical_classes_gate_context_not_total_episode_budget(self):
         rows=[report('aliased',{'3|same':600,'9|expand':600},canonical=7)]
         allocation,stats=allocator()(rows,'train',1000,{'30|same':1})
-        self.assertEqual(sum(allocation['aliased'].values()),14)
-        self.assertEqual(stats['allocation_shortfall'],986)
+        self.assertEqual(sum(allocation['aliased'].values()),1000)
+        self.assertEqual(stats['allocation_shortfall'],0)
+
+    def test_finite_query_reuse_exception_remains_one(self):
+        allocation,stats=allocator()([report('4522001f',{'3|same':4},canonical=1)],'train',1000,{})
+        self.assertEqual(allocation,{'4522001f':{'3|same':4}})
+        self.assertEqual(stats['allocation_shortfall'],996)
+
+    def test_ordinary_budget_matches_existing_four_query_limit(self):
+        allocation,stats=allocator()([report('017c7c7b',{'6|expand':254},canonical=41)],'train',1000,{})
+        self.assertEqual(allocation,{'017c7c7b':{'6|expand':1000}})
+        allocation,stats=allocator()([report('small',{'6|expand':200},canonical=41)],'train',1000,{})
+        self.assertEqual(sum(allocation['small'].values()),800)
+        self.assertFalse(stats['capacity_is_verified_episode_count'])
+
+    def test_three_canonical_classes_remain_ineligible_with_many_exact_inputs(self):
+        allocation,stats=allocator()([report('ordinary',{'6|expand':1200},canonical=3)],'train',1000,{})
+        self.assertEqual(allocation,{})
+        self.assertEqual(stats['allocation_shortfall'],1000)
 
     def test_contextual_episode_support_is_not_reused_to_fill_quota(self):
         rows=[report('context',{'3|same':4,'30|same':600},contextual=True)]

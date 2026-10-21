@@ -320,12 +320,15 @@ def allocate(reports,split,target,desired):
     if target < 0 or any(v < 0 for v in desired.values()):
         raise ValueError('Allocation counts must be nonnegative')
     ceiling=POLICY['planned_dataset']['fresh_episodes_per_family']
-    # Finite families get at most one base episode per exact query; ordinary
-    # families retain the existing two-per-canonical cap. No order-only padding.
-    multipliers={r['task_id']:1 if r.get('contextual') or r['task_id'] in FINITE_INPUT_TASK_IDS else 2
+    # Canonical classes decide within-episode eligibility, not corpus size.
+    # Ordinary episodes retain four distinct canonical inputs, but different
+    # exact queries/context sets can form fresh episodes from the same orbits.
+    # Match make_episodes' existing query-use limit; this is an upper budget,
+    # never a claim that context/semantic checks will realize the full quota.
+    multipliers={r['task_id']:1 if r.get('contextual') or r['task_id'] in FINITE_INPUT_TASK_IDS else 4
                  for r in reports}
     capacity={r['task_id']:min(ceiling,r[split+'_context_episodes'] if r.get('contextual') else
-                              multipliers[r['task_id']]*capacity_basis(r,split)) for r in reports
+                              multipliers[r['task_id']]*sum(r[split+'_strata'].values())) for r in reports
               if capacity_basis(r,split)>0}
     support={r['task_id']:r[split+'_strata'] for r in reports if r['task_id'] in capacity}
     contextual={r['task_id']:r.get('contextual',False) for r in reports}
@@ -383,7 +386,9 @@ def allocate(reports,split,target,desired):
         'family_capacity_shortfall':{r['task_id']:ceiling-capacity.get(r['task_id'],0)
                                     for r in reports if capacity.get(r['task_id'],0)<ceiling},
         'family_unused_capacity':{t:c-used[t] for t,c in capacity.items() if c>used[t]},
-        'policy':'Family quotas take priority over infeasible size-histogram targets; no synthetic support or duplicate padding.'}
+        'capacity_policy':'exact-query-reuse-budget-v2',
+        'capacity_is_verified_episode_count':False,
+        'policy':'Canonical identity gates eligibility; exact query support and existing reuse limits bound allocation. Context/semantic verification still determines realized fresh episodes.'}
 
 def make_episodes(arg):
     tid,allocs=arg;basis=fixture_basis(tid);pool=pq.read_table(OUT/'pools'/f'{tid}.parquet').to_pylist();result={};all_hashes=set()
@@ -411,8 +416,18 @@ def make_episodes(arg):
             if OUTPUT_FORMAT == 'program-grid-png':
                 for record in buffer:writer.write(record)
                 buffer.clear();return
-            table=pa.Table.from_pylist(buffer)
-            if writer is None:writer=pq.ParquetWriter(temporary,table.schema,compression='zstd')
+            if writer is None:
+                # Optional shape fallback is often null throughout the first
+                # batch, then a string later. Pin its semantic type before
+                # streaming so Arrow's first-batch inference cannot lock it to null.
+                schema=pa.Table.from_pylist(buffer).schema
+                shape=pa.struct([('demo_input_shapes',pa.string()),('query_input_shape',pa.string())])
+                pattern=pa.struct([('policy',pa.string()),('requested',shape),('matched',pa.bool_()),
+                                   ('fallback',pa.string()),('observed',shape),('identity_key',pa.string())])
+                index=schema.get_field_index('episode_input_shape_pattern')
+                schema=schema.set(index,pa.field('episode_input_shape_pattern',pattern))
+                writer=pq.ParquetWriter(temporary,schema,compression='zstd')
+            table=pa.Table.from_pylist(buffer,schema=writer.schema)
             writer.write_table(table);buffer.clear()
         try:
             for k,n in quota.items():

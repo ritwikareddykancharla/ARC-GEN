@@ -36,8 +36,8 @@ describe the files in this build, not the earlier 24-row format preview.
 ## Read an episode
 
 [Open the image viewer](https://huggingface.co/datasets/ritwika96/arc-agi2-program-grid-sft/viewer/{first_config}/train)
-· [Interactive gallery](https://huggingface.co/spaces/ritwika96/arc-episode-gallery)
-(the gallery currently displays the earlier corpus).
+· [Interactive gallery](https://ritwika96-arc-episode-gallery.static.hf.space/program-grid.html)
+(browse the published program-and-grid episodes).
 
 **Select a task family in the viewer's subset menu.** Each family contains its
 own combined episode records; the selected family's row count is not the total

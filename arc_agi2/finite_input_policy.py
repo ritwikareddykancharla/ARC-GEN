@@ -11,7 +11,9 @@ Include POLICY_SIGNATURE in pool and episode cache signatures when integrating.
 No independent unseen-orbit validation is claimed for a single-orbit family.
 
 Audit: main repo outputs/research/arcgen-program-grid-launch/pool-audit/findings.md
-Pinned HF dataset revision: 5a2f7abfd90ea205bc4e5e777efba353d1550a25.
+Initial HF audit revision: 5a2f7abfd90ea205bc4e5e777efba353d1550a25.
+Final three-family audit: d89e122ee33adb994ba0f7aff18320183ab079c2; complete
+native pair domains were exhaustively enumerated against the saved pools.
 The a85d4709 with-replacement column sampler is a documented follow-up only;
 this policy does not modify its generator or enlarge any native support.
 """
@@ -20,7 +22,7 @@ import json
 import re
 from types import MappingProxyType
 
-VERSION = 'finite-input-policy-v1'
+VERSION = 'finite-input-policy-v2'
 AUDIT_DATASET_REVISION = '5a2f7abfd90ea205bc4e5e777efba353d1550a25'
 
 FAMILY_PROVENANCE = {'0d3d703e': {'mechanism': 'Fixed colour substitution on three distinct stripes. Palette '
@@ -95,7 +97,34 @@ FAMILY_PROVENANCE = {'0d3d703e': {'mechanism': 'Fixed colour substitution on thr
               'native_source': 'tasks/task_ca8de6ea.py',
               'native_source_sha256': '97956be7d75541d1dc634dab84905176d3418e57fadda7302b1add3d3763edb8',
               'native_support_note': '9P5 = 15,120 native default inputs; 1,200 sampled, all one '
-                                     'palette/D4 orbit.'}}
+                                     'palette/D4 orbit.'},
+ 'e9afcf9a': {'audit_dataset_revision': 'd89e122ee33adb994ba0f7aff18320183ab079c2',
+              'mechanism': 'Turn two uniform coloured rows into a two-colour checkerboard by swapping '
+                           'their cells in alternating columns.',
+              'native_source': 'tasks/task_e9afcf9a.py',
+              'native_source_sha256': 'b209e052a8edc34dd31b13a697d90622d452b62330db275aac9fb615d0228756',
+              'native_support_note': '9P2 = 72 default 2×6 inputs. The complete saved pair pool exactly '
+                                     'equals the enumerated native domain; all share one palette/D4 '
+                                     'orbit, already in train.'},
+ 'eb281b96': {'audit_dataset_revision': 'd89e122ee33adb994ba0f7aff18320183ab079c2',
+              'mechanism': 'Extend a stretched zigzag motif vertically through four repeated segments '
+                           'while retaining its horizontal period.',
+              'native_source': 'tasks/task_eb281b96.py',
+              'native_source_sha256': '93fba00583e96aca3c00ac85eb59e14015613d66ae549def4d28c8e432634471',
+              'native_support_note': 'Four stretch values × nine colours = 36 default inputs (heights '
+                                     '3–6, width 17). Complete saved domain exactly enumerated. '
+                                     'Existing split has 18 exact inputs / two orbits on each side; '
+                                     'preserve both train and validation, with no reservation.'},
+ 'f3e62deb': {'audit_dataset_revision': 'd89e122ee33adb994ba0f7aff18320183ab079c2',
+              'mechanism': 'Move a hollow 3×3 box to the boundary selected by its colour: green left, '
+                           'yellow bottom, magenta top, azure right.',
+              'native_source': 'tasks/task_f3e62deb.py',
+              'native_source_sha256': 'fb8ac872f35427829f0e909baa81c1feeb4f36936457bd057048f3e9c422c640',
+              'native_support_note': '16 interior placements × four direction-coded colours = 64 '
+                                     'default 10×10 inputs. Complete saved pair domain exactly '
+                                     'enumerated; three geometric orbits, all already train. Palette '
+                                     'canonicalization merges meaningful colour-direction evidence; '
+                                     'retain the colour-evidence gate.'}}
 
 FINITE_INPUT_TASK_IDS = frozenset(FAMILY_PROVENANCE)
 # Only this audited one-orbit family had every available input assigned to val.

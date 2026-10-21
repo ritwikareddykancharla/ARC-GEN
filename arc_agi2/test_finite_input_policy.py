@@ -35,7 +35,7 @@ class FiniteInputPolicyTests(unittest.TestCase):
         self.assertEqual(policy.FINITE_INPUT_TASK_IDS, {
             '0d3d703e', '3979b1a8', '4522001f', '66e6c45b', '833966f4',
             '8b28cd80', '93b581b8', '94414823', 'a85d4709', 'bda2d7a6',
-            'ca8de6ea', '27a28665'})
+            'ca8de6ea', '27a28665', 'e9afcf9a', 'eb281b96', 'f3e62deb'})
         for tid in policy.FINITE_INPUT_TASK_IDS:
             self.assertEqual(policy.identity_key(tid), 'input_hash')
             self.assertEqual(policy.minimum_class_requirement(tid), 4)
@@ -74,6 +74,20 @@ class FiniteInputPolicyTests(unittest.TestCase):
             self.assertEqual(policy.input_split(h),
                              'validation' if int(h[:8], 16) % 20 == 0 else 'train')
         self.assertEqual(len(policy.GLOBAL_TRAIN_ORBITS), 1)
+
+    def test_zigzag_finite_family_keeps_its_two_validation_orbits(self):
+        from tasks import task_eb281b96
+        by_split={'train':set(),'validation':set()}
+        for stretch in range(1,5):
+            for colour in range(1,10):
+                h=canonical_hash(task_eb281b96.generate(stretch=stretch,color=colour)['input'])
+                self.assertNotIn(h,policy.GLOBAL_TRAIN_ORBITS)
+                by_split[policy.input_split(h)].add(h)
+        self.assertEqual({s:len(v) for s,v in by_split.items()}, {'train':2,'validation':2})
+        r={'task_id':'eb281b96','train_canonical':2,'validation_canonical':2,
+           'train_strata':{'17|expand':18},'validation_strata':{'17|expand':18}}
+        self.assertEqual(policy.capacity_basis(r,'train'),18)
+        self.assertEqual(policy.capacity_basis(r,'validation'),18)
 
     def test_stale_all_validation_report_not_silently_recounted(self):
         r = report('833966f4', 0, 0)

@@ -316,6 +316,13 @@ class RepairShortfallsTests(unittest.TestCase):
             self.assertEqual(affected, {"833966f4", "feca6190"})
             self.assertEqual(audit["policy_signature"], POLICY_SIGNATURE)
             self.assertEqual(audit["all_complete_pools_scanned"], 2)
+            parallel, parallel_reports, parallel_affected, parallel_audit = repair.prepare_finite_pools(
+                root, root / "parallel-prepared", manifest, REV, builder, workers=2)
+            self.assertEqual(parallel_reports, reports)
+            self.assertEqual(parallel_affected, affected)
+            self.assertEqual(parallel_audit, audit)
+            for tid in affected:
+                self.assertEqual(parallel[tid]["sha256"], overrides[tid]["sha256"])
             for tid in affected:
                 self.assertEqual(reports[tid]["validation_strata"], {})
                 self.assertEqual(reports[tid]["train_strata"], {"5|same": 4})
@@ -329,6 +336,9 @@ class RepairShortfallsTests(unittest.TestCase):
             (root / "pools/feca6190.parquet").unlink()
             with self.assertRaises(FileNotFoundError):
                 repair.prepare_finite_pools(root, root / "missing-audit", manifest, REV, builder)
+            with self.assertRaises(FileNotFoundError):
+                repair.prepare_finite_pools(root, root / "parallel-missing-audit", manifest, REV, builder, workers=2)
+            self.assertFalse((root / "parallel-missing-audit/finite-policy-audit.json").exists())
 
     def test_finite_allocation_recovers_zero_train_family_without_changing_other_quotas(self):
         from . import build_million as builder

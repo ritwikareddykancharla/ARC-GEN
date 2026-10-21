@@ -190,39 +190,71 @@ def size_audit(reports, manifest):
     return result
 
 
-def prepare_finite_pools(snapshot, destination, manifest, revision, builder):
+def _repartition_family(job, builder=None):
+    """Audit and repartition one pool in isolated storage; no Hub writes."""
+    from .finite_input_policy import POLICY_SIGNATURE
+    if builder is None:
+        builder = importlib.import_module(job["builder_module"])
+        if hasattr(builder, "pa"):
+            builder.pa.set_cpu_count(1)
+            builder.pa.set_io_thread_count(1)
+    snapshot, destination = Path(job["snapshot"]), Path(job["destination"])
+    tid, original = job["task_id"], job["original"]
+    provenance = validate_pool(snapshot, tid, job["manifest"], job["revision"])
+    rows = builder.pq.read_table(snapshot / "pools" / (tid + ".parquet")).to_pylist()
+    migrated, report, migration = builder.repartition_pool(rows, original)
+    if not migration["original_source_signature"]:
+        migration["original_source_signature"] = original.get("split_migration", {}).get("original_source_signature")
+    report["split_migration"] = migration
+    if migration["policy_signature"] != POLICY_SIGNATURE:
+        raise ValueError("Repartition helper used a different finite-input policy")
+    path = destination / "pools" / (tid + ".parquet")
+    path.parent.mkdir(parents=True, exist_ok=True)
+    if migrated == rows:
+        shutil.copy2(snapshot / "pools" / (tid + ".parquet"), path)
+    else:
+        builder.pq.write_table(builder.pa.Table.from_pylist(migrated,
+            schema=builder.pq.read_schema(snapshot / "pools" / (tid + ".parquet"))), path, compression="zstd")
+    report["sha256"] = sha256(path)
+    report["original_pool_provenance"] = provenance
+    write(destination / "pool_reports" / (tid + ".json"), report)
+    return tid, report, {"path": str(path), "sha256": report["sha256"], "migration": migration}
+
+
+def prepare_finite_pools(snapshot, destination, manifest, revision, builder, workers=1):
     """Audit every complete pool before exposing any globally reserved orbit."""
     from .finite_input_policy import FINITE_INPUT_TASK_IDS, POLICY_SIGNATURE
+    if type(workers) is not int or workers < 1:
+        raise ValueError("workers must be a positive integer")
+    if workers > 1 and not isinstance(builder, ModuleType):
+        raise ValueError("Parallel pool audits require an importable builder module")
     destination, snapshot = Path(destination), Path(snapshot)
     if destination.exists() and any(destination.iterdir()):
         raise ValueError("Finite-policy staging directory must be empty")
     originals = {p.stem: read(p) for p in (snapshot / "pool_reports").glob("*.json") if read(p).get("complete")}
     if len(originals) != manifest["completed_pools"]:
         raise ValueError("Global migration requires every completed saved pool report")
+    jobs = [{"task_id": tid, "original": original, "snapshot": str(snapshot),
+             "destination": str(destination), "manifest": manifest, "revision": revision,
+             "builder_module": getattr(builder, "__name__", None)}
+            for tid, original in sorted(originals.items())]
+    if workers == 1:
+        results = [_repartition_family(job, builder) for job in jobs]
+    else:
+        with ProcessPoolExecutor(max_workers=workers,
+                                 mp_context=multiprocessing.get_context("spawn")) as pool:
+            pending = [pool.submit(_repartition_family, job) for job in jobs]
+            results = []
+            for future in as_completed(pending):
+                results.append(future.result())
+                if len(results) % 64 == 0 or len(results) == len(jobs):
+                    print(json.dumps({"stage": "pool_audit", "completed": len(results),
+                                      "expected": len(jobs)}), flush=True)
     overrides, recounted, affected = {}, {}, set()
-    for tid, original in sorted(originals.items()):
-        provenance = validate_pool(snapshot, tid, manifest, revision)
-        rows = builder.pq.read_table(snapshot / "pools" / (tid + ".parquet")).to_pylist()
-        migrated, report, migration = builder.repartition_pool(rows, original)
-        if not migration["original_source_signature"]:
-            migration["original_source_signature"] = original.get("split_migration", {}).get("original_source_signature")
-        report["split_migration"] = migration
-        if migration["policy_signature"] != POLICY_SIGNATURE:
-            raise ValueError("Repartition helper used a different finite-input policy")
-        path = destination / "pools" / (tid + ".parquet")
-        path.parent.mkdir(parents=True, exist_ok=True)
-        # Unchanged bytes stay unchanged, while all reports are recounted.
-        if migrated == rows:
-            shutil.copy2(snapshot / "pools" / (tid + ".parquet"), path)
-        else:
-            builder.pq.write_table(builder.pa.Table.from_pylist(migrated,
-                schema=builder.pq.read_schema(snapshot / "pools" / (tid + ".parquet"))), path, compression="zstd")
-        report["sha256"] = sha256(path)
-        report["original_pool_provenance"] = provenance
-        write(destination / "pool_reports" / (tid + ".json"), report)
-        overrides[tid] = {"path": str(path), "sha256": report["sha256"], "migration": migration}
+    for tid, report, override in sorted(results):
+        overrides[tid] = override
         recounted[tid] = report
-        if tid in FINITE_INPUT_TASK_IDS or migration["requires_episode_rebuild"]:
+        if tid in FINITE_INPUT_TASK_IDS or override["migration"]["requires_episode_rebuild"]:
             affected.add(tid)
     audit = {"policy_signature": POLICY_SIGNATURE, "source_dataset_revision": revision,
              "all_complete_pools_scanned": len(recounted), "affected_families": sorted(affected),
@@ -407,6 +439,9 @@ def _construct_family(job, builder=None):
     try:
         if builder is None:
             builder = importlib.import_module(job["builder_module"])
+            if hasattr(builder, "pa"):
+                builder.pa.set_cpu_count(1)
+                builder.pa.set_io_thread_count(1)
         work = Path(job["work"])
         target = work / "pools" / (job["task_id"] + ".parquet")
         target.parent.mkdir(parents=True)
@@ -442,6 +477,11 @@ def _construct_families(jobs, builder, workers):
             except Exception as exc:
                 # A dead worker must preserve the original family too.
                 results[tid] = {"error": repr(exc)}
+            result = results[tid]
+            print(json.dumps({"stage": "family_constructed", "task_id": tid,
+                              "completed": len(results), "expected": len(jobs),
+                              "fresh_train": result.get("candidate", {}).get("splits", {}).get("train", {}).get("fresh_episodes", 0),
+                              "error": result.get("error"), "published": False}), flush=True)
     return results
 
 
@@ -659,7 +699,7 @@ def main():
     if args.finite_policy:
         prepared = args.stage.with_name(args.stage.name + "-finite-pools")
         overrides, recounted, required, finite_audit = prepare_finite_pools(
-            args.snapshot, prepared, manifest, args.revision, builder)
+            args.snapshot, prepared, manifest, args.revision, builder, workers=args.workers)
         allocation = finite_allocation(allocation, manifest, recounted, required, builder)
         if args.refresh_training_quotas:
             allocation = refresh_training_allocation(allocation, manifest, recounted, builder)

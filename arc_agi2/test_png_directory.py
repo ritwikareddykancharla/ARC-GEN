@@ -18,7 +18,10 @@ class DirectPNGs(unittest.TestCase):
    for p in w.paths:
     row=json.loads(p.read_text());challenge=json.loads(row['challenge_json']);answers=json.loads(row['answer_json'])['outputs']
     self.assertTrue(verify(row['program'],{**challenge,'solutions':answers})['all_exact'])
-    im=Image.open(p.parent/row['file_name']).convert('RGB')
+    im=Image.open(p.parent/row['file_name'])
+    self.assertEqual(im.mode,'RGB')
+    # Intermediate edge colours prove labels are antialiased, not 1-bit glyphs.
+    self.assertGreater(len(im.crop((30,20,600,55)).getcolors(100000)),18)
     a=challenge['train'][0]['input'];column=max(440,max(len(g[0]) for pair in challenge['train'] for g in pair.values())*28,max(len(x['input'][0])*28 for x in challenge['test']),max(len(x[0])*28 for x in answers))
     gx=36+(column-len(a[0])*28)//2
     for y,rr in enumerate(a):

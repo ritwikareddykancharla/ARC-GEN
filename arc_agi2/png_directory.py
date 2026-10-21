@@ -18,23 +18,23 @@ def render_png(record):
     pairs += [(f'Query {i+1} - expected output',p['input'],a) for i,(p,a) in enumerate(zip(record['test'],record['solutions']))]
     cell=28;column=max(440,max(len(g[0]) for _,a,b in pairs for g in (a,b))*cell)
     width=column*2+180;heights=[max(len(a),len(b))*cell+108 for _,a,b in pairs]
-    im=Image.new('P',(width,170+sum(heights)),10)
-    palette=[v for c in PALETTE for v in ImageColor.getrgb(c)];im.putpalette(palette+[0]*(768-len(palette)))
-    draw=ImageDraw.Draw(im);draw.fontmode='1'
-    draw.text((36,22),'ARC - '+record['task_id'],font=font(30),fill=11)
-    draw.text((36,65),record['episode_id'],font=font(20),fill=12)
-    draw.text((36,104),'INPUT',font=font(19),fill=13);draw.text((column+120,104),'OUTPUT',font=font(19),fill=13)
+    # RGB preserves antialiased font edges; grid rectangles stay exact integer pixels.
+    im=Image.new('RGB',(width,170+sum(heights)),PALETTE[10])
+    draw=ImageDraw.Draw(im);draw.fontmode='L'
+    draw.text((36,22),'ARC - '+record['task_id'],font=font(34),fill=PALETTE[11])
+    draw.text((36,65),record['episode_id'],font=font(22),fill=PALETTE[12])
+    draw.text((36,104),'INPUT',font=font(24),fill=PALETTE[13]);draw.text((column+120,104),'OUTPUT',font=font(24),fill=PALETTE[13])
     y=140
     for (label,a,b),height in zip(pairs,heights):
-        draw.rounded_rectangle((20,y,width-20,y+height-10),radius=12,fill=14 if label.startswith('Query') else 15)
-        draw.text((36,y+12),label,font=font(21),fill=16)
+        draw.rounded_rectangle((20,y,width-20,y+height-10),radius=12,fill=PALETTE[14] if label.startswith('Query') else PALETTE[15])
+        draw.text((36,y+12),label,font=font(26),fill=PALETTE[16])
         for left,g in [(36,a),(column+120,b)]:
-            draw.text((left,y+43),f'{len(g)} x {len(g[0])}',font=font(18),fill=17)
+            draw.text((left,y+43),f'{len(g)} x {len(g[0])}',font=font(22),fill=PALETTE[17])
             gx=left+(column-len(g[0])*cell)//2;gy=y+73
             for rr,row in enumerate(g):
                 for cc,c in enumerate(row):
                     x0,y0=gx+cc*cell,gy+rr*cell
-                    draw.rectangle((x0,y0,x0+cell-2,y0+cell-2),fill=c)
+                    draw.rectangle((x0,y0,x0+cell-2,y0+cell-2),fill=COLORS[c])
         y+=height
     return im
 

@@ -4,18 +4,24 @@ Default is a read-only plan. --execute builds an isolated local stage; --publish
 also commits that entire stage atomically against the pinned source revision.
 An active source manifest blocks execution unless --source-job-id is supplied
 and HF confirms that job has terminated. No jobs are created or canceled.
+--workers uses isolated processes for family construction; only the parent
+validates, promotes, and atomically publishes the completed stage.
 """
 import argparse
 from collections import Counter
+from concurrent.futures import ProcessPoolExecutor, as_completed
 from copy import deepcopy
 import hashlib
+import importlib
 import json
+import multiprocessing
 import os
 from pathlib import Path, PurePosixPath
 import re
 import shutil
 import subprocess
 import tarfile
+from types import ModuleType
 from unittest.mock import patch
 
 SPLITS = ("train", "validation")
@@ -392,9 +398,62 @@ def finish_finite_stage(stage, prepared, plan, allocation, audit):
         "is retained; this repair does not generate additional native support.\n")
 
 
+def _construct_family(job, builder=None):
+    """Construct only inside one family's work directory; never promote/publish.
+
+    Spawned workers import their own builder. Serial callers may inject a test
+    builder, but live module globals are never patched concurrently in threads.
+    """
+    try:
+        if builder is None:
+            builder = importlib.import_module(job["builder_module"])
+        work = Path(job["work"])
+        target = work / "pools" / (job["task_id"] + ".parquet")
+        target.parent.mkdir(parents=True)
+        shutil.copy2(job["pool_source"], target)
+        if sha256(target) != job["pool_sha256"]:
+            raise ValueError("Saved pool changed after audit")
+        with patch.object(builder, "OUT", work), patch.object(builder, "SEED", job["seed"]), \
+                patch.object(builder, "OUTPUT_FORMAT", "program-grid-png"), \
+                patch.dict(os.environ, {"ARCGEN_SOURCE_COMMIT": job["repair_commit"]}):
+            candidate = builder.make_episodes((job["task_id"], job["quotas"]))
+        return {"candidate": candidate}
+    except (Exception, SystemExit) as exc:
+        return {"error": repr(exc)}
+
+
+def _construct_families(jobs, builder, workers):
+    if workers == 1:
+        return {job["task_id"]: _construct_family(job, builder) for job in jobs}
+    results = {}
+    # Spawn avoids inheriting the parent's patched globals or open writer state.
+    with ProcessPoolExecutor(max_workers=workers,
+                             mp_context=multiprocessing.get_context("spawn")) as pool:
+        futures = {}
+        for job in jobs:
+            try:
+                futures[pool.submit(_construct_family, job)] = job["task_id"]
+            except Exception as exc:
+                results[job["task_id"]] = {"error": repr(exc)}
+        for future in as_completed(futures):
+            tid = futures[future]
+            try:
+                results[tid] = future.result()
+            except Exception as exc:
+                # A dead worker must preserve the original family too.
+                results[tid] = {"error": repr(exc)}
+    return results
+
+
 def stage_repairs(snapshot, stage, manifest, allocation, reports, chosen, revision,
                   repair_commit, terminal_proof, builder, pool_overrides=None,
-                  validation_removals=None, required_families=()):
+                  validation_removals=None, required_families=(), workers=1):
+    if type(workers) is not int or workers < 1:
+        raise ValueError("workers must be a positive integer")
+    if workers > 1 and not isinstance(builder, ModuleType):
+        raise ValueError("Parallel workers require an importable builder module")
+    if workers > 1 and importlib.import_module(builder.__name__) is not builder:
+        raise ValueError("Parallel workers require the imported builder module")
     stage, snapshot = Path(stage), Path(snapshot)
     if stage.exists() and any(stage.iterdir()):
         raise ValueError("Stage must be empty; never overwrite an earlier repair")
@@ -404,9 +463,9 @@ def stage_repairs(snapshot, stage, manifest, allocation, reports, chosen, revisi
     updated = deepcopy(reports)
     outcomes = {}
     accepted = []
+    chosen = sorted(set(chosen))
+    jobs, provenances = [], {}
     for tid in chosen:
-        work = stage / "work" / tid
-        promoted = []
         if tid not in quotas:
             outcomes[tid] = {"status": "no_saved_allocation", "needs_pool_or_allocation_repair": True}
             continue
@@ -419,7 +478,6 @@ def stage_repairs(snapshot, stage, manifest, allocation, reports, chosen, revisi
             outcomes[tid] = {"status": "invalid_pool", "error": str(exc)}
             continue
         try:
-            (work / "pools").mkdir(parents=True)
             override = (pool_overrides or {}).get(tid)
             pool_source = Path(override["path"]) if override else snapshot / "pools" / (tid + ".parquet")
             if override:
@@ -427,11 +485,28 @@ def stage_repairs(snapshot, stage, manifest, allocation, reports, chosen, revisi
                     raise ValueError("Repartitioned pool changed after audit")
                 provenance["finite_policy_migration"] = override["migration"]
                 provenance["repartitioned_pool_sha256"] = override["sha256"]
-            shutil.copy2(pool_source, work / "pools" / (tid + ".parquet"))
-            with patch.object(builder, "OUT", work), patch.object(builder, "SEED", manifest["seed"]), \
-                    patch.object(builder, "OUTPUT_FORMAT", "program-grid-png"), \
-                    patch.dict(os.environ, {"ARCGEN_SOURCE_COMMIT": repair_commit}):
-                candidate = builder.make_episodes((tid, quotas[tid]))
+            provenances[tid] = provenance
+            jobs.append({"task_id": tid, "work": str(stage / "work" / tid),
+                         "pool_source": str(pool_source),
+                         "pool_sha256": override["sha256"] if override else provenance["pool_sha256"],
+                         "seed": manifest["seed"], "quotas": quotas[tid],
+                         "repair_commit": repair_commit,
+                         "builder_module": getattr(builder, "__name__", None)})
+        except Exception as exc:
+            outcomes[tid] = {"status": "repair_error_preserved_original", "error": repr(exc)}
+    # Collect all worker results before parent-only, sorted validation/promotion.
+    # Workers cannot expose a partial family or publish while others are running.
+    constructed = _construct_families(jobs, builder, workers)
+    for job in jobs:
+        tid = job["task_id"]
+        work = Path(job["work"])
+        promoted = []
+        try:
+            result = constructed[tid]
+            if "error" in result:
+                outcomes[tid] = {"status": "repair_error_preserved_original", "error": result["error"]}
+                continue
+            candidate = result["candidate"]
             if candidate["task_id"] != tid or set(candidate["splits"]) != set(SPLITS):
                 raise ValueError("Repair must return both splits for the same family")
             verify_artifacts(work, candidate)
@@ -439,9 +514,14 @@ def stage_repairs(snapshot, stage, manifest, allocation, reports, chosen, revisi
             if not nonregressing(reports.get(tid, {}), candidate, removal):
                 outcomes[tid] = {"status": "regression_preserved_original", "candidate": candidate}
                 continue
-            candidate["repair_provenance"] = {**provenance, "episode_repair_commit": repair_commit}
+            candidate["repair_provenance"] = {**provenances[tid], "episode_repair_commit": repair_commit}
             if removal:
                 candidate["repair_provenance"]["labelled_validation_removals"] = removal
+            outcome = {"status": "repaired", "remaining": {
+                s: {"allocated": sum(quotas[tid][s].values()), "actual": candidate["splits"][s]["fresh_episodes"],
+                    "failures": candidate["splits"][s]["failures"],
+                    "query_context_shortfalls": len(candidate["splits"][s].get("query_context_shortfalls", []))}
+                for s in SPLITS}}
             write(work / "episode_reports" / (tid + ".json"), candidate)
             for name in [f"episode_reports/{tid}.json", *[p for x in candidate["splits"].values() for p in x["files"]]]:
                 destination = stage / safe_path(name)
@@ -450,17 +530,15 @@ def stage_repairs(snapshot, stage, manifest, allocation, reports, chosen, revisi
                 promoted.append(destination)
             updated[tid] = candidate
             accepted.append(tid)
-            outcomes[tid] = {"status": "repaired", "remaining": {
-                s: {"allocated": sum(quotas[tid][s].values()), "actual": candidate["splits"][s]["fresh_episodes"],
-                    "failures": candidate["splits"][s]["failures"],
-                    "query_context_shortfalls": len(candidate["splits"][s].get("query_context_shortfalls", []))}
-                for s in SPLITS}}
+            outcomes[tid] = outcome
         except Exception as exc:
             for path in promoted:
                 path.unlink(missing_ok=True)
             outcomes[tid] = {"status": "repair_error_preserved_original", "error": repr(exc)}
         finally:
             shutil.rmtree(work, ignore_errors=True)
+    outcomes = {tid: outcomes[tid] for tid in chosen}
+    execution = {"workers": workers, "start_method": "spawn" if workers > 1 else "in_process"}
     m = deepcopy(manifest)
     m.update(totals(updated))
     m["errors"] = [e for e in manifest.get("errors", [])
@@ -471,10 +549,11 @@ def stage_repairs(snapshot, stage, manifest, allocation, reports, chosen, revisi
     m["repair_history"] = [*m.get("repair_history", []), {
         "source_dataset_revision": revision, "source_commit": manifest.get("source_commit"),
         "episode_repair_commit": repair_commit, "terminal_source_proof": terminal_proof,
-        "accepted_families": accepted, "outcomes": outcomes}]
+        "accepted_families": accepted, "outcomes": outcomes, "execution": execution}]
     old_files = set().union(*(set(manifest.get("episode_files", {}).get(s, [])) for s in SPLITS))
     new_files = set().union(*(set(m["episode_files"][s]) for s in SPLITS))
     plan = {"source_dataset_revision": revision, "accepted_families": accepted,
+            "execution": execution,
             "delete_files": sorted(old_files - new_files), "outcomes": outcomes,
             "remaining_shortfalls": selection(m, allocation, updated),
             "publishable": set(required_families) <= set(accepted),
@@ -513,9 +592,13 @@ def main():
     ap.add_argument("--source-job-id")
     ap.add_argument("--namespace")
     ap.add_argument("--tasks", nargs="+")
+    ap.add_argument("--workers", type=int, default=1,
+                    help="Isolated family-construction processes (default: 1); promotion/publication stays in the parent")
     ap.add_argument("--finite-policy", action="store_true", help="Globally audit/re-split all saved pools and rebuild every affected family")
     ap.add_argument("--refresh-training-quotas", action="store_true", help="With --finite-policy, repair artificial low allocations using verified exact-query support")
     args = ap.parse_args()
+    if args.workers < 1:
+        ap.error("--workers must be a positive integer")
     if not re.fullmatch("[0-9a-f]{40}", args.revision):
         ap.error("--revision must be an exact commit SHA, never main or a moving tag")
     if args.offline and args.publish:
@@ -548,6 +631,7 @@ def main():
         chosen = {tid: chosen[tid] for tid in args.tasks}
     if not (args.execute or args.publish):
         print(json.dumps({"mode": "plan_only", "source_status": manifest["status"], "families": chosen,
+                          "workers": args.workers,
                           "finite_policy": args.finite_policy,
                           "global_pool_scan_pending": args.finite_policy,
                           "training_quota_refresh_pending": args.refresh_training_quotas,
@@ -583,7 +667,8 @@ def main():
             removals[tid] = validation_removal_evidence(args.snapshot, old, finite_audit["policy_signature"])
     plan = stage_repairs(args.snapshot, args.stage, manifest, allocation, reports, chosen,
                          args.revision, repair_commit, terminal, builder,
-                         pool_overrides=overrides, validation_removals=removals, required_families=required)
+                         pool_overrides=overrides, validation_removals=removals, required_families=required,
+                         workers=args.workers)
     if args.finite_policy:
         finish_finite_stage(args.stage, prepared, plan, allocation, finite_audit)
     if args.publish:

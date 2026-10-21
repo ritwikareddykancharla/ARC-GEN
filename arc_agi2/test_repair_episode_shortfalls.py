@@ -1,7 +1,10 @@
 from copy import deepcopy
 import json
 import io
+import os
 from pathlib import Path
+import sys
+import time
 from types import SimpleNamespace
 import tempfile
 import tarfile
@@ -14,6 +17,57 @@ TID = "00576224"
 OTHER = "00dbd492"
 REV = "a" * 40
 
+# Importable deterministic builder for real spawn-process orchestration tests.
+OUT = None
+SEED = 0
+OUTPUT_FORMAT = "legacy"
+
+
+def make_episodes(arg):
+    tid, quotas = arg
+    spec = repair.read(OUT / "pools" / (tid + ".parquet"))
+    assert SEED == 17 and OUTPUT_FORMAT == "program-grid-png"
+    assert os.environ["ARCGEN_SOURCE_COMMIT"] == "new-source"
+    stage = OUT.parents[1]
+    assert not (stage / "shards").exists(), "Parent promoted while a worker was active"
+    assert not (stage / "manifest.json").exists(), "Parent finalized before construction ended"
+    event = {"task_id": tid, "pid": os.getpid(), "stage": stage.name}
+    fd = os.open(spec["events"], os.O_WRONLY | os.O_APPEND | os.O_CREAT, 0o600)
+    try:
+        os.write(fd, (json.dumps(event) + "\n").encode())
+    finally:
+        os.close(fd)
+    if spec.get("barrier") and "parallel" in stage.name:
+        deadline = time.monotonic() + 10
+        while True:
+            seen = [json.loads(line) for line in Path(spec["events"]).read_text().splitlines()]
+            if len({e["task_id"] for e in seen if e["stage"] == stage.name}) == 2:
+                break
+            if time.monotonic() >= deadline:
+                raise RuntimeError("Both isolated workers did not start")
+            time.sleep(0.01)
+    time.sleep(spec.get("delay", 0))
+    if spec.get("failure"):
+        partial = OUT / "shards/train" / (tid + "-partial.tar")
+        partial.parent.mkdir(parents=True)
+        partial.write_bytes(b"must never be promoted")
+        if spec["failure"] == "exit":
+            os._exit(23)
+        raise RuntimeError("synthetic family failure")
+    result = report(tid, spec["train"], spec["validation"], "new")
+    for data in result["splits"].values():
+        if not data["episodes"]:
+            continue
+        metas = []
+        for name in data["files"]:
+            target = OUT / name
+            target.parent.mkdir(parents=True, exist_ok=True)
+            target.write_bytes(name.encode())
+            metas.append({"file": target.name, "sha256": repair.sha256(target), "episodes": data["episodes"]})
+        data["shards"] = [{**metas[0], "viewer_index": metas[1]}]
+    assert not (stage / "shards").exists(), "Early promotion before the last worker returned"
+    return result
+
 
 def report(tid, train=2, validation=1, tag="old"):
     result = {"task_id": tid, "splits": {}}
@@ -25,6 +79,27 @@ def report(tid, train=2, validation=1, tag="old"):
 
 
 class RepairShortfallsTests(unittest.TestCase):
+    def parallel_fixture(self, root, failure=None, barrier=False):
+        manifest, allocation, reports = self.fixture(root)
+        reports[OTHER] = report(OTHER)
+        manifest.update(repair.totals(reports))
+        repair.write(root / "manifest.json", manifest)
+        for tid, r in reports.items():
+            repair.write(root / "episode_reports" / (tid + ".json"), r)
+            for split in r["splits"].values():
+                for name in split["files"]:
+                    path = root / name
+                    path.parent.mkdir(parents=True, exist_ok=True)
+                    path.write_bytes(b"original published bytes")
+            path = root / "pools" / (tid + ".parquet")
+            repair.write(path, {"train": 4, "validation": 1, "events": str(root / "events.jsonl"),
+                                "barrier": barrier, "delay": 0.1 if tid == TID else 0,
+                                "failure": failure if tid == TID else None})
+            repair.write(root / "pool_reports" / (tid + ".json"), {
+                "task_id": tid, "complete": True, "seed": 17, "source_signature": "original-signature",
+                "sha256": repair.sha256(path)})
+        return manifest, allocation, reports
+
     def fixture(self, root):
         reports = {TID: report(TID), OTHER: report(OTHER, 4)}
         manifest = {"status": "complete_with_shortfall", "seed": 17, "source_commit": "old-source",
@@ -313,6 +388,115 @@ class RepairShortfallsTests(unittest.TestCase):
                                  {"publishable": False, "delete_files": []})
         api.dataset_info.assert_not_called()
         api.create_commit.assert_not_called()
+
+    def test_serial_parallel_artifacts_match_and_promotion_waits_for_all_workers(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            manifest, allocation, reports = self.parallel_fixture(root, barrier=True)
+            builder = sys.modules[__name__]
+            stages = [root / "stage-serial", root / "stage-parallel"]
+            plans = [repair.stage_repairs(root, stage, manifest, allocation, reports,
+                         [OTHER, TID], REV, "new-source", {}, builder, workers=workers)
+                     for stage, workers in zip(stages, (1, 2))]
+            self.assertEqual(plans[0]["execution"], {"workers": 1, "start_method": "in_process"})
+            self.assertEqual(plans[1]["execution"], {"workers": 2, "start_method": "spawn"})
+            self.assertEqual(*[{k: v for k, v in plan.items() if k != "execution"} for plan in plans])
+            self.assertEqual(plans[1]["accepted_families"], sorted([TID, OTHER]))
+            def hashes(stage):
+                result = {}
+                for p in stage.rglob("*"):
+                    if not p.is_file():
+                        continue
+                    if p.name in {"manifest.json", "repair-report.json"}:
+                        data = repair.read(p)
+                        container = data["repair_history"][-1] if p.name == "manifest.json" else data
+                        execution = container.pop("execution")
+                        self.assertEqual(execution, plans[stages.index(stage)]["execution"])
+                        result[str(p.relative_to(stage))] = json.dumps(data, sort_keys=True)
+                    else:
+                        result[str(p.relative_to(stage))] = repair.sha256(p)
+                return result
+            self.assertEqual(hashes(stages[0]), hashes(stages[1]))
+            events = [json.loads(line) for line in (root / "events.jsonl").read_text().splitlines()]
+            parallel_pids = {e["pid"] for e in events if e["stage"] == stages[1].name}
+            self.assertEqual(len(parallel_pids), 2)
+            self.assertNotIn(os.getpid(), parallel_pids)
+            self.assertIsNone(builder.OUT)
+            self.assertEqual(builder.SEED, 0)
+            self.assertEqual(builder.OUTPUT_FORMAT, "legacy")
+
+    def test_parallel_worker_failure_preserves_original_and_blocks_global_publish(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            manifest, allocation, reports = self.parallel_fixture(root, failure="exception")
+            originals = {p: repair.sha256(p) for p in root.rglob("*") if p.is_file()}
+            stage = root / "stage"
+            plan = repair.stage_repairs(root, stage, manifest, allocation, reports, [OTHER, TID],
+                       REV, "new-source", {}, sys.modules[__name__], workers=2,
+                       required_families=[TID, OTHER])
+            self.assertEqual(plan["accepted_families"], [OTHER])
+            self.assertEqual(plan["outcomes"][TID]["status"], "repair_error_preserved_original")
+            self.assertIn("synthetic family failure", plan["outcomes"][TID]["error"])
+            self.assertFalse(plan["publishable"])
+            self.assertEqual(plan["required_families_not_rebuilt"], [TID])
+            self.assertFalse(list(stage.rglob("*partial.tar")))
+            self.assertFalse((stage / "episode_reports" / (TID + ".json")).exists())
+            self.assertFalse(list((stage / "work").rglob("*.parquet")))
+            for path, original in originals.items():
+                self.assertEqual(repair.sha256(path), original)
+            new = repair.read(stage / "manifest.json")
+            for split in repair.SPLITS:
+                self.assertTrue(set(reports[TID]["splits"][split]["files"]) <= set(new["episode_files"][split]))
+                self.assertFalse(set(reports[TID]["splits"][split]["files"]) & set(plan["delete_files"]))
+            repair.finish_finite_stage(stage, root / "never-prepared", plan, allocation, {})
+            self.assertFalse((stage / "allocation.json").exists())
+            api = Mock()
+            with self.assertRaisesRegex(RuntimeError, "incomplete"):
+                repair.publish_stage(api, "repo", REV, root, stage, plan)
+            api.create_commit.assert_not_called()
+
+    def test_abrupt_worker_exit_preserves_original_and_never_promotes_partial_files(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            manifest, allocation, reports = self.parallel_fixture(root, failure="exit")
+            stage = root / "stage"
+            plan = repair.stage_repairs(root, stage, manifest, allocation, reports, [TID],
+                       REV, "new-source", {}, sys.modules[__name__], workers=2,
+                       required_families=[TID])
+            self.assertEqual(plan["accepted_families"], [])
+            self.assertEqual(plan["outcomes"][TID]["status"], "repair_error_preserved_original")
+            self.assertFalse(plan["publishable"])
+            self.assertEqual(repair.read(stage / "manifest.json")["episode_files"], manifest["episode_files"])
+            self.assertFalse((stage / "shards").exists())
+            self.assertFalse(list((stage / "work").rglob("*.parquet")))
+
+    def test_malformed_candidate_does_not_update_manifest_after_failed_promotion(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            manifest, allocation, reports = self.fixture(root)
+            candidate = report(TID, 4, 1, "new")
+            del candidate["splits"]["validation"]["failures"]
+            stage = root / "stage"
+            plan = repair.stage_repairs(root, stage, manifest, allocation, reports,
+                       [TID], REV, "new-source", {}, self.builder(candidate))
+            self.assertEqual(plan["accepted_families"], [])
+            self.assertEqual(plan["outcomes"][TID]["status"], "repair_error_preserved_original")
+            self.assertEqual(repair.read(stage / "manifest.json")["episode_files"], manifest["episode_files"])
+            self.assertFalse((stage / "shards").exists())
+
+    def test_workers_validation_rejects_threads_or_unimportable_test_builder(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            manifest, allocation, reports = self.fixture(root)
+            builder = self.builder(report(TID, 4))
+            for workers in (0, -1, True):
+                with self.assertRaisesRegex(ValueError, "positive integer"):
+                    repair.stage_repairs(root, root / "stage", manifest, allocation, reports,
+                                         [TID], REV, "new", {}, builder, workers=workers)
+            with self.assertRaisesRegex(ValueError, "importable builder module"):
+                repair.stage_repairs(root, root / "stage", manifest, allocation, reports,
+                                     [TID], REV, "new", {}, builder, workers=2)
+            self.assertFalse((root / "stage").exists())
 
 
 if __name__ == "__main__":

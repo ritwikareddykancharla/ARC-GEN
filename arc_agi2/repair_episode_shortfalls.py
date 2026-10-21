@@ -643,6 +643,12 @@ def main():
         pool_ids = ({p.stem for p in (args.snapshot / "pool_reports").glob("*.json") if read(p).get("complete")}
                     if args.finite_policy else chosen)
         for tid in pool_ids:
+            # Reuse a staged pool only when the newly pinned report proves its
+            # exact bytes. Avoid one network lookup per already audited pool.
+            saved_pool = args.snapshot / "pools" / (tid + ".parquet")
+            saved_report = read(args.snapshot / "pool_reports" / (tid + ".json"))
+            if saved_pool.exists() and sha256(saved_pool) == saved_report.get("sha256"):
+                continue
             try:
                 hf_hub_download(args.repo, f"pools/{tid}.parquet", repo_type="dataset", revision=args.revision, local_dir=args.snapshot)
             except EntryNotFoundError:

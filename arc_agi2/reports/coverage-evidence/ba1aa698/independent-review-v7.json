@@ -1,0 +1,215 @@
+{
+  "task_id": "ba1aa698",
+  "review": "independent-review-v7 (second reviewer)",
+  "author": "host parallel CLI execution worker",
+  "passed": false,
+  "verdict": "NOT CERTIFIED: unresolved canonical-fixture conflict (constructor defect). The direct program is correct and strict on the native family. No honest demo-consistent program can pass the canonical audit.",
+  "native_changed": false,
+  "canonical_fixture_changed": false,
+  "factory_changed_by_reviewer": false,
+  "source_hashes": {
+    "factory.py": "d9c288d58049ac7d6ca6b663a4ab6d626140469ed3eeec63211117fea39b2c32",
+    "native tasks/task_ba1aa698.py": "8f3909440a766e9fabd1ed73141da9bf0c6f081ccdf2974f3222bcf544a4a2c6",
+    "proposed_constructor.py (NOT canonical)": "679086df4106cc614950423ae076da000649eee09a637d07b53c5bfe0ff4dda2",
+    "gate_ba1aa698_v7.py": "0aa46fc6fa3b9e63abf74b107a59fdcb949f81f7f46303b6449cfc6f10aef476",
+    "test_ba1aa698_review_v7.py": "8a4891ff9bc55680014cd2fff99080c4abfb263c8f4f45e162abad9722a06b63",
+    "host-audit.json factory/constructor match current files": true,
+    "proposed audit hashes match current files": true
+  },
+  "fixture_digests": {
+    "canonical": "8a8682f21e71f303ce2d7dcd02091df3278e2be978151965590c559536f97fdd",
+    "reference_teaching_fixture_currently_equals_canonical": true,
+    "proposed_teaching_fixture": "de83dfb0e6a16a2c13e4d0a3d3241a82a7353df7e97a056e154411976ed5a8d0",
+    "proposed_changed_cells": [
+      {
+        "split": "train",
+        "pair": 1,
+        "field": "output",
+        "row": 11,
+        "col": 2,
+        "canonical": 2,
+        "teaching": 8
+      },
+      {
+        "split": "train",
+        "pair": 1,
+        "field": "output",
+        "row": 11,
+        "col": 3,
+        "canonical": 2,
+        "teaching": 8
+      },
+      {
+        "split": "train",
+        "pair": 1,
+        "field": "output",
+        "row": 13,
+        "col": 2,
+        "canonical": 8,
+        "teaching": 2
+      },
+      {
+        "split": "train",
+        "pair": 1,
+        "field": "output",
+        "row": 13,
+        "col": 3,
+        "canonical": 8,
+        "teaching": 2
+      }
+    ],
+    "inputs_and_test_unchanged": true
+  },
+  "audits": {
+    "canonical_host_audit": {
+      "command": "PYTHONPATH=/Users/ritwika/projects/ARC-GEN .venv/bin/python ROOT/audit.py --only ba1aa698",
+      "passed": false,
+      "failure_stage": "fixtures",
+      "error": "Inconsistent: no hypothesis is consistent with all demonstrations",
+      "fixture_variants_checked": 0,
+      "fresh_pairs_checked": 0,
+      "runtime_s": 0.56
+    },
+    "proposed_fixture_audit_NOT_CANONICAL": {
+      "command": "PYTHONPATH=... .venv/bin/python ROOT/ba1aa698/audit_proposed_ba1aa698.py",
+      "passed": true,
+      "fresh_pairs_checked": 1000,
+      "augmented_pair_checks": 8000,
+      "fixture_variants_checked": 16,
+      "unique_base_inputs": 983,
+      "sampler_rejections": 0,
+      "runtime_s": 55.6
+    }
+  },
+  "tests": {
+    "command": "PYTHONPATH=/Users/ritwika/projects/ARC-GEN /Users/ritwika/projects/arc-agi2/.venv/bin/python ROOT/ba1aa698/test_ba1aa698_review_v7.py --fresh-episodes 250",
+    "exit_code": 0,
+    "runtime_s": 42.4,
+    "result_file": "ROOT/ba1aa698/review-v7-tests.json",
+    "focused_passed": true,
+    "fresh_passed": true,
+    "focused": {
+      "witness_seed15323_input_identical": true,
+      "witness_seed15323_output_differs": true,
+      "canonical_pair2_motif_rows": [
+        12,
+        13
+      ],
+      "native_pair2_motif_rows": [
+        11,
+        12
+      ],
+      "gate_predicts_native_label_for_witness": true,
+      "canonical_gate_native_family": [
+        "MissingBa1aa698Evidence"
+      ],
+      "canonical_gate_global_residual_family": [
+        "MissingBa1aa698Evidence"
+      ],
+      "canonical_factory_program": [
+        "Inconsistent"
+      ],
+      "canonical_all16_gate_rejects": true,
+      "canonical_all16_global_residual_rejects": true,
+      "canonical_all16_factory_raises_inconsistent": true,
+      "leave_pair2_out": [
+        {
+          "gate_eq_program": true,
+          "exact": true
+        },
+        {
+          "gate_eq_program": true,
+          "exact": false
+        },
+        {
+          "gate_eq_program": true,
+          "exact": true
+        },
+        {
+          "gate_eq_program": true,
+          "exact": true
+        }
+      ],
+      "leave_pair2_out_only_pair2_wrong": true,
+      "keyed_residual_rules": {
+        "motif_colour_eq_frame": {
+          "fits_all_canonical_demos": true,
+          "test_motif_rows": [
+            10,
+            11
+          ],
+          "test_exact_post_hoc": true
+        },
+        "step_ge2_moving_down": {
+          "fits_all_canonical_demos": true,
+          "test_motif_rows": [
+            11,
+            12
+          ],
+          "test_exact_post_hoc": false
+        }
+      },
+      "keyed_rules_fit_demos_but_disagree_on_test": true,
+      "native_frame_colour_motif_samples": 493,
+      "archived_colour_rule_wrong_on_them": 493,
+      "native_sampler_refutes_colour_keyed_rule": true,
+      "gate_no_demos_ambiguous": true,
+      "program_no_demos_ambiguous": true,
+      "gate_corrupt_demo_rejects": true,
+      "program_corrupt_demo_inconsistent": true,
+      "label_free_gate_single_demo_exact": true,
+      "emitted_source_independent_of_d4_palette": true,
+      "no_label_or_fallback_tokens_in_source": true
+    },
+    "fresh_native_all8D4_shuffled_palette": {
+      "episodes": 250,
+      "pairs": 1000,
+      "aug_checks": 8000,
+      "verify_ok": 2000,
+      "gate_eq_program": 2000,
+      "gate_exact": 2000,
+      "evidence_missing_3demo": 0,
+      "single_demo_identifies": 6000,
+      "single_demo_checks": 6000,
+      "zero_demo_both_orders_applicable": 792,
+      "zero_demo_queries": 2000,
+      "fails": [],
+      "unique_base_inputs": 983,
+      "hard": {
+        "motif_eq_frame": 117,
+        "flip": 522,
+        "frames3": 488,
+        "frames4": 512,
+        "w4": 503,
+        "w5": 497,
+        "height1_motif": 386,
+        "transposed_d4": 1000,
+        "reversed_order_d4": 1000
+      }
+    }
+  },
+  "review_findings": {
+    "output_leakage": "none. solve(demonstrations, grid) reads only demos and the query input. verify() and the gate get queries=[{'input': grid}] and see no labels; tests compare labels only after both answers exist.",
+    "hidden_parameter_inference": "none. build_program ignores d4/palette; the emitted source is byte-identical across 30 d4/palette variants. Panel axis, frame, background and motion are read from pixels. Panel time order (+1/-1) is a hypothesis that every demo checks.",
+    "ambiguous_fallbacks": "none. There is no default, majority vote, intersection, demo skipping or reset. Zero survivors raises Inconsistent; disagreeing or inapplicable survivors raise Ambiguous.",
+    "domain_narrowing": "none. Fresh draws are the unmodified native sampler: 117/1000 frame-coloured motifs (the hard case), 522 upward motions, 386 one-row motifs, both widths and both frame counts. All 8 D4 transforms are used, including transposed and order-reversed views.",
+    "hard_cases": "Frame-coloured motifs (fg==frame) are solved correctly under the native rule. The archived reference solver's '+1 if motif colour == frame' rule is wrong on 493/493 such native samples (seeds 10000..13999).",
+    "identifiability": "Native family (extra=0): a single demo fixes ORDER in 6000/6000 single-demo checks, and 0 queries lacked evidence with 3 demos, so no demo resampling was needed. With zero demos the query is a context shortfall: the program and gate raise Ambiguous, and in 792/2000 both orders were applicable. Only one native output exists per input, so there is no intrinsic ambiguity.",
+    "fixture_conflict": "Canonical train pair 2 is built with validate(extra=1). random.seed(15323); generate() gives a byte-identical input whose native label has the motif at rows 11-12; canonical has rows 12-13. verify() uses each train pair as a query with all train pairs as demos. So no deterministic function of the input fits both the canonical and native labels, and a strict demo-consistent hypothesis set (native or global residual {-1,0,1}) has no survivor on all 16 variants. Feature-keyed residual rules are not identifiable: 'motif colour == frame' and 'step>=2 and moving down' both fit all 3 canonical demos but put the canonical test motif at rows 10-11 vs 11-12. Passing would require memorisation, outlier skipping or a fixture-fitted key that the native sampler refutes, so certification is refused.",
+    "task_owned_bugs_found": "none in factory.py. The earlier draft's self-referential residual lookup (prior/) is correctly gone."
+  },
+  "issues": [
+    "Canonical fixture conflicts with the native constructor (train pair 2, extra=1). The host must adjudicate a labelled teaching correction; the reviewer cannot."
+  ],
+  "recommended_integration_only_after_host_approval": {
+    "factory": "copy ROOT/ba1aa698/factory.py -> arc_agi2/direct_factories/task_ba1aa698.py (sha d9c288d5...). Plus a host-audit JSON in arc_agi2/direct_factories/ba1aa698.json, regenerated against the approved teaching fixture.",
+    "evidence_gate": "copy ROOT/ba1aa698/gate_ba1aa698_v7.py -> arc_agi2/panel_motion_evidence.py (pure numpy, no ARC-GEN imports)",
+    "fixture_policy": "APPROVED_CORRECTIONS['ba1aa698'] = {canonical_sha256: 8a8682f2..., teaching_sha256: de83dfb0... (after the references packet's teaching_fixture is set to proposed_constructor.validate()), changed_cells: the 4 cells above}",
+    "tests": "ROOT/ba1aa698/test_ba1aa698_review_v7.py"
+  },
+  "required_dispatch_signature": "in arc_agi2/colour_evidence.require_colour_evidence: if task_id == 'ba1aa698': from .panel_motion_evidence import require_ba1aa698_evidence; require_ba1aa698_evidence(demonstrations, queries, list(range(10)) if palette is None else palette, d4); return  -- signature require_ba1aa698_evidence(demonstrations, queries, palette=None, d4=0) -> list of answers; raises MissingBa1aa698Evidence(ValueError); queries items need only {'input': grid}.",
+  "assumptions": [
+    "Constructor domain: equal panels, motif present in every panel, motion along the panel long axis, extrapolation stays inside the panel.",
+    "The proposed teaching fixture is NOT canonical. Its pass is reported separately and is not counted as certification."
+  ]
+}

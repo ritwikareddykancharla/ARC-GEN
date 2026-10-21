@@ -1,0 +1,1062 @@
+{
+  "task_id": "ba1aa698",
+  "decision": "Original semantic conflict unresolved; retain strict native mechanism and request explicit root decision on labelled teaching copy.",
+  "native_changed": false,
+  "canonical_changed": false,
+  "observations": [
+    {
+      "split": "train",
+      "index": 0,
+      "anchors": [
+        2,
+        3,
+        4,
+        5
+      ],
+      "steps": [
+        1,
+        1,
+        1
+      ],
+      "predicted_next_anchor": 6,
+      "labelled_next_anchor": 6,
+      "motif_equals_frame": false,
+      "translation_same_for_leading_edge_centroid_trailing_edge": true
+    },
+    {
+      "split": "train",
+      "index": 1,
+      "anchors": [
+        2,
+        5,
+        8
+      ],
+      "steps": [
+        3,
+        3
+      ],
+      "predicted_next_anchor": 11,
+      "labelled_next_anchor": 12,
+      "motif_equals_frame": true,
+      "translation_same_for_leading_edge_centroid_trailing_edge": true
+    },
+    {
+      "split": "train",
+      "index": 2,
+      "anchors": [
+        12,
+        9,
+        6
+      ],
+      "steps": [
+        -3,
+        -3
+      ],
+      "predicted_next_anchor": 3,
+      "labelled_next_anchor": 3,
+      "motif_equals_frame": false,
+      "translation_same_for_leading_edge_centroid_trailing_edge": true
+    },
+    {
+      "split": "test",
+      "index": 0,
+      "anchors": [
+        2,
+        4,
+        6,
+        8
+      ],
+      "steps": [
+        2,
+        2,
+        2
+      ],
+      "predicted_next_anchor": 10,
+      "labelled_next_anchor": 10,
+      "motif_equals_frame": false,
+      "translation_same_for_leading_edge_centroid_trailing_edge": true
+    }
+  ],
+  "same_input_conflicting_labels": {
+    "native_seed": 15323,
+    "input": [
+      [
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8
+      ],
+      [
+        8,
+        2,
+        2,
+        2,
+        2,
+        8,
+        2,
+        2,
+        2,
+        2,
+        8,
+        2,
+        2,
+        2,
+        2,
+        8
+      ],
+      [
+        8,
+        2,
+        8,
+        8,
+        2,
+        8,
+        2,
+        2,
+        2,
+        2,
+        8,
+        2,
+        2,
+        2,
+        2,
+        8
+      ],
+      [
+        8,
+        2,
+        8,
+        8,
+        2,
+        8,
+        2,
+        2,
+        2,
+        2,
+        8,
+        2,
+        2,
+        2,
+        2,
+        8
+      ],
+      [
+        8,
+        2,
+        2,
+        2,
+        2,
+        8,
+        2,
+        2,
+        2,
+        2,
+        8,
+        2,
+        2,
+        2,
+        2,
+        8
+      ],
+      [
+        8,
+        2,
+        2,
+        2,
+        2,
+        8,
+        2,
+        8,
+        8,
+        2,
+        8,
+        2,
+        2,
+        2,
+        2,
+        8
+      ],
+      [
+        8,
+        2,
+        2,
+        2,
+        2,
+        8,
+        2,
+        8,
+        8,
+        2,
+        8,
+        2,
+        2,
+        2,
+        2,
+        8
+      ],
+      [
+        8,
+        2,
+        2,
+        2,
+        2,
+        8,
+        2,
+        2,
+        2,
+        2,
+        8,
+        2,
+        2,
+        2,
+        2,
+        8
+      ],
+      [
+        8,
+        2,
+        2,
+        2,
+        2,
+        8,
+        2,
+        2,
+        2,
+        2,
+        8,
+        2,
+        8,
+        8,
+        2,
+        8
+      ],
+      [
+        8,
+        2,
+        2,
+        2,
+        2,
+        8,
+        2,
+        2,
+        2,
+        2,
+        8,
+        2,
+        8,
+        8,
+        2,
+        8
+      ],
+      [
+        8,
+        2,
+        2,
+        2,
+        2,
+        8,
+        2,
+        2,
+        2,
+        2,
+        8,
+        2,
+        2,
+        2,
+        2,
+        8
+      ],
+      [
+        8,
+        2,
+        2,
+        2,
+        2,
+        8,
+        2,
+        2,
+        2,
+        2,
+        8,
+        2,
+        2,
+        2,
+        2,
+        8
+      ],
+      [
+        8,
+        2,
+        2,
+        2,
+        2,
+        8,
+        2,
+        2,
+        2,
+        2,
+        8,
+        2,
+        2,
+        2,
+        2,
+        8
+      ],
+      [
+        8,
+        2,
+        2,
+        2,
+        2,
+        8,
+        2,
+        2,
+        2,
+        2,
+        8,
+        2,
+        2,
+        2,
+        2,
+        8
+      ],
+      [
+        8,
+        2,
+        2,
+        2,
+        2,
+        8,
+        2,
+        2,
+        2,
+        2,
+        8,
+        2,
+        2,
+        2,
+        2,
+        8
+      ],
+      [
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8
+      ]
+    ],
+    "native_output": [
+      [
+        8,
+        8,
+        8,
+        8,
+        8,
+        8
+      ],
+      [
+        8,
+        2,
+        2,
+        2,
+        2,
+        8
+      ],
+      [
+        8,
+        2,
+        2,
+        2,
+        2,
+        8
+      ],
+      [
+        8,
+        2,
+        2,
+        2,
+        2,
+        8
+      ],
+      [
+        8,
+        2,
+        2,
+        2,
+        2,
+        8
+      ],
+      [
+        8,
+        2,
+        2,
+        2,
+        2,
+        8
+      ],
+      [
+        8,
+        2,
+        2,
+        2,
+        2,
+        8
+      ],
+      [
+        8,
+        2,
+        2,
+        2,
+        2,
+        8
+      ],
+      [
+        8,
+        2,
+        2,
+        2,
+        2,
+        8
+      ],
+      [
+        8,
+        2,
+        2,
+        2,
+        2,
+        8
+      ],
+      [
+        8,
+        2,
+        2,
+        2,
+        2,
+        8
+      ],
+      [
+        8,
+        2,
+        8,
+        8,
+        2,
+        8
+      ],
+      [
+        8,
+        2,
+        8,
+        8,
+        2,
+        8
+      ],
+      [
+        8,
+        2,
+        2,
+        2,
+        2,
+        8
+      ],
+      [
+        8,
+        2,
+        2,
+        2,
+        2,
+        8
+      ],
+      [
+        8,
+        8,
+        8,
+        8,
+        8,
+        8
+      ]
+    ],
+    "canonical_output": [
+      [
+        8,
+        8,
+        8,
+        8,
+        8,
+        8
+      ],
+      [
+        8,
+        2,
+        2,
+        2,
+        2,
+        8
+      ],
+      [
+        8,
+        2,
+        2,
+        2,
+        2,
+        8
+      ],
+      [
+        8,
+        2,
+        2,
+        2,
+        2,
+        8
+      ],
+      [
+        8,
+        2,
+        2,
+        2,
+        2,
+        8
+      ],
+      [
+        8,
+        2,
+        2,
+        2,
+        2,
+        8
+      ],
+      [
+        8,
+        2,
+        2,
+        2,
+        2,
+        8
+      ],
+      [
+        8,
+        2,
+        2,
+        2,
+        2,
+        8
+      ],
+      [
+        8,
+        2,
+        2,
+        2,
+        2,
+        8
+      ],
+      [
+        8,
+        2,
+        2,
+        2,
+        2,
+        8
+      ],
+      [
+        8,
+        2,
+        2,
+        2,
+        2,
+        8
+      ],
+      [
+        8,
+        2,
+        2,
+        2,
+        2,
+        8
+      ],
+      [
+        8,
+        2,
+        8,
+        8,
+        2,
+        8
+      ],
+      [
+        8,
+        2,
+        8,
+        8,
+        2,
+        8
+      ],
+      [
+        8,
+        2,
+        2,
+        2,
+        2,
+        8
+      ],
+      [
+        8,
+        8,
+        8,
+        8,
+        8,
+        8
+      ]
+    ],
+    "scope": "Shows one deterministic input-only rule cannot match both labels. Does not rule out context-conditioned competing families; those require a justified finite hypothesis scope."
+  },
+  "fitted_rivals": [
+    {
+      "name": "motif_colour_equals_frame",
+      "all_demos_exact": [
+        true,
+        true,
+        true
+      ],
+      "query_prediction": [
+        [
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4
+        ],
+        [
+          4,
+          3,
+          3,
+          3,
+          3,
+          3,
+          4
+        ],
+        [
+          4,
+          3,
+          3,
+          3,
+          3,
+          3,
+          4
+        ],
+        [
+          4,
+          3,
+          3,
+          3,
+          3,
+          3,
+          4
+        ],
+        [
+          4,
+          3,
+          3,
+          3,
+          3,
+          3,
+          4
+        ],
+        [
+          4,
+          3,
+          3,
+          3,
+          3,
+          3,
+          4
+        ],
+        [
+          4,
+          3,
+          3,
+          3,
+          3,
+          3,
+          4
+        ],
+        [
+          4,
+          3,
+          3,
+          3,
+          3,
+          3,
+          4
+        ],
+        [
+          4,
+          3,
+          3,
+          3,
+          3,
+          3,
+          4
+        ],
+        [
+          4,
+          3,
+          3,
+          3,
+          3,
+          3,
+          4
+        ],
+        [
+          4,
+          3,
+          8,
+          8,
+          8,
+          3,
+          4
+        ],
+        [
+          4,
+          3,
+          3,
+          8,
+          3,
+          3,
+          4
+        ],
+        [
+          4,
+          3,
+          3,
+          3,
+          3,
+          3,
+          4
+        ],
+        [
+          4,
+          3,
+          3,
+          3,
+          3,
+          3,
+          4
+        ],
+        [
+          4,
+          3,
+          3,
+          3,
+          3,
+          3,
+          4
+        ],
+        [
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4
+        ]
+      ]
+    },
+    {
+      "name": "step_at_least_two_toward_larger_row",
+      "all_demos_exact": [
+        true,
+        true,
+        true
+      ],
+      "query_prediction": [
+        [
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4
+        ],
+        [
+          4,
+          3,
+          3,
+          3,
+          3,
+          3,
+          4
+        ],
+        [
+          4,
+          3,
+          3,
+          3,
+          3,
+          3,
+          4
+        ],
+        [
+          4,
+          3,
+          3,
+          3,
+          3,
+          3,
+          4
+        ],
+        [
+          4,
+          3,
+          3,
+          3,
+          3,
+          3,
+          4
+        ],
+        [
+          4,
+          3,
+          3,
+          3,
+          3,
+          3,
+          4
+        ],
+        [
+          4,
+          3,
+          3,
+          3,
+          3,
+          3,
+          4
+        ],
+        [
+          4,
+          3,
+          3,
+          3,
+          3,
+          3,
+          4
+        ],
+        [
+          4,
+          3,
+          3,
+          3,
+          3,
+          3,
+          4
+        ],
+        [
+          4,
+          3,
+          3,
+          3,
+          3,
+          3,
+          4
+        ],
+        [
+          4,
+          3,
+          3,
+          3,
+          3,
+          3,
+          4
+        ],
+        [
+          4,
+          3,
+          8,
+          8,
+          8,
+          3,
+          4
+        ],
+        [
+          4,
+          3,
+          3,
+          8,
+          3,
+          3,
+          4
+        ],
+        [
+          4,
+          3,
+          3,
+          3,
+          3,
+          3,
+          4
+        ],
+        [
+          4,
+          3,
+          3,
+          3,
+          3,
+          3,
+          4
+        ],
+        [
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4
+        ]
+      ]
+    }
+  ],
+  "reason_not_install_rival_switch": "No rationale beyond the exceptional pair identifies the colour condition instead of other fitting conditions. Including both natural-looking residual rivals makes the original query ambiguous. Restricting solely to the colour rule requires an additional hypothesis-scope assumption not established by demonstration evidence; matching its known query label cannot justify that restriction.",
+  "original_rationale_assessment": "Opus explicitly says empirical +1 correction is fitted, not derived. Atlas repeats the frame-colour falling-square exception and adds no independent evidence.",
+  "simple_mechanisms_assessed": [
+    "Constant displacement: predicts11, canonical12",
+    "Constant centroid displacement: equivalent because motif unchanged",
+    "Constant leading/trailing-edge displacement or inter-motif gap: equivalent",
+    "Constant acceleration inferred from observed displacement: acceleration0, predicts11",
+    "Boundary clamping: unnecessary; predicted motif rows11-12 remain wholly inside14-cell panel interior"
+  ],
+  "proposed_teaching_metadata": {
+    "task_id": "ba1aa698",
+    "status": "proposed_uniform_translation_teaching_copy_pending_root_decision",
+    "original_benchmark_labels_changed": false,
+    "uncertain_original_intent": true,
+    "claim": "Matches unchanged random native generator, not established original benchmark intention.",
+    "canonical_sha256": "6dc2d46cc712ffc6810b6b7f028852346ae4e5c03bc8f0f69539e8cdd35a531e",
+    "teaching_sha256": "7c4e28c692223c47602e5b444d81b2f372805e094158ffb8f5bbf63f8715bc0f",
+    "changed_cells": [
+      {
+        "split": "train",
+        "pair_index": 1,
+        "row": 11,
+        "column": 2,
+        "original": 2,
+        "proposed": 8
+      },
+      {
+        "split": "train",
+        "pair_index": 1,
+        "row": 11,
+        "column": 3,
+        "original": 2,
+        "proposed": 8
+      },
+      {
+        "split": "train",
+        "pair_index": 1,
+        "row": 13,
+        "column": 2,
+        "original": 8,
+        "proposed": 2
+      },
+      {
+        "split": "train",
+        "pair_index": 1,
+        "row": 13,
+        "column": 3,
+        "original": 8,
+        "proposed": 2
+      }
+    ],
+    "constructor_source_sha256": "8f3909440a766e9fabd1ed73141da9bf0c6f081ccdf2974f3222bcf544a4a2c6",
+    "proposed_constructor_sha256": "679086df4106cc614950423ae076da000649eee09a637d07b53c5bfe0ff4dda2"
+  },
+  "proposed_fixture_variants_rechecked": 16,
+  "existing_fresh_audit_reused_without_source_changes": {
+    "command": "PYTHONPATH=... .venv/bin/python ROOT/ba1aa698/audit_proposed_ba1aa698.py",
+    "passed": true,
+    "fresh_pairs_checked": 1000,
+    "augmented_pair_checks": 8000,
+    "fixture_variants_checked": 16,
+    "unique_base_inputs": 983,
+    "sampler_rejections": 0,
+    "runtime_s": 55.6
+  },
+  "source_hashes": {
+    "factory.py": "d9c288d58049ac7d6ca6b663a4ab6d626140469ed3eeec63211117fea39b2c32",
+    "gate_ba1aa698_v7.py": "0aa46fc6fa3b9e63abf74b107a59fdcb949f81f7f46303b6449cfc6f10aef476",
+    "proposed_constructor.py": "679086df4106cc614950423ae076da000649eee09a637d07b53c5bfe0ff4dda2"
+  },
+  "canonical_digest_after": "6dc2d46cc712ffc6810b6b7f028852346ae4e5c03bc8f0f69539e8cdd35a531e",
+  "approval": {
+    "canonical_sha256": "8a8682f21e71f303ce2d7dcd02091df3278e2be978151965590c559536f97fdd",
+    "teaching_sha256": "de83dfb0e6a16a2c13e4d0a3d3241a82a7353df7e97a056e154411976ed5a8d0",
+    "source": "arc_agi2/reports/label-reviews/ba1aa698.json",
+    "approval": "User delegated investigation/finalization of labelled teaching copies; host selected audited uniform-motion synthetic teaching hypothesis on2026-10-21.",
+    "evidence_status": "locally_reviewed_uncertain_uniform_motion_hypothesis_not_official_correction",
+    "description": "Four train[1] output cells follow the unchanged native uniform motion mechanism. Original intent remains uncertain: fitted residual alternatives remain documented. Original benchmark labels/scoring and query answers stay unchanged.",
+    "changed_cells": [
+      {
+        "split": "train",
+        "pair": 1,
+        "field": "output",
+        "row": 11,
+        "col": 2,
+        "canonical": 2,
+        "teaching": 8
+      },
+      {
+        "split": "train",
+        "pair": 1,
+        "field": "output",
+        "row": 11,
+        "col": 3,
+        "canonical": 2,
+        "teaching": 8
+      },
+      {
+        "split": "train",
+        "pair": 1,
+        "field": "output",
+        "row": 13,
+        "col": 2,
+        "canonical": 8,
+        "teaching": 2
+      },
+      {
+        "split": "train",
+        "pair": 1,
+        "field": "output",
+        "row": 13,
+        "col": 3,
+        "canonical": 8,
+        "teaching": 2
+      }
+    ],
+    "original_fixture_context_passed": false
+  }
+}

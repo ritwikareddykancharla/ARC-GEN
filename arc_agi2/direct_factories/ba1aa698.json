@@ -1,0 +1,135 @@
+{
+  "task_id": "ba1aa698",
+  "NOT_CANONICAL": true,
+  "fixture_source": "approved labelled teaching_fixture",
+  "factory_sha256": "d9c288d58049ac7d6ca6b663a4ab6d626140469ed3eeec63211117fea39b2c32",
+  "proposed_constructor_sha256": "679086df4106cc614950423ae076da000649eee09a637d07b53c5bfe0ff4dda2",
+  "native_constructor_sha256": "8f3909440a766e9fabd1ed73141da9bf0c6f081ccdf2974f3222bcf544a4a2c6",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [],
+  "unique_base_inputs": 983,
+  "seconds": 55.63070379104465,
+  "constructor_sha256": "8f3909440a766e9fabd1ed73141da9bf0c6f081ccdf2974f3222bcf544a4a2c6",
+  "scope": "Uniform-motion teaching copy; original canonical context is not passed.",
+  "original_fixture_context_passed": false,
+  "generation_equivalence": "Original and audited proposed generate() ASTs identical; only validate() differs. Approved teaching fixture equals audited proposed validate().",
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "task_id": "ba1aa698",
+    "author": "host parallel CLI execution worker",
+    "status": "unresolved_fixture_conflict",
+    "native_changed": false,
+    "canonical_fixture_changed": false,
+    "factory_sha256": "d9c288d58049ac7d6ca6b663a4ab6d626140469ed3eeec63211117fea39b2c32",
+    "native_constructor_sha256": "8f3909440a766e9fabd1ed73141da9bf0c6f081ccdf2974f3222bcf544a4a2c6",
+    "proposed_constructor_sha256": "679086df4106cc614950423ae076da000649eee09a637d07b53c5bfe0ff4dda2",
+    "explanation": "The direct program is strict and demo-consistent, working in visible coordinates. It reads from pixels: frame = corner colour; full frame-coloured lines on one axis = panel dividers; panel background = unique most common interior colour. It checks that each panel motif is a pure translation of the previous one with a constant step. Output = one framed panel with the last motif moved one more step. Its hypotheses are the time direction ORDER in {+1,-1}. Each one is checked against EVERY demo by full-grid equality. All survivors must agree on the full query output, otherwise it raises Inconsistent/Ambiguous: no default, majority vote, demo skipping or reset. d4/palette are unused (no hidden D4 choice).",
+    "fixture_conflict": {
+      "summary": "Canonical train pair 2 (validate() uses extra=1) labels the 2x2 frame-coloured motif at rows 12-13. The native rule gives rows 11-12. That input can be generated EXACTLY by the native fresh sampler (random.seed(15323); generate()) with the rows 11-12 label. This identical-input / different-output conflict means no function of the input can match both. The audit also scores each train pair as a query with all demos, pair 2 included. So every demo-consistent uniform program fails all 16 canonical variants. The previous draft passed only by learning a +1 residual from pair 2 itself (a self-referential lookup with default 0).",
+      "witness": {
+        "explicit": "generate(width=4,frames=3,offset=3,flip=0,colors=[8,2,8],pattern=[1,1,1,1]) input == canonical train[1] input, output differs",
+        "native_sampler_seed": 15323,
+        "independent_enumeration_outputs_extra0": 1,
+        "canonical_label_in_native_family": false,
+        "outputs_if_extra_in_{0,1}": 2
+      },
+      "feature_keyed_rules_refuted": "Pair 2 alone carries \"+1\" features: motif colour == frame colour, solid 2x2 motif, or conjunctions such as frames==3 & flip==0. Fresh draws produce all of them with residual 0, so any keyed +1 rule contradicts constructor labels. The canonical demos also cannot choose among keyed rules (e.g. \"step>=2 and moving down\" also separates pair 2 from pairs 1 and 3, and it predicts +1 on the canonical test). So the residual is not identifiable from context.",
+      "intrinsic_vs_context": "In the native family (extra=0), every one of 8000 fresh pair-checks (1000 pairs x 8 D4, shuffled palette) is identifiable from its input alone: independent enumeration gives one output, equal to the label. Each single demo identifies ORDER (0 evidence-missing cases, 0 demo resamples needed). If extra in {0,1} is admitted as a latent parameter, all 250/250 base queries become intrinsically ambiguous. The fixture defect is therefore intrinsic, not a context shortfall."
+    },
+    "proposed_correction": "proposed_constructor.py drops extra=1 from validate() train pair 2. The diff (4 cells of train[1].output) is in proposed_fixture_diff_ba1aa698.json. Inputs are unchanged; the host decides.",
+    "metrics": {
+      "canonical_host_audit": {
+        "passed": false,
+        "failure_stage": "fixtures",
+        "error": "Inconsistent: no hypothesis is consistent with all demonstrations",
+        "fixture_variants_checked": 0
+      },
+      "canonical_fixture_strict_program": {
+        "variants": 16,
+        "passed": 0,
+        "without_pair2_demo_identity": [
+          "exact",
+          "wrong",
+          "exact",
+          "exact"
+        ]
+      },
+      "fresh_native_sampler_strict_program": {
+        "pairs": 1000,
+        "aug_checks": 8000,
+        "indep_singleton": 8000,
+        "indep_match": 8000,
+        "extra_family_ambiguous": 250,
+        "evidence_missing": 0,
+        "rejections": 0,
+        "program_fail": [],
+        "indep_fail": [],
+        "unique_base_inputs": 983
+      },
+      "proposed_fixture_audit_NOT_CANONICAL": {
+        "passed": true,
+        "fresh_pairs_checked": 1000,
+        "augmented_pair_checks": 8000,
+        "fixture_variants_checked": 16,
+        "unique_base_inputs": 983,
+        "seconds": 24.668085415964015
+      },
+      "focused_tests": {
+        "no_demos_is_ambiguous_context_shortfall": "pass",
+        "corrupted_demo_label_is_inconsistent": "pass",
+        "one_demo_identifies_order": "pass",
+        "witness_explicit_params_input_equal": true,
+        "witness_explicit_params_output_equal": false,
+        "witness_native_sampler_seed15323_input_equal": true,
+        "witness_native_sampler_seed15323_output_equal": false,
+        "canonical_train2_native_outputs_extra0": 1,
+        "canonical_train2_label_in_extra0_family": false,
+        "canonical_train2_outputs_extra01": 2,
+        "canonical_train2_label_motif_rows": [
+          12,
+          13
+        ],
+        "uniform_rule_motif_rows": [
+          11,
+          12
+        ]
+      }
+    },
+    "test_commands": [
+      "PYTHONPATH=/Users/ritwika/projects/ARC-GEN .venv/bin/python ROOT/audit.py --only ba1aa698  (~0.3s, fails at fixtures as expected)",
+      "PYTHONPATH=... .venv/bin/python ROOT/ba1aa698/audit_proposed_ba1aa698.py  (~25s)",
+      "PYTHONPATH=... .venv/bin/python ROOT/ba1aa698/evidence_ba1aa698.py  (~52s, 6 processes)"
+    ],
+    "assumptions": [
+      "Panels are equal in size and the motif is present in every panel (constructor domain).",
+      "Divider axis is visible: >2 full frame lines on exactly one axis.",
+      "Extrapolation stays inside the panel (max lead 11, motif height <=2, interior 14)."
+    ],
+    "source_paths": [
+      "tasks/task_ba1aa698.py (native, unchanged)",
+      "ROOT/ba1aa698/factory.py",
+      "ROOT/ba1aa698/proposed_constructor.py",
+      "ROOT/ba1aa698/evidence_ba1aa698.py",
+      "ROOT/ba1aa698/audit_proposed_ba1aa698.py",
+      "ROOT/ba1aa698/prior/ (previous draft audit/notes)"
+    ],
+    "limitations": "Not certified on the canonical fixture, and it cannot be without matching an identical-input conflicting label. Coverage depends on the host adjudicating train pair 2.",
+    "independent_review_v7": {
+      "file": "independent-review-v7.json",
+      "passed": false,
+      "status": "unresolved_fixture_conflict confirmed by second reviewer; factory unchanged"
+    },
+    "integration_ready_v10": {
+      "file": "integration-ready-v10.json",
+      "fork_tests": "arc_agi2/test_ba1aa698_independent_review_v7.py (15/15 OK, ~10.5s)",
+      "fork_gate": "arc_agi2/panel_motion_ba1aa698_evidence.py (byte-identical to gate_ba1aa698_v7.py)",
+      "fork_factory": "arc_agi2/direct_factories/task_ba1aa698.py (byte-identical, no certificate json)",
+      "status": "pending root decision on teaching copy; native/canonical untouched"
+    }
+  }
+}

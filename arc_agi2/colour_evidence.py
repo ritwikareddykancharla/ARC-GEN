@@ -63,6 +63,20 @@ def _hole_count(cells):
 
 
 def require_colour_evidence(task_id, demonstrations, queries, palette=None, d4=0):
+    if task_id == 'ba1aa698':
+        from .panel_motion_ba1aa698_evidence import require_ba1aa698_evidence, MissingBa1aa698Evidence
+        try:
+            require_ba1aa698_evidence(demonstrations, queries, palette, d4)
+        except MissingBa1aa698Evidence as exc:
+            raise MissingColourEvidence(str(exc)) from exc
+        return
+    if task_id == 'bd14c3bf':
+        from .bd14c3bf_shape_family_evidence import require_bd14c3bf_evidence, MissingBd14c3bfEvidence
+        try:
+            require_bd14c3bf_evidence(demonstrations, queries, palette, d4)
+        except MissingBd14c3bfEvidence as exc:
+            raise MissingColourEvidence(str(exc)) from exc
+        return
     if task_id == 'ac0c5833':
         from .marker_template_evidence import require_evidence
         require_evidence(demonstrations, queries, list(range(10)) if palette is None else palette)

@@ -1,0 +1,231 @@
+{
+  "task_id": "bd14c3bf",
+  "factory_sha256": "d5ee82f38fa05a37ed44c64d90fd814e49ad276c6a7bcc25004d7fafa13edae0",
+  "constructor_sha256": "f02367673de942117b53e78c37231cf3ecaaffedf07587bb50befaa77b695492",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [
+    {
+      "seed": 153389957273058,
+      "error": "reference/generator deadline"
+    },
+    {
+      "seed": 210009191714604,
+      "error": "reference/generator deadline"
+    },
+    {
+      "seed": 280272226551751,
+      "error": "reference/generator deadline"
+    },
+    {
+      "seed": 1348060371613,
+      "error": "reference/generator deadline"
+    },
+    {
+      "seed": 273453583064449,
+      "error": "reference/generator deadline"
+    },
+    {
+      "seed": 167570005207956,
+      "error": "reference/generator deadline"
+    },
+    {
+      "seed": 114206133853091,
+      "error": "reference/generator deadline"
+    },
+    {
+      "seed": 217248865711084,
+      "error": "reference/generator deadline"
+    },
+    {
+      "seed": 115948000154741,
+      "error": "reference/generator deadline"
+    },
+    {
+      "seed": 73700084226958,
+      "error": "reference/generator deadline"
+    },
+    {
+      "seed": 157690147571791,
+      "error": "reference/generator deadline"
+    },
+    {
+      "seed": 265997929581373,
+      "error": "reference/generator deadline"
+    },
+    {
+      "seed": 247502875367271,
+      "error": "reference/generator deadline"
+    },
+    {
+      "seed": 10985579396410,
+      "error": "reference/generator deadline"
+    },
+    {
+      "seed": 138637667059412,
+      "error": "reference/generator deadline"
+    },
+    {
+      "seed": 257286299783746,
+      "error": "reference/generator deadline"
+    },
+    {
+      "seed": 10142092727652,
+      "error": "reference/generator deadline"
+    },
+    {
+      "seed": 119852946455564,
+      "error": "reference/generator deadline"
+    },
+    {
+      "seed": 147158827426632,
+      "error": "reference/generator deadline"
+    },
+    {
+      "seed": 15816048743148,
+      "error": "reference/generator deadline"
+    },
+    {
+      "seed": 266531886127039,
+      "error": "reference/generator deadline"
+    },
+    {
+      "seed": 173148512183712,
+      "error": "reference/generator deadline"
+    },
+    {
+      "seed": 203470579884902,
+      "error": "reference/generator deadline"
+    },
+    {
+      "seed": 37666904070197,
+      "error": "reference/generator deadline"
+    },
+    {
+      "seed": 267811186591006,
+      "error": "reference/generator deadline"
+    },
+    {
+      "seed": 109864145723361,
+      "error": "reference/generator deadline"
+    },
+    {
+      "seed": 168674863673668,
+      "error": "reference/generator deadline"
+    },
+    {
+      "seed": 227201826848948,
+      "error": "reference/generator deadline"
+    },
+    {
+      "seed": 269368625397504,
+      "error": "reference/generator deadline"
+    },
+    {
+      "seed": 94626782867439,
+      "error": "reference/generator deadline"
+    },
+    {
+      "seed": 100252935564281,
+      "error": "reference/generator deadline"
+    },
+    {
+      "seed": 146158417931322,
+      "error": "reference/generator deadline"
+    },
+    {
+      "seed": 181750965704028,
+      "error": "reference/generator deadline"
+    },
+    {
+      "seed": 273655596598938,
+      "error": "reference/generator deadline"
+    },
+    {
+      "seed": 159998883619749,
+      "error": "reference/generator deadline"
+    },
+    {
+      "seed": 183750339783772,
+      "error": "reference/generator deadline"
+    },
+    {
+      "seed": 169690850748515,
+      "error": "reference/generator deadline"
+    },
+    {
+      "seed": 33749498624770,
+      "error": "reference/generator deadline"
+    },
+    {
+      "seed": 18555485926567,
+      "error": "reference/generator deadline"
+    },
+    {
+      "seed": 102857014441703,
+      "error": "reference/generator deadline"
+    },
+    {
+      "seed": 220828086412372,
+      "error": "reference/generator deadline"
+    },
+    {
+      "seed": 119043712229944,
+      "error": "reference/generator deadline"
+    },
+    {
+      "seed": 154785209768889,
+      "error": "reference/generator deadline"
+    },
+    {
+      "seed": 217711660505173,
+      "error": "reference/generator deadline"
+    },
+    {
+      "seed": 197494803549251,
+      "error": "reference/generator deadline"
+    },
+    {
+      "seed": 156621810059650,
+      "error": "reference/generator deadline"
+    },
+    {
+      "seed": 162725331860489,
+      "error": "reference/generator deadline"
+    },
+    {
+      "seed": 185645018238766,
+      "error": "reference/generator deadline"
+    },
+    {
+      "seed": 148910381450666,
+      "error": "reference/generator deadline"
+    },
+    {
+      "seed": 196907116290166,
+      "error": "reference/generator deadline"
+    },
+    {
+      "seed": 256011600875924,
+      "error": "reference/generator deadline"
+    }
+  ],
+  "unique_base_inputs": 832,
+  "seconds": 736.9633133411407,
+  "unique_count_note": "Conservative lower bound from first832 native samples; additional168 checked independently, no combined raw input archive retained.",
+  "audit_scope": "Native random generator unchanged. Original832 accepted pairs under5s deadline plus168 new pairs under30s deadline; all16 original fixture variants. Full8D4/palette exact checks on all1000. 8320exhaustive native shape/template comparisons separately pass.",
+  "additional_sampling_timeouts": 3,
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "The emitted program works directly in visible coordinates and substitutes the palette roles: background palette[0], ordinary objects palette[1], template palette[2]. Both normal forms below are invariant under the full D4 group, so d4 needs no other specialisation. The program takes the 4-connected template component(s). Each other non-background component is recoloured to the template colour if its shape matches the template under one of two stretch-invariant normal forms, each compared under all 8 rotations and reflections.\n\n(a) The archived form: crop, then collapse runs of identical rows and then columns.\n\n(b) A new stroke-length-invariant form. It finds the vertex cells of the line drawing: every cell that is not a straight pass-through (exactly two opposite 4-neighbours). It rank-compresses the vertex rows and columns onto a lattice where vertices sit at even positions. It then draws each straight edge, found by walking from a vertex through pass-through cells to the next vertex.\n\nForm (b) removes any lengthening of a straight stroke segment, including asymmetric lengthening that duplicate-row collapse cannot remove. It does not merge the constructor's shape families:\n- O is a single cycle.\n- 8 has two cycles.\n- A is a cycle with two legs.\n- C has 2 corners and 2 ends.\n- L has 1 corner and 2 ends.\n- Y has 1 T-junction, 2 corners and 3 ends.\n- H and P each have 2 T-junctions and 4 ends, but their compressed lattices differ: H's legs point both ways, P's teeth point one way with an overhanging base.\n\nThe host counterexample is resolved by form (b). The template is a 3-wide Y (010/111/101). The disputed object (.11/.1./11./.1./.11) is a 5-tall Y. Both compress to the same 5x5 lattice up to a 90-degree rotation, so the object is painted 6, as labelled. The other query objects are an H, an I-beam H, a second I-beam H and an O; they remain unmatched under both forms. I also checked the counterexample demos by hand: the 8 and A templates recolour exactly the labelled objects.",
+    "limitations": "- **Hand-derived claims.** That the stroke form merges each family into one class and keeps families apart comes from reading the drawing code for all allowed sizes and angles. It was not checked by exhaustive execution. Using the archived collapse form as an OR safeguard means the change only adds matches for stroke-length variants.\n- **Thin-drawing assumption.** The stroke form assumes one-cell-thick orthogonal drawings, which is what the constructor produces. On thick blobs it still returns a deterministic form, but its semantics there are unvalidated.\n- **Teaching stages.** Only the final grid is returned; the teaching-stage canvases are not.\n- **Tested (second review v6).** See independent-review-v6.json, test_bd14c3bf_review_v6.py and review-v6-gate-audit.json.",
+    "diagnosis": "The prior diagnosis, a constructor defect, is withdrawn. The failing pair is not mislabelled and is not visibly ambiguous. The generator deliberately draws Y's odd dimension as 3 or 5 and labels by shape family. Visibly, a 5-wide Y is a 3-wide Y with its base segments lengthened, which is legitimate 'stretching' of a stroke.\n\nThe archived row/column-collapse normaliser only removes stretching that comes from repeating whole rows or columns. A 5-wide Y's base has extra base-only columns between the stem and each arm. Those columns are not identical to their neighbours, so collapse cannot remove them. That is a limitation of the solver, not of the label.\n\nThe stroke-length-invariant normal form is a deterministic function of the visible input. It reproduces the generator's family label for every family and size the constructor can draw, so the label is recoverable. No identical-input / different-output witness exists: the visible geometry fixes the family.\n\nIdentifiability between the two rules: the collapse-only rule and the collapse-or-stroke rule agree on every canonical fixture and on every generated scene, except when the template is a Y and some other object is a 5-long Y. In those scenes, demonstrations with non-Y templates cannot separate the rules. The choice rests on the constructor's own family semantics, which the generated labels exhibit and nothing contradicts. It is not a colour or order tie-break, and d4 plays no part in it. The optional evidence_code reports, from demos and query input only, whether each rule is consistent with the demos and how many query cells they disagree on.",
+    "constructor_issue": "No defect requiring a sampling change. The earlier proposal to force Y odd dimension 3 in Y-template scenes is retracted: it would have narrowed the native generator. The only discrepancy is between the prose rule and archived solver (duplicate row/column collapse) and the generator's family semantics, which also allow asymmetric stroke-length variation in Y. Host review may want to update the rule text: 'stretching' means lengthening any straight stroke segment, not only repeating whole rows or columns.",
+    "author": "host parallel CLI execution worker",
+    "review_v6_addendum": "Second independent review: the factory source is unchanged (sha256 d5ee82f3...). The 'hand-derived' family claim is now checked by execution: all 32 native templates (the template is always minimum size) against all 260 native object variants, under all 8 D4 transforms, plus an independent re-implementation of the family form. Ambiguity gate: evidence_bd14c3bf.require_bd14c3bf_evidence(demonstrations, queries, palette=None, d4=None) reads only demo pairs and query inputs. It fits 13 shape-equivalence hypotheses (exact / collapse / lattice / family x id / C4 / D4, plus coarse topology) and raises MissingBd14c3bfEvidence when the survivors disagree on a query. The old host counterexample is a context shortfall, not an intrinsic ambiguity: the Y-template query plus non-Y demos is rejected, and adding one native Y-template demo resolves it. Labels are a deterministic function of the visible input, as the exhaustive check shows, so the gate has no intrinsic-ambiguity case in the native domain."
+  }
+}

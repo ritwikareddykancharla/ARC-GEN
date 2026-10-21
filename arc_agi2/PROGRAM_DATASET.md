@@ -1,6 +1,6 @@
 # Combined program and grid dataset
 
-**Current status (2026-10-21): 1,115 / 1,120 families admitted for program-target generation; 5 remain.** Production generation and SFT await completion. The dated entries below are historical progress. Coverage includes explicitly labelled teaching contexts, not a claim of solving every original benchmark context.
+**Current status (2026-10-21): 1,117 / 1,120 families admitted for program-target generation; 3 remain.** Production generation and SFT await completion. The dated entries below are historical progress. Coverage includes explicitly labelled teaching contexts, not a claim of solving every original benchmark context.
 
 Exports use **one episode per row**, containing a lossless PNG and a
 JSON record with both the program and the output grids. Images include query
@@ -37,7 +37,7 @@ recorded. Passing finite audits does not prove unrestricted generalization.
 
 - 213 native direct-coordinate certificates admitted after fresh audits and
   supplied-fixture checks.
-- 896 admitted factories. Each passed 1,000 fresh pairs, 8,000 augmented pair
+- 898 admitted factories. Each passed 1,000 fresh pairs, 8,000 augmented pair
   checks and 16 supplied-fixture variants. Their audit records retain draft
   limitations and source/constructor hashes. These checks are finite evidence,
   not proof of correctness on every generated input.
@@ -48,7 +48,7 @@ recorded. Passing finite audits does not prove unrestricted generalization.
   counts must be computed as a union, not added.
 - Local exporter test: 18 fresh base episodes, 144 augmented PNG/program/grid
   records. It requested 20 bases and reported a two-episode shortfall.
-- The union currently admits 1115 of 1,120 families; 5 still need direct
+- The union currently admits 1117 of 1,120 families; 3 still need direct
   augmented program admission. Constructor coverage and program coverage are
   different gates.
 - Synthetic labels for `00d62c1b` now fill every enclosed background component,
@@ -1659,3 +1659,12 @@ This is coverage work, not production episode counts. The dataset quota remains1
 ### Verified program coverage: 1,115 / 1,120
 
 ac0c5833 passes1,000 unique fresh pairs,8,000 augmentation checks,16 original fixture variants and11 tests. It distinguishes ordinary template copies from a geometric hollow-outline trim using demonstrations. Overlapping stamps combine their painted pixels; there is no learned per-shape lookup table. Original labels and native constructor remain unchanged. Context resampling retains the query; the gate consumes query inputs only. Five families remain.
+
+
+### Verified program coverage: 1,117 / 1,120
+
+bd14c3bf passed1,000 fresh-pair checks and8,000 augmentation checks, with slow native sampling explicitly recorded. Independent review additionally exhaustively checked8,320 template/object combinations and tested1,000 context-gated episodes, retaining all88 queries on which competing shape rules differed. Missing demonstration evidence resamples demos while preserving the query.
+
+ba1aa698 uses a labelled four-cell uniform-motion teaching copy consistent with its unchanged synthetic generator. Original labels and query answers stay unchanged; the original canonical demonstration conflict is not claimed solved. The audited proposed generate() is AST-identical to the live native sampler, and15 portable tests verify original refusal, teaching-copy success and query-label isolation.
+
+Three remaining families:1b8318e3,a64e4611,f3b10344. Production generation and SFT remain pending.

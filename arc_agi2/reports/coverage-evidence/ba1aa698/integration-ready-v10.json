@@ -1,0 +1,82 @@
+{
+  "task_id": "ba1aa698",
+  "author": "host parallel CLI execution worker",
+  "status": "integration_prepared_pending_root_decision_on_teaching_copy",
+  "certified": false,
+  "native_changed": false,
+  "canonical_changed": false,
+  "correction_applied": false,
+  "factory_source_changed": false,
+  "redo1000_audit_run": false,
+  "redo1000_reason": "All source hashes (factory, gate, native constructor, proposed constructor, teaching-copy proposal) are byte-identical to those recorded in final-semantic-review.json and host-audit-proposed-NOT-CANONICAL.json. The existing proposed-fixture audit is reused: passed, 1000 fresh pairs, 8000 aug checks, 16 fixture variants, 983 unique base inputs, 0 rejections.",
+  "source_hashes": {
+    "fork:arc_agi2/direct_factories/task_ba1aa698.py": "d9c288d58049ac7d6ca6b663a4ab6d626140469ed3eeec63211117fea39b2c32",
+    "ROOT/ba1aa698/factory.py": "d9c288d58049ac7d6ca6b663a4ab6d626140469ed3eeec63211117fea39b2c32",
+    "fork:arc_agi2/panel_motion_ba1aa698_evidence.py": "0aa46fc6fa3b9e63abf74b107a59fdcb949f81f7f46303b6449cfc6f10aef476",
+    "ROOT/ba1aa698/gate_ba1aa698_v7.py": "0aa46fc6fa3b9e63abf74b107a59fdcb949f81f7f46303b6449cfc6f10aef476",
+    "fork:arc_agi2/ba1aa698_proposed_teaching_fixture.json": "a36f76c67d571ace423b1fe63f49545a87483bd209aadd4b89c3fc33f1a79cf1",
+    "ROOT/ba1aa698/final-teaching-copy-proposal.json": "a36f76c67d571ace423b1fe63f49545a87483bd209aadd4b89c3fc33f1a79cf1",
+    "fork:arc_agi2/test_ba1aa698_independent_review_v7.py": "bc313bb51dfb2c6d6ec85526c59892d8bb5b1d576cb7807e4f448fca92502658",
+    "fork:tasks/task_ba1aa698.py (native, unchanged, git clean)": "8f3909440a766e9fabd1ed73141da9bf0c6f081ccdf2974f3222bcf544a4a2c6",
+    "fork:arc_agi2/references/ba1aa698.json (unchanged, git clean)": "5d0cb9905828e34180633ea0c0b36811647530ff3c40856bebf1733c558fc27e",
+    "ROOT/ba1aa698/proposed_constructor.py": "679086df4106cc614950423ae076da000649eee09a637d07b53c5bfe0ff4dda2",
+    "ROOT/ba1aa698/proposed_constructor_ba1aa698.diff": "74ff545b5deec14a12ee03b1e530bc6e72ba6a0fe69f5031e1c8dd9164429457"
+  },
+  "fixture_digests": {
+    "canonical_sha256_json_sorted": "6dc2d46cc712ffc6810b6b7f028852346ae4e5c03bc8f0f69539e8cdd35a531e",
+    "teaching_copy_sha256_json_sorted": "7c4e28c692223c47602e5b444d81b2f372805e094158ffb8f5bbf63f8715bc0f",
+    "teaching_changed_cells": "train[1].output (r11,c2) 2->8, (r11,c3) 2->8, (r13,c2) 8->2, (r13,c3) 8->2; all inputs and the test pair unchanged",
+    "teaching_train1_equals": "native generate(width=4,frames=3,offset=3,flip=0,colors=[8,2,8],pattern=[1,1,1,1]) with extra=0"
+  },
+  "signatures": {
+    "factory": "build_program(d4, palette) -> str. The emitted source is identical for all 16 d4/palette variants (d4/palette unused) and defines solve(demonstrations, grid). It raises Inconsistent when no ORDER fits, and Ambiguous on disagreement or an inapplicable query.",
+    "gate": "arc_agi2.panel_motion_ba1aa698_evidence.require_ba1aa698_evidence(demonstrations, queries, palette=None, d4=0, hypotheses=NATIVE_HYPOTHESES) -> list[grid]. It raises MissingBa1aa698Evidence. queries are [{'input': grid}] and only q['input'] is read. Pure numpy, no ARC-GEN imports.",
+    "separate_input_only_context_gate_needed": "No new gate. The v7 gate already takes input-only queries. A single native demo identifies ORDER (6000/6000 in review v7). Zero demos are refused as a context shortfall."
+  },
+  "query_label_isolation_proof": [
+    "QueryTrap Mapping raises on any key except 'input' and on iteration/len. The gate succeeds through it under all 16 teaching variants, and the accessed keys are exactly ['input'].",
+    "Negative control: QueryTrap()['output'] and .get('output') both raise AssertionError, so the trap would catch a gate that reads labels.",
+    "A poisoned query output ([[9]]) or the true solution supplied as 'output' gives identical gate answers. The canonical refusal is unchanged with a poisoned or true label.",
+    "AST scan: in require_ba1aa698_evidence, every query subscript is the constant 'input', and the query objects have no other uses.",
+    "The factory solve signature is (demonstrations, grid): it has no label channel. program_targets.verify passes labels only after solve returns."
+  ],
+  "tests": {
+    "command": "cd /Users/ritwika/projects/ARC-GEN && PYTHONPATH=. /Users/ritwika/projects/arc-agi2/.venv/bin/python -m unittest arc_agi2.test_ba1aa698_independent_review_v7 -v",
+    "alt_command_script_mode_any_cwd": "PYTHONPATH=/Users/ritwika/projects/ARC-GEN /Users/ritwika/projects/arc-agi2/.venv/bin/python /Users/ritwika/projects/ARC-GEN/arc_agi2/test_ba1aa698_independent_review_v7.py",
+    "result": "15/15 OK (module mode and script mode from /tmp)",
+    "runtime_seconds": 10.5,
+    "covers": [
+      "source hash pins: factory, gate, native",
+      "emitted source identical across 16 variants, passes audit_target, imports only numpy, no solutions/random identifiers",
+      "canonical immutable and equal to native validate()",
+      "seed 15323 gives the identical input with a different label (rows 11-12 vs canonical 12-13)",
+      "canonical under all 16 variants: factory Inconsistent, gate MissingBa1aa698Evidence, verify raises",
+      "leave pair 2 out: only pair 2 is wrong; gate == program",
+      "teaching copy: digests, exactly 4 cells, train[1] == native extra=0, all 16 variants exact via verify plus gate == program == label",
+      "query label isolation: trap, poison, AST",
+      "no demos means Ambiguous; corrupt demo means Inconsistent",
+      "12 seeded native episodes x 8 d4 with shuffled palette: gate == program == label; 288 single-demo checks identify the answer"
+    ]
+  },
+  "reused_evidence": {
+    "ROOT/ba1aa698/host-audit.json (canonical)": "passed=false at fixtures: Inconsistent (expected; documented fixture conflict)",
+    "ROOT/ba1aa698/host-audit-proposed-NOT-CANONICAL.json": "passed=true, 1000 fresh pairs, 8000 aug, 16 variants, 983 unique inputs",
+    "ROOT/ba1aa698/review-v7-tests.json": "fresh 1000 pairs/8000 aug, gate == program 2000/2000, evidence_missing 0, focused all pass",
+    "ROOT/ba1aa698/final-semantic-review.json": "two fitted residual rivals both fit the canonical demos but disagree on the test; the rival switch is not installed"
+  },
+  "fork_files_added_untracked": [
+    "arc_agi2/direct_factories/task_ba1aa698.py",
+    "arc_agi2/panel_motion_ba1aa698_evidence.py",
+    "arc_agi2/ba1aa698_proposed_teaching_fixture.json",
+    "arc_agi2/test_ba1aa698_independent_review_v7.py"
+  ],
+  "inert_until_root_action": "No arc_agi2/direct_factories/ba1aa698.json certificate was written, so certified_factory_source('ba1aa698') still returns None. No shared dispatch, fixture_policy, references or certificates were touched.",
+  "required_root_actions": [
+    "DECIDE whether to adopt the labelled, locally uncertain 4-cell teaching copy (status proposed_uniform_translation_teaching_copy_pending_root_decision; original_benchmark_labels_changed=false; uncertain_original_intent=true).",
+    "If adopted: register it through the root-owned fixture policy (fixture_basis -> teaching variant) or apply proposed_constructor_ba1aa698.diff (removes extra=1 from validate() train pair 2). Then run ROOT/audit.py --only ba1aa698 against the adopted fixture and write the direct_factories/ba1aa698.json certificate with the factory sha d9c288d5... and the constructor sha of the adopted constructor.",
+    "If adopted and dispatch wants an evidence gate: wire arc_agi2.panel_motion_ba1aa698_evidence.require_ba1aa698_evidence into the shared dispatcher (root-owned; not done here).",
+    "If not adopted: leave ba1aa698 uncertified. Canonical train pair 2 conflicts with a native-sampled identical input, so no strict demo-consistent program can pass the canonical fixture.",
+    "Re-run the unittest module after any root change. test_hashes pins the native sha and will fail if the constructor is edited; update PINS['native'] only together with the adopted change."
+  ],
+  "remaining_issue": "Canonical fixture conflict (train pair 2, extra=1) is unresolved by design. Root must decide on the teaching copy."
+}

@@ -1,0 +1,220 @@
+{
+  "task_id": "bd14c3bf",
+  "factory_sha256": "d5ee82f38fa05a37ed44c64d90fd814e49ad276c6a7bcc25004d7fafa13edae0",
+  "constructor_sha256": "f02367673de942117b53e78c37231cf3ecaaffedf07587bb50befaa77b695492",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "sampler_rejections": [
+    {
+      "seed": 153389957273058,
+      "error": "reference/generator deadline"
+    },
+    {
+      "seed": 210009191714604,
+      "error": "reference/generator deadline"
+    },
+    {
+      "seed": 280272226551751,
+      "error": "reference/generator deadline"
+    },
+    {
+      "seed": 1348060371613,
+      "error": "reference/generator deadline"
+    },
+    {
+      "seed": 273453583064449,
+      "error": "reference/generator deadline"
+    },
+    {
+      "seed": 167570005207956,
+      "error": "reference/generator deadline"
+    },
+    {
+      "seed": 114206133853091,
+      "error": "reference/generator deadline"
+    },
+    {
+      "seed": 217248865711084,
+      "error": "reference/generator deadline"
+    },
+    {
+      "seed": 115948000154741,
+      "error": "reference/generator deadline"
+    },
+    {
+      "seed": 73700084226958,
+      "error": "reference/generator deadline"
+    },
+    {
+      "seed": 157690147571791,
+      "error": "reference/generator deadline"
+    },
+    {
+      "seed": 265997929581373,
+      "error": "reference/generator deadline"
+    },
+    {
+      "seed": 247502875367271,
+      "error": "reference/generator deadline"
+    },
+    {
+      "seed": 10985579396410,
+      "error": "reference/generator deadline"
+    },
+    {
+      "seed": 138637667059412,
+      "error": "reference/generator deadline"
+    },
+    {
+      "seed": 257286299783746,
+      "error": "reference/generator deadline"
+    },
+    {
+      "seed": 10142092727652,
+      "error": "reference/generator deadline"
+    },
+    {
+      "seed": 119852946455564,
+      "error": "reference/generator deadline"
+    },
+    {
+      "seed": 147158827426632,
+      "error": "reference/generator deadline"
+    },
+    {
+      "seed": 15816048743148,
+      "error": "reference/generator deadline"
+    },
+    {
+      "seed": 266531886127039,
+      "error": "reference/generator deadline"
+    },
+    {
+      "seed": 173148512183712,
+      "error": "reference/generator deadline"
+    },
+    {
+      "seed": 203470579884902,
+      "error": "reference/generator deadline"
+    },
+    {
+      "seed": 37666904070197,
+      "error": "reference/generator deadline"
+    },
+    {
+      "seed": 267811186591006,
+      "error": "reference/generator deadline"
+    },
+    {
+      "seed": 109864145723361,
+      "error": "reference/generator deadline"
+    },
+    {
+      "seed": 168674863673668,
+      "error": "reference/generator deadline"
+    },
+    {
+      "seed": 227201826848948,
+      "error": "reference/generator deadline"
+    },
+    {
+      "seed": 269368625397504,
+      "error": "reference/generator deadline"
+    },
+    {
+      "seed": 94626782867439,
+      "error": "reference/generator deadline"
+    },
+    {
+      "seed": 100252935564281,
+      "error": "reference/generator deadline"
+    },
+    {
+      "seed": 146158417931322,
+      "error": "reference/generator deadline"
+    },
+    {
+      "seed": 181750965704028,
+      "error": "reference/generator deadline"
+    },
+    {
+      "seed": 273655596598938,
+      "error": "reference/generator deadline"
+    },
+    {
+      "seed": 159998883619749,
+      "error": "reference/generator deadline"
+    },
+    {
+      "seed": 183750339783772,
+      "error": "reference/generator deadline"
+    },
+    {
+      "seed": 169690850748515,
+      "error": "reference/generator deadline"
+    },
+    {
+      "seed": 33749498624770,
+      "error": "reference/generator deadline"
+    },
+    {
+      "seed": 18555485926567,
+      "error": "reference/generator deadline"
+    },
+    {
+      "seed": 102857014441703,
+      "error": "reference/generator deadline"
+    },
+    {
+      "seed": 220828086412372,
+      "error": "reference/generator deadline"
+    },
+    {
+      "seed": 119043712229944,
+      "error": "reference/generator deadline"
+    },
+    {
+      "seed": 154785209768889,
+      "error": "reference/generator deadline"
+    },
+    {
+      "seed": 217711660505173,
+      "error": "reference/generator deadline"
+    },
+    {
+      "seed": 197494803549251,
+      "error": "reference/generator deadline"
+    },
+    {
+      "seed": 156621810059650,
+      "error": "reference/generator deadline"
+    },
+    {
+      "seed": 162725331860489,
+      "error": "reference/generator deadline"
+    },
+    {
+      "seed": 185645018238766,
+      "error": "reference/generator deadline"
+    },
+    {
+      "seed": 148910381450666,
+      "error": "reference/generator deadline"
+    },
+    {
+      "seed": 196907116290166,
+      "error": "reference/generator deadline"
+    },
+    {
+      "seed": 256011600875924,
+      "error": "reference/generator deadline"
+    }
+  ],
+  "unique_base_inputs": 832,
+  "seconds": 736.9633133411407,
+  "unique_count_note": "Conservative lower bound from first832 native samples; additional168 checked independently, no combined raw input archive retained.",
+  "audit_scope": "Native random generator unchanged. Original832 accepted pairs under5s deadline plus168 new pairs under30s deadline; all16 original fixture variants. Full8D4/palette exact checks on all1000. 8320exhaustive native shape/template comparisons separately pass.",
+  "additional_sampling_timeouts": 3
+}

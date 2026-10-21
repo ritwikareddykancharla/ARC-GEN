@@ -1,0 +1,142 @@
+{
+  "task_id": "bd14c3bf",
+  "reviewer": "second independent reviewer (host parallel CLI execution worker), v6",
+  "passed": true,
+  "native_changed": false,
+  "factory_changed_by_review": false,
+  "source_hashes": {
+    "factory.py": "d5ee82f38fa05a37ed44c64d90fd814e49ad276c6a7bcc25004d7fafa13edae0",
+    "native tasks/task_bd14c3bf.py": "f02367673de942117b53e78c37231cf3ecaaffedf07587bb50befaa77b695492",
+    "common.py": "879eb61e360e4a47ee1d569408e8c66114ac068794721fe1de1b59aaa476586a",
+    "evidence_bd14c3bf.py": "a2ee3be70ea82aea17c80ac5d7d892c0ccfe37bb2ed087a0153be2597e0f08b4",
+    "test_bd14c3bf_review_v6.py": "1024af32e56de0fed17a758042ae5a987eb176346a2c3cac76f4a6a413bf181d",
+    "review_v6_gate_audit_bd14c3bf.py": "11307404a9026fab2e46c1d97be2178c9f2df9b74c8fc7b3dc55e520c8c082e6",
+    "exhaustive_shapes.py": "ee4b996089bec5ec0bc6cd558977720e75007e0a3b72ce0fc148cb93ec25e662",
+    "audit.py": "801b9b65a420a1ddcd6c0900aa8e28df4b42b7853a4f284ff3bd9b31062ed532"
+  },
+  "source_hashes_match_audits": true,
+  "host_audit_summary": {
+    "passed": true,
+    "fresh_pairs_checked": 1000,
+    "augmented_pair_checks": 8000,
+    "fixture_variants_checked": 16,
+    "unique_base_inputs": 832,
+    "seconds": 736.9633133411407
+  },
+  "host_audit_caveats": [
+    "host-audit.json is stitched: 832 pairs via ROOT/audit.py (5 s deadline), which stopped with passed:false only because it hit the >50 sampler-rejection cap (51 native generator deadline timeouts, no program failure; preserved in native-832-audit.json), plus 168 pairs via finish_native_audit.py (30 s deadline, 3 timeouts, 168 distinct inputs).",
+    "unique_base_inputs=832 is a conservative lower bound.",
+    "Native generator slowness: unbounded rejection-sampled box placement (common.overlaps loop) with 7-9 boxes on 15-20 grids. It is a known native property and is reported, not hidden; dimensions were never restricted."
+  ],
+  "exhaustive_shapes": {
+    "template_variants": 32,
+    "object_variants": 260,
+    "pair_comparisons": 8320,
+    "failures": 0,
+    "seconds": 2.84955096244812,
+    "scope": "Every native shape,width,height,angle against every possible minimum-size template; independent native explicit rendering."
+  },
+  "exhaustive_review": "Reviewed and re-executed: the template (index 0) always takes the minimum native size because randint(a, b if i else a). So 32 templates x 260 object variants (every shape/angle/width/height) cover the full per-object native domain; objects are separated by spacing 1, so each component is classified independently. Re-run here under all 8 D4 transforms with a shuffled palette (66560 solves), and cross-checked against an independently coded family form: 0 failures.",
+  "gate_audit": {
+    "task_id": "bd14c3bf",
+    "episodes": 1000,
+    "accepted_queries": 1000,
+    "unresolved_queries": [],
+    "accepted_pairs_total": 4000,
+    "augmented_episode_checks": 8000,
+    "hard_queries_collapse_vs_family_differ": 88,
+    "hard_queries_accepted": 88,
+    "first_draw_rejected": 158,
+    "first_draw_rejected_hard": 63,
+    "demo_draws_histogram": {
+      "1": 842,
+      "2": 49,
+      "3": 34,
+      "4": 22,
+      "5": 10,
+      "6": 10,
+      "7": 10,
+      "8": 9,
+      "9": 5,
+      "10": 4,
+      "12": 1,
+      "13": 1,
+      "14": 2,
+      "25": 1
+    },
+    "rejections_equivariant": true,
+    "survivor_sets": {
+      "\"[[\\\"collapse\\\", \\\"c4\\\"], [\\\"collapse\\\", \\\"d4\\\"], [\\\"lattice\\\", \\\"c4\\\"], [\\\"lattice\\\", \\\"d4\\\"], [\\\"family\\\", \\\"c4\\\"], [\\\"family\\\", \\\"d4\\\"]]\"": 363,
+      "\"[[\\\"collapse\\\", \\\"c4\\\"], [\\\"collapse\\\", \\\"d4\\\"], [\\\"lattice\\\", \\\"c4\\\"], [\\\"lattice\\\", \\\"d4\\\"], [\\\"family\\\", \\\"c4\\\"], [\\\"family\\\", \\\"d4\\\"], [\\\"topo\\\", null]]\"": 360,
+      "\"[[\\\"lattice\\\", \\\"c4\\\"], [\\\"lattice\\\", \\\"d4\\\"], [\\\"family\\\", \\\"c4\\\"], [\\\"family\\\", \\\"d4\\\"], [\\\"topo\\\", null]]\"": 186,
+      "\"[[\\\"lattice\\\", \\\"c4\\\"], [\\\"lattice\\\", \\\"d4\\\"], [\\\"family\\\", \\\"c4\\\"], [\\\"family\\\", \\\"d4\\\"]]\"": 91
+    },
+    "unique_inputs": 4000,
+    "unique_query_inputs": 1000,
+    "generator_timeouts_10s": 362,
+    "seconds": 1185.9296550750732,
+    "gate_sha256": "a2ee3be70ea82aea17c80ac5d7d892c0ccfe37bb2ed087a0153be2597e0f08b4",
+    "factory_sha256": "d5ee82f38fa05a37ed44c64d90fd814e49ad276c6a7bcc25004d7fafa13edae0",
+    "constructor_sha256": "f02367673de942117b53e78c37231cf3ecaaffedf07587bb50befaa77b695492",
+    "passed": true
+  },
+  "gate_example_rejections": [
+    "bd14c3bf: demonstrations leave query 0 ambiguous between [[('collapse', 'c4'), ('collapse', 'd4'), ('family', 'c4'), ('family', 'd4'), ('lattice', 'c4'), ('latt",
+    "bd14c3bf: demonstrations leave query 0 ambiguous between [[('collapse', 'c4'), ('collapse', 'd4'), ('family', 'c4'), ('family', 'd4'), ('lattice', 'c4'), ('latt",
+    "bd14c3bf: demonstrations leave query 0 ambiguous between [[('collapse', 'c4'), ('collapse', 'd4'), ('family', 'c4'), ('family', 'd4'), ('lattice', 'c4'), ('latt",
+    "bd14c3bf: demonstrations leave query 0 ambiguous between [[('collapse', 'c4'), ('collapse', 'd4'), ('family', 'c4'), ('family', 'd4'), ('lattice', 'c4'), ('latt"
+  ],
+  "tests": [
+    {
+      "command": "cd ROOT/bd14c3bf && PYTHONPATH=/Users/ritwika/projects/ARC-GEN /Users/ritwika/projects/arc-agi2/.venv/bin/python -m unittest -v test_bd14c3bf_review_v6",
+      "result": "8 tests OK (~200 s wall under load average ~150)"
+    },
+    {
+      "command": "PYTHONPATH=/Users/ritwika/projects/ARC-GEN /Users/ritwika/projects/arc-agi2/.venv/bin/python ROOT/bd14c3bf/exhaustive_shapes.py logic (re-executed without rewriting outputs)",
+      "result": "8320 comparisons, 0 failures"
+    },
+    {
+      "command": "cd ROOT/bd14c3bf && PYTHONPATH=/Users/ritwika/projects/ARC-GEN /Users/ritwika/projects/arc-agi2/.venv/bin/python review_v6_gate_audit_bd14c3bf.py 1000 8",
+      "result": "see gate_audit"
+    }
+  ],
+  "issues": [
+    {
+      "severity": "resolved-by-review",
+      "issue": "No callable ambiguity gate existed. coverage-repairs-v3 evidence.py takes a single query_input, only reports, and never raises. Added evidence_bd14c3bf.require_bd14c3bf_evidence(demonstrations, queries, palette=None, d4=None), which takes queries=[{\"input\": grid}]."
+    },
+    {
+      "severity": "context-shortfall (not intrinsic)",
+      "issue": "Collapse-only and family (stroke-length) shape equivalence disagree when the template is a Y and an object is a 5-long Y. The old host counterexample (counterexample.json) is such a case: its demos do not show Y stretching, so the gate rejects it. Keeping the query and adding one native Y-template demo resolves it (test_old_counterexample_context_shortfall_then_resolved). Coarse topology (holes, ends) also merges C/L and H/P, and is likewise rejected until demos separate them."
+    },
+    {
+      "severity": "info",
+      "issue": "The direct program ignores demonstrations; the rule is fixed with palette roles bg=palette[0], template=palette[2]. Its forms are D4-invariant, so d4 is unused, which is correct and not a hidden choice. There is no fallback output: with no template component the input is returned unchanged, and this never happens natively."
+    },
+    {
+      "severity": "info",
+      "issue": "notes.json previously said \"Untested\"; updated with author and a review addendum (pre-review text identical to coverage-repairs-v3/bd14c3bf/notes.json; only author, limitations and review_v6_addendum changed)."
+    },
+    {
+      "severity": "info",
+      "issue": "Native generator slow sampling (see host_audit_caveats); generator timeouts in the gate audit are counted in gate_audit.generator_timeouts_10s."
+    }
+  ],
+  "leakage_review": "verify() executes solve in a fresh namespace with copied demos and query input only. The gate reads demo pairs and query inputs; the test proves that a bogus query \"output\" key does not change its result. Labels are compared only after prediction in the audit scripts.",
+  "intrinsic_ambiguity": "None in the native domain. The exhaustive check shows that the native label of every object is a deterministic function of its visible shape and the visible template, so no identical-input / different-output witness exists. All observed gate rejections are context shortfalls resolved by redrawing demos for the same query.",
+  "recommended_integration": {
+    "factory": "arc_agi2/direct_factories/task_bd14c3bf.py <- copy of ROOT/bd14c3bf/factory.py (sha256 d5ee82f38fa05a37ed44c64d90fd814e49ad276c6a7bcc25004d7fafa13edae0)",
+    "evidence_gate": "arc_agi2/bd14c3bf_shape_family_evidence.py <- copy of ROOT/bd14c3bf/evidence_bd14c3bf.py (host-owned shared dispatch; not edited by this worker)",
+    "tests": "ROOT/bd14c3bf/test_bd14c3bf_review_v6.py"
+  },
+  "required_dispatch_signature": "require_bd14c3bf_evidence(demonstrations, queries, palette=None, d4=None) -> dict | raises MissingBd14c3bfEvidence(ValueError); queries=[{\"input\": grid}]; on raise keep the query and resample demonstrations. Factory: build_program(d4, palette) -> source with solve(demonstrations, grid).",
+  "runtime_seconds": {
+    "unit_tests": 200,
+    "gate_audit": 1185.9296550750732,
+    "host_audit_combined": 736.9633133411407
+  },
+  "assumptions": [
+    "Palette roles follow the native constructor: background 0, objects 1, template 2 (mapped through the palette).",
+    "The hypothesis set for the ambiguity gate is finite and documented in evidence_bd14c3bf.py; ARC rules are not proven identifiable beyond it."
+  ]
+}

@@ -273,6 +273,47 @@ APPROVED_CORRECTIONS.update({'d753a70b': {'approval': 'User delegated investigat
               'source': 'arc_agi2/reports/label-reviews/d753a70b.json',
               'teaching_sha256': 'a03a9f3f00d34993369efe51ec7f887c184353bec9361e410b13eb5e7054a41a'}})
 
+APPROVED_CORRECTIONS.update({'ba1aa698': {'approval': 'User delegated investigation/finalization of labelled teaching copies; '
+                          'host selected audited uniform-motion synthetic teaching hypothesis '
+                          'on2026-10-21.',
+              'canonical_sha256': '8a8682f21e71f303ce2d7dcd02091df3278e2be978151965590c559536f97fdd',
+              'changed_cells': [{'canonical': 2,
+                                 'col': 2,
+                                 'field': 'output',
+                                 'pair': 1,
+                                 'row': 11,
+                                 'split': 'train',
+                                 'teaching': 8},
+                                {'canonical': 2,
+                                 'col': 3,
+                                 'field': 'output',
+                                 'pair': 1,
+                                 'row': 11,
+                                 'split': 'train',
+                                 'teaching': 8},
+                                {'canonical': 8,
+                                 'col': 2,
+                                 'field': 'output',
+                                 'pair': 1,
+                                 'row': 13,
+                                 'split': 'train',
+                                 'teaching': 2},
+                                {'canonical': 8,
+                                 'col': 3,
+                                 'field': 'output',
+                                 'pair': 1,
+                                 'row': 13,
+                                 'split': 'train',
+                                 'teaching': 2}],
+              'description': 'Four train[1] output cells follow the unchanged native uniform '
+                             'motion mechanism. Original intent remains uncertain: fitted residual '
+                             'alternatives remain documented. Original benchmark labels/scoring '
+                             'and query answers stay unchanged.',
+              'evidence_status': 'locally_reviewed_uncertain_uniform_motion_hypothesis_not_official_correction',
+              'original_fixture_context_passed': False,
+              'source': 'arc_agi2/reports/label-reviews/ba1aa698.json',
+              'teaching_sha256': 'de83dfb0e6a16a2c13e4d0a3d3241a82a7353df7e97a056e154411976ed5a8d0'}})
+
 def digest(task):
     return hashlib.sha256(json.dumps(task,sort_keys=True,separators=(',',':')).encode()).hexdigest()
 

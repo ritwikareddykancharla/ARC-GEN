@@ -1,0 +1,68 @@
+{
+  "source_revision": "e7ea26d4fb776e1a3d39e8ca0f96dc7ec5c7ac1c",
+  "family_reports": [
+    {
+      "task_id": "00576224",
+      "episodes": 80,
+      "fresh_episodes": 10,
+      "requested_fresh_episodes": 10,
+      "failures": {},
+      "episode_input_shape_profile": {
+        "version": "input-shape-pattern-v1",
+        "patterns": [
+          {
+            "demo_input_shapes": "uniform",
+            "query_input_shape": "seen"
+          }
+        ]
+      },
+      "episode_input_shape_counts": {
+        "matched": 10,
+        "{\"demo_input_shapes\":\"uniform\",\"query_input_shape\":\"seen\"}": 10
+      }
+    },
+    {
+      "task_id": "0692e18c",
+      "episodes": 80,
+      "fresh_episodes": 10,
+      "requested_fresh_episodes": 10,
+      "failures": {},
+      "episode_input_shape_profile": {
+        "version": "input-shape-pattern-v1",
+        "patterns": [
+          {
+            "demo_input_shapes": "uniform",
+            "query_input_shape": "seen"
+          }
+        ]
+      },
+      "episode_input_shape_counts": {
+        "matched": 5,
+        "{\"demo_input_shapes\":\"uniform\",\"query_input_shape\":\"seen\"}": 5,
+        "deviated": 5,
+        "{\"demo_input_shapes\":\"mixed\",\"query_input_shape\":\"novel\"}": 5,
+        "fallback:requested_shape_pattern_unavailable_in_candidate_pool": 5
+      }
+    },
+    {
+      "task_id": "00dbd492",
+      "episodes": 80,
+      "fresh_episodes": 10,
+      "requested_fresh_episodes": 10,
+      "failures": {},
+      "episode_input_shape_profile": {
+        "version": "input-shape-pattern-v1",
+        "patterns": [
+          {
+            "demo_input_shapes": "mixed",
+            "query_input_shape": "novel"
+          }
+        ]
+      },
+      "episode_input_shape_counts": {
+        "matched": 10,
+        "{\"demo_input_shapes\":\"mixed\",\"query_input_shape\":\"novel\"}": 10
+      }
+    }
+  ]
+}

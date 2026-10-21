@@ -1,6 +1,7 @@
 import random
 import unittest
-from .episode_shape_policy import VERSION, profile_from_task, select_demonstrations
+from itertools import combinations
+from .episode_shape_policy import VERSION, describe, profile_from_task, select_demonstrations
 
 
 def pair(height, width, colour=0):
@@ -74,6 +75,59 @@ class ShapePolicyTests(unittest.TestCase):
     def test_invalid_profile_is_not_silently_ignored(self):
         with self.assertRaises(ValueError):profile_from_task({'train':[],'test':[]})
         with self.assertRaises(ValueError):select_demonstrations([],[[0]],random.Random(1),{'patterns':[]})
+
+    def test_palette_aliases_do_not_make_uniform_pattern_feasible(self):
+        candidates=[dict(pair(2,2,c%10),canonical_input_hash=str(c%2)) for c in range(100)]
+        candidates += [dict(pair(3,3),canonical_input_hash='third')]
+        demos,report=select_demonstrations(candidates,pair(2,2)['input'],random.Random(4),
+                                          policy('uniform','seen'),identity_key='canonical_input_hash')
+        self.assertFalse(report['matched'])
+        self.assertEqual(report['fallback'],'requested_shape_pattern_unavailable_in_candidate_pool')
+        self.assertEqual(len({p['canonical_input_hash'] for p in demos}),3)
+        self.assertIn((3,3),{(len(p['input']),len(p['input'][0])) for p in demos})
+
+    def test_dominant_aliases_cannot_cause_distinctness_retry(self):
+        candidates=[dict(pair(2,2,c%10),canonical_input_hash='dominant') for c in range(100)]
+        candidates += [dict(pair(2,2,c),canonical_input_hash=str(c)) for c in range(1,7)]
+        for seed in range(30):
+            demos,report=select_demonstrations(candidates,pair(2,2)['input'],random.Random(seed),
+                                              policy('uniform','seen'),identity_key='canonical_input_hash')
+            self.assertTrue(report['matched'])
+            self.assertEqual(len({p['canonical_input_hash'] for p in demos}),3)
+
+    def test_insufficient_total_classes_never_filled_with_aliases(self):
+        candidates=[dict(pair(2,2,c%10),canonical_input_hash=str(c%2)) for c in range(50)]
+        demos,report=select_demonstrations(candidates,pair(2,2)['input'],random.Random(1),
+                                          policy('uniform','seen'),identity_key='canonical_input_hash')
+        self.assertIsNone(demos)
+        self.assertEqual(report['fallback'],'insufficient_distinct_candidate_demonstrations')
+
+    def test_mask_legend_exact_input_exception_preserved(self):
+        candidates=[dict(pair(2,2,c),canonical_input_hash='same_mask',input_hash=str(c)) for c in range(1,5)]
+        demos,report=select_demonstrations(candidates,pair(2,2)['input'],random.Random(1),
+                                          policy('uniform','seen'),identity_key='input_hash')
+        self.assertTrue(report['matched'])
+        self.assertEqual(len({p['input_hash'] for p in demos}),3)
+        self.assertEqual(len({p['canonical_input_hash'] for p in demos}),1)
+
+    def test_distinct_selection_agrees_with_exhaustive_feasibility(self):
+        # Includes classes shared across rotated shapes and many palette aliases.
+        rng=random.Random(75)
+        for _ in range(100):
+            candidates=[dict(pair(*rng.choice([(2,3),(3,2),(4,4)]),c),canonical_input_hash=str(rng.randrange(4)))
+                        for c in range(8)]
+            valid=[triplet for triplet in combinations(candidates,3)
+                   if len({p['canonical_input_hash'] for p in triplet})==3]
+            for mode in ('uniform','mixed'):
+                for relation in ('seen','novel'):
+                    prof=policy(mode,relation);query=pair(2,3)['input']
+                    feasible=any(describe(triplet,query)==prof['patterns'][0] for triplet in valid)
+                    demos,report=select_demonstrations(candidates,query,rng,prof,identity_key='canonical_input_hash')
+                    if not valid:
+                        self.assertIsNone(demos)
+                    else:
+                        self.assertEqual(len({p['canonical_input_hash'] for p in demos}),3)
+                        self.assertEqual(report['matched'],feasible)
 
 
 if __name__=='__main__':unittest.main()

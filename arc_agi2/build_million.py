@@ -377,7 +377,8 @@ def make_episodes(arg):
                                 failures['stored_context_reuse_exhausted']+=1
                                 break
                         else:
-                            ds=[p for p in rows if p['input_hash']!=q['input_hash'] and pair_uses[p['input_hash']]<32]
+                            identity_key='input_hash' if tid=='27a28665' else 'canonical_input_hash'
+                            ds=[p for p in rows if p[identity_key]!=q[identity_key] and pair_uses[p['input_hash']]<32]
                             if len(ds)<3:break
                             if tid == 'b7cb93ac':
                                 from .packing_evidence import select_packing_demonstrations
@@ -386,7 +387,7 @@ def make_episodes(arg):
                                     failures['no_three_demo_packing_context']+=1
                                     break
                             else:
-                                demos,shape_report=select_demonstrations(ds,q['input'],rng,shape_profile)
+                                demos,shape_report=select_demonstrations(ds,q['input'],rng,shape_profile,identity_key=identity_key)
                                 if demos is None:break
                         if shape_report is None:
                             observed=describe_shapes(demos,q['input'])

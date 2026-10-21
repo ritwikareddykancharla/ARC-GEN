@@ -29,10 +29,14 @@ def profile_from_task(task):
             'patterns': [describe(task['train'], query['input']) for query in task['test']]}
 
 
-def select_demonstrations(candidates, query_input, rng, profile):
+def select_demonstrations(candidates, query_input, rng, profile, identity_key=None):
     """Return (three demonstrations, report), or (None, report) if fewer exist.
 
-    Candidates must already satisfy split, distinct-input and reuse restrictions.
+    Candidates must already satisfy split, query-class exclusion and reuse
+    restrictions. Pass identity_key='canonical_input_hash' to sample distinct
+    equivalence classes, or 'input_hash' for the mask-legend exception. Without
+    an explicit key, identity is the exact input grid. Palette aliases must not
+    make an otherwise impossible shape pattern appear feasible.
     Missing shape support falls back to the same candidates, never to another
     query or another split. The caller must log reports and apply semantic gates.
     """
@@ -42,9 +46,23 @@ def select_demonstrations(candidates, query_input, rng, profile):
     if wanted.get('demo_input_shapes') not in ('uniform', 'mixed') or wanted.get('query_input_shape') not in ('seen', 'novel'):
         raise ValueError('Invalid episode shape pattern')
     report = {'policy': VERSION, 'requested': wanted, 'matched': False,
-              'fallback': None, 'observed': None}
+              'fallback': None, 'observed': None, 'identity_key': identity_key or 'exact_input_grid'}
+    def identity(pair):
+        if identity_key is not None:
+            return pair[identity_key]
+        return tuple(tuple(row) for row in pair['input'])
+    def by_identity(pairs):
+        result = defaultdict(list)
+        for pair in pairs:result[identity(pair)].append(pair)
+        return result
+    def distinct_sample(pairs, count):
+        identities = by_identity(pairs)
+        return [rng.choice(identities[key]) for key in rng.sample(list(identities), count)]
     if len(candidates) < 3:
         report['fallback'] = 'insufficient_candidate_demonstrations'
+        return None, report
+    if len(by_identity(candidates)) < 3:
+        report['fallback'] = 'insufficient_distinct_candidate_demonstrations'
         return None, report
     groups = defaultdict(list)
     for pair in candidates:
@@ -52,29 +70,39 @@ def select_demonstrations(candidates, query_input, rng, profile):
     query_shape = input_shape(query_input)
     demos = None
     if wanted['demo_input_shapes'] == 'uniform':
-        feasible = [shape for shape, pairs in groups.items() if len(pairs) >= 3
+        feasible = [shape for shape, pairs in groups.items() if len(by_identity(pairs)) >= 3
                     and ((shape == query_shape) == (wanted['query_input_shape'] == 'seen'))]
         if feasible:
-            demos = rng.sample(groups[rng.choice(feasible)], 3)
+            demos = distinct_sample(groups[rng.choice(feasible)], 3)
     else:
         if wanted['query_input_shape'] == 'seen':
-            other_shapes = [shape for shape in groups if shape != query_shape]
-            if query_shape in groups and other_shapes:
-                first = rng.choice(groups[query_shape])
-                second = rng.choice(groups[rng.choice(other_shapes)])
-                rest = [pair for pair in candidates if pair is not first and pair is not second]
-                if rest:
-                    demos = [first, second, rng.choice(rest)]
+            eligible = candidates
+            first_candidates = groups.get(query_shape, [])
         else:
-            shapes = [shape for shape in groups if shape != query_shape]
-            eligible = [pair for shape in shapes for pair in groups[shape]]
-            if len(shapes) >= 2 and len(eligible) >= 3:
-                a, b = rng.sample(shapes, 2)
-                first, second = rng.choice(groups[a]), rng.choice(groups[b])
-                rest = [pair for pair in eligible if pair is not first and pair is not second]
-                demos = [first, second, rng.choice(rest)]
+            eligible = [pair for pair in candidates if input_shape(pair['input']) != query_shape]
+            first_candidates = eligible
+        if len(by_identity(eligible)) >= 3:
+            # Keep both shape and identity here: one equivalence class can span
+            # rotated shapes, so collapsing it globally would lose valid options.
+            first_groups = defaultdict(list)
+            for pair in first_candidates:
+                first_groups[(identity(pair), input_shape(pair['input']))].append(pair)
+            first_options = list(first_groups)
+            rng.shuffle(first_options)
+            for key in first_options:
+                first = rng.choice(first_groups[key])
+                second_options = [pair for pair in eligible
+                                  if identity(pair) != identity(first)
+                                  and input_shape(pair['input']) != input_shape(first['input'])]
+                if not second_options:continue
+                second = distinct_sample(second_options, 1)[0]
+                rest = [pair for pair in eligible
+                        if identity(pair) not in (identity(first), identity(second))]
+                if rest:
+                    demos = [first, second, distinct_sample(rest, 1)[0]]
+                    break
     if demos is None:
-        demos = rng.sample(candidates, 3)
+        demos = distinct_sample(candidates, 3)
         report['fallback'] = 'requested_shape_pattern_unavailable_in_candidate_pool'
     rng.shuffle(demos)
     report['observed'] = describe(demos, query_input)

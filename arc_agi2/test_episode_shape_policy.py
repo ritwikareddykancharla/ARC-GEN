@@ -129,5 +129,34 @@ class ShapePolicyTests(unittest.TestCase):
                         self.assertEqual(len({p['canonical_input_hash'] for p in demos}),3)
                         self.assertEqual(report['matched'],feasible)
 
+    def test_seen_uniform_context_is_not_repeated_when_other_shapes_exist(self):
+        candidates = [dict(pair(3,3,c), input_hash=str(c), canonical_input_hash=str(c)) for c in range(3)]
+        candidates += [dict(pair(5,5,4), input_hash='other', canonical_input_hash='other')]
+        demos, report = select_demonstrations(candidates, pair(3,3)['input'], random.Random(3),
+            policy('uniform','seen'), identity_key='canonical_input_hash',
+            excluded_contexts={('0','1','2')})
+        self.assertIsNotNone(demos)
+        self.assertNotEqual(tuple(sorted(p['input_hash'] for p in demos)), ('0','1','2'))
+        self.assertEqual(len({p['canonical_input_hash'] for p in demos}), 3)
+        self.assertFalse(report['matched'])
+        self.assertEqual(report['requested'], policy('uniform','seen')['patterns'][0])
+        self.assertEqual(report['fallback'], 'preferred_shape_context_sampling_exhausted')
+
+    def test_exhausted_exact_context_does_not_count_demo_permutations(self):
+        candidates = [dict(pair(3,3,c), input_hash=str(c), canonical_input_hash=str(c)) for c in range(3)]
+        demos, report = select_demonstrations(candidates, pair(3,3)['input'], random.Random(3),
+            policy('uniform','seen'), identity_key='canonical_input_hash',
+            excluded_contexts={('0','1','2')})
+        self.assertIsNone(demos)
+        self.assertEqual(report['fallback'], 'unique_demonstration_context_search_exhausted')
+
+    def test_unused_preferred_context_stays_preferred(self):
+        candidates = [dict(pair(3,3,c), input_hash=str(c), canonical_input_hash=str(c)) for c in range(5)]
+        demos, report = select_demonstrations(candidates, pair(3,3)['input'], random.Random(3),
+            policy('uniform','seen'), identity_key='canonical_input_hash',
+            excluded_contexts={('0','1','2')})
+        self.assertNotEqual(tuple(sorted(p['input_hash'] for p in demos)), ('0','1','2'))
+        self.assertTrue(report['matched'])
+
 
 if __name__=='__main__':unittest.main()

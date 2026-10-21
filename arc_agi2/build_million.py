@@ -403,6 +403,7 @@ def make_episodes(arg):
         for p in rows:bins[p['stratum']].append(p)
         identity_total=len({p[identity] for p in rows})
         rng=random.Random(seed(tid,split,'episodes'));query_uses=Counter();pair_uses=Counter();failures=Counter()
+        accepted_contexts=defaultdict(set)
         query_context_shortfalls=[];query_rejections=[];quarantined_queries=set();shape_counts=Counter()
         hist={which:{axis:Counter() for axis in ['height','width','longest','shapes']} for which in ['input','output']};relations=Counter()
         path=OUT/'data'/split/f'{tid}.parquet';path.parent.mkdir(parents=True,exist_ok=True)
@@ -475,7 +476,8 @@ def make_episodes(arg):
                                     failures['no_three_demo_packing_context']+=1
                                     break
                             else:
-                                demos,shape_report=select_demonstrations(ds,q['input'],rng,shape_profile,identity_key=identity)
+                                demos,shape_report=select_demonstrations(ds,q['input'],rng,shape_profile,identity_key=identity,
+                                    excluded_contexts=accepted_contexts[q['input_hash']])
                                 if demos is None:break
                         if shape_report is None:
                             observed=describe_shapes(demos,q['input'])
@@ -580,6 +582,7 @@ def make_episodes(arg):
                         shape_counts[compact(shape_report['observed'])]+=1
                         if shape_report['fallback']:shape_counts['fallback:'+shape_report['fallback']]+=1
                         all_hashes.add(basehash);query_uses[q['input_hash']]+=1
+                        accepted_contexts[q['input_hash']].add(tuple(sorted(p['input_hash'] for p in demos)))
                         for p in four:pair_uses[p['input_hash']]+=1
                         accepted=True;break
                     if not accepted and not terminal_rejection:

@@ -29,7 +29,7 @@ def profile_from_task(task):
             'patterns': [describe(task['train'], query['input']) for query in task['test']]}
 
 
-def select_demonstrations(candidates, query_input, rng, profile, identity_key=None):
+def _select_demonstrations(candidates, query_input, rng, profile, identity_key=None):
     """Return (three demonstrations, report), or (None, report) if fewer exist.
 
     Candidates must already satisfy split, query-class exclusion and reuse
@@ -108,3 +108,42 @@ def select_demonstrations(candidates, query_input, rng, profile, identity_key=No
     report['observed'] = describe(demos, query_input)
     report['matched'] = report['observed'] == wanted
     return demos, report
+
+
+def select_demonstrations(candidates, query_input, rng, profile, identity_key=None,
+                          excluded_contexts=None):
+    """Prefer original shapes while searching for a fresh demonstration set.
+
+    excluded_contexts contains sorted triples of exact input_hash strings for
+    this fixed query only. Demo order does not create a new episode. When the
+    preferred-shape search repeats known contexts, search the same eligible
+    pool across shapes and report that deviation explicitly. Semantic checks
+    remain the caller's responsibility; query outputs are never inspected.
+    """
+    demos, report = _select_demonstrations(candidates, query_input, rng, profile, identity_key)
+    if not excluded_contexts or demos is None:
+        return demos, report
+    def key(pairs):
+        return tuple(sorted(p['input_hash'] for p in pairs))
+    if key(demos) not in excluded_contexts:
+        return demos, report
+    # A small bounded search preserves the preference without repeatedly
+    # exhausting the caller's entire context-search budget on known episodes.
+    for _ in range(8):
+        demos, report = _select_demonstrations(candidates, query_input, rng, profile, identity_key)
+        if demos is None or key(demos) not in excluded_contexts:
+            return demos, report
+    groups = defaultdict(list)
+    for p in candidates:
+        identity = p[identity_key] if identity_key else tuple(map(tuple, p['input']))
+        groups[identity].append(p)
+    for _ in range(64):
+        demos = [rng.choice(groups[k]) for k in rng.sample(list(groups), 3)]
+        if key(demos) in excluded_contexts:
+            continue
+        report['observed'] = describe(demos, query_input)
+        report['matched'] = report['observed'] == report['requested']
+        report['fallback'] = 'preferred_shape_context_sampling_exhausted'
+        return demos, report
+    report['fallback'] = 'unique_demonstration_context_search_exhausted'
+    return None, report

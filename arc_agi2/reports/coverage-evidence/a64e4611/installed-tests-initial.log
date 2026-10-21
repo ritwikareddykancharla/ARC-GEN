@@ -1,0 +1,18 @@
+test_constructor_ast_identical_to_audited_except_metadata (arc_agi2.test_a64e4611_variant.VariantTests.test_constructor_ast_identical_to_audited_except_metadata) ... FAIL
+test_generation_uses_only_declared_variant (arc_agi2.test_a64e4611_variant.VariantTests.test_generation_uses_only_declared_variant) ... ok
+test_installed_canonical_and_gate_16_variants (arc_agi2.test_a64e4611_variant.VariantTests.test_installed_canonical_and_gate_16_variants) ... ok
+test_record_carries_variant_provenance (arc_agi2.test_a64e4611_variant.VariantTests.test_record_carries_variant_provenance) ... ok
+
+======================================================================
+FAIL: test_constructor_ast_identical_to_audited_except_metadata (arc_agi2.test_a64e4611_variant.VariantTests.test_constructor_ast_identical_to_audited_except_metadata)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/ritwika/projects/ARC-GEN/arc_agi2/test_a64e4611_variant.py", line 31, in test_constructor_ast_identical_to_audited_except_metadata
+    self.assertEqual(constructor.validate(), CANONICAL)
+AssertionError: {'tra[13 chars]': [[8, 8, 0, 8, 0, 8, 0, 8, 8, 8, 8, 8, 0, 8,[22132 chars]]]}]} != {'tra[13 chars]': [[1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,[22132 chars]]]}]}
+Diff is 327518 characters long. Set self.maxDiff to None to see it.
+
+----------------------------------------------------------------------
+Ran 4 tests in 44.127s
+
+FAILED (failures=1)

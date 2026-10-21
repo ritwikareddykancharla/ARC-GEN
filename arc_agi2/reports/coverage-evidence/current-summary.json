@@ -90,6 +90,7 @@
     "1b2d62fb",
     "1b59e163",
     "1b60fb0c",
+    "1b8318e3",
     "1be83260",
     "1bfc4729",
     "1c02dbbe",
@@ -721,6 +722,7 @@
     "a61ba2ce",
     "a61f2674",
     "a644e277",
+    "a64e4611",
     "a65b410d",
     "a680ac02",
     "a68b268e",
@@ -1073,6 +1075,7 @@
     "f28a3cbb",
     "f341894c",
     "f35d900a",
+    "f3b10344",
     "f3cdc58f",
     "f3e14006",
     "f3e62deb",
@@ -1118,12 +1121,15 @@
     "ff72ca3e",
     "ff805c23"
   ],
-  "missing": [
-    "1b8318e3",
-    "a64e4611",
-    "f3b10344"
-  ],
+  "missing": [],
   "total": 1120,
-  "checked_at": 1792543183.704625,
-  "factory_count": 898
+  "checked_at": 1792544797.8204281,
+  "factory_count": 901,
+  "final_fixture_replay": {
+    "tasks": 1120,
+    "variants": 17920,
+    "passed_tasks": 1120,
+    "report": "arc_agi2/reports/coverage-evidence/final-coverage-replay.json"
+  },
+  "scope": "Declared generator/target family coverage, including labelled teaching contexts and explicit synthetic variants; not original-benchmark score."
 }

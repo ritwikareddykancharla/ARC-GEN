@@ -1,7 +1,7 @@
 """Square counts from disjoint maximal blocks; output pixels computed by coverage."""
 from collections import Counter
 from itertools import product
-from arc_agi2.colour_evidence import MissingColourEvidence
+from arc_agi2.colour_evidence import MissingColourEvidence, IntrinsicQueryEvidence
 
 
 def features(g):
@@ -64,6 +64,8 @@ def require_evidence(demonstrations,queries,palette=None):
             data=features(pair['input']);alive=[p for p in alive if render(data,*p)==pair['output']]
         if not alive:raise ValueError('No demonstrated hypothesis')
         for q in queries:
-            data=features(q['input'])
+            try:data=features(q['input'])
+            except ValueError as exc:raise IntrinsicQueryEvidence('b1986d4b: '+str(exc)) from exc
             if len({tuple(map(tuple,render(data,*p))) for p in alive})!=1:raise ValueError('Unresolved stack cap or orientation')
+    except IntrinsicQueryEvidence:raise
     except ValueError as e:raise MissingColourEvidence('b1986d4b: '+str(e)) from e

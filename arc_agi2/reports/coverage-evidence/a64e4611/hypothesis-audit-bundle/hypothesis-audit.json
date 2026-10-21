@@ -1,0 +1,29 @@
+{
+  "task_id": "a64e4611",
+  "scope": "PROPOSED versioned visible-clearance convention12/3 synthetic labels; full930-parameter demo-selected target; native unchanged",
+  "passed": true,
+  "fixture_variants_checked": 16,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "independent_episode_gate_checks": 250,
+  "unique_base_inputs": 1000,
+  "sampler_draws": 2536,
+  "input_changes": 0,
+  "intrinsic_rejections": 0,
+  "context_retries": 512,
+  "max_context_retries": 23,
+  "synthetic_label_changes_including_context_draws": 1372,
+  "errors": [],
+  "seconds": 88.89863872528076,
+  "hardware": "192 CPU H200 host;32 CPU worker processes; no GPU use",
+  "source_hashes": {
+    "native.py": "06ef672f20c070afad1b44e08eedfa842f2d181632fd9f050f36e17873d34bc2",
+    "hypothesis_evidence.py": "70fa402e71825d97034db40b1480239d07bf127d03f689c9866c16b02be148d4",
+    "hypothesis_core.py": "c15fafd48be8290512d4d84bc135c796b51ad37866c2b1ac0abacc3c654a69a1",
+    "proposed_constructor.py": "09b9214d8aff685117bdaeaa99d455d493f8e5567493e6b8a6909a15d51167ae",
+    "hypothesis_factory.py": "3393d8684cb69f6745f2427ef513f7bf66103480f9bf6951d4579ba1902ea428",
+    "run_audit.py": "4dd51805dadd0b5f0969cbfd9b63a64b5fd1277fb6c04b8919e2ba2837a3eb9f",
+    "common.py": "879eb61e360e4a47ee1d569408e8c66114ac068794721fe1de1b59aaa476586a",
+    "test_hypotheses.py": "a74f6c0c6a01f7a9166e7c620274c0743859e6346cab46de7c6558b9d9eb01ee"
+  }
+}

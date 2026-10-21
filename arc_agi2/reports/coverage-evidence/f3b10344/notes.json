@@ -1,0 +1,49 @@
+{
+  "task_id": "f3b10344",
+  "author": "host parallel CLI execution worker",
+  "reviewer_version": "independent-review-v7",
+  "status": "admitted_context_enriched_teaching_fixture",
+  "native_changed": false,
+  "labels_changed": false,
+  "explanation": "Direct visible-coordinate program. It finds solid rectangles on BG=palette[0] and pairs same-colour rectangles facing across a gap. The bridge is gap x shared span with one cell trimmed at each end, painted BR=palette[8] on background. Rival rules are {centred, overlap} x {trim_any, trim_same, span_any, span_same, none}. Every rule that reproduces all demos is kept, and the program answers only if all survivors agree on the full query. Otherwise it raises Undetermined. It also raises when nothing survives, and when a bridge is needed but no demo shows its colour. D4 selects nothing.",
+  "ambiguity": {
+    "intrinsic": "None found. All native labels equal centred/trim_any on the visible input, for every audited pair.",
+    "context_shortfall": "Canonical fixture: overlap/* fits the train demos and differs on the test (canonical-fixture-counterexample-v7-f3b10344.json). Fresh episodes: contexts resampled with the query held fixed. See host-audit.json rejection_stats."
+  },
+  "audit": {
+    "command": "cd /Users/ritwika/projects/ARC-GEN && PYTHONPATH=. /Users/ritwika/projects/arc-agi2/.venv/bin/python ROOT/f3b10344/review-v7/audit_v7_f3b10344.py --queries 250 --workers 8 --deadline 30",
+    "tests": "cd /Users/ritwika/projects/ARC-GEN && PYTHONPATH=. /Users/ritwika/projects/arc-agi2/.venv/bin/python -m unittest arc_agi2.test_f3b10344_independent_review_v7 -v",
+    "host_audit": "ROOT/f3b10344/host-audit.json",
+    "runtime_seconds": 1259.9810957909795
+  },
+  "constructor_issue": "subset and expected_boxes are drawn once, outside the while-True loop, and the recursive growth must hit that count exactly. 32/200 draws exceed 5 s (rival_probe run), so the standard 5 s / 50-rejection audit cannot sample this family. The v7 audit uses a 30 s deadline, then redraws and counts the misses (see rejection_stats). Dimensions are not restricted. Proposed host fix, not applied: redraw subset/expected_boxes after K failed geometry attempts. This needs a distribution review.",
+  "fixture_proposal": "With the v7 family, solver and gate both refuse the canonical query in all 16 variants, so the standard audit.py fails at the fixture stage (standard-audit-v7-f3b10344.json). This is a context shortfall, not intrinsic ambiguity. One added native demonstration fixes it: native generate(**params) in proposed-extra-demo-f3b10344.json. Original pairs are unchanged, following the df8cc377 context_enriched precedent. It needs host approval in fixture_policy plus a teaching_fixture in the reference; this reviewer did not edit either.",
+  "superseded": "v6 factory/gate/tests/audit are preserved in review-v7/v6-*. ROOT/audit_centred_bridges_f3b10344.py is superseded.",
+  "source_paths": [
+    "/Users/ritwika/projects/arc-agi2/outputs/research/arcgen-coverage-cli/direct-program-rewrites/f3b10344/factory.py",
+    "/Users/ritwika/projects/ARC-GEN/arc_agi2/direct_factories/task_f3b10344.py",
+    "/Users/ritwika/projects/ARC-GEN/tasks/task_f3b10344.py",
+    "/Users/ritwika/projects/ARC-GEN/arc_agi2/centred_bridges_f3b10344_evidence.py",
+    "/Users/ritwika/projects/ARC-GEN/arc_agi2/test_f3b10344_independent_review_v7.py",
+    "/Users/ritwika/projects/ARC-GEN/arc_agi2/f3b10344_proposed_extra_demo.json",
+    "/Users/ritwika/projects/arc-agi2/outputs/research/arcgen-coverage-cli/direct-program-rewrites/f3b10344/review-v7/proposed-extra-demo-f3b10344.json",
+    "/Users/ritwika/projects/arc-agi2/outputs/research/arcgen-coverage-cli/direct-program-rewrites/f3b10344/review-v7/audit_v7_f3b10344.py",
+    "/Users/ritwika/projects/arc-agi2/outputs/research/arcgen-coverage-cli/direct-program-rewrites/f3b10344/review-v7/rival_probe_f3b10344.py",
+    "/Users/ritwika/projects/arc-agi2/outputs/research/arcgen-coverage-cli/direct-program-rewrites/f3b10344/review-v7/canonical-fixture-counterexample-v7-f3b10344.json",
+    "/Users/ritwika/projects/arc-agi2/outputs/research/arcgen-coverage-cli/direct-program-rewrites/f3b10344/review-v7/standard-audit-v7-f3b10344.json"
+  ],
+  "fixture_approval": {
+    "fixture": "teaching_fixture",
+    "corrected": true,
+    "added_demonstrations": 1,
+    "approval": "User delegated investigation and finalization of labelled teaching copies; reviewed context enrichment on 2026-10-21.",
+    "canonical_sha256": "cfadc43e5098d6f1f109edf736d9b5a6d76bceb101db1c96098677bac5cc3822",
+    "changed_cells": [],
+    "description": "One native demonstration distinguishes centred pairing from overlapping pairing. Every original pair and query label is unchanged. The original context remains ambiguous under the documented rival family and is not claimed solved. Fresh episodes require their own sufficient demonstrations.",
+    "evidence_status": "locally_reviewed_additional_native_demonstration_not_canonical_solution",
+    "kind": "context_enriched",
+    "original_fixture_context_passed": false,
+    "source": "arc_agi2/reports/label-reviews/f3b10344.json",
+    "teaching_sha256": "89b8e2d7b81d8236805a33424ec4ad77c3d61095162b3240e7e1172056515fad"
+  }
+}

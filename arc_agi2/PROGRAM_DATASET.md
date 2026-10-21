@@ -1,6 +1,6 @@
 # Combined program and grid dataset
 
-**Current status (2026-10-21): 1,117 / 1,120 families admitted for program-target generation; 3 remain.** Production generation and SFT await completion. The dated entries below are historical progress. Coverage includes explicitly labelled teaching contexts, not a claim of solving every original benchmark context.
+**Current status (2026-10-21): 1,120 / 1,120 families admitted for program-target generation; none remain.** Expanded generation is the next stage; no dataset or training run was launched during coverage. The dated entries below are historical progress. Coverage includes explicitly labelled teaching contexts, not a claim of solving every original benchmark context.
 
 Exports use **one episode per row**, containing a lossless PNG and a
 JSON record with both the program and the output grids. Images include query
@@ -37,7 +37,7 @@ recorded. Passing finite audits does not prove unrestricted generalization.
 
 - 213 native direct-coordinate certificates admitted after fresh audits and
   supplied-fixture checks.
-- 898 admitted factories. Each passed 1,000 fresh pairs, 8,000 augmented pair
+- 901 admitted factories. Each passed 1,000 fresh pairs, 8,000 augmented pair
   checks and 16 supplied-fixture variants. Their audit records retain draft
   limitations and source/constructor hashes. These checks are finite evidence,
   not proof of correctness on every generated input.
@@ -48,8 +48,7 @@ recorded. Passing finite audits does not prove unrestricted generalization.
   counts must be computed as a union, not added.
 - Local exporter test: 18 fresh base episodes, 144 augmented PNG/program/grid
   records. It requested 20 bases and reported a two-episode shortfall.
-- The union currently admits 1117 of 1,120 families; 3 still need direct
-  augmented program admission. Constructor coverage and program coverage are
+- The union admits all 1120 families. A final independent execution pass checked all 17,920 declared-fixture variants (eight orientations × two palettes × 1,120 families). Constructor coverage and program coverage are
   different gates.
 - Synthetic labels for `00d62c1b` now fill every enclosed background component,
   including incidental pockets. The `0bb8deee` sampler reserves room for its
@@ -1668,3 +1667,13 @@ bd14c3bf passed1,000 fresh-pair checks and8,000 augmentation checks, with slow n
 ba1aa698 uses a labelled four-cell uniform-motion teaching copy consistent with its unchanged synthetic generator. Original labels and query answers stay unchanged; the original canonical demonstration conflict is not claimed solved. The audited proposed generate() is AST-identical to the live native sampler, and15 portable tests verify original refusal, teaching-copy success and query-label isolation.
 
 Three remaining families:1b8318e3,a64e4611,f3b10344. Production generation and SFT remain pending.
+
+### Final coverage checkpoint — 2026-10-21
+
+All 1,120 declared task families are admitted. The final cross-family replay passed 17,920 fixture variants, with exact demonstration/query outputs. [Machine-readable replay](reports/coverage-evidence/final-coverage-replay.json). This is generator/program preparation, not a trained-model result.
+
+- `1b8318e3`: independent input-only docking gate; 1,000 fresh distinct pairs, 8,000 augmented checks and 16 canonical variants. Hidden-order ambiguous inputs are explicitly rejected; demonstration retries retain the query.
+- `f3b10344`: one additional native demonstration disambiguates centred versus overlapping bridge pairing. Original pairs and query answers are unchanged. Coverage uses the labelled enriched context; the original context remains ambiguous within the documented rival family.
+- `a64e4611`: `visible-clearance-v1` is an explicitly versioned synthetic definition. All original fixture variants pass. It preserves native random inputs but changes 1,372 of 2,536 synthetic labels in the audit, so it is **not native-equivalent**. The original constructor is archived. Targets fit 930 parameter hypotheses to demonstrations and require agreement on the query, with no privileged parameter choice. Every exported episode carries variant provenance. [Evidence and comparison image](reports/coverage-evidence/a64e4611/README.md).
+
+These finite audits remain supplemented by exact per-episode verification during the future dataset build. No bulk generation, SFT or RL was launched by this checkpoint.

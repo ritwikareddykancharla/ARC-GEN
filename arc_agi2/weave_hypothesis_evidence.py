@@ -1,4 +1,5 @@
 """Visible coloured-line reconstruction independent of emitted target parsing."""
+from arc_agi2.colour_evidence import MissingColourEvidence
 import numpy as np
 from collections import Counter
 
@@ -68,4 +69,4 @@ def require_evidence(demos,queries,palette):
  for x in list(demos)+list(queries):
   inp=x['input'] if isinstance(x,dict) else x
   result=gate(demos,inp,palette)
-  if result['status']!='unique':raise ValueError(result['status'])
+  if result['status']!='unique':raise MissingColourEvidence(result['status'])

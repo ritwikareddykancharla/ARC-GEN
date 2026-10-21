@@ -181,8 +181,10 @@ def gate(demos, query_input):
 
 
 def require_checkerboard_phase_evidence(demonstrations, queries):
-    from .colour_evidence import MissingColourEvidence
+    from .colour_evidence import MissingColourEvidence, IntrinsicQueryEvidence
     for query in queries:
         result = gate(demonstrations, query['input'])
+        if result['status'] in ('role_ambiguous', 'no_query_reading'):
+            raise IntrinsicQueryEvidence('df8cc377: ' + result['status'])
         if result['status'] != 'unique':
             raise MissingColourEvidence('df8cc377: ' + result['status'])

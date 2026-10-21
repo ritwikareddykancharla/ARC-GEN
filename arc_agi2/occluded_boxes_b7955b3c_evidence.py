@@ -8,10 +8,10 @@ generator-valid reading (background = any non-plus colour, visible or not)
 renders the same full grid. Otherwise IntrinsicAmbiguity carries a witness.
 """
 import numpy as np
-from .colour_evidence import MissingColourEvidence
+from .colour_evidence import MissingColourEvidence, IntrinsicQueryEvidence
 
 
-class IntrinsicAmbiguity(ValueError):
+class IntrinsicAmbiguity(IntrinsicQueryEvidence):
     """The query input itself admits generator-valid readings that disagree."""
 
     def __init__(self, message, witness=None):

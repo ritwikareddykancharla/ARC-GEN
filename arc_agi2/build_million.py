@@ -25,7 +25,7 @@ from .audit import relation,UPSTREAM_IDS
 from .augmentation import transformed, exhaustive_variants, demonstrations_disambiguate
 from .contextual import CONTEXTUAL_TASK_IDS, verify_shared_picture_episode
 from .motif_context import MissingMotifEvidence, solve_demonstrated_motifs
-from .colour_evidence import MissingColourEvidence, require_colour_evidence
+from .colour_evidence import MissingColourEvidence, IntrinsicQueryEvidence, EvidenceSearchBudget, require_colour_evidence
 from .program_targets import compile_target, audit_target, make_record, TargetError
 from .visual_shards import VisualShardWriter
 
@@ -142,7 +142,10 @@ def make_pool(tid):
     rows=[];seen={};canonical=set();reject=Counter();stale=0;trials=0
     while len(rows)<POOL_SIZE and time.monotonic()-start<FAMILY_SECONDS and trials<POOL_SIZE*40:
         trials+=1;s=seed(tid,'pair',trials);random.seed(s);np.random.seed(s % (2**32));kw={};mode='default' if tid in UPSTREAM_IDS else 'standalone_constructor'
-        if tid in NEW_TASK_IDS:
+        if getattr(native_module, 'SYNTHETIC_VARIANT', None):
+            # A versioned family definition must not mix legacy extension labels.
+            mode = 'default'
+        elif tid in NEW_TASK_IDS:
             pass  # Reviewed standalone replaces, rather than mixes with, its archived draft.
         elif tid in GENERATORS and (native is None or rng.random()<.6):mode='extension'
         elif configs and rng.random()<.6:kw=rng.choice(configs)['parameters'];mode='parameter_override'
@@ -229,7 +232,7 @@ def make_episodes(arg):
         for p in rows:bins[p['stratum']].append(p)
         canonical_total=len({p['canonical_input_hash'] for p in rows})
         rng=random.Random(seed(tid,split,'episodes'));query_uses=Counter();pair_uses=Counter();failures=Counter()
-        query_context_shortfalls=[]
+        query_context_shortfalls=[];query_rejections=[];quarantined_queries=set()
         hist={which:{axis:Counter() for axis in ['height','width','longest','shapes']} for which in ['input','output']};relations=Counter()
         path=OUT/'data'/split/f'{tid}.parquet';path.parent.mkdir(parents=True,exist_ok=True)
         temporary=path.with_suffix('.parquet.tmp');writer=None;buffer=[]
@@ -257,11 +260,21 @@ def make_episodes(arg):
                     # silently bias the dataset toward easier query cases.
                     q=next((candidates[(j+offset)%len(candidates)]
                             for offset in range(len(candidates))
-                            if query_uses[candidates[(j+offset)%len(candidates)]['input_hash']]<4),None)
+                            if query_uses[candidates[(j+offset)%len(candidates)]['input_hash']]<4
+                            and candidates[(j+offset)%len(candidates)]['input_hash'] not in quarantined_queries),None)
                     if q is None:
                         failures['query_reuse_exhausted']+=1
                         continue
+                    terminal_rejection=None
                     context_attempts=1 if tid in STORED_CONTEXT_TASK_IDS else 50
+                    def quarantine_query(kind, exc, attempt):
+                        nonlocal terminal_rejection
+                        terminal_rejection=kind
+                        quarantined_queries.add(q['input_hash'])
+                        failures[kind]+=1
+                        query_rejections.append({'query_input_hash':q['input_hash'],
+                            'stratum':k,'context_attempts':attempt,'kind':kind,
+                            'error':str(exc),'witness':getattr(exc,'witness',{})})
                     for retry in range(context_attempts):
                         if tid in STORED_CONTEXT_TASK_IDS:
                             demos=q['context_pairs']
@@ -284,6 +297,12 @@ def make_episodes(arg):
                         four=demos+[q]
                         try:
                             require_colour_evidence(tid,demos,[{'input':q['input']}])
+                        except EvidenceSearchBudget as exc:
+                            quarantine_query('evidence_search_budget_exhausted',exc,retry+1)
+                            break
+                        except IntrinsicQueryEvidence as exc:
+                            quarantine_query('intrinsic_query_evidence_rejected',exc,retry+1)
+                            break
                         except MissingColourEvidence:
                             failures['missing_motif_evidence_attempts' if tid=='98c475bf' else 'missing_colour_evidence_attempts']+=1
                             continue
@@ -317,8 +336,9 @@ def make_episodes(arg):
                         if cfg['colour_permutation_default'] or tid in cfg['colour_permutation_task_ids']:rng.shuffle(palette)
                         variants=exhaustive_variants(four,palette)
                         if not demonstrations_disambiguate(variants):
-                            failures['ambiguous_augmented_context_attempts']+=1
-                            continue
+                            quarantine_query('augmented_label_conflict',
+                                ValueError('Same visible augmented puzzle has conflicting labels'),retry+1)
+                            break
                         base_id=f'arcgen-{tid}-{split}-base-{fresh_count:05d}'
                         pending=[]
                         for variant in variants:
@@ -350,12 +370,14 @@ def make_episodes(arg):
                                 try:
                                     row.update(make_record(row,source_repo='ritwikareddykancharla/ARC-GEN',source_revision=row['source_commit']))
                                 except (TargetError,ValueError,TypeError,IndexError,TimeoutError) as exc:
-                                    failures['program_verification_rejected']+=1
-                                    # Keep the failing episode for repair; do not accept
-                                    # only the easy orientations of a fresh episode.
-                                    dump(OUT/'rejections'/split/f'{tid}.json',{'task_id':tid,'error':str(exc),'episode':row})
+                                    # This stage may compare against the hidden answer.
+                                    # Never redraw demos to search for a context that passes it.
+                                    quarantine_query('post_gate_program_rejected',exc,retry+1)
+                                    dump(OUT/'rejections'/split/tid/f"{q['input_hash']}.json",
+                                         {'task_id':tid,'error':str(exc),'episode':row})
                                     pending=[];break
                             pending.append(row)
+                        if terminal_rejection:break
                         if not pending:continue
                         for row in pending:
                             query={'input':row['test'][0]['input'],'output':row['solutions'][0]}
@@ -368,7 +390,7 @@ def make_episodes(arg):
                         all_hashes.add(basehash);query_uses[q['input_hash']]+=1
                         for p in four:pair_uses[p['input_hash']]+=1
                         accepted=True;break
-                    if not accepted:
+                    if not accepted and not terminal_rejection:
                         failures['episode_constraints_exhausted']+=1
                         query_context_shortfalls.append({'query_input_hash':q['input_hash'],
                             'stratum':k,'context_attempts':retry+1})
@@ -390,6 +412,7 @@ def make_episodes(arg):
             'symmetric_variants_removed':symmetric_duplicates,'variants_per_fresh_episode':dict(variant_counts),
             'query_histograms':hist,'relations':dict(relations),'failures':dict(failures),
             'query_context_shortfalls':query_context_shortfalls,
+            'query_rejections':query_rejections,'quarantined_query_count':len(quarantined_queries),
             'max_query_reuse_in_fresh_episodes':max(query_uses.values(),default=0),
             'max_pair_reuse_in_fresh_episodes':max(pair_uses.values(),default=0),'distinct_inputs_used':len(pair_uses)}
     report={'task_id':tid,'splits':result};dump(OUT/'episode_reports'/f'{tid}.json',report);return report

@@ -1,0 +1,16 @@
+{
+  "id": "a64e4611-visible-clearance-v1",
+  "definition": "Paint background cells belonging to long horizontal or vertical runs with one-cell obstacle clearance; iteratively prune short exposed dead ends.",
+  "constructor_parameters": {
+    "minimum_safe_run": 12,
+    "maximum_pruned_dead_end": 3
+  },
+  "native_equivalent": false,
+  "canonical_fixture_labels_changed": false,
+  "native_input_rng_preserved": true,
+  "original_native_sha256": "06ef672f20c070afad1b44e08eedfa842f2d181632fd9f050f36e17873d34bc2",
+  "original_native_archive": "arc_agi2/archives/task_a64e4611_native_06ef672f.py",
+  "target_inference": "Fit all 930 run 1..30 and prune 0..30 hypotheses to demonstrations; require query prediction unanimity.",
+  "query_selection": "Keep query input fixed; retry demonstration context without reading query output.",
+  "installed_constructor_sha256": "13a2e9d087135abbb9858a49a2e50fd3e4c0c955238af5236c3af548219e0716"
+}

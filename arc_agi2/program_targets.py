@@ -279,6 +279,8 @@ def make_record(episode, source_repo='', source_revision=''):
     completion = '```python\n' + source.rstrip() + '\n```\n\n```json\n' + output_json + '\n```'
     from .fixture_policy import fixture_basis
     fb = fixture_basis(task_id)
+    from .synthetic_variants import variant_provenance
+    variant = variant_provenance(task_id)
     return dict(episode_id=episode['episode_id'], source_episode_id=episode['episode_id'],
                 task_id=task_id, mode='PROGRAM_AND_GRID', prompt=prompt, completion=completion,
                 program=source, output_json=output_json,
@@ -286,5 +288,6 @@ def make_record(episode, source_repo='', source_revision=''):
                 program_sha256=hashlib.sha256(source.encode()).hexdigest(), solver_basis=basis,
                 d4_transform=episode.get('d4_transform',0), color_permutation=episode.get('color_permutation',list(range(10))),
                 source_repo=source_repo, source_revision=source_revision,
+                synthetic_variant=variant,
                 fixture_basis=fb['fixture'], correction_evidence_status=fb.get('evidence_status','reviewed_upstream_proposal' if fb['corrected'] else 'canonical'),
                 verification=checked, train=episode['train'], test=episode['test'], solutions=episode['solutions'])

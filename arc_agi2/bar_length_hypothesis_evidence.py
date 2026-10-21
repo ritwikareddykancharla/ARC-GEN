@@ -1,4 +1,5 @@
 """Independent component extraction and explicit competing scalar rules."""
+from arc_agi2.colour_evidence import MissingColourEvidence
 from collections import Counter
 
 def layouts(g,palette):
@@ -60,4 +61,4 @@ def require_evidence(demos,queries,palette):
  for x in list(demos)+list(queries):
   inp=x['input'] if isinstance(x,dict) else x
   result=gate(demos,inp,palette)
-  if result['status']!='unique':raise ValueError(result['status'])
+  if result['status']!='unique':raise MissingColourEvidence(result['status'])

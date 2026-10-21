@@ -1,16 +1,14 @@
-> **2026-10-20: Coverage first.** The million-episode job was canceled at the user’s request. All 1,120 public tasks are now in scope. No bulk generation or model training is running from this work. Standalone new modules use `tasks/task_<id>.py` with `generate(...)` and `validate()`. Claude CLI drafts are not counted before validation and review.
+> **Current checkpoint — 2026-10-21: coverage first.** All 1,120 generator sources exist. Direct, augmented program admission is **1,120/1,120**, with 17,920/17,920 declared-fixture variants passing the final replay. No expanded dataset or model training has launched. See [current program evidence](PROGRAM_DATASET.md) for the authoritative distinction between original fixtures, labelled teaching contexts and synthetic variants.
 >
-> Target after coverage: **1,120 × 1,000 = 1,120,000 fresh episodes**, then all eight D4 transforms, **up to 8,960,000 episodes** before symmetry deduplication and adaptive family shortfalls. The builder now emits every D4 variant, deduplicates symmetric episodes, and reports fresh and augmented counts separately. Its full-coverage and reviewed-standalone guards still block bulk use.
+> Dataset target after coverage: **1,120 × 1,000 = 1,120,000 fresh episodes**, each containing **both a program and grid target**, plus a lossless PNG for inspection. Apply eight D4 transforms and an episode-wide palette mapping consistently: up to **8,960,000 records** before symmetry deduplication and explicit diversity shortfalls. Public destination: [program/grid dataset](https://huggingface.co/datasets/ritwika96/arc-agi2-program-grid-sft).
 >
-> Next model-training stage, as clarified by the user: **full-parameter SFT with separate program and grid output modes on the user’s 8 × H200 GPUs**, followed by a proposed execution-verified RL stage. The user revised the earlier grid-only plan on 2026-10-20. Mastery-based family sampling is a proposed SFT curriculum and must be evaluated using free-generated exact grids.
->
-> Colours are sampled by native generators. Extra episode-wide colour permutation is opt-in, not mandatory. Rotations/reflections always transform all demonstration and query grids consistently. Native solver validation occurs before augmentation: the augmented rule is `T f T^-1`, not necessarily the original direction-specific rule.
+> The latest model choice is **Qwen 27B, rank-256 LoRA on 8 × H200**, with the exact model ID still to be verified. SFT precedes the proposed execution-verified RL stage. Earlier grid-only/full-parameter settings below are historical, not the current launch configuration.
 
 # ARC-AGI-2 procedural generator research
 
 This fork adds a reference-guided generator workflow and an adaptive episode builder. Reviewed standalone additions extend `task_list.task_list()` without replacing upstream entries. Older constructive drafts remain in `arc_agi2.generators.registry` while conversion proceeds.
 
-## Current evidence
+## Earlier generator-stage evidence (historical)
 
 - All **1,120** canonical tasks inventoried with saved Opus/Fable explanations, `transform(grid)` programs, provenance and separately labelled teaching fixtures.
 - **891 existing upstream generators** reproduce the canonical pair sets (pair ordering can differ between releases).
@@ -37,11 +35,11 @@ python -m arc_agi2.validate_parameters
 ARCGEN_WORKERS=32 python -m arc_agi2.build_million
 ```
 
-HF target: `ritwika96/arc-agi2-arcgen-1m-episodes`. Requires a write-capable `HF_TOKEN` in the environment. Use `--local` for no Hub writes and `--tasks ID ...` for a small test. `ARCGEN_TARGET_EPISODES`, `ARCGEN_POOL_SIZE`, `ARCGEN_FAMILY_SECONDS`, and `ARCGEN_BUILD_ROOT` configure generation. Master seed 20261021.
+Combined-target HF destination: `ritwika96/arc-agi2-program-grid-sft`. The older `arc-agi2-arcgen-1m-episodes` destination is for the explicit legacy grid-only format. Requires a write-capable `HF_TOKEN` in the environment. Use `--local` for no Hub writes and `--tasks ID ...` for a small test. `ARCGEN_TARGET_EPISODES`, `ARCGEN_POOL_SIZE`, `ARCGEN_FAMILY_SECONDS`, and `ARCGEN_BUILD_ROOT` configure generation. Master seed 20261021.
 
 The builder first makes fresh pools of unique inputs, then allocates training/validation episodes adaptively by observed diversity. It targets the exact **query longest-side bins 1–30 jointly with output shape-change category** from all 1,120 tasks; it reports full height/width histograms too. It does not guarantee matching all joint dimensions or reasoning difficulty. Unsupported bins are published as shortfalls, never silently replaced by easy duplicates. A finite pool or unavailable size strata can leave the build below the 1.12M fresh-episode target. The fresh quota is capped at 1,000 per family and reduced for limited diversity; unsupported counts remain explicit shortfalls. Allocation and achieved counts are explicit.
 
-Each episode contains three demonstrations and one query. Targets are output-grid JSON only. No solver code, reasoning or query labels are included in the prompt. All eight D4 transforms are emitted for each accepted fresh episode, with symmetric duplicates stored once and the represented transforms recorded in `equivalent_d4`. Optional palette mapping is simultaneous and shared. Fresh native episode hashes ignore demonstration order and augmentation. Parquet output is buffered in groups of 64 rows to avoid holding an entire augmented family in memory. Equivalent input grids under palette renaming/D4 are assigned to the same split globally before episode construction. All 1,120 tasks, including the former 20 holdouts, are training-eligible after validation. The historical flags remain provenance only. Public evaluation families used in training are no longer independent evaluations.
+Each episode contains three demonstrations and one query. The production format stores a combined verified Python program and output-grid target, with PNG/JSON audit records. The following Parquet details describe the legacy grid-only exporter. No solver code, reasoning or query labels are included in the prompt. All eight D4 transforms are emitted for each accepted fresh episode, with symmetric duplicates stored once and the represented transforms recorded in `equivalent_d4`. Optional palette mapping is simultaneous and shared. Fresh native episode hashes ignore demonstration order and augmentation. Parquet output is buffered in groups of 64 rows to avoid holding an entire augmented family in memory. Equivalent input grids under palette renaming/D4 are assigned to the same split globally before episode construction. All 1,120 tasks, including the former 20 holdouts, are training-eligible after validation. The historical flags remain provenance only. Public evaluation families used in training are no longer independent evaluations.
 
 ## Getting to full coverage
 

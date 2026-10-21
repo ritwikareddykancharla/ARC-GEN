@@ -140,7 +140,9 @@ def gate(train, query_input, palette, d4):
 
 
 def require_fragment_evidence(demonstrations, queries, palette, d4=0):
-    from .colour_evidence import MissingColourEvidence
+    from .colour_evidence import MissingColourEvidence, IntrinsicQueryEvidence
     for query in queries:
         status,info=gate(demonstrations,query['input'],palette,d4)
+        if status in ('intrinsic_ambiguity','not_constructor'):
+            raise IntrinsicQueryEvidence('b230c067: '+status,info)
         if status!='determined':raise MissingColourEvidence('b230c067: '+status)

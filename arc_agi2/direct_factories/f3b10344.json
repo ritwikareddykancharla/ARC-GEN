@@ -1,0 +1,179 @@
+{
+  "task_id": "f3b10344",
+  "factory_sha256": "d13580b42a3bffc994d4d957f39e14f50ce4ac2a91e183a96845c97100fec70c",
+  "constructor_sha256": "72688e6373a3242c5e0e17a4cbf24f39990fb4c82219eb0f197e99ca363092a6",
+  "evidence_gate_path": "/Users/ritwika/projects/ARC-GEN/arc_agi2/centred_bridges_f3b10344_evidence.py",
+  "evidence_gate_sha256": "ce082938559787781b9cfddec54c7afeba3c811332c3494a4370e59a2db73a35",
+  "audit_script_sha256": "cbdf06dcf767e6e34530663c19c1f673d5648c22c153db261f06b927cc3b1647",
+  "passed": true,
+  "fresh_audit_passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "canonical_fixture": {
+    "variants": 16,
+    "gate_status": [
+      "context_shortfall"
+    ],
+    "disagreeing_survivors": [
+      "overlap/span_any",
+      "overlap/span_same",
+      "overlap/trim_any",
+      "overlap/trim_same"
+    ],
+    "solver_refuses_query_all_variants": true,
+    "demo_inputs_reproduced_all_variants": true,
+    "verdict": "context_shortfall: canonical train has no uncentred same-colour pair; overlap/* rules fit all train demos and bridge test boxes rows10-14xcols24-27 / rows20-22xcols24-26 (col 25, rows 15-19)."
+  },
+  "enriched_fixture_variants_checked": 16,
+  "unique_base_inputs": 1000,
+  "label_is_centred_trim_all_pairs": true,
+  "rejection_stats": {
+    "native_sampler_deadline_rejections": 111,
+    "native_sampler_error_kinds": {
+      "TimeoutError:reference/generator deadline": 111
+    },
+    "sampler_deadline_seconds": 30.0,
+    "context_draws_total": 593,
+    "context_status_totals": {
+      "identified": 250,
+      "context_shortfall": 343
+    },
+    "first_context_status_per_query": {
+      "identified": 186,
+      "context_shortfall": 64
+    },
+    "queries_needing_context_resample": 64,
+    "max_context_draws_for_one_query": 73,
+    "hard_queries_discriminating_rival_rules": 122,
+    "shortfall_disagreeing_survivor_sets": {
+      "centred/none,overlap/none,overlap/span_any,overlap/span_same,overlap/trim_any,overlap/trim_same": 17,
+      "centred/none": 26,
+      "centred/none,overlap/none": 9,
+      "centred/span_any": 51,
+      "centred/span_any,overlap/span_any": 22,
+      "overlap/span_any,overlap/span_same,overlap/trim_any,overlap/trim_same": 18,
+      "centred/none,overlap/none,overlap/span_same,overlap/trim_any,overlap/trim_same": 4,
+      "centred/none,overlap/none,overlap/span_same,overlap/trim_same": 2,
+      "overlap/none,overlap/span_same,overlap/trim_same": 2,
+      "overlap/none,overlap/span_any,overlap/span_same,overlap/trim_any,overlap/trim_same": 13,
+      "overlap/span_same,overlap/trim_any,overlap/trim_same": 3,
+      "overlap/trim_any,overlap/trim_same": 1,
+      "overlap/trim_any": 1,
+      "centred/span_same": 9,
+      "centred/span_any,centred/span_same": 76,
+      "centred/span_any,centred/span_same,overlap/span_any,overlap/span_same": 41,
+      "centred/none,centred/span_any,centred/span_same": 10,
+      "centred/none,centred/span_any,centred/span_same,overlap/none,overlap/span_any,overlap/span_same": 6,
+      "centred/span_any,centred/span_same,overlap/span_any": 3,
+      "centred/span_same,overlap/span_same": 5,
+      "centred/none,centred/span_same,overlap/none,overlap/span_same": 1,
+      "centred/none,overlap/span_any,overlap/trim_any": 1,
+      "overlap/none,overlap/span_same,overlap/trim_any,overlap/trim_same": 2,
+      "centred/span_any,overlap/none,overlap/span_any,overlap/span_same,overlap/trim_any,overlap/trim_same": 6,
+      "centred/span_any,overlap/span_any,overlap/span_same,overlap/trim_any,overlap/trim_same": 3,
+      "overlap/span_same,overlap/trim_same": 2,
+      "centred/none,centred/span_any": 4,
+      "centred/none,centred/span_any,overlap/none,overlap/span_any": 2,
+      "overlap/none": 2,
+      "overlap/none,overlap/trim_any,overlap/trim_same": 1
+    },
+    "intrinsic_ambiguity_witnesses": 0
+  },
+  "audit_scope": "250 fresh unchanged native queries held fixed; 3-demo contexts resampled from the unchanged native generator only on gate context/colour shortfall; rival family {centred,overlap}x{trim_any,trim_same,span_any,span_same,none}; gate called with queries=[{'input': grid}] only; every accepted episode verified under all 8 D4 with a shuffled palette; slow native draws redrawn and counted; no query dropped or narrowed.",
+  "seconds": 1259.9810957909795,
+  "fixture_source": "approved context-enriched teaching_fixture",
+  "fixture_basis": {
+    "fixture": "teaching_fixture",
+    "corrected": true,
+    "added_demonstrations": 1,
+    "approval": "User delegated investigation and finalization of labelled teaching copies; reviewed context enrichment on 2026-10-21.",
+    "canonical_sha256": "cfadc43e5098d6f1f109edf736d9b5a6d76bceb101db1c96098677bac5cc3822",
+    "changed_cells": [],
+    "description": "One native demonstration distinguishes centred pairing from overlapping pairing. Every original pair and query label is unchanged. The original context remains ambiguous under the documented rival family and is not claimed solved. Fresh episodes require their own sufficient demonstrations.",
+    "evidence_status": "locally_reviewed_additional_native_demonstration_not_canonical_solution",
+    "kind": "context_enriched",
+    "original_fixture_context_passed": false,
+    "source": "arc_agi2/reports/label-reviews/f3b10344.json",
+    "teaching_sha256": "89b8e2d7b81d8236805a33424ec4ad77c3d61095162b3240e7e1172056515fad"
+  },
+  "original_fixture_context_passed": false,
+  "host_integration_tests": {
+    "tests": 10,
+    "passed": 10,
+    "seconds": 1.973,
+    "command": "python -m unittest arc_agi2.test_f3b10344_independent_review_v7.CanonicalFixture arc_agi2.test_f3b10344_independent_review_v7.GateInterface arc_agi2.test_f3b10344_independent_review_v7.HardCases -v",
+    "portable_test_sha256": "b2bc19bc696c26aa0d938e2b3a506edaa19411a5ac5d40c741bc0bc46915b32e"
+  },
+  "fixture_variants_scope": "16 approved teaching variants passed live dispatcher and execution. Separately 16 original canonical contexts correctly refused due to ambiguous alignment.",
+  "host_review": {
+    "approval": {
+      "kind": "context_enriched",
+      "added_demonstrations": 1,
+      "changed_cells": [],
+      "canonical_sha256": "cfadc43e5098d6f1f109edf736d9b5a6d76bceb101db1c96098677bac5cc3822",
+      "teaching_sha256": "89b8e2d7b81d8236805a33424ec4ad77c3d61095162b3240e7e1172056515fad",
+      "original_fixture_context_passed": false,
+      "source": "arc_agi2/reports/label-reviews/f3b10344.json",
+      "approval": "User delegated investigation and finalization of labelled teaching copies; reviewed context enrichment on 2026-10-21.",
+      "evidence_status": "locally_reviewed_additional_native_demonstration_not_canonical_solution",
+      "description": "One native demonstration distinguishes centred pairing from overlapping pairing. Every original pair and query label is unchanged. The original context remains ambiguous under the documented rival family and is not claimed solved. Fresh episodes require their own sufficient demonstrations."
+    },
+    "source_review": "Native constructor, direct program and independent gate inspected. No native, factory or gate changes. Pure palette substitutions only; no query labels in gate; full query unanimity within ten explicit bridge hypotheses.",
+    "background_limit": "Gate uses pooled demonstration majority for background. Production dispatch cross-checks palette and fails closed on a mismatch. This is a conservative context limitation, not a proven complete inference rule for arbitrary dense scenes.",
+    "finite_hypothesis_limit": "Unanimity is relative to the ten documented alignment/blocker hypotheses, not a proof against every imaginable rule. Canonical context not claimed solved.",
+    "audit_scope": "250 fixed fresh queries, three demonstrations each: 1000 distinct pairs, 8000 D4 checks. 111 native draw timeouts counted. Context retries do not consult query outputs."
+  },
+  "factory_version": 1,
+  "requires_per_episode_verification": true,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "task_id": "f3b10344",
+    "author": "host parallel CLI execution worker",
+    "reviewer_version": "independent-review-v7",
+    "status": "admitted_context_enriched_teaching_fixture",
+    "native_changed": false,
+    "labels_changed": false,
+    "explanation": "Direct visible-coordinate program. It finds solid rectangles on BG=palette[0] and pairs same-colour rectangles facing across a gap. The bridge is gap x shared span with one cell trimmed at each end, painted BR=palette[8] on background. Rival rules are {centred, overlap} x {trim_any, trim_same, span_any, span_same, none}. Every rule that reproduces all demos is kept, and the program answers only if all survivors agree on the full query. Otherwise it raises Undetermined. It also raises when nothing survives, and when a bridge is needed but no demo shows its colour. D4 selects nothing.",
+    "ambiguity": {
+      "intrinsic": "None found. All native labels equal centred/trim_any on the visible input, for every audited pair.",
+      "context_shortfall": "Canonical fixture: overlap/* fits the train demos and differs on the test (canonical-fixture-counterexample-v7-f3b10344.json). Fresh episodes: contexts resampled with the query held fixed. See host-audit.json rejection_stats."
+    },
+    "audit": {
+      "command": "cd /Users/ritwika/projects/ARC-GEN && PYTHONPATH=. /Users/ritwika/projects/arc-agi2/.venv/bin/python ROOT/f3b10344/review-v7/audit_v7_f3b10344.py --queries 250 --workers 8 --deadline 30",
+      "tests": "cd /Users/ritwika/projects/ARC-GEN && PYTHONPATH=. /Users/ritwika/projects/arc-agi2/.venv/bin/python -m unittest arc_agi2.test_f3b10344_independent_review_v7 -v",
+      "host_audit": "ROOT/f3b10344/host-audit.json",
+      "runtime_seconds": 1259.9810957909795
+    },
+    "constructor_issue": "subset and expected_boxes are drawn once, outside the while-True loop, and the recursive growth must hit that count exactly. 32/200 draws exceed 5 s (rival_probe run), so the standard 5 s / 50-rejection audit cannot sample this family. The v7 audit uses a 30 s deadline, then redraws and counts the misses (see rejection_stats). Dimensions are not restricted. Proposed host fix, not applied: redraw subset/expected_boxes after K failed geometry attempts. This needs a distribution review.",
+    "fixture_proposal": "With the v7 family, solver and gate both refuse the canonical query in all 16 variants, so the standard audit.py fails at the fixture stage (standard-audit-v7-f3b10344.json). This is a context shortfall, not intrinsic ambiguity. One added native demonstration fixes it: native generate(**params) in proposed-extra-demo-f3b10344.json. Original pairs are unchanged, following the df8cc377 context_enriched precedent. It needs host approval in fixture_policy plus a teaching_fixture in the reference; this reviewer did not edit either.",
+    "superseded": "v6 factory/gate/tests/audit are preserved in review-v7/v6-*. ROOT/audit_centred_bridges_f3b10344.py is superseded.",
+    "source_paths": [
+      "/Users/ritwika/projects/arc-agi2/outputs/research/arcgen-coverage-cli/direct-program-rewrites/f3b10344/factory.py",
+      "/Users/ritwika/projects/ARC-GEN/arc_agi2/direct_factories/task_f3b10344.py",
+      "/Users/ritwika/projects/ARC-GEN/tasks/task_f3b10344.py",
+      "/Users/ritwika/projects/ARC-GEN/arc_agi2/centred_bridges_f3b10344_evidence.py",
+      "/Users/ritwika/projects/ARC-GEN/arc_agi2/test_f3b10344_independent_review_v7.py",
+      "/Users/ritwika/projects/ARC-GEN/arc_agi2/f3b10344_proposed_extra_demo.json",
+      "/Users/ritwika/projects/arc-agi2/outputs/research/arcgen-coverage-cli/direct-program-rewrites/f3b10344/review-v7/proposed-extra-demo-f3b10344.json",
+      "/Users/ritwika/projects/arc-agi2/outputs/research/arcgen-coverage-cli/direct-program-rewrites/f3b10344/review-v7/audit_v7_f3b10344.py",
+      "/Users/ritwika/projects/arc-agi2/outputs/research/arcgen-coverage-cli/direct-program-rewrites/f3b10344/review-v7/rival_probe_f3b10344.py",
+      "/Users/ritwika/projects/arc-agi2/outputs/research/arcgen-coverage-cli/direct-program-rewrites/f3b10344/review-v7/canonical-fixture-counterexample-v7-f3b10344.json",
+      "/Users/ritwika/projects/arc-agi2/outputs/research/arcgen-coverage-cli/direct-program-rewrites/f3b10344/review-v7/standard-audit-v7-f3b10344.json"
+    ],
+    "fixture_approval": {
+      "fixture": "teaching_fixture",
+      "corrected": true,
+      "added_demonstrations": 1,
+      "approval": "User delegated investigation and finalization of labelled teaching copies; reviewed context enrichment on 2026-10-21.",
+      "canonical_sha256": "cfadc43e5098d6f1f109edf736d9b5a6d76bceb101db1c96098677bac5cc3822",
+      "changed_cells": [],
+      "description": "One native demonstration distinguishes centred pairing from overlapping pairing. Every original pair and query label is unchanged. The original context remains ambiguous under the documented rival family and is not claimed solved. Fresh episodes require their own sufficient demonstrations.",
+      "evidence_status": "locally_reviewed_additional_native_demonstration_not_canonical_solution",
+      "kind": "context_enriched",
+      "original_fixture_context_passed": false,
+      "source": "arc_agi2/reports/label-reviews/f3b10344.json",
+      "teaching_sha256": "89b8e2d7b81d8236805a33424ec4ad77c3d61095162b3240e7e1172056515fad"
+    }
+  }
+}

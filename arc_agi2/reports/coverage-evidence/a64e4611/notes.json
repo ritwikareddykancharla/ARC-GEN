@@ -1,0 +1,18 @@
+{
+  "author": "host",
+  "method": "Full 930-parameter demo-selected visible-clearance solver; independent NumPy gate checks input-only query unanimity.",
+  "synthetic_variant": "a64e4611-visible-clearance-v1",
+  "native_equivalent": false,
+  "original_fixture_context_passed": true,
+  "decision": "Adopt a named synthetic family definition, with per-record provenance. Preserve original generator source, original benchmark pair labels and original audit counterexamples.",
+  "limitations": [
+    "Synthetic output labels differ from native hidden-rectangle labels on 1,372 of 2,536 audit draws; this is not merely an ambiguity correction.",
+    "The synthetic constructor uses declared run=12 and prune=3 convention; the program target is not allowed to prefer those parameters and fits all 930 hypotheses.",
+    "Canonical fixture compatibility does not establish equivalence on arbitrary new scenes or prove uniquely intended semantics."
+  ],
+  "evidence": [
+    "1,000 distinct fresh inputs, 8,000 augmented pair checks, 16 canonical variants, 250 input-only gates passed.",
+    "All 250 sampled queries retained; only demo context resampled (512 retries, maximum 23).",
+    "Eight portable algorithm tests and four installed integration checks passed."
+  ]
+}

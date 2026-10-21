@@ -1,0 +1,50 @@
+{
+  "task_id": "1b8318e3",
+  "created_at_utc": "2026-10-21T00:36:12.844711+00:00",
+  "dispatch": {
+    "module": "arc_agi2.pixel_docking_evidence",
+    "function": "require_evidence(demonstrations, queries, palette=None)",
+    "return": "None on admission; MissingColourEvidence subclasses on abstention"
+  },
+  "native_input_gate": "require_native_input(grid, palette=None)",
+  "classification": {
+    "IntrinsicDockingAmbiguity": "native clamp rule itself has multiple completed outputs for input; only this justifies intrinsic-example rejection",
+    "DockingContextAmbiguity": "Ambiguous demonstration OR native-unique query with unresolved alternative king rule: retain query and resample demos",
+    "DockingSearchBudget": "fail closed; not proof of intrinsic ambiguity"
+  },
+  "changes": "New evidence/test modules only. Constructor, factory, shared dispatch and active CLI audit unchanged. Separate production audit gates from input before verification and never consults expected query output to decide context retries.",
+  "tests": {
+    "portable_tests_passed": 7,
+    "canonical_variants": 16,
+    "intrinsic_witness_variants": 16,
+    "query_output_access_trap": true,
+    "poison_query_output": true,
+    "query_enumeration_label_instrumentation": true,
+    "fresh_smoke_pairs": 64,
+    "fixed_query_smoke_episodes": 16,
+    "context_retries_retaining_query": 2,
+    "ambiguous_demo_retains_query": true,
+    "ambiguous_query_precedes_demo_checks": true
+  },
+  "scope": "Native unique-output restriction is explicit. Canonical fixture uses learned clamp/king hypothesis scope; no original label edits and no universal intended-rule claim.",
+  "hashes": {
+    "/Users/ritwika/projects/ARC-GEN/arc_agi2/pixel_docking_evidence.py": "f85de8793e013fdddf2d2cd380b2095364228c3ee71afff241e45f8f0c24fc6c",
+    "/Users/ritwika/projects/ARC-GEN/arc_agi2/test_pixel_docking_evidence.py": "65cae954418052b73dcb4bd1927cfd074e059107ce9513e36abab97d61efad09",
+    "/Users/ritwika/projects/arc-agi2/outputs/research/arcgen-coverage-cli/direct-program-rewrites/1b8318e3/audit_production_gate_legend.py": "d0da60b07688acbc029a09a36a3c2e6b2e402264367bbccde6e695a965c7854f"
+  },
+  "full_audit": {
+    "report": "host-audit.json",
+    "passed": true,
+    "native_unique_pairs": 1000,
+    "all_d4_pair_checks": 8000,
+    "canonical_variants": 16,
+    "context_retries": 24,
+    "all_retry_queries_retained": true,
+    "intrinsic_rejections": 29,
+    "snapshot_records": 1039,
+    "typed_exception_gate_sha256": "f85de8793e013fdddf2d2cd380b2095364228c3ee71afff241e45f8f0c24fc6c",
+    "seconds": 16.713037832989357
+  },
+  "query_first": true,
+  "audit_rerun": "audit_production_gate_legend.py now defaults to the frozen production-gate-pool-snapshot.jsonl; optional first positional path overrides it."
+}

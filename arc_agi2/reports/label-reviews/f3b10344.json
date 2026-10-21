@@ -1,0 +1,206 @@
+{
+  "task_id": "f3b10344",
+  "reviewer": "second independent reviewer (host parallel CLI execution worker, v7)",
+  "passed": true,
+  "verdict": "Host approved explicitly labelled context enrichment after independent fresh audit and live-dispatch tests. Original canonical context remains ambiguous and is not claimed solved.",
+  "fresh_audit_passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "unique_base_inputs": 1000,
+  "canonical_fixture_variants_checked": 16,
+  "canonical_fixture": {
+    "variants": 16,
+    "gate_status": [
+      "context_shortfall"
+    ],
+    "disagreeing_survivors": [
+      "overlap/span_any",
+      "overlap/span_same",
+      "overlap/trim_any",
+      "overlap/trim_same"
+    ],
+    "solver_refuses_query_all_variants": true,
+    "demo_inputs_reproduced_all_variants": true,
+    "verdict": "context_shortfall: canonical train has no uncentred same-colour pair; overlap/* rules fit all train demos and bridge test boxes rows10-14xcols24-27 / rows20-22xcols24-26 (col 25, rows 15-19)."
+  },
+  "enriched_fixture_variants_checked": 16,
+  "rejection_stats": {
+    "native_sampler_deadline_rejections": 111,
+    "native_sampler_error_kinds": {
+      "TimeoutError:reference/generator deadline": 111
+    },
+    "sampler_deadline_seconds": 30.0,
+    "context_draws_total": 593,
+    "context_status_totals": {
+      "identified": 250,
+      "context_shortfall": 343
+    },
+    "first_context_status_per_query": {
+      "identified": 186,
+      "context_shortfall": 64
+    },
+    "queries_needing_context_resample": 64,
+    "max_context_draws_for_one_query": 73,
+    "hard_queries_discriminating_rival_rules": 122,
+    "shortfall_disagreeing_survivor_sets": {
+      "centred/none,overlap/none,overlap/span_any,overlap/span_same,overlap/trim_any,overlap/trim_same": 17,
+      "centred/none": 26,
+      "centred/none,overlap/none": 9,
+      "centred/span_any": 51,
+      "centred/span_any,overlap/span_any": 22,
+      "overlap/span_any,overlap/span_same,overlap/trim_any,overlap/trim_same": 18,
+      "centred/none,overlap/none,overlap/span_same,overlap/trim_any,overlap/trim_same": 4,
+      "centred/none,overlap/none,overlap/span_same,overlap/trim_same": 2,
+      "overlap/none,overlap/span_same,overlap/trim_same": 2,
+      "overlap/none,overlap/span_any,overlap/span_same,overlap/trim_any,overlap/trim_same": 13,
+      "overlap/span_same,overlap/trim_any,overlap/trim_same": 3,
+      "overlap/trim_any,overlap/trim_same": 1,
+      "overlap/trim_any": 1,
+      "centred/span_same": 9,
+      "centred/span_any,centred/span_same": 76,
+      "centred/span_any,centred/span_same,overlap/span_any,overlap/span_same": 41,
+      "centred/none,centred/span_any,centred/span_same": 10,
+      "centred/none,centred/span_any,centred/span_same,overlap/none,overlap/span_any,overlap/span_same": 6,
+      "centred/span_any,centred/span_same,overlap/span_any": 3,
+      "centred/span_same,overlap/span_same": 5,
+      "centred/none,centred/span_same,overlap/none,overlap/span_same": 1,
+      "centred/none,overlap/span_any,overlap/trim_any": 1,
+      "overlap/none,overlap/span_same,overlap/trim_any,overlap/trim_same": 2,
+      "centred/span_any,overlap/none,overlap/span_any,overlap/span_same,overlap/trim_any,overlap/trim_same": 6,
+      "centred/span_any,overlap/span_any,overlap/span_same,overlap/trim_any,overlap/trim_same": 3,
+      "overlap/span_same,overlap/trim_same": 2,
+      "centred/none,centred/span_any": 4,
+      "centred/none,centred/span_any,overlap/none,overlap/span_any": 2,
+      "overlap/none": 2,
+      "overlap/none,overlap/trim_any,overlap/trim_same": 1
+    },
+    "intrinsic_ambiguity_witnesses": 0
+  },
+  "audit_seconds": 1259.9810957909795,
+  "tests": {
+    "command": "cd /Users/ritwika/projects/ARC-GEN && PYTHONPATH=. /Users/ritwika/projects/arc-agi2/.venv/bin/python -m unittest arc_agi2.test_f3b10344_independent_review_v7 -v",
+    "result": "10/10 OK: full module 9/10 in 210 s, then the colour-shortfall test was redesigned and HardCases 4/4 rerun OK in 0.3 s",
+    "note": "The colour-shortfall test first failed: with blank demos the canonical query is context_shortfall, which takes precedence. It was replaced by a query that every rule bridges."
+  },
+  "audit_command": "cd /Users/ritwika/projects/ARC-GEN && PYTHONPATH=. /Users/ritwika/projects/arc-agi2/.venv/bin/python ROOT/f3b10344/review-v7/audit_v7_f3b10344.py --queries 250 --workers 8 --deadline 30",
+  "standard_audit_py": {
+    "task_id": "f3b10344",
+    "factory_sha256": "d13580b42a3bffc994d4d957f39e14f50ce4ac2a91e183a96845c97100fec70c",
+    "constructor_sha256": "72688e6373a3242c5e0e17a4cbf24f39990fb4c82219eb0f197e99ca363092a6",
+    "passed": false,
+    "fresh_pairs_checked": 0,
+    "augmented_pair_checks": 0,
+    "fixture_variants_checked": 0,
+    "sampler_rejections": [],
+    "failure_stage": "fixtures",
+    "error": "Undetermined: demonstration-consistent bridge rules disagree on the query",
+    "unique_base_inputs": 0,
+    "seconds": 0.141748333000578
+  },
+  "issues": [
+    {
+      "id": "hidden-centred-parameter",
+      "severity": "blocking",
+      "fixed_in_task_code": true,
+      "detail": "v6 hard-coded the equal-centre pairing test. The canonical train contains 0 uncentred same-colour pairs, so overlap/{trim_any,trim_same,span_any,span_same} fit all 3 train demos exactly. On the canonical test they bridge col 25 rows 15-19, which the label does not. v6 answered the canonical query from an undemonstrated parameter. On native pairs the overlap reading differs from the label in about 24% of pairs (61/250 in rival_probe)."
+    },
+    {
+      "id": "canonical-fixture-context-shortfall",
+      "severity": "blocking_for_certification",
+      "fixed_in_task_code": false,
+      "detail": "With the v7 family, solver and gate both refuse the canonical query in all 16 variants, so the standard audit.py fails at the fixture stage (standard-audit-v7-f3b10344.json). This is a context shortfall, not intrinsic ambiguity. One added native demonstration fixes it: native generate(**params) in proposed-extra-demo-f3b10344.json. Original pairs are unchanged, following the df8cc377 context_enriched precedent. It needs host approval in fixture_policy plus a teaching_fixture in the reference; this reviewer did not edit either."
+    },
+    {
+      "id": "gate-signature",
+      "severity": "moderate",
+      "fixed_in_task_code": true,
+      "detail": "The v6 gate assess(demos, query_input) did not match dispatch. The new gate is require_centred_bridge_evidence(demonstrations, queries, palette=None) and is called with queries=[{'input': grid}]. A test confirms that a poisoned 'output' key is ignored."
+    },
+    {
+      "id": "blocker-family-incomplete",
+      "severity": "minor",
+      "fixed_in_task_code": true,
+      "detail": "Added trim_same and none (bridge through boxes). The canonical train refutes 'none'. trim_same is equivalent to trim_any on native inputs, because the constructor rejects foreign colours in the trimmed rectangle."
+    },
+    {
+      "id": "native-slow-sampling",
+      "severity": "reported_constructor_issue",
+      "fixed_in_task_code": false,
+      "detail": "subset and expected_boxes are drawn once, outside the while-True loop, and the recursive growth must hit that count exactly. 32/200 draws exceed 5 s (rival_probe run), so the standard 5 s / 50-rejection audit cannot sample this family. The v7 audit uses a 30 s deadline, then redraws and counts the misses (see rejection_stats). Dimensions are not restricted. Proposed host fix, not applied: redraw subset/expected_boxes after K failed geometry attempts. This needs a distribution review."
+    },
+    {
+      "id": "no-leakage-found",
+      "severity": "info",
+      "fixed_in_task_code": false,
+      "detail": "There is no first/majority/default fallback, no demo skipping, and no D4 choice. Only BG=palette[0] and BR=palette[8] are specialised. Query labels reach verify() only. audit_target passes for all emitted programs."
+    },
+    {
+      "id": "residual-family-limits",
+      "severity": "info",
+      "fixed_in_task_code": false,
+      "detail": "Painting is on background only, and the one-cell trim is fixed. Any demonstrated bridge refutes other trims, and the solver refuses when no demo shows a bridge. Other exotic rivals (diagonal pairing, nearest-only) are not enumerated."
+    }
+  ],
+  "source_hashes": {
+    "factory": "d13580b42a3bffc994d4d957f39e14f50ce4ac2a91e183a96845c97100fec70c",
+    "factory_fork_mirror": "d13580b42a3bffc994d4d957f39e14f50ce4ac2a91e183a96845c97100fec70c",
+    "native_constructor": "72688e6373a3242c5e0e17a4cbf24f39990fb4c82219eb0f197e99ca363092a6",
+    "evidence_gate": "ce082938559787781b9cfddec54c7afeba3c811332c3494a4370e59a2db73a35",
+    "portable_tests": "c3d448b3f62ce46663bae046fcfdcd56e45f4dc8ef61688c1c49de42ca4b28cf",
+    "proposed_extra_demo_fork": "e61c02833587356361e7b19dac77641c39ea7c333e8fea98dfda21b6516e0ba8",
+    "proposed_extra_demo": "e61c02833587356361e7b19dac77641c39ea7c333e8fea98dfda21b6516e0ba8",
+    "audit_script": "cbdf06dcf767e6e34530663c19c1f673d5648c22c153db261f06b927cc3b1647",
+    "rival_probe": "0e58a643a65cfe8eb785b06ebce0399ee7511cc986548b25145eb7b8dcb03fc0",
+    "canonical_counterexample": "06c74f20c2292d516ae635f5c525b94cc57cb84f3c4fd653c6a83664117175ef",
+    "standard_audit_result": "b63d9a8e934bb10a776c607299be87fec28ffb3df1a4911d2c40c436745933e4"
+  },
+  "v6_hashes_reviewed": {
+    "factory": "782ee5156173edc348cef4e48d65645a09868204a9a5a43363cfc6f971faa2c5",
+    "evidence_gate": "9bfdd7557c9745b013d08689cbe22c5189ec6bc157d57cb679d877e7a5aafe1f",
+    "audit_script": "a523bb154b8e07b30dd5098f0bf5d57cc05eabfd90f19df2da7337ed866f4978",
+    "note": "All matched v6 host-audit.json. Copies are in review-v7/v6-*."
+  },
+  "recommended_integration_files": [
+    "arc_agi2/direct_factories/task_f3b10344.py (byte-identical to ROOT/f3b10344/factory.py)",
+    "arc_agi2/centred_bridges_f3b10344_evidence.py",
+    "arc_agi2/test_f3b10344_independent_review_v7.py",
+    "arc_agi2/f3b10344_proposed_extra_demo.json (input for a host-approved teaching_fixture)"
+  ],
+  "required_dispatch_signature": {
+    "colour_evidence.require_colour_evidence": "if task_id == 'f3b10344':\n    from .centred_bridges_f3b10344_evidence import require_centred_bridge_evidence\n    require_centred_bridge_evidence(demonstrations, queries,\n                list(range(10)) if palette is None else palette)\n    return",
+    "gate": "require_centred_bridge_evidence(demonstrations, queries, palette=None) -> dict; raises MissingColourEvidence",
+    "program": "build_program(d4, palette) -> source defining solve(demonstrations, grid)",
+    "fixture_policy": "APPROVED_CORRECTIONS['f3b10344'] = kind 'context_enriched', added_demonstrations 1, original_fixture_context_passed False. Teaching fixture = canonical train + proposed extra demo, with canonical test unchanged. Host action only."
+  },
+  "do_not_integrate_until": "Resolved: context-enriched fixture hash-pinned and approved; original context remains separately labelled.",
+  "native_changed": false,
+  "labels_changed": false,
+  "host_integration": {
+    "approval": {
+      "kind": "context_enriched",
+      "added_demonstrations": 1,
+      "changed_cells": [],
+      "canonical_sha256": "cfadc43e5098d6f1f109edf736d9b5a6d76bceb101db1c96098677bac5cc3822",
+      "teaching_sha256": "89b8e2d7b81d8236805a33424ec4ad77c3d61095162b3240e7e1172056515fad",
+      "original_fixture_context_passed": false,
+      "source": "arc_agi2/reports/label-reviews/f3b10344.json",
+      "approval": "User delegated investigation and finalization of labelled teaching copies; reviewed context enrichment on 2026-10-21.",
+      "evidence_status": "locally_reviewed_additional_native_demonstration_not_canonical_solution",
+      "description": "One native demonstration distinguishes centred pairing from overlapping pairing. Every original pair and query label is unchanged. The original context remains ambiguous under the documented rival family and is not claimed solved. Fresh episodes require their own sufficient demonstrations."
+    },
+    "source_review": "Native constructor, direct program and independent gate inspected. No native, factory or gate changes. Pure palette substitutions only; no query labels in gate; full query unanimity within ten explicit bridge hypotheses.",
+    "background_limit": "Gate uses pooled demonstration majority for background. Production dispatch cross-checks palette and fails closed on a mismatch. This is a conservative context limitation, not a proven complete inference rule for arbitrary dense scenes.",
+    "finite_hypothesis_limit": "Unanimity is relative to the ten documented alignment/blocker hypotheses, not a proof against every imaginable rule. Canonical context not claimed solved.",
+    "audit_scope": "250 fixed fresh queries, three demonstrations each: 1000 distinct pairs, 8000 D4 checks. 111 native draw timeouts counted. Context retries do not consult query outputs.",
+    "passed": true,
+    "focused_tests": {
+      "tests": 10,
+      "passed": 10,
+      "seconds": 1.973,
+      "command": "python -m unittest arc_agi2.test_f3b10344_independent_review_v7.CanonicalFixture arc_agi2.test_f3b10344_independent_review_v7.GateInterface arc_agi2.test_f3b10344_independent_review_v7.HardCases -v",
+      "portable_test_sha256": "b2bc19bc696c26aa0d938e2b3a506edaa19411a5ac5d40c741bc0bc46915b32e"
+    },
+    "conclusion": "Admitted for synthetic teaching and per-episode verification. Original context remains unresolved under the rival family. No claim of solving the original benchmark fixture."
+  },
+  "pre_approval_verdict": "Not certified. The v6 certificate depended on an undemonstrated centred-pairing parameter. The v7 program is correct under the widened rival family: the fresh query-fixed audit passed and the enriched fixture passed 16/16. The canonical fixture is an honest context shortfall, so certification needs host approval of the proposed context-enriched fixture."
+}

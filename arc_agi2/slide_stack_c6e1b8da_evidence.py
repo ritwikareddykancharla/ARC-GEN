@@ -30,16 +30,18 @@ Errors:
 from itertools import permutations
 
 try:  # integration inside the arc_agi2 package
-    from .colour_evidence import MissingColourEvidence
+    from .colour_evidence import MissingColourEvidence, IntrinsicQueryEvidence
 except ImportError:  # portable use from the review folder
     try:
-        from arc_agi2.colour_evidence import MissingColourEvidence
+        from arc_agi2.colour_evidence import MissingColourEvidence, IntrinsicQueryEvidence
     except ImportError:
         class MissingColourEvidence(ValueError):
             pass
+        class IntrinsicQueryEvidence(MissingColourEvidence):
+            pass
 
 
-class IntrinsicAmbiguity(MissingColourEvidence):
+class IntrinsicAmbiguity(IntrinsicQueryEvidence):
     """The query input itself admits generator-valid readings that disagree."""
 
     def __init__(self, message, witness=None):
@@ -156,7 +158,10 @@ def require_c6e1b8da_evidence(demonstrations, queries, palette=None, d4=0):
         if 'output' in demo and [list(r) for r in next(iter(outs))] != [list(r) for r in demo['output']]:
             raise MissingColourEvidence('c6e1b8da: demo %d contradicts the slide mechanism' % i)
     for j, query in enumerate(queries):
-        outs = outputs(query['input'], bg)  # Unreadable propagates; never reads query['output']
+        try:
+            outs = outputs(query['input'], bg)  # Never reads query['output'].
+        except Unreadable as exc:
+            raise IntrinsicQueryEvidence(str(exc)) from exc
         if len(outs) != 1:
             raise IntrinsicAmbiguity('c6e1b8da: query %d has %d valid outputs from %d orders'
                                      % (j, len(outs), sum(outs.values())),

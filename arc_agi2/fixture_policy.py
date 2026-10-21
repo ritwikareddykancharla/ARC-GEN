@@ -314,6 +314,22 @@ APPROVED_CORRECTIONS.update({'ba1aa698': {'approval': 'User delegated investigat
               'source': 'arc_agi2/reports/label-reviews/ba1aa698.json',
               'teaching_sha256': 'de83dfb0e6a16a2c13e4d0a3d3241a82a7353df7e97a056e154411976ed5a8d0'}})
 
+APPROVED_CORRECTIONS.update({'f3b10344': {'added_demonstrations': 1,
+              'approval': 'User delegated investigation and finalization of labelled teaching '
+                          'copies; reviewed context enrichment on 2026-10-21.',
+              'canonical_sha256': 'cfadc43e5098d6f1f109edf736d9b5a6d76bceb101db1c96098677bac5cc3822',
+              'changed_cells': [],
+              'description': 'One native demonstration distinguishes centred pairing from '
+                             'overlapping pairing. Every original pair and query label is '
+                             'unchanged. The original context remains ambiguous under the '
+                             'documented rival family and is not claimed solved. Fresh episodes '
+                             'require their own sufficient demonstrations.',
+              'evidence_status': 'locally_reviewed_additional_native_demonstration_not_canonical_solution',
+              'kind': 'context_enriched',
+              'original_fixture_context_passed': False,
+              'source': 'arc_agi2/reports/label-reviews/f3b10344.json',
+              'teaching_sha256': '89b8e2d7b81d8236805a33424ec4ad77c3d61095162b3240e7e1172056515fad'}})
+
 def digest(task):
     return hashlib.sha256(json.dumps(task,sort_keys=True,separators=(',',':')).encode()).hexdigest()
 

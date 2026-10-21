@@ -1,6 +1,6 @@
 # /// script
 # requires-python = ">=3.12"
-# dependencies = ["numpy>=2,<3", "pyarrow>=19,<26", "huggingface-hub>=1,<2", "Pillow>=11,<13"]
+# dependencies = ["numpy>=2,<3", "pyarrow>=19,<26", "huggingface-hub>=1,<2", "Pillow>=11,<13", "datasets>=4,<6"]
 # ///
 """Two-stage adaptive episode builder. Run as python -m arc_agi2.build_million.
 
@@ -28,6 +28,8 @@ from .motif_context import MissingMotifEvidence, solve_demonstrated_motifs
 from .colour_evidence import MissingColourEvidence, IntrinsicQueryEvidence, EvidenceSearchBudget, require_colour_evidence
 from .program_targets import compile_target, audit_target, make_record, TargetError
 from .visual_shards import VisualShardWriter
+from .episode_shape_policy import profile_from_task, select_demonstrations, describe as describe_shapes
+from .pool_sampling import sample_native, SamplerTimeout, load_native_seed_pool, family_budget_seconds, timeout_limits
 
 STORED_CONTEXT_TASK_IDS = CONTEXTUAL_TASK_IDS | {'7b7f7511'}
 
@@ -118,17 +120,29 @@ def pool_signature(tid,configs):
     files=[Path(__file__),BASE/'runtime.py',BASE/'verified_rules.py',BASE/'joint_fragments.py',BASE/'contextual.py',BASE/'motif_context.py',BASE/'repeat_tile_context.py',BASE/'program_targets.py',BASE/'direct_programs.py',BASE/'fixture_policy.py',BASE/'helpers.py',BASE/'training_policy.json',
            BASE/'references'/f'{tid}.json',BASE.parent/'common.py',BASE/'task_registry.py']
     files+=sorted((BASE/'generators').glob('*.py'))
+    # Evidence policies and target factories affect which inputs/contexts are
+    # eligible. A pool built under an older policy must not silently resume.
+    files+=sorted(p for p in BASE.glob('*.py') if not p.name.startswith('test_'))
+    for name in (f'task_{tid}.py', f'{tid}.json'):
+        path=BASE/'direct_factories'/name
+        if path.exists():files.append(path)
+    certificate=BASE/'reports/direct-certificates'/f'{tid}.json'
+    if certificate.exists():files.append(certificate)
+    files=list(dict.fromkeys(files))
     native=BASE.parent/'tasks'/f'task_{tid}.py'
     if native.exists():files.append(native)
+    if tid == '985ae207':files.append(BASE/'audit_support/task_985ae207_parameter_sampler.cpp')
+    if tid == '1b8318e3':files.append(BASE/'audit_support/task_1b8318e3_raw_pool.jsonl')
     hashes={str(p.relative_to(BASE.parent)):hashlib.sha256(p.read_bytes()).hexdigest() for p in files}
-    return digest({'source_hashes':hashes,'approved_parameters':configs,'reviewed_standalone':tid in NEW_TASK_IDS})
+    return digest({'source_hashes':hashes,'approved_parameters':configs,'reviewed_standalone':tid in NEW_TASK_IDS,'output_format':OUTPUT_FORMAT,
+                   'family_budget_seconds':family_budget_seconds(tid,FAMILY_SECONDS),'sampling_timeout_limits':timeout_limits(tid)})
 
 def make_pool(tid):
     start=time.monotonic();rng=random.Random(seed(tid,'pool'));r=reference(tid)
     assert tid not in POLICY['excluded_task_ids']
     report_path=OUT/'pool_reports'/f'{tid}.json';file=OUT/'pools'/f'{tid}.parquet'
     configs=json.loads((BASE/'reports/parameter-validation.json').read_text()).get(tid,{}).get('approved',[])
-    signature=pool_signature(tid,configs)
+    signature=pool_signature(tid,configs);family_seconds=family_budget_seconds(tid,FAMILY_SECONDS)
     if file.exists() and report_path.exists():
         old=json.loads(report_path.read_text())
         if (old.get('complete') and old.get('seed')==SEED and old.get('source_signature')==signature
@@ -139,8 +153,10 @@ def make_pool(tid):
     native=native_module.generate if existing else None
     refs=verification_solver(tid) if tid in GENERATORS or tid not in UPSTREAM_IDS else None
     if configs and refs is None:refs=verification_solver(tid)
+    seed_records,seed_pool_metadata=load_native_seed_pool(tid,native) if native else ([],None)
+    seed_record_cursor=0;sampling_modes=Counter();timeout_records=[];termination_reason=None
     rows=[];seen={};canonical=set();reject=Counter();stale=0;trials=0
-    while len(rows)<POOL_SIZE and time.monotonic()-start<FAMILY_SECONDS and trials<POOL_SIZE*40:
+    while len(rows)<POOL_SIZE and time.monotonic()-start<family_seconds and trials<POOL_SIZE*40:
         trials+=1;s=seed(tid,'pair',trials);random.seed(s);np.random.seed(s % (2**32));kw={};mode='default' if tid in UPSTREAM_IDS else 'standalone_constructor'
         if getattr(native_module, 'SYNTHETIC_VARIANT', None):
             # A versioned family definition must not mix legacy extension labels.
@@ -149,9 +165,15 @@ def make_pool(tid):
             pass  # Reviewed standalone replaces, rather than mixes with, its archived draft.
         elif tid in GENERATORS and (native is None or rng.random()<.6):mode='extension'
         elif configs and rng.random()<.6:kw=rng.choice(configs)['parameters'];mode='parameter_override'
-        contextual=None
+        contextual=None;sampling_metadata=None;phase='sampling'
         try:
-            if tid == '7b7f7511':
+            if seed_record_cursor < len(seed_records):
+                saved=seed_records[seed_record_cursor];seed_record_cursor+=1
+                p={k:grid(saved['pair'][k]) for k in ['input','output']}
+                s=saved['seed'];kw={};mode='default'
+                sampling_metadata=dict(seed_pool_metadata,index=saved['index'],seed=s,
+                                       archived_status=saved['status'],archived_generation_seconds=saved.get('gen_seconds'),attempts=[])
+            elif tid == '7b7f7511':
                 from .repeat_tile_context import generate_episode
                 # Give rare native ambiguity cases explicit curriculum coverage.
                 four,context_id=generate_episode(s,canonical_input,digest,
@@ -166,25 +188,53 @@ def make_pool(tid):
                 p={k:four[-1][k] for k in ['input','output']}
                 mode='episode_shared_picture'
             else:
-                p=call(generate,tid,s,seconds=2) if mode=='extension' else call(native,seconds=2,**kw)
+                if mode=='extension':
+                    p,sampling_metadata=sample_native(tid,lambda:generate(tid,s),s,use_compiled=False)
+                    sampling_metadata['mode']='legacy_extension'
+                else:
+                    p,sampling_metadata=sample_native(tid,native,s,kw)
                 p={k:grid(p[k]) for k in ['input','output']}
+            if sampling_metadata:
+                sampling_modes[sampling_metadata['mode']]+=1
+                if any(a.get('status')=='timeout' for a in sampling_metadata.get('attempts',[])):
+                    timeout_records.append(sampling_metadata)
+            phase='legacy_verification'
             if tid not in STORED_CONTEXT_TASK_IDS and mode!='default' and grid(call(refs,p['input'],seconds=2))!=p['output']:
                 reject['reference_disagreement']+=1;continue
+        except SamplerTimeout as e:
+            reject['sampler_timeout_exhausted']+=1;e.metadata['generator_mode']=mode;timeout_records.append(e.metadata);continue
+        except TimeoutError:
+            if phase=='legacy_verification':reject['reference_timeout']+=1
+            else:
+                reject['context_sampler_timeout']+=1
+                timeout_records.append({'task_id':tid,'seed':s,'mode':mode,'attempts':[{'status':'timeout','limit_seconds':None,'deadline_source':'context generator internal deadline'}]})
+            continue
         except Exception as e:reject[type(e).__name__]+=1;continue
         ih,oh=digest(p['input']),digest(p['output'])
         if ih in seen:
             reason=('duplicate_input' if seen[ih]==oh else
                     'duplicate_query_input_other_context' if tid=='7b7f7511' else 'conflicting_label')
             reject[reason]+=1;stale+=1
-            if stale>=max(200,len(rows)*3):break
+            if stale>=max(200,len(rows)*3):
+                termination_reason='duplicate_stagnation';break
             continue
         stale=0;seen[ih]=oh;c=canonical_input(p['input']);canonical.add(c)
         # Split assignment depends only on input equivalence class, not family/seed/output.
         split='validation' if int(c[:8],16)%20==0 else 'train'
         rows.append(contextual if contextual is not None else
-                    dict(task_id=tid,input=p['input'],output=p['output'],seed=s,parameters=compact(kw),
+                    dict(task_id=tid,input=p['input'],output=p['output'],seed=s,parameters=compact({'requested_parameters':kw,'sampling':sampling_metadata}) if sampling_metadata else compact(kw),
                     generator_mode=mode,input_hash=ih,canonical_input_hash=c,split=split,stratum=stratum(p)))
-    if not rows:return {'task_id':tid,'complete':False,'pairs':0,'reason':'no valid unique pairs','rejections':dict(reject)}
+    if termination_reason is None:
+        termination_reason=('requested_pool_reached' if len(rows)>=POOL_SIZE else
+                            'family_time_budget' if time.monotonic()-start>=family_seconds else 'draw_attempt_limit')
+    sampling_report={'family_budget_seconds':family_seconds,'termination_reason':termination_reason,
+                     'draw_attempts':trials,'quota_complete':len(rows)>=POOL_SIZE,'pool_shortfall':max(0,POOL_SIZE-len(rows)),
+                     'sampling_modes':dict(sampling_modes),'sampling_timeout_attempts':sum(sum(a.get('status')=='timeout' for a in m.get('attempts',[])) for m in timeout_records),
+                     'sampling_timeouts':timeout_records,'archived_raw_pool':seed_pool_metadata,'archived_records_consumed':seed_record_cursor,
+                     'archived_status_counts_consumed':dict(Counter(r['status'] for r in seed_records[:seed_record_cursor]))}
+    if not rows:
+        report=dict(task_id=tid,complete=False,pairs=0,reason='no valid unique pairs',rejections=dict(reject),**sampling_report)
+        dump(report_path,report);return report
     file.parent.mkdir(parents=True,exist_ok=True)
     pq.write_table(pa.Table.from_pylist(rows),file,compression='zstd')
     assert pq.read_table(file).to_pylist()==rows
@@ -196,25 +246,32 @@ def make_pool(tid):
        'train_context_episodes':sum(r['split']=='train' for r in rows) if tid in STORED_CONTEXT_TASK_IDS else 0,
        'validation_context_episodes':sum(r['split']=='validation' for r in rows) if tid in STORED_CONTEXT_TASK_IDS else 0,
        'modes':dict(Counter(r['generator_mode'] for r in rows)),'rejections':dict(reject),'seconds':time.monotonic()-start,
-       'sha256':hashlib.sha256(file.read_bytes()).hexdigest()}
+       'sha256':hashlib.sha256(file.read_bytes()).hexdigest(),**sampling_report}
     dump(report_path,report);return report
 
 def allocate(reports,split,target,desired):
-    # Fresh episode quotas, before augmentation. Small pools get fewer examples.
+    # Fresh episode quotas, before augmentation. The histogram is a preference,
+    # not a reason to withhold a family's otherwise feasible 1,000 episodes.
+    if target < 0 or any(v < 0 for v in desired.values()):
+        raise ValueError('Allocation counts must be nonnegative')
     ceiling=POLICY['planned_dataset']['fresh_episodes_per_family']
     capacity={r['task_id']:min(ceiling,r[split+'_context_episodes'] if r.get('contextual') else
                               2*r[split+'_canonical']) for r in reports
               if r[split+'_canonical'] >= (1 if r['task_id']=='27a28665' else 4)}
     support={r['task_id']:r[split+'_strata'] for r in reports if r['task_id'] in capacity}
-    budgets={};keys=sorted(desired);total=sum(desired.values())
+    contextual={r['task_id']:r.get('contextual',False) for r in reports}
+    limits={t:{k:(1 if contextual[t] else 2)*n for k,n in support[t].items()}
+            for t in capacity}
+    capacity={t:min(c,sum(limits[t].values())) for t,c in capacity.items()}
+    budgets={};keys=sorted(k for k in desired if desired[k]);total=sum(desired.values())
     for k in keys:budgets[k]=int(target*desired[k]/total)
     for k in sorted(keys,key=lambda k:target*desired[k]/total-budgets[k],reverse=True)[:target-sum(budgets.values())]:budgets[k]+=1
     allocation={tid:Counter() for tid in capacity};used=Counter();missing={}
     # Scarce strata first. Per-stratum caps also limit reusing a small query pool.
-    order=sorted(keys,key=lambda k:sum(min(capacity[t],2*support[t].get(k,0)) for t in capacity)/max(1,budgets[k]))
+    order=sorted(keys,key=lambda k:sum(min(capacity[t],limits[t].get(k,0)) for t in capacity)/max(1,budgets[k]))
     for k in order:
         remaining=budgets[k]
-        available={t:min(capacity[t]-used[t],2*support[t].get(k,0)) for t in capacity}
+        available={t:min(capacity[t]-used[t],limits[t].get(k,0)) for t in capacity}
         while remaining:
             ts=[t for t,c in available.items() if c>0]
             if not ts:break
@@ -223,16 +280,51 @@ def allocate(reports,split,target,desired):
                 n=min(share,available[t],remaining);allocation[t][k]+=n;used[t]+=n;available[t]-=n;remaining-=n
                 if not remaining:break
         if remaining:missing[k]=remaining
-    return {t:dict(v) for t,v in allocation.items() if v},{'requested':target,'allocated':sum(used.values()),'shortfall_by_stratum':missing,'desired':budgets}
+    preferred_allocated=sum(used.values())
+    actual=Counter()
+    for row in allocation.values():actual.update(row)
+    remaining=min(target,sum(capacity.values()))-preferred_allocated
+    # Recover quota stranded by unavailable sizes using real pool strata only.
+    # Equal shares favour underfilled families; within each family, prefer the
+    # largest outstanding histogram deficit before accepting a size deviation.
+    while remaining:
+        ts=[t for t in capacity if used[t]<capacity[t]]
+        if not ts:break
+        share=max(1,remaining//len(ts));progress=0
+        for t in sorted(ts,key=lambda t:(used[t],seed(t,'quota-recovery'))):
+            allowance=min(share,capacity[t]-used[t],remaining)
+            ks=sorted(limits[t],key=lambda k:(
+                -(budgets.get(k,0)-actual[k]),-desired.get(k,0),k))
+            for k in ks:
+                n=min(allowance,limits[t][k]-allocation[t][k])
+                if n<=0:continue
+                allocation[t][k]+=n;used[t]+=n;actual[k]+=n
+                allowance-=n;remaining-=n;progress+=n
+                if not allowance:break
+            if not remaining:break
+        if not progress:break
+    missing={k:n-actual[k] for k,n in budgets.items() if n>actual[k]}
+    return {t:dict(v) for t,v in allocation.items() if v},{
+        'requested':target,'allocated':sum(used.values()),
+        'allocation_shortfall':target-sum(used.values()),
+        'shortfall_by_stratum':missing,'desired':budgets,'actual':dict(actual),
+        'histogram_surplus_by_stratum':{k:n-budgets.get(k,0) for k,n in actual.items() if n>budgets.get(k,0)},
+        'quota_recovered_outside_histogram':sum(used.values())-preferred_allocated,
+        'family_capacity':capacity,'family_allocated':dict(used),
+        'family_capacity_shortfall':{r['task_id']:ceiling-capacity.get(r['task_id'],0)
+                                    for r in reports if capacity.get(r['task_id'],0)<ceiling},
+        'family_unused_capacity':{t:c-used[t] for t,c in capacity.items() if c>used[t]},
+        'policy':'Family quotas take priority over infeasible size-histogram targets; no synthetic support or duplicate padding.'}
 
 def make_episodes(arg):
     tid,allocs=arg;basis=fixture_basis(tid);pool=pq.read_table(OUT/'pools'/f'{tid}.parquet').to_pylist();result={};all_hashes=set()
+    shape_profile=profile_from_task(reference(tid)['canonical'])
     for split,quota in allocs.items():
         rows=[r for r in pool if r['split']==split];bins=defaultdict(list)
         for p in rows:bins[p['stratum']].append(p)
         canonical_total=len({p['canonical_input_hash'] for p in rows})
         rng=random.Random(seed(tid,split,'episodes'));query_uses=Counter();pair_uses=Counter();failures=Counter()
-        query_context_shortfalls=[];query_rejections=[];quarantined_queries=set()
+        query_context_shortfalls=[];query_rejections=[];quarantined_queries=set();shape_counts=Counter()
         hist={which:{axis:Counter() for axis in ['height','width','longest','shapes']} for which in ['input','output']};relations=Counter()
         path=OUT/'data'/split/f'{tid}.parquet';path.parent.mkdir(parents=True,exist_ok=True)
         temporary=path.with_suffix('.parquet.tmp');writer=None;buffer=[]
@@ -276,6 +368,7 @@ def make_episodes(arg):
                             'stratum':k,'context_attempts':attempt,'kind':kind,
                             'error':str(exc),'witness':getattr(exc,'witness',{})})
                     for retry in range(context_attempts):
+                        shape_report=None
                         if tid in STORED_CONTEXT_TASK_IDS:
                             demos=q['context_pairs']
                             if len(demos)!=3 or any(p['split']!=split for p in demos):
@@ -293,7 +386,13 @@ def make_episodes(arg):
                                     failures['no_three_demo_packing_context']+=1
                                     break
                             else:
-                                demos=rng.sample(ds,3)
+                                demos,shape_report=select_demonstrations(ds,q['input'],rng,shape_profile)
+                                if demos is None:break
+                        if shape_report is None:
+                            observed=describe_shapes(demos,q['input'])
+                            shape_report={'policy':shape_profile['version'],'requested':shape_profile['patterns'],
+                                'observed':observed,'matched':observed in shape_profile['patterns'],
+                                'fallback':'required_semantic_context_selector'}
                         four=demos+[q]
                         try:
                             require_colour_evidence(tid,demos,[{'input':q['input']}])
@@ -350,6 +449,7 @@ def make_episodes(arg):
                               'variant':'native' if d4==0 and palette==list(range(10)) else 'augmented',
                               'train':train,'test':challenge['test'],'solutions':[query['output']],
                               'prompt':prompt,'completion':compact({'outputs':[query['output']]}),
+                              'episode_input_shape_pattern':shape_report,
                               'pair_seeds':[p['seed'] for p in four],'pair_parameters':[p['parameters'] for p in four],
                               'pair_generator_modes':[p['generator_mode'] for p in four],
                               'context_id':q.get('context_id',''),
@@ -387,6 +487,9 @@ def make_episodes(arg):
                                 a=query[which];h,w=len(a),len(a[0]);hist[which]['height'][h]+=1;hist[which]['width'][w]+=1;hist[which]['longest'][max(h,w)]+=1;hist[which]['shapes'][f'{h}x{w}']+=1
                             relations[relation(query)]+=1
                         fresh_count+=1;variant_counts[len(variants)]+=1;symmetric_duplicates+=8-len(variants)
+                        shape_counts['matched' if shape_report['matched'] else 'deviated']+=1
+                        shape_counts[compact(shape_report['observed'])]+=1
+                        if shape_report['fallback']:shape_counts['fallback:'+shape_report['fallback']]+=1
                         all_hashes.add(basehash);query_uses[q['input_hash']]+=1
                         for p in four:pair_uses[p['input_hash']]+=1
                         accepted=True;break
@@ -411,6 +514,7 @@ def make_episodes(arg):
             'requested_fresh_episodes':sum(quota.values()),'spatial_variant_upper_bound':8*fresh_count,
             'symmetric_variants_removed':symmetric_duplicates,'variants_per_fresh_episode':dict(variant_counts),
             'query_histograms':hist,'relations':dict(relations),'failures':dict(failures),
+            'episode_input_shape_profile':shape_profile,'episode_input_shape_counts':dict(shape_counts),
             'query_context_shortfalls':query_context_shortfalls,
             'query_rejections':query_rejections,'quarantined_query_count':len(quarantined_queries),
             'max_query_reuse_in_fresh_episodes':max(query_uses.values(),default=0),
@@ -515,6 +619,25 @@ def require_program_ready(task_ids):
         raise RuntimeError(f"{len(missing)} families lack verified direct augmented programs; "
                            f"no generation launched. First missing: {', '.join(missing[:12])}")
 
+def bounded_completed(executor, function, items, limit):
+    """Bound queued artifact producers while the parent publishes completed work."""
+    iterator=iter(items)
+    pending={}
+    def submit_one():
+        try:item=next(iterator)
+        except StopIteration:return False
+        pending[executor.submit(function,item)]=item
+        return True
+    for _ in range(limit):
+        if not submit_one():break
+    while pending:
+        done,_=cf.wait(pending,return_when=cf.FIRST_COMPLETED)
+        for future in done:
+            item=pending.pop(future)
+            yield future,item
+            submit_one()
+
+
 def main():
     global OUTPUT_FORMAT, REPO
     ap=argparse.ArgumentParser();ap.add_argument('--local',action='store_true');ap.add_argument('--tasks',nargs='*');ap.add_argument('--resume',action='store_true');ap.add_argument('--format',choices=['program-grid-png','legacy-grid-parquet'],default=os.environ.get('ARCGEN_OUTPUT_FORMAT','program-grid-png'));args=ap.parse_args()
@@ -558,6 +681,14 @@ def main():
                 except Exception:
                     if retry==4:raise
                     time.sleep(2**retry)
+            # Dataset shards are durable only after a successful Hub commit.
+            # Keep small pools/reports for reproducibility and delete only bulky
+            # uploaded artifacts when running on an ephemeral job disk.
+            if os.environ.get('ARCGEN_PRUNE_UPLOADED_SHARDS')=='1':
+                for name in files:
+                    path=Path(name)
+                    if path.parts and path.parts[0] in ('shards','viewer') and path.suffix in ('.tar','.arrow'):
+                        (OUT/path).unlink(missing_ok=True)
     publish();reports=[];last=time.monotonic();files=[]
     with cf.ProcessPoolExecutor(max_workers=WORKERS) as pool:
         futures={pool.submit(make_pool,t):t for t in eligible}
@@ -584,9 +715,8 @@ def main():
     combined={tid:{s:a[tid] for s,a in [('train',alloc_train),('validation',alloc_val)] if tid in a} for tid in sorted(set(alloc_train)|set(alloc_val))}
     episode_reports=[]
     with cf.ProcessPoolExecutor(max_workers=WORKERS) as pool:
-        futures={pool.submit(make_episodes,item):item[0] for item in combined.items()}
-        for f in cf.as_completed(futures):
-            tid=futures[f]
+        for f,item in bounded_completed(pool,make_episodes,combined.items(),WORKERS):
+            tid=item[0]
             try:
                 r=f.result();episode_reports.append(r);files.append(f'episode_reports/{tid}.json')
                 for split,x in r['splits'].items():

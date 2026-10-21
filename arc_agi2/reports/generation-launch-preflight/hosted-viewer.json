@@ -1,0 +1,119 @@
+{
+  "checked_at": 1792545940.232793,
+  "repo": "ritwika96/arcgen-program-grid-viewer-preflight",
+  "splits": {
+    "status": 200,
+    "error": null,
+    "cause_message": null,
+    "body": {
+      "splits": [
+        {
+          "dataset": "ritwika96/arcgen-program-grid-viewer-preflight",
+          "config": "episodes",
+          "split": "train"
+        }
+      ],
+      "pending": [],
+      "failed": []
+    }
+  },
+  "rows": {
+    "status": 200,
+    "error": null,
+    "cause_message": null,
+    "rows": 40,
+    "num_rows_total": 40,
+    "features": [
+      {
+        "feature_idx": 0,
+        "name": "image",
+        "type": {
+          "_type": "Image"
+        }
+      },
+      {
+        "feature_idx": 1,
+        "name": "episode_id",
+        "type": {
+          "dtype": "string",
+          "_type": "Value"
+        }
+      },
+      {
+        "feature_idx": 2,
+        "name": "task_id",
+        "type": {
+          "dtype": "string",
+          "_type": "Value"
+        }
+      },
+      {
+        "feature_idx": 3,
+        "name": "program",
+        "type": {
+          "dtype": "string",
+          "_type": "Value"
+        }
+      },
+      {
+        "feature_idx": 4,
+        "name": "output_json",
+        "type": {
+          "dtype": "string",
+          "_type": "Value"
+        }
+      },
+      {
+        "feature_idx": 5,
+        "name": "prompt",
+        "type": {
+          "dtype": "string",
+          "_type": "Value"
+        }
+      },
+      {
+        "feature_idx": 6,
+        "name": "completion",
+        "type": {
+          "dtype": "string",
+          "_type": "Value"
+        }
+      },
+      {
+        "feature_idx": 7,
+        "name": "verification",
+        "type": {
+          "dtype": "string",
+          "_type": "Value"
+        }
+      },
+      {
+        "feature_idx": 8,
+        "name": "episode_json",
+        "type": {
+          "dtype": "string",
+          "_type": "Value"
+        }
+      },
+      {
+        "feature_idx": 9,
+        "name": "image_usage",
+        "type": {
+          "dtype": "string",
+          "_type": "Value"
+        }
+      }
+    ]
+  },
+  "decoded_png_sizes": [
+    [
+      1580,
+      3318
+    ],
+    [
+      1524,
+      3150
+    ]
+  ],
+  "hosted_verified": true
+}

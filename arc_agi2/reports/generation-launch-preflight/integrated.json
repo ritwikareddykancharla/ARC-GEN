@@ -1,0 +1,24 @@
+{
+  "rows": 96,
+  "program_pair_checks": 384,
+  "png_and_arrow_exact": true,
+  "shape_counts": {
+    "d59b0160": {
+      "deviated": 4,
+      "{\"demo_input_shapes\":\"mixed\",\"query_input_shape\":\"novel\"}": 4,
+      "fallback:requested_shape_pattern_unavailable_in_candidate_pool": 4
+    },
+    "0692e18c": {
+      "matched": 1,
+      "{\"demo_input_shapes\":\"uniform\",\"query_input_shape\":\"seen\"}": 1,
+      "deviated": 3,
+      "{\"demo_input_shapes\":\"mixed\",\"query_input_shape\":\"novel\"}": 3,
+      "fallback:requested_shape_pattern_unavailable_in_candidate_pool": 3
+    },
+    "e4888269": {
+      "deviated": 4,
+      "{\"demo_input_shapes\":\"mixed\",\"query_input_shape\":\"novel\"}": 4,
+      "fallback:requested_shape_pattern_unavailable_in_candidate_pool": 4
+    }
+  }
+}

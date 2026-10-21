@@ -4,13 +4,25 @@ import json
 
 def card(manifest):
     files = manifest.get("episode_files", {})
-    configs = []
+    families = {}
     for split in ("train", "validation"):
-        if files.get(split):
-            configs.append({"split": split, "path": sorted(files[split])})
-    # JSON is a subset of YAML and avoids hand-escaping thousands of filenames.
+        for path in files.get(split, []):
+            if not path.endswith(".arrow"):
+                continue  # Source TARs are downloadable, not viewer loader inputs.
+            family = path.rsplit("/", 1)[-1].split("-", 1)[0]
+            if len(family) != 8 or any(c not in "0123456789abcdef" for c in family):
+                raise ValueError("Unexpected viewer index family filename: " + path)
+            families.setdefault(family, {}).setdefault(split, []).append(path)
+    configs = [{"config_name": "family_" + family,
+                "data_files": [{"split": split, "path": sorted(paths)}
+                               for split, paths in sorted(splits.items())]}
+               for family, splits in sorted(families.items())]
+    if configs:
+        configs[0]["default"] = True
+    first_config = configs[0]["config_name"] if configs else "default"
+    # JSON is a subset of YAML and avoids escaping thousands of filenames.
     metadata = {"license": "apache-2.0", "task_categories": ["text-generation"],
-                "configs": [{"config_name": "default", "default": True, "data_files": configs}]}
+                "configs": configs}
     count = manifest.get("train_episodes", 0)
     fresh = manifest.get("train_fresh_episodes", 0)
     target = manifest["target_train_fresh_episodes"]
@@ -23,15 +35,25 @@ describe the files in this build, not the earlier 24-row format preview.
 
 ## Read an episode
 
-[Open the image viewer](https://huggingface.co/datasets/ritwika96/arc-agi2-program-grid-sft/viewer/default/train)
+[Open the image viewer](https://huggingface.co/datasets/ritwika96/arc-agi2-program-grid-sft/viewer/{first_config}/train)
 · [Interactive gallery](https://huggingface.co/spaces/ritwika96/arc-episode-gallery)
 (the gallery currently displays the earlier corpus).
 
-Each row contains a high-resolution, lossless **PNG** of demonstrations and query,
-plus one JSON record containing **both the executable program and output grids**.
-The PNGs and records are grouped into TAR shards so millions of episodes do not
-require millions of repository files. No Parquet source is required. Hugging Face
-may create its own Parquet cache to display the viewer.
+**Select a task family in the viewer's subset menu.** Each family contains its
+own combined episode records; the selected family's row count is not the total
+corpus count above. Family configurations limit conversion size because Hugging
+Face may truncate non-Parquet previews beyond 5 GB per configuration. They do
+not split programs from grid targets.
+
+Each row displays a full-resolution, lossless **PNG**, readable Python program,
+output-grid JSON, prompt, and combined completion. Authoritative PNG/JSON pairs
+are grouped into downloadable TAR shards. Compressed Arrow support indexes embed
+exactly the same PNG bytes and records for the viewer, avoiding millions of
+individual repository files and failing archive image paths. Episode training
+shards are PNG/JSON TARs with Arrow viewer indexes, not Parquet. Separate internal
+reusable pair pools may use Parquet; they are not episode viewer inputs or
+additional training episodes. Hugging Face may create its own display cache.
+Source and index row counts are identical and are counted only once.
 
 **The PNG shows the expected query answer for human inspection. Do not feed it
 to the model.** Use the record's `prompt` as input and `completion` as the target.
@@ -52,7 +74,11 @@ low-diversity families are reported rather than filled with duplicate episodes.
 · [Exact size histograms](size-audit.json) · [Allocation](allocation.json)
 
 The size allocation targets the measured query-size and input/output-shape
-distribution of the 1,120 public tasks. Published measurements, not the target
+distribution of the 1,120 public tasks. Demonstration selection also prefers each
+family's original uniform/mixed input dimensions and whether the query size was
+seen among the demonstrations. Required semantic contexts take priority;
+unsupported size patterns and deviations are recorded per family.
+Published measurements, not the target
 distribution alone, show whether a completed build achieves that match.
 
 Approved teaching corrections are labelled in each record. Canonical benchmark

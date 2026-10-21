@@ -1,0 +1,70 @@
+{
+  "helper": "arc_agi2/pool_sampling.py",
+  "helper_sha256": "80cff144810e4013644bd638aa012d29cd497f850d6e00c5331b99d7bff39fe2",
+  "tests": {
+    "passed": 11,
+    "actual_compiled_985_repeated_native_rendering": true,
+    "complete_raw_pool_retained_ambiguous_records": 33,
+    "builder_raw_import_without_fresh_draws": 1150,
+    "cache_budget_invalidation": true
+  },
+  "interface": "sample_native(task_id, native, seed, parameters=None) -> (pair, metadata); SamplerTimeout.metadata contains failed attempts",
+  "timeouts_seconds": {
+    "ordinary": [
+      5
+    ],
+    "1b8318e3": [
+      5,
+      30,
+      300
+    ],
+    "985ae207": [
+      5,
+      30
+    ],
+    "bd14c3bf": [
+      5,
+      30
+    ],
+    "f3b10344": [
+      5,
+      30
+    ]
+  },
+  "scope": "Audited compiled985 proposal source reused with unchanged native explicit renderer. Different RNG stream, not Python-native seed equivalence. Native retries reset same seed and restore caller RNG states. No output-label-based retries.",
+  "builder_edited": true,
+  "raw_1b_cache_implemented": true,
+  "raw_1b_pool_available": {
+    "path": "/Users/ritwika/projects/arc-agi2/outputs/research/arcgen-coverage-cli/direct-program-rewrites/1b8318e3/fresh_pool_1b8318e3.jsonl",
+    "sha256": "7d58c8f42063b13cabcda1f257790cb8187118864c87d76c30c18e4f5de2529a",
+    "count": 1150,
+    "index_min": 0,
+    "index_max": 1149,
+    "missing_indices": [],
+    "status_counts": {
+      "unique": 1117,
+      "ambiguous": 33
+    },
+    "cpu_seconds": 18858.717,
+    "repository_path": "arc_agi2/audit_support/task_1b8318e3_raw_pool.jsonl"
+  },
+  "limitations": [
+    "Timeouts remain finite and can reject valid slow draws; record shortfalls instead of claiming distribution completeness.",
+    "Native1b fallback is slow; no compiled1b replacement yet.",
+    "Compiled985 requires a local C++17 compiler. Compilation failure falls back explicitly in metadata.",
+    "No full-generation throughput measurement or training launch."
+  ],
+  "generation_provenance": "Sampling metadata is serialized in each pool row parameters and carried into final episode pair_parameters. Imported raw samples are explicitly fresh_draws_this_job=false.",
+  "family_budgets_seconds": {
+    "1b8318e3": 3600,
+    "985ae207": 1800,
+    "bd14c3bf": 3600,
+    "f3b10344": 1800
+  },
+  "termination_reporting": [
+    "requested_pool_reached",
+    "family_time_budget",
+    "draw_attempt_limit",
+    "duplicate_stagnation"
+  ]
+}

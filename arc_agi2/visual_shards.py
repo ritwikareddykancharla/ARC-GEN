@@ -11,6 +11,7 @@ import re
 import tarfile
 
 from .visual_dataset import render
+from .visual_arrow_index import write_arrow_index
 
 
 class VisualShardWriter:
@@ -33,15 +34,25 @@ class VisualShardWriter:
         if self.archive is None:
             return
         self.archive.close()
+        self.archive = None
         self.temporary.replace(self.destination)
-        self.paths.append(self.destination)
+        index_path = self.destination.with_suffix(".arrow")
+        try:
+            index = write_arrow_index(self.destination, index_path)
+            if index["episodes"] != self.shard_records:
+                raise ValueError("Viewer index and source episode counts differ")
+        except BaseException:
+            self.destination.unlink(missing_ok=True)
+            index_path.unlink(missing_ok=True)
+            raise
+        self.paths.extend([self.destination, index_path])
         hasher = hashlib.sha256()
         with self.destination.open("rb") as stream:
             for chunk in iter(lambda: stream.read(1024**2), b""):
                 hasher.update(chunk)
         self.manifest.append(dict(file=self.destination.name, episodes=self.shard_records,
                                   bytes=self.destination.stat().st_size,
-                                  sha256=hasher.hexdigest()))
+                                  sha256=hasher.hexdigest(), viewer_index=index))
         self.archive = None
 
     def write(self, record):
@@ -65,7 +76,7 @@ class VisualShardWriter:
                 or self.shard_bytes + nbytes > self.max_bytes):
             self._finish()
         if self.archive is None:
-            self.destination = self.directory / f"{self.family}-{len(self.paths):05d}.tar"
+            self.destination = self.directory / f"{self.family}-{len(self.manifest):05d}.tar"
             self.temporary = self.destination.with_suffix(".tar.tmp")
             self.archive = tarfile.open(self.temporary, "w")
             self.shard_records = self.shard_bytes = 0
@@ -91,3 +102,4 @@ class VisualShardWriter:
         for path in self.paths:
             path.unlink(missing_ok=True)
         self.paths.clear()
+        self.manifest.clear()

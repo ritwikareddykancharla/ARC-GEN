@@ -1,0 +1,16 @@
+test_builder_exhausted_sampler_reports_attempts_and_shortfall (arc_agi2.test_pool_sampling.PoolIntegrationTests.test_builder_exhausted_sampler_reports_attempts_and_shortfall) ... ok
+test_builder_imports_full_stream_without_fresh_sampling (arc_agi2.test_pool_sampling.PoolIntegrationTests.test_builder_imports_full_stream_without_fresh_sampling) ... ok
+test_complete_raw_pool_includes_all_ambiguous_draws_and_hash_guard (arc_agi2.test_pool_sampling.PoolIntegrationTests.test_complete_raw_pool_includes_all_ambiguous_draws_and_hash_guard) ... ok
+test_family_budget_invalidates_cache_signature (arc_agi2.test_pool_sampling.PoolIntegrationTests.test_family_budget_invalidates_cache_signature) ... ok
+test_audited_compiled_sampler_reproducible_native_rendering (arc_agi2.test_pool_sampling.SamplingTests.test_audited_compiled_sampler_reproducible_native_rendering) ... ok
+test_compiler_fallback_is_explicit (arc_agi2.test_pool_sampling.SamplingTests.test_compiler_fallback_is_explicit) ... ok
+test_explicit_parameters_never_use_compiled_sampler (arc_agi2.test_pool_sampling.SamplingTests.test_explicit_parameters_never_use_compiled_sampler) ... ok
+test_final_timeout_preserves_seed_and_attempt_metadata (arc_agi2.test_pool_sampling.SamplingTests.test_final_timeout_preserves_seed_and_attempt_metadata) ... ok
+test_known_docking_long_tail_has_bounded_final_tier (arc_agi2.test_pool_sampling.SamplingTests.test_known_docking_long_tail_has_bounded_final_tier) ... ok
+test_output_preserved_and_non_timeout_errors_not_retried (arc_agi2.test_pool_sampling.SamplingTests.test_output_preserved_and_non_timeout_errors_not_retried) ... ok
+test_same_seed_retry_and_caller_rng_restored (arc_agi2.test_pool_sampling.SamplingTests.test_same_seed_retry_and_caller_rng_restored) ... ok
+
+----------------------------------------------------------------------
+Ran 11 tests in 1.703s
+
+OK

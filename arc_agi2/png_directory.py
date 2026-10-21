@@ -13,28 +13,35 @@ from .visual_dataset import COLORS, font
 
 PALETTE = COLORS + ['#101925','#f1f6ff','#aabdd5','#c4d5eb','#142b32','#182332','#9be4c4','#abbcd2']
 
-def render_png(record):
+def render_png(record, pixel_ratio=1):
+    """Render directly at the requested pixel density, never upscale raster text."""
+    if not isinstance(pixel_ratio, int) or not 1 <= pixel_ratio <= 4:
+        raise ValueError('pixel_ratio must be an integer from 1 to 4')
     pairs=[(f'Demonstration {i+1}',p['input'],p['output']) for i,p in enumerate(record['train'])]
     pairs += [(f'Query {i+1} - expected output',p['input'],a) for i,(p,a) in enumerate(zip(record['test'],record['solutions']))]
     cell=28;column=max(440,max(len(g[0]) for _,a,b in pairs for g in (a,b))*cell)
     width=column*2+180;heights=[max(len(a),len(b))*cell+108 for _,a,b in pairs]
-    # RGB preserves antialiased font edges; grid rectangles stay exact integer pixels.
-    im=Image.new('RGB',(width,170+sum(heights)),PALETTE[10])
+    scale=pixel_ratio
+    im=Image.new('RGB',(width*scale,(170+sum(heights))*scale),PALETTE[10])
     draw=ImageDraw.Draw(im);draw.fontmode='L'
-    draw.text((36,22),'ARC - '+record['task_id'],font=font(34),fill=PALETTE[11])
-    draw.text((36,65),record['episode_id'],font=font(22),fill=PALETTE[12])
-    draw.text((36,104),'INPUT',font=font(24),fill=PALETTE[13]);draw.text((column+120,104),'OUTPUT',font=font(24),fill=PALETTE[13])
+    def text(x,y,label,size,colour):
+        draw.text((x*scale,y*scale),label,font=font(size*scale),fill=PALETTE[colour])
+    # Original logical font sizes; density changes sharpness, not label size.
+    text(36,22,'ARC - '+record['task_id'],30,11)
+    text(36,65,record['episode_id'],20,12)
+    text(36,104,'INPUT',19,13);text(column+120,104,'OUTPUT',19,13)
     y=140
     for (label,a,b),height in zip(pairs,heights):
-        draw.rounded_rectangle((20,y,width-20,y+height-10),radius=12,fill=PALETTE[14] if label.startswith('Query') else PALETTE[15])
-        draw.text((36,y+12),label,font=font(26),fill=PALETTE[16])
+        draw.rounded_rectangle(tuple(v*scale for v in (20,y,width-20,y+height-10)),radius=12*scale,fill=PALETTE[14] if label.startswith('Query') else PALETTE[15])
+        text(36,y+12,label,21,16)
         for left,g in [(36,a),(column+120,b)]:
-            draw.text((left,y+43),f'{len(g)} x {len(g[0])}',font=font(22),fill=PALETTE[17])
+            text(left,y+43,f'{len(g)} x {len(g[0])}',18,17)
             gx=left+(column-len(g[0])*cell)//2;gy=y+73
             for rr,row in enumerate(g):
                 for cc,c in enumerate(row):
                     x0,y0=gx+cc*cell,gy+rr*cell
-                    draw.rectangle((x0,y0,x0+cell-2,y0+cell-2),fill=COLORS[c])
+                    # Preserve the exact logical cell footprint at every density.
+                    draw.rectangle((x0*scale,y0*scale,(x0+cell-1)*scale-1,(y0+cell-1)*scale-1),fill=COLORS[c])
         y+=height
     return im
 

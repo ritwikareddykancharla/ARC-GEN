@@ -1,8 +1,10 @@
 from copy import deepcopy
 import json
+import io
 from pathlib import Path
 from types import SimpleNamespace
 import tempfile
+import tarfile
 import unittest
 from unittest.mock import Mock, patch
 
@@ -177,6 +179,106 @@ class RepairShortfallsTests(unittest.TestCase):
             api.assert_not_called()
             self.assertEqual(json.loads(output.getvalue())["mode"], "plan_only")
             self.assertFalse((root / "stage").exists())
+
+    def test_finite_migration_scans_shared_orbit_in_nonfinite_family(self):
+        from . import build_million as builder
+        from .finite_input_policy import GLOBAL_TRAIN_ORBITS, POLICY_SIGNATURE
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            manifest = {"completed_pools": 2, "seed": 17, "source_commit": "old-source"}
+            for tid in ("833966f4", "feca6190"):
+                rows = []
+                for shift in range(4):
+                    g = [[(n + shift) % 10] for n in range(5)]
+                    canonical = builder.canonical_input(g)
+                    self.assertIn(canonical, GLOBAL_TRAIN_ORBITS)
+                    rows.append({"task_id": tid, "input": g, "output": g,
+                                 "input_hash": builder.digest(g), "canonical_input_hash": canonical,
+                                 "split": "validation", "stratum": "5|same"})
+                path = root / "pools" / (tid + ".parquet")
+                path.parent.mkdir(exist_ok=True)
+                builder.pq.write_table(builder.pa.Table.from_pylist(rows), path)
+                repair.write(root / "pool_reports" / (tid + ".json"), {
+                    "task_id": tid, "complete": True, "seed": 17, "pairs": 4, "requested_pool_size": 4,
+                    "source_signature": "original-" + tid, "sha256": repair.sha256(path),
+                    "train_strata": {}, "validation_strata": {"5|same": 4},
+                    "train_canonical": 0, "validation_canonical": 1})
+            overrides, reports, affected, audit = repair.prepare_finite_pools(root, root / "prepared", manifest, REV, builder)
+            self.assertEqual(affected, {"833966f4", "feca6190"})
+            self.assertEqual(audit["policy_signature"], POLICY_SIGNATURE)
+            self.assertEqual(audit["all_complete_pools_scanned"], 2)
+            for tid in affected:
+                self.assertEqual(reports[tid]["validation_strata"], {})
+                self.assertEqual(reports[tid]["train_strata"], {"5|same": 4})
+                self.assertNotIn("source_signature", reports[tid])
+                self.assertEqual(reports[tid]["split_migration"]["original_source_signature"], "original-" + tid)
+                self.assertEqual(reports[tid]["original_pool_provenance"]["source_commit"], "old-source")
+                source = builder.pq.read_table(root / "pools" / (tid + ".parquet")).to_pylist()
+                migrated = builder.pq.read_table(overrides[tid]["path"]).to_pylist()
+                self.assertTrue(all(p["split"] == "validation" for p in source))
+                self.assertTrue(all(p["split"] == "train" for p in migrated))
+            (root / "pools/feca6190.parquet").unlink()
+            with self.assertRaises(FileNotFoundError):
+                repair.prepare_finite_pools(root, root / "missing-audit", manifest, REV, builder)
+
+    def test_finite_allocation_recovers_zero_train_family_without_changing_other_quotas(self):
+        from . import build_million as builder
+        recounted = {
+            "833966f4": {"task_id": "833966f4", "train_strata": {"5|same": 20},
+                         "train_canonical": 1, "validation_strata": {}, "validation_canonical": 0},
+            OTHER: {"task_id": OTHER, "train_strata": {"5|same": 10}, "train_canonical": 10,
+                    "validation_strata": {}, "validation_canonical": 0}}
+        allocation = {"train": {"desired": {"5|same": 1}}, "validation": {"desired": {"5|same": 1}},
+                      "train_by_family": {OTHER: {"5|same": 4}}, "validation_by_family": {}}
+        manifest = {"seed": 17, "target_train_fresh_episodes": 14, "target_validation_fresh_episodes": 0}
+        result = repair.finite_allocation(allocation, manifest, recounted, {"833966f4"}, builder)
+        self.assertEqual(result["train_by_family"][OTHER], {"5|same": 4})
+        self.assertEqual(sum(result["train_by_family"]["833966f4"].values()), 10)
+        self.assertEqual(result["validation_by_family"]["833966f4"], {})
+        self.assertEqual(result["train"]["allocated"], 14)
+
+    def test_validation_reduction_requires_hash_verified_explicit_episode_evidence(self):
+        from .finite_input_policy import GLOBAL_TRAIN_ORBITS, POLICY_SIGNATURE
+        from .build_million import canonical_input
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            path = root / "shards/validation/feca6190-old.tar"
+            path.parent.mkdir(parents=True)
+            with tarfile.open(path, "w") as archive:
+                for index, grid in enumerate(([[n] for n in range(5)], [[0]])):
+                    orbit = canonical_input(grid)
+                    row = {"task_id": "feca6190", "split": "validation", "episode_id": f"e{index}",
+                           "base_episode_id": f"b{index}", "train": [{"input": grid}] * 3, "test": [{"input": grid}],
+                           "canonical_input_hashes": [orbit] * 4}
+                    data = json.dumps(row).encode()
+                    member = tarfile.TarInfo(f"e{index}.json")
+                    member.size = len(data)
+                    archive.addfile(member, io.BytesIO(data))
+            old = {"task_id": "feca6190", "splits": {
+                "train": {"episodes": 8, "fresh_episodes": 1},
+                "validation": {"episodes": 2, "fresh_episodes": 2,
+                               "shards": [{"file": path.name, "sha256": repair.sha256(path)}]}}}
+            evidence = repair.validation_removal_evidence(root, old, POLICY_SIGNATURE)
+            self.assertEqual(evidence["episodes"], 1)
+            self.assertEqual(evidence["fresh_episodes"], 1)
+            self.assertEqual(evidence["removed_episode_ids"], ["e0"])
+            new = deepcopy(old)
+            new["splits"]["validation"].update(episodes=1, fresh_episodes=1)
+            self.assertFalse(repair.nonregressing(old, new))
+            self.assertTrue(repair.nonregressing(old, new, evidence))
+            new["splits"]["train"]["episodes"] = 7
+            self.assertFalse(repair.nonregressing(old, new, evidence))
+            path.write_bytes(b"changed")
+            with self.assertRaisesRegex(ValueError, "SHA256"):
+                repair.validation_removal_evidence(root, old, POLICY_SIGNATURE)
+
+    def test_incomplete_global_migration_cannot_publish_even_with_unchanged_head(self):
+        api = Mock()
+        with self.assertRaisesRegex(RuntimeError, "incomplete"):
+            repair.publish_stage(api, "repo", REV, Path("unused"), Path("unused"),
+                                 {"publishable": False, "delete_files": []})
+        api.dataset_info.assert_not_called()
+        api.create_commit.assert_not_called()
 
 
 if __name__ == "__main__":

@@ -15,6 +15,7 @@ from pathlib import Path, PurePosixPath
 import re
 import shutil
 import subprocess
+import tarfile
 from unittest.mock import patch
 
 SPLITS = ("train", "validation")
@@ -130,7 +131,8 @@ def validate_pool(root, tid, manifest, revision):
     report = read(report_path)
     if report.get("task_id") != tid or not report.get("complete"):
         raise ValueError("Saved pool report is incomplete or belongs to another family")
-    if not report.get("source_signature") or sha256(path) != report.get("sha256"):
+    signature = report.get("source_signature") or report.get("split_migration", {}).get("original_source_signature")
+    if not signature or sha256(path) != report.get("sha256"):
         raise ValueError("Saved pool signature missing or SHA256 mismatch")
     if report.get("seed") != manifest.get("seed"):
         raise ValueError("Saved pool seed differs from source manifest")
@@ -139,8 +141,10 @@ def validate_pool(root, tid, manifest, revision):
             "reuse_policy": "Original pool provenance retained; current episode gates recheck every constructed target."}
 
 
-def nonregressing(old, new):
-    return all(new.get("splits", {}).get(s, {}).get(key, 0) >= old.get("splits", {}).get(s, {}).get(key, 0)
+def nonregressing(old, new, validation_removals=None):
+    removed = validation_removals or {}
+    return all(new.get("splits", {}).get(s, {}).get(key, 0) >=
+               old.get("splits", {}).get(s, {}).get(key, 0) - (removed.get(key, 0) if s == "validation" else 0)
                for s in SPLITS for key in ("episodes", "fresh_episodes"))
 
 
@@ -180,8 +184,157 @@ def size_audit(reports, manifest):
     return result
 
 
+def prepare_finite_pools(snapshot, destination, manifest, revision, builder):
+    """Audit every complete pool before exposing any globally reserved orbit."""
+    from .finite_input_policy import FINITE_INPUT_TASK_IDS, POLICY_SIGNATURE
+    destination, snapshot = Path(destination), Path(snapshot)
+    if destination.exists() and any(destination.iterdir()):
+        raise ValueError("Finite-policy staging directory must be empty")
+    originals = {p.stem: read(p) for p in (snapshot / "pool_reports").glob("*.json") if read(p).get("complete")}
+    if len(originals) != manifest["completed_pools"]:
+        raise ValueError("Global migration requires every completed saved pool report")
+    overrides, recounted, affected = {}, {}, set()
+    for tid, original in sorted(originals.items()):
+        provenance = validate_pool(snapshot, tid, manifest, revision)
+        rows = builder.pq.read_table(snapshot / "pools" / (tid + ".parquet")).to_pylist()
+        migrated, report, migration = builder.repartition_pool(rows, original)
+        if not migration["original_source_signature"]:
+            migration["original_source_signature"] = original.get("split_migration", {}).get("original_source_signature")
+        report["split_migration"] = migration
+        if migration["policy_signature"] != POLICY_SIGNATURE:
+            raise ValueError("Repartition helper used a different finite-input policy")
+        path = destination / "pools" / (tid + ".parquet")
+        path.parent.mkdir(parents=True, exist_ok=True)
+        # Unchanged bytes stay unchanged, while all reports are recounted.
+        if migrated == rows:
+            shutil.copy2(snapshot / "pools" / (tid + ".parquet"), path)
+        else:
+            builder.pq.write_table(builder.pa.Table.from_pylist(migrated,
+                schema=builder.pq.read_schema(snapshot / "pools" / (tid + ".parquet"))), path, compression="zstd")
+        report["sha256"] = sha256(path)
+        report["original_pool_provenance"] = provenance
+        write(destination / "pool_reports" / (tid + ".json"), report)
+        overrides[tid] = {"path": str(path), "sha256": report["sha256"], "migration": migration}
+        recounted[tid] = report
+        if tid in FINITE_INPUT_TASK_IDS or migration["requires_episode_rebuild"]:
+            affected.add(tid)
+    audit = {"policy_signature": POLICY_SIGNATURE, "source_dataset_revision": revision,
+             "all_complete_pools_scanned": len(recounted), "affected_families": sorted(affected),
+             "retained_nonempty_pools": sum(bool(r["complete"]) for r in recounted.values()),
+             "split_changed_families": sorted(t for t, x in overrides.items() if x["migration"]["requires_episode_rebuild"])}
+    write(destination / "finite-policy-audit.json", audit)
+    return overrides, recounted, affected, audit
+
+
+def finite_allocation(original, manifest, recounted, affected, builder):
+    """Preserve unaffected quotas; allocate remaining budget using audited support."""
+    result = deepcopy(original)
+    for split in SPLITS:
+        retained = {t: q for t, q in original.get(split + "_by_family", {}).items() if t not in affected}
+        target = manifest["target_" + split + "_fresh_episodes"]
+        remaining = target - sum(sum(q.values()) for q in retained.values())
+        if remaining < 0:
+            raise ValueError("Existing unaffected quotas exceed total target")
+        desired = original[split]["desired"]
+        with patch.object(builder, "SEED", manifest["seed"]):
+            replacement, _ = builder.allocate([recounted[t] for t in sorted(affected)], split, remaining, desired)
+            _, all_stats = builder.allocate(list(recounted.values()), split, target, desired)
+        # Explicit empty allocations ensure retired validation splits are rebuilt.
+        combined = {**retained, **{t: replacement.get(t, {}) for t in sorted(affected)}}
+        actual = Counter()
+        for q in combined.values():
+            actual.update(q)
+        used = {t: sum(q.values()) for t, q in combined.items()}
+        result[split + "_by_family"] = combined
+        result[split] = {"requested": target, "allocated": sum(used.values()),
+                         "allocation_shortfall": target - sum(used.values()),
+                         "desired": desired, "actual": dict(actual), "family_allocated": used,
+                         "family_capacity": all_stats["family_capacity"],
+                         "policy": "Preserve unaffected quotas; reallocate affected families from globally re-split saved support."}
+    result["finite_policy_source_allocation_sha256"] = hashlib.sha256(json.dumps(original, sort_keys=True).encode()).hexdigest()
+    return result
+
+
+def validation_removal_evidence(snapshot, report, policy_signature):
+    """Hash-check old TARs; count only explicitly invalidated validation rows."""
+    from .finite_input_policy import GLOBAL_TRAIN_ORBITS, POLICY_SIGNATURE
+    from .build_million import canonical_input
+    if policy_signature != POLICY_SIGNATURE:
+        raise ValueError("Validation-removal policy mismatch")
+    detail = report.get("splits", {}).get("validation", {})
+    rows, all_bases, removed_bases, removed_ids = 0, set(), set(), []
+    seen_ids, base_decisions = set(), {}
+    files = []
+    for shard in detail.get("shards", []):
+        name = safe_path("shards/validation/" + shard["file"])
+        path = Path(snapshot) / name
+        if sha256(path) != shard["sha256"]:
+            raise ValueError("Original validation shard SHA256 mismatch")
+        files.append({"file": name, "sha256": shard["sha256"]})
+        with tarfile.open(path) as archive:
+            for member in archive:
+                if not member.name.endswith(".json"):
+                    continue
+                if not member.isfile():
+                    raise ValueError("Invalid validation archive member")
+                row = json.load(archive.extractfile(member))
+                if row["task_id"] != report["task_id"] or row["split"] != "validation":
+                    raise ValueError("Unexpected original validation record")
+                identities = row["canonical_input_hashes"]
+                visible = [canonical_input(p["input"]) for p in row["train"] + row["test"]]
+                if identities != visible:
+                    raise ValueError("Validation identity evidence disagrees with visible inputs")
+                if row["episode_id"] in seen_ids:
+                    raise ValueError("Duplicate original validation episode")
+                seen_ids.add(row["episode_id"])
+                base = row["base_episode_id"]
+                invalid = bool(set(identities) & GLOBAL_TRAIN_ORBITS)
+                if base in base_decisions and base_decisions[base] != invalid:
+                    raise ValueError("Base episode variants disagree on global split membership")
+                base_decisions[base] = invalid
+                rows += 1
+                all_bases.add(base)
+                if invalid:
+                    removed_ids.append(row["episode_id"])
+                    removed_bases.add(base)
+    if rows != detail.get("episodes", 0) or len(all_bases) != detail.get("fresh_episodes", 0):
+        raise ValueError("Original validation archives do not account for published counts")
+    return {"reason": "Global train reservation invalidates these old validation episodes",
+            "policy_signature": policy_signature, "reserved_orbits": sorted(GLOBAL_TRAIN_ORBITS),
+            "source_shards": files, "episodes": len(removed_ids), "fresh_episodes": len(removed_bases),
+            "removed_episode_ids": removed_ids, "removed_base_episode_ids": sorted(removed_bases)}
+
+
+def finish_finite_stage(stage, prepared, plan, allocation, audit):
+    """Keep all pool, allocation, and episode changes in the same commit."""
+    stage, prepared = Path(stage), Path(prepared)
+    if not plan["publishable"]:
+        return  # Failed migration remains a local diagnostic, never a partial publish.
+    for directory in ("pools", "pool_reports"):
+        for source in (prepared / directory).glob("*"):
+            destination = stage / directory / source.name
+            destination.parent.mkdir(parents=True, exist_ok=True)
+            shutil.copy2(source, destination)
+    write(stage / "allocation.json", allocation)
+    write(stage / "finite-policy-audit.json", audit)
+    manifest = read(stage / "manifest.json")
+    manifest["finite_input_policy_signature"] = audit["policy_signature"]
+    manifest["finite_input_policy_migration"] = audit
+    manifest["completed_pools"] = audit["retained_nonempty_pools"]
+    write(stage / "manifest.json", manifest)
+    from .visual_card import card
+    (stage / "README.md").write_text(card(manifest) +
+        "\n## Finite-input support and global split migration\n\n"
+        "Audited finite families use four exact-distinct inputs, while all families share the same "
+        "canonical-orbit split policy. Train-reserved orbits were removed from validation globally. "
+        "Any reduced validation count is itemized in the repaired family's report. Single-orbit "
+        "families do not provide independent unseen-orbit validation. Original pool provenance "
+        "is retained; this repair does not generate additional native support.\n")
+
+
 def stage_repairs(snapshot, stage, manifest, allocation, reports, chosen, revision,
-                  repair_commit, terminal_proof, builder):
+                  repair_commit, terminal_proof, builder, pool_overrides=None,
+                  validation_removals=None, required_families=()):
     stage, snapshot = Path(stage), Path(snapshot)
     if stage.exists() and any(stage.iterdir()):
         raise ValueError("Stage must be empty; never overwrite an earlier repair")
@@ -207,7 +360,14 @@ def stage_repairs(snapshot, stage, manifest, allocation, reports, chosen, revisi
             continue
         try:
             (work / "pools").mkdir(parents=True)
-            shutil.copy2(snapshot / "pools" / (tid + ".parquet"), work / "pools" / (tid + ".parquet"))
+            override = (pool_overrides or {}).get(tid)
+            pool_source = Path(override["path"]) if override else snapshot / "pools" / (tid + ".parquet")
+            if override:
+                if sha256(pool_source) != override["sha256"]:
+                    raise ValueError("Repartitioned pool changed after audit")
+                provenance["finite_policy_migration"] = override["migration"]
+                provenance["repartitioned_pool_sha256"] = override["sha256"]
+            shutil.copy2(pool_source, work / "pools" / (tid + ".parquet"))
             with patch.object(builder, "OUT", work), patch.object(builder, "SEED", manifest["seed"]), \
                     patch.object(builder, "OUTPUT_FORMAT", "program-grid-png"), \
                     patch.dict(os.environ, {"ARCGEN_SOURCE_COMMIT": repair_commit}):
@@ -215,10 +375,13 @@ def stage_repairs(snapshot, stage, manifest, allocation, reports, chosen, revisi
             if candidate["task_id"] != tid or set(candidate["splits"]) != set(SPLITS):
                 raise ValueError("Repair must return both splits for the same family")
             verify_artifacts(work, candidate)
-            if not nonregressing(reports.get(tid, {}), candidate):
+            removal = (validation_removals or {}).get(tid)
+            if not nonregressing(reports.get(tid, {}), candidate, removal):
                 outcomes[tid] = {"status": "regression_preserved_original", "candidate": candidate}
                 continue
             candidate["repair_provenance"] = {**provenance, "episode_repair_commit": repair_commit}
+            if removal:
+                candidate["repair_provenance"]["labelled_validation_removals"] = removal
             write(work / "episode_reports" / (tid + ".json"), candidate)
             for name in [f"episode_reports/{tid}.json", *[p for x in candidate["splits"].values() for p in x["files"]]]:
                 destination = stage / safe_path(name)
@@ -253,7 +416,9 @@ def stage_repairs(snapshot, stage, manifest, allocation, reports, chosen, revisi
     new_files = set().union(*(set(m["episode_files"][s]) for s in SPLITS))
     plan = {"source_dataset_revision": revision, "accepted_families": accepted,
             "delete_files": sorted(old_files - new_files), "outcomes": outcomes,
-            "remaining_shortfalls": selection(m, allocation, updated)}
+            "remaining_shortfalls": selection(m, allocation, updated),
+            "publishable": set(required_families) <= set(accepted),
+            "required_families_not_rebuilt": sorted(set(required_families) - set(accepted))}
     write(stage / "manifest.json", m)
     write(stage / "size-audit.json", size_audit(updated, m))
     write(stage / "repair-report.json", plan)
@@ -263,6 +428,8 @@ def stage_repairs(snapshot, stage, manifest, allocation, reports, chosen, revisi
 
 
 def publish_stage(api, repo, revision, snapshot, stage, plan, job_id=None, namespace=None):
+    if not plan.get("publishable", True):
+        raise RuntimeError("Finite-policy migration is incomplete; publishing could leak train-reserved inputs into validation")
     if api.dataset_info(repo, revision="main").sha != revision:
         raise RuntimeError("Dataset changed since pinned revision; rebuild the repair against the new head")
     require_terminal(read(Path(snapshot) / "manifest.json"), api, job_id, namespace)
@@ -286,11 +453,14 @@ def main():
     ap.add_argument("--source-job-id")
     ap.add_argument("--namespace")
     ap.add_argument("--tasks", nargs="+")
+    ap.add_argument("--finite-policy", action="store_true", help="Globally audit/re-split all saved pools and rebuild every affected family")
     args = ap.parse_args()
     if not re.fullmatch("[0-9a-f]{40}", args.revision):
         ap.error("--revision must be an exact commit SHA, never main or a moving tag")
     if args.offline and args.publish:
         ap.error("--publish requires online head/job checks")
+    if args.finite_policy and args.tasks:
+        ap.error("--finite-policy is global and cannot be restricted with --tasks")
     from huggingface_hub import HfApi, snapshot_download, hf_hub_download
     api = None if args.offline else HfApi()
     if api:
@@ -314,20 +484,42 @@ def main():
             ap.error("--tasks must select only shortfall/error families")
         chosen = {tid: chosen[tid] for tid in args.tasks}
     if not (args.execute or args.publish):
-        print(json.dumps({"mode": "plan_only", "source_status": manifest["status"], "families": chosen}, indent=2))
+        print(json.dumps({"mode": "plan_only", "source_status": manifest["status"], "families": chosen,
+                          "finite_policy": args.finite_policy,
+                          "global_pool_scan_pending": args.finite_policy,
+                          "note": "Finite-policy execution scans ALL saved pools and adds every affected family before repair." if args.finite_policy else ""}, indent=2))
         return
     terminal = require_terminal(manifest, api, args.source_job_id, args.namespace)
     if api:
         from huggingface_hub.errors import EntryNotFoundError
-        for tid in chosen:
+        pool_ids = ({p.stem for p in (args.snapshot / "pool_reports").glob("*.json") if read(p).get("complete")}
+                    if args.finite_policy else chosen)
+        for tid in pool_ids:
             try:
                 hf_hub_download(args.repo, f"pools/{tid}.parquet", repo_type="dataset", revision=args.revision, local_dir=args.snapshot)
             except EntryNotFoundError:
                 pass  # Report missing pools; do not generate replacements or fabricate quota.
     repair_commit = subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=Path(__file__).resolve().parents[1], text=True).strip()
     from . import build_million as builder
+    overrides, removals, required = {}, {}, set()
+    if args.finite_policy:
+        prepared = args.stage.with_name(args.stage.name + "-finite-pools")
+        overrides, recounted, required, finite_audit = prepare_finite_pools(
+            args.snapshot, prepared, manifest, args.revision, builder)
+        allocation = finite_allocation(allocation, manifest, recounted, required, builder)
+        chosen = sorted(set(selection(manifest, allocation, reports)) | required)
+        for tid in required:
+            old = reports.get(tid, {"task_id": tid, "splits": {}})
+            if api:
+                for shard in old.get("splits", {}).get("validation", {}).get("shards", []):
+                    hf_hub_download(args.repo, safe_path("shards/validation/" + shard["file"]),
+                                    repo_type="dataset", revision=args.revision, local_dir=args.snapshot)
+            removals[tid] = validation_removal_evidence(args.snapshot, old, finite_audit["policy_signature"])
     plan = stage_repairs(args.snapshot, args.stage, manifest, allocation, reports, chosen,
-                         args.revision, repair_commit, terminal, builder)
+                         args.revision, repair_commit, terminal, builder,
+                         pool_overrides=overrides, validation_removals=removals, required_families=required)
+    if args.finite_policy:
+        finish_finite_stage(args.stage, prepared, plan, allocation, finite_audit)
     if args.publish:
         commit = publish_stage(api, args.repo, args.revision, args.snapshot, args.stage, plan,
                                args.source_job_id, args.namespace)

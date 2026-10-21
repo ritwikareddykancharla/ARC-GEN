@@ -9,7 +9,7 @@ allocate fresh training episodes by query size and output-shape relation,
 then expand every fresh episode into all eight D4 transforms.
 Shortfalls are reported explicitly, never padded with duplicate episodes.
 """
-import argparse,concurrent.futures as cf,hashlib,importlib,json,math,os,random,time
+import argparse,concurrent.futures as cf,copy,hashlib,importlib,json,math,os,random,time
 from collections import Counter,defaultdict
 from functools import lru_cache
 from pathlib import Path
@@ -30,6 +30,9 @@ from .program_targets import compile_target, audit_target, make_record, TargetEr
 from .visual_shards import VisualShardWriter
 from .episode_shape_policy import profile_from_task, select_demonstrations, describe as describe_shapes
 from .pool_sampling import sample_native, SamplerTimeout, load_native_seed_pool, family_budget_seconds, timeout_limits
+from .finite_input_policy import (FINITE_INPUT_TASK_IDS, FAMILY_PROVENANCE,
+    VERSION as FINITE_INPUT_POLICY_VERSION, POLICY_SIGNATURE as FINITE_INPUT_POLICY_SIGNATURE,
+    identity_key, minimum_class_requirement, input_split)
 
 STORED_CONTEXT_TASK_IDS = CONTEXTUAL_TASK_IDS | {'7b7f7511'}
 
@@ -77,6 +80,59 @@ def canonical_input(g):
     return hashlib.sha256(min(versions)).hexdigest()
 def stratum(p):return str(max(len(p['input']),len(p['input'][0])))+'|'+relation(p)
 def counts(rows,split):return dict(Counter(r['stratum'] for r in rows if r['split']==split))
+def repartition_pool(rows, report):
+    """Pure migration of saved pools to the global input split policy.
+
+    Run on ALL families, not just finite families: their orbits can overlap.
+    Regenerate affected episodes; never retain an old validation episode with
+    an input now reserved for training. No labels are consulted for selection.
+    File hashes/cache signatures are removed until the caller persists and
+    audits the migrated pool. The original values survive in the migration.
+    """
+    updated=[];changed=[];dropped=[];seen=set()
+    for original in rows:
+        row=copy.deepcopy(original)
+        members=[row]+row.get('context_pairs',[])
+        for pair in members:
+            ih=digest(pair['input']);ch=canonical_input(pair['input'])
+            if pair['input_hash']!=ih or pair['canonical_input_hash']!=ch:
+                raise ValueError('Saved pool input identity disagrees with visible grid')
+            old=pair['split'];pair['split']=input_split(ch)
+            if old!=pair['split']:
+                changed.append({'input_hash':ih,'canonical_input_hash':ch,
+                                'old_split':old,'new_split':pair['split']})
+        if row['input_hash'] in seen:raise ValueError('Saved pool contains duplicate exact query inputs')
+        seen.add(row['input_hash'])
+        if any(p['split']!=row['split'] for p in row.get('context_pairs',[])):
+            dropped.append({'input_hash':row['input_hash'],
+                            'reason':'stored_context_spans_new_global_splits'})
+            continue
+        updated.append(row)
+    result=copy.deepcopy(report)
+    migration={'version':FINITE_INPUT_POLICY_VERSION,'policy_signature':FINITE_INPUT_POLICY_SIGNATURE,
+               'original_source_signature':result.pop('source_signature',None),
+               'original_file_sha256':result.pop('sha256',None),
+               'original_pairs':len(rows),'retained_pairs':len(updated),
+               'changed_inputs':changed,'dropped_stored_contexts':dropped,
+               'requires_episode_rebuild':bool(changed or dropped),
+               'scope_requirement':'Apply globally across every family before rebuilding episodes.'}
+    result.update(pairs=len(updated),complete=bool(updated),
+                  distinct_canonical_inputs=len({p['canonical_input_hash'] for p in updated}),
+                  finite_input_policy_signature=FINITE_INPUT_POLICY_SIGNATURE,
+                  finite_input_identity_key=identity_key(report['task_id']),
+                  finite_input_provenance=dict(FAMILY_PROVENANCE[report['task_id']])
+                  if report['task_id'] in FINITE_INPUT_TASK_IDS else None)
+    for split in ('train','validation'):
+        selected=[p for p in updated if p['split']==split]
+        result[split+'_strata']=counts(updated,split)
+        result[split+'_canonical']=len({p['canonical_input_hash'] for p in selected})
+        result[split+'_context_episodes']=len(selected) if report.get('contextual') else 0
+    if 'requested_pool_size' in result:
+        result['quota_complete']=len(updated)>=result['requested_pool_size']
+        result['pool_shortfall']=max(0,result['requested_pool_size']-len(updated))
+    result['split_migration']=migration
+    return updated,result,migration
+
 def input_stats(g):
     c=Counter(v for row in g for v in row)
     return {'height':len(g),'width':len(g[0]),'colours':len(c),'dominant_fraction':max(c.values())/sum(c.values())}
@@ -90,7 +146,7 @@ def picture_episode(module, tid, sample_seed):
     colours=sorted({v for row in picture for v in row})
     template=[[int(v==colours[0]) for v in row] for row in picture]
     context_id=canonical_input(picture)
-    split='validation' if int(context_id[:8],16)%20==0 else 'train'
+    split=input_split(context_id)
     selected=[];seen=set()
     initial=first['train']+first['test']
     for attempt in range(400):
@@ -102,7 +158,7 @@ def picture_episode(module, tid, sample_seed):
             pair=call(module.generate,template=template,seconds=3)
         pair={k:grid(pair[k]) for k in ['input','output']}
         identity=canonical_input(pair['input'])
-        pair_split='validation' if int(identity[:8],16)%20==0 else 'train'
+        pair_split=input_split(identity)
         if pair_split!=split or identity in seen:continue
         seen.add(identity)
         selected.append(dict(pair,task_id=tid,seed=pair_seed,
@@ -135,6 +191,7 @@ def pool_signature(tid,configs):
     if tid == '1b8318e3':files.append(BASE/'audit_support/task_1b8318e3_raw_pool.jsonl')
     hashes={str(p.relative_to(BASE.parent)):hashlib.sha256(p.read_bytes()).hexdigest() for p in files}
     return digest({'source_hashes':hashes,'approved_parameters':configs,'reviewed_standalone':tid in NEW_TASK_IDS,'output_format':OUTPUT_FORMAT,
+                   'finite_input_policy_signature':FINITE_INPUT_POLICY_SIGNATURE,
                    'family_budget_seconds':family_budget_seconds(tid,FAMILY_SECONDS),'sampling_timeout_limits':timeout_limits(tid)})
 
 def make_pool(tid):
@@ -178,7 +235,11 @@ def make_pool(tid):
                 # Give rare native ambiguity cases explicit curriculum coverage.
                 four,context_id=generate_episode(s,canonical_input,digest,
                                                 force_ambiguous_query=trials%10==0)
-                for pair in four:pair['stratum']=stratum(pair)
+                for pair in four:
+                    pair['stratum']=stratum(pair)
+                    pair['split']=input_split(pair['canonical_input_hash'])
+                if len({pair['split'] for pair in four})!=1:
+                    raise ValueError('Stored repeat context spans global input splits')
                 contextual=dict(four[-1],context_pairs=four[:3],context_id=context_id)
                 p={k:four[-1][k] for k in ['input','output']}
                 mode='episode_shared_repeat_axis'
@@ -220,7 +281,7 @@ def make_pool(tid):
             continue
         stale=0;seen[ih]=oh;c=canonical_input(p['input']);canonical.add(c)
         # Split assignment depends only on input equivalence class, not family/seed/output.
-        split='validation' if int(c[:8],16)%20==0 else 'train'
+        split=input_split(c)
         rows.append(contextual if contextual is not None else
                     dict(task_id=tid,input=p['input'],output=p['output'],seed=s,parameters=compact({'requested_parameters':kw,'sampling':sampling_metadata}) if sampling_metadata else compact(kw),
                     generator_mode=mode,input_hash=ih,canonical_input_hash=c,split=split,stratum=stratum(p)))
@@ -239,6 +300,9 @@ def make_pool(tid):
     pq.write_table(pa.Table.from_pylist(rows),file,compression='zstd')
     assert pq.read_table(file).to_pylist()==rows
     report={'task_id':tid,'seed':SEED,'source_signature':signature,'requested_pool_size':POOL_SIZE,'complete':True,'pairs':len(rows),'distinct_canonical_inputs':len(canonical),
+       'finite_input_policy_signature':FINITE_INPUT_POLICY_SIGNATURE,
+       'finite_input_identity_key':identity_key(tid),
+       'finite_input_provenance':dict(FAMILY_PROVENANCE[tid]) if tid in FINITE_INPUT_TASK_IDS else None,
        'train_strata':counts(rows,'train'),'validation_strata':counts(rows,'validation'),
        'train_canonical':len({r['canonical_input_hash'] for r in rows if r['split']=='train'}),
        'validation_canonical':len({r['canonical_input_hash'] for r in rows if r['split']=='validation'}),
@@ -250,17 +314,22 @@ def make_pool(tid):
     dump(report_path,report);return report
 
 def allocate(reports,split,target,desired):
+    from arc_agi2.finite_input_policy import capacity_basis, FINITE_INPUT_TASK_IDS
     # Fresh episode quotas, before augmentation. The histogram is a preference,
     # not a reason to withhold a family's otherwise feasible 1,000 episodes.
     if target < 0 or any(v < 0 for v in desired.values()):
         raise ValueError('Allocation counts must be nonnegative')
     ceiling=POLICY['planned_dataset']['fresh_episodes_per_family']
+    # Finite families get at most one base episode per exact query; ordinary
+    # families retain the existing two-per-canonical cap. No order-only padding.
+    multipliers={r['task_id']:1 if r.get('contextual') or r['task_id'] in FINITE_INPUT_TASK_IDS else 2
+                 for r in reports}
     capacity={r['task_id']:min(ceiling,r[split+'_context_episodes'] if r.get('contextual') else
-                              2*r[split+'_canonical']) for r in reports
-              if r[split+'_canonical'] >= (1 if r['task_id']=='27a28665' else 4)}
+                              multipliers[r['task_id']]*capacity_basis(r,split)) for r in reports
+              if capacity_basis(r,split)>0}
     support={r['task_id']:r[split+'_strata'] for r in reports if r['task_id'] in capacity}
     contextual={r['task_id']:r.get('contextual',False) for r in reports}
-    limits={t:{k:(1 if contextual[t] else 2)*n for k,n in support[t].items()}
+    limits={t:{k:multipliers[t]*n for k,n in support[t].items()}
             for t in capacity}
     capacity={t:min(c,sum(limits[t].values())) for t,c in capacity.items()}
     budgets={};keys=sorted(k for k in desired if desired[k]);total=sum(desired.values())
@@ -318,11 +387,16 @@ def allocate(reports,split,target,desired):
 
 def make_episodes(arg):
     tid,allocs=arg;basis=fixture_basis(tid);pool=pq.read_table(OUT/'pools'/f'{tid}.parquet').to_pylist();result={};all_hashes=set()
+    identity=identity_key(tid)
+    for row in pool:
+        for pair in [row]+row.get('context_pairs',[]):
+            if pair['split']!=input_split(pair['canonical_input_hash']):
+                raise ValueError('Stale pool split: globally repartition and recount all pools before episode construction')
     shape_profile=profile_from_task(reference(tid)['canonical'])
     for split,quota in allocs.items():
         rows=[r for r in pool if r['split']==split];bins=defaultdict(list)
         for p in rows:bins[p['stratum']].append(p)
-        canonical_total=len({p['canonical_input_hash'] for p in rows})
+        identity_total=len({p[identity] for p in rows})
         rng=random.Random(seed(tid,split,'episodes'));query_uses=Counter();pair_uses=Counter();failures=Counter()
         query_context_shortfalls=[];query_rejections=[];quarantined_queries=set();shape_counts=Counter()
         hist={which:{axis:Counter() for axis in ['height','width','longest','shapes']} for which in ['input','output']};relations=Counter()
@@ -343,7 +417,7 @@ def make_episodes(arg):
         try:
             for k,n in quota.items():
                 candidates=bins[k][:];rng.shuffle(candidates)
-                if len(rows)<4 or canonical_total<(1 if tid=='27a28665' else 4) or not candidates:
+                if len(rows)<4 or identity_total<minimum_class_requirement(tid) or not candidates:
                     failures['insufficient_distinct_inputs']+=n;continue
                 for j in range(n):
                     accepted=False
@@ -352,7 +426,7 @@ def make_episodes(arg):
                     # silently bias the dataset toward easier query cases.
                     q=next((candidates[(j+offset)%len(candidates)]
                             for offset in range(len(candidates))
-                            if query_uses[candidates[(j+offset)%len(candidates)]['input_hash']]<4
+                            if query_uses[candidates[(j+offset)%len(candidates)]['input_hash']]<(1 if tid in FINITE_INPUT_TASK_IDS else 4)
                             and candidates[(j+offset)%len(candidates)]['input_hash'] not in quarantined_queries),None)
                     if q is None:
                         failures['query_reuse_exhausted']+=1
@@ -377,8 +451,7 @@ def make_episodes(arg):
                                 failures['stored_context_reuse_exhausted']+=1
                                 break
                         else:
-                            identity_key='input_hash' if tid=='27a28665' else 'canonical_input_hash'
-                            ds=[p for p in rows if p[identity_key]!=q[identity_key] and pair_uses[p['input_hash']]<32]
+                            ds=[p for p in rows if p[identity]!=q[identity] and pair_uses[p['input_hash']]<32]
                             if len(ds)<3:break
                             if tid == 'b7cb93ac':
                                 from .packing_evidence import select_packing_demonstrations
@@ -387,7 +460,7 @@ def make_episodes(arg):
                                     failures['no_three_demo_packing_context']+=1
                                     break
                             else:
-                                demos,shape_report=select_demonstrations(ds,q['input'],rng,shape_profile,identity_key=identity_key)
+                                demos,shape_report=select_demonstrations(ds,q['input'],rng,shape_profile,identity_key=identity)
                                 if demos is None:break
                         if shape_report is None:
                             observed=describe_shapes(demos,q['input'])
@@ -424,11 +497,9 @@ def make_episodes(arg):
                                 continue
                             if predicted != q['output']:
                                 raise ValueError('Demonstration-derived legend output disagrees')
-                        # A mask legend must show the same mask in another ink
-                        # colour. Exact inputs stay distinct and equivalence
-                        # classes still never cross the training/validation split.
-                        uniqueness = 'input_hash' if tid=='27a28665' else 'canonical_input_hash'
-                        if len({p[uniqueness] for p in four})<4:continue
+                        # Audited finite-orbit families may reuse an orbit, but
+                        # never an exact input. Global split grouping is unchanged.
+                        if len({p[identity] for p in four})<minimum_class_requirement(tid):continue
                         if all(p['input']==p['output'] for p in four):continue
                         basehash=digest([sorted(p['input_hash'] for p in demos),q['input_hash']])
                         if basehash in all_hashes:continue
@@ -461,6 +532,8 @@ def make_episodes(arg):
                                   'reviewed_upstream_proposal' if basis['corrected'] else 'canonical'),
                               'base_input_hashes':[p['input_hash'] for p in four],
                               'canonical_input_hashes':[p['canonical_input_hash'] for p in four],
+                              'finite_input_policy_signature':FINITE_INPUT_POLICY_SIGNATURE,
+                              'within_episode_input_identity':identity,
                               'base_episode_sha256':basehash,'d4_transform':d4,'color_permutation':palette,
                               'equivalent_d4':variant['equivalent_d4'],'distinct_spatial_variants':len(variants),
                               'query_input_height':len(query['input']),'query_input_width':len(query['input'][0]),
@@ -520,7 +593,10 @@ def make_episodes(arg):
             'query_rejections':query_rejections,'quarantined_query_count':len(quarantined_queries),
             'max_query_reuse_in_fresh_episodes':max(query_uses.values(),default=0),
             'max_pair_reuse_in_fresh_episodes':max(pair_uses.values(),default=0),'distinct_inputs_used':len(pair_uses)}
-    report={'task_id':tid,'splits':result};dump(OUT/'episode_reports'/f'{tid}.json',report);return report
+    report={'task_id':tid,'splits':result,'finite_input_policy_signature':FINITE_INPUT_POLICY_SIGNATURE,
+            'within_episode_input_identity':identity,
+            'finite_input_provenance':dict(FAMILY_PROVENANCE[tid]) if tid in FINITE_INPUT_TASK_IDS else None}
+    dump(OUT/'episode_reports'/f'{tid}.json',report);return report
 
 def card(m):
     if OUTPUT_FORMAT == 'program-grid-png':
@@ -553,11 +629,11 @@ Three demonstration pairs and one query per episode, with generator-produced out
 ## What changes
 
 - All fixture-verified ARC-GEN generators whose task IDs occur in ARC-AGI-2, plus independently constructed, tested extensions.
-- Adaptive fresh quotas: at most two episodes per unique canonical input in the pair pool, with a {POLICY['planned_dataset']['fresh_episodes_per_family']:,}-episode family ceiling before augmentation. Families with little variation receive fewer examples.
+- Adaptive fresh quotas: at most two episodes per unique canonical input in ordinary families; audited finite-orbit families use at most one episode per exact query input. The family ceiling is {POLICY['planned_dataset']['fresh_episodes_per_family']:,} before augmentation. Families with little variation receive fewer examples.
 - Target query longest-side distribution at each integer size 1–30 jointly with output expansion/shrinkage/same-shape, measured on all 1,120 public tasks. Exact height, width and rectangular-shape histograms are reported separately. Unsupported targets become explicit shortfalls; difficulty is not proven equal by dimensions.
 - Size overrides require original replay and differential seed checks. Overridden/extended pairs use saved teacher solvers with documented verifier improvements: `78332cb0` checks the unique complete panel chain because the archived greedy program fails on valid panel permutations. `de493100` uses a dimension-aware reflection-orbit verifier for labelled even-sized crop extensions; its archived program hardcodes the original coordinate 31. Episode-shared picture family `269e22fb` uses an independent verifier conditioned on a demonstration output, since its archived solver contains only the original picture. Original teacher programs and benchmark data remain unchanged. Default upstream generators have fixture checks, not full semantic proofs.
-- Fresh input pool, no duplicated full native episodes, and no repeated exact inputs inside an episode. Inputs must also be inequivalent under D4/palette except in mask-legend family `27a28665`, where the same mask in another ink colour supplies necessary evidence. Every fresh episode expands into all eight D4 transforms. Symmetric identical episodes are stored once, with every represented transform recorded in `equivalent_d4`; fresh and augmented counts remain separate. Colours are generated natively; extra palette permutation is opt-in per family. One transformation applies consistently to all demonstration inputs/outputs and the query input/output.
-- Input equivalence classes under palette renaming and D4 are assigned to one split before episode construction, including across families. All 1,120 public task families, including the former 20 holdouts, are training-eligible after generator validation. Synthetic validation measures new-input generalization within known families.
+- Fresh input pool, no duplicated full native episodes, and no repeated exact inputs inside an episode. Inputs must also be inequivalent under D4/palette except in the 12 source-audited finite-orbit families listed in `arc_agi2/finite_input_policy.py`; these still require four exact-distinct inputs and all semantic checks. Every fresh episode expands into all eight D4 transforms. Symmetric identical episodes are stored once, with every represented transform recorded in `equivalent_d4`; fresh and augmented counts remain separate. Colours are generated natively; extra palette permutation is opt-in per family. One transformation applies consistently to all demonstration inputs/outputs and the query input/output.
+- Input equivalence classes under palette renaming and D4 are assigned to one split before episode construction, including across families. The sole input orbit of `833966f4` is reserved globally for training, including matching inputs of other families. Single-orbit training families have no independent unseen-orbit validation. All 1,120 public task families, including the former 20 holdouts, are training-eligible after generator validation. Synthetic validation measures new-input generalization within known families where distinct validation orbits exist.
 - For `269e22fb`, each fresh picture is shared by its three demonstrations and query. These pairs are stored together and never mixed with a different picture. The picture equivalence class and every crop belong to the same deterministic split. Fresh-episode capacity is limited to the number of complete context bundles, rather than multiplying the number of queries.
 - For `98c475bf`, a query marker colour must have its full motif demonstrated in the selected inputs or outputs. An independent context solver learns those templates from the demonstrations and verifies the query before augmentation. Missing-evidence attempts are rejected and counted; query answers never supply the templates.
 - For `27a28665`, `9110e3c5`, and `d4469b4b`, the query's legend key must be demonstrated. Fixed canonical answer tables are not substituted for missing evidence. Repeated equivalent masks in `27a28665` stay within the same data split and its small capacity is reported explicitly.

@@ -1,0 +1,767 @@
+{
+ "task_id": "f3cdc58f",
+ "purpose": "pre-gate counterexample: demonstrations fit a count-sorted bar order",
+ "generated_at_commit": "9498a906edc8a0ce0ec9e556476f3411714e3d25",
+ "source_sha256": {
+  "constructor": "abd953bb8cd3a8c121ee081492f4c8e8df591b26cd03d3b13d01b875c9934d97",
+  "colour_evidence": "7da811128625c47ad8008fbc8253ea8b75cb25747b1d39eb45c6b438dbccfddf",
+  "program_targets": "88298f336ca6a50ee91e58a08f24a4997c7c49e832eda1e68f98153dd59ed790",
+  "verified_rules": "3a3425ae44e64be437e071b01c833eb5684a1646fe74adf5f2fbeab8df03d02f",
+  "prepare": "52df35f648dc47624b519e14eb2782f752ea5b5881d10766ae445d04aa4bf74c",
+  "harness": "2b896700eaa06e12c197c90329a2b56ab89e52966eb7884a352dcb7b4b1737bc"
+ },
+ "witnesses": {
+  "ascending_count": {
+   "competitor": "ascending_count",
+   "tie_break": "fixed legend order shown by every demonstration's bars (native 1,2,3,4)",
+   "shape": [
+    4,
+    4
+   ],
+   "shape_profile": {
+    "demo_input_shapes": "uniform",
+    "query_input_shape": "seen"
+   },
+   "split": "train",
+   "input_orbits": [
+    "c267ed034f4b23df6a233901a24dafb60e267dd69816324b484c33ceaf935259",
+    "d62f0e62d21605361a006587778413f47715fde51fe474e8420125c6ecad0eea",
+    "ae0c75e041193e377d85371d29f1027ec9858ceca86a7f069d76ad5fcdfd93ff",
+    "8fb3233e641b07fe4906897a1d752d8ca595d3789b48cc2d268ec5b1c868f1b3"
+   ],
+   "search": {
+    "search_seed": 20261025,
+    "query_draws": 3,
+    "demo_draws": 16,
+    "query_seed": 190362381645953,
+    "demo_seeds": [
+     175923532485271,
+     175262938001358,
+     163371896113832
+    ]
+   },
+   "demonstrations": [
+    {
+     "input": [
+      [
+       2,
+       4,
+       0,
+       0
+      ],
+      [
+       0,
+       1,
+       2,
+       0
+      ],
+      [
+       3,
+       0,
+       0,
+       0
+      ],
+      [
+       4,
+       3,
+       0,
+       1
+      ]
+     ],
+     "output": [
+      [
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       1,
+       2,
+       3,
+       4
+      ],
+      [
+       1,
+       2,
+       3,
+       4
+      ]
+     ],
+     "legend_counts": [
+      2,
+      2,
+      2,
+      2
+     ]
+    },
+    {
+     "input": [
+      [
+       4,
+       1,
+       0,
+       0
+      ],
+      [
+       2,
+       4,
+       0,
+       4
+      ],
+      [
+       0,
+       3,
+       2,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       3
+      ]
+     ],
+     "output": [
+      [
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       4
+      ],
+      [
+       0,
+       2,
+       3,
+       4
+      ],
+      [
+       1,
+       2,
+       3,
+       4
+      ]
+     ],
+     "legend_counts": [
+      1,
+      2,
+      2,
+      3
+     ]
+    },
+    {
+     "input": [
+      [
+       0,
+       3,
+       2,
+       3
+      ],
+      [
+       0,
+       0,
+       1,
+       0
+      ],
+      [
+       4,
+       0,
+       0,
+       0
+      ],
+      [
+       1,
+       2,
+       4,
+       4
+      ]
+     ],
+     "output": [
+      [
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       4
+      ],
+      [
+       1,
+       2,
+       3,
+       4
+      ],
+      [
+       1,
+       2,
+       3,
+       4
+      ]
+     ],
+     "legend_counts": [
+      2,
+      2,
+      2,
+      3
+     ]
+    }
+   ],
+   "query": {
+    "input": [
+     [
+      0,
+      4,
+      2,
+      1
+     ],
+     [
+      0,
+      0,
+      3,
+      0
+     ],
+     [
+      2,
+      1,
+      0,
+      3
+     ],
+     [
+      0,
+      4,
+      3,
+      0
+     ]
+    ],
+    "legend_counts": [
+     2,
+     2,
+     3,
+     2
+    ],
+    "native_answer": [
+     [
+      0,
+      0,
+      0,
+      0
+     ],
+     [
+      0,
+      0,
+      3,
+      0
+     ],
+     [
+      1,
+      2,
+      3,
+      4
+     ],
+     [
+      1,
+      2,
+      3,
+      4
+     ]
+    ],
+    "competitor_answer": [
+     [
+      0,
+      0,
+      0,
+      0
+     ],
+     [
+      0,
+      0,
+      0,
+      3
+     ],
+     [
+      1,
+      2,
+      4,
+      3
+     ],
+     [
+      1,
+      2,
+      4,
+      3
+     ]
+    ]
+   },
+   "seeded_palette": [
+    7,
+    9,
+    4,
+    0,
+    5,
+    8,
+    6,
+    2,
+    3,
+    1
+   ],
+   "pregate_make_record_accepted": [
+    {
+     "palette": "identity",
+     "d4": 0
+    },
+    {
+     "palette": "identity",
+     "d4": 1
+    },
+    {
+     "palette": "identity",
+     "d4": 2
+    },
+    {
+     "palette": "identity",
+     "d4": 3
+    },
+    {
+     "palette": "identity",
+     "d4": 4
+    },
+    {
+     "palette": "identity",
+     "d4": 5
+    },
+    {
+     "palette": "identity",
+     "d4": 6
+    },
+    {
+     "palette": "identity",
+     "d4": 7
+    },
+    {
+     "palette": "seeded",
+     "d4": 0
+    },
+    {
+     "palette": "seeded",
+     "d4": 1
+    },
+    {
+     "palette": "seeded",
+     "d4": 2
+    },
+    {
+     "palette": "seeded",
+     "d4": 3
+    },
+    {
+     "palette": "seeded",
+     "d4": 4
+    },
+    {
+     "palette": "seeded",
+     "d4": 5
+    },
+    {
+     "palette": "seeded",
+     "d4": 6
+    },
+    {
+     "palette": "seeded",
+     "d4": 7
+    }
+   ]
+  },
+  "descending_count": {
+   "competitor": "descending_count",
+   "tie_break": "fixed legend order shown by every demonstration's bars (native 1,2,3,4)",
+   "shape": [
+    4,
+    4
+   ],
+   "shape_profile": {
+    "demo_input_shapes": "uniform",
+    "query_input_shape": "seen"
+   },
+   "split": "validation",
+   "input_orbits": [
+    "2dd7a21cedc10f6c6a520c200170c144f8af9a829dbd576a6db0691d4de25e76",
+    "8333a0a875227a8c8bfdfa454dfed582c555b3adf3c75537701ba844449271b3",
+    "75d4ad58811c2e35ab82bd6cd4686adb840ca80a981990b2e2486081b29662fc",
+    "7bd231d0762a2d7465164f7275166ab52bd9daff14151a49b23645c4616800b2"
+   ],
+   "search": {
+    "search_seed": 20261026,
+    "query_draws": 1,
+    "demo_draws": 767,
+    "query_seed": 225155557934166,
+    "demo_seeds": [
+     69810842795439,
+     114969400072996,
+     67949472614605
+    ]
+   },
+   "demonstrations": [
+    {
+     "input": [
+      [
+       1,
+       0,
+       4,
+       3
+      ],
+      [
+       0,
+       0,
+       0,
+       4
+      ],
+      [
+       1,
+       3,
+       0,
+       0
+      ],
+      [
+       0,
+       2,
+       0,
+       2
+      ]
+     ],
+     "output": [
+      [
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       1,
+       2,
+       3,
+       4
+      ],
+      [
+       1,
+       2,
+       3,
+       4
+      ]
+     ],
+     "legend_counts": [
+      2,
+      2,
+      2,
+      2
+     ]
+    },
+    {
+     "input": [
+      [
+       0,
+       3,
+       2,
+       0
+      ],
+      [
+       0,
+       1,
+       0,
+       0
+      ],
+      [
+       0,
+       1,
+       4,
+       0
+      ],
+      [
+       3,
+       0,
+       0,
+       2
+      ]
+     ],
+     "output": [
+      [
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       1,
+       2,
+       3,
+       0
+      ],
+      [
+       1,
+       2,
+       3,
+       4
+      ]
+     ],
+     "legend_counts": [
+      2,
+      2,
+      2,
+      1
+     ]
+    },
+    {
+     "input": [
+      [
+       2,
+       0,
+       3,
+       2
+      ],
+      [
+       4,
+       3,
+       0,
+       0
+      ],
+      [
+       1,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       4,
+       0,
+       1
+      ]
+     ],
+     "output": [
+      [
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       0,
+       0,
+       0,
+       0
+      ],
+      [
+       1,
+       2,
+       3,
+       4
+      ],
+      [
+       1,
+       2,
+       3,
+       4
+      ]
+     ],
+     "legend_counts": [
+      2,
+      2,
+      2,
+      2
+     ]
+    }
+   ],
+   "query": {
+    "input": [
+     [
+      3,
+      3,
+      0,
+      2
+     ],
+     [
+      0,
+      0,
+      4,
+      1
+     ],
+     [
+      0,
+      0,
+      0,
+      4
+     ],
+     [
+      1,
+      0,
+      0,
+      0
+     ]
+    ],
+    "legend_counts": [
+     2,
+     1,
+     2,
+     2
+    ],
+    "native_answer": [
+     [
+      0,
+      0,
+      0,
+      0
+     ],
+     [
+      0,
+      0,
+      0,
+      0
+     ],
+     [
+      1,
+      0,
+      3,
+      4
+     ],
+     [
+      1,
+      2,
+      3,
+      4
+     ]
+    ],
+    "competitor_answer": [
+     [
+      0,
+      0,
+      0,
+      0
+     ],
+     [
+      0,
+      0,
+      0,
+      0
+     ],
+     [
+      1,
+      3,
+      4,
+      0
+     ],
+     [
+      1,
+      3,
+      4,
+      2
+     ]
+    ]
+   },
+   "seeded_palette": [
+    5,
+    7,
+    8,
+    3,
+    6,
+    4,
+    1,
+    9,
+    0,
+    2
+   ],
+   "pregate_make_record_accepted": [
+    {
+     "palette": "identity",
+     "d4": 0
+    },
+    {
+     "palette": "identity",
+     "d4": 1
+    },
+    {
+     "palette": "identity",
+     "d4": 2
+    },
+    {
+     "palette": "identity",
+     "d4": 3
+    },
+    {
+     "palette": "identity",
+     "d4": 4
+    },
+    {
+     "palette": "identity",
+     "d4": 5
+    },
+    {
+     "palette": "identity",
+     "d4": 6
+    },
+    {
+     "palette": "identity",
+     "d4": 7
+    },
+    {
+     "palette": "seeded",
+     "d4": 0
+    },
+    {
+     "palette": "seeded",
+     "d4": 1
+    },
+    {
+     "palette": "seeded",
+     "d4": 2
+    },
+    {
+     "palette": "seeded",
+     "d4": 3
+    },
+    {
+     "palette": "seeded",
+     "d4": 4
+    },
+    {
+     "palette": "seeded",
+     "d4": 5
+    },
+    {
+     "palette": "seeded",
+     "d4": 6
+    },
+    {
+     "palette": "seeded",
+     "d4": 7
+    }
+   ]
+  }
+ }
+}

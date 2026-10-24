@@ -88,6 +88,8 @@ def main():
             "latin_fill_4cd1b7b2_evidence.py",
             "marker_roll_evidence.py",
             "self_match_evidence.py",
+            "native_i_evidence.py",
+            "dot_motion_d47aa2ff_evidence.py",
         )
     ]
     for result in results:

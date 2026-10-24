@@ -8,6 +8,9 @@ import importlib
 import json
 import random
 
+import time
+
+import common
 import pytest
 
 from .augmentation import transformed
@@ -87,7 +90,10 @@ def test_31adaf00_larger_holes_on_rectangular_canvas():
     cells = [[5] * width for _ in range(height)]
     for r in range(1, 5):
         for c in range(2, 6):
-            cells[r][c] = 0          # 4x4 hole: impossible on the old 10x10 sampler
+            # 4x4 hole on a 7x23 canvas. The old 10x10 sampler planted only
+            # 2x2/3x3 holes (a 4x4 could arise only from random zeros) and
+            # never produced this canvas shape.
+            cells[r][c] = 0
     for r, c in ((4, 15), (4, 16), (5, 15), (5, 16), (0, 20), (6, 0)):
         cells[r][c] = 0
     p = module('31adaf00').generate(colors=sum(cells, []), width=width, height=height)
@@ -174,3 +180,72 @@ def test_137f0df0_narrow_canvases_terminate():
             p = gen(width=width, height=height)
             assert shape(p['input']) == (height, width)
             assert any(2 in row for row in p['output'])
+
+
+# A degenerate random source that always returns the top of the requested range
+# (or the first option) never yields an acceptable scene for these families. The
+# constructors must then stop with RuntimeError rather than hang or quietly
+# return a simplified scene.
+def upper_randint(start, stop):
+    return stop
+
+
+@pytest.mark.parametrize('tid, kwargs', [
+    ('31adaf00', dict(width=5, height=5)),     # every planted hole at one corner: overlaps
+    ('84db8fc4', dict(width=3, height=3)),     # no empty cells: fewer than four colours
+    ('ce039d91', dict(width=4, height=3)),     # no grey pixels at all
+    ('d282b262', dict(width=6, height=6)),     # every box at one position: overlaps
+])
+def test_exhausted_proposals_raise_runtime_error(monkeypatch, tid, kwargs):
+    monkeypatch.setattr(common, 'randint', upper_randint)
+    started = time.monotonic()
+    with pytest.raises(RuntimeError, match='budget'):
+        module(tid).generate(**kwargs)
+    assert time.monotonic() - started < 20
+
+
+def test_f45f5ca7_exhausted_proposals_raise_runtime_error(monkeypatch):
+    monkeypatch.setattr(common, 'choice', lambda options: options[0])  # one value only
+    started = time.monotonic()
+    with pytest.raises(RuntimeError, match='budget'):
+        module('f45f5ca7').generate()
+    assert time.monotonic() - started < 20
+
+
+@pytest.mark.parametrize('tid, kwargs', [
+    ('84db8fc4', dict(width=3, height=3)),
+    ('ce039d91', dict(width=4, height=3)),
+    ('d282b262', dict(width=6, height=6)),
+    ('31adaf00', dict(width=30, height=30)),
+])
+def test_hardest_valid_canvases_still_generate_requested_shape(tid, kwargs):
+    """Budgets bound failure only; the hardest valid canvases still succeed."""
+    pairs = []
+    for seed in range(40 if tid == '31adaf00' else 200):
+        random.seed(seed)
+        pairs.append(module(tid).generate(**kwargs))
+    assert {shape(p['input']) for p in pairs} == {(kwargs['height'], kwargs['width'])}
+    check_pairs(tid, pairs[:8])
+
+
+def test_f45f5ca7_minimum_height_still_generates():
+    for seed in range(200):
+        random.seed(seed)
+        p = module('f45f5ca7').generate(height=5)
+        assert len(p['input']) == 5
+        assert {row[0] for row in p['input']} == {0, 2, 3, 4, 8}
+
+
+def test_every_family_accepts_a_requested_shape():
+    """Strict uniform-shape episodes need demonstrations of the query's shape."""
+    requests = {'31adaf00': (7, 23), '84db8fc4': (4, 29), 'ce039d91': (17, 6),
+                '137f0df0': (9, 26), 'd282b262': (30, 8), 'a406ac07': (5, 21),
+                'f45f5ca7': (12, 27)}
+    for tid, (height, width) in requests.items():
+        pairs = []
+        for seed in range(12):
+            random.seed(seed)
+            pairs.append(module(tid).generate(width=width, height=height))
+        assert {shape(p['input']) for p in pairs} == {(height, width)}, tid
+        assert len({json.dumps(p['input']) for p in pairs}) >= 10, tid
+        check_pairs(tid, pairs[:8])

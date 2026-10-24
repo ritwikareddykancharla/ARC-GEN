@@ -16,6 +16,10 @@
 
 import common
 
+# Worst measured acceptance is ~63% per scene (6x6); 1,000 proposals
+# fail with probability < 1e-400 on any valid canvas.
+PROPOSALS = 1000
+
 
 def generate(sizes=None, brows=None, bcols=None, evens=None, odds=None,
              talls=None, width=None, height=None):
@@ -38,7 +42,7 @@ def generate(sizes=None, brows=None, bcols=None, evens=None, odds=None,
     if not (6 <= width <= 30 and 6 <= height <= 30):
       raise ValueError("Random dimensions must be 6..30")
     area = width * height
-    while True:
+    for _ in range(PROPOSALS):
       num_boxes = common.randint(1, max(2, min(9, area // 30)))
       sizes = [common.randint(1, 5) for _ in range(num_boxes)]
       talls = [common.randint(1, 5) for _ in range(num_boxes)]
@@ -53,6 +57,8 @@ def generate(sizes=None, brows=None, bcols=None, evens=None, odds=None,
       else:
         continue
       if 2 * sum(w * t for w, t in zip(sizes, talls)) < area: break
+    else:
+      raise RuntimeError("No valid d282b262 scene within the proposal budget")
     evens, odds = [], []
     for _ in range(num_boxes):
       colors = common.random_colors(2)

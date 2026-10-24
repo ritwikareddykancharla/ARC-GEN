@@ -16,6 +16,10 @@
 
 import common
 
+# Worst measured acceptance is ~18% per scene (30x30); 1,000 proposals
+# fail with probability < 1e-80 on any valid canvas.
+PROPOSALS = 1000
+
 
 def generate(colors=None, width=None, height=None):
   """Returns input and output grids according to the given parameters.
@@ -62,7 +66,7 @@ def generate(colors=None, width=None, height=None):
     if not (5 <= width <= 30 and 5 <= height <= 30):
       raise ValueError("Random dimensions must be 5..30")
     area = width * height
-    while True:
+    for _ in range(PROPOSALS):
       grey = common.randint(62, 80)
       num_boxes = common.randint(1, max(2, min(10, area // 18)))
       sizes = [common.choice([2, 2, 2, 3, 3, 4]) for _ in range(num_boxes)]
@@ -84,6 +88,8 @@ def generate(colors=None, width=None, height=None):
       grid, _ = draw()
       if grid: break
       colors = None
+    else:
+      raise RuntimeError("No valid 31adaf00 scene within the proposal budget")
 
   grid, output = draw()
   return {"input": grid, "output": output}

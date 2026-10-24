@@ -141,9 +141,14 @@ def measure(tid, mod):
 
 def main():
     audit_dir = Path(sys.argv[1]) if len(sys.argv) > 1 else None
-    report = {'baseline_revision': BASELINE, 'samples_per_family': N, 'families': {}}
+    report = {'baseline_revision': BASELINE, 'samples_per_family': N,
+              'seed_scheme': 'sha256(native-domain-20261024:<id>:<i>)[:12]', 'families': {}}
     for tid in FAMILIES:
         entry = {'baseline': measure(tid, load(tid, BASELINE)), 'current': measure(tid, load(tid))}
+        entry['baseline']['source_sha256'] = hashlib.sha256(subprocess.check_output(
+            ['git', 'show', f'{BASELINE}:tasks/task_{tid}.py'])).hexdigest()
+        entry['current']['source_sha256'] = hashlib.sha256(
+            Path(f'tasks/task_{tid}.py').read_bytes()).hexdigest()
         if audit_dir:
             audit = json.loads((audit_dir / f'{tid}.json').read_text())['native']['input']
             entry['audit_20261024_128_samples'] = {k: audit[k] for k in (

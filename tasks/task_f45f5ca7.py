@@ -16,20 +16,29 @@
 
 import common
 
+# At height 5 a proposal shows all five values with probability
+# 5!/5^5 ~ 3.8%; 10,000 proposals fail with probability < 1e-160.
+PROPOSALS = 10000
 
-def generate(colors=None, width=None):
+
+def generate(colors=None, width=None, height=None):
   """Returns input and output grids according to the given parameters.
 
   Args:
     colors: The colors of the pixels, one per row (the grid height).
     width: Grid width; 10 for supplied colors, otherwise random 5..30.
+    height: Optional height (5..30) for a random scene; random otherwise.
   """
 
   if colors is None:
-    height = common.randint(5, 30)
-    while True:
+    height = common.randint(5, 30) if height is None else height
+    if not 5 <= height <= 30:
+      raise ValueError("Random height must be 5..30")
+    for _ in range(PROPOSALS):
       colors = [common.choice([0, 2, 3, 4, 8]) for _ in range(height)]
       if len(set(colors)) == 5: break
+    else:
+      raise RuntimeError("No f45f5ca7 column showing all five values within budget")
     width = common.randint(5, 30) if width is None else width
   width = 10 if width is None else width
   if width < 5:

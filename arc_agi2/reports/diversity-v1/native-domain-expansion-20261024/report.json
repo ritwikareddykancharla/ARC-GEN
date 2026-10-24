@@ -17,10 +17,10 @@
   }
  },
  "checks": {
-  "recertify": "python -m arc_agi2.diversity.recertify 31adaf00 84db8fc4 ce039d91 137f0df0 d282b262 a406ac07 f45f5ca7 -> all passed: 1000 fresh pairs, 8000 D4/palette pair checks, 16 original fixture variants each; 0 sampler rejections.",
-  "regression": "arc_agi2/test_native_domain_expansion_20261024.py (21 tests)",
+  "recertify": "Standard recertify on final sources (31adaf00 84db8fc4 ce039d91 d282b262 f45f5ca7 a406ac07 rerun; 137f0df0 source unchanged since its passing certificate): all 7 passed 1000 fresh pairs, 8000 D4/palette pair checks, 16 original fixture variants; 0 sampler rejections; certificate constructor hashes equal committed source hashes.",
+  "regression": "arc_agi2/test_native_domain_expansion_20261024.py (32 tests, incl. degenerate-RNG budget exhaustion -> RuntimeError for 5 bounded families, hardest valid canvases, requested shapes)",
   "existing": "test_constructor_uniqueness, test_generator_boundaries, test_sampling_domains, test_direct_certificates, diversity/test_hybrid_extensions, test_bounded_scene_sampling: 41 passed",
-  "size_sweep": "Every allowed width x height (3 seeds each) generated without hang; worst single call 0.046 s."
+  "size_sweep": "Every allowed width x height (3 seeds each) generated the requested shape without hang; worst single call 0.033 s."
  },
  "families": {
   "31adaf00": {
@@ -36,13 +36,14 @@
     "fixture_variants_checked": 16,
     "unique_base_inputs": 1000,
     "sampler_rejections": 0,
-    "constructor_sha256": "2aa60ad0aebbbffd4a277aba165dba4d5d00851d7d86d0e547317cf0016d924c",
+    "constructor_sha256": "8164343cd2e3c46e16e2f2e8380f08abbbabfbb63f210c16f6bb855f5da7ef8c",
     "factory_sha256": "0f6fffb87eb57d581cd06bd973f24bd0b9f1d6bd5f2ffe3cb333881c66311e47",
     "previous_constructor_sha256": "74ca69be1b7b08c9fcef49cfb80cb7f64c4716e3de78fe18ac221974e9fcd520",
     "previous_factory_provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
     "previous_factory_limitations": "The program assumes the generator's guarantee that same-size all-background windows are disjoint. If an off-domain input breaks that guarantee, overlapping candidates are resolved by visible reading order, which may not match a rotated reference. The background and fill roles come from the palette rather than from the demonstrations. The fixtures are consistent with this uniform rule, and I found no contradictions. I have not run any tests."
    },
    "baseline_1000": {
+    "source_sha256": "74ca69be1b7b08c9fcef49cfb80cb7f64c4716e3de78fe18ac221974e9fcd520",
     "distinct_shapes": 1,
     "shapes_with_at_least_4_samples": 1,
     "height": {
@@ -70,6 +71,7 @@
     }
    },
    "current_1000": {
+    "source_sha256": "8164343cd2e3c46e16e2f2e8380f08abbbabfbb63f210c16f6bb855f5da7ef8c",
     "distinct_shapes": 517,
     "shapes_with_at_least_4_samples": 43,
     "height": {
@@ -95,6 +97,13 @@
     "input_colour_count_hist": {
      "2": 1000
     }
+   },
+   "proposal_budget": {
+    "budget": 1000,
+    "on_exhaustion": "RuntimeError",
+    "hardest_canvas": "30x30",
+    "measured_acceptance_per_proposal": 0.18,
+    "exhaustion_probability": "<1e-80"
    }
   },
   "84db8fc4": {
@@ -110,13 +119,14 @@
     "fixture_variants_checked": 16,
     "unique_base_inputs": 1000,
     "sampler_rejections": 0,
-    "constructor_sha256": "0d3632e5099c5afd31a5eec0fe9fd06989550f7e622179f537b996ff7437ea3b",
+    "constructor_sha256": "cbfd404cfe5322a71430d0830c1067ac71ae011a4b233bde7cd6d75dd647ff74",
     "factory_sha256": "9bbaef64fb5c525e2b2238c448945484ffe6397ce59794a7d80e6a31f422d435",
     "previous_constructor_sha256": "3d18ad68e5d0997f79c0d06eeff51eb4ccf9147fde570a4a61d3858f6a5df577",
     "previous_factory_provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
     "previous_factory_limitations": "Colour roles come from the palette, not inferred from the demonstrations. The constructor itself only makes 10x10 grids from colours {0,1,3} and rejects scenes where the output has fewer than 4 colours. No constructor defects or tie-breaks were found: the generator's stack-based flood fill gives the same result as component-wise border-touch classification. The fixtures agree with this uniform rule. Not executed or tested by me."
    },
    "baseline_1000": {
+    "source_sha256": "3d18ad68e5d0997f79c0d06eeff51eb4ccf9147fde570a4a61d3858f6a5df577",
     "distinct_shapes": 1,
     "shapes_with_at_least_4_samples": 1,
     "height": {
@@ -144,6 +154,7 @@
     }
    },
    "current_1000": {
+    "source_sha256": "cbfd404cfe5322a71430d0830c1067ac71ae011a4b233bde7cd6d75dd647ff74",
     "distinct_shapes": 553,
     "shapes_with_at_least_4_samples": 36,
     "height": {
@@ -169,6 +180,13 @@
     "input_colour_count_hist": {
      "3": 1000
     }
+   },
+   "proposal_budget": {
+    "budget": 10000,
+    "on_exhaustion": "RuntimeError",
+    "hardest_canvas": "3x3",
+    "measured_acceptance_per_proposal": 0.045,
+    "exhaustion_probability": "<1e-190"
    }
   },
   "ce039d91": {
@@ -183,13 +201,14 @@
     "fixture_variants_checked": 16,
     "unique_base_inputs": 1000,
     "sampler_rejections": 0,
-    "constructor_sha256": "8e29bff067ef248013226dc95a184d9d626aded038add4fdd1a1a1c8e1992ada",
+    "constructor_sha256": "73050bcc2355bb9279cfa9139deb7dc3931ec2beab7f4120b9870c17efa09e31",
     "factory_sha256": "ac3dd99c8b9612abee83726da76e30deb838b3989969e6fa98539a9bd0178d8d",
     "previous_constructor_sha256": "1177c7d08f274e3414a2c382a6729c0c2fcdb255c6eecf8378781833f3116643",
     "previous_factory_provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
     "previous_factory_limitations": "- **Input colours:** the program assumes query inputs contain only palette[0] and palette[5], which is what the generator produces. Any other colour is left unchanged and never counts as a partner. The archived solver instead uses the most common colour as background and tests equality with the mirror cell; on the generator's domain the two give the same result.\n- **Two-stage description:** the rule text describes the output as two canvases, left half then right half. The archived solver's left-half stage is redundant, because its final canvas is the same full symmetric recolouring. Only that final result is produced here.\n- **Fixtures:** no fixture contradictions or constructor defects were found. The generator always uses 10x10 grids, so the odd-width centre-line case is outside the constructor's domain."
    },
    "baseline_1000": {
+    "source_sha256": "1177c7d08f274e3414a2c382a6729c0c2fcdb255c6eecf8378781833f3116643",
     "distinct_shapes": 1,
     "shapes_with_at_least_4_samples": 1,
     "height": {
@@ -217,6 +236,7 @@
     }
    },
    "current_1000": {
+    "source_sha256": "73050bcc2355bb9279cfa9139deb7dc3931ec2beab7f4120b9870c17efa09e31",
     "distinct_shapes": 371,
     "shapes_with_at_least_4_samples": 95,
     "height": {
@@ -242,6 +262,13 @@
     "input_colour_count_hist": {
      "2": 1000
     }
+   },
+   "proposal_budget": {
+    "budget": 1000,
+    "on_exhaustion": "RuntimeError",
+    "hardest_canvas": "width 4 x height 3",
+    "measured_acceptance_per_proposal": 0.29,
+    "exhaustion_probability": "<1e-140"
    }
   },
   "137f0df0": {
@@ -264,6 +291,7 @@
     "previous_factory_limitations": "Assumes the background is palette[0] and that the only other colour in the input is the block colour, as the generator guarantees. The demonstrations are not used. Nothing has been tested. The fixtures and the archived solver agree with a single uniform rule; no contradictions were found."
    },
    "baseline_1000": {
+    "source_sha256": "0c4c37706955e54eca8909dca362bf3dfb62970e82bba7d38f00f46ebed6acd9",
     "distinct_shapes": 1,
     "shapes_with_at_least_4_samples": 1,
     "height": {
@@ -291,6 +319,7 @@
     }
    },
    "current_1000": {
+    "source_sha256": "6cef7d1dec0052f9037d562f3051a6112ba9072736902928cc5612436c17d0df",
     "distinct_shapes": 517,
     "shapes_with_at_least_4_samples": 47,
     "height": {
@@ -316,6 +345,10 @@
     "input_colour_count_hist": {
      "2": 1000
     }
+   },
+   "proposal_budget": {
+    "budget": 1000,
+    "on_exhaustion": "ValueError (infeasible canvas/block request)"
    }
   },
   "d282b262": {
@@ -331,13 +364,14 @@
     "fixture_variants_checked": 16,
     "unique_base_inputs": 1000,
     "sampler_rejections": 0,
-    "constructor_sha256": "1caa93c15ae921d4f1087049a9bca907e6a0a2242db50a07a253ef0180739c66",
+    "constructor_sha256": "82eda5c5004e0483f894cec7a7840d4a9792e3e8421c29e0ac9f2679662064fc",
     "factory_sha256": "d3589cca95940a2b457fe2643adc6f3652fadaafe7bc36060cf26b333488fe54",
     "previous_constructor_sha256": "73afb505f93807df009563185057fe3e670c7d2b42402ed3f59bf3eff5a78e57",
     "previous_factory_provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
     "previous_factory_limitations": "Assumes background is palette[0] and objects are non-touching (guaranteed by the generator's padded non-overlap check). Works on rectangular grids of any size. The generator's rule text mentions only 2x2/3x3 but the constructor produces sizes 2..5; both are handled. No constructor defects or fixture contradictions found; ordering ties between equal leading edges only occur for non-interacting squares and do not affect the result."
    },
    "baseline_1000": {
+    "source_sha256": "73afb505f93807df009563185057fe3e670c7d2b42402ed3f59bf3eff5a78e57",
     "distinct_shapes": 1,
     "shapes_with_at_least_4_samples": 1,
     "height": {
@@ -371,6 +405,7 @@
     }
    },
    "current_1000": {
+    "source_sha256": "82eda5c5004e0483f894cec7a7840d4a9792e3e8421c29e0ac9f2679662064fc",
     "distinct_shapes": 491,
     "shapes_with_at_least_4_samples": 51,
     "height": {
@@ -403,10 +438,17 @@
      "9": 86,
      "10": 30
     }
+   },
+   "proposal_budget": {
+    "budget": 1000,
+    "on_exhaustion": "RuntimeError",
+    "hardest_canvas": "6x6",
+    "measured_acceptance_per_proposal": 0.63,
+    "exhaustion_probability": "<1e-400"
    }
   },
   "a406ac07": {
-   "change": "Canvas: 10x10 square -> independent height/width (k+1)..30. Colour count 4..5 -> 2..9. Run lengths are random partitions (1..27 observed) instead of near-uniform 2..3 runs.",
+   "change": "Canvas: 10x10 square -> independent height/width (k+1)..30. Colour count 4..5 -> 2..9. Run lengths are random partitions (1..28 observed) instead of near-uniform 2..3 runs. Optional width/height request a shape (colour count drawn from what fits).",
    "remaining": [
     "Last run stays >=2 on each ruler so the corner block is visible, as in the original.",
     "Rulers stay on the bottom row/right column in canonical orientation (D4 augmentation covers others)."
@@ -418,13 +460,14 @@
     "fixture_variants_checked": 16,
     "unique_base_inputs": 1000,
     "sampler_rejections": 0,
-    "constructor_sha256": "588d161f416a02f2ab3c037b6275f461d401b30d2f2df8bc365bbef7b9f5c137",
+    "constructor_sha256": "a06ca04575f74c25ccc477f563e9906a4cbbb7e652c4c29829dd7d6ded95e91f",
     "factory_sha256": "55dbd3e594a4a7fff744cf79d1a4f0f2f28a0533782a3af256ac571b0359c0ae",
     "previous_constructor_sha256": "a6ce6e252f510796eea918da51cd77acc7f7ceb307d2bf4607f573be3572f90e",
     "previous_factory_provenance": "Host-authored direct program with constructor/source review, source restrictions and execution verification.",
     "previous_factory_limitations": "Requires complete edge legends, distinct nonbackground band colours and the original single background role; these are constructor invariants."
    },
    "baseline_1000": {
+    "source_sha256": "a6ce6e252f510796eea918da51cd77acc7f7ceb307d2bf4607f573be3572f90e",
     "distinct_shapes": 1,
     "shapes_with_at_least_4_samples": 1,
     "height": {
@@ -453,27 +496,28 @@
     }
    },
    "current_1000": {
-    "distinct_shapes": 540,
-    "shapes_with_at_least_4_samples": 41,
+    "source_sha256": "a06ca04575f74c25ccc477f563e9906a4cbbb7e652c4c29829dd7d6ded95e91f",
+    "distinct_shapes": 514,
+    "shapes_with_at_least_4_samples": 52,
     "height": {
      "min": 3,
      "max": 30,
-     "mean": 18.217,
+     "mean": 18.296,
      "distinct": 28
     },
     "width": {
      "min": 3,
      "max": 30,
-     "mean": 18.192,
+     "mean": 18.18,
      "distinct": 28
     },
-    "rectangular_rate": 0.958,
-    "large_rate": 0.642,
+    "rectangular_rate": 0.955,
+    "large_rate": 0.665,
     "aspect_ratio": {
      "min": 1.0,
      "max": 9.333,
-     "mean": 1.844,
-     "distinct": 227
+     "mean": 1.863,
+     "distinct": 222
     },
     "input_colour_count_hist": {
      "3": 121,
@@ -485,10 +529,11 @@
      "9": 122,
      "10": 128
     }
-   }
+   },
+   "proposal_budget": "no rejection loop"
   },
   "f45f5ca7": {
-   "change": "Canvas: fixed 10x10 -> height 5..30 (number of rows/pixels) and width 5..30 independently.",
+   "change": "Canvas: fixed 10x10 -> height 5..30 (number of rows/pixels) and width 5..30 independently. Optional height requests a shape.",
    "remaining": [
     "Colour->offset legend (8:1, 2:2, 4:3, 3:4) is the rule and stays fixed; width only adds empty columns.",
     "Each grid still shows all five values (including empty rows)."
@@ -500,13 +545,14 @@
     "fixture_variants_checked": 16,
     "unique_base_inputs": 1000,
     "sampler_rejections": 0,
-    "constructor_sha256": "209b010dfc8094fdcead95a17417476a06d70b78c81310e60f8d2bf18a0b26a3",
+    "constructor_sha256": "398ea3c45b496763a40d7e9503e5b451b5967918517eb2c414d326dfdf312683",
     "factory_sha256": "8dbe9498e372ba233838ee41b54391a9603e9d84b13e79a2a1aa99a112a6ed18",
     "previous_constructor_sha256": "3a67776ca2a4877dbcd144fe8b4b2c229ccd83147ee9dcd5932a020b348c8122",
     "previous_factory_provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
     "previous_factory_limitations": "The colour-to-distance table is an arbitrary legend in the constructor (offsets list indexed by colour), not derived from the visible scene. It is therefore hard-coded via the palette rather than inferred from the demonstrations. Colours outside {2,3,4,8} (none occur in the generator's domain) are assigned offset 0, so they stay on the source edge; this follows the archived solver's fallback. The program assumes the background is palette[0]; the generator always uses 0 as background. Every generated scene has exactly one cell per row on the source line, so collisions cannot occur. If they did, cells would be painted in increasing offset order. No constructor defects or fixture contradictions were found: all three train pairs and the test pair agree with the uniform table. I have not run any tests."
    },
    "baseline_1000": {
+    "source_sha256": "3a67776ca2a4877dbcd144fe8b4b2c229ccd83147ee9dcd5932a020b348c8122",
     "distinct_shapes": 1,
     "shapes_with_at_least_4_samples": 1,
     "height": {
@@ -534,6 +580,7 @@
     }
    },
    "current_1000": {
+    "source_sha256": "398ea3c45b496763a40d7e9503e5b451b5967918517eb2c414d326dfdf312683",
     "distinct_shapes": 528,
     "shapes_with_at_least_4_samples": 43,
     "height": {
@@ -559,13 +606,21 @@
     "input_colour_count_hist": {
      "5": 1000
     }
+   },
+   "proposal_budget": {
+    "budget": 10000,
+    "on_exhaustion": "RuntimeError",
+    "hardest_canvas": "height 5",
+    "measured_acceptance_per_proposal": 0.038,
+    "exhaustion_probability": "<1e-160 (analytic 5!/5^5)"
    }
   }
  },
  "uncertainty": [
   "Measurements are 1,000-sample statistics, not guarantees about every exported episode.",
-  "All originals use one fixed canvas (uniform/seen shape profile). With ~370-550 distinct shapes per 1,000 samples, only 36-95 shapes had >=4 samples, so the uniform-shape episode policy will often fall back unless pools are large or shape-matched demos are requested via the new width/height parameters.",
+  "Strict shape contract: every original task has one input shape across demos and query. In 1,000 independent samples only 36-95 of ~370-550 shapes occurred >=4 times, so independently drawn pools will leave many queries without three distinct same-shape demonstrations (strict-sampling shortfalls; the contract must not be relaxed). Shape-conditioned context sampling is needed: all seven constructors accept a requested shape (tested). The root sampler's shortfall handling and rates were not inspected here and no fallback behaviour is claimed.",
+  "Proposal budgets come from measured worst-case acceptance (finite samples); exhaustion bounds are estimates except f45f5ca7 (analytic).",
   "These families are not in prepare.py's native-repair list or admission.json (not edited here); they need root integration before entering the supplement.",
-  "Recertify overwrote direct_factories/<id>.json; earlier provenance/limitations text is preserved here under previous_factory_*."
+  "Recertify overwrote direct_factories/<id>.json; earlier provenance/limitations text from cf79bbc is preserved here under previous_factory_*."
  ]
 }

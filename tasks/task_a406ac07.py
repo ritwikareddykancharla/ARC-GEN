@@ -17,13 +17,15 @@
 import common
 
 
-def generate(colors=None, widths=None, heights=None):
+def generate(colors=None, widths=None, heights=None, width=None, height=None):
   """Returns input and output grids according to the given parameters.
 
   Args:
     colors: A list of colors to use.
     widths: A list of widths to use (their sum is the grid width).
     heights: A list of heights to use (their sum is the grid height).
+    width: Optional width (3..30) for a random scene; random otherwise.
+    height: Optional height (3..30) for a random scene; random otherwise.
   """
 
   def partition(total, parts):
@@ -34,10 +36,19 @@ def generate(colors=None, widths=None, heights=None):
     return runs
 
   if colors is None:
-    num_colors = common.randint(2, 9)
+    if width is None and height is None:
+      num_colors = common.randint(2, 9)
+      width = common.randint(num_colors + 1, 30)
+      height = common.randint(num_colors + 1, 30)
+    else:
+      # Requested shape (e.g. for shape-matched demonstrations): same domain,
+      # with the colour count drawn from what that shape can hold.
+      width = common.randint(3, 30) if width is None else width
+      height = common.randint(3, 30) if height is None else height
+      if not (3 <= width <= 30 and 3 <= height <= 30):
+        raise ValueError("Random dimensions must be 3..30")
+      num_colors = common.randint(2, min(9, width - 1, height - 1))
     colors = common.random_colors(num_colors)
-    width = common.randint(num_colors + 1, 30)
-    height = common.randint(num_colors + 1, 30)
     widths = partition(width, num_colors)
     heights = partition(height, num_colors)
 

@@ -1,6 +1,7 @@
 {
  "baseline_revision": "cf79bbcdbccb62f6af3f04c5b4933159ef175fc7",
  "samples_per_family": 1000,
+ "seed_scheme": "sha256(native-domain-20261024:<id>:<i>)[:12]",
  "families": {
   "31adaf00": {
    "baseline": {
@@ -51,7 +52,8 @@
       "3": 1349,
       "4": 19
      }
-    }
+    },
+    "source_sha256": "74ca69be1b7b08c9fcef49cfb80cb7f64c4716e3de78fe18ac221974e9fcd520"
    },
    "current": {
     "samples": 1000,
@@ -108,7 +110,8 @@
       "4": 644,
       "5": 1
      }
-    }
+    },
+    "source_sha256": "8164343cd2e3c46e16e2f2e8380f08abbbabfbb63f210c16f6bb855f5da7ef8c"
    },
    "audit_20261024_128_samples": {
     "shapes": {
@@ -202,7 +205,8 @@
       "12": 2,
       "13": 2
      }
-    }
+    },
+    "source_sha256": "3d18ad68e5d0997f79c0d06eeff51eb4ccf9147fde570a4a61d3858f6a5df577"
    },
    "current": {
     "samples": 1000,
@@ -361,7 +365,8 @@
       "29": 2,
       "30": 1
      }
-    }
+    },
+    "source_sha256": "cbfd404cfe5322a71430d0830c1067ac71ae011a4b233bde7cd6d75dd647ff74"
    },
    "audit_20261024_128_samples": {
     "shapes": {
@@ -479,7 +484,8 @@
       "36": 3,
       "38": 3
      }
-    }
+    },
+    "source_sha256": "1177c7d08f274e3414a2c382a6729c0c2fcdb255c6eecf8378781833f3116643"
    },
    "current": {
     "samples": 1000,
@@ -861,7 +867,8 @@
       "272": 1,
       "274": 1
      }
-    }
+    },
+    "source_sha256": "73050bcc2355bb9279cfa9139deb7dc3931ec2beab7f4120b9870c17efa09e31"
    },
    "audit_20261024_128_samples": {
     "shapes": {
@@ -941,7 +948,8 @@
       "2": 694,
       "3": 1306
      }
-    }
+    },
+    "source_sha256": "0c4c37706955e54eca8909dca362bf3dfb62970e82bba7d38f00f46ebed6acd9"
    },
    "current": {
     "samples": 1000,
@@ -1072,7 +1080,8 @@
       "5": 223,
       "6": 190
      }
-    }
+    },
+    "source_sha256": "6cef7d1dec0052f9037d562f3051a6112ba9072736902928cc5612436c17d0df"
    },
    "audit_20261024_128_samples": {
     "shapes": {
@@ -1181,7 +1190,8 @@
      "hist": {
       "0": 1000
      }
-    }
+    },
+    "source_sha256": "73afb505f93807df009563185057fe3e670c7d2b42402ed3f59bf3eff5a78e57"
    },
    "current": {
     "samples": 1000,
@@ -1340,7 +1350,8 @@
       "8": 17,
       "9": 7
      }
-    }
+    },
+    "source_sha256": "82eda5c5004e0483f894cec7a7840d4a9792e3e8421c29e0ac9f2679662064fc"
    },
    "audit_20261024_128_samples": {
     "shapes": {
@@ -1418,31 +1429,32 @@
       "6": 31,
       "7": 2
      }
-    }
+    },
+    "source_sha256": "a6ce6e252f510796eea918da51cd77acc7f7ceb307d2bf4607f573be3572f90e"
    },
    "current": {
     "samples": 1000,
-    "distinct_shapes": 540,
-    "shapes_with_at_least_4_samples": 41,
+    "distinct_shapes": 514,
+    "shapes_with_at_least_4_samples": 52,
     "height": {
      "min": 3,
      "max": 30,
-     "mean": 18.217,
+     "mean": 18.296,
      "distinct": 28
     },
     "width": {
      "min": 3,
      "max": 30,
-     "mean": 18.192,
+     "mean": 18.18,
      "distinct": 28
     },
-    "rectangular_rate": 0.958,
-    "large_rate": 0.642,
+    "rectangular_rate": 0.955,
+    "large_rate": 0.665,
     "aspect_ratio": {
      "min": 1.0,
      "max": 9.333,
-     "mean": 1.844,
-     "distinct": 227
+     "mean": 1.863,
+     "distinct": 222
     },
     "input_colour_count_hist": {
      "3": 121,
@@ -1472,35 +1484,37 @@
     },
     "run_lengths": {
      "hist": {
-      "1": 3620,
-      "2": 2487,
-      "3": 1471,
-      "4": 986,
-      "5": 613,
-      "6": 431,
-      "7": 315,
-      "8": 250,
-      "9": 193,
-      "10": 129,
-      "11": 94,
-      "12": 71,
-      "13": 63,
-      "14": 45,
-      "15": 39,
-      "16": 37,
-      "17": 22,
-      "18": 21,
-      "19": 19,
-      "20": 6,
-      "21": 6,
-      "22": 11,
+      "1": 3638,
+      "2": 2520,
+      "3": 1431,
+      "4": 925,
+      "5": 653,
+      "6": 455,
+      "7": 306,
+      "8": 245,
+      "9": 200,
+      "10": 118,
+      "11": 110,
+      "12": 60,
+      "13": 56,
+      "14": 44,
+      "15": 42,
+      "16": 29,
+      "17": 16,
+      "18": 23,
+      "19": 22,
+      "20": 10,
+      "21": 10,
+      "22": 7,
       "23": 8,
-      "24": 4,
-      "25": 2,
-      "26": 3,
-      "27": 2
+      "24": 7,
+      "25": 3,
+      "26": 7,
+      "27": 1,
+      "28": 2
      }
-    }
+    },
+    "source_sha256": "a06ca04575f74c25ccc477f563e9906a4cbbb7e652c4c29829dd7d6ded95e91f"
    },
    "audit_20261024_128_samples": {
     "shapes": {
@@ -1561,7 +1575,8 @@
      "hist": {
       "10": 1000
      }
-    }
+    },
+    "source_sha256": "3a67776ca2a4877dbcd144fe8b4b2c229ccd83147ee9dcd5932a020b348c8122"
    },
    "current": {
     "samples": 1000,
@@ -1623,7 +1638,8 @@
       "29": 38,
       "30": 40
      }
-    }
+    },
+    "source_sha256": "398ea3c45b496763a40d7e9503e5b451b5967918517eb2c414d326dfdf312683"
    },
    "audit_20261024_128_samples": {
     "shapes": {

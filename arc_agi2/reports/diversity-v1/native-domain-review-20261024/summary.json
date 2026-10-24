@@ -1,5 +1,5 @@
 {
- "baseline_commit": "4f2ec866610ed91927c90a6935a589540cc9ca77",
+ "baseline_commit": "e64baab92377355d6f9335ddf10a0fbda1e0e6a3",
  "ordering_commit": "5436f3fe035f261cdcf7996565c108148efa37fb",
  "audit_fork_commit": "cdf50ed9c057c6c11b679fc3e67243bcc0ffc597",
  "worklist": "/Users/ritwika/projects/arc-agi2/docs/hybrid-generator-review/family-worklist.json",
@@ -20,7 +20,7 @@
   "current": 724,
   "unavailable": 5
  },
- "audit_matches_current_source": 698,
+ "audit_matches_current_source": 694,
  "audit_stale_ids": [
   "03560426",
   "0becf7df",
@@ -33,6 +33,9 @@
   "7e2bad24",
   "7e576d6e",
   "94414823",
+  "e0fb7511",
+  "f0df5ff0",
+  "f3cdc58f",
   "137f0df0",
   "31adaf00",
   "84db8fc4",
@@ -41,6 +44,7 @@
   "ce039d91",
   "d282b262",
   "f45f5ca7",
+  "0c786b71",
   "195ba7dc",
   "281123b4",
   "31d5ba1a",
@@ -117,6 +121,7 @@
    "b7fb29bc",
    "bb52a14b",
    "db7260a4",
+   "f0df5ff0",
    "f3e62deb",
    "fd02da9e",
    "15696249",
@@ -215,7 +220,6 @@
    "d94c3b52",
    "da2b0fe3",
    "dc46ea44",
-   "e0fb7511",
    "e45ef808",
    "e57337a4",
    "e5c44e8f",
@@ -223,7 +227,6 @@
    "e84fef15",
    "e9b4f6fc",
    "edcc2ff0",
-   "f0df5ff0",
    "f1bcbc2c",
    "f28a3cbb",
    "f3cdc58f",
@@ -231,7 +234,6 @@
    "ff2825db",
    "31adaf00",
    "aaecdb9a",
-   "0c786b71",
    "27f8ce4f",
    "337b420f",
    "3979b1a8",
@@ -294,11 +296,13 @@
    "996ec1f3",
    "d304284e",
    "dc2aa30b",
+   "e0fb7511",
    "e2092e0c",
    "e99362f0",
    "ea9794b1",
    "00576224",
    "0692e18c",
+   "0c786b71",
    "0c9aba6e",
    "195ba7dc",
    "281123b4",
@@ -335,8 +339,8 @@
  },
  "reviewed_axis_dispositions": {
   "dimensions": {
-   "broadly_variable": 49,
-   "incidental_restriction": 135,
+   "broadly_variable": 53,
+   "incidental_restriction": 131,
    "mixed": 35,
    "unknown": 5
   },
@@ -353,9 +357,9 @@
    "broadly_variable": 33
   },
   "density_colours": {
-   "intrinsic_or_rule_supported": 77,
-   "mixed": 99,
-   "incidental_restriction": 32,
+   "intrinsic_or_rule_supported": 76,
+   "mixed": 101,
+   "incidental_restriction": 31,
    "broadly_variable": 16
   },
   "rule_parameters": {
@@ -366,15 +370,15 @@
    "unknown": 3
   },
   "demonstration_context": {
-   "intrinsic_or_rule_supported": 193,
-   "mixed": 30,
+   "intrinsic_or_rule_supported": 191,
+   "mixed": 32,
    "unknown": 1
   }
  },
  "reviewed_patch_priority": {
-  "low": 36,
-  "medium": 126,
-  "high": 49,
+  "low": 38,
+  "medium": 123,
+  "high": 50,
   "none": 13
  },
  "reviewed_batches": [
@@ -397,7 +401,11 @@
   "50c07299",
   "7e2bad24",
   "7e576d6e",
-  "94414823"
+  "94414823",
+  "e0fb7511",
+  "f0df5ff0",
+  "f3cdc58f",
+  "0c786b71"
  ],
  "review_history_ids": [
   "03560426",
@@ -410,7 +418,11 @@
   "50c07299",
   "7e2bad24",
   "7e576d6e",
-  "94414823"
+  "94414823",
+  "e0fb7511",
+  "f0df5ff0",
+  "f3cdc58f",
+  "0c786b71"
  ],
  "stale_reviewed_constructors": [],
  "pending_batches": [

@@ -19,6 +19,12 @@ current source, fixtures, factories, verifiers, certificates and repair
 measurements; see [Rereview of 11 repaired constructors](#rereview-of-11-repaired-constructors-native-batches-b-and-c).
 The superseded reviews are kept verbatim in `review_history.json`.
 
+**Rereview (2026-10-25):** 4 more reviews (`e0fb7511` in batch 3; `0c786b71`,
+`f0df5ff0` and `f3cdc58f` in batch 4) went stale when native batch E
+(`a7edea3`) changed their constructors. They were reviewed again at the frozen
+integrated HEAD `e64baab`; see [Rereview of 4 repaired constructors](#rereview-of-4-repaired-constructors-native-batch-e).
+`review_history.json` now holds 15 superseded reviews.
+
 ## Files
 
 | File | Content |
@@ -26,8 +32,8 @@ The superseded reviews are kept verbatim in `review_history.json`.
 | `extract.py` | Reproducible extraction, merge and validation (`--check` validates without writing) |
 | `inventory.jsonl` | One record per family (729), sorted by review rank |
 | `semantic_reviews.json` | Current hand-written semantic reviews (batches 1–6 and 22, 224 families), each bound to a constructor sha256 and to the source at its `baseline_commit` |
-| `review_history.json` | Superseded reviews (11 families), each kept verbatim with its constructor binding and the mechanical record it was written against |
-| `probes/` | Small read-only, seeded measurement scripts cited by the batch-2 to batch-6 and batch-22 reviews and the rereview (`rereview_batch_bc.py`) |
+| `review_history.json` | Superseded reviews (15 families: 11 from batches B/C, 4 from batch E), each kept verbatim with its constructor binding and the mechanical record it was written against |
+| `probes/` | Small read-only, seeded measurement scripts cited by the batch-2 to batch-6 and batch-22 reviews and the rereviews (`rereview_batch_bc.py`, `rereview_batch_e.py`) |
 | `summary.json` | Counts, ID lists, all batches, reviewed and pending batch numbers, the next pending batch, rereviewed and history IDs, validation errors (currently none) |
 
 ```bash
@@ -56,6 +62,10 @@ Validation also checks:
   where it was first written and at its archive commit;
 - the hash it records is the constructor at its review baseline and just
   before the repair commit;
+- the replacing commit is the one that changed the constructor
+  (`last_commit_with_this_source` is `replaced_by_commit^`), and
+  `replacement_constructor_sha256` is the source at that commit (added with the
+  batch-E rereview; the 11 earlier entries pass it unchanged);
 - its mechanical record equals the inventory line at the review commit;
 - the current rereview's `supersedes` link points at it;
 - every rereview has a complete `repair_delta` and existing `evidence` paths.
@@ -68,7 +78,17 @@ the seeded wrong-selector cases are listed in the batch-22 section.
 
 ## Provenance
 
-- **Batch 22 (latest, reviewed out of order):** records bind to `59d03df`,
+- **Batch-E rereview (latest):** the 4 records bind to the worktree HEAD
+  `e64baab92377355d6f9335ddf10a0fbda1e0e6a3` (the batch-22 report commit). It
+  contains native batch E (`4909572`, `c35ae5a`, `a7edea3`, `c0effbf`,
+  `4895174`, `3a08f5f`, `95ffc02`), and root's registration and admission
+  refresh `96be803`. Every other record keeps its own baseline.
+  - The `inventory.jsonl` and `summary.json` committed in `e64baab` were
+    generated on the batch-22 lane at `4f2ec86`, before batch E was
+    integrated. So at `e64baab` they still showed the pre-repair E hashes and
+    "0 stale", while `extract.py --check` at that commit reported the 4 E
+    records stale. Both files are now regenerated at `e64baab`.
+- **Batch 22 (reviewed out of order):** records bind to `59d03df`,
   like batch 6. The worktree HEAD at extraction was the batch-6 report commit
   `4f2ec86`, which changed no constructor. All 32 constructors are identical
   from the ordering commit `5436f3f` through `59d03df` and HEAD, and equal the
@@ -95,11 +115,12 @@ the seeded wrong-selector cases are listed in the batch-22 section.
     constructor, and 16 were stale: the seven `1ed7790` repairs, plus
     `aaecdb9a`, `45bbe264`, `0934a4d8`, `00dbd492`, `3a301edc`, `009d5c81`,
     `3194b014`, `09c534e7` and `ecb67b6d`.
-  - Now 698 of 729 match. The 11 rereviewed families are also stale, because
+  - Now 694 of 729 match. The 11 B/C rereviewed families are also stale, because
     the audit describes their pre-repair constructors. Their current domains
     come from the repair reports and `probes/rereview_batch_bc.py`. The four
     native batch-D families (`db16125`) are stale for the same reason; see
-    batch 5. All 31 must be remeasured.
+    batch 5. So are the four batch-E families (`a7edea3`); see the batch-E
+    rereview. All 35 must be remeasured.
 - **Selection:** `docs/hybrid-generator-review/family-worklist.json` with
   `rearc_overlap == false`. This gives exactly 729 IDs, and validation checks
   them against this list.
@@ -277,6 +298,211 @@ The other 115 reviews, including the `782b5218` erratum, are byte-identical to
   - `03560426`: whether the row must reach the right edge.
 - **Sample statistics:** every density, tie and timing figure above is a
   seeded sample from one local run, not an audit.
+
+## Rereview of 4 repaired constructors (native batch E)
+
+**Scope:** `e0fb7511` (batch 3, first reviewed at `f1b8bb9`, committed in
+`25c8140`), and `0c786b71`, `f0df5ff0` and `f3cdc58f` (batch 4, first reviewed
+at `a59e28a`, committed in `24493e3`). Each old review's constructor hash is
+the source at its baseline and at `a7edea3^`. Each review text was
+byte-identical from its first commit through `e64baab`.
+
+Native batch E was built on a lane and integrated with new hashes:
+
+| Lane | Integrated | Scope |
+|---|---|---|
+| `05db160` | `4909572` | fixed-colour pair checkers for e0fb7511 and f3cdc58f |
+| `ce8c79d` | `c35ae5a` | `mirror_neighbourhood_evidence.py` gates and `colour_evidence` dispatch |
+| `b9480e9` | `a7edea3` | constructors, recertified factory records, tests, evidence |
+| `51e67f2` | `3a08f5f` | e0fb7511 component-size threshold candidates (final gate `98e1b2ea`) |
+| `9996de4` | `95ffc02` | evidence and context-audit refresh on the final gate |
+
+The lane tip `9996de4` and HEAD are byte-identical for every E constructor,
+factory, certificate, gate and batch-E report file. Root then registered the
+four families in `prepare.REPAIRED` and refreshed the `admission.json` pins
+(`96be803`).
+
+**What was read, for each family:**
+- the whole current constructor, the source at the old baseline, and the exact
+  `a7edea3` patch;
+- every canonical train/test pair;
+- the direct factory (unchanged since before the old review: `871a44a1`,
+  `66678c1e`, `d3eb4c59`, `81c2164b`);
+- the production pair verifier: the archived reference for `0c786b71` and
+  `f0df5ff0` (colour-agnostic and fixed-colour respectively), and
+  `verified_rules.native_zero_adjacency` / `fixed_colour_histogram` for
+  `e0fb7511` / `f3cdc58f`;
+- the final `mirror_neighbourhood_evidence.py` and its `colour_evidence.py`
+  dispatch (line 209);
+- both certificate records per family, including merged draft notes;
+- `native-batch-e/` README, `batch-e-evidence.json`, `context-audit.json`, the
+  pre-threshold snapshots and the verifier evidence;
+- `prepare.py`, `sampler.admission()`, `direct_certificates.py` and
+  `admission.json`.
+
+**Code run:**
+- the existing focused tests, once: `test_native_batch_e.py`,
+  `test_mirror_neighbourhood_evidence.py` and `test_e0_f3_verifiers.py`, 80
+  passed at `e64baab`;
+- a new read-only, seeded probe, `probes/rereview_batch_e.py`. Two runs gave
+  byte-identical output (sha256 `4bca2dc5…` at `e64baab`; the output records
+  HEAD, so the hash differs at other commits; no timing section). It does not
+  repeat the batch-E coverage or context-audit runs. It adds:
+  - production lookups at HEAD;
+  - canonical latent parameters checked against the **current random path**,
+    not only explicit replay;
+  - restrictions that remain in the default sampler;
+  - plausible competitor rules that no gate enumerates.
+
+No certificate was rerun or required: constructors and factories are unchanged
+since certification, and the evidence pins equal HEAD.
+
+### Per-family result
+
+| ID | Priority (old → new) | Repair delta (implemented in batch E) | Still restricted or open |
+|---|---|---|---|
+| `0c786b71` | medium → low | Input H, W 2..15 (explicit 1..15), output up to 30×30; anchor gate | Pool fixed at 3 colours from 1..9 (black never sampled; 1-colour inputs ≈0.1%) |
+| `e0fb7511` | medium → low | W, H 6..30; per-scene density 0.15..0.35; area-scaled azure floor; bounded loop; fixed-colour checker; connectivity × threshold gate | Floor removes scenes marking under ≈7.7% of the canvas (46/400 draws retried); 6×6 needs gate retries (11/250) |
+| `f0df5ff0` | medium → **high** | W, H 6..30; seeds 2..area-scaled max (2..29 measured); confetti 0.3..0.5; bounded loop; square-vs-cross gate | **Canonical `train[1]` is unreachable:** it has 7 confetti colours, but line 150 `choices(range(2,10), 6)` gives ≤ 6 (legacy too; missed by the old review). Edge seeds and overlaps stay excluded |
+| `f3cdc58f` | medium → medium | W, H 4..30; placements 2..min(H, 4H//5), bars to 24; bounded loop; fixed-legend checker | **No gate:** an ascending-count column legend fits all 3 demos and changes the query in 67/2000 4×4 contexts (6/2000 at default shapes). Bars above 0.8 H never sampled; ink density uncontrolled across widths |
+
+Every old proposal (sample sizes, counts and densities) is implemented. None is
+repeated. The new priorities come from findings the old reviews did not have:
+- `f0df5ff0` is now `high`, because a canonical input is unreachable. This is
+  the same criterion as batches 5, 6 and 22. The fix is narrow: line 150 only.
+- `f3cdc58f` is `medium` for gate work, not constructor work. It follows the
+  `3d31c5b3` precedent: 2.6% ungated ambiguity was `medium`.
+
+Disposition counts for the 4 current rereviews:
+
+| Axis | incidental | mixed | intrinsic / rule-supported | broadly variable | unknown |
+|---|---|---|---|---|---|
+| dimensions | 0 | 0 | 0 | 4 | 0 |
+| objects | 0 | 2 | 1 | 1 | 0 |
+| placement | 0 | 1 | 1 | 2 | 0 |
+| density / colours | 0 | 4 | 0 | 0 | 0 |
+| rule parameters | 0 | 0 | 4 | 0 | 0 |
+| demonstration context | 0 | 2 | 2 | 0 | 0 |
+
+The old reviews had all four dimensions `incidental`. Two other axes changed
+from `intrinsic` to `mixed`:
+- **Demonstration context** for `e0fb7511` and `f3cdc58f`: identifiability now
+  depends on a gate (e0), or on a gate that is missing (f3).
+- **Density/colours** for `f3cdc58f`: the legend is still intrinsic, but ink
+  density across widths is uncontrolled.
+
+### Retained constraints, sampling minima and measurable restrictions
+
+The records keep these three kinds apart.
+
+**Retained intrinsic or fixture-faithful constraints:**
+- the mirror anchor (0c);
+- 4-adjacency and the 0/1/8 roles (e0);
+- the 3×3 window, confetti preservation, no blue confetti, interior seeds and
+  disjoint windows (f0). Edge seeds and overlaps are undemonstrated;
+- all four colours present, the colour-value legend and W ≥ 4 (f3).
+
+**Sampling minima:** these are choices, not semantics, and explicit arguments
+go below them.
+- Random minimum dimensions: 2 (0c), 6 (e0, f0) and 4 (f3).
+- The clarity floors:
+  - e0: `max(2, round(13·HW/169))` azure cells;
+  - f0: at least 3 visible blue cells per window;
+  - f3: all four colours survive.
+- Retry budgets: 200, 200 and 100.
+
+**Remaining measurable restrictions** (probe, seed 0, N = 400 unless noted):
+- 0c: a 3-colour pool (395/400 three-colour, 5/400 two-colour, 0/400
+  one-colour).
+- e0: realised azure fraction ≥ 0.075; random density 0.15..0.35.
+- f0: ≤ 6 distinct confetti colours (median 4; canonical 4, 7, 6, 6). Seeds
+  stay at ≤ 0.5 of window capacity, and default draws never use the lattice
+  placer (0 of the 625 6..30 shapes).
+- f3: max bar/H ≤ 0.8 in 400/400 (no random height allows a full-height bar);
+  ink density 0.023–0.49.
+
+### Certificates, gates and production status
+
+These are three different things, and the records keep them apart.
+
+1. **Repair-time snapshots (upstream lane).** The following are the batch-E
+   lane's measurements:
+   - certificates: 1000 fresh / 8000 D4 / 16 fixtures, 0 rejections;
+   - coverage: 194/515/497/541 input shapes per 1000 draws;
+   - gate-aware context audit: 250/250 queries, default and min corner.
+
+   Every pin in `batch-e-evidence.json` and `context-audit.json` equals the HEAD
+   file: constructor, factory, factory certificate,
+   `mirror_neighbourhood_evidence` 98e1b2ea, `colour_evidence` 6789d3d8,
+   `verified_rules` a54743d7, `program_targets` 88298f33 and harness. The
+   certificates' `auditor_sha256` 1e194cb8 is the current `recertify.py`.
+
+   Three dependency details stay explicit:
+   - The certificates predate the final threshold gate (`3a08f5f`).
+     `recertify.check` does not run gates, so gate coverage rests on the
+     refreshed context audit only.
+   - `verifier-evidence-e0fb7511-f3cdc58f.json` pins the current
+     `verified_rules` but the **legacy** constructors `3857588f` and
+     `763478e5`. Its 0/1000 and adversarial results are legacy-draw results.
+     `batch-e-evidence.json` gives 0 disagreements on 1000 current draws.
+   - The certificates' merged `draft_notes` carry an independent review bound
+     to the pre-repair constructors (e0, f0 and f3). Their statements are
+     historical: "1-in-8 density", "not gated", "only 10x10".
+2. **Current production registration and admission (HEAD `e64baab`).**
+   - All four are in `prepare.REPAIRED` (line 38, `96be803`). They are
+     supplement entries, not RE-ARC `admission.json` entries.
+   - All 471 `admission.json` target pins equal the HEAD files, so
+     `sampler.admission()` loads.
+   - `certified_factory_source` returns a program for all 8 D4 transforms.
+   - The gate dispatches for 0c, e0 and f0, and canonical demos pass it. f3 is
+     ungated.
+3. **Unknown: full `prepare` exports.** No unmodified `prepare` 200/20 export
+   for these families is recorded in this worktree, and batch E ran none. So
+   these are unmeasured:
+   - same-shape support (batch E estimated 147/55/45/37 shapes with ≥ 4 pairs
+     per 1000 draws);
+   - gate retry rates under `prepare`;
+   - validation query identities.
+
+   Registration is not an export, and no smoke test or certificate makes a
+   family release-ready. `release_ready` stays false.
+
+**Stale side records (reported, not edited):**
+- `arc_agi2/reports/diversity-v1/family-status.csv` (last changed in
+  `d71ead8`) still lists all four with their pre-repair constructor hashes and
+  `native_repaired=False`.
+- The 128-sample audit is stale for all four.
+
+### Other stale or soon-stale constructors (not reviewed here)
+
+At `e64baab`, `extract.py --check` reports 0 stale reviews. No F, G or H
+repair is integrated in HEAD. But three lane branches change constructors of
+batch-5-reviewed families:
+- `hybrid-claude-native-f-20261025`: `27f8ce4f`, `48f8583b` and `5b6cbef5`;
+- `hybrid-claude-native-g-20261025`: `4cd1b7b2` and `8ba14f53`;
+- `hybrid-native-h-20261025`: `6d1d5c90`.
+
+Those six reviews will go stale when root integrates the lanes. They must then
+be rereviewed the same way. Their review is neither faked nor pre-empted here,
+and validation is unchanged for them.
+
+### Remaining gaps
+
+- **`f0df5ff0`:** the confetti pool literal (line 150) excludes canonical
+  `train[1]`.
+- **`f3cdc58f`:** no gate for count-ordered legends. Episodes like these would
+  pass `make_record` today.
+- **Not measured:** no unmodified `prepare` export, so no production
+  same-shape support, gate retry or validation-identity figures. The audit is
+  stale.
+- **Open semantics:**
+  - whether 4+-colour inputs belong to `0c786b71`;
+  - whether bars above 0.8 H belong to `f3cdc58f`;
+  - whether edge seeds and overlaps belong to `f0df5ff0`.
+- **Gate scope:** each gate rules out only its named alternatives. The probe's
+  competitors are hypotheses too.
+- **Sample statistics:** every probe figure is a seeded local sample, not an
+  audit.
 
 ## Batch 1 semantic review (32 families)
 
@@ -513,6 +739,11 @@ As in batch 1, a fixed literal canvas is the main incidental restriction:
 
 ## Batch 3 semantic review (32 families, ranks 65–96)
 
+> **Historical record.** This section describes the batch-3 reviews as first
+> written at `f1b8bb9`, and its tables count those records. `e0fb7511` is
+> superseded by the batch-E rereview; its original text is in
+> `review_history.json`. Current batch-3 priorities: high 5, medium 23, low 4.
+
 **Scope:** tier A, all audit-current. Every constructor sha256 is unchanged
 from the ordering commit to the review baseline `f1b8bb9`, and also equals
 the constructor in `/Users/ritwika/projects/ARC-GEN/tasks`. Every family has
@@ -585,7 +816,9 @@ The 7 `mixed` dimension cases are:
     pair 2's radius-6 ring (native radius is 0–3). The certificate already
     uses a teaching fixture (`original_fixture_context_passed: false`).
   - `e0fb7511`: canonical black density is 0.16–0.31. Native is fixed at
-    1/8, with an audit range of 0.107–0.219.
+    1/8, with an audit range of 0.107–0.219. *Resolved by native batch E
+    (`a7edea3`): per-scene density 0.15..0.35 now covers all four canonical
+    densities (batch-E rereview).*
 - **Rule identity chosen from demonstrations.** These factories filter
   hypotheses against demonstrations and raise if the query is unresolved:
   - `a1aa0c1e`: length rank versus rung count. Both fit all 4 canonical
@@ -650,6 +883,12 @@ and all 11 were rereviewed (see the rereview section). The superseded texts are
 in `review_history.json`.
 
 ## Batch 4 semantic review (32 families, ranks 97–128)
+
+> **Historical record.** This section describes the batch-4 reviews as first
+> written at `a59e28a`, and its tables count those records. `0c786b71`,
+> `f0df5ff0` and `f3cdc58f` are superseded by the batch-E rereview; their
+> original text is in `review_history.json`. Current batch-4 priorities: high
+> 5, medium 14, low 7, none 6.
 
 **Scope:**
 - 18 tier-A families with a current audit.
@@ -938,7 +1177,8 @@ unmodified 200/20 exports.
   - how `3979b1a8` and `8b28cd80` extend.
 - **Out of scope:** the nativeE families (`0c786b71`, `e0fb7511`, `f0df5ff0`,
   `f3cdc58f`) belong to another lane. `e0fb7511` (batch 3) will need a
-  rereview once that lane lands.
+  rereview once that lane lands. *Done: all four were rereviewed at `e64baab`
+  (batch-E rereview).*
 
 ## Batch 6 semantic review (32 families, ranks 161–192)
 
@@ -1323,7 +1563,8 @@ None is release-ready.
     remain current here and were not edited. Only their mechanical `worklist`
     fields were regenerated.
   - They will become stale, and need rereview, when root's nativeE
-    integration lands.
+    integration lands. *Resolved: the integration landed before `e64baab`,
+    and the four were rereviewed (batch-E rereview).*
 - **Selector check:** in scratch, replacing `next_pending_batch` with the old
   `max(reviewed) + 1` rule failed the focused check: it gave 23 instead of 7
   for `(1..6, 22)` and 3 instead of 1 for `(2,)`. An off-by-one variant
@@ -1333,8 +1574,9 @@ None is release-ready.
 ## Not covered
 
 - **No changes:** constructors, factories, verifiers, fixtures, labels and
-  admission/prepare code are untouched by this review record, including the
-  rereview. No certificate or audit was rerun.
+  admission/prepare code are untouched by this review record, including both
+  rereviews. Gates, `verified_rules.py`, `family-status.csv` and
+  `admission.json` are also untouched. No certificate or audit was rerun.
 - **Dispositions are judgements:** they rest on reading the source; fixtures
   are finite examples. "Intrinsic" means the cited line serves the rule.
   It does not mean the original task forbids alternatives.
@@ -1348,9 +1590,18 @@ None is release-ready.
   A rereview moves the old record into `review_history.json` verbatim; it
   does not just refresh the hash.
 - **Certificate dependencies:** `extract.py` binds certificates only by
-  constructor and factory hash, as production lookup does. Auditor, harness
-  and pair-verifier hashes are reported by `probes/rereview_batch_bc.py` for
-  the 11 rereviewed families only.
+  constructor and factory hash, as production lookup does. Auditor, harness,
+  gate and pair-verifier hashes are reported only for the rereviewed families:
+  by `probes/rereview_batch_bc.py` for the 11 B/C families, and by
+  `probes/rereview_batch_e.py` plus the batch-E evidence pins for the 4 E
+  families.
+- **Validator change:** the batch-E rereview strengthened one history check
+  in `extract.py` (replacing-commit parent and replacement hash). No check was
+  removed or relaxed. Negative tests on the new entries were run in scratch:
+  18 of 18 mutations failed validation, including an edited old text, a
+  dropped entry, a wrong binding, baseline, first commit or replacing commit,
+  an altered mechanical record, a missing `repair_delta` field or evidence
+  path, a bad line reference, and `release_ready` set.
 
 ## Coverage and next batch
 

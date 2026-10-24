@@ -582,6 +582,238 @@
     }
    }
   ],
+  "0c786b71": [
+   {
+    "superseded_on": "2026-10-25",
+    "reason": "Constructor changed by native batch E (a7edea3; lane commit b9480e9); this review's constructor_sha256 no longer matched, so extract.py reported it stale.",
+    "first_committed_in": "24493e3a3ab8531b5169e02c49510789207dd685",
+    "archived_from_commit": "e64baab92377355d6f9335ddf10a0fbda1e0e6a3",
+    "source_binding": {
+     "path": "tasks/task_0c786b71.py",
+     "constructor_sha256": "7fc6d170003af1a888887129b02bf336afb967f350691ae23e6551c102e0d8e8",
+     "verified_at_commit": "a59e28aca6cb1d7a39e6cbf8dac469ceab74db5b",
+     "last_commit_with_this_source": "a7edea3d1145795b61d7b6e1b730075bb7c7b593^",
+     "replaced_by_commit": "a7edea3d1145795b61d7b6e1b730075bb7c7b593",
+     "replacement_constructor_sha256": "64010e00fa4b50356b829180c5d6549e84111615b0ce90d268673225f6eb9741"
+    },
+    "mechanical_record_at_review": {
+     "audit": {
+      "audit_matches_current_source": true,
+      "audit_source_sha256": "7fc6d170003af1a888887129b02bf336afb967f350691ae23e6551c102e0d8e8",
+      "configured": null,
+      "legacy_extension_available": false,
+      "native": {
+       "attempted": 128,
+       "colour_count": [
+        2,
+        3
+       ],
+       "components": [
+        3,
+        6
+       ],
+       "errors": 0,
+       "input_h": [
+        3,
+        3
+       ],
+       "input_shapes": 1,
+       "input_w": [
+        4,
+        4
+       ],
+       "nonmodal_fraction": [
+        0.16666666666666663,
+        0.6666666666666667
+       ],
+       "output_h": [
+        6,
+        6
+       ],
+       "output_shapes": 1,
+       "output_w": [
+        8,
+        8
+       ],
+       "rect_rate": 1.0,
+       "requested": 128,
+       "sample_shortfall": false,
+       "seconds": 0.064,
+       "shape_relation": {
+        "larger": 128
+       },
+       "unique_input_orbits": 127,
+       "unique_inputs": 128,
+       "valid": 128
+      }
+     },
+     "certified_evidence": {
+      "records": [
+       {
+        "constructor_sha256_matches": true,
+        "factory_sha256_matches": true,
+        "kind": "direct_factory",
+        "passed": true,
+        "path": "arc_agi2/direct_factories/0c786b71.json"
+       }
+      ],
+      "state": "current"
+     },
+     "factory": {
+      "path": "arc_agi2/direct_factories/task_0c786b71.py",
+      "references_demonstrations_beyond_signature": false,
+      "sha256": "871a44a1da91fce07f380c59924d0a16c5bafb10f88e910f0a36bb0fab3d9fdc"
+     },
+     "fixture": {
+      "input_colours": [
+       2,
+       3,
+       4,
+       5,
+       6,
+       7,
+       8,
+       9
+      ],
+      "input_shapes": [
+       "3x4",
+       "3x4",
+       "3x4",
+       "3x4"
+      ],
+      "output_shapes": [
+       "6x8",
+       "6x8",
+       "6x8",
+       "6x8"
+      ],
+      "test": 1,
+      "train": 3
+     },
+     "generate": {
+      "body_lines": 20,
+      "constraint_lines_total": 3,
+      "constraints": [
+       {
+        "kind": [
+         "draw"
+        ],
+        "line": 28,
+        "text": "raw_colors = common.random_colors(3)"
+       },
+       {
+        "kind": [
+         "draw"
+        ],
+        "line": 29,
+        "text": "colors = [raw_colors[common.randint(0, 2)] for _ in range(12)]"
+       },
+       {
+        "kind": [
+         "canvas"
+        ],
+        "line": 31,
+        "text": "grid, output = common.grid(4, 3), common.grid(8, 6)"
+       }
+      ],
+      "end_line": 39,
+      "kind_counts": {
+       "canvas": 1,
+       "draw": 2
+      },
+      "parameters": [
+       "colors=None"
+      ],
+      "start_line": 20
+     },
+     "priority": {
+      "audit_stale_at_ordering_commit": false,
+      "batch": 4,
+      "rank": 125,
+      "tier": "B_other"
+     },
+     "release_ready": false,
+     "source": {
+      "lines": 52,
+      "path": "tasks/task_0c786b71.py",
+      "sha256": "7fc6d170003af1a888887129b02bf336afb967f350691ae23e6551c102e0d8e8",
+      "uncommitted_change": false
+     },
+     "task_id": "0c786b71",
+     "worklist": {
+      "native_repaired": false,
+      "pending_checks": [
+       "no_rearc_counterpart_review_native_domain"
+      ]
+     }
+    },
+    "review": {
+     "status": "reviewed",
+     "reviewer": "claude-opus-5-5 (hybrid-claude-native worktree)",
+     "reviewed_on": "2026-10-24",
+     "review_batch": 4,
+     "constructor_sha256": "7fc6d170003af1a888887129b02bf336afb967f350691ae23e6551c102e0d8e8",
+     "baseline_commit": "a59e28aca6cb1d7a39e6cbf8dac469ceab74db5b",
+     "mechanism": "A 3x4 input of 12 cells, each one of 3 random distinct colours (lines 27-29), becomes a 6x8 output: the input sits unchanged in the bottom-right quadrant, mirrored left-right, top-bottom and both ways into the other three (lines 31-38).",
+     "fixture_evidence": "4 canonical pairs, 3x4 to 6x8, each input using exactly 3 colours. Native may use only 1-2 of the 3 drawn colours (line 29). Audit: 128/128 unique, 127 orbits.",
+     "axes": {
+      "dimensions": {
+       "disposition": "incidental_restriction",
+       "lines": [
+        31,
+        32,
+        33
+       ],
+       "why": "3x4 is a literal. The factory mirrors any h x w into 2h x 2w."
+      },
+      "objects": {
+       "disposition": "broadly_variable",
+       "lines": [
+        29
+       ],
+       "why": "Cells are independent picks from 3 drawn colours."
+      },
+      "placement": {
+       "disposition": "intrinsic_or_rule_supported",
+       "lines": [
+        35,
+        36,
+        37,
+        38
+       ],
+       "why": "Four-way mirror tiling with the original in the bottom-right quadrant."
+      },
+      "density_colours": {
+       "disposition": "mixed",
+       "lines": [
+        28
+       ],
+       "why": "At most 3 colours from 1-9, and black never appears. Canonical inputs use exactly 3."
+      },
+      "rule_parameters": {
+       "disposition": "intrinsic_or_rule_supported",
+       "lines": [
+        35,
+        38
+       ],
+       "why": "Reflect across both axes, so the output is four mirrored copies of the input."
+      },
+      "demonstration_context": {
+       "disposition": "intrinsic_or_rule_supported",
+       "lines": [
+        35
+       ],
+       "why": "The factory takes the anchor quadrant from d4 and never reads demonstrations."
+      }
+     },
+     "proposal": "Medium. Sample h and w (2-15 each, so the output fits 30) and the colour count. Recertify.",
+     "patch_priority": "medium",
+     "uncertainties": "Whether 1-2 colour inputs, which native allows but no fixture shows, are intended.",
+     "certified_evidence": "current",
+     "release_ready": false
+    }
+   }
+  ],
   "0f63c0b9": [
    {
     "superseded_on": "2026-10-24",
@@ -3014,6 +3246,776 @@
      "proposal": "Sample canvas H,W (e.g. 8-20), square side 2k+2 (k = 1..5) at any position with room for outside-corner markers, and the corner pair (any two adjacent corners). This replaces a domain of 56 colour pairs x 4 orientations = 224 inputs. Recertify.",
      "patch_priority": "high",
      "uncertainties": "Whether markers may sit on diagonal corners is not defined (the quadrant claims would conflict); the proposal keeps adjacent corners.",
+     "certified_evidence": "current",
+     "release_ready": false
+    }
+   }
+  ],
+  "e0fb7511": [
+   {
+    "superseded_on": "2026-10-25",
+    "reason": "Constructor changed by native batch E (a7edea3; lane commit b9480e9); this review's constructor_sha256 no longer matched, so extract.py reported it stale.",
+    "first_committed_in": "25c8140d5dbc23cfe6808b340fbb4ac699bcc9f0",
+    "archived_from_commit": "e64baab92377355d6f9335ddf10a0fbda1e0e6a3",
+    "source_binding": {
+     "path": "tasks/task_e0fb7511.py",
+     "constructor_sha256": "3857588ff73d8b3866193818d618dc323c66986853ee719a64ee247ff18c48f4",
+     "verified_at_commit": "f1b8bb9548c0361b9a9d93cbbf8b24ec81966baa",
+     "last_commit_with_this_source": "a7edea3d1145795b61d7b6e1b730075bb7c7b593^",
+     "replaced_by_commit": "a7edea3d1145795b61d7b6e1b730075bb7c7b593",
+     "replacement_constructor_sha256": "d2a9f6e3cb794bdd7b12b8d689442a85dcdca061e27bff219eefd96e209853ad"
+    },
+    "mechanical_record_at_review": {
+     "audit": {
+      "audit_matches_current_source": true,
+      "audit_source_sha256": "3857588ff73d8b3866193818d618dc323c66986853ee719a64ee247ff18c48f4",
+      "configured": null,
+      "legacy_extension_available": false,
+      "native": {
+       "attempted": 128,
+       "colour_count": [
+        2,
+        2
+       ],
+       "components": [
+        10,
+        22
+       ],
+       "errors": 0,
+       "input_h": [
+        13,
+        13
+       ],
+       "input_shapes": 1,
+       "input_w": [
+        13,
+        13
+       ],
+       "nonmodal_fraction": [
+        0.10650887573964496,
+        0.21893491124260356
+       ],
+       "output_h": [
+        13,
+        13
+       ],
+       "output_shapes": 1,
+       "output_w": [
+        13,
+        13
+       ],
+       "rect_rate": 0.0,
+       "requested": 128,
+       "sample_shortfall": false,
+       "seconds": 0.266,
+       "shape_relation": {
+        "same": 128
+       },
+       "unique_input_orbits": 128,
+       "unique_inputs": 128,
+       "valid": 128
+      }
+     },
+     "certified_evidence": {
+      "records": [
+       {
+        "constructor_sha256_matches": true,
+        "factory_sha256_matches": true,
+        "kind": "direct_factory",
+        "passed": true,
+        "path": "arc_agi2/direct_factories/e0fb7511.json"
+       }
+      ],
+      "state": "current"
+     },
+     "factory": {
+      "path": "arc_agi2/direct_factories/task_e0fb7511.py",
+      "references_demonstrations_beyond_signature": false,
+      "sha256": "66678c1ecbc5e75d939cbf63226c3357e9a8a59445b143a4a63c1a850790de63"
+     },
+     "fixture": {
+      "input_colours": [
+       0,
+       1
+      ],
+      "input_shapes": [
+       "13x13",
+       "13x13",
+       "13x13",
+       "13x13"
+      ],
+      "output_shapes": [
+       "13x13",
+       "13x13",
+       "13x13",
+       "13x13"
+      ],
+      "test": 1,
+      "train": 3
+     },
+     "generate": {
+      "body_lines": 29,
+      "constraint_lines_total": 4,
+      "constraints": [
+       {
+        "kind": [
+         "canvas"
+        ],
+        "line": 28,
+        "text": "grid, output = common.grids(13, 13)"
+       },
+       {
+        "kind": [
+         "retry"
+        ],
+        "line": 33,
+        "text": "if grid[row][col]: continue"
+       },
+       {
+        "kind": [
+         "loop"
+        ],
+        "line": 41,
+        "text": "while True:"
+       },
+       {
+        "kind": [
+         "draw"
+        ],
+        "line": 42,
+        "text": "colors = [common.randint(0, 7) for _ in range(13 * 13)]"
+       }
+      ],
+      "end_line": 48,
+      "kind_counts": {
+       "canvas": 1,
+       "draw": 1,
+       "loop": 1,
+       "retry": 1
+      },
+      "parameters": [
+       "colors=None"
+      ],
+      "start_line": 20
+     },
+     "priority": {
+      "audit_stale_at_ordering_commit": false,
+      "batch": 3,
+      "rank": 96,
+      "tier": "A_fixed_dims_ge8"
+     },
+     "release_ready": false,
+     "source": {
+      "lines": 109,
+      "path": "tasks/task_e0fb7511.py",
+      "sha256": "3857588ff73d8b3866193818d618dc323c66986853ee719a64ee247ff18c48f4",
+      "uncommitted_change": false
+     },
+     "task_id": "e0fb7511",
+     "worklist": {
+      "native_repaired": false,
+      "pending_checks": [
+       "no_rearc_counterpart_review_native_domain"
+      ]
+     }
+    },
+    "review": {
+     "status": "reviewed",
+     "reviewer": "claude-opus-5-5 (hybrid-claude-native worktree)",
+     "reviewed_on": "2026-10-24",
+     "review_batch": 3,
+     "constructor_sha256": "3857588ff73d8b3866193818d618dc323c66986853ee719a64ee247ff18c48f4",
+     "baseline_commit": "f1b8bb9548c0361b9a9d93cbbf8b24ec81966baa",
+     "mechanism": "A 13x13 blue (1) grid where each cell is black (0) with probability 1/8 (lines 41-43). In the output, every black cell with a 4-adjacent black neighbour becomes azure (8); isolated black cells stay black (lines 31-36). Scenes need at least 13 azure cells (line 37).",
+     "fixture_evidence": "4 canonical pairs, 13x13, colours 0/1. probes/fixture_stats_batch3.py measures canonical black densities of 0.266, 0.16, 0.195 and 0.308, with 21, 14, 18 and 33 azure cells. Native density is fixed at 1/8, and the audit's non-modal fraction spans 0.107-0.219. So two of the four fixtures (0.266 and 0.308) are denser than any of the 128 audit draws.",
+     "axes": {
+      "dimensions": {
+       "disposition": "incidental_restriction",
+       "lines": [
+        28,
+        30,
+        42
+       ],
+       "why": "The 13x13 canvas is a literal in grids(13, 13), the flat index i // 13 and i % 13, and the 13*13 draw (lines 28, 30, 42). The adjacency rule works on any HxW."
+      },
+      "objects": {
+       "disposition": "intrinsic_or_rule_supported",
+       "lines": [
+        34,
+        35,
+        36
+       ],
+       "why": "Components arise from noise; the rule distinguishes only isolated black cells from connected ones."
+      },
+      "placement": {
+       "disposition": "broadly_variable",
+       "lines": [
+        42
+       ],
+       "why": "Every cell is drawn independently (line 42), so black components can appear anywhere, including along edges."
+      },
+      "density_colours": {
+       "disposition": "incidental_restriction",
+       "lines": [
+        42,
+        43
+       ],
+       "why": "Black probability is fixed at 1/8, below half of the canonical densities. Denser scenes with larger black components are never produced."
+      },
+      "rule_parameters": {
+       "disposition": "intrinsic_or_rule_supported",
+       "lines": [
+        34,
+        36
+       ],
+       "why": "4-adjacency defines 'connected'; diagonal neighbours do not count."
+      },
+      "demonstration_context": {
+       "disposition": "intrinsic_or_rule_supported",
+       "lines": [
+        36
+       ],
+       "why": "Self-contained; the factory does not read demonstrations."
+      }
+     },
+     "proposal": "Medium: sample the black density per scene in 0.10-0.35, covering the canonical range, and H and W in 8-20. Keep the minimum-azure guard, scaled with area. Recertify.",
+     "patch_priority": "medium",
+     "uncertainties": "Fixture densities come from only 4 pairs. Not checked: whether higher densities create very large components that change learnability.",
+     "certified_evidence": "current",
+     "release_ready": false
+    }
+   }
+  ],
+  "f0df5ff0": [
+   {
+    "superseded_on": "2026-10-25",
+    "reason": "Constructor changed by native batch E (a7edea3; lane commit b9480e9); this review's constructor_sha256 no longer matched, so extract.py reported it stale.",
+    "first_committed_in": "24493e3a3ab8531b5169e02c49510789207dd685",
+    "archived_from_commit": "e64baab92377355d6f9335ddf10a0fbda1e0e6a3",
+    "source_binding": {
+     "path": "tasks/task_f0df5ff0.py",
+     "constructor_sha256": "df76beda51cd578c92874de3457086aa71845949a4ca3f6b77e69dea34205dba",
+     "verified_at_commit": "a59e28aca6cb1d7a39e6cbf8dac469ceab74db5b",
+     "last_commit_with_this_source": "a7edea3d1145795b61d7b6e1b730075bb7c7b593^",
+     "replaced_by_commit": "a7edea3d1145795b61d7b6e1b730075bb7c7b593",
+     "replacement_constructor_sha256": "0c452608a9c167d402388478ef972d599bef10213655c9a79664b9d98a0b6ab1"
+    },
+    "mechanical_record_at_review": {
+     "audit": {
+      "audit_matches_current_source": true,
+      "audit_source_sha256": "df76beda51cd578c92874de3457086aa71845949a4ca3f6b77e69dea34205dba",
+      "configured": null,
+      "legacy_extension_available": false,
+      "native": {
+       "attempted": 128,
+       "colour_count": [
+        4,
+        8
+       ],
+       "components": [
+        64,
+        102
+       ],
+       "errors": 0,
+       "input_h": [
+        15,
+        15
+       ],
+       "input_shapes": 1,
+       "input_w": [
+        15,
+        15
+       ],
+       "nonmodal_fraction": [
+        0.42666666666666664,
+        0.6177777777777778
+       ],
+       "output_h": [
+        15,
+        15
+       ],
+       "output_shapes": 1,
+       "output_w": [
+        15,
+        15
+       ],
+       "rect_rate": 0.0,
+       "requested": 128,
+       "sample_shortfall": false,
+       "seconds": 0.835,
+       "shape_relation": {
+        "same": 128
+       },
+       "unique_input_orbits": 128,
+       "unique_inputs": 128,
+       "valid": 128
+      }
+     },
+     "certified_evidence": {
+      "records": [
+       {
+        "constructor_sha256_matches": true,
+        "factory_sha256_matches": true,
+        "kind": "direct_factory",
+        "passed": true,
+        "path": "arc_agi2/direct_factories/f0df5ff0.json"
+       }
+      ],
+      "state": "current"
+     },
+     "factory": {
+      "path": "arc_agi2/direct_factories/task_f0df5ff0.py",
+      "references_demonstrations_beyond_signature": false,
+      "sha256": "d3eb4c59d0ed4767f992ba87cb9de46c6266d6929f79a5eb8e423a966c45b270"
+     },
+     "fixture": {
+      "input_colours": [
+       0,
+       1,
+       2,
+       3,
+       4,
+       5,
+       6,
+       7,
+       8,
+       9
+      ],
+      "input_shapes": [
+       "15x15",
+       "15x15",
+       "15x15",
+       "15x15"
+      ],
+      "output_shapes": [
+       "15x15",
+       "15x15",
+       "15x15",
+       "15x15"
+      ],
+      "test": 1,
+      "train": 3
+     },
+     "generate": {
+      "body_lines": 42,
+      "constraint_lines_total": 10,
+      "constraints": [
+       {
+        "kind": [
+         "canvas"
+        ],
+        "line": 28,
+        "text": "grid, output = common.grids(15, 15)"
+       },
+       {
+        "kind": [
+         "retry"
+        ],
+        "line": 37,
+        "text": "if color != 1: continue"
+       },
+       {
+        "kind": [
+         "draw"
+        ],
+        "line": 46,
+        "text": "subset = common.choices(list(range(2, 10)), 6)"
+       },
+       {
+        "kind": [
+         "draw"
+        ],
+        "line": 47,
+        "text": "num_boxes = common.randint(2, 8)"
+       },
+       {
+        "kind": [
+         "loop"
+        ],
+        "line": 48,
+        "text": "while True:"
+       },
+       {
+        "kind": [
+         "draw"
+        ],
+        "line": 49,
+        "text": "colors = [common.randint(0, 1) for _ in range(15 * 15)]"
+       },
+       {
+        "kind": [
+         "draw"
+        ],
+        "line": 50,
+        "text": "colors = [common.choice(subset) if color else 0 for color in colors]"
+       },
+       {
+        "kind": [
+         "draw"
+        ],
+        "line": 51,
+        "text": "brows = [common.randint(0, 12) for _ in range(num_boxes)]"
+       },
+       {
+        "kind": [
+         "draw"
+        ],
+        "line": 52,
+        "text": "bcols = [common.randint(0, 12) for _ in range(num_boxes)]"
+       },
+       {
+        "kind": [
+         "retry"
+        ],
+        "line": 54,
+        "text": "if common.overlaps(brows, bcols, lengths, lengths): continue"
+       }
+      ],
+      "end_line": 61,
+      "kind_counts": {
+       "canvas": 1,
+       "draw": 6,
+       "loop": 1,
+       "retry": 2
+      },
+      "parameters": [
+       "colors=None"
+      ],
+      "start_line": 20
+     },
+     "priority": {
+      "audit_stale_at_ordering_commit": false,
+      "batch": 4,
+      "rank": 107,
+      "tier": "A_fixed_dims_ge8"
+     },
+     "release_ready": false,
+     "source": {
+      "lines": 130,
+      "path": "tasks/task_f0df5ff0.py",
+      "sha256": "df76beda51cd578c92874de3457086aa71845949a4ca3f6b77e69dea34205dba",
+      "uncommitted_change": false
+     },
+     "task_id": "f0df5ff0",
+     "worklist": {
+      "native_repaired": false,
+      "pending_checks": [
+       "no_rearc_counterpart_review_native_domain"
+      ]
+     }
+    },
+    "review": {
+     "status": "reviewed",
+     "reviewer": "claude-opus-5-5 (hybrid-claude-native worktree)",
+     "reviewed_on": "2026-10-24",
+     "review_batch": 4,
+     "constructor_sha256": "df76beda51cd578c92874de3457086aa71845949a4ca3f6b77e69dea34205dba",
+     "baseline_commit": "a59e28aca6cb1d7a39e6cbf8dac469ceab74db5b",
+     "mechanism": "A 15x15 grid of 50% confetti, using choices of 6 colours from 2-9 (repeats allowed; lines 46-50). It holds 2-8 blue seeds at the centres of non-overlapping 3x3 windows, never on the edge (lines 47, 51-56). The output paints blue over every black cell in each seed's 3x3 window (lines 31, 34). Line 42 rejects scenes where a window ends up with fewer than 3 blue cells.",
+     "fixture_evidence": "4 canonical pairs, 15x15. Seed counts are 5, 4, 6 and 8. No canonical seed is on the edge and no two windows overlap (batch-4 fixture check), which matches lines 51-54. Canonical confetti density is 0.31-0.45, while native is 0.5 per cell before seeding. Audit: 128/128 unique.",
+     "axes": {
+      "dimensions": {
+       "disposition": "incidental_restriction",
+       "lines": [
+        28,
+        31,
+        41,
+        49,
+        51,
+        52
+       ],
+       "why": "The literal 15 appears throughout. Dilating seeds into black works on any canvas."
+      },
+      "objects": {
+       "disposition": "mixed",
+       "lines": [
+        47,
+        53,
+        56
+       ],
+       "why": "Several single-cell seeds is rule-supported. The 2-8 count is a literal that matches the fixtures."
+      },
+      "placement": {
+       "disposition": "mixed",
+       "lines": [
+        51,
+        52,
+        54,
+        56
+       ],
+       "why": "Interior seeds and non-overlapping windows match the fixtures but are incidental. The factory clips windows at edges, and overlapping windows would simply merge."
+      },
+      "density_colours": {
+       "disposition": "mixed",
+       "lines": [
+        46,
+        49,
+        50
+       ],
+       "why": "Blue never appears in the confetti, so seeds are unambiguous (rule-supported). The 0.5 density is a literal above the canonical 0.31-0.45."
+      },
+      "rule_parameters": {
+       "disposition": "intrinsic_or_rule_supported",
+       "lines": [
+        31,
+        34,
+        42
+       ],
+       "why": "The 3x3 neighbourhood's black cells turn blue; confetti is preserved. Line 42 guarantees each window shows a visible change."
+      },
+      "demonstration_context": {
+       "disposition": "intrinsic_or_rule_supported",
+       "lines": [
+        31,
+        34
+       ],
+       "why": "The factory dilates the query's seeds and never reads demonstrations."
+      }
+     },
+     "proposal": "Medium. Sample H and W, scale the seed count with area, and sample confetti density in about 0.3-0.5 to match the fixtures. Edge seeds and overlapping windows are optional and undemonstrated. Recertify.",
+     "patch_priority": "medium",
+     "uncertainties": "Whether edge seeds or overlapping windows occur in the original rule.",
+     "certified_evidence": "current",
+     "release_ready": false
+    }
+   }
+  ],
+  "f3cdc58f": [
+   {
+    "superseded_on": "2026-10-25",
+    "reason": "Constructor changed by native batch E (a7edea3; lane commit b9480e9); this review's constructor_sha256 no longer matched, so extract.py reported it stale.",
+    "first_committed_in": "24493e3a3ab8531b5169e02c49510789207dd685",
+    "archived_from_commit": "e64baab92377355d6f9335ddf10a0fbda1e0e6a3",
+    "source_binding": {
+     "path": "tasks/task_f3cdc58f.py",
+     "constructor_sha256": "763478e511a8fd9bd9ec13580b1bd30bfa19642e3a8f356018efa81c7c328f94",
+     "verified_at_commit": "a59e28aca6cb1d7a39e6cbf8dac469ceab74db5b",
+     "last_commit_with_this_source": "a7edea3d1145795b61d7b6e1b730075bb7c7b593^",
+     "replaced_by_commit": "a7edea3d1145795b61d7b6e1b730075bb7c7b593",
+     "replacement_constructor_sha256": "abd953bb8cd3a8c121ee081492f4c8e8df591b26cd03d3b13d01b875c9934d97"
+    },
+    "mechanical_record_at_review": {
+     "audit": {
+      "audit_matches_current_source": true,
+      "audit_source_sha256": "763478e511a8fd9bd9ec13580b1bd30bfa19642e3a8f356018efa81c7c328f94",
+      "configured": null,
+      "legacy_extension_available": false,
+      "native": {
+       "attempted": 128,
+       "colour_count": [
+        5,
+        5
+       ],
+       "components": [
+        10,
+        22
+       ],
+       "errors": 0,
+       "input_h": [
+        10,
+        10
+       ],
+       "input_shapes": 1,
+       "input_w": [
+        10,
+        10
+       ],
+       "nonmodal_fraction": [
+        0.09999999999999998,
+        0.25
+       ],
+       "output_h": [
+        10,
+        10
+       ],
+       "output_shapes": 1,
+       "output_w": [
+        10,
+        10
+       ],
+       "rect_rate": 0.0,
+       "requested": 128,
+       "sample_shortfall": false,
+       "seconds": 0.068,
+       "shape_relation": {
+        "same": 128
+       },
+       "unique_input_orbits": 128,
+       "unique_inputs": 128,
+       "valid": 128
+      }
+     },
+     "certified_evidence": {
+      "records": [
+       {
+        "constructor_sha256_matches": true,
+        "factory_sha256_matches": true,
+        "kind": "direct_factory",
+        "passed": true,
+        "path": "arc_agi2/direct_factories/f3cdc58f.json"
+       }
+      ],
+      "state": "current"
+     },
+     "factory": {
+      "path": "arc_agi2/direct_factories/task_f3cdc58f.py",
+      "references_demonstrations_beyond_signature": false,
+      "sha256": "81c2164bbfb8fd3e335c16ef06186c432b50bf3c3e4ad7afb5b939673f3204d9"
+     },
+     "fixture": {
+      "input_colours": [
+       0,
+       1,
+       2,
+       3,
+       4
+      ],
+      "input_shapes": [
+       "10x10",
+       "10x10",
+       "10x10",
+       "10x10"
+      ],
+      "output_shapes": [
+       "10x10",
+       "10x10",
+       "10x10",
+       "10x10"
+      ],
+      "test": 1,
+      "train": 3
+     },
+     "generate": {
+      "body_lines": 25,
+      "constraint_lines_total": 4,
+      "constraints": [
+       {
+        "kind": [
+         "loop"
+        ],
+        "line": 28,
+        "text": "while True:"
+       },
+       {
+        "kind": [
+         "draw"
+        ],
+        "line": 31,
+        "text": "for _ in range(common.randint(2, 8)):"
+       },
+       {
+        "kind": [
+         "draw"
+        ],
+        "line": 32,
+        "text": "colors[common.randint(0, 99)] = color"
+       },
+       {
+        "kind": [
+         "canvas"
+        ],
+        "line": 38,
+        "text": "grid, output = common.grids(10, 10)"
+       }
+      ],
+      "end_line": 44,
+      "kind_counts": {
+       "canvas": 1,
+       "draw": 2,
+       "loop": 1
+      },
+      "parameters": [
+       "colors=None"
+      ],
+      "start_line": 20
+     },
+     "priority": {
+      "audit_stale_at_ordering_commit": false,
+      "batch": 4,
+      "rank": 110,
+      "tier": "A_fixed_dims_ge8"
+     },
+     "release_ready": false,
+     "source": {
+      "lines": 77,
+      "path": "tasks/task_f3cdc58f.py",
+      "sha256": "763478e511a8fd9bd9ec13580b1bd30bfa19642e3a8f356018efa81c7c328f94",
+      "uncommitted_change": false
+     },
+     "task_id": "f3cdc58f",
+     "worklist": {
+      "native_repaired": false,
+      "pending_checks": [
+       "no_rearc_counterpart_review_native_domain"
+      ]
+     }
+    },
+    "review": {
+     "status": "reviewed",
+     "reviewer": "claude-opus-5-5 (hybrid-claude-native worktree)",
+     "reviewed_on": "2026-10-24",
+     "review_batch": 4,
+     "constructor_sha256": "763478e511a8fd9bd9ec13580b1bd30bfa19642e3a8f356018efa81c7c328f94",
+     "baseline_commit": "a59e28aca6cb1d7a39e6cbf8dac469ceab74db5b",
+     "mechanism": "A 10x10 black grid where each colour 1-4 is placed 2-8 times at random cells. Later placements may overwrite earlier ones, and every colour must survive (lines 27-36). The output is a histogram: column c-1 holds a bottom-anchored bar of colour c, as tall as the colour's count (lines 41-43).",
+     "fixture_evidence": "4 canonical pairs, 10x10. Bars of colours 1-4 always sit in columns 0-3. Audit: 128/128 unique.",
+     "axes": {
+      "dimensions": {
+       "disposition": "incidental_restriction",
+       "lines": [
+        29,
+        38,
+        43
+       ],
+       "why": "The literal 10x10 canvas and the 100-cell list. Counts of at most 8 fit 10 rows."
+      },
+      "objects": {
+       "disposition": "mixed",
+       "lines": [
+        30,
+        31,
+        32,
+        35
+       ],
+       "why": "Four colours each present is rule-supported. The 2-8 placements per colour (fewer after overwrites) are literals."
+      },
+      "placement": {
+       "disposition": "broadly_variable",
+       "lines": [
+        32
+       ],
+       "why": "Pixel positions are uniform over the canvas (line 32)."
+      },
+      "density_colours": {
+       "disposition": "intrinsic_or_rule_supported",
+       "lines": [
+        30,
+        43
+       ],
+       "why": "Colours are exactly 1-4, and the colour's value sets its bar column. This fixed colour-to-column legend is the rule; it varies only through the palette."
+      },
+      "rule_parameters": {
+       "disposition": "intrinsic_or_rule_supported",
+       "lines": [
+        41,
+        42,
+        43
+       ],
+       "why": "Count each colour and draw its bar from the bottom of its column."
+      },
+      "demonstration_context": {
+       "disposition": "intrinsic_or_rule_supported",
+       "lines": [
+        34,
+        35,
+        43
+       ],
+       "why": "Every pair shows all four colours (line 35), so each pair reveals the legend. The factory uses a constant COLOURS order."
+      }
+     },
+     "proposal": "Medium. Sample H and W, with counts capped by H, and allow counts above 8. Recertify.",
+     "patch_priority": "medium",
+     "uncertainties": "Whether the original orders columns by colour value or by some other fixed legend; only colours 1-4 are ever seen.",
      "certified_evidence": "current",
      "release_ready": false
     }

@@ -648,66 +648,111 @@
   },
   "0c786b71": {
    "status": "reviewed",
-   "reviewer": "claude-opus-5-5 (hybrid-claude-native worktree)",
-   "reviewed_on": "2026-10-24",
+   "reviewer": "claude-opus-5-5 (hybrid-claude-native-review-current worktree)",
+   "reviewed_on": "2026-10-25",
    "review_batch": 4,
-   "constructor_sha256": "7fc6d170003af1a888887129b02bf336afb967f350691ae23e6551c102e0d8e8",
-   "baseline_commit": "a59e28aca6cb1d7a39e6cbf8dac469ceab74db5b",
-   "mechanism": "A 3x4 input of 12 cells, each one of 3 random distinct colours (lines 27-29), becomes a 6x8 output: the input sits unchanged in the bottom-right quadrant, mirrored left-right, top-bottom and both ways into the other three (lines 31-38).",
-   "fixture_evidence": "4 canonical pairs, 3x4 to 6x8, each input using exactly 3 colours. Native may use only 1-2 of the 3 drawn colours (line 29). Audit: 128/128 unique, 127 orbits.",
+   "review_kind": "rereview_after_native_repair",
+   "constructor_sha256": "64010e00fa4b50356b829180c5d6549e84111615b0ce90d268673225f6eb9741",
+   "baseline_commit": "e64baab92377355d6f9335ddf10a0fbda1e0e6a3",
+   "integration_baseline_commit": "96be8033a32ac47104ec737310778baffa7f5159",
+   "repair_commit": "a7edea3d1145795b61d7b6e1b730075bb7c7b593",
+   "repair_lane_commits": {
+    "verified_rules": "05db160 -> 4909572",
+    "gates": "ce8c79d -> c35ae5a",
+    "constructors": "b9480e9 -> a7edea3",
+    "threshold_gate": "51e67f2 -> 3a08f5f",
+    "evidence_refresh": "9996de4 -> 95ffc02"
+   },
+   "supersedes": {
+    "constructor_sha256": "7fc6d170003af1a888887129b02bf336afb967f350691ae23e6551c102e0d8e8",
+    "baseline_commit": "a59e28aca6cb1d7a39e6cbf8dac469ceab74db5b",
+    "history_file": "review_history.json",
+    "history_index": 0
+   },
+   "mechanism": "An H x W input (default H and W independently 2..15, lines 46 and 48; explicit 1..15, line 24) whose cells are independent picks from a pool of 3 distinct colours from 1..9 (51-52) becomes a 2H x 2W output (58): the input unchanged in the bottom-right quadrant (63), mirrored left-right into the bottom-left (64), top-bottom into the top-right (65) and both ways into the top-left (66). Explicit colours with omitted dimensions keep the legacy 4-wide, 3-tall canvas (46, 48).",
+   "fixture_evidence": "4 canonical pairs (3 train, 1 test), all 3x4 -> 6x8, replayed exactly through the explicit legacy path (validate 70-80). The production verifier (archived reference, colour-agnostic) and the d4=0 factory program also give 4/4 (probe). Every canonical input uses exactly 3 non-zero colours and 3x4 is inside the default 2..15 range, so all four canonical inputs are reachable by the random path (probe canonical section). No canonical input is left-right or top-bottom symmetric.",
    "axes": {
     "dimensions": {
-     "disposition": "incidental_restriction",
+     "disposition": "broadly_variable",
      "lines": [
-      31,
-      32,
-      33
+      24,
+      46,
+      48,
+      58
      ],
-     "why": "3x4 is a literal. The factory mirrors any h x w into 2h x 2w."
+     "why": "Was the literal 3x4 (old lines 31-33). H and W are now drawn independently 2..15 (46, 48), validated 1..15 (24), and the output is 2H x 2W (58), so the 15 cap is the rule-derived 30x30 output bound, not a literal. Batch E: 194 input shapes in 1000 draws (was 1), 147 with >= 4 draws. The default minimum 2 is a sampling choice; explicit size 1 is accepted."
     },
     "objects": {
      "disposition": "broadly_variable",
      "lines": [
-      29
+      52
      ],
-     "why": "Cells are independent picks from 3 drawn colours."
+     "why": "Unchanged: every cell is an independent uniform pick from the 3-colour pool (52). There is no object grammar to restrict, and larger canvases let colour regions vary freely."
     },
     "placement": {
      "disposition": "intrinsic_or_rule_supported",
      "lines": [
-      35,
-      36,
-      37,
-      38
+      63,
+      64,
+      65,
+      66
      ],
-     "why": "Four-way mirror tiling with the original in the bottom-right quadrant."
+     "why": "Four-way mirror tiling with the unflipped input bottom-right (63-66) is the rule. Under D4 the anchor moves; the factory derives it from d4 (task_0c786b71.py factory lines 3-7), and the anchor gate (mirror_neighbourhood_evidence.anchor_variants) checks all four anchors against the demos."
     },
     "density_colours": {
      "disposition": "mixed",
      "lines": [
-      28
+      51,
+      52,
+      55
      ],
-     "why": "At most 3 colours from 1-9, and black never appears. Canonical inputs use exactly 3."
+     "why": "The pool is exactly 3 distinct colours from 1..9 (51; common.random_colors excludes 0) and cells pick from it (52), so 1-3 colours appear: probe 395/400 three-colour, 5/400 two-colour, 0/400 one-colour (batch E 990/9/1 of 1000). Every canonical input has exactly 3, so the pool matches the fixtures, but the literal 3 is incidental because the rule copies any colours. Black is accepted on the explicit path (55) but never sampled. Not changed by batch E."
     },
     "rule_parameters": {
      "disposition": "intrinsic_or_rule_supported",
      "lines": [
-      35,
-      38
+      63,
+      64,
+      65,
+      66
      ],
-     "why": "Reflect across both axes, so the output is four mirrored copies of the input."
+     "why": "Reflect across both midlines with no hidden parameter (63-66). The four-anchor convention is the only alternative reading, and it is the one the gate enumerates."
     },
     "demonstration_context": {
      "disposition": "intrinsic_or_rule_supported",
      "lines": [
-      35
+      52,
+      63
      ],
-     "why": "The factory takes the anchor quadrant from d4 and never reads demonstrations."
+     "why": "The factory reads no demonstrations; the anchor comes from d4. New: the anchor gate rejects contexts whose demos cannot separate anchors on the query. Before the gate batch E measured 10/2000 ambiguous 2x2 contexts and 0/2000 at 3x2, 2x3 and 3x4; the gate-aware audit kept 250/250 queries with 0 retries at default and at the 2x2 corner. Probe: 1/400 default inputs is left-right or top-bottom symmetric, so ambiguity is a small-canvas effect."
     }
    },
-   "proposal": "Medium. Sample h and w (2-15 each, so the output fits 30) and the colour count. Recertify.",
-   "patch_priority": "medium",
-   "uncertainties": "Whether 1-2 colour inputs, which native allows but no fixture shows, are intended.",
+   "repair_delta": {
+    "expanded": "Input H, W independently 2..15 by default (46, 48), explicit 1..15 (20-26, 49) with argument validation (53-56); output up to 30x30 (58). Anchor gate for this family (c35ae5a; final mirror_neighbourhood_evidence.py 98e1b2ea, dispatched at colour_evidence.py 209).",
+    "retained": "Mirror rule with the unflipped input bottom-right (63-66); 3-colour pool from 1..9 (51-52); legacy 4x3 canvas and RNG stream for explicit colours (46, 48); factory 871a44a1 and the archived pair verifier unchanged.",
+    "unsolved": "Colour pool fixed at 3: no 4+-colour inputs, black never sampled, 1-colour inputs about 0.1%. Production same-shape support only estimated from draw statistics."
+   },
+   "proposal": "Low. The old proposal (sample H and W 2-15, recertify) is implemented and certified; it is not repeated. Optional refinement: draw the pool size per scene (for example 1..5 colours) and remeasure the anchor gate; the fixtures show only 3. Remaining work is root's: an unmodified prepare 200/20 export that reports same-shape support, and the 128-sample audit rerun.",
+   "patch_priority": "low",
+   "adequacy": "repaired_domain_adequate_registered",
+   "uncertainties": "Whether inputs with other than 3 colours are intended (fixtures show only 3). The anchor gate enumerates only the four quadrant anchors; other symmetric constructions are not excluded. Same-shape support under prepare is estimated (147 shapes with >= 4 pairs per 1000 draws), not measured. The certificate carries no independent-review draft notes, only the factory's limitations text.",
+   "evidence": [
+    "arc_agi2/reports/diversity-v1/native-batch-e/README.md",
+    "arc_agi2/reports/diversity-v1/native-batch-e/batch-e-evidence.json",
+    "arc_agi2/reports/diversity-v1/native-batch-e/context-audit.json",
+    "arc_agi2/diversity/test_native_batch_e.py",
+    "arc_agi2/direct_factories/0c786b71.json",
+    "arc_agi2/reports/diversity-v1/native-certificates/0c786b71.json",
+    "arc_agi2/diversity/prepare.py (REPAIRED, native batch E)",
+    "arc_agi2/diversity/admission.json (target_source_hashes)",
+    "probes/rereview_batch_e.py",
+    "arc_agi2/mirror_neighbourhood_evidence.py",
+    "arc_agi2/test_mirror_neighbourhood_evidence.py",
+    "arc_agi2/colour_evidence.py (dispatch, line 209)"
+   ],
+   "certificate_note": "direct_factories/0c786b71.json and native-certificates/0c786b71.json both pass 1000 fresh / 8000 augmented / 16 fixture variants with 1000 unique base inputs and 0 sampler rejections, bound to constructor 64010e00 and the unchanged factory 871a44a1; certified_factory_source returns a program for all 8 D4 transforms (probe). auditor_sha256 1e194cb8 is the current recertify.py (5fdfb65). recertify.check runs the pair verifier only, not the evidence gate, so gate coverage comes from native-batch-e/context-audit.json, which pins this constructor, factory, factory certificate, mirror_neighbourhood_evidence 98e1b2ea, colour_evidence 6789d3d8, verified_rules a54743d7, program_targets 88298f33 and its harness; all equal the files at e64baab (probe and direct hash check). The certificates were issued before the final threshold gate (3a08f5f); constructors and factories are unchanged since, so no recertification is required. A passed certificate is a finite audit, not a proof.",
+   "admission": "Registered in the supplement: arc_agi2/diversity/prepare.py REPAIRED line 38 (native batch E, added by root in 96be803). Not a RE-ARC admission.json entry. admission.json target_source_hashes, refreshed in 96be803, pin verified_rules a54743d7, colour_evidence 6789d3d8 and mirror_neighbourhood_evidence 98e1b2ea; all 471 pins equal the files at e64baab, so sampler.admission() loads (probe). Registration is not an export: no unmodified prepare 200/20 export for this family is recorded in this worktree, and the batch-E report ran none. Batch-E figures are repair-time snapshots from the lane (b9480e9..9996de4, byte-identical to a7edea3..95ffc02). arc_agi2/reports/diversity-v1/family-status.csv still lists the pre-repair constructor 7fc6d170 with native_repaired=False (stale side record; not edited). release_ready stays false.",
+   "audit_note": "The 128-sample domain audit (fork cdf50ed) measured the legacy constructor 7fc6d170 and is stale. Current-domain figures come from native-batch-e/batch-e-evidence.json, context-audit.json and probes/rereview_batch_e.py.",
    "certified_evidence": "current",
    "release_ready": false
   },
@@ -14833,66 +14878,118 @@
   },
   "e0fb7511": {
    "status": "reviewed",
-   "reviewer": "claude-opus-5-5 (hybrid-claude-native worktree)",
-   "reviewed_on": "2026-10-24",
+   "reviewer": "claude-opus-5-5 (hybrid-claude-native-review-current worktree)",
+   "reviewed_on": "2026-10-25",
    "review_batch": 3,
-   "constructor_sha256": "3857588ff73d8b3866193818d618dc323c66986853ee719a64ee247ff18c48f4",
-   "baseline_commit": "f1b8bb9548c0361b9a9d93cbbf8b24ec81966baa",
-   "mechanism": "A 13x13 blue (1) grid where each cell is black (0) with probability 1/8 (lines 41-43). In the output, every black cell with a 4-adjacent black neighbour becomes azure (8); isolated black cells stay black (lines 31-36). Scenes need at least 13 azure cells (line 37).",
-   "fixture_evidence": "4 canonical pairs, 13x13, colours 0/1. probes/fixture_stats_batch3.py measures canonical black densities of 0.266, 0.16, 0.195 and 0.308, with 21, 14, 18 and 33 azure cells. Native density is fixed at 1/8, and the audit's non-modal fraction spans 0.107-0.219. So two of the four fixtures (0.266 and 0.308) are denser than any of the 128 audit draws.",
+   "review_kind": "rereview_after_native_repair",
+   "constructor_sha256": "d2a9f6e3cb794bdd7b12b8d689442a85dcdca061e27bff219eefd96e209853ad",
+   "baseline_commit": "e64baab92377355d6f9335ddf10a0fbda1e0e6a3",
+   "integration_baseline_commit": "96be8033a32ac47104ec737310778baffa7f5159",
+   "repair_commit": "a7edea3d1145795b61d7b6e1b730075bb7c7b593",
+   "repair_lane_commits": {
+    "verified_rules": "05db160 -> 4909572",
+    "gates": "ce8c79d -> c35ae5a",
+    "constructors": "b9480e9 -> a7edea3",
+    "threshold_gate": "51e67f2 -> 3a08f5f",
+    "evidence_refresh": "9996de4 -> 95ffc02"
+   },
+   "supersedes": {
+    "constructor_sha256": "3857588ff73d8b3866193818d618dc323c66986853ee719a64ee247ff18c48f4",
+    "baseline_commit": "f1b8bb9548c0361b9a9d93cbbf8b24ec81966baa",
+    "history_file": "review_history.json",
+    "history_index": 0
+   },
+   "mechanism": "A W x H blue (1) field with black (0) cells (default W and H independently 6..30, lines 73 and 75; explicit 1..30, line 29). Each sampled scene draws one black probability in 0.15..0.35 (87) and then every cell independently (97). In the output a black cell with a 4-adjacent black cell becomes azure (8); isolated black cells, including diagonal-only contacts, stay black (61-66). Sampled scenes need at least default_min_marked = max(2, round(13*HW/169)) azure cells (36, 91, 99), redrawn at most 200 times (22, 96) before RuntimeError (101). Explicit scenes are labelled as given, with no floor (78-84).",
+   "fixture_evidence": "4 canonical pairs (3 train, 1 test), all 13x13 0/1 grids, replayed exactly through the explicit path (validate 105-163). The production verifier (verified_rules.native_zero_adjacency) and the d4=0 factory give 4/4. Canonical black densities 0.266, 0.160, 0.195 and 0.308, and azure counts 21, 14, 18 and 33, lie inside the default density range 0.15..0.35 and above the 13-cell floor at 13x13, so all four canonical inputs are reachable by the random path (probe canonical section). The old finding (two fixtures denser than every audit draw at fixed p = 1/8) is resolved.",
    "axes": {
     "dimensions": {
-     "disposition": "incidental_restriction",
+     "disposition": "broadly_variable",
      "lines": [
-      28,
-      30,
-      42
+      29,
+      73,
+      75
      ],
-     "why": "The 13x13 canvas is a literal in grids(13, 13), the flat index i // 13 and i % 13, and the 13*13 draw (lines 28, 30, 42). The adjacency rule works on any HxW."
+     "why": "Was the literal 13x13 (old lines 28, 30, 42). W and H are now drawn independently 6..30 (73, 75) and validated 1..30 (29). Batch E: 515 input shapes in 1000 draws (was 1), but only 55 shapes have >= 4 draws, so strict same-shape support is thin. The default minimum 6 is a sampling choice; explicit sizes down to 1x1 are labelled as given."
     },
     "objects": {
      "disposition": "intrinsic_or_rule_supported",
      "lines": [
-      34,
-      35,
-      36
+      64,
+      65,
+      66
      ],
-     "why": "Components arise from noise; the rule distinguishes only isolated black cells from connected ones."
+     "why": "Components still arise from independent noise; the rule only separates isolated black cells from 4-connected ones (64-66). Higher density gives larger components: batch E largest component 2..32 (was 2..12)."
     },
     "placement": {
      "disposition": "broadly_variable",
      "lines": [
-      42
+      97
      ],
-     "why": "Every cell is drawn independently (line 42), so black components can appear anywhere, including along edges."
+     "why": "Every cell is drawn independently (97), so components appear anywhere, including along edges, on every canvas."
     },
     "density_colours": {
-     "disposition": "incidental_restriction",
+     "disposition": "mixed",
      "lines": [
-      42,
-      43
+      36,
+      87,
+      97,
+      99
      ],
-     "why": "Black probability is fixed at 1/8, below half of the canonical densities. Denser scenes with larger black components are never produced."
+     "why": "Density is drawn per scene in 0.15..0.35 (87), covering canonical 0.16-0.31 (batch E realised 0.11-0.41). Colours stay the fixed roles 0/1/8. The azure floor (36, 99) is a sampling-clarity minimum scaled from the legacy 13/169, not a rule. Probe: 46/400 default draws needed a redraw (15.7% for areas <= 169, 6.5% above 450), and the realised azure fraction is never below 0.075. Scenes marking less than about 7.7% of the canvas are never sampled (canonical minimum 14/169 = 0.083), a measurable restriction. Explicit densities near 0.10 on large canvases can exhaust the 200 attempts (batch E Limits)."
     },
     "rule_parameters": {
      "disposition": "intrinsic_or_rule_supported",
      "lines": [
-      34,
-      36
+      63,
+      64,
+      65,
+      66
      ],
-     "why": "4-adjacency defines 'connected'; diagonal neighbours do not count."
+     "why": "4-adjacency read from the unmodified input (63-66): a 0 with an orthogonal 0 neighbour becomes 8. The gate enumerates 4- and 8-connectivity with every component-size threshold T >= 1; the native rule is (4, T = 2)."
     },
     "demonstration_context": {
-     "disposition": "intrinsic_or_rule_supported",
+     "disposition": "mixed",
      "lines": [
-      36
+      36,
+      64,
+      87
      ],
-     "why": "Self-contained; the factory does not read demonstrations."
+     "why": "The factory reads no demonstrations. On small, sparse canvases the demos can fail to separate T = 2 from T >= 3 or from 8-connectivity: before the threshold gate (3a08f5f) batch E measured 127/2000 ambiguous 6x6 contexts (T >= 3: 66; 8-adjacency: 55; both: 6) and 0/2000 at 13x13. The final gate keeps every (connectivity, T) interval consistent with the demos and requires agreement at its extremes. The gate-aware audit kept 250/250 queries at default with 0 retries, and 250/250 at 6x6 with 11 retries (10 ambiguous first contexts). Identifiability depends on the gate, so this is mixed rather than intrinsic."
     }
    },
-   "proposal": "Medium: sample the black density per scene in 0.10-0.35, covering the canonical range, and H and W in 8-20. Keep the minimum-azure guard, scaled with area. Recertify.",
-   "patch_priority": "medium",
-   "uncertainties": "Fixture densities come from only 4 pairs. Not checked: whether higher densities create very large components that change learnability.",
+   "repair_delta": {
+    "expanded": "W, H independently 6..30 by default (73, 75), explicit 1..30 (25-31); per-scene black density 0.15..0.35 (87) or explicit 0 < p < 1 (88-89); area-scaled azure floor (34-36, 90-95); bounded 200-attempt loop with RuntimeError (22, 96-102); explicit scenes labelled as given (78-84). Fixed-colour pair checker verified_rules.native_zero_adjacency (4909572) and the connectivity/threshold gate (c35ae5a, final 3a08f5f).",
+    "retained": "4-adjacency marking rule (61-66); roles 0/1/8; independent per-cell noise; 13-cell floor at 13x13; legacy 13x13 canvas when colours are explicit; factory 66678c1e unchanged.",
+    "unsolved": "The floor excludes scenes marking under about 7.7% of the canvas; random density stops at 0.15..0.35; same-shape support is thin (55 shapes with >= 4 pairs per 1000 draws); the gate covers only connectivity and size thresholds."
+   },
+   "proposal": "Low. The old proposal (density 0.10-0.35, H and W 8-20, scaled floor) is implemented in a broader form (6..30, 0.15..0.35) and certified; it is not repeated. The 0.10 lower density was deliberately not used (batch E Limits). Optional: lower or randomise the floor ratio on large canvases if sparser marked scenes are wanted, then remeasure gate retries. Remaining: an unmodified prepare 200/20 export reporting same-shape support and the gate retry rate, and the 128-sample audit rerun.",
+   "patch_priority": "low",
+   "adequacy": "repaired_domain_adequate_registered",
+   "uncertainties": "The gate rules out only 4/8-connectivity and size thresholds; other component predicates (shape, row or column runs) are not enumerated. The certificate's merged draft_notes (independent review bound to the pre-repair constructor 3857588f) still describe the 1-in-8 density and say e0fb7511 is not gated; both statements are historical. Same-shape support and the gate retry rate under prepare are unmeasured.",
+   "evidence": [
+    "arc_agi2/reports/diversity-v1/native-batch-e/README.md",
+    "arc_agi2/reports/diversity-v1/native-batch-e/batch-e-evidence.json",
+    "arc_agi2/reports/diversity-v1/native-batch-e/context-audit.json",
+    "arc_agi2/diversity/test_native_batch_e.py",
+    "arc_agi2/direct_factories/e0fb7511.json",
+    "arc_agi2/reports/diversity-v1/native-certificates/e0fb7511.json",
+    "arc_agi2/diversity/prepare.py (REPAIRED, native batch E)",
+    "arc_agi2/diversity/admission.json (target_source_hashes)",
+    "probes/rereview_batch_e.py",
+    "arc_agi2/mirror_neighbourhood_evidence.py",
+    "arc_agi2/test_mirror_neighbourhood_evidence.py",
+    "arc_agi2/colour_evidence.py (dispatch, line 209)",
+    "arc_agi2/reports/diversity-v1/native-batch-e/verifier-evidence-e0fb7511-f3cdc58f.json",
+    "arc_agi2/reports/diversity-v1/native-batch-e/verifier_e0_f3_evidence.py",
+    "arc_agi2/reports/diversity-v1/native-batch-e/e0fb7511-archived-verifier-counterexample.json",
+    "arc_agi2/diversity/test_e0_f3_verifiers.py",
+    "arc_agi2/verified_rules.py (native_zero_adjacency)",
+    "arc_agi2/reports/diversity-v1/native-batch-e/batch-e-evidence-pre-threshold-b9480e9.json",
+    "arc_agi2/reports/diversity-v1/native-batch-e/context-audit-pre-threshold-b9480e9.json"
+   ],
+   "certificate_note": "direct_factories/e0fb7511.json and native-certificates/e0fb7511.json both pass 1000 fresh / 8000 augmented / 16 fixture variants with 1000 unique base inputs and 0 sampler rejections, bound to constructor d2a9f6e3 and the unchanged factory 66678c1e; certified_factory_source returns a program for all 8 D4 transforms (probe). auditor_sha256 1e194cb8 is the current recertify.py (5fdfb65). recertify.check runs the pair verifier only, not the evidence gate, so gate coverage comes from native-batch-e/context-audit.json, which pins this constructor, factory, factory certificate, mirror_neighbourhood_evidence 98e1b2ea, colour_evidence 6789d3d8, verified_rules a54743d7, program_targets 88298f33 and its harness; all equal the files at e64baab (probe and direct hash check). The certificates were issued before the final threshold gate (3a08f5f); constructors and factories are unchanged since, so no recertification is required. A passed certificate is a finite audit, not a proof. The pair verifier is verified_rules.native_zero_adjacency (archived solver disproven: counterexample file). verifier-evidence-e0fb7511-f3cdc58f.json pins the current verified_rules a54743d7 but the legacy constructor 3857588f, so its 0/1000 and adversarial results were measured on legacy draws; batch-e-evidence.json reports 0 checker disagreements on 1000 current draws.",
+   "admission": "Registered in the supplement: arc_agi2/diversity/prepare.py REPAIRED line 38 (native batch E, added by root in 96be803). Not a RE-ARC admission.json entry. admission.json target_source_hashes, refreshed in 96be803, pin verified_rules a54743d7, colour_evidence 6789d3d8 and mirror_neighbourhood_evidence 98e1b2ea; all 471 pins equal the files at e64baab, so sampler.admission() loads (probe). Registration is not an export: no unmodified prepare 200/20 export for this family is recorded in this worktree, and the batch-E report ran none. Batch-E figures are repair-time snapshots from the lane (b9480e9..9996de4, byte-identical to a7edea3..95ffc02). arc_agi2/reports/diversity-v1/family-status.csv still lists the pre-repair constructor 3857588f with native_repaired=False (stale side record; not edited). release_ready stays false.",
+   "audit_note": "The 128-sample domain audit (fork cdf50ed) measured the legacy constructor 3857588f and is stale. Current-domain figures come from native-batch-e/batch-e-evidence.json, context-audit.json and probes/rereview_batch_e.py.",
    "certified_evidence": "current",
    "release_ready": false
   },
@@ -16519,75 +16616,118 @@
   },
   "f0df5ff0": {
    "status": "reviewed",
-   "reviewer": "claude-opus-5-5 (hybrid-claude-native worktree)",
-   "reviewed_on": "2026-10-24",
+   "reviewer": "claude-opus-5-5 (hybrid-claude-native-review-current worktree)",
+   "reviewed_on": "2026-10-25",
    "review_batch": 4,
-   "constructor_sha256": "df76beda51cd578c92874de3457086aa71845949a4ca3f6b77e69dea34205dba",
-   "baseline_commit": "a59e28aca6cb1d7a39e6cbf8dac469ceab74db5b",
-   "mechanism": "A 15x15 grid of 50% confetti, using choices of 6 colours from 2-9 (repeats allowed; lines 46-50). It holds 2-8 blue seeds at the centres of non-overlapping 3x3 windows, never on the edge (lines 47, 51-56). The output paints blue over every black cell in each seed's 3x3 window (lines 31, 34). Line 42 rejects scenes where a window ends up with fewer than 3 blue cells.",
-   "fixture_evidence": "4 canonical pairs, 15x15. Seed counts are 5, 4, 6 and 8. No canonical seed is on the edge and no two windows overlap (batch-4 fixture check), which matches lines 51-54. Canonical confetti density is 0.31-0.45, while native is 0.5 per cell before seeding. Audit: 128/128 unique.",
+   "review_kind": "rereview_after_native_repair",
+   "constructor_sha256": "0c452608a9c167d402388478ef972d599bef10213655c9a79664b9d98a0b6ab1",
+   "baseline_commit": "e64baab92377355d6f9335ddf10a0fbda1e0e6a3",
+   "integration_baseline_commit": "96be8033a32ac47104ec737310778baffa7f5159",
+   "repair_commit": "a7edea3d1145795b61d7b6e1b730075bb7c7b593",
+   "repair_lane_commits": {
+    "verified_rules": "05db160 -> 4909572",
+    "gates": "ce8c79d -> c35ae5a",
+    "constructors": "b9480e9 -> a7edea3",
+    "threshold_gate": "51e67f2 -> 3a08f5f",
+    "evidence_refresh": "9996de4 -> 95ffc02"
+   },
+   "supersedes": {
+    "constructor_sha256": "df76beda51cd578c92874de3457086aa71845949a4ca3f6b77e69dea34205dba",
+    "baseline_commit": "a59e28aca6cb1d7a39e6cbf8dac469ceab74db5b",
+    "history_file": "review_history.json",
+    "history_index": 0
+   },
+   "mechanism": "A W x H black canvas (default W and H independently 6..30, lines 126 and 128; explicit 1..30, line 29) with confetti: each cell takes a colour from a 6-draw multiset of 2..9 with probability d (150, 167-168), d drawn per scene in 0.3..0.5 (159). Blue (1) seeds sit at the centres of disjoint 3x3 windows fully inside the canvas (165, 169-170); the default seed count is 2..default_max_boxes (151-153), which is 2..8 at 15x15 and capped at half the window capacity (44-45). The output paints blue over every black cell in each seed's window (108) and keeps confetti (111). Every window must show at least 3 blue cells (117-120, 172); layouts are redrawn at most 200 times (22, 163) before RuntimeError (174).",
+   "fixture_evidence": "4 canonical pairs (3 train, 1 test), all 15x15, replayed exactly through the explicit path (validate 178-244). The production verifier (archived reference with fixed background 0 and seed 1) and the d4=0 factory give 4/4. Seed counts 5, 4, 6 and 8 lie in the default 2..8 at 15x15, and non-seed confetti density 0.318, 0.389, 0.438 and 0.465 lies in 0.3..0.5. But train[1] uses 7 distinct confetti colours ({2,3,5,6,7,8,9}), and line 150 draws the pool as common.choices(range(2, 10), 6), which gives at most 6. Canonical train[1] is therefore unreachable by the random path. This was also true of legacy line 46, and the old review missed it. Probe: distinct confetti colours in 400 default draws are 2:4, 3:47, 4:167, 5:157, 6:25, against canonical 4, 7, 6, 6.",
    "axes": {
     "dimensions": {
-     "disposition": "incidental_restriction",
+     "disposition": "broadly_variable",
      "lines": [
-      28,
-      31,
-      41,
-      49,
-      51,
-      52
+      29,
+      126,
+      128
      ],
-     "why": "The literal 15 appears throughout. Dilating seeds into black works on any canvas."
+     "why": "Was the literal 15 throughout. W and H are now drawn independently 6..30 (126, 128) and validated 1..30 (29). Batch E: 497 input shapes in 1000 draws (was 1), 45 with >= 4 draws. The minimum 6 is a sampling choice; explicit canvases need at least one 3x3 window (147-149)."
     },
     "objects": {
      "disposition": "mixed",
      "lines": [
-      47,
-      53,
-      56
+      44,
+      45,
+      151,
+      152,
+      153
      ],
-     "why": "Several single-cell seeds is rule-supported. The 2-8 count is a literal that matches the fixtures."
+     "why": "The seed count now scales: 2..default_max_boxes (151-153), the legacy 8 per 225 cells capped at half the window capacity (44-45). Batch E: 2..29 seeds with 27 distinct counts (was 2..8). Probe: seeds never use more than 0.5 of the window capacity in default draws. The ratio and the half-capacity cap are sampling choices; explicit num_boxes reaches full capacity (156-157)."
     },
     "placement": {
      "disposition": "mixed",
      "lines": [
-      51,
-      52,
       54,
-      56
+      60,
+      137,
+      139,
+      165
      ],
-     "why": "Interior seeds and non-overlapping windows match the fixtures but are incidental. The factory clips windows at edges, and overlapping windows would simply merge."
+     "why": "Retained domain limits: seeds are interior because windows lie fully inside the canvas (54); windows are disjoint but may touch (60); explicit scenes with edge seeds or overlapping windows raise (137-141). Neither case is demonstrated, so keeping them out is fixture-faithful, not rule-derived; the factory clips at edges and unions overlaps. The probe shows default_max_boxes <= capacity//2 for every 6..30 shape, so default draws always use random sequential placement and the jittered lattice (64-79, 165) runs only for explicit num_boxes."
     },
     "density_colours": {
      "disposition": "mixed",
      "lines": [
-      46,
-      49,
-      50
+      150,
+      159,
+      167,
+      168
      ],
-     "why": "Blue never appears in the confetti, so seeds are unambiguous (rule-supported). The 0.5 density is a literal above the canonical 0.31-0.45."
+     "why": "Confetti density is drawn per scene in 0.3..0.5 (159), matching canonical 0.32-0.47 (batch E realised 0.20-0.56). Blue never appears in confetti, so seeds are unambiguous (rule-supported). The incidental restriction kept from legacy is the pool common.choices(range(2, 10), 6) (150): at most 6 distinct colours and usually fewer (probe median 4). Canonical train[1] has 7, so it lies outside the random path."
     },
     "rule_parameters": {
      "disposition": "intrinsic_or_rule_supported",
      "lines": [
-      31,
-      34,
-      42
+      108,
+      111,
+      117,
+      118,
+      119,
+      120
      ],
-     "why": "The 3x3 neighbourhood's black cells turn blue; confetti is preserved. Line 42 guarantees each window shows a visible change."
+     "why": "3x3 window around each seed; black cells become blue and confetti is kept (108, 111). The >= 3 visible-blue guard (117-120) is a clarity minimum; probe 31/400 default draws needed a redraw."
     },
     "demonstration_context": {
      "disposition": "intrinsic_or_rule_supported",
      "lines": [
-      31,
-      34
+      108,
+      111
      ],
-     "why": "The factory dilates the query's seeds and never reads demonstrations."
+     "why": "The factory reads no demonstrations. The dilation gate (square vs plus cross) found 0/2000 ambiguous contexts at 6x6 and 15x15 before gating, and the gate-aware audit kept 250/250 queries with 0 retries at default and at 6x6. Probe: a competitor that also overwrites confetti inside windows fitted all three demos in 0/2000 contexts at 6x6 and at 15x15. In practice identifiability does not depend on the gate."
     }
    },
-   "proposal": "Medium. Sample H and W, scale the seed count with area, and sample confetti density in about 0.3-0.5 to match the fixtures. Edge seeds and overlapping windows are optional and undemonstrated. Recertify.",
-   "patch_priority": "medium",
-   "uncertainties": "Whether edge seeds or overlapping windows occur in the original rule.",
+   "repair_delta": {
+    "expanded": "W, H independently 6..30 (126, 128), explicit 1..30 (25-31); seed count 2..default_max_boxes scaled with area (39-45, 151-153), explicit up to capacity (156-157) through a jittered lattice for dense requests (64-79, 162, 165); confetti density per scene 0.3..0.5 (159); bounded 200-attempt loop with RuntimeError (22, 163-175); explicit scenes validated (131-145). Square-vs-cross dilation gate (c35ae5a).",
+    "retained": "3x3 dilation over black with confetti kept (104-112); blue excluded from confetti; interior seeds and disjoint windows (54, 60, 137-141); >= 3 visible blue per window (117-120); confetti pool choices(range(2, 10), 6) (150); legacy 15x15 canvas when colours are explicit; factory d3eb4c59 and the archived verifier unchanged.",
+    "unsolved": "Canonical train[1] (7 confetti colours) is unreachable by the random path because of line 150. Edge seeds and overlapping windows stay excluded (undemonstrated). Dense explicit requests can exhaust the budget. Same-shape support is thin (45 shapes with >= 4 pairs per 1000 draws)."
+   },
+   "proposal": "High, narrowly scoped. One canonical input is outside the random path, the criterion used for high priority in batches 5, 6 and 22. Fix line 150 only: draw the confetti pool size per scene (for example 1..8 distinct colours from 2..9 via common.sample) so 7-colour scenes like train[1] occur; keep every other rule and guard. Then recertify (1000/8000/16), rerun the gate-aware context audit and check the archived verifier on the new scenes. The old size/count/density proposal is implemented and is not repeated. Edge seeds and overlapping windows stay optional and undemonstrated.",
+   "patch_priority": "high",
+   "adequacy": "needs_constructor_work",
+   "uncertainties": "Whether the 6-draw pool was intended or is a legacy sampling artefact; canonical train[1] shows the task admits 7. Whether edge seeds or overlapping windows occur in the original task. The gate enumerates only square vs cross; the overwrite competitor was checked only by the probe. The certificate's draft_notes (review bound to pre-repair df76beda) still say f0df5ff0 is not in the colour_evidence whitelist; it is now gated (colour_evidence.py 209).",
+   "evidence": [
+    "arc_agi2/reports/diversity-v1/native-batch-e/README.md",
+    "arc_agi2/reports/diversity-v1/native-batch-e/batch-e-evidence.json",
+    "arc_agi2/reports/diversity-v1/native-batch-e/context-audit.json",
+    "arc_agi2/diversity/test_native_batch_e.py",
+    "arc_agi2/direct_factories/f0df5ff0.json",
+    "arc_agi2/reports/diversity-v1/native-certificates/f0df5ff0.json",
+    "arc_agi2/diversity/prepare.py (REPAIRED, native batch E)",
+    "arc_agi2/diversity/admission.json (target_source_hashes)",
+    "probes/rereview_batch_e.py",
+    "arc_agi2/mirror_neighbourhood_evidence.py",
+    "arc_agi2/test_mirror_neighbourhood_evidence.py",
+    "arc_agi2/colour_evidence.py (dispatch, line 209)"
+   ],
+   "certificate_note": "direct_factories/f0df5ff0.json and native-certificates/f0df5ff0.json both pass 1000 fresh / 8000 augmented / 16 fixture variants with 1000 unique base inputs and 0 sampler rejections, bound to constructor 0c452608 and the unchanged factory d3eb4c59; certified_factory_source returns a program for all 8 D4 transforms (probe). auditor_sha256 1e194cb8 is the current recertify.py (5fdfb65). recertify.check runs the pair verifier only, not the evidence gate, so gate coverage comes from native-batch-e/context-audit.json, which pins this constructor, factory, factory certificate, mirror_neighbourhood_evidence 98e1b2ea, colour_evidence 6789d3d8, verified_rules a54743d7, program_targets 88298f33 and its harness; all equal the files at e64baab (probe and direct hash check). The certificates were issued before the final threshold gate (3a08f5f); constructors and factories are unchanged since, so no recertification is required. A passed certificate is a finite audit, not a proof.",
+   "admission": "Registered in the supplement: arc_agi2/diversity/prepare.py REPAIRED line 38 (native batch E, added by root in 96be803). Not a RE-ARC admission.json entry. admission.json target_source_hashes, refreshed in 96be803, pin verified_rules a54743d7, colour_evidence 6789d3d8 and mirror_neighbourhood_evidence 98e1b2ea; all 471 pins equal the files at e64baab, so sampler.admission() loads (probe). Registration is not an export: no unmodified prepare 200/20 export for this family is recorded in this worktree, and the batch-E report ran none. Batch-E figures are repair-time snapshots from the lane (b9480e9..9996de4, byte-identical to a7edea3..95ffc02). arc_agi2/reports/diversity-v1/family-status.csv still lists the pre-repair constructor df76beda with native_repaired=False (stale side record; not edited). release_ready stays false.",
+   "audit_note": "The 128-sample domain audit (fork cdf50ed) measured the legacy constructor df76beda and is stale. Current-domain figures come from native-batch-e/batch-e-evidence.json, context-audit.json and probes/rereview_batch_e.py.",
    "certified_evidence": "current",
    "release_ready": false
   },
@@ -16745,70 +16885,114 @@
   },
   "f3cdc58f": {
    "status": "reviewed",
-   "reviewer": "claude-opus-5-5 (hybrid-claude-native worktree)",
-   "reviewed_on": "2026-10-24",
+   "reviewer": "claude-opus-5-5 (hybrid-claude-native-review-current worktree)",
+   "reviewed_on": "2026-10-25",
    "review_batch": 4,
-   "constructor_sha256": "763478e511a8fd9bd9ec13580b1bd30bfa19642e3a8f356018efa81c7c328f94",
-   "baseline_commit": "a59e28aca6cb1d7a39e6cbf8dac469ceab74db5b",
-   "mechanism": "A 10x10 black grid where each colour 1-4 is placed 2-8 times at random cells. Later placements may overwrite earlier ones, and every colour must survive (lines 27-36). The output is a histogram: column c-1 holds a bottom-anchored bar of colour c, as tall as the colour's count (lines 41-43).",
-   "fixture_evidence": "4 canonical pairs, 10x10. Bars of colours 1-4 always sit in columns 0-3. Audit: 128/128 unique.",
+   "review_kind": "rereview_after_native_repair",
+   "constructor_sha256": "abd953bb8cd3a8c121ee081492f4c8e8df591b26cd03d3b13d01b875c9934d97",
+   "baseline_commit": "e64baab92377355d6f9335ddf10a0fbda1e0e6a3",
+   "integration_baseline_commit": "96be8033a32ac47104ec737310778baffa7f5159",
+   "repair_commit": "a7edea3d1145795b61d7b6e1b730075bb7c7b593",
+   "repair_lane_commits": {
+    "verified_rules": "05db160 -> 4909572",
+    "gates": "ce8c79d -> c35ae5a",
+    "constructors": "b9480e9 -> a7edea3",
+    "threshold_gate": "51e67f2 -> 3a08f5f",
+    "evidence_refresh": "9996de4 -> 95ffc02"
+   },
+   "supersedes": {
+    "constructor_sha256": "763478e511a8fd9bd9ec13580b1bd30bfa19642e3a8f356018efa81c7c328f94",
+    "baseline_commit": "a59e28aca6cb1d7a39e6cbf8dac469ceab74db5b",
+    "history_file": "review_history.json",
+    "history_index": 0
+   },
+   "mechanism": "A W x H black grid (default W and H independently 4..30, lines 60 and 62; explicit W 4..30 and H 1..30, line 63). Each colour 1..4 is placed randint(lo, hi) times at uniform cells, where placement_range(H) = (2, min(H, max(2, 4H//5))) (37-38, 66, 69-71). Later placements may overwrite earlier ones; the scene is redrawn at most 100 times (20, 67) until all four colours survive (72), else RuntimeError (74). The output is a histogram on the same canvas: column c-1 holds a bottom-aligned bar of colour c as tall as its count (88-90). Counts above H raise (80-83).",
+   "fixture_evidence": "4 canonical pairs (3 train, 1 test), all 10x10, replayed exactly (validate 94-124; explicit 10x10 consumes the legacy RNG stream). The production verifier (verified_rules.fixed_colour_histogram) and the d4=0 factory give 4/4. Canonical counts [7,5,8,5], [8,4,2,6], [2,3,3,5] and [6,7,8,4] lie in the placement range 2..8 at H = 10, so every canonical input is reachable by the random path (probe). The tallest canonical bar is 8/10 = 0.8 H.",
    "axes": {
     "dimensions": {
-     "disposition": "incidental_restriction",
+     "disposition": "broadly_variable",
      "lines": [
-      29,
-      38,
-      43
+      60,
+      62,
+      63
      ],
-     "why": "The literal 10x10 canvas and the 100-cell list. Counts of at most 8 fit 10 rows."
+     "why": "Was the literal 10x10. W and H are now drawn independently 4..30 (60, 62); explicit W >= 4 (the four bar columns, intrinsic) and H >= 1 (63). Batch E: 541 input shapes in 1000 draws (was 1), 37 with >= 4 draws. The random minimum 4 for H is a sampling choice."
     },
     "objects": {
      "disposition": "mixed",
      "lines": [
-      30,
-      31,
-      32,
-      35
+      37,
+      69,
+      70,
+      71,
+      72
      ],
-     "why": "Four colours each present is rule-supported. The 2-8 placements per colour (fewer after overwrites) are literals."
+     "why": "Four colours always present (72) is rule-supported: every pair shows all four bars. Placements now scale with H (37, 70): batch E max bar 24 (was 8), 591/1000 with a bar above 8. Retained cap: placements never exceed 4H//5 for H >= 5 (37), so no default draw has a bar taller than 0.8 H (probe: max bar/H <= 0.8 in 400/400, and no random height allows a full-height bar). The canonical maximum is exactly 0.8 H, so the cap is fixture-consistent but measurably restrictive; explicit colours allow counts up to H (81)."
     },
     "placement": {
      "disposition": "broadly_variable",
      "lines": [
-      32
+      71
      ],
-     "why": "Pixel positions are uniform over the canvas (line 32)."
+     "why": "Placements are uniform over the whole canvas (71) at any width."
     },
     "density_colours": {
-     "disposition": "intrinsic_or_rule_supported",
+     "disposition": "mixed",
      "lines": [
-      30,
-      43
+      37,
+      70,
+      71,
+      90
      ],
-     "why": "Colours are exactly 1-4, and the colour's value sets its bar column. This fixed colour-to-column legend is the rule; it varies only through the palette."
+     "why": "Colours are exactly 1..4 on 0, and colour value sets the bar column (90): this fixed legend is the rule and varies only through the palette. Ink density is not controlled: placements scale with H but not W (37, 70), so wide, short canvases are sparse (probe ink density 0.023-0.49, median 0.10; batch E 0.02-0.50)."
     },
     "rule_parameters": {
      "disposition": "intrinsic_or_rule_supported",
      "lines": [
-      41,
-      42,
-      43
+      88,
+      89,
+      90
      ],
-     "why": "Count each colour and draw its bar from the bottom of its column."
+     "why": "Count each colour and draw its bar upward from the bottom row of column c-1 (88-90)."
     },
     "demonstration_context": {
-     "disposition": "intrinsic_or_rule_supported",
+     "disposition": "mixed",
      "lines": [
-      34,
-      35,
-      43
+      70,
+      72,
+      90
      ],
-     "why": "Every pair shows all four colours (line 35), so each pair reveals the legend. The factory uses a constant COLOURS order."
+     "why": "Every pair shows all four bars (72), and the factory takes a constant colour order from the palette without reading demonstrations. No gate is dispatched: colour_evidence has no f3cdc58f branch, and the context audit reports gated: false. Probe: a competitor legend that orders columns by ascending count (ties by colour) fits all three demos and changes the query in 67/2000 same-shape 4x4 contexts, 3/2000 at 10x10 and 6/2000 at default query shapes; descending count gives 3, 0 and 1 of 2000; first appearance gives 0. prepare would accept such episodes although their demos do not identify the legend. Small heights make counts tie or follow colour order."
     }
    },
-   "proposal": "Medium. Sample H and W, with counts capped by H, and allow counts above 8. Recertify.",
+   "repair_delta": {
+    "expanded": "W, H independently 4..30 (60, 62), explicit W 4..30 and H 1..30 (23-29, 63); placements 2..min(H, 4H//5) per colour (32-38, 66-71), so bars above 8 occur; bounded 100-attempt loop with RuntimeError (20, 67-75); explicit counts validated 1..H (80-83); legacy 10x10 RNG replay. Fixed-legend pair checker verified_rules.fixed_colour_histogram (4909572).",
+    "retained": "Histogram rule with colour c in column c-1 (88-90); all four colours present (72); overwriting placements; legacy 10x10 canvas when colours are explicit; factory 81c2164b unchanged; no evidence gate.",
+    "unsolved": "Bars above 0.8 H never sampled; ink density uncontrolled across widths; ungated count-order legend ambiguity at small heights (67/2000 at 4x4); thin same-shape support (37 shapes with >= 4 pairs per 1000 draws)."
+   },
+   "proposal": "Medium, mostly gate work rather than constructor work. The old proposal (sample H and W, counts capped by H, counts above 8) is implemented and certified; it is not repeated. Add a narrow legend gate (root-authorised, as for 0c786b71 and e0fb7511) that rejects contexts where a count-ordered legend fits every demonstration but changes the query, or raise the random minimum height; then rerun the gate-aware context audit. Optional constructor refinement: allow placements up to H and scale them with area so wide canvases are not sparse. Recertify after any constructor change.",
    "patch_priority": "medium",
-   "uncertainties": "Whether the original orders columns by colour value or by some other fixed legend; only colours 1-4 are ever seen.",
+   "adequacy": "repaired_domain_adequate_registered_needs_context_gate",
+   "uncertainties": "The competitor legends are this probe's choice; other legends are not excluded. Whether bars taller than 0.8 H were intended (the fixtures stop at 0.8). Whether the original task orders columns by colour value or by another fixed legend, since only colours 1-4 are seen. The certificate's merged draft_notes (review bound to pre-repair 763478e5) say the constructor only emits 10x10; that is historical.",
+   "evidence": [
+    "arc_agi2/reports/diversity-v1/native-batch-e/README.md",
+    "arc_agi2/reports/diversity-v1/native-batch-e/batch-e-evidence.json",
+    "arc_agi2/reports/diversity-v1/native-batch-e/context-audit.json",
+    "arc_agi2/diversity/test_native_batch_e.py",
+    "arc_agi2/direct_factories/f3cdc58f.json",
+    "arc_agi2/reports/diversity-v1/native-certificates/f3cdc58f.json",
+    "arc_agi2/diversity/prepare.py (REPAIRED, native batch E)",
+    "arc_agi2/diversity/admission.json (target_source_hashes)",
+    "probes/rereview_batch_e.py",
+    "arc_agi2/reports/diversity-v1/native-batch-e/verifier-evidence-e0fb7511-f3cdc58f.json",
+    "arc_agi2/reports/diversity-v1/native-batch-e/verifier_e0_f3_evidence.py",
+    "arc_agi2/reports/diversity-v1/native-batch-e/f3cdc58f-archived-verifier-counterexample.json",
+    "arc_agi2/diversity/test_e0_f3_verifiers.py",
+    "arc_agi2/verified_rules.py (fixed_colour_histogram)"
+   ],
+   "certificate_note": "direct_factories/f3cdc58f.json and native-certificates/f3cdc58f.json both pass 1000 fresh / 8000 augmented / 16 fixture variants with 1000 unique base inputs and 0 sampler rejections, bound to constructor abd953bb and the unchanged factory 81c2164b; certified_factory_source returns a program for all 8 D4 transforms (probe). auditor_sha256 1e194cb8 is the current recertify.py (5fdfb65). recertify.check runs the pair verifier only, not the evidence gate, so gate coverage comes from native-batch-e/context-audit.json, which pins this constructor, factory, factory certificate, mirror_neighbourhood_evidence 98e1b2ea, colour_evidence 6789d3d8, verified_rules a54743d7, program_targets 88298f33 and its harness; all equal the files at e64baab (probe and direct hash check). The certificates were issued before the final threshold gate (3a08f5f); constructors and factories are unchanged since, so no recertification is required. A passed certificate is a finite audit, not a proof. The pair verifier is verified_rules.fixed_colour_histogram (archived solver disproven: counterexample file). verifier-evidence-e0fb7511-f3cdc58f.json pins the current verified_rules a54743d7 but the legacy constructor 763478e5, so its 0/1000 and adversarial results were measured on legacy draws; batch-e-evidence.json reports 0 checker disagreements on 1000 current draws. The context audit runs this family ungated (gated: false).",
+   "admission": "Registered in the supplement: arc_agi2/diversity/prepare.py REPAIRED line 38 (native batch E, added by root in 96be803). Not a RE-ARC admission.json entry. admission.json target_source_hashes, refreshed in 96be803, pin verified_rules a54743d7, colour_evidence 6789d3d8 and mirror_neighbourhood_evidence 98e1b2ea; all 471 pins equal the files at e64baab, so sampler.admission() loads (probe). Registration is not an export: no unmodified prepare 200/20 export for this family is recorded in this worktree, and the batch-E report ran none. Batch-E figures are repair-time snapshots from the lane (b9480e9..9996de4, byte-identical to a7edea3..95ffc02). arc_agi2/reports/diversity-v1/family-status.csv still lists the pre-repair constructor 763478e5 with native_repaired=False (stale side record; not edited). release_ready stays false.",
+   "audit_note": "The 128-sample domain audit (fork cdf50ed) measured the legacy constructor 763478e5 and is stale. Current-domain figures come from native-batch-e/batch-e-evidence.json, context-audit.json and probes/rereview_batch_e.py.",
    "certified_evidence": "current",
    "release_ready": false
   },

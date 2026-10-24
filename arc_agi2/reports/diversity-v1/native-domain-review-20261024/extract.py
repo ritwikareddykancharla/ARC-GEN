@@ -273,6 +273,12 @@ def check_history(reviews, history, recs):
             b = git_blob(sb["replaced_by_commit"], sb["path"])
             if b is None or sha(b) == sb["constructor_sha256"]:
                 errs.append(f"{tid}: history[{n}] replaced_by_commit does not change the constructor")
+            # The replacing commit must be the one that made the change (its parent still
+            # holds the reviewed source) and must hold the recorded replacement source.
+            if sb["last_commit_with_this_source"] != sb["replaced_by_commit"] + "^":
+                errs.append(f"{tid}: history[{n}] last_commit_with_this_source is not replaced_by_commit^")
+            if b is None or sha(b) != sb.get("replacement_constructor_sha256"):
+                errs.append(f"{tid}: history[{n}] replacement_constructor_sha256 is not the source at replaced_by_commit")
             for c in (e["first_committed_in"], e["archived_from_commit"]):
                 b = git_blob(c, review_rel)
                 if b is None or json.loads(b)["reviews"].get(tid) != old:

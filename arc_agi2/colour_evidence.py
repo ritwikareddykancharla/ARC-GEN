@@ -211,6 +211,16 @@ def require_colour_evidence(task_id, demonstrations, queries, palette=None, d4=0
         require_mirror_neighbourhood_evidence(task_id, demonstrations, queries,
                     list(range(10)) if palette is None else palette)
         return
+    if task_id == '8ba14f53':
+        from .hole_tally_8ba14f53_evidence import require_hole_tally_evidence
+        require_hole_tally_evidence(demonstrations, queries,
+                    list(range(10)) if palette is None else palette)
+        return
+    if task_id == '4cd1b7b2':
+        from .latin_fill_4cd1b7b2_evidence import require_latin_fill_evidence
+        require_latin_fill_evidence(demonstrations, queries,
+                    list(range(10)) if palette is None else palette)
+        return
     if task_id == '80214e03':
         from .mosaic_band_evidence import require_mosaic_band_evidence
         require_mosaic_band_evidence(demonstrations, queries,

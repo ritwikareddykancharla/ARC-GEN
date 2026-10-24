@@ -7,9 +7,11 @@ arguments. Every pair label is checked by runtime.verification_solver.
 The witness probe draws strict same-shape contexts (three demonstrations and
 a query at one input size) and counts contexts where a competing candidate
 rule fits every demonstration but changes the query answer, i.e. contexts
-make_record accepted before the batch E gates. The e0fb7511 component-size
-threshold (size >= 3) competitor is measured too but is NOT gated (proposal
-only). Every call has a 3 s deadline. Writes batch-e-evidence.json.
+make_record accepted before the batch E gates and the current gates reject.
+For e0fb7511 the candidates are 4-/8-connectivity x every threshold T >= 1;
+wrong survivors are named eight-adjacency, T=1 or T>=3. Every call has a
+3 s deadline. Writes batch-e-evidence.json (the version before the threshold
+candidates is kept as batch-e-evidence-pre-threshold-b9480e9.json).
 
     PYTHONPATH=. python arc_agi2/reports/diversity-v1/native-batch-e/batch_e_evidence.py
 """
@@ -23,8 +25,10 @@ import types
 from collections import Counter
 from pathlib import Path
 
-from arc_agi2.mirror_neighbourhood_evidence import (ADJACENCIES, ANCHORS, DILATIONS,
-                                                    surviving_rules, variants_for)
+from arc_agi2.mirror_neighbourhood_evidence import (ANCHORS, CONNECTIVITY, DILATIONS,
+                                                    _components, candidate_predictions,
+                                                    surviving_rules, surviving_thresholds,
+                                                    threshold_output, variants_for)
 from arc_agi2.runtime import BASE, call, grid, verification_solver
 
 OUT = Path(__file__).resolve().parent
@@ -37,8 +41,7 @@ LEGACY_SHA = {"0c786b71": "7fc6d170003af1a888887129b02bf336afb967f350691ae23e655
 WITNESS_SHAPES = {"0c786b71": [(2, 2), (3, 2), (2, 3), (3, 4)], "e0fb7511": [(6, 6), (13, 13)],
                   "f0df5ff0": [(6, 6), (15, 15)]}
 WITNESS_CONTEXTS = 2000
-NAMES = {"0c786b71": ANCHORS, "e0fb7511": ADJACENCIES, "f0df5ff0": DILATIONS}
-NATIVE = {"0c786b71": ANCHORS.index("BR"), "e0fb7511": 0, "f0df5ff0": 0}
+NAMES = {"0c786b71": ANCHORS, "f0df5ff0": DILATIONS}
 
 
 def sha(data):
@@ -145,54 +148,40 @@ def stats(tid, pairs):
             **family_stats(tid, pairs)}
 
 
-def threshold_three(a):
-    """Unimplemented competitor: only 4-components of size >= 3 turn 8."""
-    out = [r[:] for r in a]
-    h, w = len(a), len(a[0])
-    seen = set()
-    for y in range(h):
-        for x in range(w):
-            if a[y][x] or (y, x) in seen:
-                continue
-            comp, stack = [], [(y, x)]
-            seen.add((y, x))
-            while stack:
-                cy, cx = stack.pop()
-                comp.append((cy, cx))
-                for p in ((cy + 1, cx), (cy - 1, cx), (cy, cx + 1), (cy, cx - 1)):
-                    if 0 <= p[0] < h and 0 <= p[1] < w and p not in seen and a[p[0]][p[1]] == 0:
-                        seen.add(p)
-                        stack.append(p)
-            if len(comp) >= 3:
-                for cy, cx in comp:
-                    out[cy][cx] = 8
-    return out
+def e0_competitors(demos, query, palette):
+    """Name surviving e0fb7511 candidates whose (extremal) query answer is wrong."""
+    rows = query["input"]
+    bad = set()
+    for name, (low, high) in surviving_thresholds(demos, palette).items():
+        beyond = max(map(len, _components(rows, palette[0], CONNECTIVITY[name])), default=0) + 1
+        for t in {min(low, beyond), beyond if high is None else min(high, beyond)}:
+            if threshold_output(rows, palette, name, t) != query["output"]:
+                bad.add("eight-adjacency" if name == "eight" else "T=1" if t < 2 else "T>=3")
+    return sorted(bad)
 
 
 def witness(tid, module):
     rows = {}
-    variants = variants_for(tid, list(range(10)))
+    palette = list(range(10))
     for h, w in WITNESS_SHAPES[tid]:
-        wrong, extra, first = Counter(), 0, None
+        wrong, ambiguous, first = Counter(), 0, None
         for i in range(WITNESS_CONTEXTS):
             seeded(tid, f"witness-{h}x{w}", i)
             ps = [call(module.generate, seconds=3, width=w, height=h) for _ in range(4)]
-            alive = surviving_rules(tid, ps[:3])
-            options = variants(ps[3]["input"])
-            bad = sorted(NAMES[tid][k] for k in alive if options[k] != ps[3]["output"])
-            if bad:
-                wrong[",".join(bad)] += 1
-                if first is None:
-                    first = {"context": i, "competitors": bad}
+            if len(candidate_predictions(tid, ps[:3], ps[3]["input"], palette)) < 2:
+                continue
+            ambiguous += 1
             if tid == "e0fb7511":
-                fits = all(threshold_three(p["input"]) == p["output"] for p in ps[:3])
-                extra += fits and threshold_three(ps[3]["input"]) != ps[3]["output"]
-        row = {"contexts": WITNESS_CONTEXTS,
-               "ambiguous_contexts": sum(wrong.values()),
-               "by_surviving_wrong_candidates": dict(wrong), "first": first}
-        if tid == "e0fb7511":
-            row["ungated_size3_threshold_ambiguous"] = extra
-        rows[f"{h}x{w}"] = row
+                bad = e0_competitors(ps[:3], ps[3], palette)
+            else:
+                options = variants_for(tid, palette)(ps[3]["input"])
+                bad = sorted(NAMES[tid][k] for k in surviving_rules(tid, ps[:3])
+                             if options[k] != ps[3]["output"])
+            wrong[",".join(bad)] += 1
+            if first is None:
+                first = {"context": i, "competitors": bad}
+        rows[f"{h}x{w}"] = {"contexts": WITNESS_CONTEXTS, "ambiguous_contexts": ambiguous,
+                            "by_surviving_wrong_candidates": dict(wrong), "first": first}
     return rows
 
 

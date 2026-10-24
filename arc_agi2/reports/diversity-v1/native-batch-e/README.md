@@ -16,12 +16,16 @@ registries were not modified or monkeypatched.
 |---|---|
 | `05db160` | `verified_rules`: fixed-colour pair checkers for e0fb7511 and f3cdc58f |
 | `ce8c79d` | `colour_evidence` + new `mirror_neighbourhood_evidence.py`: gates for 0c786b71, e0fb7511, f0df5ff0 |
-| (this) | constructors, recertified factory records, tests, evidence, context audit, report |
+| `b9480e9` | constructors, recertified factory records, tests, evidence, context audit, report |
+| `3061857` | batch D context-audit rerun on the batch E shared sources |
+| `302a830` | supervisor doc qualification (low-density limit, D rerun comparison) |
+| `51e67f2` | e0fb7511 gate: component-size threshold candidates (all T ≥ 1) alongside 4/8-connectivity |
+| (this) | witness evidence and context-audit refresh on the final gate bytes; report |
 
 Shared-source hashes:
 - `verified_rules.py`: 8ad9a385 → a54743d7.
 - `colour_evidence.py`: 2617143c → 6789d3d8.
-- `mirror_neighbourhood_evidence.py`: new, 59b0a8f1.
+- `mirror_neighbourhood_evidence.py`: new, 59b0a8f1 (`ce8c79d`) → 98e1b2ea (`51e67f2`, final).
 
 The direct factories are unchanged (871a44a1, 66678c1e, d3eb4c59, 81c2164b).
 
@@ -76,7 +80,7 @@ for the same query.
 | ID | Candidates | Ambiguous before the gate (strict same shape, 2000 contexts) |
 |---|---|---|
 | 0c786b71 | unflipped input in TL / TR / BL / BR | 2×2: 10 (TL 3, BL 5, TR 2); 3×2, 2×3, 3×4: 0 |
-| e0fb7511 | 4- vs 8-adjacency | 6×6: 53 (8-adjacency); 13×13: 0 |
+| e0fb7511 | 4- or 8-connectivity × every threshold T ≥ 1 (mark components of ≥ T cells) | 6×6: 127 (T ≥ 3: 66; 8-adjacency: 55; both: 6; T = 1: 0); 13×13: 0 |
 | f0df5ff0 | 3×3 square vs plus cross | 6×6, 15×15: 0 (explicit legal witness in tests) |
 
 Checked cases:
@@ -84,10 +88,16 @@ Checked cases:
 - **f0df5ff0:** demos whose seed diagonals all hold confetti, with a query that has a background diagonal, are rejected. These are legal constructor scenes, and tests check that the constructor reproduces them.
 - **f3cdc58f:** no gate. Every pair shows all four bars.
 
-**Not gated (proposal for root):** a size-threshold competitor for e0fb7511, where only
-4-components of size ≥ 3 are marked. It survives in 71/2000 6×6 contexts and 0/2000 at 13×13.
-I did not add it because it is outside the authorised hypothesis set. The gates rule out only
-the listed alternatives. They are not identifiability proofs.
+**e0fb7511 thresholds.** The first gate (`ce8c79d`) compared 4- and 8-adjacency only. A
+measured "size ≥ 3" competitor still survived in 71/2000 6×6 contexts, so `51e67f2` adds every
+positive threshold, under the supervisor's reading of the earlier root authorisation of
+evidenced adjacency checks.
+- **Bounds from demos.** For each connectivity, a marked demo component of size s bounds T ≤ s and an unmarked one bounds T > s. A partly marked component, or a changed non-target cell, rules that connectivity out.
+- **Query check.** Marked sets are nested in T, so the two extremal surviving thresholds decide agreement exactly. The upper one is capped at the largest query component + 1, where nothing is marked.
+- **Cross-check.** Tests compare this against an exhaustive brute force of 34 rules on 300 random grids.
+- **Measured breakdown.** The 6×6 numbers above come from the final gate on the current constructor. The pre-threshold measurement is kept in `batch-e-evidence-pre-threshold-b9480e9.json`.
+
+The gates rule out only the listed alternatives. They are not identifiability proofs.
 
 ## Certificates (final bytes)
 
@@ -116,12 +126,16 @@ Provenance, `draft_notes` and `limitations` were merged in, and
 | ID | default: accepted / retries / query shapes | min corner (0c 2×2, e0/f0 6×6, f3 4×4): accepted / retries |
 |---|---|---|
 | 0c786b71 | 250/250 / 0 / 137 | 250/250 / 0 |
-| e0fb7511 | 250/250 / 0 / 208 | 250/250 / 3 (3 ambiguous first contexts, each resolved in 1 retry) |
+| e0fb7511 | 250/250 / 0 / 208 | 250/250 / 11 (10 ambiguous first contexts; 9 queries needed 1 retry, 1 needed 2) |
 | f0df5ff0 | 250/250 / 0 / 201 | 250/250 / 0 |
 | f3cdc58f | 250/250 / 0 / 214 | 250/250 / 0 |
 
 Every run made 2000 `make_record` calls, and no query failed. Mixed-shape first contexts were
-never ambiguous.
+never ambiguous. These numbers come from the refresh on the final gate bytes (method version 2:
+predictions via `candidate_predictions`). Compared with the pre-threshold audit, kept as
+`context-audit-pre-threshold-b9480e9.json`, only e0fb7511@min_corner changed: 3 → 10
+ambiguous first contexts, and 3 → 11 retries. The coverage sections of `batch-e-evidence.json`
+reproduced exactly.
 
 ## Coverage (1000 draws, same seeds; `batch-e-evidence.json`)
 
@@ -145,11 +159,13 @@ after. These come from a bounded pool, so they are not a finite-capacity claim.
 - **Production shape support.** Strict same-shape support in the production pool was estimated only from draw statistics (shapes with ≥ 4 pairs). No prepare run was done.
 - **Batch D re-certification.** Batch D's `context-audit.json` pins the old shared hashes. Root authorised a real rerun, which is committed separately after this one.
 - **Batch D rerun comparison.** Semantic metrics and retry counts reproduced exactly. The shared dependency hashes and measured runtimes changed; the preceding report is preserved as `context-audit-pre-batch-e-db16125.json`.
+- **Batch D after the threshold gate.** None of batch D's pinned sources changed in `51e67f2`, because it does not depend on `mirror_neighbourhood_evidence.py`. A `--no-write` rerun of its `context_audit.py` on the final bytes matched the committed `context-audit.json` in every field except runtimes, so the D files were left unchanged.
+- **Standard certificates were not rerun for the threshold gate.** Constructors and factories are unchanged, and `recertify.check` does not run the gates.
 
 ## Tests
 
 | Test file | Covers |
 |---|---|
 | `diversity/test_native_batch_e.py` | fixture replay; legacy canvas and RNG replay; random-domain structure; partial and explicit arguments; invalid arguments, including floats; boundary shapes on both sides via checker and factory on 8 D4; dense f0 under a 3 s deadline; bounded `RuntimeError`; gate witnesses are constructor scenes; certificate and audit hash binding |
-| `test_mirror_neighbourhood_evidence.py` | fixture acceptance (canonical and teaching, 24 variants); anchor, adjacency and dilation witnesses; reject and accept cases; `make_record` runs the gate while `verify` passes; demos fitting no candidate; f3 not gated |
+| `test_mirror_neighbourhood_evidence.py` | fixture acceptance (canonical and teaching, 24 variants); anchor, adjacency and dilation witnesses; e0 threshold witnesses (no isolated cell → T = 1, no marked pair → T = 3, only 4-cell components → T 2..4, nothing marked → T unbounded); informative contexts accept any query; no-fit demos; exhaustive brute-force cross-check; `make_record` runs the gate while `verify` passes; f3 not gated |
 | `diversity/test_e0_f3_verifiers.py` | checker registration, fixtures, counterexamples, adversarial cases, raising on out-of-domain inputs |

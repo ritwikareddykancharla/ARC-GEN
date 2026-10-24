@@ -21,6 +21,9 @@ uninformative contexts are most frequent. First-context ambiguity is also
 recorded for strict same-shape contexts and for recertify-style mixed-shape
 contexts (three independent default draws).
 
+The version before the e0fb7511 threshold candidates is kept as
+context-audit-pre-threshold-b9480e9.json.
+
 Run from the worktree root (two workers):
     PYTHONPATH=. python arc_agi2/reports/diversity-v1/native-batch-e/context_audit.py
 """
@@ -36,7 +39,7 @@ from pathlib import Path
 
 from arc_agi2.colour_evidence import MissingColourEvidence, require_colour_evidence
 from arc_agi2.diversity.recertify import episode
-from arc_agi2.mirror_neighbourhood_evidence import TASK_IDS as GATED, surviving_rules, variants_for
+from arc_agi2.mirror_neighbourhood_evidence import TASK_IDS as GATED, candidate_predictions
 from arc_agi2.program_targets import make_record
 from arc_agi2.runtime import BASE, call, grid, verification_solver
 
@@ -44,7 +47,7 @@ TASKS = ("0c786b71", "e0fb7511", "f0df5ff0", "f3cdc58f")
 QUERIES = 250
 MAX_CONTEXTS = 64
 METHOD = "gate-aware-query-preserving-same-shape-context"
-METHOD_VERSION = 1
+METHOD_VERSION = 2   # v2: gate predictions via candidate_predictions (e0 thresholds)
 # smallest RANDOM input canvas (width, height) per family
 MIN_CORNER = {"0c786b71": (2, 2), "e0fb7511": (6, 6), "f0df5ff0": (6, 6), "f3cdc58f": (4, 4)}
 OUT = Path(__file__).resolve().parent
@@ -68,10 +71,8 @@ def draw(module, checker, **kw):
 
 def gate_prediction(tid, ep, palette):
     """Unique answer implied by the demonstrations alone (None if unresolved)."""
-    alive = surviving_rules(tid, ep["train"], palette)
-    options = variants_for(tid, palette)(ep["test"][0]["input"])
-    answers = {json.dumps(options[i]) for i in alive}
-    return json.loads(answers.pop()) if len(answers) == 1 else None
+    answers = candidate_predictions(tid, ep["train"], ep["test"][0]["input"], palette)
+    return answers[0] if len(answers) == 1 else None
 
 
 def audit(job):

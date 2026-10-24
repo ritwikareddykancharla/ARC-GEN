@@ -185,24 +185,24 @@
   "pre_gate_witnesses_current_constructor": {
    "6x6": {
     "contexts": 2000,
-    "ambiguous_contexts": 53,
+    "ambiguous_contexts": 127,
     "by_surviving_wrong_candidates": {
-     "eight": 53
+     "T>=3": 66,
+     "eight-adjacency": 55,
+     "T>=3,eight-adjacency": 6
     },
     "first": {
-     "context": 43,
+     "context": 2,
      "competitors": [
-      "eight"
+      "T>=3"
      ]
-    },
-    "ungated_size3_threshold_ambiguous": 71
+    }
    },
    "13x13": {
     "contexts": 2000,
     "ambiguous_contexts": 0,
     "by_surviving_wrong_candidates": {},
-    "first": null,
-    "ungated_size3_threshold_ambiguous": 0
+    "first": null
    }
   }
  },
@@ -359,9 +359,9 @@
   }
  },
  "source_sha256": {
-  "mirror_neighbourhood_evidence": "59b0a8f1e8e0e16a3fc833920c6e73791cbda4ec20c93b29cca2c4c5b59cf7b7",
+  "mirror_neighbourhood_evidence": "98e1b2eae8f72875fbf3a35f3324a06e1c0a9a8fd817b8f8e45e37b1714a5ee8",
   "verified_rules": "a54743d7f19075966af22be6abfaa09863427822593ef186b0a2da13ca8ec853",
   "colour_evidence": "6789d3d80f42268c0e66732ef04ff6e05c39de5dd8e69447bf4029431161b221",
-  "harness": "38ac33e5bca7c2d3306c6574f233d123706c37d33bc0dbfbdfcdaacb2d204456"
+  "harness": "2a87a8d291c69c3873d71f0d7d7269486c5c575d3fa1972c1fdf4fbf7aa9ae70"
  }
 }

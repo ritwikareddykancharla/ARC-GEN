@@ -1,0 +1,367 @@
+{
+ "base_revision": "c201cfe",
+ "witness_definition": "same-shape context where a competing candidate rule reproduces all three demonstrations but changes the query answer (accepted by make_record before the batch E gates)",
+ "0c786b71": {
+  "constructor_sha256": "64010e00fa4b50356b829180c5d6549e84111615b0ce90d268673225f6eb9741",
+  "previous_constructor_sha256": "7fc6d170003af1a888887129b02bf336afb967f350691ae23e6551c102e0d8e8",
+  "before": {
+   "draws": 1000,
+   "unique_inputs": 1000,
+   "input_shapes": 1,
+   "output_shapes": 1,
+   "input_h": [
+    3,
+    3
+   ],
+   "input_w": [
+    4,
+    4
+   ],
+   "output_h": [
+    6,
+    6
+   ],
+   "output_w": [
+    8,
+    8
+   ],
+   "shapes_with_4_or_more_pairs": 1,
+   "registered_verifier_disagreements": 0,
+   "distinct_colours_histogram": {
+    "2": 27,
+    "3": 973
+   },
+   "mirror_symmetric_inputs": 22
+  },
+  "after": {
+   "draws": 1000,
+   "unique_inputs": 1000,
+   "input_shapes": 194,
+   "output_shapes": 194,
+   "input_h": [
+    2,
+    15
+   ],
+   "input_w": [
+    2,
+    15
+   ],
+   "output_h": [
+    4,
+    30
+   ],
+   "output_w": [
+    4,
+    30
+   ],
+   "shapes_with_4_or_more_pairs": 147,
+   "registered_verifier_disagreements": 0,
+   "distinct_colours_histogram": {
+    "1": 1,
+    "2": 9,
+    "3": 990
+   },
+   "mirror_symmetric_inputs": 4
+  },
+  "pre_gate_witnesses_current_constructor": {
+   "2x2": {
+    "contexts": 2000,
+    "ambiguous_contexts": 10,
+    "by_surviving_wrong_candidates": {
+     "TL": 3,
+     "BL": 5,
+     "TR": 2
+    },
+    "first": {
+     "context": 34,
+     "competitors": [
+      "TL"
+     ]
+    }
+   },
+   "3x2": {
+    "contexts": 2000,
+    "ambiguous_contexts": 0,
+    "by_surviving_wrong_candidates": {},
+    "first": null
+   },
+   "2x3": {
+    "contexts": 2000,
+    "ambiguous_contexts": 0,
+    "by_surviving_wrong_candidates": {},
+    "first": null
+   },
+   "3x4": {
+    "contexts": 2000,
+    "ambiguous_contexts": 0,
+    "by_surviving_wrong_candidates": {},
+    "first": null
+   }
+  }
+ },
+ "e0fb7511": {
+  "constructor_sha256": "d2a9f6e3cb794bdd7b12b8d689442a85dcdca061e27bff219eefd96e209853ad",
+  "previous_constructor_sha256": "3857588ff73d8b3866193818d618dc323c66986853ee719a64ee247ff18c48f4",
+  "before": {
+   "draws": 1000,
+   "unique_inputs": 1000,
+   "input_shapes": 1,
+   "output_shapes": 1,
+   "input_h": [
+    13,
+    13
+   ],
+   "input_w": [
+    13,
+    13
+   ],
+   "output_h": [
+    13,
+    13
+   ],
+   "output_w": [
+    13,
+    13
+   ],
+   "shapes_with_4_or_more_pairs": 1,
+   "registered_verifier_disagreements": 0,
+   "black_density": [
+    0.101,
+    0.154,
+    0.225
+   ],
+   "azure_cells": [
+    13,
+    25
+   ],
+   "largest_black_component": [
+    2,
+    12
+   ],
+   "inputs_with_component_size_2": 986,
+   "inputs_with_diagonal_only_contact": 971,
+   "inputs_with_singleton": 1000
+  },
+  "after": {
+   "draws": 1000,
+   "unique_inputs": 1000,
+   "input_shapes": 515,
+   "output_shapes": 515,
+   "input_h": [
+    6,
+    30
+   ],
+   "input_w": [
+    6,
+    30
+   ],
+   "output_h": [
+    6,
+    30
+   ],
+   "output_w": [
+    6,
+    30
+   ],
+   "shapes_with_4_or_more_pairs": 55,
+   "registered_verifier_disagreements": 0,
+   "black_density": [
+    0.111,
+    0.25,
+    0.406
+   ],
+   "azure_cells": [
+    3,
+    233
+   ],
+   "largest_black_component": [
+    2,
+    32
+   ],
+   "inputs_with_component_size_2": 979,
+   "inputs_with_diagonal_only_contact": 995,
+   "inputs_with_singleton": 999
+  },
+  "pre_gate_witnesses_current_constructor": {
+   "6x6": {
+    "contexts": 2000,
+    "ambiguous_contexts": 53,
+    "by_surviving_wrong_candidates": {
+     "eight": 53
+    },
+    "first": {
+     "context": 43,
+     "competitors": [
+      "eight"
+     ]
+    },
+    "ungated_size3_threshold_ambiguous": 71
+   },
+   "13x13": {
+    "contexts": 2000,
+    "ambiguous_contexts": 0,
+    "by_surviving_wrong_candidates": {},
+    "first": null,
+    "ungated_size3_threshold_ambiguous": 0
+   }
+  }
+ },
+ "f0df5ff0": {
+  "constructor_sha256": "0c452608a9c167d402388478ef972d599bef10213655c9a79664b9d98a0b6ab1",
+  "previous_constructor_sha256": "df76beda51cd578c92874de3457086aa71845949a4ca3f6b77e69dea34205dba",
+  "before": {
+   "draws": 1000,
+   "unique_inputs": 1000,
+   "input_shapes": 1,
+   "output_shapes": 1,
+   "input_h": [
+    15,
+    15
+   ],
+   "input_w": [
+    15,
+    15
+   ],
+   "output_h": [
+    15,
+    15
+   ],
+   "output_w": [
+    15,
+    15
+   ],
+   "shapes_with_4_or_more_pairs": 1,
+   "registered_verifier_disagreements": 0,
+   "seed_count_range": [
+    2,
+    8
+   ],
+   "distinct_seed_counts": 7,
+   "confetti_density": [
+    0.36,
+    0.484,
+    0.587
+   ]
+  },
+  "after": {
+   "draws": 1000,
+   "unique_inputs": 1000,
+   "input_shapes": 497,
+   "output_shapes": 497,
+   "input_h": [
+    6,
+    30
+   ],
+   "input_w": [
+    6,
+    30
+   ],
+   "output_h": [
+    6,
+    30
+   ],
+   "output_w": [
+    6,
+    30
+   ],
+   "shapes_with_4_or_more_pairs": 45,
+   "registered_verifier_disagreements": 0,
+   "seed_count_range": [
+    2,
+    29
+   ],
+   "distinct_seed_counts": 27,
+   "confetti_density": [
+    0.195,
+    0.394,
+    0.558
+   ]
+  },
+  "pre_gate_witnesses_current_constructor": {
+   "6x6": {
+    "contexts": 2000,
+    "ambiguous_contexts": 0,
+    "by_surviving_wrong_candidates": {},
+    "first": null
+   },
+   "15x15": {
+    "contexts": 2000,
+    "ambiguous_contexts": 0,
+    "by_surviving_wrong_candidates": {},
+    "first": null
+   }
+  }
+ },
+ "f3cdc58f": {
+  "constructor_sha256": "abd953bb8cd3a8c121ee081492f4c8e8df591b26cd03d3b13d01b875c9934d97",
+  "previous_constructor_sha256": "763478e511a8fd9bd9ec13580b1bd30bfa19642e3a8f356018efa81c7c328f94",
+  "before": {
+   "draws": 1000,
+   "unique_inputs": 1000,
+   "input_shapes": 1,
+   "output_shapes": 1,
+   "input_h": [
+    10,
+    10
+   ],
+   "input_w": [
+    10,
+    10
+   ],
+   "output_h": [
+    10,
+    10
+   ],
+   "output_w": [
+    10,
+    10
+   ],
+   "shapes_with_4_or_more_pairs": 1,
+   "registered_verifier_disagreements": 0,
+   "max_bar": 8,
+   "pairs_with_a_bar_above_8": 0,
+   "distinct_count_tuples": 802,
+   "ink_density": [
+    0.08,
+    0.3
+   ]
+  },
+  "after": {
+   "draws": 1000,
+   "unique_inputs": 1000,
+   "input_shapes": 541,
+   "output_shapes": 541,
+   "input_h": [
+    4,
+    30
+   ],
+   "input_w": [
+    4,
+    30
+   ],
+   "output_h": [
+    4,
+    30
+   ],
+   "output_w": [
+    4,
+    30
+   ],
+   "shapes_with_4_or_more_pairs": 37,
+   "registered_verifier_disagreements": 0,
+   "max_bar": 24,
+   "pairs_with_a_bar_above_8": 591,
+   "distinct_count_tuples": 907,
+   "ink_density": [
+    0.023,
+    0.5
+   ]
+  }
+ },
+ "source_sha256": {
+  "mirror_neighbourhood_evidence": "59b0a8f1e8e0e16a3fc833920c6e73791cbda4ec20c93b29cca2c4c5b59cf7b7",
+  "verified_rules": "a54743d7f19075966af22be6abfaa09863427822593ef186b0a2da13ca8ec853",
+  "colour_evidence": "6789d3d80f42268c0e66732ef04ff6e05c39de5dd8e69447bf4029431161b221",
+  "harness": "38ac33e5bca7c2d3306c6574f233d123706c37d33bc0dbfbdfcdaacb2d204456"
+ }
+}

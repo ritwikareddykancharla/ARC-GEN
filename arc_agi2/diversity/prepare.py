@@ -132,8 +132,54 @@ def feasible_queries(pool, profile, identity):
     return [p for p in pool if id(p) in rows]
 
 
+def repeated_strip_colour(pair):
+    cells = [c for row in pair['input'] for c in row if c != 0]
+    return len(cells) > len(set(cells))
+
+
+def evidence_query_support(tid, pool, profile, identity):
+    """Count strip queries only when their required repeated-colour demo exists.
+
+    This is an input-only sampling constraint, before shared episode transforms.
+    make_record still verifies the actual evidence and all program outputs.
+    """
+    support = query_support(pool, profile, identity)
+    if tid != 'feca6190':
+        return support
+    expected = {'demo_input_shapes': 'uniform', 'query_input_shape': 'seen'}
+    if any(p != expected for p in profile['patterns']):
+        raise ValueError('Re-review strip evidence sampling for changed shape profile')
+    witnesses = defaultdict(set)
+    for pair in pool:
+        if repeated_strip_colour(pair):
+            witnesses[_shape(pair['input'])].add(pair[identity])
+    filtered = {}
+    for qid, queries in support.items():
+        viable = [q for q in queries if not repeated_strip_colour(q)
+                  or witnesses[_shape(q['input'])] - {qid}]
+        if viable:
+            filtered[qid] = viable
+    return filtered
+
+
+def select_task_demonstrations(tid, candidates, query, randomizer, profile, identity):
+    demos, report = select_demonstrations(candidates, query['input'], randomizer,
+                                           profile, identity)
+    if tid == 'feca6190' and demos and report['matched'] and repeated_strip_colour(query):
+        if not any(repeated_strip_colour(p) for p in demos):
+            # Preserve the original uniform/seen shape pattern and distinct IDs.
+            kept_ids = {p[identity] for p in demos[1:]} | {query[identity]}
+            witnesses = [p for p in candidates if p[identity] not in kept_ids
+                         and _shape(p['input']) == _shape(query['input'])
+                         and repeated_strip_colour(p)]
+            if witnesses:
+                demos[0] = randomizer.choice(witnesses)
+                randomizer.shuffle(demos)
+    return demos, report
+
+
 def assemble_split(pool, profile, identity, quota, randomizer, emit, attempts, deadline,
-                   rejected, split):
+                   rejected, split, task_id=None):
     """Emit up to quota episodes, one per distinct query identity.
 
     Query identities, not exact rows, are drawn uniformly, so identities with
@@ -143,7 +189,7 @@ def assemble_split(pool, profile, identity, quota, randomizer, emit, attempts, d
     query, shape_report) must perform all semantic/program checks and raise on
     failure. Returns (produced, stats).
     """
-    support = query_support(pool, profile, identity)
+    support = evidence_query_support(task_id, pool, profile, identity)
     remaining = list(support)
     failures = Counter()
     stats = {
@@ -173,9 +219,8 @@ def assemble_split(pool, profile, identity, quota, randomizer, emit, attempts, d
         qid = randomizer.choice(remaining)
         query = randomizer.choice(support[qid])
         candidates = [p for p in pool if p[identity] != qid]
-        demos, shape_report = select_demonstrations(
-            candidates, query["input"], randomizer, profile, identity
-        )
+        demos, shape_report = select_task_demonstrations(
+            task_id, candidates, query, randomizer, profile, identity)
         failure = None
         if demos is None:
             failure = "insufficient_demo_identities"
@@ -240,7 +285,7 @@ def prepare(item):
             # some split still lacks support for its requested quota.
             extra = margin if trial < base_trials else dict.fromkeys(pools, 0)
             if all(
-                len(query_support(pools[s], profile, identity)) >= options[s] + extra[s]
+                len(evidence_query_support(tid, pools[s], profile, identity)) >= options[s] + extra[s]
                 for s in pools
             ):
                 pool_stop = "support" if trial < base_trials else "support_after_extension"
@@ -335,7 +380,7 @@ def prepare(item):
                 pool, profile, identity, options[split], randomizer, emit,
                 attempts=max(100, options[split] * 40),
                 deadline=started + options["seconds"],
-                rejected=rejected, split=split,
+                rejected=rejected, split=split, task_id=tid,
             )
         final = folder / "metadata.jsonl"
         pending.replace(final)

@@ -3546,7 +3546,7 @@
    "constructor_sha256": "b90ba728d65911f7c15633d7721ed7559c8bae78d3d24fdd676e7a5cf520f6a3",
    "baseline_commit": "f7353826fdd001ce808b911ad4bb984a404b99d0",
    "mechanism": "10x10 grid with 50% noise in one colour X, crossed left to right by a red (2) gap-free line built by tiling a pattern of length 1-4 with a drift; the output keeps red, clears everything above the line to 0, and fills everything below with X.",
-   "fixture_evidence": "4 canonical pairs, 10x10; every canonical red line spans all 10 columns. A local measurement (probes/line_span_782b5218.py, 3000 native draws) found 136 inputs (4.5%) with at least one column without red: the line leaves the canvas through the bottom (e.g. a start-row-2 drift +1 diagonal exiting at col 8), and those columns are cleared to 0 in the output. The factory's 4-connected top flood (edge 'top') agreed with the native output on all 3000.",
+   "fixture_evidence": "4 canonical pairs, 10x10. Canonical train[2] (identical to native validate()['train'][2]) has a red line that leaves through the bottom edge at column 8. Column 9 contains no red, and the output's column 9 is all zeros. Bottom exits and the cleared red-free column are therefore fixture-supported. probes/line_span_782b5218.py prints this counterexample. On 3000 native draws (seed 0) it finds 136 inputs (4.5%) with at least one red-free column; in all 136 those output columns are blank, exactly as in canonical train[2]. The factory's 4-connected top flood (edge 'top') agrees with the native output on all 3000. See erratum: the batch-2 text wrongly said every canonical line spans all 10 columns.",
    "axes": {
     "dimensions": {
      "disposition": "incidental_restriction",
@@ -3567,7 +3567,7 @@
       42,
       50
      ],
-     "why": "A single gap-free red line (line 50 rejects vertical gaps) is rule-supported. Line 52 rejects only lines leaving the top; nothing rejects lines leaving the bottom, so ~4.5% of native lines do not cross the grid: a latent defect."
+     "why": "A single gap-free red line (line 50 rejects vertical gaps) is rule-supported. The line may leave through the bottom edge, leaving red-free columns that the output clears to 0; canonical train[2] shows exactly this, so it is supported behaviour to preserve. The pattern length 1-4 and step rules (lines 37-42) are literal ranges and incidental."
     },
     "placement": {
      "disposition": "mixed",
@@ -3577,7 +3577,7 @@
       46,
       52
      ],
-     "why": "Start row 2..7 with a forced drift at the extremes; the drift and pattern excursions can push the line off the bottom (no guard), which is incidental and departs from the fixtures."
+     "why": "Start row 2..7 with a forced drift at the extremes (lines 44-46) is a literal range tied to the 10x10 canvas (incidental). Line 52 rejects only lines that leave the top. Bottom exits are allowed and fixture-supported (canonical train[2], column 9), so they must not be guarded away."
     },
     "density_colours": {
      "disposition": "mixed",
@@ -3607,11 +3607,24 @@
      "why": "Natively the cleared side is always the top. The factory learns the cleared edge (top/right/bottom/left) by filtering against demonstrations and raises on ambiguity, so under an episode d4 the edge is a demonstration-conveyed convention; any one pair fixes it."
     }
    },
-   "proposal": "Add a bottom-edge guard (reject row + r > 9, mirroring line 52) so every line spans the canvas, then sample H,W (e.g. 6-20). Bound the while True loop at line 29. Re-audit and recertify.",
-   "patch_priority": "high",
-   "uncertainties": "Whether partially off-canvas lines confuse learners was not measured; the 4.5% rate comes from one local seed (3000 draws).",
+   "proposal": "Medium: sample H and W (e.g. 6-20), scaling the start-row range, and bound the while True loop at line 29. Keep bottom exits and red-free columns cleared to 0: they are fixture-supported, and a bottom-edge guard would narrow canonical support. No bottom guard is justified without new evidence. Re-audit and recertify.",
+   "patch_priority": "medium",
+   "uncertainties": "The 4.5% red-free rate comes from one local seed (3000 draws). Unknown: whether the original task also allows top exits, which line 52 forbids; no fixture shows one. Not measured: whether red-free columns change learnability.",
    "certified_evidence": "current",
-   "release_ready": false
+   "release_ready": false,
+   "erratum": {
+    "corrected_on": "2026-10-24",
+    "correction_baseline_commit": "573f0b689ed1f1676e168c101deb7893858fd9d1",
+    "summary": "The batch-2 review called bottom exits a latent defect, rated the family high, and proposed a bottom-edge guard. That was wrong. Canonical train[2] and validate()['train'][2] both have a red-free column 9 with a blank output column, so bottom clipping is demonstrated by the fixtures. The measured 136/3000 statistic stands, but it describes supported behaviour, not invalid scenes. Found by an independent implementation worker and the orchestrator.",
+    "original": {
+     "fixture_evidence": "4 canonical pairs, 10x10; every canonical red line spans all 10 columns. A local measurement (probes/line_span_782b5218.py, 3000 native draws) found 136 inputs (4.5%) with at least one column without red: the line leaves the canvas through the bottom (e.g. a start-row-2 drift +1 diagonal exiting at col 8), and those columns are cleared to 0 in the output. The factory's 4-connected top flood (edge 'top') agreed with the native output on all 3000.",
+     "objects_why": "A single gap-free red line (line 50 rejects vertical gaps) is rule-supported. Line 52 rejects only lines leaving the top; nothing rejects lines leaving the bottom, so ~4.5% of native lines do not cross the grid: a latent defect.",
+     "placement_why": "Start row 2..7 with a forced drift at the extremes; the drift and pattern excursions can push the line off the bottom (no guard), which is incidental and departs from the fixtures.",
+     "proposal": "Add a bottom-edge guard (reject row + r > 9, mirroring line 52) so every line spans the canvas, then sample H,W (e.g. 6-20). Bound the while True loop at line 29. Re-audit and recertify.",
+     "patch_priority": "high",
+     "uncertainties": "Whether partially off-canvas lines confuse learners was not measured; the 4.5% rate comes from one local seed (3000 draws)."
+    }
+   }
   },
   "7c8af763": {
    "status": "reviewed",

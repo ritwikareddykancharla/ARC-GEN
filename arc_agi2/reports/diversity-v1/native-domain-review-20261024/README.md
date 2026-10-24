@@ -193,9 +193,10 @@ was rerun.
 | demonstration context | 0 | 6 | 26 | 0 | 0 |
 
 **Patch priority:**
-- **High (8):** `4f537728`, `50c07299`, `54db823b`, `782b5218`, `7e2bad24`,
-  `7e576d6e`, `917bccba`, `94414823`.
-- **Medium (22).**
+- **High (7):** `4f537728`, `50c07299`, `54db823b`, `7e2bad24`, `7e576d6e`,
+  `917bccba`, `94414823`.
+- **Medium (23).** Includes `782b5218`, which was originally rated high; see
+  the erratum below.
 - **Low (2):** `5b37cb25` and `981571dc`. Both already have wide variety
   (128/128 unique audit inputs). For `981571dc`, the 30×30 crop of a 32×32
   mosaic is fixture-faithful, so no patch is justified.
@@ -224,11 +225,30 @@ As in batch 1, a fixed literal canvas is the main incidental restriction:
     and 100/100 native draws.
   - For `7e2bad24`, the factory also keeps four rival mirror-end readings and
     picks between them using demonstrations.
-- **Latent defect.** In `782b5218`, line 52 rejects lines that leave the top
-  edge but not the bottom. `probes/line_span_782b5218.py` found 136 of 3000
-  native inputs (4.5%) with a column containing no red; those columns are
-  cleared to 0. The factory's flood fill agreed with the native output on all
-  3000.
+- **Bottom exits in `782b5218` are fixture-supported (corrected; see
+  erratum).** Line 52 rejects lines that leave the top edge, but lines may
+  leave through the bottom. Canonical `train[2]` (identical to
+  `validate()['train'][2]`) does exactly this: column 9 contains no red, and
+  the output's column 9 is all zeros.
+
+  `probes/line_span_782b5218.py` prints that counterexample. It then finds 136
+  of 3000 native inputs (4.5%, seed 0) with a red-free column. In all 136,
+  those output columns are blank, matching the canonical pair. The factory's
+  flood fill agreed with the native output on all 3000.
+
+  Preserve this behaviour. No bottom guard is justified.
+
+  > **Erratum (2026-10-24, corrected after `573f0b6`).** The batch-2 text
+  > called this a "latent defect", claimed that every canonical line spans all
+  > 10 columns, rated the family high, and proposed a bottom-edge guard. That
+  > was wrong: canonical `train[2]` demonstrates bottom clipping, so the guard
+  > would narrow canonical support.
+  >
+  > An independent implementation worker and the orchestrator found the error.
+  > The measured 136/3000 statistic is unchanged; only its interpretation
+  > changed. The `782b5218` record in `semantic_reviews.json` carries an
+  > `erratum` field with the original wording. Remaining proposal: canvas
+  > generalisation and a bounded loop (medium).
 - **Tiny or single-geometry domains.**
   - `94414823`: one geometry. The domain is 56 colour pairs × 4 orientations;
     the audit found 1 orbit.
@@ -397,6 +417,12 @@ The 7 batch-1 families have different constructors in ARC-GEN than in this
 worktree. Their reviews are `current` here, but would be stale against
 ARC-GEN. They were left byte-for-byte unchanged. Re-review them once those
 constructors land in this tree.
+
+By the time of the `782b5218` correction commit, the worklist also flagged 4
+batch-2 families: `50c07299`, `7e2bad24`, `7e576d6e` and `94414823`. Their
+ARC-GEN constructors differ from this worktree, and their reviews are
+likewise unchanged. Only their mechanical `worklist` fields were regenerated.
+`782b5218` has the same constructor in both places.
 
 ## Not covered
 

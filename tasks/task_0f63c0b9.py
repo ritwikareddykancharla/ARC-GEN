@@ -17,36 +17,52 @@
 import common
 
 
-def generate(prows=None, pcols=None, colors=None, size=15):
+def generate(prows=None, pcols=None, colors=None, size=None, width=None,
+             height=None):
   """Returns input and output grids according to the given parameters.
 
   Args:
     prows: The rows of the pixels.
     pcols: The columns of the pixels.
     colors: The colors of the pixels.
-    size: The size of the grid.
+    size: The size of a square grid (15 for the original pairs).
+    width: Canvas width; random scenes sample it independently in 9..30.
+    height: Canvas height; random scenes sample it independently in 7..30.
   """
 
+  if size is not None:
+    if width is not None or height is not None:
+      raise ValueError('Specify size or width/height, not both')
+    width = height = size
   if prows is None:
-    colors = common.random_colors(common.randint(3, 4))
-    while True:
-      prows = sorted(common.sample(range(1, size - 1), len(colors)))
-      pcols = common.sample(range(3, size - 3), len(colors))
-      diffs = [prows[i + 1] - prows[i] for i in range(len(colors) - 1)]
-      if min(diffs) > 1: break
+    width = common.randint(9, 30) if width is None else width
+    height = common.randint(7, 30) if height is None else height
+    if not (9 <= width <= 30 and 7 <= height <= 30):
+      raise ValueError('Random dimensions must be 9..30 wide, 7..30 tall')
+    # Seeds sit in rows 1..height-2, pairwise at least two rows apart, and in
+    # distinct columns at least three cells from the side edges.
+    num = common.randint(3, min(6, (height - 1) // 2, width - 6))
+    colors = common.random_colors(num)
+    # Sorted rows with gaps of at least two are, after subtracting the rank,
+    # exactly the sorted num-subsets of 1..height-1-num (uniform, no retries).
+    base = sorted(common.sample(range(1, height - num), num))
+    prows = [r + i for i, r in enumerate(base)]
+    pcols = common.sample(range(3, width - 3), num)
+  width = 15 if width is None else width
+  height = 15 if height is None else height
 
-  grid, output = common.grids(15, 15)
+  grid, output = common.grids(width, height)
   for i, (prow, pcol, color) in enumerate(zip(prows, pcols, colors)):
     grid[prow][pcol] = color
-    for c in range(size):
+    for c in range(width):
       output[prow][c] = color
     lb_row = 0 if i == 0 else (prow - (prow - prows[i - 1] - 1) // 2)
-    ub_row = size if i + 1 == len(prows) else (prow + (prows[i + 1] - prow + 2) // 2)
+    ub_row = height if i + 1 == len(prows) else (prow + (prows[i + 1] - prow + 2) // 2)
     for row in range(lb_row, ub_row):
-      output[row][0] = output[row][size - 1] = color
-  for c in range(size):
+      output[row][0] = output[row][width - 1] = color
+  for c in range(width):
     output[0][c] = colors[0]
-    output[size - 1][c] = colors[-1]
+    output[height - 1][c] = colors[-1]
   return {"input": grid, "output": output}
 
 

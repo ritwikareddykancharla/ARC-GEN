@@ -1,0 +1,329 @@
+{
+  "batch": "native-generator-diversity-B",
+  "measurement": "1000 seeded samples per revision (before = HEAD ea0a620 constructor, after = final constructor); signatures are input-only structural tuples (shape plus a family count). Sample statistics, not domain guarantees.",
+  "boundary_agreement": "3000 samples per family cycling free, (min,min), (30,30), (min,30), (30,min) canvases, archived independent verifier",
+  "families": {
+    "03560426": {
+      "before": {
+        "samples": 1000,
+        "sampler_errors": {},
+        "verifier_disagree": 0,
+        "unique_inputs": 1000,
+        "distinct_shapes": 1,
+        "rectangular": 0,
+        "at_30": 0,
+        "height_range": [
+          10,
+          10
+        ],
+        "width_range": [
+          10,
+          10
+        ],
+        "distinct_signatures": 2
+      },
+      "after": {
+        "samples": 1000,
+        "sampler_errors": {},
+        "verifier_disagree": 0,
+        "unique_inputs": 1000,
+        "distinct_shapes": 388,
+        "rectangular": 973,
+        "at_30": 82,
+        "height_range": [
+          6,
+          30
+        ],
+        "width_range": [
+          6,
+          30
+        ],
+        "distinct_signatures": 589
+      },
+      "boundary_agreement": {
+        "samples": 3000,
+        "verifier_disagreements": 0,
+        "sampler_errors": {}
+      },
+      "constructor_sha256": "230912e67d063d1f62f9258ff8b0911fbe092b13120a78f7d130f960af618dbe",
+      "factory_sha256": "14e627c66e888f1dd6519d1eb32da20882ec3b612f9c7331e3f8deb9dcc8bd3f"
+    },
+    "0becf7df": {
+      "before": {
+        "samples": 1000,
+        "sampler_errors": {},
+        "verifier_disagree": 0,
+        "unique_inputs": 1000,
+        "distinct_shapes": 1,
+        "rectangular": 0,
+        "at_30": 0,
+        "height_range": [
+          10,
+          10
+        ],
+        "width_range": [
+          10,
+          10
+        ],
+        "distinct_signatures": 3
+      },
+      "after": {
+        "samples": 1000,
+        "sampler_errors": {},
+        "verifier_disagree": 0,
+        "unique_inputs": 1000,
+        "distinct_shapes": 462,
+        "rectangular": 972,
+        "at_30": 84,
+        "height_range": [
+          7,
+          30
+        ],
+        "width_range": [
+          7,
+          30
+        ],
+        "distinct_signatures": 826
+      },
+      "boundary_agreement": {
+        "samples": 3000,
+        "verifier_disagreements": 0,
+        "sampler_errors": {}
+      },
+      "constructor_sha256": "e1e2c0568baab8c110e2c4b9581b3e915b04b3b5adcb0db4c703fa341d40e057",
+      "factory_sha256": "9ab49e10182a1f3ea3b1c709e4ff494d4bd47dd99e1a2889c7724bd966de8972"
+    },
+    "0f63c0b9": {
+      "before": {
+        "samples": 1000,
+        "sampler_errors": {},
+        "verifier_disagree": 0,
+        "unique_inputs": 1000,
+        "distinct_shapes": 1,
+        "rectangular": 0,
+        "at_30": 0,
+        "height_range": [
+          15,
+          15
+        ],
+        "width_range": [
+          15,
+          15
+        ],
+        "distinct_signatures": 2
+      },
+      "after": {
+        "samples": 1000,
+        "sampler_errors": {},
+        "verifier_disagree": 0,
+        "unique_inputs": 1000,
+        "distinct_shapes": 452,
+        "rectangular": 960,
+        "at_30": 114,
+        "height_range": [
+          7,
+          30
+        ],
+        "width_range": [
+          9,
+          30
+        ],
+        "distinct_signatures": 718
+      },
+      "boundary_agreement": {
+        "samples": 3000,
+        "verifier_disagreements": 0,
+        "sampler_errors": {}
+      },
+      "constructor_sha256": "af3a801d16ee5d923ffdc0070a28865ba9d57ec5a7b752d7bea7e021aadd2f2b",
+      "factory_sha256": "2ee340a2b143d9491d7a09876e038f4a8e784be3bd95ebadb380a24b7fcde47d"
+    },
+    "14b8e18c": {
+      "before": {
+        "samples": 1000,
+        "sampler_errors": {},
+        "verifier_disagree": 1,
+        "unique_inputs": 1000,
+        "distinct_shapes": 1,
+        "rectangular": 0,
+        "at_30": 0,
+        "height_range": [
+          10,
+          10
+        ],
+        "width_range": [
+          10,
+          10
+        ],
+        "distinct_signatures": 13
+      },
+      "after": {
+        "samples": 1000,
+        "sampler_errors": {},
+        "verifier_disagree": 0,
+        "unique_inputs": 1000,
+        "distinct_shapes": 497,
+        "rectangular": 971,
+        "at_30": 77,
+        "height_range": [
+          6,
+          30
+        ],
+        "width_range": [
+          6,
+          30
+        ],
+        "distinct_signatures": 926
+      },
+      "boundary_agreement": {
+        "samples": 3000,
+        "verifier_disagreements": 0,
+        "sampler_errors": {}
+      },
+      "constructor_sha256": "6b117ab876066d0b4701422c4506c0585360cc73f3a8a56875785f867ecc9505",
+      "factory_sha256": "cd3bf23e37df17cd1601de1dc36e80d723fa31725cc7149aa21ef323083c15c2"
+    },
+    "21f83797": {
+      "before": {
+        "samples": 1000,
+        "sampler_errors": {},
+        "verifier_disagree": 0,
+        "unique_inputs": 679,
+        "distinct_shapes": 1,
+        "rectangular": 0,
+        "at_30": 0,
+        "height_range": [
+          13,
+          13
+        ],
+        "width_range": [
+          13,
+          13
+        ],
+        "distinct_signatures": 81
+      },
+      "after": {
+        "samples": 1000,
+        "sampler_errors": {},
+        "verifier_disagree": 0,
+        "unique_inputs": 998,
+        "distinct_shapes": 515,
+        "rectangular": 963,
+        "at_30": 81,
+        "height_range": [
+          5,
+          30
+        ],
+        "width_range": [
+          5,
+          30
+        ],
+        "distinct_signatures": 988
+      },
+      "boundary_agreement": {
+        "samples": 3000,
+        "verifier_disagreements": 0,
+        "sampler_errors": {}
+      },
+      "constructor_sha256": "6b6ba6874f377675c2409c6afe048b74a34a4e60b0e75575f6448fd8246a2ccd",
+      "factory_sha256": "f166650361e30abe5d50587f7b5c0f5bcc2dda892eb3e6f4afe43ad7ccc163a3"
+    },
+    "2685904e": {
+      "before": {
+        "samples": 1000,
+        "sampler_errors": {},
+        "verifier_disagree": 0,
+        "unique_inputs": 996,
+        "distinct_shapes": 1,
+        "rectangular": 0,
+        "at_30": 0,
+        "height_range": [
+          10,
+          10
+        ],
+        "width_range": [
+          10,
+          10
+        ],
+        "distinct_signatures": 5
+      },
+      "after": {
+        "samples": 1000,
+        "sampler_errors": {},
+        "verifier_disagree": 0,
+        "unique_inputs": 1000,
+        "distinct_shapes": 526,
+        "rectangular": 961,
+        "at_30": 60,
+        "height_range": [
+          6,
+          30
+        ],
+        "width_range": [
+          4,
+          30
+        ],
+        "distinct_signatures": 950
+      },
+      "boundary_agreement": {
+        "samples": 3000,
+        "verifier_disagreements": 0,
+        "sampler_errors": {}
+      },
+      "constructor_sha256": "803b8e0c1ba6a922fa6606bd7b9cda8b6509e555bc48247a23ab2011467feb37",
+      "factory_sha256": "4de00b5b012aef2473a584dfc1ca91b90233728a1c3998080d53a09522e7bbbe"
+    },
+    "2a28add5": {
+      "before": {
+        "samples": 1000,
+        "sampler_errors": {},
+        "verifier_disagree": 0,
+        "unique_inputs": 1000,
+        "distinct_shapes": 1,
+        "rectangular": 0,
+        "at_30": 0,
+        "height_range": [
+          10,
+          10
+        ],
+        "width_range": [
+          10,
+          10
+        ],
+        "distinct_signatures": 10
+      },
+      "after": {
+        "samples": 1000,
+        "sampler_errors": {},
+        "verifier_disagree": 0,
+        "unique_inputs": 1000,
+        "distinct_shapes": 525,
+        "rectangular": 963,
+        "at_30": 83,
+        "height_range": [
+          5,
+          30
+        ],
+        "width_range": [
+          5,
+          30
+        ],
+        "distinct_signatures": 914
+      },
+      "boundary_agreement": {
+        "samples": 3000,
+        "verifier_disagreements": 0,
+        "sampler_errors": {}
+      },
+      "constructor_sha256": "612452c02ecbf7164bac75985e05c3fa9a6df22787288d5b54be796604110df1",
+      "factory_sha256": "af195e315024ee30ffcc278e990f71407489a47dae60bbbe11120e423a469a29"
+    }
+  },
+  "notes": {
+    "14b8e18c": "The HEAD sampler mislabelled ~1/1000 scenes: boxes sharing or overlapping a diagonal's bounding box (e.g. two diagonals in one 2x2 box) draw a merged solid square that the constructor left unmarked, contradicting the canonical solid-2x2 marking. Random scenes now require disjoint boxes or strict nesting inside a hollow box; explicit scenes are unchanged.",
+    "03560426": "Fixed-width requests are built from feasible width/height compositions (all feasible box counts and trailing blanks reachable, e.g. 6x30 needs five 5x2 boxes); the free-width default keeps its bounded rejection sampler."
+  },
+  "deferred": {
+    "22806e14": "Archived independent verifier (erase plus when fewer than 5 odd squares) disagrees with the constructor (row/column alignment) on 160/300 fresh HEAD scenes; standard recertification cannot pass without a reviewed verifier, which is outside this batch's scope. Left unchanged."
+  }
+}

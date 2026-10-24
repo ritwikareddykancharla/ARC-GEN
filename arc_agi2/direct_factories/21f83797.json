@@ -1,21 +1,17 @@
 {
   "task_id": "21f83797",
-  "factory_sha256": "f166650361e30abe5d50587f7b5c0f5bcc2dda892eb3e6f4afe43ad7ccc163a3",
-  "constructor_sha256": "bc2081d029e34c2bd023e91a2d38895cd62bbdc0a99681d7f3704fc723575c78",
   "passed": true,
   "fresh_pairs_checked": 1000,
   "augmented_pair_checks": 8000,
   "fixture_variants_checked": 16,
-  "sampler_rejections": [],
-  "seed": 62916850942137,
-  "d4": 7,
-  "unique_base_inputs": 658,
-  "seconds": 3.9600347080267966,
-  "factory_version": 1,
+  "constructor_sha256": "6b6ba6874f377675c2409c6afe048b74a34a4e60b0e75575f6448fd8246a2ccd",
+  "auditor_sha256": "c7c525a7ef21debe8a3e1cd459009003846a69e4a45d032a5447efc16b14f283",
   "requires_per_episode_verification": true,
-  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
-  "draft_notes": {
-    "explanation": "The input contains two seed cells of colour 2 on a colour-0 background, placed at opposite corners of a box. In the output, every seed's row and every seed's column is drawn across the whole grid in the seed colour. The rectangle strictly between the outermost seed rows and columns is then filled with colour 1. This mechanism is invariant under every D4 transform. A rotation swaps rows and columns, and both kinds of line are drawn. A reflection swaps which diagonal pair of box corners the seeds occupy, and the rule only uses the sorted row and column coordinates. So the emitted program works directly in visible coordinates with the same steps, and d4 needs no special handling. Colour roles are fixed as constants: background = palette[0], fill = palette[1], seed = palette[2]. If no cell has the seed colour, the program falls back to any non-background cell. Lines are drawn at the actual grid width and height, so rectangular grids are handled. The interior fill skips the line cells, which matches the generator: it fills the box first and then overwrites the borders with lines.",
-    "limitations": "This assumes the generator's domain: exactly two seeds of one colour on a uniform background. The interior is at least 1x1 because the box is at least 3x3; degenerate cases with no interior skip the fill. If extra seeds were present, the program would draw lines through all of them and fill between the outermost ones. That matches the archived solver but is outside the generator's domain. No tests were run."
-  }
+  "sampler_rejections": [],
+  "program_provider": "factory",
+  "factory_sha256": "f166650361e30abe5d50587f7b5c0f5bcc2dda892eb3e6f4afe43ad7ccc163a3",
+  "factory_version": 1,
+  "unique_base_inputs": 995,
+  "fixture_basis": "canonical",
+  "seconds": 4.262923208065331
 }

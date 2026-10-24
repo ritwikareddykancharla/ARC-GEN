@@ -17,41 +17,59 @@
 import common
 
 
-def generate(colors=None):
+def generate(colors=None, width=None, height=None):
   """Returns input and output grids according to the given parameters.
 
   Args:
-    colors: A list of colors to use.
+    colors: A list of colors to use (row-major, `width` cells per row).
+    width: Canvas width; random scenes sample it independently in 5..30.
+    height: Canvas height; random scenes sample it independently in 5..30.
   """
 
   def draw():
-    grid, output = common.grids(10, 10, 7)
+    grid, output = common.grids(width, height, 7)
     for i, color in enumerate(colors):
-      grid[i // 10][i % 10] = color
-    for row in range(10):
-      for col in range(10):
+      grid[i // width][i % width] = color
+    for row in range(height):
+      for col in range(width):
         if grid[row][col] != 6: continue
         num_left, num_right = 0, 0
         for c in range(0, col):
           if grid[row][c] != 7: num_left += 1
-        for c in range(col + 1, 10):
+        for c in range(col + 1, width):
           if grid[row][c] != 7: num_right += 1
         for c in range(col - num_left, col + num_right + 1):
           output[row][c] = 8
     return grid, output
 
   if colors is None:
+    width = common.randint(5, 30) if width is None else width
+    height = common.randint(5, 30) if height is None else height
+    if not (5 <= width <= 30 and 5 <= height <= 30):
+      raise ValueError('Random dimensions must be 5..30')
     subset = common.sample([0, 1, 2, 3, 4, 5, 8, 9], common.randint(3, 8))
-    grid = common.grid(10, 10, 7)
     freq = common.randint(1, 2)
-    for row in range(10):
-      for col in range(10):
-        if common.randint(0, freq): continue
-        grid[row][col] = common.choice(subset)
-    for row in range(10):
-      if common.randint(0, 1): continue
-      grid[row][common.randint(0, 9)] = 6
+    for _ in range(100):
+      grid = common.grid(width, height, 7)
+      for row in range(height):
+        for col in range(width):
+          if common.randint(0, freq): continue
+          grid[row][col] = common.choice(subset)
+      for row in range(height):
+        if common.randint(0, 1): continue
+        grid[row][common.randint(0, width - 1)] = 6
+      counts = [sum(row.count(c) for row in grid) for c in range(10)]
+      # Every original scene has at least one 6 anchor and a strictly
+      # dominant orange background; small canvases make both worth checking.
+      if counts[6] and counts[7] > max(counts[:7] + counts[8:]): break
+    else:
+      raise RuntimeError('Cannot sample an anchored scene; retry')
     colors = common.flatten(grid)
+  else:
+    width = 10 if width is None else width
+    height = len(colors) // width if height is None else height
+    if width * height != len(colors):
+      raise ValueError('colors must contain width * height cells')
 
   grid, output = draw()
   return {"input": grid, "output": output}

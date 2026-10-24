@@ -17,7 +17,8 @@
 import common
 
 
-def generate(width=None, height=None, brow=None, bcol=None):
+def generate(width=None, height=None, brow=None, bcol=None, grid_width=None,
+             grid_height=None):
   """Returns input and output grids according to the given parameters.
 
   Args:
@@ -25,19 +26,32 @@ def generate(width=None, height=None, brow=None, bcol=None):
     height: The height of the box.
     brow: The row of the box.
     bcol: The column of the box.
+    grid_width: Canvas width; random scenes sample it independently in 5..30.
+    grid_height: Canvas height; random scenes sample it independently in 5..30.
   """
 
   if width is None:
-    width, height = common.randint(3, 11), common.randint(3, 11)
-    brow, bcol = common.randint(1, 12 - height), common.randint(1, 12 - width)
+    grid_width = common.randint(5, 30) if grid_width is None else grid_width
+    grid_height = common.randint(5, 30) if grid_height is None else grid_height
+    if not (5 <= grid_width <= 30 and 5 <= grid_height <= 30):
+      raise ValueError('Random dimensions must be 5..30')
+    # The box keeps a blank margin of at least one cell on every side, as in
+    # the original 13x13 scenes (box sides 3..11, corners in rows/cols 1..11).
+    width = common.randint(3, grid_width - 2)
+    height = common.randint(3, grid_height - 2)
+    brow = common.randint(1, grid_height - 1 - height)
+    bcol = common.randint(1, grid_width - 1 - width)
+  grid_width = 13 if grid_width is None else grid_width
+  grid_height = 13 if grid_height is None else grid_height
 
-  grid, output = common.grids(13, 13)
+  grid, output = common.grids(grid_width, grid_height)
   grid[brow][bcol] = grid[brow + height - 1][bcol + width - 1] = 2
   for r in range(height):
     for c in range(width):
       output[brow + r][bcol + c] = 1
-  for i in range(13):
+  for i in range(grid_width):
     output[brow][i] = output[brow + height - 1][i] = 2
+  for i in range(grid_height):
     output[i][bcol] = output[i][bcol + width - 1] = 2
   return {"input": grid, "output": output}
 

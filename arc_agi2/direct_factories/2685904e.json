@@ -1,21 +1,17 @@
 {
   "task_id": "2685904e",
-  "factory_sha256": "4de00b5b012aef2473a584dfc1ca91b90233728a1c3998080d53a09522e7bbbe",
-  "constructor_sha256": "791b606c4af8b9546fbe9e2b0a765790c802430cea4abf388c4e7c6936a97199",
   "passed": true,
   "fresh_pairs_checked": 1000,
   "augmented_pair_checks": 8000,
   "fixture_variants_checked": 16,
-  "sampler_rejections": [],
-  "seed": 198309650784278,
-  "d4": 7,
-  "unique_base_inputs": 994,
-  "seconds": 5.075296125025488,
-  "factory_version": 1,
+  "constructor_sha256": "803b8e0c1ba6a922fa6606bd7b9cda8b6509e555bc48247a23ab2011467feb37",
+  "auditor_sha256": "c7c525a7ef21debe8a3e1cd459009003846a69e4a45d032a5447efc16b14f283",
   "requires_per_episode_verification": true,
-  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
-  "draft_notes": {
-    "explanation": "In the original task, a grey (5) divider runs the full width of the grid. A row of 8s on the far side counts n, and a data line sits on the other side of the divider. For every data colour that occurs exactly n times, a bar of that colour, n cells long, is drawn from the divider toward the counter side, in each position where that colour appears.\n\nThe factory works out, directly from d4, whether the divider is a row or a column in visible coordinates, and which way the bars grow.\n- Rotation 0: horizontal divider, bars go up.\n- Rotation 1: vertical divider, bars go right.\n- Rotation 2: horizontal divider, bars go down.\n- Rotation 3: vertical divider, bars go left.\n- A reflection (d4 >= 4) reverses rows before rotating. That only permutes positions along the divider, so it changes neither the divider axis nor the bar direction.\n\nThe background colour (palette[0]) and divider colour (palette[5]) are built in as constants.\n\nThe emitted program works on the visible grid as follows:\n1. It finds the full line of the divider colour along the chosen axis.\n2. It sets n to the number of non-background cells on the counter side.\n3. It takes the data line to be the line on the opposite side with the most non-background cells.\n4. It counts the colours in that line.\n5. It stamps bars of length n next to the divider, growing in direction DIR, in the matching colour at every qualifying position.\n\nThe program never rotates the grid or remaps colours. The six training pairs and the test pair all follow this one rule; I found no contradictions.",
-    "limitations": "The program assumes the generator's domain: exactly one full line of palette[5], a counter side containing only the counter cells, and a single data line on the other side. If no line of the divider colour exists, it falls back to any uniform non-background line. If several lines tie for most coloured cells on the data side, it uses the first one in index order. Bars are clipped to the grid edges, although under the generator's limit of length 5 they always fit. The factory does not use the demonstrations. I have not run any tests."
-  }
+  "sampler_rejections": [],
+  "program_provider": "factory",
+  "factory_sha256": "4de00b5b012aef2473a584dfc1ca91b90233728a1c3998080d53a09522e7bbbe",
+  "factory_version": 1,
+  "unique_base_inputs": 1000,
+  "fixture_basis": "canonical",
+  "seconds": 6.0597132090479136
 }

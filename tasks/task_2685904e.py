@@ -17,36 +17,58 @@
 import common
 
 
-def generate(length=None, colors=None):
+def generate(length=None, colors=None, height=None, divider=None, data_row=None):
   """Returns input and output grids according to the given parameters.
 
   Args:
     length: The length to match.
-    colors: The colors to use.
+    colors: The colors of the full-width data row (its length is the width).
+    height: Canvas height (10 for the original pairs); random 6..30.
+    divider: Row of the grey divider (6 for the original pairs).
+    data_row: Row of the data (8 for the original pairs).
   """
 
   def draw():
-    grid, output = common.grids(10, 10)
+    width = len(colors)
+    grid, output = common.grids(width, height)
     for c in range(length):
       output[0][c] = grid[0][c] = 8
     matches = False
     for c, color in enumerate(colors):
-      output[8][c] = grid[8][c] = color
-      output[6][c] = grid[6][c] = 5
+      output[data_row][c] = grid[data_row][c] = color
+      output[divider][c] = grid[divider][c] = 5
       if colors.count(color) != length: continue
       matches = True
       for r in range(length):
-        output[5 - r][c] = color
+        output[divider - 1 - r][c] = color
     if not matches: return None, None
     return grid, output
 
   if length is None:
-    length = common.randint(1, 5)
-    subset = common.sample([1, 2, 3, 4, 6, 7, 8, 9], common.randint(2, 5))
-    while True:
-      colors = common.choices(subset, 10)
-      grid, _ = draw()
+    fixed_height = height
+    if fixed_height is not None and not 6 <= fixed_height <= 30:
+      raise ValueError('Random height must be 6..30')
+    for _ in range(100):
+      width = common.randint(4, 30)
+      height = common.randint(6, 30) if fixed_height is None else fixed_height
+      # Layout of the original pairs: counter bar from the top-left corner,
+      # bars rising from the divider without reaching row 0, and a full-width
+      # data row below the divider with at least one blank row in between.
+      divider = common.randint(2, height - 3)
+      data_row = common.randint(divider + 2, height - 1)
+      # A counter as long as the row would itself look like a divider line.
+      length = common.randint(1, min(divider - 1, width - 1))
+      subset = common.sample([1, 2, 3, 4, 6, 7, 8, 9], common.randint(2, 8))
+      for _ in range(20):
+        colors = common.choices(subset, width)
+        grid, _ = draw()
+        if grid: break
       if grid: break
+    else:
+      raise RuntimeError('No data colour occurs exactly length times; retry')
+  height = 10 if height is None else height
+  divider = 6 if divider is None else divider
+  data_row = 8 if data_row is None else data_row
 
   grid, output = draw()
   return {"input": grid, "output": output}

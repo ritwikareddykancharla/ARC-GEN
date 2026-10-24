@@ -229,3 +229,30 @@ def test_out_of_domain_inputs_raise_missing_evidence():
     for bad in ([[1, 2, 3]], [[1, 2, 3, 0]], [[1, 2, 3, 5]], [[1, 1, 2, 3], [4, 0, 0, 0]]):
         with pytest.raises(MissingColourEvidence):
             require_colour_evidence(TID, demos, [{"input": bad}])
+
+
+def test_context_audit_passed_and_pins_current_sources():
+    audits = json.loads((REPORT / "context-audit.json").read_text())
+    assert set(audits) == {f"{TID}@default", f"{TID}@min_4x4"}
+    rels = {"constructor": f"../tasks/task_{TID}.py", "factory": f"direct_factories/task_{TID}.py",
+            "factory_certificate": f"direct_factories/{TID}.json",
+            "histogram_order_evidence": "histogram_order_evidence.py",
+            "colour_evidence": "colour_evidence.py", "verified_rules": "verified_rules.py",
+            "program_targets": "program_targets.py", "augmentation": "augmentation.py",
+            "episode_shape_policy": "episode_shape_policy.py",
+            "finite_input_policy": "finite_input_policy.py", "prepare": "diversity/prepare.py",
+            "recertify": "diversity/recertify.py",
+            "harness": "reports/diversity-v1/f3cdc58f-order-evidence-20261025/context_audit.py"}
+    for key, a in audits.items():
+        assert a["passed"] and "error" not in a, key
+        assert a["queries_accepted"] == a["queries_requested"] == 250 and not a["queries_failed"]
+        assert a["d4_inconsistent_contexts"] == 0
+        assert a["shape_profile"] == {"demo_input_shapes": "uniform", "query_input_shape": "seen"}
+        assert (a["max_contexts_per_query"], a["max_split_draws_per_slot"]) == (64, 400)
+        assert sum(a["query_split"].values()) == 250
+        assert sum(c["queries"] for c in a["query_count_classes"].values()) == 250
+        assert a["make_record_calls"] == 8 * (250 + a["context_retries"])
+        assert set(a["source_sha256"]) == set(rels)
+        for name, rel in rels.items():
+            assert a["source_sha256"][name] == sha(BASE / rel), (key, name)
+    assert audits[f"{TID}@min_4x4"]["query_heights"] == [4, 4]

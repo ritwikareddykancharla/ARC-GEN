@@ -87,6 +87,7 @@ def main():
             "hole_tally_8ba14f53_evidence.py",
             "latin_fill_4cd1b7b2_evidence.py",
             "marker_roll_evidence.py",
+            "self_match_evidence.py",
         )
     ]
     for result in results:

@@ -1,0 +1,42 @@
+{
+  "task_id": "8403a5d5",
+  "domain_input_orbits": 6286,
+  "canonical_shape_policy": "uniform demo input shapes; query shape seen",
+  "split_signature": "e68cce8b0bc4921758c6568ade5ae78cc58d5f76865c92996f0fcdb9b5c2965c",
+  "supported_distinct_validation_query_orbits": 17,
+  "eligible_shape_bins": {
+    "18x28": [
+      "46febeeca88454da97a72d095ace61e7dfd6b74bf6d64abd3596949c03d1267c",
+      "6c606820aa1e3d4dab5317f146710ca9df1eb67ea5fcc568438ceba4b567cb25",
+      "73a5bc704566d82630e1e4f097e1d6205464c0d612856637b45efe746f468f72",
+      "d15c9ca87d05797df073e1ced976c2932903c11e0e8a301fcba8de64a0a0fc51"
+    ],
+    "20x30": [
+      "3561bc98c9697cc13bcf40b42b6ba62c30c7f1362eedaef11981a2125e4bfd27",
+      "723426c42ad9be37410dbeb03c74d56b71a04d2f73340f0d2cf705409a165486",
+      "813c45aca51f17fef916819ced41768d7a7cd0efa7424fff5bd913cba647d00a",
+      "bd0c667029b828f7567059d827e36d5bca9e898947c51b71c0082a27c0329bc1",
+      "d74dd12c047a1a9f28f19b602afc72f17014b97138cb89d6a568694d3c0a0d7b"
+    ],
+    "22x19": [
+      "109a2e90c5d75135efaa3ad06fd5a47dc240842c4d2006e4adf17d9606ec6ece",
+      "212f9e48d362dd8739c7417c04702808f9251c8ea09e922baaa45b7432e3f0d5",
+      "8c176b144dbffc62fb07cb21ef8c6207e6504c99391198c3f0ebdb42d10b20f2",
+      "e5cca55ce675e9142e1278a50685667681b93c993273d39b28fb6c0306bb40ea"
+    ],
+    "24x25": [
+      "3af865bc8021bd1f4e9781613aec886dfc509c6892b1b5b5a0becf8e20f82dfc",
+      "6aa55374b20cc88fb96b5e699d1d5d99873edfb2a0b68fd803acd4aeccd21353",
+      "f270dc38bf9c387fc2f81e43b93345e005fdb761a5b9d46a38b493e6d5b3c2bc",
+      "f8a81b8483421cd8cd2809cee17b2621300799533181a3b1f4dc5c24f1b96a2e"
+    ]
+  },
+  "source_sha256": {
+    "arc_agi2/diversity/audit_8403a5d5_query_support.py": "78999c29ec92384e4741432411b628a35a3f969ab5fb75a9986f28bb07e705de",
+    "arc_agi2/diversity/rearc/generators.py": "7eb7b6620afe08760fb52761c7dd46796e9e44958714efc950b11e923a8281ae",
+    "tasks/task_8403a5d5.py": "341ba3209edcdd02946b1e9eab136d529152adc7ded2ed1a45bda71fe194cb5e",
+    "arc_agi2/finite_input_policy.py": "3ce236d975f85f35b587ea8d5337e621dcb1177d51d65fe935aa766f0440cbd3",
+    "arc_agi2/diversity/prepare.py": "e7b7cc88013b227aa8d0f1e58cdc23436daf60de3482e7c1b63734d42ec01b5b"
+  },
+  "limitation": "Bound on unique query identities under this split and four-orbit, same-shape context policy; NOT a bound on distinct episode contexts or future expanded generators."
+}

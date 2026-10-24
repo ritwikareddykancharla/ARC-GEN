@@ -252,14 +252,86 @@ def midpoint_xor_panels(grid):
             for r in rows]
 
 
+def midpoint_or_panels(grid):
+    """195ba7dc: OR of the two equal panels around the midpoint divider.
+
+    Pair label checker only (native colours). Every canonical and teaching
+    fixture, and every constructor output, is an odd-width grid whose exact
+    midpoint column (W - 1) / 2 is a full single-colour non-zero divider with
+    equal panels on both sides. A cell is 1 where either panel is non-zero.
+    The divider is located geometrically, so full or empty panel columns are
+    ordinary content. Inputs without this geometry are rejected, not guessed.
+    """
+    rows = [list(row) for row in grid]
+    width = len(rows[0]) if rows else 0
+    if not rows or width < 3 or width % 2 == 0 or any(len(r) != width for r in rows):
+        raise ValueError('Expected an odd-width grid with a midpoint divider column')
+    mid = width // 2
+    divider = {r[mid] for r in rows}
+    if len(divider) != 1 or 0 in divider:
+        raise ValueError('Midpoint column is not a full non-background divider')
+    return [[1 if r[x] != 0 or r[mid + 1 + x] != 0 else 0 for x in range(mid)] for r in rows]
+
+
+def separated_priority_panels(grid):
+    """281123b4: overlay four equal panels at fixed separator positions.
+
+    Pair label checker only (native colours). Every canonical and teaching
+    fixture, and every constructor output, has width 4w + 3 with full
+    single-colour non-zero separator columns at w, 2w + 1 and 3w + 2, and
+    background 0. Panels are read at those positions (never by modal colour or
+    first uniform column), and each output cell takes the highest-priority
+    non-zero panel colour, 9 > 4 > 8 > 5, else 0. Unexpected colours or
+    geometry raise.
+    """
+    rows = [list(row) for row in grid]
+    width = len(rows[0]) if rows else 0
+    if not rows or width < 7 or (width - 3) % 4 or any(len(r) != width for r in rows):
+        raise ValueError('Expected width 4w+3 with three separator columns')
+    w = (width - 3) // 4
+    seps = (w, 2 * w + 1, 3 * w + 2)
+    colours = {r[x] for r in rows for x in seps}
+    if len(colours) != 1 or 0 in colours:
+        raise ValueError('Separator columns are not one full non-background colour')
+    rank = {9: 0, 4: 1, 8: 2, 5: 3}
+    out = []
+    for r in rows:
+        row = []
+        for x in range(w):
+            present = [r[k * (w + 1) + x] for k in range(4)]
+            if any(v != 0 and v not in rank for v in present):
+                raise ValueError('Panel holds a colour outside 0, 8, 5, 9, 4')
+            on = [v for v in present if v != 0]
+            row.append(min(on, key=rank.__getitem__) if on else 0)
+        out.append(row)
+    return out
+
+
 from .joint_fragments import transform as joint_fragment_completion
 
 VERIFIERS = {'78332cb0': panel_chain, 'de493100': cropped_mirror_patch,
              '3a301edc': nested_frame_band,
              'd6542281': joint_fragment_completion,
              'aaecdb9a': legend_object_chart, '007bbfb7': self_tiling,
-             '7e2bad24': native_side_beam, '34b99a2b': midpoint_xor_panels}
+             '7e2bad24': native_side_beam, '34b99a2b': midpoint_xor_panels,
+             '195ba7dc': midpoint_or_panels, '281123b4': separated_priority_panels}
 VERIFIER_EVIDENCE = {
+    '195ba7dc': {
+        'mode': 'reviewed_midpoint_divider_or',
+        'module': 'arc_agi2.verified_rules.midpoint_or_panels',
+        'reason': 'The archived solver takes the FIRST full single-colour column whose colour occurs only there as the divider. A valid sparse scene whose only 7s fill one left-panel column (width=height=4, top column 0 set, bottom empty) is therefore cut at column 0 and yields an empty 4x0 answer. This is not confined to tiny panels. All 5 canonical and 5 teaching fixtures and every constructor output place the colour-2 divider at the exact midpoint (W-1)/2 of an odd-width grid with equal panels, so this checker reads the midpoint column and ORs the panels. Empty, sparse and full panel rows/columns stay valid content; inputs lacking the geometry raise. The independent direct factory and the panel_overlay_evidence gate are unchanged.',
+        'counterexample': 'arc_agi2/reports/diversity-v1/native-batch-d/195ba7dc-archived-verifier-counterexample.json',
+        'canonical_data_changed': False,
+        'archived_reference_changed': False,
+    },
+    '281123b4': {
+        'mode': 'reviewed_fixed_separator_priority_overlay',
+        'module': 'arc_agi2.verified_rules.separated_priority_panels',
+        'reason': 'The archived solver picks the separator colour as the first non-modal colour whose cells all lie in full uniform columns. A valid sparse scene whose only 8s fill one top-panel column (width=height=4, other panels empty) makes 8 the separator and yields a 4x18 answer instead of 4x4. This is not confined to tiny panels; modal-background errors add further failures at narrow widths. All 7 canonical and 7 teaching fixtures and every constructor output have width 4w+3 with colour-3 separators at w, 2w+1, 3w+2 and background 0, so this checker reads the panels at those positions and applies the priority 9>4>8>5. Empty, sparse and full panel rows/columns stay valid content; inputs lacking the geometry raise. The independent direct factory and the panel_overlay_evidence gate are unchanged.',
+        'counterexample': 'arc_agi2/reports/diversity-v1/native-batch-d/281123b4-archived-verifier-counterexample.json',
+        'canonical_data_changed': False,
+        'archived_reference_changed': False,
+    },
     '34b99a2b': {
         'mode': 'reviewed_midpoint_divider_xor',
         'module': 'arc_agi2.verified_rules.midpoint_xor_panels',

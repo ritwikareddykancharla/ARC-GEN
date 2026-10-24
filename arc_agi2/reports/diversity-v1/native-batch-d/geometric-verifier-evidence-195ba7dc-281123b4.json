@@ -1,0 +1,79 @@
+{
+  "verified_rules_sha256": "8ad9a385e545b8a2ca8b5eab3e8deb72bf9f9eb2152a585dc9e68116a457f853",
+  "195ba7dc": {
+    "constructor_sha256": "30fee2d98afa62cdb7069c55f5e49cf95480cc39ef24e5aaa22ce58aa6b6ac88",
+    "fixtures": {
+      "pairs": 10,
+      "archived_exact": 10,
+      "reviewed_exact": 10
+    },
+    "legacy_dims": {
+      "draws": 1000,
+      "archived_disagree": 0,
+      "reviewed_disagree": 0
+    },
+    "expanded_explicit": {
+      "draws": 1000,
+      "archived_disagree": 3,
+      "reviewed_disagree": 0
+    },
+    "adversarial": {
+      "cases": 290,
+      "archived_disagree": 52,
+      "reviewed_disagree": 0,
+      "archived_disagree_at_4x4_or_larger": 15,
+      "archived_examples": [
+        "1x1:top:full",
+        "1x1:top:full_col0",
+        "1x1:top:full_row0",
+        "1x1:top:single_cell",
+        "1x1:top:checker",
+        "1x1:bottom:full",
+        "1x1:bottom:full_col0",
+        "1x1:bottom:full_row0",
+        "1x1:bottom:single_cell",
+        "1x1:bottom:checker",
+        "1x2:top:full",
+        "1x2:top:full_col0"
+      ]
+    }
+  },
+  "281123b4": {
+    "constructor_sha256": "91c64590592220df177e06d352c66c1d30c6c97ae340df5e12d85d6ffad8e594",
+    "fixtures": {
+      "pairs": 14,
+      "archived_exact": 14,
+      "reviewed_exact": 14
+    },
+    "legacy_dims": {
+      "draws": 1000,
+      "archived_disagree": 1,
+      "reviewed_disagree": 0
+    },
+    "expanded_explicit": {
+      "draws": 1000,
+      "archived_disagree": 184,
+      "reviewed_disagree": 0
+    },
+    "adversarial": {
+      "cases": 538,
+      "archived_disagree": 146,
+      "reviewed_disagree": 0,
+      "archived_disagree_at_4x4_or_larger": 50,
+      "archived_examples": [
+        "1x1:top:empty",
+        "1x1:top:full",
+        "1x1:top:full_col0",
+        "1x1:top:full_row0",
+        "1x1:top:single_cell",
+        "1x1:top:checker",
+        "1x1:upper:empty",
+        "1x1:lower:empty",
+        "1x1:bottom:empty",
+        "1x1:all_full",
+        "1x1:all_empty",
+        "1x1:col_each"
+      ]
+    }
+  }
+}

@@ -238,6 +238,10 @@ def require_colour_evidence(task_id, demonstrations, queries, palette=None, d4=0
         from .dot_motion_d47aa2ff_evidence import require_dot_motion_evidence
         require_dot_motion_evidence(demonstrations, queries, palette, d4)
         return
+    if task_id == 'f3cdc58f':
+        from .histogram_order_evidence import require_histogram_order_evidence
+        require_histogram_order_evidence(demonstrations, queries, palette, d4)
+        return
     if task_id == '80214e03':
         from .mosaic_band_evidence import require_mosaic_band_evidence
         require_mosaic_band_evidence(demonstrations, queries,

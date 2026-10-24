@@ -1,0 +1,309 @@
+{
+  "27f8ce4f": {
+    "task_id": "27f8ce4f",
+    "query_domain": "default",
+    "passed": true,
+    "method": "gate-aware-query-preserving-same-shape-context",
+    "method_version": 1,
+    "gated": true,
+    "source_sha256": {
+      "constructor": "dc392a5eed8aeda53b8c84f023bff42ddc492de138c2adc8339e0abbbb8cae20",
+      "factory": "f49052a7c88c047ead6075da34e9fe73c6a8a16303400fe15e4731cc6fd111ad",
+      "factory_certificate": "1e2283a2edbce39f4050318c030fee9a06c8c4c7f4ca754dd6778a32b8684254",
+      "self_tiler_evidence": "126ce13833d13df5237e3b4005d6fc0b5cd2baefc8f0245ef7fbd0e13be33867",
+      "colour_evidence": "51a6c4047613d84858d9d2dcf71535ca1239a15823e20816e59a432e48acf287",
+      "verified_rules": "a54743d7f19075966af22be6abfaa09863427822593ef186b0a2da13ca8ec853",
+      "program_targets": "88298f336ca6a50ee91e58a08f24a4997c7c49e832eda1e68f98153dd59ed790",
+      "prepare_input_orbit": "9f12746d9ccf5b8484702d8a4884ffcdbb25a43ad2a4cd731e35931e35827d9d",
+      "harness": "8a33aa448b48fbfc12ae2416c3a88b33f6b71c82731c513c7e7663c2944fdd0c"
+    },
+    "queries_requested": 250,
+    "queries_accepted": 250,
+    "queries_failed": [],
+    "max_contexts_per_query": 64,
+    "context_retries": 71,
+    "context_retry_histogram": {
+      "0": 201,
+      "1": 34,
+      "2": 10,
+      "3": 3,
+      "4": 2
+    },
+    "context_failure_reasons": {
+      "27f8ce4f: demonstrations leave the self-tiling query ambiguous": 71
+    },
+    "make_record_calls": 2000,
+    "pair_draws": 1964,
+    "distinctness_redraws": 1,
+    "accepted_with_four_distinct_orbits": 221,
+    "first_context_ambiguous": {
+      "same_shape": 49,
+      "mixed_shape": 43
+    },
+    "query_input_shapes": 16,
+    "query_classes": {
+      "colours=3": 104,
+      "colours=4": 60,
+      "colours=5": 86
+    },
+    "seconds": 15.21
+  },
+  "48f8583b": {
+    "task_id": "48f8583b",
+    "query_domain": "default",
+    "passed": true,
+    "method": "gate-aware-query-preserving-same-shape-context",
+    "method_version": 1,
+    "gated": true,
+    "source_sha256": {
+      "constructor": "b3443161b61b812d01e7b7da044cd48a5f402edd4f948df67ad3af6baf5927cb",
+      "factory": "f9862775cefeed58f6b27bcda4dabb3d43cb01ca4cd7a278f746afcae0cfb322",
+      "factory_certificate": "1519fca7444e2fe32209a0616e2516bccc7c51214ed3039871f590afcc0fa721",
+      "self_tiler_evidence": "126ce13833d13df5237e3b4005d6fc0b5cd2baefc8f0245ef7fbd0e13be33867",
+      "colour_evidence": "51a6c4047613d84858d9d2dcf71535ca1239a15823e20816e59a432e48acf287",
+      "verified_rules": "a54743d7f19075966af22be6abfaa09863427822593ef186b0a2da13ca8ec853",
+      "program_targets": "88298f336ca6a50ee91e58a08f24a4997c7c49e832eda1e68f98153dd59ed790",
+      "prepare_input_orbit": "9f12746d9ccf5b8484702d8a4884ffcdbb25a43ad2a4cd731e35931e35827d9d",
+      "harness": "8a33aa448b48fbfc12ae2416c3a88b33f6b71c82731c513c7e7663c2944fdd0c"
+    },
+    "queries_requested": 250,
+    "queries_accepted": 250,
+    "queries_failed": [],
+    "max_contexts_per_query": 64,
+    "context_retries": 37,
+    "context_retry_histogram": {
+      "0": 224,
+      "1": 18,
+      "2": 6,
+      "3": 1,
+      "4": 1
+    },
+    "context_failure_reasons": {
+      "48f8583b: demonstrations leave the self-tiling query ambiguous": 37
+    },
+    "make_record_calls": 2000,
+    "pair_draws": 1862,
+    "distinctness_redraws": 1,
+    "accepted_with_four_distinct_orbits": 224,
+    "first_context_ambiguous": {
+      "same_shape": 26,
+      "mixed_shape": 22
+    },
+    "query_input_shapes": 16,
+    "query_classes": {
+      "colours=1": 4,
+      "colours=2": 96,
+      "colours=3": 97,
+      "colours=4": 53
+    },
+    "seconds": 18.8
+  },
+  "5b6cbef5": {
+    "task_id": "5b6cbef5",
+    "query_domain": "default",
+    "passed": true,
+    "method": "gate-aware-query-preserving-same-shape-context",
+    "method_version": 1,
+    "gated": true,
+    "source_sha256": {
+      "constructor": "2d4fa5b4f4522443b000e26832efb92e7d32f114a6223ab1d0b006aef6b20bac",
+      "factory": "fd5d91b9ef3074cf5bc6f85d64c7cd7378851ac6ebb5053dc776ccac93217a4e",
+      "factory_certificate": "18169d6f8766982cf5e0bbd69a49af0b4d33f89efde506fe806d400492ed6824",
+      "self_tiler_evidence": "126ce13833d13df5237e3b4005d6fc0b5cd2baefc8f0245ef7fbd0e13be33867",
+      "colour_evidence": "51a6c4047613d84858d9d2dcf71535ca1239a15823e20816e59a432e48acf287",
+      "verified_rules": "a54743d7f19075966af22be6abfaa09863427822593ef186b0a2da13ca8ec853",
+      "program_targets": "88298f336ca6a50ee91e58a08f24a4997c7c49e832eda1e68f98153dd59ed790",
+      "prepare_input_orbit": "9f12746d9ccf5b8484702d8a4884ffcdbb25a43ad2a4cd731e35931e35827d9d",
+      "harness": "8a33aa448b48fbfc12ae2416c3a88b33f6b71c82731c513c7e7663c2944fdd0c"
+    },
+    "queries_requested": 250,
+    "queries_accepted": 250,
+    "queries_failed": [],
+    "max_contexts_per_query": 64,
+    "context_retries": 119,
+    "context_retry_histogram": {
+      "0": 172,
+      "1": 48,
+      "2": 23,
+      "3": 4,
+      "4": 2,
+      "5": 1
+    },
+    "context_failure_reasons": {
+      "5b6cbef5: demonstrations leave the self-tiling query ambiguous": 119
+    },
+    "make_record_calls": 2000,
+    "pair_draws": 2112,
+    "distinctness_redraws": 5,
+    "accepted_with_four_distinct_orbits": 207,
+    "first_context_ambiguous": {
+      "same_shape": 78,
+      "mixed_shape": 78
+    },
+    "query_input_shapes": 16,
+    "query_classes": {
+      "full": 3,
+      "ink_majority": 107,
+      "ink_minority": 97,
+      "ink_tie": 43
+    },
+    "seconds": 17.17
+  },
+  "27f8ce4f@min_corner": {
+    "task_id": "27f8ce4f",
+    "query_domain": "min_corner",
+    "passed": true,
+    "method": "gate-aware-query-preserving-same-shape-context",
+    "method_version": 1,
+    "gated": true,
+    "source_sha256": {
+      "constructor": "dc392a5eed8aeda53b8c84f023bff42ddc492de138c2adc8339e0abbbb8cae20",
+      "factory": "f49052a7c88c047ead6075da34e9fe73c6a8a16303400fe15e4731cc6fd111ad",
+      "factory_certificate": "1e2283a2edbce39f4050318c030fee9a06c8c4c7f4ca754dd6778a32b8684254",
+      "self_tiler_evidence": "126ce13833d13df5237e3b4005d6fc0b5cd2baefc8f0245ef7fbd0e13be33867",
+      "colour_evidence": "51a6c4047613d84858d9d2dcf71535ca1239a15823e20816e59a432e48acf287",
+      "verified_rules": "a54743d7f19075966af22be6abfaa09863427822593ef186b0a2da13ca8ec853",
+      "program_targets": "88298f336ca6a50ee91e58a08f24a4997c7c49e832eda1e68f98153dd59ed790",
+      "prepare_input_orbit": "9f12746d9ccf5b8484702d8a4884ffcdbb25a43ad2a4cd731e35931e35827d9d",
+      "harness": "8a33aa448b48fbfc12ae2416c3a88b33f6b71c82731c513c7e7663c2944fdd0c"
+    },
+    "queries_requested": 250,
+    "queries_accepted": 250,
+    "queries_failed": [],
+    "max_contexts_per_query": 64,
+    "context_retries": 223,
+    "context_retry_histogram": {
+      "0": 137,
+      "1": 54,
+      "2": 31,
+      "3": 15,
+      "4": 6,
+      "5": 5,
+      "6": 1,
+      "7": 1
+    },
+    "context_failure_reasons": {
+      "27f8ce4f: demonstrations leave the self-tiling query ambiguous": 223
+    },
+    "make_record_calls": 2000,
+    "pair_draws": 2419,
+    "distinctness_redraws": 0,
+    "accepted_with_four_distinct_orbits": 0,
+    "first_context_ambiguous": {
+      "same_shape": 113,
+      "mixed_shape": 34
+    },
+    "query_input_shapes": 1,
+    "query_classes": {
+      "colours=3": 250
+    },
+    "seconds": 22.53
+  },
+  "48f8583b@min_corner": {
+    "task_id": "48f8583b",
+    "query_domain": "min_corner",
+    "passed": true,
+    "method": "gate-aware-query-preserving-same-shape-context",
+    "method_version": 1,
+    "gated": true,
+    "source_sha256": {
+      "constructor": "b3443161b61b812d01e7b7da044cd48a5f402edd4f948df67ad3af6baf5927cb",
+      "factory": "f9862775cefeed58f6b27bcda4dabb3d43cb01ca4cd7a278f746afcae0cfb322",
+      "factory_certificate": "1519fca7444e2fe32209a0616e2516bccc7c51214ed3039871f590afcc0fa721",
+      "self_tiler_evidence": "126ce13833d13df5237e3b4005d6fc0b5cd2baefc8f0245ef7fbd0e13be33867",
+      "colour_evidence": "51a6c4047613d84858d9d2dcf71535ca1239a15823e20816e59a432e48acf287",
+      "verified_rules": "a54743d7f19075966af22be6abfaa09863427822593ef186b0a2da13ca8ec853",
+      "program_targets": "88298f336ca6a50ee91e58a08f24a4997c7c49e832eda1e68f98153dd59ed790",
+      "prepare_input_orbit": "9f12746d9ccf5b8484702d8a4884ffcdbb25a43ad2a4cd731e35931e35827d9d",
+      "harness": "8a33aa448b48fbfc12ae2416c3a88b33f6b71c82731c513c7e7663c2944fdd0c"
+    },
+    "queries_requested": 250,
+    "queries_accepted": 250,
+    "queries_failed": [],
+    "max_contexts_per_query": 64,
+    "context_retries": 145,
+    "context_retry_histogram": {
+      "0": 175,
+      "1": 45,
+      "2": 19,
+      "3": 3,
+      "4": 3,
+      "5": 1,
+      "6": 1,
+      "7": 1,
+      "8": 1,
+      "15": 1
+    },
+    "context_failure_reasons": {
+      "48f8583b: demonstrations leave the self-tiling query ambiguous": 145
+    },
+    "make_record_calls": 2000,
+    "pair_draws": 2201,
+    "distinctness_redraws": 16,
+    "accepted_with_four_distinct_orbits": 0,
+    "first_context_ambiguous": {
+      "same_shape": 75,
+      "mixed_shape": 15
+    },
+    "query_input_shapes": 1,
+    "query_classes": {
+      "colours=1": 24,
+      "colours=2": 226
+    },
+    "seconds": 29.03
+  },
+  "5b6cbef5@min_corner": {
+    "task_id": "5b6cbef5",
+    "query_domain": "min_corner",
+    "passed": true,
+    "method": "gate-aware-query-preserving-same-shape-context",
+    "method_version": 1,
+    "gated": true,
+    "source_sha256": {
+      "constructor": "2d4fa5b4f4522443b000e26832efb92e7d32f114a6223ab1d0b006aef6b20bac",
+      "factory": "fd5d91b9ef3074cf5bc6f85d64c7cd7378851ac6ebb5053dc776ccac93217a4e",
+      "factory_certificate": "18169d6f8766982cf5e0bbd69a49af0b4d33f89efde506fe806d400492ed6824",
+      "self_tiler_evidence": "126ce13833d13df5237e3b4005d6fc0b5cd2baefc8f0245ef7fbd0e13be33867",
+      "colour_evidence": "51a6c4047613d84858d9d2dcf71535ca1239a15823e20816e59a432e48acf287",
+      "verified_rules": "a54743d7f19075966af22be6abfaa09863427822593ef186b0a2da13ca8ec853",
+      "program_targets": "88298f336ca6a50ee91e58a08f24a4997c7c49e832eda1e68f98153dd59ed790",
+      "prepare_input_orbit": "9f12746d9ccf5b8484702d8a4884ffcdbb25a43ad2a4cd731e35931e35827d9d",
+      "harness": "8a33aa448b48fbfc12ae2416c3a88b33f6b71c82731c513c7e7663c2944fdd0c"
+    },
+    "queries_requested": 250,
+    "queries_accepted": 250,
+    "queries_failed": [],
+    "max_contexts_per_query": 64,
+    "context_retries": 206,
+    "context_retry_histogram": {
+      "0": 148,
+      "1": 59,
+      "2": 17,
+      "3": 10,
+      "4": 5,
+      "5": 6,
+      "6": 3,
+      "7": 1,
+      "8": 1
+    },
+    "context_failure_reasons": {
+      "5b6cbef5: demonstrations leave the self-tiling query ambiguous": 206
+    },
+    "make_record_calls": 2000,
+    "pair_draws": 2391,
+    "distinctness_redraws": 23,
+    "accepted_with_four_distinct_orbits": 4,
+    "first_context_ambiguous": {
+      "same_shape": 102,
+      "mixed_shape": 75
+    },
+    "query_input_shapes": 1,
+    "query_classes": {
+      "full": 17,
+      "ink_majority": 55,
+      "ink_minority": 60,
+      "ink_tie": 118
+    },
+    "seconds": 23.93
+  }
+}

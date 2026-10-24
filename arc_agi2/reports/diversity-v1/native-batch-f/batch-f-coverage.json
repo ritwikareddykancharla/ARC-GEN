@@ -1,0 +1,252 @@
+{
+ "draws": 1000,
+ "base_rev": "e72190b",
+ "source_sha256": {
+  "tasks/task_27f8ce4f.py": "dc392a5eed8aeda53b8c84f023bff42ddc492de138c2adc8339e0abbbb8cae20",
+  "tasks/task_48f8583b.py": "b3443161b61b812d01e7b7da044cd48a5f402edd4f948df67ad3af6baf5927cb",
+  "tasks/task_5b6cbef5.py": "2d4fa5b4f4522443b000e26832efb92e7d32f114a6223ab1d0b006aef6b20bac"
+ },
+ "legacy_sha256": {
+  "27f8ce4f": "70c1d22e63c495fb6406e92fc0f616939995b39333bc8cf2fee2d2a62b1e3e78",
+  "48f8583b": "e03a032ed0ebe4f6481595d20554648bb8fc2fe34d2556c4b8ad6fbf895cf0e6",
+  "5b6cbef5": "7037789f7a5655b1bd06bcfbad383bdfc7b8c9d91f7a6b4c04c4f73df692aa24"
+ },
+ "families": {
+  "27f8ce4f": {
+   "before": {
+    "unique_inputs": 1000,
+    "checker_disagreements": 0,
+    "height": {
+     "3": 1000
+    },
+    "width": {
+     "3": 1000
+    },
+    "input_shapes": 1,
+    "non_square": 0,
+    "max_output_height": 9,
+    "max_output_width": 9,
+    "outputs_25x25": 0,
+    "selected_cell_fraction_decile": {
+     "0.3": 328,
+     "0.4": 466,
+     "0.5": 159,
+     "0.6": 40,
+     "0.7": 7
+    },
+    "used_colours": {
+     "3": 294,
+     "4": 368,
+     "5": 338
+    },
+    "monochrome": 0
+   },
+   "after": {
+    "unique_inputs": 1000,
+    "checker_disagreements": 0,
+    "height": {
+     "2": 227,
+     "3": 241,
+     "4": 284,
+     "5": 248
+    },
+    "width": {
+     "2": 245,
+     "3": 252,
+     "4": 250,
+     "5": 253
+    },
+    "input_shapes": 16,
+    "non_square": 734,
+    "max_output_height": 25,
+    "max_output_width": 25,
+    "outputs_25x25": 71,
+    "selected_cell_fraction_decile": {
+     "0.2": 19,
+     "0.3": 319,
+     "0.4": 285,
+     "0.5": 317,
+     "0.6": 56,
+     "0.7": 4
+    },
+    "used_colours": {
+     "3": 381,
+     "4": 306,
+     "5": 313
+    },
+    "monochrome": 0
+   }
+  },
+  "48f8583b": {
+   "before": {
+    "unique_inputs": 997,
+    "checker_disagreements": 0,
+    "height": {
+     "3": 1000
+    },
+    "width": {
+     "3": 1000
+    },
+    "input_shapes": 1,
+    "non_square": 0,
+    "max_output_height": 9,
+    "max_output_width": 9,
+    "outputs_25x25": 0,
+    "selected_cell_fraction_decile": {
+     "0.1": 406,
+     "0.2": 285,
+     "0.3": 125,
+     "0.4": 182,
+     "1.0": 2
+    },
+    "used_colours": {
+     "1": 2,
+     "2": 382,
+     "3": 418,
+     "4": 198
+    },
+    "monochrome": 2
+   },
+   "after": {
+    "unique_inputs": 993,
+    "checker_disagreements": 0,
+    "height": {
+     "2": 272,
+     "3": 241,
+     "4": 238,
+     "5": 249
+    },
+    "width": {
+     "2": 232,
+     "3": 248,
+     "4": 251,
+     "5": 269
+    },
+    "input_shapes": 16,
+    "non_square": 739,
+    "max_output_height": 25,
+    "max_output_width": 25,
+    "outputs_25x25": 72,
+    "selected_cell_fraction_decile": {
+     "0.0": 59,
+     "0.1": 349,
+     "0.2": 266,
+     "0.3": 142,
+     "0.4": 170,
+     "1.0": 14
+    },
+    "used_colours": {
+     "1": 14,
+     "2": 427,
+     "3": 354,
+     "4": 205
+    },
+    "monochrome": 14
+   }
+  },
+  "5b6cbef5": {
+   "before": {
+    "unique_inputs": 1000,
+    "checker_disagreements": 0,
+    "height": {
+     "4": 1000
+    },
+    "width": {
+     "4": 1000
+    },
+    "input_shapes": 1,
+    "non_square": 0,
+    "max_output_height": 16,
+    "max_output_width": 16,
+    "outputs_25x25": 0,
+    "selected_cell_fraction_decile": {
+     "0.1": 9,
+     "0.2": 43,
+     "0.3": 193,
+     "0.4": 165,
+     "0.5": 378,
+     "0.6": 172,
+     "0.7": 29,
+     "0.8": 10,
+     "0.9": 1
+    },
+    "ink_colour": {
+     "1": 232,
+     "2": 258,
+     "3": 264,
+     "4": 246
+    },
+    "ink_density_decile": {
+     "0.1": 9,
+     "0.2": 43,
+     "0.3": 193,
+     "0.4": 165,
+     "0.5": 378,
+     "0.6": 172,
+     "0.7": 29,
+     "0.8": 10,
+     "0.9": 1
+    },
+    "full_masks": 0
+   },
+   "after": {
+    "unique_inputs": 979,
+    "checker_disagreements": 0,
+    "height": {
+     "2": 232,
+     "3": 258,
+     "4": 264,
+     "5": 246
+    },
+    "width": {
+     "2": 273,
+     "3": 232,
+     "4": 242,
+     "5": 253
+    },
+    "input_shapes": 16,
+    "non_square": 738,
+    "max_output_height": 25,
+    "max_output_width": 25,
+    "outputs_25x25": 57,
+    "selected_cell_fraction_decile": {
+     "0.1": 20,
+     "0.2": 64,
+     "0.3": 134,
+     "0.4": 194,
+     "0.5": 318,
+     "0.6": 166,
+     "0.7": 83,
+     "0.8": 15,
+     "0.9": 1,
+     "1.0": 5
+    },
+    "ink_colour": {
+     "1": 126,
+     "2": 106,
+     "3": 112,
+     "4": 108,
+     "5": 110,
+     "6": 107,
+     "7": 114,
+     "8": 109,
+     "9": 108
+    },
+    "ink_density_decile": {
+     "0.0": 2,
+     "0.1": 26,
+     "0.2": 56,
+     "0.3": 134,
+     "0.4": 194,
+     "0.5": 318,
+     "0.6": 166,
+     "0.7": 83,
+     "0.8": 15,
+     "0.9": 1,
+     "1.0": 5
+    },
+    "full_masks": 5
+   }
+  }
+ }
+}

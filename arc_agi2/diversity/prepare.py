@@ -47,36 +47,157 @@ def input_orbit(g):
     return hashlib.sha256(min(variants)).hexdigest()
 
 
-def feasible_queries(pool, profile, identity):
-    """Find query shapes with enough distinct context, using inputs only."""
+# A query identity that keeps failing (demonstration, colour-evidence or
+# program checks) is retired after this many attempts, so a fixed attempt
+# budget is not consumed by one permanently invalid query.
+MAX_QUERY_FAILURES = 8
+# Pool sampling may continue up to this multiple of the base trial budget, but
+# only while some split lacks strict shape-compatible query support and the
+# pool time share remains. Every extra proposal passes the same checks.
+POOL_EXTENSION_FACTOR = 4
+SHORTFALL_NOTE = (
+    "Observed bounded-pool shortfall under the strict shape/orbit policy; "
+    "not a finite-capacity claim about the source domain."
+)
+
+
+def _shape(g):
+    return (len(g), len(g[0]))
+
+
+def _possible(groups, all_ids, shape, qid, pattern):
+    """Exact strict shape-pattern feasibility for one (query shape, identity).
+
+    Equivalent to checking groups with qid removed, without copying sets.
+    The query row itself is in the pool, so qid is always in groups[shape].
+    """
+    def others(ids):
+        return len(ids) - (qid in ids)
+
+    uniform = pattern["demo_input_shapes"] == "uniform"
+    seen = pattern["query_input_shape"] == "seen"
+    if uniform:
+        if seen:
+            return others(groups[shape]) >= 3
+        return any(s != shape and others(ids) >= 3 for s, ids in groups.items())
+    if seen:
+        return (
+            others(all_ids) >= 3
+            and others(groups[shape]) >= 1
+            and any(s != shape and others(ids) >= 1 for s, ids in groups.items())
+        )
+    nonempty, union = 0, set()
+    for s, ids in groups.items():
+        if s == shape or not others(ids):
+            continue
+        nonempty += 1
+        union.update(ids)
+        union.discard(qid)
+        if nonempty >= 2 and len(union) >= 3:
+            return True
+    return False
+
+
+def query_support(pool, profile, identity):
+    """Map each strictly feasible query identity to its feasible pool rows.
+
+    Inputs only; outputs are never inspected. A query is feasible when at least
+    one original shape pattern could be matched with three other identities.
+    Iteration follows pool order, so results do not depend on hash seeds.
+    """
     groups = defaultdict(set)
     for p in pool:
-        groups[(len(p["input"]), len(p["input"][0]))].add(p[identity])
+        groups[_shape(p["input"])].add(p[identity])
     all_ids = set().union(*groups.values()) if groups else set()
-    result = []
+    memo, support = {}, {}
     for query in pool:
-        shape = (len(query["input"]), len(query["input"][0]))
-        qid = query[identity]
-        for pattern in profile["patterns"]:
-            uniform = pattern["demo_input_shapes"] == "uniform"
-            seen = pattern["query_input_shape"] == "seen"
-            if uniform:
-                possible = any(
-                    len(ids - {qid}) >= 3 and ((s == shape) == seen) for s, ids in groups.items()
-                )
-            elif seen:
-                possible = (
-                    len(all_ids - {qid}) >= 3
-                    and bool(groups[shape] - {qid})
-                    and any(s != shape and ids - {qid} for s, ids in groups.items())
-                )
-            else:
-                other = [ids - {qid} for s, ids in groups.items() if s != shape]
-                possible = sum(bool(ids) for ids in other) >= 2 and len(set().union(*other)) >= 3
-            if possible:
-                result.append(query)
-                break
-    return result
+        key = (_shape(query["input"]), query[identity])
+        if key not in memo:
+            memo[key] = any(
+                _possible(groups, all_ids, key[0], key[1], pattern)
+                for pattern in profile["patterns"]
+            )
+        if memo[key]:
+            support.setdefault(key[1], []).append(query)
+    return support
+
+
+def feasible_queries(pool, profile, identity):
+    """Find query rows with enough distinct shape-compatible context."""
+    rows = {id(p) for ps in query_support(pool, profile, identity).values() for p in ps}
+    return [p for p in pool if id(p) in rows]
+
+
+def assemble_split(pool, profile, identity, quota, randomizer, emit, attempts, deadline,
+                   rejected, split):
+    """Emit up to quota episodes, one per distinct query identity.
+
+    Query identities, not exact rows, are drawn uniformly, so identities with
+    many exact rows cannot starve rare ones. A query identity is retired after
+    MAX_QUERY_FAILURES failed attempts. The original shape pattern is strict:
+    demonstrations that do not match it are rejected, never used. emit(demos,
+    query, shape_report) must perform all semantic/program checks and raise on
+    failure. Returns (produced, stats).
+    """
+    support = query_support(pool, profile, identity)
+    remaining = list(support)
+    failures = Counter()
+    stats = {
+        "pool_rows": len(pool),
+        "pool_identities": len({p[identity] for p in pool}),
+        "shape_bins": len({_shape(p["input"]) for p in pool}),
+        "feasible_query_identities": len(support),
+        "used_query_identities": 0,
+        "retired_query_identities": 0,
+        "attempts": 0,
+    }
+    produced, stop = 0, None
+    if len(pool) < 4 or not remaining:
+        rejected[split + ":no_shape_compatible_distinct_query_context"] += 1
+    while produced < quota:
+        if not remaining:
+            stop = ("query_identities_retired_after_bounded_failures"
+                    if stats["retired_query_identities"] else "bounded_pool_query_support")
+            break
+        if stats["attempts"] >= attempts:
+            stop = "attempt_budget"
+            break
+        if time.monotonic() > deadline:
+            stop = "time_budget"
+            break
+        stats["attempts"] += 1
+        qid = randomizer.choice(remaining)
+        query = randomizer.choice(support[qid])
+        candidates = [p for p in pool if p[identity] != qid]
+        demos, shape_report = select_demonstrations(
+            candidates, query["input"], randomizer, profile, identity
+        )
+        failure = None
+        if demos is None:
+            failure = "insufficient_demo_identities"
+        elif not shape_report["matched"]:
+            # Preserve the family's demonstrated shape pattern; do not
+            # silently fall back to unrelated demo dimensions.
+            failure = "shape_pattern_unavailable"
+        else:
+            try:
+                emit(demos, query, shape_report)
+            except Exception as exc:
+                failure = "episode:" + type(exc).__name__ + ":" + str(exc)[:120]
+        if failure is None:
+            produced += 1
+            remaining.remove(qid)
+            stats["used_query_identities"] += 1
+            continue
+        rejected[failure] += 1
+        failures[qid] += 1
+        if failures[qid] >= MAX_QUERY_FAILURES:
+            remaining.remove(qid)
+            stats["retired_query_identities"] += 1
+    if produced < quota:
+        stats["shortfall"] = {"requested": quota, "produced": produced, "stop": stop,
+                              "note": SHORTFALL_NOTE}
+    return produced, stats
 
 
 def prepare(item):
@@ -100,9 +221,26 @@ def prepare(item):
     identity = identity_key(tid)
     seen, rejected, sources, counts = set(), Counter(), Counter(), Counter()
     target_pool = max(160, options["train"] * 2 + options["validation"] * 8)
-    for trial in range(target_pool * 40):
+    base_trials = target_pool * 40
+    margin = {s: max(2, -(-options[s] // 10)) for s in pools}
+    pool_stop, trial = "trial_budget", -1
+    for trial in range(base_trials * POOL_EXTENSION_FACTOR):
         if time.monotonic() - started > options["seconds"] * 0.6:
+            pool_stop = "time_share"
             break
+        if trial and trial % 64 == 0 and all(
+            len(pools[s]) >= max(40, options[s] * 2) for s in pools
+        ):
+            # Within the base budget, stop once strict query support has a
+            # small margin for evidence failures; beyond it, extend only while
+            # some split still lacks support for its requested quota.
+            extra = margin if trial < base_trials else dict.fromkeys(pools, 0)
+            if all(
+                len(query_support(pools[s], profile, identity)) >= options[s] + extra[s]
+                for s in pools
+            ):
+                pool_stop = "support" if trial < base_trials else "support_after_extension"
+                break
         seed = int(digest([options["seed"], tid, "pair", trial])[:15], 16)
         mode = "rearc-compatible-v1" if use_broader and randomizer.random() < 0.5 else "native"
         try:
@@ -126,48 +264,18 @@ def prepare(item):
             )
             pools[split].append(pair)
             sources[mode] += 1
-            if trial % 64 == 63 and all(len(pools[s]) >= max(40, options[s] * 2) for s in pools):
-                if all(
-                    len({p[identity] for p in feasible_queries(pools[s], profile, identity)})
-                    >= options[s]
-                    for s in pools
-                ):
-                    break
         except Exception as exc:
             rejected["pair:" + type(exc).__name__ + ":" + str(exc)[:120]] += 1
     paths = []
     shape_patterns = Counter()
+    support_stats = {}
     for split, pool in pools.items():
-        query_candidates = feasible_queries(pool, profile, identity)
         folder = root / split / tid
         folder.mkdir(parents=True, exist_ok=True)
         pending = folder / "metadata.jsonl.tmp"
-        used_queries = set()
         with pending.open("w") as stream:
-            for _attempt in range(max(100, options[split] * 40)):
-                if (
-                    counts[split] >= options[split]
-                    or time.monotonic() - started > options["seconds"]
-                ):
-                    break
-                if len(pool) < 4 or not query_candidates:
-                    rejected[split + ":no_shape_compatible_distinct_query_context"] += 1
-                    break
-                query = randomizer.choice(query_candidates)
-                if query[identity] in used_queries:
-                    continue
-                candidates = [p for p in pool if p[identity] != query[identity]]
-                demos, shape_report = select_demonstrations(
-                    candidates, query["input"], randomizer, profile, identity
-                )
-                if demos is None:
-                    rejected["insufficient_demo_identities"] += 1
-                    continue
-                # Preserve the family's demonstrated shape pattern; do not
-                # silently fall back to unrelated demo dimensions.
-                if not shape_report["matched"]:
-                    rejected["shape_pattern_unavailable"] += 1
-                    continue
+
+            def emit(demos, query, shape_report, split=split, folder=folder, stream=stream):
                 palette = list(range(10))
                 randomizer.shuffle(palette)
                 d4 = randomizer.randrange(8)
@@ -185,40 +293,45 @@ def prepare(item):
                     "d4_transform": d4,
                     "color_permutation": palette,
                 }
-                try:
-                    record = make_record(
-                        ep,
-                        source_repo="ritwikareddykancharla/ARC-GEN",
-                        source_revision=options["source_signature"],
-                    )
-                    record.update(
-                        split=split,
-                        file_name=eid + ".png",
-                        pair_provenance=[
-                            {
-                                k: p.get(k)
-                                for k in (
-                                    "seed",
-                                    "generator_mode",
-                                    "input_hash",
-                                    "canonical_input_hash",
-                                    "source_colour_map",
-                                )
-                            }
-                            for p in four
-                        ],
-                        shape_policy=shape_report,
-                        image_usage="Human audit only; includes the query answer.",
-                    )
-                    image = folder / record["file_name"]
-                    render(record).save(image, format="PNG", compress_level=3)
-                    stream.write(json.dumps(record, separators=(",", ":")) + "\n")
-                    paths.append(image)
-                    counts[split] += 1
-                    used_queries.add(query[identity])
-                    shape_patterns[digest(shape_report["observed"])] += 1
-                except Exception as exc:
-                    rejected["episode:" + type(exc).__name__ + ":" + str(exc)[:120]] += 1
+                # Colour/demonstration evidence and program verification run
+                # here; any failure raises and is counted against the query.
+                record = make_record(
+                    ep,
+                    source_repo="ritwikareddykancharla/ARC-GEN",
+                    source_revision=options["source_signature"],
+                )
+                record.update(
+                    split=split,
+                    file_name=eid + ".png",
+                    pair_provenance=[
+                        {
+                            k: p.get(k)
+                            for k in (
+                                "seed",
+                                "generator_mode",
+                                "input_hash",
+                                "canonical_input_hash",
+                                "source_colour_map",
+                            )
+                        }
+                        for p in four
+                    ],
+                    shape_policy=shape_report,
+                    image_usage="Human audit only; includes the query answer.",
+                )
+                image = folder / record["file_name"]
+                render(record).save(image, format="PNG", compress_level=3)
+                stream.write(json.dumps(record, separators=(",", ":")) + "\n")
+                paths.append(image)
+                counts[split] += 1
+                shape_patterns[digest(shape_report["observed"])] += 1
+
+            _, support_stats[split] = assemble_split(
+                pool, profile, identity, options[split], randomizer, emit,
+                attempts=max(100, options[split] * 40),
+                deadline=started + options["seconds"],
+                rejected=rejected, split=split,
+            )
         final = folder / "metadata.jsonl"
         pending.replace(final)
         paths.append(final)
@@ -228,6 +341,9 @@ def prepare(item):
         "requested": {s: options[s] for s in pools},
         "pool_counts": {s: len(p) for s, p in pools.items()},
         "pool_sources": dict(sources),
+        "pool_trials": trial + 1,
+        "pool_stop": pool_stop,
+        "query_support": support_stats,
         "rejections": dict(rejected),
         "seconds": round(time.monotonic() - started, 2),
         "complete": all(counts[s] == options[s] for s in pools),

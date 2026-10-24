@@ -154,3 +154,11 @@ def test_mixed_novel_pattern_is_matched_not_relaxed():
     produced, stats, _ = run(pool, profile(PATTERNS[3]), 4, emit)
     assert produced == stats["feasible_query_identities"] >= 1
     assert all(r["matched"] and r["observed"] == PATTERNS[3] for r in reports)
+
+
+def test_query_reserve_preserves_default_and_allows_stricter_pool_support():
+    for quota in range(2001):
+        assert P.query_reserve(quota) == max(2, -(-quota // 10))
+    assert P.query_reserve(20, 200) == 40  # 60 candidates for 20 output episodes
+    with pytest.raises(ValueError):
+        P.query_reserve(20, -1)

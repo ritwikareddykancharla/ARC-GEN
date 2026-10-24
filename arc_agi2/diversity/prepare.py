@@ -279,6 +279,13 @@ def reserved_validation_orbits(path, expected_sha256):
     return frozenset(values)
 
 
+def query_reserve(quota, percent=10):
+    """Extra distinct query candidates before evidence checks, never extra outputs."""
+    if type(percent) is not int or percent < 0:
+        raise ValueError("Query pool reserve percent must be a nonnegative integer")
+    return max(2, (quota * percent + 99) // 100)
+
+
 def prepare(item):
     tid, options = item
     root = Path(options["out"])
@@ -302,7 +309,7 @@ def prepare(item):
     seen, rejected, sources, counts = set(), Counter(), Counter(), Counter()
     target_pool = max(160, options["train"] * 2 + options["validation"] * 8)
     base_trials = target_pool * 40
-    margin = {s: max(2, -(-options[s] // 10)) for s in pools}
+    margin = {s: query_reserve(options[s], options.get("query_reserve_percent", 10)) for s in pools}
     pool_stop, pool_trials = "trial_budget", 0
     for trial in range(base_trials * POOL_EXTENSION_FACTOR):
         if time.monotonic() - started > options["seconds"] * 0.6:
@@ -447,9 +454,12 @@ def main():
     parser.add_argument("--workers", type=int, default=8)
     parser.add_argument("--seconds", type=int, default=180)
     parser.add_argument("--seed", type=int, default=2026102401)
+    parser.add_argument("--query-reserve-percent", type=int, default=10,
+                        help="Extra distinct query candidates for context-gate rejection; output quotas stay fixed")
     parser.add_argument("--tasks", nargs="+")
     parser.add_argument("--reserved-validation-orbits", help="JSON orbit ledger from earlier validation; exclude these inputs from train pools")
     args = parser.parse_args()
+    query_reserve(1, args.query_reserve_percent)
     ids = sorted(set(admission()["admitted"]) | set(REPAIRED) | set(REVIEWED_NATIVE))
     if args.tasks:
         if not set(args.tasks) <= set(ids):

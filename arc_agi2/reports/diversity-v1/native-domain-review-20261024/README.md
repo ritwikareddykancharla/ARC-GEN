@@ -5,8 +5,8 @@ prepare/admission or release-readiness code was changed. `release_ready` is
 `false` for every record. A source review is not enough to set it, and neither
 is a smoke test.
 
-**Progress:** 160 of 729 families have current, hand-written semantic reviews
-(batches 1–5). None is stale. The other 569 are `pending`. Not all 729 families
+**Progress:** 192 of 729 families have current, hand-written semantic reviews
+(batches 1–6). None is stale. The other 537 are `pending`. Not all 729 families
 have been semantically reviewed.
 
 **Rereview (2026-10-24):** 11 of the 128 reviews went stale when native batches B
@@ -21,9 +21,9 @@ The superseded reviews are kept verbatim in `review_history.json`.
 |---|---|
 | `extract.py` | Reproducible extraction, merge and validation (`--check` validates without writing) |
 | `inventory.jsonl` | One record per family (729), sorted by review rank |
-| `semantic_reviews.json` | Current hand-written semantic reviews (batches 1–5, 160 families), each bound to a constructor sha256 and to the source at its `baseline_commit` |
+| `semantic_reviews.json` | Current hand-written semantic reviews (batches 1–6, 192 families), each bound to a constructor sha256 and to the source at its `baseline_commit` |
 | `review_history.json` | Superseded reviews (11 families), each kept verbatim with its constructor binding and the mechanical record it was written against |
-| `probes/` | Small read-only, seeded measurement scripts cited by the batch-2 to batch-5 reviews and the rereview (`rereview_batch_bc.py`) |
+| `probes/` | Small read-only, seeded measurement scripts cited by the batch-2 to batch-6 reviews and the rereview (`rereview_batch_bc.py`) |
 | `summary.json` | Counts, ID lists, all batches, rereviewed and history IDs, validation errors (currently none) |
 
 ```bash
@@ -31,7 +31,7 @@ PYTHONPATH=. .venv/bin/python arc_agi2/reports/diversity-v1/native-domain-review
 ```
 
 Running the script twice gives byte-identical `inventory.jsonl` and
-`summary.json`. `REVIEWED_BATCHES` in `extract.py` (currently `(1, 2, 3, 4, 5)`) sets
+`summary.json`. `REVIEWED_BATCHES` in `extract.py` (currently `(1, 2, 3, 4, 5, 6)`) sets
 which batches must be fully and currently reviewed. Validation fails if any
 other batch has a non-`pending` record.
 
@@ -52,6 +52,11 @@ each one failed validation as intended.
 
 ## Provenance
 
+- **Batch 6 (latest):** records bind to `59d03df` (root integration, which
+  registered native batch D and refreshed role admissions). The worktree HEAD
+  at extraction was the batch-5 report commit `ce6fb52`; no constructor
+  changed between the two. The rereview and batch 1–5 baselines below are kept
+  as written.
 - **Current baseline (worktree HEAD at the rereview):**
   `8395c38ba950e45e1e23e6b8d81c434e048d62bd`, the batch-4 review commit.
   It sits on the integrated ARC-GEN baseline
@@ -97,8 +102,8 @@ each one failed validation as intended.
   `demonstrations`. That flag is a lead only.
 - **Priority:** rank, batch and tier.
 
-Mechanical extraction is not semantic review. All 569 families outside
-batches 1–5 are `semantic_review.status = "pending"`.
+Mechanical extraction is not semantic review. All 537 families outside
+batches 1–6 are `semantic_review.status = "pending"`.
 
 Totals:
 - **Tiers:** Tier A has 122 families: the audit-sampled input height and width
@@ -891,6 +896,12 @@ They are **not** admitted. They are absent from `prepare.REPAIRED` and
 and `2617143c`. Root must rebuild admission, register the families and run
 unmodified 200/20 exports.
 
+> **Snapshot at `724a43b`.** The paragraph above describes the batch-5
+> baseline. Root commit `59d03df` has since added all four to
+> `prepare.REPAIRED` ("Native batch D") and refreshed role admissions. The
+> batch-5 records are unchanged; their `admission` text is a snapshot of
+> `724a43b`. Production 200/20 exports were not checked by this review.
+
 ### Remaining gaps
 
 - **Audits:** the four batch-D audits are stale.
@@ -906,6 +917,189 @@ unmodified 200/20 exports.
 - **Out of scope:** the nativeE families (`0c786b71`, `e0fb7511`, `f0df5ff0`,
   `f3cdc58f`) belong to another lane. `e0fb7511` (batch 3) will need a
   rereview once that lane lands.
+
+## Batch 6 semantic review (32 families, ranks 161–192)
+
+**Scope:** 32 tier-B families, all first reviews. Every constructor sha256 is
+unchanged from the ordering commit through `59d03df`, and every record binds to
+`59d03df`. The 128-sample audit matches all 32, with no sample shortfall.
+
+- **Certificates:** 31 `current` (25 `direct_factory`, 6 `direct_certificate`
+  saved-teacher programs). `9110e3c5` is `unavailable`: it has only the
+  uncertified `direct_programs.py` legend candidate.
+- **Admission:** none of the 32 is admitted. All are absent from every
+  `prepare` registry and from `admission.json` at `59d03df`.
+- **Other lane:** the nativeE families (`0c786b71`, `e0fb7511`, `f0df5ff0`,
+  `f3cdc58f`) are outside batch 6 and were not touched.
+
+**What was read, for each family:**
+- the whole constructor;
+- every canonical train/test pair (`runtime.reference(tid)["canonical"]`);
+- the audit record;
+- the factory `build_program` body, or for direct certificates the saved
+  teacher `transform`;
+- every certificate record.
+
+Also read, where they bear on a family:
+- `colour_evidence.py` dispatch and gates (`e133d23d`, `e345f17b`,
+  `e6de6e8f`, `ed74f2f2`, `b0722778`, `ba1aa698`);
+- `cursor_recolour_evidence.py` (`dd2401ed`);
+- `finite_input_policy.py` and its test (`ca8de6ea`, `72207abc`);
+- `fixture_policy.py` and the `ba1aa698` coverage evidence;
+- `parameter-validation.json` and `build_million.py` (configured sizes);
+- `direct_programs.py` (`9110e3c5`).
+
+**Code run:** a new read-only, seeded probe, `probes/fixture_stats_batch6.py`
+(N = 400, seed 0). Two runs gave byte-identical output. It covers:
+- exact finite domains;
+- canonical fixtures checked against native guards;
+- ungated truth-table ambiguity;
+- certified programs, fetched through the production lookups, run on
+  out-of-domain inputs against independent references (or the constructor's
+  explicit-parameter path where noted).
+
+Two limits apply to these runs:
+- Program draws keep the background modal. Scenes where the motif covers most
+  of the canvas failed only because the programs read the background as the
+  modal colour, so they are out of scope.
+- A pass is evidence of program support. It is not certification and does not
+  establish intended scope.
+
+### Axis dispositions (count of families)
+
+| Axis | incidental | mixed | intrinsic / rule-supported | broadly variable | unknown |
+|---|---|---|---|---|---|
+| dimensions | 21 | 9 | 0 | 0 | 2 |
+| objects | 8 | 16 | 4 | 4 | 0 |
+| placement | 1 | 9 | 21 | 1 | 0 |
+| density / colours | 1 | 22 | 9 | 0 | 0 |
+| rule parameters | 0 | 3 | 29 | 0 | 0 |
+| demonstration context | 0 | 5 | 27 | 0 | 0 |
+
+**Dimensions:**
+- The two `unknown` are `ca8de6ea` (fixed 5x5 X) and `e6de6e8f` (8x7 output
+  tied to five commands).
+- The nine `mixed` keep a rule-tied part:
+  - squareness: `cf5fd0ad`, `ed98d772`;
+  - a fixed output: `b1fc8b8e` (5x5 motif), `e3f79277` (16x16);
+  - a legend layout: `ed74f2f2`, `e87109e9` (width 24 from four panels);
+  - band-derived height: `b0722778`;
+  - derived widths: `42f83767`;
+  - an undetermined copy count: `bc4146bd` (five copies or W+1).
+- The fixed sizes were not treated as intrinsic in themselves.
+  - The self-tiling analogues `a59b95c0`, `c48954c1` and `d4b1c2b1`, and
+    `e633a9e5`, `a8610ef7`, `bbb1b8b6`, `9b30e358`, `72207abc` and
+    `8597cfd7`, were probed with 400/400 program agreement over many shapes.
+  - The fixed outputs that every fixture and program share were kept:
+    `e3f79277` 16x16, `b1fc8b8e` 5x5 and `ca8de6ea` 3x3.
+
+**Patch priority:**
+- **High (9).** Canonical inputs unreachable:
+  - `b4a43f3b`: train[1] needs four segments, native draws three;
+  - `18447a8d`: train[1] has 2 bands, native has 3..4;
+  - `d017b73f`: 4 of 5 pairs unreachable (path segment counts and lengths;
+    see Discoveries);
+  - `42f83767`: three hollow stencils below the conway minimum of L²−L;
+  - `e87109e9`: the test pair has a 21-wide block and a 13-tall block that
+    touch, while native draws cap blocks at 12 x 14 and keep them apart.
+
+  Tiny or low-orbit domains with fixture-compatible expansions:
+  - `be03b35f`: 14 inputs;
+  - `e3f79277`: 160;
+  - `8597cfd7`: 92;
+  - `72207abc`: 1152 inputs in 4 orbits, not admitted by the finite policy.
+- **Medium (20).**
+- **Low (3):** `d19f7514`, `e133d23d` and `e345f17b`. Their configured
+  width/height path already adds sizes, and the factory matched the
+  explicit-size path on 400/400.
+
+**Adequacy:**
+- `needs_constructor_work`: 30;
+- `finite_domain_no_change_without_new_semantics`: 2 (`ca8de6ea`, already in
+  `finite_input_policy`; `e6de6e8f`, exhaustive 80-input certificate);
+- **adequate unchanged candidates: none.**
+
+No batch-6 constructor is recommended for admission without constructor work.
+The closest is `e87109e9`: rich sampling, a four-panel legend, rejection of
+ambiguous beams. It still cannot produce its canonical test input.
+
+### Discoveries
+
+- **Canonical inputs outside the native domain (probe, section B).**
+  - `d017b73f`: the segment lengths `[3,4,4]`, `[2,5,3,1]`, `[2,4,3,2]` and
+    `[2,3,4]` (lines 105–108) need fewer than three middle segments or a final
+    segment of 2. Train[3] is also 9 wide, against native widths of 10–16.
+    - A canonical-compatible relaxation (first 2..3, 1..4 middle segments of
+      3..5, a final 1..5, 2..5 pieces) gave factory agreement on 400/400.
+    - A broader sampler gave 320/400. Every mismatch (scratch triage) had a
+      length-1/2 later segment or a one-column piece, where the piece tip is
+      undetermined, so those exclusions support the rule.
+  - `42f83767`: stencil pixels `[16,17]`, `[15,15]` (L = 5) and `[24,24,24]`
+    (L = 6) are below `conway_sprite`'s minimum (20/30). Sparser stencils give
+    400/400 factory agreement.
+  - `b4a43f3b`: segments needed per canonical map are `[2,4,2,3,3]`.
+  - `18447a8d`: band counts `[3,2,4,4]`. n in {2,5,6,7} gives 400/400.
+  - `e87109e9`: the train pairs satisfy every guard; test[0] fails both the
+    size caps and the separation. Touching or oversized blocks (area guard
+    kept) give 400/400.
+- **Canonical labels outside the native rule.** These are existing semantic
+  conflicts, not new defects.
+  - `dd2401ed`: train[2] is generated with `extra=1`, and the native label
+    would differ in 2 cells.
+    - Blue counts are 1,5,2,3,3, so 'recolour iff odd' fits every fixture.
+    - Native draws contradict that reading in 147/400 cases.
+    - The factory and gate keep both readings and choose by demonstration.
+  - `ba1aa698`: train[1]'s extra step is covered by an approved teaching copy.
+    The certificate has `original_fixture_context_passed: false`.
+- **Finite domains (exact):**
+  - 14 (`be03b35f`), 80 (`e6de6e8f`), 92 (`8597cfd7`) and 160 (`e3f79277`;
+    colour 7 is excluded);
+  - 690 (`ed74f2f2`: 230 masks x 3 keys);
+  - 1152 (`72207abc`), 3145 (`b1fc8b8e`), 4590 (`ed98d772`) and 15,120
+    (`ca8de6ea`).
+- **Distribution drift (no invalidity).**
+  - `b1fc8b8e`: 108/400 native inputs are one 4-connected blob, against 6/7
+    canonical.
+  - `bbb1b8b6`: canonical non-exact distractors are near misses. Only 33/183
+    native non-exact draws match the hole count, and none is a coherent shape.
+- **Ungated panel truth tables.** Ungated native 3-demo + query episodes leave
+  the query undetermined in 2/400 (`e133d23d`, 9-cell panels) and 0/400
+  (`d19f7514`, `e345f17b`). Small configured sizes would need a batch-D-style
+  occupancy gate; the existing gates only check that the output colour
+  appears.
+- **Programs already broader than their constructors.** Factories and teacher
+  programs matched independent references on out-of-domain inputs:
+  - 400/400: `a59b95c0`, `a8610ef7`, `bc4146bd`, `c48954c1`, `cf5fd0ad`,
+    `d4b1c2b1`, `e633a9e5`, `ed98d772`, `72207abc`, `8597cfd7`, `bbb1b8b6`
+    and `9b30e358`;
+  - 385/385: `be03b35f`;
+  - 398/398: `e3f79277`.
+- **Hard-coded factories that block expansion:**
+  - `e6de6e8f`: the 8x7 output and start cell;
+  - `ed74f2f2`: the 5x9 windows;
+  - `0607ce86`: the tile/offset/spacing search;
+  - `ca8de6ea`: the nine source cells.
+
+### Remaining gaps
+
+- **Not probed off-domain:**
+  - `e3fe1151` (larger quadrants);
+  - `b4a43f3b` (maps other than 6x6);
+  - `b1fc8b8e`, `0607ce86` and `b0722778`;
+  - the `9110e3c5` candidate.
+- **Unmeasured:** episode-level ambiguity for `bbb1b8b6` and `b0722778`, and
+  gate retry rates after any proposed expansion.
+- **Open semantics:**
+  - the copy count under width changes (`bc4146bd`);
+  - parity or data error (`dd2401ed`);
+  - the train[1] step (`ba1aa698`);
+  - output sizing for other command counts (`e6de6e8f`);
+  - larger X motifs (`ca8de6ea`);
+  - odd heights (`a8610ef7`);
+  - whether 0 counts as a colour (`a59b95c0`, `d4b1c2b1`).
+- **No production checks:** no prepare 200/20 export was run, and no
+  certificate or audit was rerun. The `9110e3c5` `direct-candidate-audit.json`
+  failure was not traced to a specific candidate version.
 
 ## Not covered
 
@@ -929,11 +1123,12 @@ unmodified 200/20 exports.
   and pair-verifier hashes are reported by `probes/rereview_batch_bc.py` for
   the 11 rereviewed families only.
 
-## Next batch (batch 6, ranks 161–192)
+## Next batch (batch 7, ranks 193–224)
 
-`9110e3c5 a59b95c0 a8610ef7 b1fc8b8e b4a43f3b bbb1b8b6 bc4146bd be03b35f
-c48954c1 ca8de6ea cf5fd0ad d19f7514 d4b1c2b1 dd2401ed e133d23d e345f17b
-e3f79277 e3fe1151 e633a9e5 e6de6e8f ed74f2f2 ed98d772 18447a8d 72207abc
-8597cfd7 b0722778 9b30e358 ba1aa698 0607ce86 d017b73f 42f83767 e87109e9`
+`817e6c09 c1990cce 98c475bf 456873bc 458e3a53 470c91de 52fd389e 5783df64
+5ecac7f7 758abdf0 762cd429 7d7772cc 8fbca751 981add89 985ae207 c8b7cc0f
+df9fd884 e9ac8c9e ef26cbf6 17b866bd 1e5d6875 25e02866 2601afb7 2e65ae53
+42a15761 48131b3c 5751f35e 7491f3cf 963c33f8 973e499e 9968a131 9ddd00f0`
 
-All are tier B. Check each constructor hash against `724a43b` before reviewing.
+All are tier B. Check each constructor hash against the current HEAD before
+reviewing.

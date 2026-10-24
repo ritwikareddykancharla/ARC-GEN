@@ -263,6 +263,83 @@
    "certified_evidence": "current",
    "release_ready": false
   },
+  "0607ce86": {
+   "status": "reviewed",
+   "reviewer": "claude-opus-5-5 (hybrid-claude-native-review-current worktree)",
+   "reviewed_on": "2026-10-25",
+   "review_batch": 6,
+   "review_kind": "first_review",
+   "constructor_sha256": "c2bf1a6f39ced437545dc11bf3dd65a6b90bc2be79c91fb6cdaeefee74e47a9d",
+   "baseline_commit": "59d03df8b76e537ef9cb08c3b1e5890501c024c9",
+   "mechanism": "Width 22 (parameter default at 21, never sampled) and height 20..25 (59). Tiles are 4..6 wide and tall (61), with offsets 1..2 (62), spacing 1..2 (63) and (W-2)//(t+s) copies per axis (36-37). The tile pattern is painted row by row or column by column from 3..4 colours of {1,2,3,6,8} until full (64-74). Each cell is replaced by a subset colour with p 1/10 (80). Scenes are rejected if a tile cell is zero (49) or a majority vote ties (54). The output is the clean tile lattice.",
+   "fixture_evidence": "4 pairs (3 train, 1 test): 21x22, 23x22, 22x22, 24x22, with 3,2,3,3 horizontal copies. Audit: 128/128 unique, 6 shapes. The factory hard-codes tiles of 4..6, offsets of 1..2, spacing of 1..2 and the copy formula, and falls back to density otherwise.",
+   "axes": {
+    "dimensions": {
+     "disposition": "incidental_restriction",
+     "lines": [
+      21,
+      59
+     ],
+     "why": "Width fixed at 22 although the parameter exists; height already varies (59)."
+    },
+    "objects": {
+     "disposition": "mixed",
+     "lines": [
+      36,
+      37,
+      61
+     ],
+     "why": "Tile sizes 4..6 and copies tied to the canvas; the factory's search shares those ranges."
+    },
+    "placement": {
+     "disposition": "mixed",
+     "lines": [
+      62,
+      63
+     ],
+     "why": "Offsets and spacing of 1..2; the factory's search shares those ranges."
+    },
+    "density_colours": {
+     "disposition": "mixed",
+     "lines": [
+      64,
+      80
+     ],
+     "why": "A literal palette subset matching the fixtures; noise fixed at 10%."
+    },
+    "rule_parameters": {
+     "disposition": "intrinsic_or_rule_supported",
+     "lines": [
+      49,
+      53,
+      54,
+      55
+     ],
+     "why": "Majority vote per tile cell, with ties rejected."
+    },
+    "demonstration_context": {
+     "disposition": "intrinsic_or_rule_supported",
+     "lines": [
+      55
+     ],
+     "why": "The factory's solve() reads only the query grid, never the demonstrations, and nothing in the rule depends on episode context."
+    }
+   },
+   "proposal": "Medium. Sample the width (e.g. 14..30) and a noise rate. Keep tile ranges unless the factory's hard-coded search is widened. Recertify.",
+   "patch_priority": "medium",
+   "uncertainties": "The factory's density fallback outside its hard-coded search was not probed.",
+   "adequacy": "needs_constructor_work",
+   "evidence": [
+    "probes/fixture_stats_batch6.py",
+    "arc_agi2/direct_factories/0607ce86.json",
+    "arc_agi2/direct_factories/task_0607ce86.py"
+   ],
+   "certificate_note": "direct_factory record arc_agi2/direct_factories/0607ce86.json: passed=True, 1000 fresh / 8000 augmented / 16 fixture variants, 1000 unique base inputs, constructor c2bf1a6f, factory 72fb50e9. The constructor hash and the factory/program hash equal the current files, so the state is current, and the production lookup (certified_factory_source / certified_source) returned a program in the probe. A passed certificate is a finite audit, not a proof.",
+   "admission": "Not admitted: absent from every prepare registry (including REPAIRED and REVIEWED_NATIVE) and from RE-ARC admission.json at baseline 59d03df. release_ready stays false.",
+   "audit_note": "The 128-sample domain audit (fork cdf50ed) matches this constructor, which is unchanged since the ordering commit; native draws 128/128 valid, 128 unique inputs. Its figures are quoted alongside the probe.",
+   "certified_evidence": "current",
+   "release_ready": false
+  },
   "0692e18c": {
    "status": "reviewed",
    "reviewer": "claude-opus-5-5 (hybrid-claude-native worktree)",
@@ -1396,6 +1473,81 @@
    "proposal": "High. The native domain is 60 inputs. Sample the panel count (2-10, width 3k <= 30) and allow repeated glyphs, keeping the 5-glyph legend. Add an episode policy so that demos cover the query's glyphs. Recertify.",
    "patch_priority": "high",
    "uncertainties": "Whether repeated glyphs or other panel counts appear in the original. Episodes were simulated by independent native draws, not by the production sampler.",
+   "certified_evidence": "current",
+   "release_ready": false
+  },
+  "18447a8d": {
+   "status": "reviewed",
+   "reviewer": "claude-opus-5-5 (hybrid-claude-native-review-current worktree)",
+   "reviewed_on": "2026-10-25",
+   "review_batch": 6,
+   "review_kind": "first_review",
+   "constructor_sha256": "616d77deeef304c5cb79adb4dbc21c0c2ae35626c8da863b6162e283c9fc5e1f",
+   "baseline_commit": "59d03df8b76e537ef9cb08c3b1e5890501c024c9",
+   "mechanism": "Canvas 11 wide by 4n+1 tall on background 7 (39). There are n bands, with n = 3..4 colours other than 7 and 8 (52). Each band has three rows, each with an 8 lock of length 1..4 at the left and a coloured key of length 5-len at the right (44-48, 57-60); keys are shuffled across bands (62). The output moves each key next to the lock it completes to width 5 (29-36, 43). Scenes where a key fits several locks are rejected (42).",
+   "fixture_evidence": "4 pairs (3 train, 1 test) with band counts 3,2,4,4 (probe). Train[1] (9x11, n = 2) is unreachable natively (line 52; audit input heights 13..17). Probe: the factory matches the constructor's explicit path on 400/400 scenes with n in {2,5,6,7}. Audit: 128/128 unique.",
+   "axes": {
+    "dimensions": {
+     "disposition": "incidental_restriction",
+     "lines": [
+      39,
+      52
+     ],
+     "why": "Height 4n+1 follows n (rule-tied), but n = 3..4 excludes canonical n = 2; the bound 4n+1 <= 30 allows n <= 7. Width 11 and total 5 are fixture-constant (the factory derives the total from area)."
+    },
+    "objects": {
+     "disposition": "incidental_restriction",
+     "lines": [
+      52
+     ],
+     "why": "n = 3..4 excludes canonical train[1] (n = 2)."
+    },
+    "placement": {
+     "disposition": "intrinsic_or_rule_supported",
+     "lines": [
+      46,
+      48
+     ],
+     "why": "Locks at the left and keys at the right, as in the fixtures."
+    },
+    "density_colours": {
+     "disposition": "mixed",
+     "lines": [
+      52,
+      58
+     ],
+     "why": "Lengths 1..4 with total 5, colours from seven (not 7 or 8)."
+    },
+    "rule_parameters": {
+     "disposition": "intrinsic_or_rule_supported",
+     "lines": [
+      34,
+      35,
+      42,
+      43
+     ],
+     "why": "Move each key to its unique complementary lock."
+    },
+    "demonstration_context": {
+     "disposition": "intrinsic_or_rule_supported",
+     "lines": [
+      43
+     ],
+     "why": "The factory's solve() reads only the query grid, never the demonstrations, and nothing in the rule depends on episode context."
+    }
+   },
+   "proposal": "High: a canonical input is unreachable. Sample n in 2..7 so that train[1] is reachable. Optionally vary the total T and the canvas width, which the factory reads from area. Recertify.",
+   "patch_priority": "high",
+   "uncertainties": "Varying the total width T is not shown by any fixture.",
+   "adequacy": "needs_constructor_work",
+   "evidence": [
+    "probes/fixture_stats_batch6.py",
+    "arc_agi2/direct_factories/18447a8d.json",
+    "arc_agi2/direct_factories/task_18447a8d.py"
+   ],
+   "certificate_note": "direct_factory record arc_agi2/direct_factories/18447a8d.json: passed=True, 1000 fresh / 8000 augmented / 16 fixture variants, 1000 unique base inputs, constructor 616d77de, factory 63b5acbc. The constructor hash and the factory/program hash equal the current files, so the state is current, and the production lookup (certified_factory_source / certified_source) returned a program in the probe. A passed certificate is a finite audit, not a proof.",
+   "admission": "Not admitted: absent from every prepare registry (including REPAIRED and REVIEWED_NATIVE) and from RE-ARC admission.json at baseline 59d03df. release_ready stays false.",
+   "audit_note": "The 128-sample domain audit (fork cdf50ed) matches this constructor, which is unchanged since the ordering commit; native draws 128/128 valid, 128 unique inputs. Its figures are quoted alongside the probe.",
    "certified_evidence": "current",
    "release_ready": false
   },
@@ -3634,6 +3786,82 @@
    "proposal": "Parameterise H,W (e.g. 12-30), widen H/I widths (e.g. 3-9) and heights, allow 0-2 I distractors, keeping notch-area uniqueness and separation. Recertify.",
    "patch_priority": "high",
    "uncertainties": "Only one I distractor and at most two H shapes were sampled; the direct-source program's assumptions on shape widths were not inspected.",
+   "certified_evidence": "current",
+   "release_ready": false
+  },
+  "42f83767": {
+   "status": "reviewed",
+   "reviewer": "claude-opus-5-5 (hybrid-claude-native-review-current worktree)",
+   "reviewed_on": "2026-10-25",
+   "review_batch": 6,
+   "review_kind": "first_review",
+   "constructor_sha256": "ea94f6bb1646315ade69cc9fc1f27395212e2d3cb8ed2ebfbdd6f869c6c3325d",
+   "baseline_commit": "59d03df8b76e537ef9cb08c3b1e5890501c024c9",
+   "mechanism": "A 15-row canvas (37) holds a legend of 2..4 colours from {1,2,3,4,8} as 2x2 swatches (41, 61), followed by grey L x L stencils (42-45) with L in 3..6 (59), and below it a size x size mosaic (size 4..7) of those colours (46-49, 60). The (L*size)^2 output stamps each colour's stencil (50-54). Stencils come from conway_sprite(L, L, L) (68), so each keeps at least L^2-L pixels and every row and column.",
+   "fixture_evidence": "5 pairs (3 train, 2 test). Stencil pixel counts for L = 3 are [8,7,7] and [7,7,8,7], which are reachable. For L = 5 they are [16,17] and [15,15], and for L = 6 [24,24,24], below L^2-L = 20 and 30, so train[1], train[2] and test[1] are unreachable (probe). Probe: the factory matches the constructor on 400/400 scenes with sparser stencils. Audit: 128/128 unique.",
+   "axes": {
+    "dimensions": {
+     "disposition": "mixed",
+     "lines": [
+      35,
+      36,
+      37
+     ],
+     "why": "Height 15 is literal; widths are derived from L, size and the legend count (rule-tied)."
+    },
+    "objects": {
+     "disposition": "incidental_restriction",
+     "lines": [
+      68
+     ],
+     "why": "Dense conway stencils exclude the hollow frame stencils of 3 of 5 canonical pairs."
+    },
+    "placement": {
+     "disposition": "mixed",
+     "lines": [
+      60
+     ],
+     "why": "The mosaic position varies within a band."
+    },
+    "density_colours": {
+     "disposition": "incidental_restriction",
+     "lines": [
+      61,
+      68
+     ],
+     "why": "Stencil density is restricted (at least L^2-L pixels); colours come from a literal set matching the fixtures."
+    },
+    "rule_parameters": {
+     "disposition": "intrinsic_or_rule_supported",
+     "lines": [
+      50,
+      51,
+      52,
+      53,
+      54
+     ],
+     "why": "Stamp each mosaic cell with its colour's stencil."
+    },
+    "demonstration_context": {
+     "disposition": "intrinsic_or_rule_supported",
+     "lines": [
+      54
+     ],
+     "why": "The factory's solve() reads only the query grid, never the demonstrations, and nothing in the rule depends on episode context."
+    }
+   },
+   "proposal": "High: 3 of 5 canonical inputs are unreachable. Draw stencils as arbitrary masks covering every row and column (e.g. density 0.3..1, including frame-like shapes) and sample a canvas height from 15 to 30. Recertify.",
+   "patch_priority": "high",
+   "uncertainties": "Whether stencils with empty rows or columns belong to the task. Canonical stencils all span the full L x L.",
+   "adequacy": "needs_constructor_work",
+   "evidence": [
+    "probes/fixture_stats_batch6.py",
+    "arc_agi2/direct_factories/42f83767.json",
+    "arc_agi2/direct_factories/task_42f83767.py"
+   ],
+   "certificate_note": "direct_factory record arc_agi2/direct_factories/42f83767.json: passed=True, 1000 fresh / 8000 augmented / 16 fixture variants, 1000 unique base inputs, constructor ea94f6bb, factory f4b425e7. The constructor hash and the factory/program hash equal the current files, so the state is current, and the production lookup (certified_factory_source / certified_source) returned a program in the probe. A passed certificate is a finite audit, not a proof.",
+   "admission": "Not admitted: absent from every prepare registry (including REPAIRED and REVIEWED_NATIVE) and from RE-ARC admission.json at baseline 59d03df. release_ready stays false.",
+   "audit_note": "The 128-sample domain audit (fork cdf50ed) matches this constructor, which is unchanged since the ordering commit; native draws 128/128 valid, 128 unique inputs. Its figures are quoted alongside the probe.",
    "certified_evidence": "current",
    "release_ready": false
   },
@@ -6163,6 +6391,81 @@
    "certified_evidence": "current",
    "release_ready": false
   },
+  "72207abc": {
+   "status": "reviewed",
+   "reviewer": "claude-opus-5-5 (hybrid-claude-native-review-current worktree)",
+   "reviewed_on": "2026-10-25",
+   "review_batch": 6,
+   "review_kind": "first_review",
+   "constructor_sha256": "bab40c3a9c55bb4b3dedd767ecaef9fdd3525e3b96118fffd4ee5689793b6253",
+   "baseline_commit": "59d03df8b76e537ef9cb08c3b1e5890501c024c9",
+   "mechanism": "Canvas 3 x W with W in {19, 29} (29, 32). Two or three seed colours sit at columns 0, 1 (and 3) of row 1 (30, 33-34). The output repeats the colours cyclically at triangular columns 0, 1, 3, 6, 10, 15, 21, 28 (35-36).",
+   "fixture_evidence": "4 pairs (3 train, 1 test), with widths 19,29,19,29 and 3,2,2,3 colours. The domain is exactly 1152 inputs in 4 palette/D4 orbits (probe). It is not admitted by finite_input_policy: test_finite_input_policy.py line 43 keeps canonical_input_hash identity. Probe: the factory matches an independent reference (which replays all 4 pairs) on 400/400 inputs over 305 shapes (H 1..30, W 4..30, 2..4 colours, any seed row).",
+   "axes": {
+    "dimensions": {
+     "disposition": "incidental_restriction",
+     "lines": [
+      29,
+      32
+     ],
+     "why": "Only two widths and height 3. The factory reads any line length and picks the densest line (probe)."
+    },
+    "objects": {
+     "disposition": "incidental_restriction",
+     "lines": [
+      30,
+      34
+     ],
+     "why": "2..3 seeds. A fourth seed at column 6 fits the same triangular rule (probe)."
+    },
+    "placement": {
+     "disposition": "mixed",
+     "lines": [
+      33,
+      34
+     ],
+     "why": "Seeds at the line start are rule-tied (triangular offsets from the start); the fixed middle row of three is incidental."
+    },
+    "density_colours": {
+     "disposition": "intrinsic_or_rule_supported",
+     "lines": [
+      30,
+      36
+     ],
+     "why": "Distinct seed colours cycle along the line; background 0 as in every fixture."
+    },
+    "rule_parameters": {
+     "disposition": "intrinsic_or_rule_supported",
+     "lines": [
+      35,
+      36
+     ],
+     "why": "Triangular offsets T(k) from the line start, with colours repeating cyclically."
+    },
+    "demonstration_context": {
+     "disposition": "intrinsic_or_rule_supported",
+     "lines": [
+      36
+     ],
+     "why": "The factory's solve() reads only the query grid, never the demonstrations, and nothing in the rule depends on episode context."
+    }
+   },
+   "proposal": "High: low-orbit domain. Sample W in 4..30, H in 1..30 with the seed row anywhere, and 2..4 colours; recertify. This also removes the need for a finite-input exception.",
+   "patch_priority": "high",
+   "uncertainties": "Whether a fourth seed or other line lengths are original; the fixtures show two widths only.",
+   "adequacy": "needs_constructor_work",
+   "evidence": [
+    "probes/fixture_stats_batch6.py",
+    "arc_agi2/test_finite_input_policy.py",
+    "arc_agi2/direct_factories/72207abc.json",
+    "arc_agi2/direct_factories/task_72207abc.py"
+   ],
+   "certificate_note": "direct_factory record arc_agi2/direct_factories/72207abc.json: passed=True, 1000 fresh / 8000 augmented / 16 fixture variants, 524 unique base inputs, constructor bab40c3a, factory f7d5518b. The constructor hash and the factory/program hash equal the current files, so the state is current, and the production lookup (certified_factory_source / certified_source) returned a program in the probe. A passed certificate is a finite audit, not a proof.",
+   "admission": "Not admitted: absent from every prepare registry (including REPAIRED and REVIEWED_NATIVE) and from RE-ARC admission.json at baseline 59d03df. release_ready stays false.",
+   "audit_note": "The 128-sample domain audit (fork cdf50ed) matches this constructor, which is unchanged since the ordering commit; native draws 128/128 valid, 116 unique inputs. Its figures are quoted alongside the probe.",
+   "certified_evidence": "current",
+   "release_ready": false
+  },
   "73182012": {
    "status": "reviewed",
    "reviewer": "claude-opus-5-5 (hybrid-claude-native worktree)",
@@ -7094,6 +7397,85 @@
    "certified_evidence": "current",
    "release_ready": false
   },
+  "8597cfd7": {
+   "status": "reviewed",
+   "reviewer": "claude-opus-5-5 (hybrid-claude-native-review-current worktree)",
+   "reviewed_on": "2026-10-25",
+   "review_batch": 6,
+   "review_kind": "first_review",
+   "constructor_sha256": "cf15e3fee301297cd70bacda9d9d63c99a26d5adda10c134df051035ee2c0804",
+   "baseline_commit": "59d03df8b76e537ef9cb08c3b1e5890501c024c9",
+   "mechanism": "Canvas H x 9 with H in {9, 11} (33, 44) and a grey divider row at H//2 (35). A red bar in column 2 and a yellow bar in column 6 start at the top of each half (36-40). Both bars grow from the top half to the bottom half, by different amounts (30-31). The output is a 2x2 of the colour that grows more (32-33).",
+   "fixture_evidence": "5 pairs (4 train, 1 test) with heights 11,9,11,9,11. The domain is exactly 92 inputs (probe; certificate finite_default_domain exhaustive 92); the audit saw 63 unique and 42 orbits. Probe: the factory matches an independent reference (which replays all 5 pairs) on 400/400 inputs over 225 shapes (odd H 5..29, W 3..30, random bar columns).",
+   "axes": {
+    "dimensions": {
+     "disposition": "incidental_restriction",
+     "lines": [
+      33,
+      44
+     ],
+     "why": "Two heights and width 9. The factory finds the divider and counts per half at any size (probe)."
+    },
+    "objects": {
+     "disposition": "mixed",
+     "lines": [
+      30,
+      31,
+      47,
+      48
+     ],
+     "why": "Two bars per half. Positive, unequal growth (30-31) avoids ties and supports the rule."
+    },
+    "placement": {
+     "disposition": "incidental_restriction",
+     "lines": [
+      38,
+      40
+     ],
+     "why": "Fixed columns 2 and 6; the factory counts colours per half wherever they are."
+    },
+    "density_colours": {
+     "disposition": "intrinsic_or_rule_supported",
+     "lines": [
+      32,
+      35,
+      38,
+      40
+     ],
+     "why": "Literal roles 2 (red), 4 (yellow) and 5 (divider), as in every fixture."
+    },
+    "rule_parameters": {
+     "disposition": "intrinsic_or_rule_supported",
+     "lines": [
+      30,
+      31,
+      32
+     ],
+     "why": "Compare each bar's growth across the divider and output the bigger grower."
+    },
+    "demonstration_context": {
+     "disposition": "intrinsic_or_rule_supported",
+     "lines": [
+      32
+     ],
+     "why": "The factory's solve() reads only the query grid, never the demonstrations, and nothing in the rule depends on episode context."
+    }
+   },
+   "proposal": "High: tiny domain (92). Sample odd H in 5..29, W in 3..30 and free bar columns, keeping growth positive and unequal; recertify.",
+   "patch_priority": "high",
+   "uncertainties": "Whether shrinking bars or even heights belong to the task; no fixture shows them.",
+   "adequacy": "needs_constructor_work",
+   "evidence": [
+    "probes/fixture_stats_batch6.py",
+    "arc_agi2/direct_factories/8597cfd7.json",
+    "arc_agi2/direct_factories/task_8597cfd7.py"
+   ],
+   "certificate_note": "direct_factory record arc_agi2/direct_factories/8597cfd7.json: passed=True, 1000 fresh / 8000 augmented / 16 fixture variants, 92 unique base inputs, constructor cf15e3fe, factory 0050cbbd, finite_default_domain exhaustive over 92 inputs. The constructor hash and the factory/program hash equal the current files, so the state is current, and the production lookup (certified_factory_source / certified_source) returned a program in the probe. A passed certificate is a finite audit, not a proof.",
+   "admission": "Not admitted: absent from every prepare registry (including REPAIRED and REVIEWED_NATIVE) and from RE-ARC admission.json at baseline 59d03df. release_ready stays false.",
+   "audit_note": "The 128-sample domain audit (fork cdf50ed) matches this constructor, which is unchanged since the ordering commit; native draws 128/128 valid, 63 unique inputs. Its figures are quoted alongside the probe.",
+   "certified_evidence": "current",
+   "release_ready": false
+  },
   "85b81ff1": {
    "status": "reviewed",
    "reviewer": "claude-opus-5-5 (hybrid-claude-native worktree)",
@@ -7601,6 +7983,92 @@
    "patch_priority": "medium",
    "uncertainties": "Line 52 requires every colour to stay visible after the drop; whether fully exiting sprites are allowed in the original is unknown.",
    "certified_evidence": "current",
+   "release_ready": false
+  },
+  "9110e3c5": {
+   "status": "reviewed",
+   "reviewer": "claude-opus-5-5 (hybrid-claude-native-review-current worktree)",
+   "reviewed_on": "2026-10-25",
+   "review_batch": 6,
+   "review_kind": "first_review",
+   "constructor_sha256": "1c7d6005de63e05ba3c73bf431e6a51e9ce9ffea4adc168bf36fb4b780df7178",
+   "baseline_commit": "59d03df8b76e537ef9cb08c3b1e5890501c024c9",
+   "mechanism": "Literal 7x7 canvas (35) filled from 49 colour draws (29). Each cell is 0 with p 1/2, otherwise the scene's key colour d in 1..3 (28) or a random_color 1..9 (30-33) with equal odds. The 3x3 output stamps a fixed glyph in 8 for the most frequent non-zero colour: 1 (44), 2 (45) or 3 (46). Any other dominant colour would give a blank output, which the sampler practically never draws. Ties go to the earlier colour after a stable sort (40-42).",
+   "fixture_evidence": "9 canonical pairs (7 train, 2 test), all 7x7 -> 3x3, replayed by validate(). Dominant colours are 1,3,2,2,3,2,1,3,1, with counts 12-21 against runner-ups of 2-4 (probe), and every key appears in train. Native draws: dominant-minus-runner-up gap median 11 (min 0; 2/400 ties) against canonical gaps of 10-18 (probe). Audit: 128/128 unique, 4-10 colours, non-modal fraction 0.35-0.65.",
+   "axes": {
+    "dimensions": {
+     "disposition": "incidental_restriction",
+     "lines": [
+      29,
+      35
+     ],
+     "why": "Literal 7x7 canvas (35) with exactly 49 draws (29). The rule only counts colours and the 3x3 output is the legend glyph, so nothing ties the input canvas to 7x7. The output size is intrinsic; the input size is not."
+    },
+    "objects": {
+     "disposition": "mixed",
+     "lines": [
+      28,
+      30,
+      33
+     ],
+     "why": "There are no objects, only scattered pixels: one key colour per scene (rule-supported) plus random_color distractors (33), which may be the other keys."
+    },
+    "placement": {
+     "disposition": "intrinsic_or_rule_supported",
+     "lines": [
+      36,
+      37
+     ],
+     "why": "Every cell is sampled independently, and the rule ignores position."
+    },
+    "density_colours": {
+     "disposition": "mixed",
+     "lines": [
+      30,
+      33,
+      44,
+      45,
+      46
+     ],
+     "why": "The background share is fixed at 1/2 and the key share at about 0.28 (30, 33). Canonical key counts (12-21 of 49) overlap native draws, but sparsity never varies. Keys are limited to 1..3 because the glyph table defines only those (44-46): this is an intrinsic legend."
+    },
+    "rule_parameters": {
+     "disposition": "intrinsic_or_rule_supported",
+     "lines": [
+      40,
+      41,
+      42,
+      44,
+      45,
+      46
+     ],
+     "why": "The most frequent non-zero colour selects a fixed glyph. Native ties (2/400) are broken by raster order (41-42); the direct_programs.py legend candidate raises on a tie instead."
+    },
+    "demonstration_context": {
+     "disposition": "intrinsic_or_rule_supported",
+     "lines": [
+      44,
+      45,
+      46
+     ],
+     "why": "The glyph table is a demonstrated legend. The uncertified direct_programs.py candidate (lines 53-80) returns the output of a demonstration with the same key and raises if there is none, and build_million.py (lines 40, 706) requires the query key to be demonstrated. With three keys, an independent 3-demo episode misses the query key with probability (2/3)^3 = 0.30 (arithmetic, not measured)."
+    }
+   },
+   "proposal": "Medium, blocked on certification. First certify a native program (the legend candidate). Then sample an independent canvas (e.g. 3..30 per side) and a per-scene background share, keeping a unique key colour in 1..3 and the fixed glyphs. Recertify.",
+   "patch_priority": "medium",
+   "uncertainties": "direct-candidate-audit.json records passed=false ('Literal original grid in program'); whether that record describes the current legend candidate was not checked. Larger canvases, other sparsities and key-absent episodes were not probed.",
+   "adequacy": "needs_constructor_work",
+   "evidence": [
+    "probes/fixture_stats_batch6.py",
+    "arc_agi2/direct_programs.py",
+    "arc_agi2/build_million.py",
+    "arc_agi2/reports/direct-candidate-audit.json",
+    "arc_agi2/reports/native-program-audit.json"
+   ],
+   "certificate_note": "No certificate: there is no direct_factories, direct-certificates or native-certificates record, so the state is unavailable. native-program-audit.json lists a reviewed_direct_coordinate_rewrite that is exact on the canonical fixture (7 demo + 2 query pairs), and direct-candidate-audit.json lists passed=false. Neither is a domain certificate.",
+   "admission": "Not admitted: absent from every prepare registry (including REPAIRED and REVIEWED_NATIVE) and from RE-ARC admission.json at baseline 59d03df. release_ready stays false.",
+   "audit_note": "The 128-sample domain audit (fork cdf50ed) matches this constructor, which is unchanged since the ordering commit; native draws 128/128 valid, 128 unique inputs. Its figures are quoted alongside the probe.",
+   "certified_evidence": "unavailable",
    "release_ready": false
   },
   "917bccba": {
@@ -8202,6 +8670,84 @@
    "certified_evidence": "current",
    "release_ready": false
   },
+  "9b30e358": {
+   "status": "reviewed",
+   "reviewer": "claude-opus-5-5 (hybrid-claude-native-review-current worktree)",
+   "reviewed_on": "2026-10-25",
+   "review_batch": 6,
+   "review_kind": "first_review",
+   "constructor_sha256": "d6118d8050ea49ec7585118478c08cd7f049e32d56fdd50de2c56f4260941452",
+   "baseline_commit": "59d03df8b76e537ef9cb08c3b1e5890501c024c9",
+   "mechanism": "10 rows x W in 5..7 (28, 32) on a random background with two other colours (29). A motif of height 4..5 (30) and width 3..W (30-31) sits on the bottom edge, optionally left-right symmetric (31, 37); its rows are random cell subsets (34-36). The output repeats the motif upward with period equal to its height (40-49).",
+   "fixture_evidence": "3 pairs (2 train, 1 test): 10x5, 10x7, 10x5, with motif heights 5,4,4. Audit: 128/128 unique, 3 shapes. Probe: the factory matches an independent reference (which replays all 3 pairs) on 400/400 inputs over 300 shapes (H 6..30, W 3..30, motif height below H/2). The factory reads the background as the modal colour, so motifs covering most of the canvas were excluded from the probe.",
+   "axes": {
+    "dimensions": {
+     "disposition": "incidental_restriction",
+     "lines": [
+      28,
+      32
+     ],
+     "why": "Literal height 10 and W 5..7; the factory works at any size (probe)."
+    },
+    "objects": {
+     "disposition": "mixed",
+     "lines": [
+      30,
+      34,
+      37
+     ],
+     "why": "Motif height 4..5, with random rows rather than the compact shapes of the fixtures."
+    },
+    "placement": {
+     "disposition": "intrinsic_or_rule_supported",
+     "lines": [
+      36
+     ],
+     "why": "Anchoring the motif to the bottom edge is the rule; the factory handles all four edges under D4."
+    },
+    "density_colours": {
+     "disposition": "mixed",
+     "lines": [
+      29,
+      34
+     ],
+     "why": "Two motif colours on a random background."
+    },
+    "rule_parameters": {
+     "disposition": "intrinsic_or_rule_supported",
+     "lines": [
+      44,
+      45,
+      46,
+      47,
+      48,
+      49
+     ],
+     "why": "Periodic upward tiling with period equal to the motif height."
+    },
+    "demonstration_context": {
+     "disposition": "intrinsic_or_rule_supported",
+     "lines": [
+      49
+     ],
+     "why": "The factory's solve() reads only the query grid, never the demonstrations, and nothing in the rule depends on episode context."
+    }
+   },
+   "proposal": "Medium. Sample H in 6..30, W in 3..30, motif height 1..floor((H-1)/2) (keeping the background modal) and motif width; recertify.",
+   "patch_priority": "medium",
+   "uncertainties": "Motifs taller than half the canvas would make the background non-modal; the factory and the original intent are untested there.",
+   "adequacy": "needs_constructor_work",
+   "evidence": [
+    "probes/fixture_stats_batch6.py",
+    "arc_agi2/direct_factories/9b30e358.json",
+    "arc_agi2/direct_factories/task_9b30e358.py"
+   ],
+   "certificate_note": "direct_factory record arc_agi2/direct_factories/9b30e358.json: passed=True, 1000 fresh / 8000 augmented / 16 fixture variants, 1000 unique base inputs, constructor d6118d80, factory 74bdd865. The constructor hash and the factory/program hash equal the current files, so the state is current, and the production lookup (certified_factory_source / certified_source) returned a program in the probe. A passed certificate is a finite audit, not a proof.",
+   "admission": "Not admitted: absent from every prepare registry (including REPAIRED and REVIEWED_NATIVE) and from RE-ARC admission.json at baseline 59d03df. release_ready stays false.",
+   "audit_note": "The 128-sample domain audit (fork cdf50ed) matches this constructor, which is unchanged since the ordering commit; native draws 128/128 valid, 128 unique inputs. Its figures are quoted alongside the probe.",
+   "certified_evidence": "current",
+   "release_ready": false
+  },
   "9c1e755f": {
    "status": "reviewed",
    "reviewer": "claude-opus-5-5 (hybrid-claude-native worktree)",
@@ -8710,6 +9256,155 @@
    "certified_evidence": "current",
    "release_ready": false
   },
+  "a59b95c0": {
+   "status": "reviewed",
+   "reviewer": "claude-opus-5-5 (hybrid-claude-native-review-current worktree)",
+   "reviewed_on": "2026-10-25",
+   "review_batch": 6,
+   "review_kind": "first_review",
+   "constructor_sha256": "7d64fcd5727748f6d4dbf1ea3765948e94ee1edea951c5c44e6b26cd363ab342",
+   "baseline_commit": "59d03df8b76e537ef9cb08c3b1e5890501c024c9",
+   "mechanism": "Literal 3x3 input (34) of k = 2..4 distinct colours from 1..9 (28-31). The output tiles the input k x k, where k is the number of distinct colours (33-40).",
+   "fixture_evidence": "6 pairs (5 train, 1 test), all 3x3, with k = 2,2,4,3,3,4 (6x6 to 12x12 outputs) and no 0. Audit: 128/128 unique (112 orbits). Probe: the independent reference replays all 6 pairs. The certified teacher program then matches it on 400/400 inputs over 35 shapes, with H, W in 1..6 and k up to min(HW, 9, 30/max(H, W)).",
+   "axes": {
+    "dimensions": {
+     "disposition": "incidental_restriction",
+     "lines": [
+      34,
+      37,
+      38
+     ],
+     "why": "Literal 3x3 canvas. The rule bound is kH, kW <= 30, and the teacher reads h and w. This is the self-tiling pattern of the certified 007bbfb7 repair (probe 400/400)."
+    },
+    "objects": {
+     "disposition": "mixed",
+     "lines": [
+      28,
+      31
+     ],
+     "why": "There are no objects; the number of distinct colours is the rule parameter. The native range 2..4 (28) is narrower than the bound min(HW, 9, 30/max(H, W)). k = 1 (output equals input) is shown by the sibling d4b1c2b1 but not by this task."
+    },
+    "placement": {
+     "disposition": "intrinsic_or_rule_supported",
+     "lines": [
+      35,
+      36
+     ],
+     "why": "Every cell is drawn, and the rule copies the whole grid."
+    },
+    "density_colours": {
+     "disposition": "mixed",
+     "lines": [
+      30,
+      31
+     ],
+     "why": "Cells are uniform over the chosen colours, all present (30-31), with no 0, as in the fixtures. Proportions never vary, but the rule ignores them."
+    },
+    "rule_parameters": {
+     "disposition": "intrinsic_or_rule_supported",
+     "lines": [
+      33,
+      37,
+      38,
+      39,
+      40
+     ],
+     "why": "k x k tiling with k = number of distinct colours."
+    },
+    "demonstration_context": {
+     "disposition": "intrinsic_or_rule_supported",
+     "lines": [
+      33
+     ],
+     "why": "Query-only program; k is visible in the query."
+    }
+   },
+   "proposal": "Medium. Sample H, W independently (e.g. 1..10) and k up to min(HW, 9, floor(30/max(H, W))), starting at 2 unless k = 1 is accepted. Recertify.",
+   "patch_priority": "medium",
+   "uncertainties": "Whether k = 1 belongs to this task (no fixture). Whether 0 counts as a colour: the teacher counts every value, but no fixture contains 0.",
+   "adequacy": "needs_constructor_work",
+   "evidence": [
+    "probes/fixture_stats_batch6.py",
+    "arc_agi2/reports/direct-certificates/a59b95c0.json"
+   ],
+   "certificate_note": "direct_certificate record arc_agi2/reports/direct-certificates/a59b95c0.json: passed=True, 1000 fresh / 8000 augmented / 16 fixture variants, 997 unique base inputs, constructor 7d64fcd5, program ab7ccf30 (saved_teacher_transform). The constructor hash and the factory/program hash equal the current files, so the state is current, and the production lookup (certified_factory_source / certified_source) returned a program in the probe. A passed certificate is a finite audit, not a proof.",
+   "admission": "Not admitted: absent from every prepare registry (including REPAIRED and REVIEWED_NATIVE) and from RE-ARC admission.json at baseline 59d03df. release_ready stays false.",
+   "audit_note": "The 128-sample domain audit (fork cdf50ed) matches this constructor, which is unchanged since the ordering commit; native draws 128/128 valid, 128 unique inputs. Its figures are quoted alongside the probe.",
+   "certified_evidence": "current",
+   "release_ready": false
+  },
+  "a8610ef7": {
+   "status": "reviewed",
+   "reviewer": "claude-opus-5-5 (hybrid-claude-native-review-current worktree)",
+   "reviewed_on": "2026-10-25",
+   "review_batch": 6,
+   "review_kind": "first_review",
+   "constructor_sha256": "49fc43eb5feb77164af15623212cf9176fe7e7b8c58bcb276396439c8c9008b8",
+   "baseline_commit": "59d03df8b76e537ef9cb08c3b1e5890501c024c9",
+   "mechanism": "Literal 6x6 canvas (30) of fair-coin 8/0 cells (28). Each 8 becomes 2 if the cell in the mirrored row 5-r of the same column is 8, and 5 otherwise (33-36).",
+   "fixture_evidence": "5 pairs (4 train, 1 test), all 6x6, with 8-density 0.50-0.64 (probe). Audit: 128/128 unique, minority share 0.25-0.50. Probe: the factory matches an independent mirror reference (which replays all 5 pairs) on 400/400 inputs over 319 shapes in 1..30 x 1..30.",
+   "axes": {
+    "dimensions": {
+     "disposition": "incidental_restriction",
+     "lines": [
+      30,
+      36
+     ],
+     "why": "Literal 6x6 canvas and literal partner row 5-row (36). The factory mirrors row H-1-r for any H. For odd H the middle row pairs with itself, so its 8s become 2, as the factory notes say. No rule ties H or W to 6."
+    },
+    "objects": {
+     "disposition": "broadly_variable",
+     "lines": [
+      28
+     ],
+     "why": "There are no objects: all 2^36 masks are reachable."
+    },
+    "placement": {
+     "disposition": "broadly_variable",
+     "lines": [
+      31,
+      32
+     ],
+     "why": "Every cell is sampled independently, so every arrangement of 8s is reachable."
+    },
+    "density_colours": {
+     "disposition": "mixed",
+     "lines": [
+      28,
+      36
+     ],
+     "why": "The fixed p = 1/2 (28) covers the canonical 0.50-0.64, but very sparse or dense masks are rare. 8, 2 and 5 are fixture roles."
+    },
+    "rule_parameters": {
+     "disposition": "intrinsic_or_rule_supported",
+     "lines": [
+      36
+     ],
+     "why": "Pairing across the horizontal midline is the whole rule."
+    },
+    "demonstration_context": {
+     "disposition": "intrinsic_or_rule_supported",
+     "lines": [
+      36
+     ],
+     "why": "The factory reads no demonstrations; the mirror axis is fixed per D4."
+    }
+   },
+   "proposal": "Medium. Sample H and W independently (e.g. 2..30) and a per-scene density (e.g. 0.2..0.8). Decide whether odd heights are in scope, since no fixture shows a self-paired middle row. Recertify.",
+   "patch_priority": "medium",
+   "uncertainties": "Odd-height middle-row semantics are undemonstrated. The probe's agreement on odd H is agreement with the factory's convention, not evidence for the original task.",
+   "adequacy": "needs_constructor_work",
+   "evidence": [
+    "probes/fixture_stats_batch6.py",
+    "arc_agi2/direct_factories/a8610ef7.json",
+    "arc_agi2/direct_factories/task_a8610ef7.py"
+   ],
+   "certificate_note": "direct_factory record arc_agi2/direct_factories/a8610ef7.json: passed=True, 1000 fresh / 8000 augmented / 16 fixture variants, 1000 unique base inputs, constructor 49fc43eb, factory 51e9e13b. The constructor hash and the factory/program hash equal the current files, so the state is current, and the production lookup (certified_factory_source / certified_source) returned a program in the probe. A passed certificate is a finite audit, not a proof.",
+   "admission": "Not admitted: absent from every prepare registry (including REPAIRED and REVIEWED_NATIVE) and from RE-ARC admission.json at baseline 59d03df. release_ready stays false.",
+   "audit_note": "The 128-sample domain audit (fork cdf50ed) matches this constructor, which is unchanged since the ordering commit; native draws 128/128 valid, 128 unique inputs. Its figures are quoted alongside the probe.",
+   "certified_evidence": "current",
+   "release_ready": false
+  },
   "aa300dc3": {
    "status": "reviewed",
    "reviewer": "claude-opus-5-5 (hybrid-claude-native worktree)",
@@ -9134,6 +9829,188 @@
    "certified_evidence": "current",
    "release_ready": false
   },
+  "b0722778": {
+   "status": "reviewed",
+   "reviewer": "claude-opus-5-5 (hybrid-claude-native-review-current worktree)",
+   "reviewed_on": "2026-10-25",
+   "review_batch": 6,
+   "review_kind": "first_review",
+   "constructor_sha256": "9d3151c562a2c04f562d2fff552406427814523ebd12926217a0f4d11f36f5c3",
+   "baseline_commit": "59d03df8b76e537ef9cb08c3b1e5890501c024c9",
+   "mechanism": "A 9-wide canvas with 3n-1 rows (73-74), where n = 3..4 bands (31). Each band holds a 2x2 block A (columns 0-1), its transform (columns 3-4) and a block B (columns 7-8). The transforms are R, L or O, and optionally one band uses the global colour map C (32-37, 55-62). The 2-wide output applies each band's transform to B (64-71, 89-93). Block colourings are two-colour stripes for R/L and one odd cell for O (40-54).",
+   "fixture_evidence": "3 pairs (2 train, 1 test) with bands ORC, CRLO and ORL. Audit: 128/128 unique. The gate analogy_priority_evidence is dispatched from colour_evidence.py (347-351).",
+   "axes": {
+    "dimensions": {
+     "disposition": "mixed",
+     "lines": [
+      73,
+      74
+     ],
+     "why": "Height follows the band count (rule-tied). The 9-wide layout is constant across fixtures."
+    },
+    "objects": {
+     "disposition": "incidental_restriction",
+     "lines": [
+      31
+     ],
+     "why": "3..4 bands; the bound 3n-1 <= 30 allows n <= 10."
+    },
+    "placement": {
+     "disposition": "intrinsic_or_rule_supported",
+     "lines": [
+      76,
+      77,
+      78,
+      79,
+      80,
+      81,
+      82,
+      83,
+      85,
+      86,
+      87,
+      88
+     ],
+     "why": "The three-block layout per band is the task."
+    },
+    "density_colours": {
+     "disposition": "mixed",
+     "lines": [
+      41,
+      42,
+      43,
+      44,
+      45,
+      46,
+      47,
+      49,
+      50,
+      51,
+      52
+     ],
+     "why": "Block colourings are restricted per transform (stripes or one odd cell), which keeps transforms identifiable but narrows content."
+    },
+    "rule_parameters": {
+     "disposition": "intrinsic_or_rule_supported",
+     "lines": [
+      64,
+      65,
+      66,
+      67,
+      68,
+      69,
+      70,
+      71
+     ],
+     "why": "Apply the transform that the band itself shows (A to its neighbour block: R, L, O or colour map C) to block B."
+    },
+    "demonstration_context": {
+     "disposition": "intrinsic_or_rule_supported",
+     "lines": [
+      31,
+      32
+     ],
+     "why": "Transform priority is learnt per episode by analogy_priority_evidence, which compares all 8! orderings of D4 operations (colour_evidence.py 347-351)."
+    }
+   },
+   "proposal": "Medium. Sample n in 2..10 bands and keep the layout; recertify with the gate.",
+   "patch_priority": "medium",
+   "uncertainties": "Whether richer block colourings belong to the task. Gate retry rates for more bands were not measured.",
+   "adequacy": "needs_constructor_work",
+   "evidence": [
+    "probes/fixture_stats_batch6.py",
+    "arc_agi2/analogy_priority_evidence.py",
+    "arc_agi2/colour_evidence.py",
+    "arc_agi2/direct_factories/b0722778.json",
+    "arc_agi2/direct_factories/task_b0722778.py"
+   ],
+   "certificate_note": "direct_factory record arc_agi2/direct_factories/b0722778.json: passed=True, 1000 fresh / 8000 augmented / 16 fixture variants, 1000 unique base inputs, constructor 9d3151c5, factory 802f1edc. The constructor hash and the factory/program hash equal the current files, so the state is current, and the production lookup (certified_factory_source / certified_source) returned a program in the probe. A passed certificate is a finite audit, not a proof.",
+   "admission": "Not admitted: absent from every prepare registry (including REPAIRED and REVIEWED_NATIVE) and from RE-ARC admission.json at baseline 59d03df. release_ready stays false.",
+   "audit_note": "The 128-sample domain audit (fork cdf50ed) matches this constructor, which is unchanged since the ordering commit; native draws 128/128 valid, 128 unique inputs. Its figures are quoted alongside the probe.",
+   "certified_evidence": "current",
+   "release_ready": false
+  },
+  "b1fc8b8e": {
+   "status": "reviewed",
+   "reviewer": "claude-opus-5-5 (hybrid-claude-native-review-current worktree)",
+   "reviewed_on": "2026-10-25",
+   "review_batch": 6,
+   "review_kind": "first_review",
+   "constructor_sha256": "03be3aabd0e3739487a5e21f22ef7dee3a66ba889974e1916b072cbe3d24b66c",
+   "baseline_commit": "59d03df8b76e537ef9cb08c3b1e5890501c024c9",
+   "mechanism": "Literal 6x6 canvas (47). It holds four non-overlapping pieces, either all 2x2 squares or all L-trominoes (a 2x2 square missing its top-left cell) (28, 30-39), with top-left corners in 0..4 (31-32). L scenes also require some piece's missing corner to be covered by another piece (40-43). The output is a fixed 5x5 motif of four 2x2 quadrants (50-54); when the input has 12 cells, the quadrant corners are cleared (53).",
+   "fixture_evidence": "7 pairs (5 train, 2 test), 6x6 -> 5x5, with 16,16,12,12,12,12,16 cells. In every pair the bottom row is blank; 6 of 7 inputs are one 4-connected blob (probe). The exact native domain is 3145 inputs: 1158 L scenes and 1987 square scenes (probe). Native draws form one 4-connected blob in 108/400 (probe). Audit: 125/128 unique; certificate: 847/1000.",
+   "axes": {
+    "dimensions": {
+     "disposition": "mixed",
+     "lines": [
+      47,
+      50,
+      51
+     ],
+     "why": "The 5x5 output is a fixed legend motif (intrinsic). The 6x6 input canvas is a literal (47), and the factory only counts non-background cells, so the input canvas is incidental."
+    },
+    "objects": {
+     "disposition": "mixed",
+     "lines": [
+      28,
+      31,
+      32,
+      36,
+      40,
+      41,
+      42,
+      43
+     ],
+     "why": "Four pieces of one type is what the output distinguishes, and every fixture has 12 or 16 cells. The piece count is fixture-supported, but it is also what lets the factory's cell-count threshold stand in for piece shape."
+    },
+    "placement": {
+     "disposition": "mixed",
+     "lines": [
+      31,
+      32,
+      37
+     ],
+     "why": "Pieces are free within 0..4 apart from non-overlap. Canonical inputs are interlocked blobs (6/7 4-connected, bottom row blank in 7/7), while native draws are connected in 108/400. Scattering widens support, but it departs from the canonical look; the rule (a cell count) does not require connectivity."
+    },
+    "density_colours": {
+     "disposition": "intrinsic_or_rule_supported",
+     "lines": [
+      49,
+      54
+     ],
+     "why": "One ink colour 8 on 0, with fixed roles as in every fixture."
+    },
+    "rule_parameters": {
+     "disposition": "intrinsic_or_rule_supported",
+     "lines": [
+      53
+     ],
+     "why": "The 12-vs-16 split (53) is the piece-type signal; the factory thresholds at 14. Within this domain, reading it as arm thickness or as cell count gives the same answer."
+    },
+    "demonstration_context": {
+     "disposition": "intrinsic_or_rule_supported",
+     "lines": [
+      53
+     ],
+     "why": "Query-only factory; both motifs appear in canonical train."
+    }
+   },
+   "proposal": "Medium. Sample a larger independent canvas (e.g. 6..15 per side) and keep four pieces. Add an interlocked-blob layout mode matching the fixtures. Vary piece counts only after replacing the count threshold with a shape test. Recertify.",
+   "patch_priority": "medium",
+   "uncertainties": "The original discriminating feature (arm thickness or cell count) is unknown; varied piece counts would separate the two and are untested. The factory on larger canvases was not probed.",
+   "adequacy": "needs_constructor_work",
+   "evidence": [
+    "probes/fixture_stats_batch6.py",
+    "arc_agi2/direct_factories/b1fc8b8e.json",
+    "arc_agi2/direct_factories/task_b1fc8b8e.py"
+   ],
+   "certificate_note": "direct_factory record arc_agi2/direct_factories/b1fc8b8e.json: passed=True, 1000 fresh / 8000 augmented / 16 fixture variants, 847 unique base inputs, constructor 03be3aab, factory b3c2afe5. The constructor hash and the factory/program hash equal the current files, so the state is current, and the production lookup (certified_factory_source / certified_source) returned a program in the probe. A passed certificate is a finite audit, not a proof.",
+   "admission": "Not admitted: absent from every prepare registry (including REPAIRED and REVIEWED_NATIVE) and from RE-ARC admission.json at baseline 59d03df. release_ready stays false.",
+   "audit_note": "The 128-sample domain audit (fork cdf50ed) matches this constructor, which is unchanged since the ordering commit; native draws 128/128 valid, 125 unique inputs. Its figures are quoted alongside the probe.",
+   "certified_evidence": "current",
+   "release_ready": false
+  },
   "b2bc3ffd": {
    "status": "reviewed",
    "reviewer": "claude-opus-5-5 (hybrid-claude-native worktree)",
@@ -9204,6 +10081,85 @@
    "proposal": "Medium: sample H (8-14) and W (6-14), bounding object size so that cells plus height stays at most H-1. This widens the domain beyond about 1000 inputs. Recertify.",
    "patch_priority": "medium",
    "uncertainties": "Unknown: whether objects in the original task are always floor-anchored bars (the fixtures agree). The domain size is estimated from certificate and audit uniqueness, not enumerated.",
+   "certified_evidence": "current",
+   "release_ready": false
+  },
+  "b4a43f3b": {
+   "status": "reviewed",
+   "reviewer": "claude-opus-5-5 (hybrid-claude-native-review-current worktree)",
+   "reviewed_on": "2026-10-25",
+   "review_batch": 6,
+   "review_kind": "first_review",
+   "constructor_sha256": "62217bdcedb23b02fef3dce69643bdf6dd86853741e25c77b62453195337896d",
+   "baseline_commit": "59d03df8b76e537ef9cb08c3b1e5890501c024c9",
+   "mechanism": "13x6 input (44): a 3x3 motif upscaled 2x on top (47-49), a grey divider row 6 (45-46) and a 6x6 placement map below (50-53). The motif is a diagonally connected 3x3 sprite coloured from {1,2,3,6} (29-33). The map is three axis-aligned segments of colour 2 with lengths 1..6 (35-41). The 18x18 output stamps the motif at each map cell (54-56).",
+   "fixture_evidence": "5 pairs (4 train, 1 test), all 13x6 -> 18x18. Axis segments needed per canonical map: 2, 4, 2, 3, 3 (probe). Train[1]'s map (a 2x2 block plus two diagonal cells) needs four segments, so native draws cannot produce it. Motif colours in the fixtures are 1, 2, 3 and 6. Audit: 128/128 unique.",
+   "axes": {
+    "dimensions": {
+     "disposition": "incidental_restriction",
+     "lines": [
+      34,
+      44
+     ],
+     "why": "Literal 13x6 input and 6x6 map. The rule bound is 3P, 3Q <= 30 (maps up to 10x10 with the 3x3 motif). The factory reads the map at any size with MOTIF_N = 3, but larger maps were not probed."
+    },
+    "objects": {
+     "disposition": "incidental_restriction",
+     "lines": [
+      35,
+      36,
+      39,
+      41
+     ],
+     "why": "The map is exactly three axis-aligned segments (35-41). That excludes canonical train[1], which needs four (probe). The rule stamps any binary map."
+    },
+    "placement": {
+     "disposition": "mixed",
+     "lines": [
+      37,
+      38,
+      39
+     ],
+     "why": "Segment positions are free on the 6x6 map; the motif region and divider are fixed, as in every fixture."
+    },
+    "density_colours": {
+     "disposition": "mixed",
+     "lines": [
+      33,
+      41
+     ],
+     "why": "Motif colours come from the literal set {1,2,3,6} (33), matching the fixtures; the map colour 2 is literal. A motif cell may share the map colour, as canonical train[0] and train[3] show."
+    },
+    "rule_parameters": {
+     "disposition": "intrinsic_or_rule_supported",
+     "lines": [
+      52,
+      54,
+      55,
+      56
+     ],
+     "why": "Stamp the 3x3 motif at every non-background map cell; no free parameter beyond the motif and the map."
+    },
+    "demonstration_context": {
+     "disposition": "intrinsic_or_rule_supported",
+     "lines": [
+      56
+     ],
+     "why": "The factory's solve() reads only the query grid, never the demonstrations, and nothing in the rule depends on episode context."
+    }
+   },
+   "proposal": "High: a canonical input is unreachable. Replace the three-segment map with a general non-empty binary map, or 1..6 segments plus free cells, on P x Q up to 10 x 10, so that train[1] is reachable. Widen motif colours to 1..9 except the divider. Probe the factory on non-6x6 maps, then recertify.",
+   "patch_priority": "high",
+   "uncertainties": "The factory on maps other than 6x6 was not run. It derives the motif step as region//3, and a motif region narrower than a wider map is untested.",
+   "adequacy": "needs_constructor_work",
+   "evidence": [
+    "probes/fixture_stats_batch6.py",
+    "arc_agi2/direct_factories/b4a43f3b.json",
+    "arc_agi2/direct_factories/task_b4a43f3b.py"
+   ],
+   "certificate_note": "direct_factory record arc_agi2/direct_factories/b4a43f3b.json: passed=True, 1000 fresh / 8000 augmented / 16 fixture variants, 1000 unique base inputs, constructor 62217bdc, factory ad0f0f59. The constructor hash and the factory/program hash equal the current files, so the state is current, and the production lookup (certified_factory_source / certified_source) returned a program in the probe. A passed certificate is a finite audit, not a proof.",
+   "admission": "Not admitted: absent from every prepare registry (including REPAIRED and REVIEWED_NATIVE) and from RE-ARC admission.json at baseline 59d03df. release_ready stays false.",
+   "audit_note": "The 128-sample domain audit (fork cdf50ed) matches this constructor, which is unchanged since the ordering commit; native draws 128/128 valid, 128 unique inputs. Its figures are quoted alongside the probe.",
    "certified_evidence": "current",
    "release_ready": false
   },
@@ -9347,6 +10303,90 @@
    "certified_evidence": "current",
    "release_ready": false
   },
+  "ba1aa698": {
+   "status": "reviewed",
+   "reviewer": "claude-opus-5-5 (hybrid-claude-native-review-current worktree)",
+   "reviewed_on": "2026-10-25",
+   "review_batch": 6,
+   "review_kind": "first_review",
+   "constructor_sha256": "8f3909440a766e9fabd1ed73141da9bf0c6f081ccdf2974f3222bcf544a4a2c6",
+   "baseline_commit": "59d03df8b76e537ef9cb08c3b1e5890501c024c9",
+   "mechanism": "A 16-row canvas (51-52) of 3..4 framed panels (36, 53-54), each 4..5 wide (35). Each panel holds a 2-row motif (43-49) shifted down by a constant 1..3 per panel (37, 58). The output is one panel with the motif one step further on (59-64); a flip makes the motion upward (65). The motif colour may equal the background (39-42).",
+   "fixture_evidence": "4 pairs (3 train, 1 test): 16x21, 16x16, 16x19, 16x25. Canonical train[1] (lines 74-75) uses extra=1: the labelled next anchor is 12, while uniform motion predicts 11 (coverage-evidence/ba1aa698/final-semantic-review.json). fixture_policy.py (276-315) approves a labelled teaching copy. The certificate passed on that copy with original_fixture_context_passed false. Audit: 128/128 unique, 40 orbits.",
+   "axes": {
+    "dimensions": {
+     "disposition": "incidental_restriction",
+     "lines": [
+      35,
+      36,
+      51
+     ],
+     "why": "Literal 16 rows and panels 4..5 wide; the bound is (w+1)f+1 <= 30."
+    },
+    "objects": {
+     "disposition": "mixed",
+     "lines": [
+      43,
+      44,
+      45,
+      46,
+      47,
+      48,
+      49
+     ],
+     "why": "A two-row motif whose last cells are mirrored (43-49), which matches the fixtures but narrows shapes."
+    },
+    "placement": {
+     "disposition": "mixed",
+     "lines": [
+      37,
+      58
+     ],
+     "why": "Offsets are bounded by the 14-row frame (37)."
+    },
+    "density_colours": {
+     "disposition": "mixed",
+     "lines": [
+      39,
+      40,
+      41
+     ],
+     "why": "Three roles; the motif colour may equal the background, as in canonical train[1]."
+    },
+    "rule_parameters": {
+     "disposition": "mixed",
+     "lines": [
+      60,
+      64
+     ],
+     "why": "Uniform motion (native extra=0) against canonical train[1]'s extra step: unresolved. The family uses a teaching fixture."
+    },
+    "demonstration_context": {
+     "disposition": "intrinsic_or_rule_supported",
+     "lines": [
+      65
+     ],
+     "why": "The direction of the panel sequence is learnt from demonstrations, with the gate panel_motion_ba1aa698_evidence (colour_evidence.py 93-96)."
+    }
+   },
+   "proposal": "Medium. Sample the canvas height (e.g. 10..30), panel widths and frame counts within 30, and wider offsets; keep extra=0 and recertify. The train[1] decision stays with root.",
+   "patch_priority": "medium",
+   "uncertainties": "Which reading of train[1] is original. Gate behaviour after expansion.",
+   "adequacy": "needs_constructor_work",
+   "evidence": [
+    "probes/fixture_stats_batch6.py",
+    "arc_agi2/fixture_policy.py",
+    "arc_agi2/panel_motion_ba1aa698_evidence.py",
+    "arc_agi2/reports/coverage-evidence/ba1aa698/final-semantic-review.json",
+    "arc_agi2/direct_factories/ba1aa698.json",
+    "arc_agi2/direct_factories/task_ba1aa698.py"
+   ],
+   "certificate_note": "direct_factory record arc_agi2/direct_factories/ba1aa698.json: passed=True, 1000 fresh / 8000 augmented / 16 fixture variants, 983 unique base inputs, constructor 8f390944, factory d9c288d5, original_fixture_context_passed false (approved labelled teaching_fixture). The constructor hash and the factory/program hash equal the current files, so the state is current, and the production lookup (certified_factory_source / certified_source) returned a program in the probe. A passed certificate is a finite audit, not a proof.",
+   "admission": "Not admitted: absent from every prepare registry (including REPAIRED and REVIEWED_NATIVE) and from RE-ARC admission.json at baseline 59d03df. release_ready stays false.",
+   "audit_note": "The 128-sample domain audit (fork cdf50ed) matches this constructor, which is unchanged since the ordering commit; native draws 128/128 valid, 128 unique inputs. Its figures are quoted alongside the probe.",
+   "certified_evidence": "current",
+   "release_ready": false
+  },
   "bb52a14b": {
    "status": "reviewed",
    "reviewer": "claude-opus-5-5 (hybrid-claude-native worktree)",
@@ -9423,6 +10463,174 @@
    "certified_evidence": "current",
    "release_ready": false
   },
+  "bbb1b8b6": {
+   "status": "reviewed",
+   "reviewer": "claude-opus-5-5 (hybrid-claude-native-review-current worktree)",
+   "reviewed_on": "2026-10-25",
+   "review_batch": 6,
+   "review_kind": "first_review",
+   "constructor_sha256": "bc22b579239b3c227e37d3af6d96b1ceec5e923adcd193acaa88d74cc9c331c5",
+   "baseline_commit": "59d03df8b76e537ef9cb08c3b1e5890501c024c9",
+   "mechanism": "Literal 4x9 canvas (32, 48). The left 4x4 pattern in colour 1 has 4..12 cells (33-35), column 4 is a grey divider (41), and the right 4x4 shape is one colour other than 1 or 5 (31). That shape is the exact complement (36) or, with p 1/2, a random 4..12-cell mask (37-40). The output overlays the two panels if the right shape exactly fills the left holes (51-57), and is the left panel otherwise.",
+   "fixture_evidence": "9 pairs (7 train, 2 test), 4x9 -> 4x4: 5 exact and 4 non-exact. The non-exact distractors are near misses, with (holes, cells) = (4,4), (9,8), (6,5), (8,6), and are coherent shapes; train[1] puts the hole-sized 2x2 block in the wrong place. Native draws: 183/400 non-exact, of which 33 have as many cells as holes (probe), and all are random masks. Probe: the factory matches an independent reference on 400/400 inputs over 241 shapes (panels up to 30 x 14, including near misses).",
+   "axes": {
+    "dimensions": {
+     "disposition": "incidental_restriction",
+     "lines": [
+      32,
+      48
+     ],
+     "why": "Literal 4x4 panels. The factory splits at any divider with equal panels (probe 400/400); the bound is 2W+1 <= 30."
+    },
+    "objects": {
+     "disposition": "mixed",
+     "lines": [
+      34,
+      35,
+      38,
+      39,
+      40
+     ],
+     "why": "The left pattern is any 4..12-cell mask. The right shape is the complement or random noise, so the coherent shapes of the fixtures are not sampled."
+    },
+    "placement": {
+     "disposition": "intrinsic_or_rule_supported",
+     "lines": [
+      41,
+      43,
+      45
+     ],
+     "why": "The panels are aligned cell by cell by construction, and that alignment is the rule."
+    },
+    "density_colours": {
+     "disposition": "mixed",
+     "lines": [
+      31,
+      35,
+      40
+     ],
+     "why": "Colours 1 and 5 are literal roles and the right colour is random (31). Distractors are noise: canonical-style near misses (equal count or one cell off) are uncommon natively (33/183 equal count)."
+    },
+    "rule_parameters": {
+     "disposition": "intrinsic_or_rule_supported",
+     "lines": [
+      51,
+      52,
+      53,
+      54,
+      55,
+      56,
+      57
+     ],
+     "why": "Overlay only on an exact positional complement."
+    },
+    "demonstration_context": {
+     "disposition": "mixed",
+     "lines": [
+      37,
+      38,
+      39,
+      40
+     ],
+     "why": "Readings such as 'counts match' or 'shape fits somewhere' would differ from the exact positional complement. Canonical train[1] separates them (4 holes, 4 cells, wrong place, no overlay), but native noise distractors seldom do. The factory reads no demonstrations, and episode-level ambiguity was not measured."
+    }
+   },
+   "proposal": "Medium. Sample panel H x W (2..30 x 2..14). Draw some distractors as near misses (a complement with one or two cells moved, or the hole shape shifted) alongside random ones. Recertify.",
+   "patch_priority": "medium",
+   "uncertainties": "Episode-level hypothesis ambiguity was not measured. Whether near-miss distractors are part of the task is inferred from four canonical pairs.",
+   "adequacy": "needs_constructor_work",
+   "evidence": [
+    "probes/fixture_stats_batch6.py",
+    "arc_agi2/direct_factories/bbb1b8b6.json",
+    "arc_agi2/direct_factories/task_bbb1b8b6.py"
+   ],
+   "certificate_note": "direct_factory record arc_agi2/direct_factories/bbb1b8b6.json: passed=True, 1000 fresh / 8000 augmented / 16 fixture variants, 1000 unique base inputs, constructor bc22b579, factory 3ca50417. The constructor hash and the factory/program hash equal the current files, so the state is current, and the production lookup (certified_factory_source / certified_source) returned a program in the probe. A passed certificate is a finite audit, not a proof.",
+   "admission": "Not admitted: absent from every prepare registry (including REPAIRED and REVIEWED_NATIVE) and from RE-ARC admission.json at baseline 59d03df. release_ready stays false.",
+   "audit_note": "The 128-sample domain audit (fork cdf50ed) matches this constructor, which is unchanged since the ordering commit; native draws 128/128 valid, 128 unique inputs. Its figures are quoted alongside the probe.",
+   "certified_evidence": "current",
+   "release_ready": false
+  },
+  "bc4146bd": {
+   "status": "reviewed",
+   "reviewer": "claude-opus-5-5 (hybrid-claude-native-review-current worktree)",
+   "reviewed_on": "2026-10-25",
+   "review_batch": 6,
+   "review_kind": "first_review",
+   "constructor_sha256": "475ee231edfb0f6d67a5b38cdd53f1e132c802dba00301eaa770354908019367",
+   "baseline_commit": "59d03df8b76e537ef9cb08c3b1e5890501c024c9",
+   "mechanism": "Literal 4x4 input (34) of 2..3 colours from 1..9 (28-32). The 4x20 output places the tile, its mirror, the tile, its mirror and the tile side by side (35-41).",
+   "fixture_evidence": "5 pairs (4 train, 1 test), all 4x4 -> 4x20, with 3,3,3,2,3 colours and no 0. Audit: 128/128 unique. Probe: the factory matches an independent reference (which replays all 5 pairs) on 400/400 inputs over 167 shapes, H 1..30 x W 1..6.",
+   "axes": {
+    "dimensions": {
+     "disposition": "mixed",
+     "lines": [
+      34,
+      37,
+      38,
+      39,
+      40,
+      41
+     ],
+     "why": "Height is incidental: the factory copies any H. Width is ambiguous. Every fixture is 4 wide with five copies, so 'five copies' and 'W+1 copies' fit equally well; the factory fixes five. The bound is 5W <= 30."
+    },
+    "objects": {
+     "disposition": "broadly_variable",
+     "lines": [
+      31,
+      32
+     ],
+     "why": "There are no objects; every 4x4 arrangement of the chosen colours is reachable."
+    },
+    "placement": {
+     "disposition": "intrinsic_or_rule_supported",
+     "lines": [
+      36
+     ],
+     "why": "The whole tile is copied; nothing depends on position."
+    },
+    "density_colours": {
+     "disposition": "mixed",
+     "lines": [
+      28,
+      29,
+      32
+     ],
+     "why": "2..3 colours with no 0, matching the fixtures. The rule never reads colours, so the count limit is incidental but harmless."
+    },
+    "rule_parameters": {
+     "disposition": "mixed",
+     "lines": [
+      37,
+      38,
+      39,
+      40,
+      41
+     ],
+     "why": "O,M,O,M,O along the width in every fixture. The copy count against width is undetermined (see dimensions)."
+    },
+    "demonstration_context": {
+     "disposition": "intrinsic_or_rule_supported",
+     "lines": [
+      37
+     ],
+     "why": "The factory's solve() reads only the query grid, never the demonstrations, and nothing in the rule depends on episode context."
+    }
+   },
+   "proposal": "Medium. Sample H freely now (1..30). Vary W only after choosing a copy-count reading (five fixed or W+1). Recertify.",
+   "patch_priority": "medium",
+   "uncertainties": "Copy-count semantics for other widths are unknown; the probe tests only the factory's five-copy reading.",
+   "adequacy": "needs_constructor_work",
+   "evidence": [
+    "probes/fixture_stats_batch6.py",
+    "arc_agi2/direct_factories/bc4146bd.json",
+    "arc_agi2/direct_factories/task_bc4146bd.py"
+   ],
+   "certificate_note": "direct_factory record arc_agi2/direct_factories/bc4146bd.json: passed=True, 1000 fresh / 8000 augmented / 16 fixture variants, 1000 unique base inputs, constructor 475ee231, factory 01cf7898. The constructor hash and the factory/program hash equal the current files, so the state is current, and the production lookup (certified_factory_source / certified_source) returned a program in the probe. A passed certificate is a finite audit, not a proof.",
+   "admission": "Not admitted: absent from every prepare registry (including REPAIRED and REVIEWED_NATIVE) and from RE-ARC admission.json at baseline 59d03df. release_ready stays false.",
+   "audit_note": "The 128-sample domain audit (fork cdf50ed) matches this constructor, which is unchanged since the ordering commit; native draws 128/128 valid, 128 unique inputs. Its figures are quoted alongside the probe.",
+   "certified_evidence": "current",
+   "release_ready": false
+  },
   "bd283c4a": {
    "status": "reviewed",
    "reviewer": "claude-opus-5-5 (hybrid-claude-native worktree)",
@@ -9484,6 +10692,86 @@
    "proposal": "Medium: sample H and W (6-14) and 2-6 colours with random weights. Either reject tied counts (about 2% cost) or document the tie-break as a convention. Recertify.",
    "patch_priority": "medium",
    "uncertainties": "The 1.9% tie rate comes from one seeded run of 2000. Whether the original task ever has ties is unknown.",
+   "certified_evidence": "current",
+   "release_ready": false
+  },
+  "be03b35f": {
+   "status": "reviewed",
+   "reviewer": "claude-opus-5-5 (hybrid-claude-native-review-current worktree)",
+   "reviewed_on": "2026-10-25",
+   "review_batch": 6,
+   "review_kind": "first_review",
+   "constructor_sha256": "db67e94a04c9abc1ba63db9a3e6aba1f35e8a31bb9a027ccad4a951f0b2b6593",
+   "baseline_commit": "59d03df8b76e537ef9cb08c3b1e5890501c024c9",
+   "mechanism": "Literal 5x5 canvas (32). The TL, TR and BL 2x2 quadrants hold successive clockwise rotations of a binary 2x2 pattern in colour 1 (33-36), and BR is a red 2x2 (37). The output is the next rotation (33-36).",
+   "fixture_evidence": "4 pairs (3 train, 1 test), 5x5 -> 2x2. The native domain is exactly 14 inputs, the non-constant binary patterns (29-30). The probe and the certificate's exhaustive finite_default_domain both count 14, and native draws reach all 14 in 400. Probe: the factory matches an independent reference (which replays all 4 pairs) on 385/385 scenes with k x k quadrants (k 2..9, gap 1..3).",
+   "axes": {
+    "dimensions": {
+     "disposition": "incidental_restriction",
+     "lines": [
+      32,
+      37
+     ],
+     "why": "Literal 5x5 canvas with 2x2 quadrants. The rotation-sequence rule holds for any k x k quadrant, and the factory reads k from the red block (probe 385/385)."
+    },
+    "objects": {
+     "disposition": "incidental_restriction",
+     "lines": [
+      29,
+      30
+     ],
+     "why": "One binary 2x2 pattern, so only 14 possibilities."
+    },
+    "placement": {
+     "disposition": "intrinsic_or_rule_supported",
+     "lines": [
+      33,
+      34,
+      35,
+      36,
+      37
+     ],
+     "why": "The three-quadrant sequence with a red placeholder is the task's structure in every fixture."
+    },
+    "density_colours": {
+     "disposition": "mixed",
+     "lines": [
+      29,
+      33,
+      37
+     ],
+     "why": "Ink 1 on 0 plus red 2 are fixture roles; 1..3 of 4 cells are lit (30)."
+    },
+    "rule_parameters": {
+     "disposition": "intrinsic_or_rule_supported",
+     "lines": [
+      33,
+      34,
+      35,
+      36
+     ],
+     "why": "Continue the clockwise rotation sequence."
+    },
+    "demonstration_context": {
+     "disposition": "intrinsic_or_rule_supported",
+     "lines": [
+      37
+     ],
+     "why": "Query-only factory; the sequence is visible in the query. The finite certificate requires queries distinct from demonstrations."
+    }
+   },
+   "proposal": "High: tiny domain. Sample quadrant size k in 2..9 with a gap of 1..3 (canvas 2k+gap <= 30) and keep binary ink; recertify. Until then admit only under finite-domain identity rules.",
+   "patch_priority": "high",
+   "uncertainties": "Whether quadrants larger than 2x2, or multi-colour quadrants, belong to the original task; no fixture shows them. Rotation-symmetric patterns make some quadrants identical, and how often that confuses solvers was not measured.",
+   "adequacy": "needs_constructor_work",
+   "evidence": [
+    "probes/fixture_stats_batch6.py",
+    "arc_agi2/direct_factories/be03b35f.json",
+    "arc_agi2/direct_factories/task_be03b35f.py"
+   ],
+   "certificate_note": "direct_factory record arc_agi2/direct_factories/be03b35f.json: passed=True, 1000 fresh / 8000 augmented / 16 fixture variants, 14 unique base inputs, constructor db67e94a, factory 6f54544c, finite_default_domain exhaustive over 14 inputs. The constructor hash and the factory/program hash equal the current files, so the state is current, and the production lookup (certified_factory_source / certified_source) returned a program in the probe. A passed certificate is a finite audit, not a proof.",
+   "admission": "Not admitted: absent from every prepare registry (including REPAIRED and REVIEWED_NATIVE) and from RE-ARC admission.json at baseline 59d03df. release_ready stays false.",
+   "audit_note": "The 128-sample domain audit (fork cdf50ed) matches this constructor, which is unchanged since the ordering commit; native draws 128/128 valid, 14 unique inputs. Its figures are quoted alongside the probe.",
    "certified_evidence": "current",
    "release_ready": false
   },
@@ -9555,6 +10843,79 @@
    "proposal": "Medium: sample even H and W (8-16), seed at a central cell, and scale growth with the half-area. Optionally vary which central cell seeds the blob, provided the hypothesis class stays identifiable. Recertify.",
    "patch_priority": "medium",
    "uncertainties": "Unknown: whether the original rule picks the foreground by centre position or by another cue (e.g. the largest symmetric object). The factory's hypothesis class is a modelling choice.",
+   "certified_evidence": "current",
+   "release_ready": false
+  },
+  "c48954c1": {
+   "status": "reviewed",
+   "reviewer": "claude-opus-5-5 (hybrid-claude-native-review-current worktree)",
+   "reviewed_on": "2026-10-25",
+   "review_batch": 6,
+   "review_kind": "first_review",
+   "constructor_sha256": "dadd64c19c1b3060239a6113ffcbf1bd5a89cc8a55877f79faa17cbf242a97ca",
+   "baseline_commit": "59d03df8b76e537ef9cb08c3b1e5890501c024c9",
+   "mechanism": "Literal 3x3 input (34) of 3..4 distinct colours (28-32). The 9x9 output is a 3x3 array of copies: rows are flipped in even block-rows and columns in even block-columns (35-42).",
+   "fixture_evidence": "4 pairs (3 train, 1 test), 3x3 -> 9x9, with 3,4,4,3 colours. Audit: 128/128 unique (120 orbits). Probe: the certified teacher program matches an independent reference (which replays all 4 pairs) on 400/400 inputs over 98 shapes, H, W in 1..10.",
+   "axes": {
+    "dimensions": {
+     "disposition": "incidental_restriction",
+     "lines": [
+      34
+     ],
+     "why": "Literal 3x3 canvas: the self-tiling pattern. The bound is 3H, 3W <= 30, and the teacher reads h and w (probe 400/400)."
+    },
+    "objects": {
+     "disposition": "mixed",
+     "lines": [
+      28,
+      31,
+      32
+     ],
+     "why": "There are no objects; 3..4 colours (28) is narrower than what the rule admits."
+    },
+    "placement": {
+     "disposition": "intrinsic_or_rule_supported",
+     "lines": [
+      37
+     ],
+     "why": "The whole grid is copied into each block, so cell positions only matter through the flips."
+    },
+    "density_colours": {
+     "disposition": "mixed",
+     "lines": [
+      28,
+      31
+     ],
+     "why": "Uniform cells over the chosen colours with no 0, matching the fixtures."
+    },
+    "rule_parameters": {
+     "disposition": "intrinsic_or_rule_supported",
+     "lines": [
+      40,
+      41,
+      42
+     ],
+     "why": "Mirrored 3x3 tiling: rows flipped in even block-rows, columns flipped in even block-columns."
+    },
+    "demonstration_context": {
+     "disposition": "intrinsic_or_rule_supported",
+     "lines": [
+      42
+     ],
+     "why": "The certified teacher transform reads only the query grid, never the demonstrations, and nothing in the rule depends on episode context."
+    }
+   },
+   "proposal": "Medium. Sample H, W independently in 1..10 and 2..9 colours; recertify.",
+   "patch_priority": "medium",
+   "uncertainties": "Mirroring is defined for any shape, but no fixture shows a non-square input.",
+   "adequacy": "needs_constructor_work",
+   "evidence": [
+    "probes/fixture_stats_batch6.py",
+    "arc_agi2/reports/direct-certificates/c48954c1.json"
+   ],
+   "certificate_note": "direct_certificate record arc_agi2/reports/direct-certificates/c48954c1.json: passed=True, 1000 fresh / 8000 augmented / 16 fixture variants, 1000 unique base inputs, constructor dadd64c1, program b03f9500 (saved_teacher_transform). The constructor hash and the factory/program hash equal the current files, so the state is current, and the production lookup (certified_factory_source / certified_source) returned a program in the probe. A passed certificate is a finite audit, not a proof.",
+   "admission": "Not admitted: absent from every prepare registry (including REPAIRED and REVIEWED_NATIVE) and from RE-ARC admission.json at baseline 59d03df. release_ready stays false.",
+   "audit_note": "The 128-sample domain audit (fork cdf50ed) matches this constructor, which is unchanged since the ordering commit; native draws 128/128 valid, 128 unique inputs. Its figures are quoted alongside the probe.",
    "certified_evidence": "current",
    "release_ready": false
   },
@@ -9703,6 +11064,88 @@
    "certified_evidence": "current",
    "release_ready": false
   },
+  "ca8de6ea": {
+   "status": "reviewed",
+   "reviewer": "claude-opus-5-5 (hybrid-claude-native-review-current worktree)",
+   "reviewed_on": "2026-10-25",
+   "review_batch": 6,
+   "review_kind": "first_review",
+   "constructor_sha256": "97956be7d75541d1dc634dab84905176d3418e57fadda7302b1add3d3763edb8",
+   "baseline_commit": "59d03df8b76e537ef9cb08c3b1e5890501c024c9",
+   "mechanism": "A 5x5 X of five distinct non-zero colours (28) on 0: corners, inner diagonal ring and centre (31-35). The X compresses into a solid 3x3: corners stay corners, the centre stays the centre, and the inner ring turns onto the edge midpoints (31-35).",
+   "fixture_evidence": "4 pairs (3 train, 1 test), 5x5 -> 3x3, all with one geometry. finite_input_policy.py (lines 95-100) registers the family: 9P5 = 15,120 inputs in one palette/D4 orbit. Audit: 127/128 unique, 1 orbit; certificate: 968/1000.",
+   "axes": {
+    "dimensions": {
+     "disposition": "unknown",
+     "lines": [
+      30
+     ],
+     "why": "Fixed 5x5 -> 3x3. The factory hard-codes the nine source cells. No fixture shows another X size, and how a 7x7 X with three rings would compress is undefined."
+    },
+    "objects": {
+     "disposition": "intrinsic_or_rule_supported",
+     "lines": [
+      31,
+      32,
+      33,
+      34,
+      35
+     ],
+     "why": "One X motif of nine cells is the whole task, as in every fixture."
+    },
+    "placement": {
+     "disposition": "intrinsic_or_rule_supported",
+     "lines": [
+      31,
+      32,
+      33,
+      34,
+      35
+     ],
+     "why": "The X geometry (corners, inner diagonal ring, centre) is fixed by the rule and the factory."
+    },
+    "density_colours": {
+     "disposition": "intrinsic_or_rule_supported",
+     "lines": [
+      28
+     ],
+     "why": "Five distinct non-zero colours, as in every fixture."
+    },
+    "rule_parameters": {
+     "disposition": "intrinsic_or_rule_supported",
+     "lines": [
+      31,
+      32,
+      33,
+      34,
+      35
+     ],
+     "why": "A fixed cell-to-cell compression of the nine X cells into the 3x3 block."
+    },
+    "demonstration_context": {
+     "disposition": "intrinsic_or_rule_supported",
+     "lines": [
+      35
+     ],
+     "why": "The factory's solve() reads only the query grid, never the demonstrations, and nothing in the rule depends on episode context."
+    }
+   },
+   "proposal": "Medium, blocked on semantics. Keep the constructor and admit only under the existing finite_input_policy entry (exact-input identity, four distinct inputs per episode). Any larger X would invent rules that no fixture shows.",
+   "patch_priority": "medium",
+   "uncertainties": "Whether repeated colours within the X are allowed (every fixture uses five distinct colours).",
+   "adequacy": "finite_domain_no_change_without_new_semantics",
+   "evidence": [
+    "probes/fixture_stats_batch6.py",
+    "arc_agi2/finite_input_policy.py",
+    "arc_agi2/direct_factories/ca8de6ea.json",
+    "arc_agi2/direct_factories/task_ca8de6ea.py"
+   ],
+   "certificate_note": "direct_factory record arc_agi2/direct_factories/ca8de6ea.json: passed=True, 1000 fresh / 8000 augmented / 16 fixture variants, 968 unique base inputs, constructor 97956be7, factory 24f6bb66. The constructor hash and the factory/program hash equal the current files, so the state is current, and the production lookup (certified_factory_source / certified_source) returned a program in the probe. A passed certificate is a finite audit, not a proof.",
+   "admission": "Not admitted: absent from every prepare registry (including REPAIRED and REVIEWED_NATIVE) and from RE-ARC admission.json at baseline 59d03df. release_ready stays false.",
+   "audit_note": "The 128-sample domain audit (fork cdf50ed) matches this constructor, which is unchanged since the ordering commit; native draws 128/128 valid, 127 unique inputs. Its figures are quoted alongside the probe.",
+   "certified_evidence": "current",
+   "release_ready": false
+  },
   "ce039d91": {
    "status": "reviewed",
    "reviewer": "claude-opus-5-5 (hybrid-claude-native worktree)",
@@ -9839,6 +11282,95 @@
    "certified_evidence": "current",
    "release_ready": false
   },
+  "cf5fd0ad": {
+   "status": "reviewed",
+   "reviewer": "claude-opus-5-5 (hybrid-claude-native-review-current worktree)",
+   "reviewed_on": "2026-10-25",
+   "review_batch": 6,
+   "review_kind": "first_review",
+   "constructor_sha256": "e354a99857321f00208c8cc969750b7bee613cce8e00553826f04680cb9bc94c",
+   "baseline_commit": "59d03df8b76e537ef9cb08c3b1e5890501c024c9",
+   "mechanism": "Literal 3x3 input (34). Each cell is 8 with p 2/3, otherwise one of 1..3 other colours (not 8) (28-32). The 12x12 output has four quadrants, each a 2x2 tiling of the input rotated 180 (TL), clockwise (TR), anticlockwise (BL) or not at all (BR) (38-52).",
+   "fixture_evidence": "4 pairs (3 train, 1 test), 3x3 -> 12x12. 8 dominates every input, alongside 3, 1, 1 and 3 other colours. Audit: 127/128 unique (98 orbits). Probe: the factory matches an independent reference (which replays all 4 pairs) on 400/400 square inputs n x n, n in 1..7 except 3.",
+   "axes": {
+    "dimensions": {
+     "disposition": "mixed",
+     "lines": [
+      34,
+      43,
+      44,
+      45,
+      46,
+      47,
+      48
+     ],
+     "why": "The 3x3 size is incidental: the factory handles any square n with 4n <= 30 (probe). Squareness is rule-supported, because the quarter-turned quadrants need H = W."
+    },
+    "objects": {
+     "disposition": "mixed",
+     "lines": [
+      28,
+      30,
+      31
+     ],
+     "why": "There are no objects; 1..3 non-8 colours are scattered."
+    },
+    "placement": {
+     "disposition": "intrinsic_or_rule_supported",
+     "lines": [
+      37
+     ],
+     "why": "The whole grid is copied with rotations."
+    },
+    "density_colours": {
+     "disposition": "mixed",
+     "lines": [
+      30,
+      31
+     ],
+     "why": "The 8 role is literal at p 2/3, matching the fixtures; other proportions are not sampled."
+    },
+    "rule_parameters": {
+     "disposition": "intrinsic_or_rule_supported",
+     "lines": [
+      40,
+      41,
+      42,
+      43,
+      44,
+      45,
+      46,
+      47,
+      48,
+      49,
+      50,
+      51
+     ],
+     "why": "Fixed quadrant rotations (180, clockwise, anticlockwise, identity), each quadrant tiled 2x2."
+    },
+    "demonstration_context": {
+     "disposition": "intrinsic_or_rule_supported",
+     "lines": [
+      52
+     ],
+     "why": "The factory's solve() reads only the query grid, never the demonstrations, and nothing in the rule depends on episode context."
+    }
+   },
+   "proposal": "Medium. Sample square n in 2..7 and an 8-share per scene; recertify.",
+   "patch_priority": "medium",
+   "uncertainties": "Whether non-square inputs belong to the task; no fixture shows one, and the rotations would change shape.",
+   "adequacy": "needs_constructor_work",
+   "evidence": [
+    "probes/fixture_stats_batch6.py",
+    "arc_agi2/direct_factories/cf5fd0ad.json",
+    "arc_agi2/direct_factories/task_cf5fd0ad.py"
+   ],
+   "certificate_note": "direct_factory record arc_agi2/direct_factories/cf5fd0ad.json: passed=True, 1000 fresh / 8000 augmented / 16 fixture variants, 963 unique base inputs, constructor e354a998, factory 7f0ea689. The constructor hash and the factory/program hash equal the current files, so the state is current, and the production lookup (certified_factory_source / certified_source) returned a program in the probe. A passed certificate is a finite audit, not a proof.",
+   "admission": "Not admitted: absent from every prepare registry (including REPAIRED and REVIEWED_NATIVE) and from RE-ARC admission.json at baseline 59d03df. release_ready stays false.",
+   "audit_note": "The 128-sample domain audit (fork cdf50ed) matches this constructor, which is unchanged since the ordering commit; native draws 128/128 valid, 127 unique inputs. Its figures are quoted alongside the probe.",
+   "certified_evidence": "current",
+   "release_ready": false
+  },
   "cfb2ce5a": {
    "status": "reviewed",
    "reviewer": "claude-opus-5-5 (hybrid-claude-native worktree)",
@@ -9905,6 +11437,188 @@
    "proposal": "Medium: sample the bitmap size k (3-6) with canvas 2k+2 or larger, and let the factory read H and W from the grid. Keep the hint rule. Recertify.",
    "patch_priority": "medium",
    "uncertainties": "Inferring a class colour whose only hint is 0 (invisible) relies on the convention 'unseen = background'. That convention is canonical but subtle. Unknown: whether k other than 4 fits the original task.",
+   "certified_evidence": "current",
+   "release_ready": false
+  },
+  "d017b73f": {
+   "status": "reviewed",
+   "reviewer": "claude-opus-5-5 (hybrid-claude-native-review-current worktree)",
+   "reviewed_on": "2026-10-25",
+   "review_batch": 6,
+   "review_kind": "first_review",
+   "constructor_sha256": "30824e365b78ba09bef5aa788da6075c6a96ef8f8c2fc90bacedcba914e70b45",
+   "baseline_commit": "59d03df8b76e537ef9cb08c3b1e5890501c024c9",
+   "mechanism": "A 3-row input (31-33) of 3..4 path pieces, each 2..3 columns wide (89), separated by blank columns (plus an optional trailing blank, 31, 73). Each piece is shifted vertically by -2..2 (92-94) and coloured 1..9 (91). The output removes the gaps and shifts the pieces back into one monotone path (45-69). The path has a first segment of 2..3 (75), then 3..4 segments of 3..5 (76-77) and an optional final 1 (78-79), with rows alternating from the centre (80-87).",
+   "fixture_evidence": "5 pairs (4 train, 1 test). Canonical segment lengths [3,4,4], [2,5,3,1], [2,4,3,2] and [2,3,4] (lines 105-108) have too few middle segments or a final segment of 2, so 4 of 5 canonical pairs are unreachable (probe). Train[3] is also 3x9, while native input widths are 10..16. Only test[0] is reachable. Probe: the factory matches the constructor on 400/400 scenes under a canonical-compatible relaxation and on 320/400 under a broader one. In scratch triage, every mismatch had a later segment of length 1 or 2 or a one-column piece, where the piece tip is undetermined.",
+   "axes": {
+    "dimensions": {
+     "disposition": "incidental_restriction",
+     "lines": [
+      31,
+      76,
+      89
+     ],
+     "why": "Widths follow the segment and piece counts, and the native counts exclude canonical widths (train[3] is 9 wide)."
+    },
+    "objects": {
+     "disposition": "incidental_restriction",
+     "lines": [
+      75,
+      76,
+      77,
+      78,
+      79,
+      89
+     ],
+     "why": "Segment counts and lengths exclude 4 of 5 canonical paths (probe)."
+    },
+    "placement": {
+     "disposition": "mixed",
+     "lines": [
+      80,
+      81,
+      82,
+      83,
+      84,
+      85,
+      86,
+      87,
+      92,
+      93,
+      94
+     ],
+     "why": "Alternating rows and offsets of -2..2 fit the fixtures."
+    },
+    "density_colours": {
+     "disposition": "mixed",
+     "lines": [
+      91
+     ],
+     "why": "Random piece colours; adjacent pieces may share a colour, which the fixtures also show (train[2] colours 1,2,2)."
+    },
+    "rule_parameters": {
+     "disposition": "intrinsic_or_rule_supported",
+     "lines": [
+      45,
+      54,
+      55,
+      56,
+      57,
+      58,
+      59,
+      60,
+      61,
+      62,
+      63,
+      64,
+      65,
+      66,
+      67,
+      68,
+      69
+     ],
+     "why": "Reconnect the shifted pieces into one path."
+    },
+    "demonstration_context": {
+     "disposition": "intrinsic_or_rule_supported",
+     "lines": [
+      69
+     ],
+     "why": "The factory's solve() reads only the query grid, never the demonstrations, and nothing in the rule depends on episode context."
+    }
+   },
+   "proposal": "High: 4 of 5 canonical inputs are unreachable. Allow 1..4 middle segments of 3..5 and a final segment of 1..5, with 2..5 pieces; that relaxation reaches the canonical shapes and the factory agrees on 400/400. Keep middle segments of length 1-2 and one-column pieces excluded unless an ambiguity guard is added. Recertify.",
+   "patch_priority": "high",
+   "uncertainties": "Whether the hand triage of the 80 broad-sampler mismatches is complete; it was done in scratch. Rule-level ambiguity of length-1/2 segments was inferred from the piece-tip mechanism.",
+   "adequacy": "needs_constructor_work",
+   "evidence": [
+    "probes/fixture_stats_batch6.py",
+    "arc_agi2/direct_factories/d017b73f.json",
+    "arc_agi2/direct_factories/task_d017b73f.py"
+   ],
+   "certificate_note": "direct_factory record arc_agi2/direct_factories/d017b73f.json: passed=True, 1000 fresh / 8000 augmented / 16 fixture variants, 1000 unique base inputs, constructor 30824e36, factory 42a7e732. The constructor hash and the factory/program hash equal the current files, so the state is current, and the production lookup (certified_factory_source / certified_source) returned a program in the probe. A passed certificate is a finite audit, not a proof.",
+   "admission": "Not admitted: absent from every prepare registry (including REPAIRED and REVIEWED_NATIVE) and from RE-ARC admission.json at baseline 59d03df. release_ready stays false.",
+   "audit_note": "The 128-sample domain audit (fork cdf50ed) matches this constructor, which is unchanged since the ordering commit; native draws 128/128 valid, 128 unique inputs. Its figures are quoted alongside the probe.",
+   "certified_evidence": "current",
+   "release_ready": false
+  },
+  "d19f7514": {
+   "status": "reviewed",
+   "reviewer": "claude-opus-5-5 (hybrid-claude-native-review-current worktree)",
+   "reviewed_on": "2026-10-25",
+   "review_batch": 6,
+   "review_kind": "first_review",
+   "constructor_sha256": "c3f2ccae6b80e6caa37e4376f069960f3755c0dbca32650e1623fe661aa209ff",
+   "baseline_commit": "59d03df8b76e537ef9cb08c3b1e5890501c024c9",
+   "mechanism": "Parameters width = 4 and height = 6 (20). Two stacked halves, the top in 3 and the bottom in 5, are filled by fair coins (29-31, 35-38). The height x width output is their OR in colour 4 (39-40). Native draws are always 12x4.",
+   "fixture_evidence": "5 pairs (4 train, 1 test), 12x4 -> 6x4. parameter-validation.json approves six configured sizes up to 14x20 halves, which build_million.py (line 211) uses; the configured audit shows 7 shapes. Probe: the factory matches the constructor's explicit width/height path on 400/400 inputs over 180 shapes (w 1..14, h 1..15). No native 3-demo + query episode left the query on an undemonstrated occupancy combination (0/400).",
+   "axes": {
+    "dimensions": {
+     "disposition": "incidental_restriction",
+     "lines": [
+      20,
+      33,
+      34
+     ],
+     "why": "The native default is a 4 x 6 half. The constructor and factory support any size (probe), and the configured path approves six."
+    },
+    "objects": {
+     "disposition": "intrinsic_or_rule_supported",
+     "lines": [
+      33,
+      36,
+      38
+     ],
+     "why": "Two halves of cell noise, which is what OR is defined on."
+    },
+    "placement": {
+     "disposition": "intrinsic_or_rule_supported",
+     "lines": [
+      36,
+      38
+     ],
+     "why": "The halves are aligned cell by cell by construction."
+    },
+    "density_colours": {
+     "disposition": "mixed",
+     "lines": [
+      30,
+      31,
+      36,
+      38,
+      40
+     ],
+     "why": "Fair coins only; 3, 5 and 4 are literal fixture roles."
+    },
+    "rule_parameters": {
+     "disposition": "intrinsic_or_rule_supported",
+     "lines": [
+      40
+     ],
+     "why": "Cell-wise OR of the two halves, painted 4; the rule has no free parameter."
+    },
+    "demonstration_context": {
+     "disposition": "mixed",
+     "lines": [
+      40
+     ],
+     "why": "OR must be told apart from other truth tables. At native size this held in 400/400 episodes (probe). There is no evidence gate (the family is absent from colour_evidence.py), so the small configured sizes would need one, as batch D added for 195ba7dc."
+    }
+   },
+   "proposal": "Low: the configured path already adds sizes. Sample width and height natively, add an occupancy-combination gate before small sizes, and recertify.",
+   "patch_priority": "low",
+   "uncertainties": "Whether the diversity prepare path uses the configured parameters; only build_million.py was seen reading them. Ambiguity at small configured sizes was not measured.",
+   "adequacy": "needs_constructor_work",
+   "evidence": [
+    "probes/fixture_stats_batch6.py",
+    "arc_agi2/reports/parameter-validation.json",
+    "arc_agi2/build_million.py",
+    "arc_agi2/direct_factories/d19f7514.json",
+    "arc_agi2/direct_factories/task_d19f7514.py"
+   ],
+   "certificate_note": "direct_factory record arc_agi2/direct_factories/d19f7514.json: passed=True, 1000 fresh / 8000 augmented / 16 fixture variants, 1000 unique base inputs, constructor c3f2ccae, factory 251ad004. The constructor hash and the factory/program hash equal the current files, so the state is current, and the production lookup (certified_factory_source / certified_source) returned a program in the probe. A passed certificate is a finite audit, not a proof.",
+   "admission": "Not admitted: absent from every prepare registry (including REPAIRED and REVIEWED_NATIVE) and from RE-ARC admission.json at baseline 59d03df. release_ready stays false.",
+   "audit_note": "The 128-sample domain audit (fork cdf50ed) matches this constructor, which is unchanged since the ordering commit; native draws 128/128 valid, 128 unique inputs. Its figures are quoted alongside the probe.",
    "certified_evidence": "current",
    "release_ready": false
   },
@@ -10121,6 +11835,78 @@
    "proposal": "Medium: sample panel H and W (6-14) and scale the pixel count with area. Vertical panel stacking is optional, since D4 already covers it at episode level. Recertify.",
    "patch_priority": "medium",
    "uncertainties": "Unknown: whether larger displacements fit the original task (fixtures move at most 2).",
+   "certified_evidence": "current",
+   "release_ready": false
+  },
+  "d4b1c2b1": {
+   "status": "reviewed",
+   "reviewer": "claude-opus-5-5 (hybrid-claude-native-review-current worktree)",
+   "reviewed_on": "2026-10-25",
+   "review_batch": 6,
+   "review_kind": "first_review",
+   "constructor_sha256": "5cefbd6505794155a2426ed9bd540d68d15b4197b97fcd04d6cf83ad87ae3877",
+   "baseline_commit": "59d03df8b76e537ef9cb08c3b1e5890501c024c9",
+   "mechanism": "Literal 3x3 input (34) of k = 1..5 distinct colours (28-32). The output upsamples every cell to a k x k block (37).",
+   "fixture_evidence": "8 pairs (7 train, 1 test), with k = 3,1,1,4,2,2,2,5 and outputs 3x3 to 15x15; two pairs show k = 1. Audit: 115/128 unique (99 orbits); certificate: 807/1000. Probe: the teacher program matches an independent reference (which replays all 8 pairs) on 400/400 inputs over 35 shapes, H, W in 1..6.",
+   "axes": {
+    "dimensions": {
+     "disposition": "incidental_restriction",
+     "lines": [
+      34,
+      37
+     ],
+     "why": "Literal 3x3 canvas; the bound is kH, kW <= 30, and the teacher reads h and w (probe)."
+    },
+    "objects": {
+     "disposition": "mixed",
+     "lines": [
+      28,
+      31,
+      32
+     ],
+     "why": "There are no objects; k = 1..5 is narrower than the bound min(HW, 9, 30/max(H, W))."
+    },
+    "placement": {
+     "disposition": "intrinsic_or_rule_supported",
+     "lines": [
+      35,
+      36
+     ],
+     "why": "Every cell is scaled to a k x k block; positions are preserved."
+    },
+    "density_colours": {
+     "disposition": "mixed",
+     "lines": [
+      31
+     ],
+     "why": "Uniform cells with no 0, matching the fixtures."
+    },
+    "rule_parameters": {
+     "disposition": "intrinsic_or_rule_supported",
+     "lines": [
+      37
+     ],
+     "why": "Scale factor = number of distinct colours."
+    },
+    "demonstration_context": {
+     "disposition": "intrinsic_or_rule_supported",
+     "lines": [
+      37
+     ],
+     "why": "The certified teacher transform reads only the query grid, never the demonstrations, and nothing in the rule depends on episode context."
+    }
+   },
+   "proposal": "Medium. Sample H, W independently and k up to the bound; recertify.",
+   "patch_priority": "medium",
+   "uncertainties": "Whether 0 counts as a colour (no fixture contains 0).",
+   "adequacy": "needs_constructor_work",
+   "evidence": [
+    "probes/fixture_stats_batch6.py",
+    "arc_agi2/reports/direct-certificates/d4b1c2b1.json"
+   ],
+   "certificate_note": "direct_certificate record arc_agi2/reports/direct-certificates/d4b1c2b1.json: passed=True, 1000 fresh / 8000 augmented / 16 fixture variants, 807 unique base inputs, constructor 5cefbd65, program 6ab53f66 (saved_teacher_transform). The constructor hash and the factory/program hash equal the current files, so the state is current, and the production lookup (certified_factory_source / certified_source) returned a program in the probe. A passed certificate is a finite audit, not a proof.",
+   "admission": "Not admitted: absent from every prepare registry (including REPAIRED and REVIEWED_NATIVE) and from RE-ARC admission.json at baseline 59d03df. release_ready stays false.",
+   "audit_note": "The 128-sample domain audit (fork cdf50ed) matches this constructor, which is unchanged since the ordering commit; native draws 128/128 valid, 115 unique inputs. Its figures are quoted alongside the probe.",
    "certified_evidence": "current",
    "release_ready": false
   },
@@ -10550,6 +12336,86 @@
    "certified_evidence": "current",
    "release_ready": false
   },
+  "dd2401ed": {
+   "status": "reviewed",
+   "reviewer": "claude-opus-5-5 (hybrid-claude-native-review-current worktree)",
+   "reviewed_on": "2026-10-25",
+   "review_batch": 6,
+   "review_kind": "first_review",
+   "constructor_sha256": "9ff751409428594666a4d19be417f26d750c230efe85c1fab1c1f998f69c50a8",
+   "baseline_commit": "59d03df8b76e537ef9cb08c3b1e5890501c024c9",
+   "mechanism": "Literal 7x15 canvas (30) with red/blue pixels at 7..14% density (48, 50). Pixels left of the grey cursor column c in 1..6 are blue and the rest red (35). The output moves the cursor to 2c+1 and recolours reds left of it blue (36, 41-44). 'extra' (37) suppresses that recolouring, and native draws always use extra=0 (48). Scenes are rejected if they have no blues, no reds beyond the new cursor, or pixels in either cursor column (40-42).",
+   "fixture_evidence": "5 pairs (4 train, 1 test), all 7x15. Canonical train[2] (line 77) uses extra=1: its two swept reds stay red, and the native label would differ in those 2 cells (probe). Blue counts are 1,5,2,3,3; train[2] is the only even one, so 'recolour iff the blue count is odd' fits all five. Native draws contradict that reading in 147/400 cases (even blue count with recoloured reds, probe). Audit: 128/128 unique.",
+   "axes": {
+    "dimensions": {
+     "disposition": "incidental_restriction",
+     "lines": [
+      30,
+      48
+     ],
+     "why": "Literal 7x15 canvas. The cursor range 1..6 keeps 2c+1 <= 13 (48). The rule works for any H and any W >= 2c+2."
+    },
+    "objects": {
+     "disposition": "mixed",
+     "lines": [
+      48,
+      50
+     ],
+     "why": "Scattered single pixels plus one cursor line, as in the fixtures."
+    },
+    "placement": {
+     "disposition": "mixed",
+     "lines": [
+      40,
+      41,
+      42
+     ],
+     "why": "Free pixel positions, with guards that keep both cursor columns clear and both colours present."
+    },
+    "density_colours": {
+     "disposition": "mixed",
+     "lines": [
+      48,
+      50
+     ],
+     "why": "7..14% density matches the canonical look; the colours are literal roles."
+    },
+    "rule_parameters": {
+     "disposition": "mixed",
+     "lines": [
+      36,
+      37,
+      48
+     ],
+     "why": "Native draws always recolour (extra=0, 48) and canonical train[2] does not (extra=1, 77). The factory and gate (cursor_recolour_evidence.py, called from colour_evidence.py 165-169) keep 'always' and 'odd blue count' as rival readings chosen per episode. The certificate calls parity tentative, and upstream issue 123 reports anomalous red pixels. Native data only supports 'always'."
+    },
+    "demonstration_context": {
+     "disposition": "mixed",
+     "lines": [
+      37,
+      48
+     ],
+     "why": "Demonstrations choose between the readings; the certificate records 29 context retries."
+    }
+   },
+   "proposal": "Medium. Decide the semantics of canonical train[2] first (parity rule or data error). Then sample H, W (e.g. 5..30 x 2c+2..30) and a wider cursor range. If parity is adopted, generate both parities with matching labels. Recertify with the gate.",
+   "patch_priority": "medium",
+   "uncertainties": "Which reading is original is open. The 147/400 figure counts native pairs that contradict parity, not full episodes.",
+   "adequacy": "needs_constructor_work",
+   "evidence": [
+    "probes/fixture_stats_batch6.py",
+    "arc_agi2/cursor_recolour_evidence.py",
+    "arc_agi2/colour_evidence.py",
+    "arc_agi2/reports/coverage-evidence/dd2401ed/notes.json",
+    "arc_agi2/direct_factories/dd2401ed.json",
+    "arc_agi2/direct_factories/task_dd2401ed.py"
+   ],
+   "certificate_note": "direct_factory record arc_agi2/direct_factories/dd2401ed.json: passed=True, 1000 fresh / 8000 augmented / 16 fixture variants, 1000 unique base inputs, constructor 9ff75140, factory 3f0c7eb4, 29 context retries. The constructor hash and the factory/program hash equal the current files, so the state is current, and the production lookup (certified_factory_source / certified_source) returned a program in the probe. A passed certificate is a finite audit, not a proof.",
+   "admission": "Not admitted: absent from every prepare registry (including REPAIRED and REVIEWED_NATIVE) and from RE-ARC admission.json at baseline 59d03df. release_ready stays false.",
+   "audit_note": "The 128-sample domain audit (fork cdf50ed) matches this constructor, which is unchanged since the ordering commit; native draws 128/128 valid, 128 unique inputs. Its figures are quoted alongside the probe.",
+   "certified_evidence": "current",
+   "release_ready": false
+  },
   "e0fb7511": {
    "status": "reviewed",
    "reviewer": "claude-opus-5-5 (hybrid-claude-native worktree)",
@@ -10612,6 +12478,82 @@
    "proposal": "Medium: sample the black density per scene in 0.10-0.35, covering the canonical range, and H and W in 8-20. Keep the minimum-azure guard, scaled with area. Recertify.",
    "patch_priority": "medium",
    "uncertainties": "Fixture densities come from only 4 pairs. Not checked: whether higher densities create very large components that change learnability.",
+   "certified_evidence": "current",
+   "release_ready": false
+  },
+  "e133d23d": {
+   "status": "reviewed",
+   "reviewer": "claude-opus-5-5 (hybrid-claude-native-review-current worktree)",
+   "reviewed_on": "2026-10-25",
+   "review_batch": 6,
+   "review_kind": "first_review",
+   "constructor_sha256": "e89224c0b1da4dcea1543487fe99f8de35bc8d2bb82bfea89ca76d31d4812502",
+   "baseline_commit": "59d03df8b76e537ef9cb08c3b1e5890501c024c9",
+   "mechanism": "Parameters width = 3 and height = 3 (20). The left panel in 6, a divider column in 4 and the right panel in 8 are filled by fair coins (29-31, 33-40). The output is their OR in colour 2 (41-42).",
+   "fixture_evidence": "6 pairs (5 train, 1 test), 3x7 -> 3x3. parameter-validation.json approves six configured sizes (up to 14-wide x 20-tall panels), used by build_million.py (line 211). Audit: 128/128 unique. Probe: the factory matches the constructor's explicit width/height path on 400/400 inputs over 263 shapes. 2/400 native 3-demo + query episodes leave the query on an undemonstrated occupancy combination, and no gate catches them.",
+   "axes": {
+    "dimensions": {
+     "disposition": "incidental_restriction",
+     "lines": [
+      20,
+      33
+     ],
+     "why": "The native default is 3x3 panels; the constructor and factory support any size (probe), and the configured path approves six."
+    },
+    "objects": {
+     "disposition": "intrinsic_or_rule_supported",
+     "lines": [
+      33,
+      38
+     ],
+     "why": "Two panels of cell noise and one divider, as in every fixture."
+    },
+    "placement": {
+     "disposition": "intrinsic_or_rule_supported",
+     "lines": [
+      36,
+      40
+     ],
+     "why": "The panels are aligned cell by cell by construction, and that alignment is the rule."
+    },
+    "density_colours": {
+     "disposition": "mixed",
+     "lines": [
+      30,
+      31
+     ],
+     "why": "Fair coins only; 6, 4, 8 and 2 are literal roles."
+    },
+    "rule_parameters": {
+     "disposition": "intrinsic_or_rule_supported",
+     "lines": [
+      42
+     ],
+     "why": "Cell-wise OR of the two panels, painted 2; the rule has no free parameter."
+    },
+    "demonstration_context": {
+     "disposition": "mixed",
+     "lines": [
+      42
+     ],
+     "why": "OR against other truth tables: 2/400 ungated native episodes are ambiguous (probe). colour_evidence.py (527-531) only requires colour 2 in some demo output, not truth-table coverage. Batch D's occupancy gate for the analogous 195ba7dc is not applied here."
+    }
+   },
+   "proposal": "Low: the configured path already adds sizes. Sample panel size natively, add an occupancy-combination gate (as panel_overlay_evidence does for 195ba7dc), and recertify.",
+   "patch_priority": "low",
+   "uncertainties": "Whether the diversity prepare path uses configured sizes. Gate retry rates after the change.",
+   "adequacy": "needs_constructor_work",
+   "evidence": [
+    "probes/fixture_stats_batch6.py",
+    "arc_agi2/reports/parameter-validation.json",
+    "arc_agi2/build_million.py",
+    "arc_agi2/colour_evidence.py",
+    "arc_agi2/direct_factories/e133d23d.json",
+    "arc_agi2/direct_factories/task_e133d23d.py"
+   ],
+   "certificate_note": "direct_factory record arc_agi2/direct_factories/e133d23d.json: passed=True, 1000 fresh / 8000 augmented / 16 fixture variants, 999 unique base inputs, constructor e89224c0, factory e4cd9755. The constructor hash and the factory/program hash equal the current files, so the state is current, and the production lookup (certified_factory_source / certified_source) returned a program in the probe. A passed certificate is a finite audit, not a proof.",
+   "admission": "Not admitted: absent from every prepare registry (including REPAIRED and REVIEWED_NATIVE) and from RE-ARC admission.json at baseline 59d03df. release_ready stays false.",
+   "audit_note": "The 128-sample domain audit (fork cdf50ed) matches this constructor, which is unchanged since the ordering commit; native draws 128/128 valid, 128 unique inputs. Its figures are quoted alongside the probe.",
    "certified_evidence": "current",
    "release_ready": false
   },
@@ -10684,6 +12626,235 @@
    "proposal": "Low. The size parameter and configured path already reach 10-30 square. An optional follow-up is to give native draws independent H and W, keeping the key at the origin, and then recertify. No defect was found.",
    "patch_priority": "low",
    "uncertainties": "Whether copies whose frame would be clipped belong to the original rule is unknown. Unique-match acceptance on non-square canvases was not measured.",
+   "certified_evidence": "current",
+   "release_ready": false
+  },
+  "e345f17b": {
+   "status": "reviewed",
+   "reviewer": "claude-opus-5-5 (hybrid-claude-native-review-current worktree)",
+   "reviewed_on": "2026-10-25",
+   "review_batch": 6,
+   "review_kind": "first_review",
+   "constructor_sha256": "36a112d0063caa1b799873ef414893434b8efce28e6959bdafb96757a395b5a2",
+   "baseline_commit": "59d03df8b76e537ef9cb08c3b1e5890501c024c9",
+   "mechanism": "Parameters width = 4 and height = 4 (20). The left panel in 6 and the right panel in 5 abut with no divider and are filled by fair coins (29-31, 33-38). The output marks cells empty in both panels with 4 (NOR, 39-40).",
+   "fixture_evidence": "6 pairs (4 train, 2 test), 4x8 -> 4x4. parameter-validation.json approves six configured sizes, used by build_million.py (line 211). Audit: 128/128 unique. Probe: the factory matches the constructor's explicit width/height path on 400/400 inputs over 247 shapes. 0/400 native episodes leave the query on an undemonstrated combination.",
+   "axes": {
+    "dimensions": {
+     "disposition": "incidental_restriction",
+     "lines": [
+      20,
+      33
+     ],
+     "why": "The native default is 4x4 panels; any size is supported (probe), and the configured path approves six."
+    },
+    "objects": {
+     "disposition": "intrinsic_or_rule_supported",
+     "lines": [
+      33,
+      38
+     ],
+     "why": "Two abutting panels of cell noise, which is what NOR is defined on."
+    },
+    "placement": {
+     "disposition": "intrinsic_or_rule_supported",
+     "lines": [
+      36,
+      38
+     ],
+     "why": "The panels are aligned cell by cell by construction, and that alignment is the rule."
+    },
+    "density_colours": {
+     "disposition": "mixed",
+     "lines": [
+      30,
+      31
+     ],
+     "why": "Fair coins only; 6, 5 and 4 are literal roles."
+    },
+    "rule_parameters": {
+     "disposition": "intrinsic_or_rule_supported",
+     "lines": [
+      40
+     ],
+     "why": "Cell-wise NOR of the two panels, painted 4; the rule has no free parameter."
+    },
+    "demonstration_context": {
+     "disposition": "mixed",
+     "lines": [
+      40
+     ],
+     "why": "At native size, truth tables were pinned in 400/400 episodes (probe). The gate (colour_evidence.py 959-972) only checks that the mark colour is demonstrated; small configured sizes would need occupancy coverage."
+    }
+   },
+   "proposal": "Low: the configured path already adds sizes. Sample panel size natively, add occupancy coverage before small sizes, and recertify.",
+   "patch_priority": "low",
+   "uncertainties": "Whether the diversity prepare path uses configured sizes.",
+   "adequacy": "needs_constructor_work",
+   "evidence": [
+    "probes/fixture_stats_batch6.py",
+    "arc_agi2/reports/parameter-validation.json",
+    "arc_agi2/build_million.py",
+    "arc_agi2/colour_evidence.py",
+    "arc_agi2/direct_factories/e345f17b.json",
+    "arc_agi2/direct_factories/task_e345f17b.py"
+   ],
+   "certificate_note": "direct_factory record arc_agi2/direct_factories/e345f17b.json: passed=True, 1000 fresh / 8000 augmented / 16 fixture variants, 1000 unique base inputs, constructor 36a112d0, factory 4218a44d. The constructor hash and the factory/program hash equal the current files, so the state is current, and the production lookup (certified_factory_source / certified_source) returned a program in the probe. A passed certificate is a finite audit, not a proof.",
+   "admission": "Not admitted: absent from every prepare registry (including REPAIRED and REVIEWED_NATIVE) and from RE-ARC admission.json at baseline 59d03df. release_ready stays false.",
+   "audit_note": "The 128-sample domain audit (fork cdf50ed) matches this constructor, which is unchanged since the ordering commit; native draws 128/128 valid, 128 unique inputs. Its figures are quoted alongside the probe.",
+   "certified_evidence": "current",
+   "release_ready": false
+  },
+  "e3f79277": {
+   "status": "reviewed",
+   "reviewer": "claude-opus-5-5 (hybrid-claude-native-review-current worktree)",
+   "reviewed_on": "2026-10-25",
+   "review_batch": 6,
+   "review_kind": "first_review",
+   "constructor_sha256": "d907867b3683931bab9b71c77f4e53262f6696d543316bf91e0584ac1a2ebaf0",
+   "baseline_commit": "59d03df8b76e537ef9cb08c3b1e5890501c024c9",
+   "mechanism": "A 6x6 input on background 7 (35) holds an L corner: two arms of length L in 2..6 in one non-7 colour (31-32, 36-37), at a corner chosen by flip/flop (33, 40-41). The 16x16 background-7 output (35) doubles the arms to 2L and adds the closing diagonal (38-39), at the same corner.",
+   "fixture_evidence": "3 pairs (2 train, 1 test), with L = 2,3,4, all 6x6 -> 16x16. The exact domain is 160 inputs: 5 lengths x 8 colours x 4 corners (probe). The certificate saw 158 unique in 1000; the audit, 86 unique and 5 orbits. The teacher hard-codes N = 16 and reads only the corner and arm length, not the input size. Probe: it matches an independent drawing on 398/398 inputs with H, W in L..30 and L in 2..8 (background kept modal).",
+   "axes": {
+    "dimensions": {
+     "disposition": "mixed",
+     "lines": [
+      35
+     ],
+     "why": "The 16x16 output is fixed in every fixture and in the teacher, so keep it; on the evidence it is intrinsic. The 6x6 input canvas is incidental: the teacher ignores it and draws the same output for any canvas of at least L (probe)."
+    },
+    "objects": {
+     "disposition": "incidental_restriction",
+     "lines": [
+      31,
+      36,
+      37
+     ],
+     "why": "One L with equal arms of 2..6. The 16x16 output admits 2L <= 16 (L <= 8); the cap at 6 comes only from the 6x6 input."
+    },
+    "placement": {
+     "disposition": "intrinsic_or_rule_supported",
+     "lines": [
+      33,
+      40,
+      41
+     ],
+     "why": "Corner-anchored at any of the four corners, as the rule requires."
+    },
+    "density_colours": {
+     "disposition": "intrinsic_or_rule_supported",
+     "lines": [
+      32,
+      35
+     ],
+     "why": "Background 7 is literal; one arm colour."
+    },
+    "rule_parameters": {
+     "disposition": "intrinsic_or_rule_supported",
+     "lines": [
+      38,
+      39
+     ],
+     "why": "Double both legs from the same corner and close the triangle with the anti-diagonal."
+    },
+    "demonstration_context": {
+     "disposition": "intrinsic_or_rule_supported",
+     "lines": [
+      39
+     ],
+     "why": "The certified teacher transform reads only the query grid, never the demonstrations, and nothing in the rule depends on episode context."
+    }
+   },
+   "proposal": "High: tiny domain (160). Sample the input canvas H, W in L..30 (keeping 7 the modal colour) and L in 2..8, with the output fixed at 16x16. Recertify.",
+   "patch_priority": "high",
+   "uncertainties": "Whether a non-6x6 input belongs to the task; the teacher's behaviour is agreement with one reading, not proof. Unequal arms are not shown by any fixture.",
+   "adequacy": "needs_constructor_work",
+   "evidence": [
+    "probes/fixture_stats_batch6.py",
+    "arc_agi2/reports/direct-certificates/e3f79277.json"
+   ],
+   "certificate_note": "direct_certificate record arc_agi2/reports/direct-certificates/e3f79277.json: passed=True, 1000 fresh / 8000 augmented / 16 fixture variants, 158 unique base inputs, constructor d907867b, program 5289d7b2 (saved_teacher_transform). The constructor hash and the factory/program hash equal the current files, so the state is current, and the production lookup (certified_factory_source / certified_source) returned a program in the probe. A passed certificate is a finite audit, not a proof.",
+   "admission": "Not admitted: absent from every prepare registry (including REPAIRED and REVIEWED_NATIVE) and from RE-ARC admission.json at baseline 59d03df. release_ready stays false.",
+   "audit_note": "The 128-sample domain audit (fork cdf50ed) matches this constructor, which is unchanged since the ordering commit; native draws 128/128 valid, 86 unique inputs. Its figures are quoted alongside the probe.",
+   "certified_evidence": "current",
+   "release_ready": false
+  },
+  "e3fe1151": {
+   "status": "reviewed",
+   "reviewer": "claude-opus-5-5 (hybrid-claude-native-review-current worktree)",
+   "reviewed_on": "2026-10-25",
+   "review_batch": 6,
+   "review_kind": "first_review",
+   "constructor_sha256": "0f3ecbbdf580117ac48c4e0fa2a334cdc90a8527edaa39905d08123e2c837b27",
+   "baseline_commit": "59d03df8b76e537ef9cb08c3b1e5890501c024c9",
+   "mechanism": "Literal 5x5 canvas (28, 62) with a grey 7 cross. Each of the four 2x2 quadrants is a shuffle of the same four colours, drawn with replacement from the nine non-7 colours (63-72), with all quadrant arrangements distinct (64-69). One cell per quadrant is blanked to 7 (73-74). The output fills each hole with the colour needed to reach the per-colour maximum (31-57). Scenes where a quadrant has more or fewer than one candidate are rejected (53).",
+   "fixture_evidence": "4 pairs (3 train, 1 test), 5x5 -> 5x5, with one hole per quadrant. Audit: 128/128 unique. The teacher finds panels (or falls back to quadrants) and fills holes with missing colours. That code is not tied to 2x2, but it was not probed off-domain.",
+   "axes": {
+    "dimensions": {
+     "disposition": "incidental_restriction",
+     "lines": [
+      28,
+      62
+     ],
+     "why": "Literal 5x5 canvas with 2x2 quadrants. Multiset completion works for k x k quadrants; the teacher looks size-generic but was not run."
+    },
+    "objects": {
+     "disposition": "mixed",
+     "lines": [
+      63,
+      73,
+      74
+     ],
+     "why": "One hole per quadrant supports the rule, because it makes the fill unique (53). The quadrant size 2 is a literal."
+    },
+    "placement": {
+     "disposition": "intrinsic_or_rule_supported",
+     "lines": [
+      70,
+      71,
+      72,
+      73
+     ],
+     "why": "The quadrant geometry is the task; hole positions are random (73)."
+    },
+    "density_colours": {
+     "disposition": "intrinsic_or_rule_supported",
+     "lines": [
+      39,
+      63
+     ],
+     "why": "Repeated colours are allowed (max-count logic, 39); 7 marks the gaps, as in the fixtures."
+    },
+    "rule_parameters": {
+     "disposition": "intrinsic_or_rule_supported",
+     "lines": [
+      40,
+      41,
+      52,
+      53,
+      57
+     ],
+     "why": "Complete each quadrant to the shared multiset."
+    },
+    "demonstration_context": {
+     "disposition": "intrinsic_or_rule_supported",
+     "lines": [
+      57
+     ],
+     "why": "The certified teacher transform reads only the query grid, never the demonstrations, and nothing in the rule depends on episode context."
+    }
+   },
+   "proposal": "Medium. Sample k x k quadrants (k 2..14) with a one-cell grey cross and one hole each. Probe the teacher on larger quadrants, then recertify.",
+   "patch_priority": "medium",
+   "uncertainties": "The teacher was not run on larger quadrants. Whether several holes per quadrant belong to the task (no fixture).",
+   "adequacy": "needs_constructor_work",
+   "evidence": [
+    "probes/fixture_stats_batch6.py",
+    "arc_agi2/reports/direct-certificates/e3fe1151.json"
+   ],
+   "certificate_note": "direct_certificate record arc_agi2/reports/direct-certificates/e3fe1151.json: passed=True, 1000 fresh / 8000 augmented / 16 fixture variants, 1000 unique base inputs, constructor 0f3ecbbd, program b97db218 (saved_teacher_transform). The constructor hash and the factory/program hash equal the current files, so the state is current, and the production lookup (certified_factory_source / certified_source) returned a program in the probe. A passed certificate is a finite audit, not a proof.",
+   "admission": "Not admitted: absent from every prepare registry (including REPAIRED and REVIEWED_NATIVE) and from RE-ARC admission.json at baseline 59d03df. release_ready stays false.",
+   "audit_note": "The 128-sample domain audit (fork cdf50ed) matches this constructor, which is unchanged since the ordering commit; native draws 128/128 valid, 128 unique inputs. Its figures are quoted alongside the probe.",
    "certified_evidence": "current",
    "release_ready": false
   },
@@ -10911,6 +13082,176 @@
    "certified_evidence": "current",
    "release_ready": false
   },
+  "e633a9e5": {
+   "status": "reviewed",
+   "reviewer": "claude-opus-5-5 (hybrid-claude-native-review-current worktree)",
+   "reviewed_on": "2026-10-25",
+   "review_batch": 6,
+   "review_kind": "first_review",
+   "constructor_sha256": "eb523b24ec3a3ea890470977d7de50f2a33b1d97336e7466895540623b36d5e6",
+   "baseline_commit": "59d03df8b76e537ef9cb08c3b1e5890501c024c9",
+   "mechanism": "Literal 3x3 input of random colours 1..9 (28, 30). The 5x5 output duplicates the edge rows and columns (31-40).",
+   "fixture_evidence": "4 pairs (3 train, 1 test), 3x3 -> 5x5, with no 0. Audit: 128/128 unique (117 orbits). Probe: the certified teacher program matches an independent reference (which replays all 4 pairs) on 400/400 inputs over 318 shapes, H, W in 1..28.",
+   "axes": {
+    "dimensions": {
+     "disposition": "incidental_restriction",
+     "lines": [
+      30
+     ],
+     "why": "Literal 3x3 canvas. The rule maps H x W to (H+2) x (W+2), and the teacher reads h and w (probe 400/400)."
+    },
+    "objects": {
+     "disposition": "broadly_variable",
+     "lines": [
+      28
+     ],
+     "why": "There are no objects; every colouring of the 3x3 is reachable."
+    },
+    "placement": {
+     "disposition": "intrinsic_or_rule_supported",
+     "lines": [
+      32
+     ],
+     "why": "Whole-grid copy plus duplication of the edge rows and columns."
+    },
+    "density_colours": {
+     "disposition": "mixed",
+     "lines": [
+      28
+     ],
+     "why": "Independent uniform colours with no 0; colour repeats and runs are not controlled, which matches the fixtures."
+    },
+    "rule_parameters": {
+     "disposition": "intrinsic_or_rule_supported",
+     "lines": [
+      33,
+      34,
+      35,
+      36,
+      37,
+      38,
+      39,
+      40
+     ],
+     "why": "Duplicate the first and last rows and columns; the rule has no free parameter."
+    },
+    "demonstration_context": {
+     "disposition": "intrinsic_or_rule_supported",
+     "lines": [
+      40
+     ],
+     "why": "The certified teacher transform reads only the query grid, never the demonstrations, and nothing in the rule depends on episode context."
+    }
+   },
+   "proposal": "Medium. Sample H, W independently in 1..28; recertify.",
+   "patch_priority": "medium",
+   "uncertainties": "Non-square inputs are not shown by any fixture, but the rule is defined for them.",
+   "adequacy": "needs_constructor_work",
+   "evidence": [
+    "probes/fixture_stats_batch6.py",
+    "arc_agi2/reports/direct-certificates/e633a9e5.json"
+   ],
+   "certificate_note": "direct_certificate record arc_agi2/reports/direct-certificates/e633a9e5.json: passed=True, 1000 fresh / 8000 augmented / 16 fixture variants, 1000 unique base inputs, constructor eb523b24, program 1e0268b6 (saved_teacher_transform). The constructor hash and the factory/program hash equal the current files, so the state is current, and the production lookup (certified_factory_source / certified_source) returned a program in the probe. A passed certificate is a finite audit, not a proof.",
+   "admission": "Not admitted: absent from every prepare registry (including REPAIRED and REVIEWED_NATIVE) and from RE-ARC admission.json at baseline 59d03df. release_ready stays false.",
+   "audit_note": "The 128-sample domain audit (fork cdf50ed) matches this constructor, which is unchanged since the ordering commit; native draws 128/128 valid, 128 unique inputs. Its figures are quoted alongside the probe.",
+   "certified_evidence": "current",
+   "release_ready": false
+  },
+  "e6de6e8f": {
+   "status": "reviewed",
+   "reviewer": "claude-opus-5-5 (hybrid-claude-native-review-current worktree)",
+   "reviewed_on": "2026-10-25",
+   "review_batch": 6,
+   "review_kind": "first_review",
+   "constructor_sha256": "6f0348f8acd2588695a325017c1eb96419454ab661b31d79bd4907e21c37b9c7",
+   "baseline_commit": "59d03df8b76e537ef9cb08c3b1e5890501c024c9",
+   "mechanism": "A 2x12 strip of five glyphs (32-44): a straight (two stacked cells) or a three-cell hook left or right (+/-1), with exactly two straights (28-30). The 8x7 output (32) draws a path from a 3 at (0,3) (46): straights go down two rows and hooks step sideways (48-57).",
+   "fixture_evidence": "4 pairs (3 train, 1 test), all 2x12 -> 8x7, each with two straights. The domain is exactly 80 inputs (probe; certificate finite_default_domain exhaustive 80); the audit saw 60 unique and 38 orbits.",
+   "axes": {
+    "dimensions": {
+     "disposition": "unknown",
+     "lines": [
+      32
+     ],
+     "why": "Both canvases follow from five glyphs with two straights: width 2*2+3*3-1, height 1+2*2+3 and width 2*3+1. No fixture shows whether other command counts would size the output from the path or keep 8x7, and the factory hard-codes OH = 8, OW = 7 and the start cell."
+    },
+    "objects": {
+     "disposition": "mixed",
+     "lines": [
+      29,
+      30
+     ],
+     "why": "Five commands, exactly two straight: constant across fixtures, but not fixed by any stated rule."
+    },
+    "placement": {
+     "disposition": "intrinsic_or_rule_supported",
+     "lines": [
+      34,
+      35,
+      36,
+      37,
+      38,
+      39,
+      40,
+      41,
+      42,
+      43,
+      44
+     ],
+     "why": "Glyph order along the strip defines the path order, as in every fixture."
+    },
+    "density_colours": {
+     "disposition": "intrinsic_or_rule_supported",
+     "lines": [
+      37,
+      40,
+      43,
+      46
+     ],
+     "why": "Literal roles: glyphs in 2 on 0, start marker 3, as in every fixture."
+    },
+    "rule_parameters": {
+     "disposition": "intrinsic_or_rule_supported",
+     "lines": [
+      48,
+      49,
+      50,
+      51,
+      52,
+      53,
+      54,
+      55,
+      56,
+      57
+     ],
+     "why": "Fixed glyph-to-step mapping: straight goes down two rows, hooks step one column sideways."
+    },
+    "demonstration_context": {
+     "disposition": "intrinsic_or_rule_supported",
+     "lines": [
+      37,
+      40,
+      43
+     ],
+     "why": "colour_evidence.py (882-889) requires every query glyph shape to appear in the demonstrations."
+    }
+   },
+   "proposal": "Medium, blocked on semantics. Keep the constructor and admit only under finite-domain identity rules, until an output-size rule for other command counts is chosen. That would then need a factory change and recertification.",
+   "patch_priority": "medium",
+   "uncertainties": "Whether the 8x7 output is path-derived or literal is unresolved by the fixtures.",
+   "adequacy": "finite_domain_no_change_without_new_semantics",
+   "evidence": [
+    "probes/fixture_stats_batch6.py",
+    "arc_agi2/colour_evidence.py",
+    "arc_agi2/direct_factories/e6de6e8f.json",
+    "arc_agi2/direct_factories/task_e6de6e8f.py"
+   ],
+   "certificate_note": "direct_factory record arc_agi2/direct_factories/e6de6e8f.json: passed=True, 1000 fresh / 8000 augmented / 16 fixture variants, 80 unique base inputs, constructor 6f0348f8, factory ade3bcaf, finite_default_domain exhaustive over 80 inputs. The constructor hash and the factory/program hash equal the current files, so the state is current, and the production lookup (certified_factory_source / certified_source) returned a program in the probe. A passed certificate is a finite audit, not a proof.",
+   "admission": "Not admitted: absent from every prepare registry (including REPAIRED and REVIEWED_NATIVE) and from RE-ARC admission.json at baseline 59d03df. release_ready stays false.",
+   "audit_note": "The 128-sample domain audit (fork cdf50ed) matches this constructor, which is unchanged since the ordering commit; native draws 128/128 valid, 60 unique inputs. Its figures are quoted alongside the probe.",
+   "certified_evidence": "current",
+   "release_ready": false
+  },
   "e7a25a18": {
    "status": "reviewed",
    "reviewer": "claude-opus-5-5 (hybrid-claude-native worktree)",
@@ -11055,6 +13396,93 @@
    "proposal": "Medium. Sample tile height and width (3-7) and lattice counts (at least 3 tiles, so the majority is unambiguous) within 30. Recertify.",
    "patch_priority": "medium",
    "uncertainties": "The minimum tile count the original intends for an unambiguous majority. Whether non-square tiles belong.",
+   "certified_evidence": "current",
+   "release_ready": false
+  },
+  "e87109e9": {
+   "status": "reviewed",
+   "reviewer": "claude-opus-5-5 (hybrid-claude-native-review-current worktree)",
+   "reviewed_on": "2026-10-25",
+   "review_batch": 6,
+   "review_kind": "first_review",
+   "constructor_sha256": "7d8e628e7baaa46094faaa5484a3922f317de75fc087e6b14cd2dadcfc2e95d9",
+   "baseline_commit": "59d03df8b76e537ef9cb08c3b1e5890501c024c9",
+   "mechanism": "A legend strip of four (colour, side) panels (50-59) fixes the width at 24 (46). Below it: canvas height 14..24 (153), a background from seven colours (154), and 3..4 blocks in distinct legend colours (161-178). Blocks are 2..12 x 2..14 (135-136), 75% snapped to an edge (139-147), and at least one cell apart from each other and from the 2..3 square (157-172); total block area stays under half (181-182). Four beams turn according to the legend sides and stop at the edge. Scenes with mixed contacts, loops, stops or fewer than two turns are rejected (186-189).",
+   "fixture_evidence": "4 pairs (3 train, 1 test) with canvas heights 19,19,19,24. The train pairs satisfy every native guard (probe). The test pair (lines 236-239) has a 21-wide block (0,0,3,21) and a 13-tall block (0,21,13,3), and the two touch, so test[0] is outside the native domain. Probe: the factory matches the constructor's trace on 400/400 scenes with touching or oversized blocks (area guard kept; 93 flagged scenes skipped). Audit: 128/128 unique, 11 shapes.",
+   "axes": {
+    "dimensions": {
+     "disposition": "mixed",
+     "lines": [
+      46,
+      153
+     ],
+     "why": "Width 24 is tied to the four 6-column legend panels, as in every fixture. Height 14..24 already varies up to the 30-row limit."
+    },
+    "objects": {
+     "disposition": "mixed",
+     "lines": [
+      135,
+      136,
+      161
+     ],
+     "why": "Block size caps (at most 12 tall, at most 14 wide) exclude canonical test blocks 21 wide and 13 tall."
+    },
+    "placement": {
+     "disposition": "mixed",
+     "lines": [
+      139,
+      140,
+      141,
+      142,
+      143,
+      144,
+      145,
+      146,
+      147,
+      170,
+      172
+     ],
+     "why": "Edge snapping matches the fixtures. The one-cell separation excludes the touching wall pair of canonical test[0]."
+    },
+    "density_colours": {
+     "disposition": "intrinsic_or_rule_supported",
+     "lines": [
+      45,
+      154,
+      155,
+      181,
+      182
+     ],
+     "why": "Background and legend colours are sampled; the area guard keeps the background modal."
+    },
+    "rule_parameters": {
+     "disposition": "intrinsic_or_rule_supported",
+     "lines": [
+      186,
+      188
+     ],
+     "why": "Beam turning by legend side; ambiguous scenes are rejected."
+    },
+    "demonstration_context": {
+     "disposition": "intrinsic_or_rule_supported",
+     "lines": [
+      156
+     ],
+     "why": "The legend is in the query; the factory reads no demonstrations."
+    }
+   },
+   "proposal": "High: the canonical test input is unreachable. Allow block heights up to the canvas height minus 1 and widths up to 23, and allow touching blocks of distinct colours, keeping the mixed-contact rejection and area guard. Recertify.",
+   "patch_priority": "high",
+   "uncertainties": "Mixed contacts at touching corners are rejected, not resolved. Whether the original allows them is unknown.",
+   "adequacy": "needs_constructor_work",
+   "evidence": [
+    "probes/fixture_stats_batch6.py",
+    "arc_agi2/direct_factories/e87109e9.json",
+    "arc_agi2/direct_factories/task_e87109e9.py"
+   ],
+   "certificate_note": "direct_factory record arc_agi2/direct_factories/e87109e9.json: passed=True, 1000 fresh / 8000 augmented / 16 fixture variants, 1000 unique base inputs, constructor 7d8e628e, factory ea08acce. The constructor hash and the factory/program hash equal the current files, so the state is current, and the production lookup (certified_factory_source / certified_source) returned a program in the probe. A passed certificate is a finite audit, not a proof.",
+   "admission": "Not admitted: absent from every prepare registry (including REPAIRED and REVIEWED_NATIVE) and from RE-ARC admission.json at baseline 59d03df. release_ready stays false.",
+   "audit_note": "The 128-sample domain audit (fork cdf50ed) matches this constructor, which is unchanged since the ordering commit; native draws 128/128 valid, 128 unique inputs. Its figures are quoted alongside the probe.",
    "certified_evidence": "current",
    "release_ready": false
   },
@@ -11279,6 +13707,161 @@
    "proposal": "Low. Enable native width/height sampling and optionally vary density. Recertify.",
    "patch_priority": "low",
    "uncertainties": "As in e99362f0, native data binds each colour to one quadrant, so colour priority cannot be told apart from position priority.",
+   "certified_evidence": "current",
+   "release_ready": false
+  },
+  "ed74f2f2": {
+   "status": "reviewed",
+   "reviewer": "claude-opus-5-5 (hybrid-claude-native-review-current worktree)",
+   "reviewed_on": "2026-10-25",
+   "review_batch": 6,
+   "review_kind": "first_review",
+   "constructor_sha256": "97a3a3c16026be8393d81c151e71b4065f5f28d8eabc589e949893260d5fde04",
+   "baseline_commit": "59d03df8b76e537ef9cb08c3b1e5890501c024c9",
+   "mechanism": "Literal 5x9 canvas (36). The key glyph at columns 1-3 is a grey stem plus two corners that encode colour 1..3 (29, 37-40). The pattern at columns 5-7 is a 3x3 diagonally connected conway sprite (30-34). The output is the pattern in the key's colour (41-43).",
+   "fixture_evidence": "7 pairs (6 train, 1 test), 5x9 -> 3x3, with keys 1,3,1,2,2,2,3 and pattern pixel counts 7,6,6,5,7,4,7 (probe); every pattern spans all rows and columns. The exact domain is 690 = 230 masks x 3 keys (probe); native draws reached 287 inputs in 400, and the certificate 472 unique in 1000. The factory uses a fixed key TABLE with a demonstration fallback.",
+   "axes": {
+    "dimensions": {
+     "disposition": "mixed",
+     "lines": [
+      36,
+      41,
+      42,
+      43
+     ],
+     "why": "The key glyph is a fixed 3x3 legend symbol (intrinsic). The 5x9 canvas, its one-cell margins and the 3x3 pattern window are literals, and the factory hard-codes these 5x9 positions, so a larger pattern would need factory work."
+    },
+    "objects": {
+     "disposition": "mixed",
+     "lines": [
+      30,
+      33
+     ],
+     "why": "Patterns have 4..8 pixels, use every row and column and are 8-connected (230 masks). The fixtures fit, but masks with an empty row or column, disconnected masks and the full 9-pixel square are unreachable."
+    },
+    "placement": {
+     "disposition": "intrinsic_or_rule_supported",
+     "lines": [
+      37,
+      42
+     ],
+     "why": "The fixed key-then-pattern layout matches every fixture."
+    },
+    "density_colours": {
+     "disposition": "intrinsic_or_rule_supported",
+     "lines": [
+      29,
+      37,
+      43
+     ],
+     "why": "Legend colours 1..3 on grey-5 glyphs, as the key table defines."
+    },
+    "rule_parameters": {
+     "disposition": "intrinsic_or_rule_supported",
+     "lines": [
+      38,
+      39,
+      40,
+      43
+     ],
+     "why": "Recolour the pattern with the colour encoded by the key glyph."
+    },
+    "demonstration_context": {
+     "disposition": "intrinsic_or_rule_supported",
+     "lines": [
+      38,
+      39,
+      40
+     ],
+     "why": "The legend is fixed in the factory TABLE. colour_evidence.py (947-958) requires each query key glyph to appear in a demonstration with a one-colour output."
+    }
+   },
+   "proposal": "Medium. Widen patterns to any non-empty 3x3 mask (empty rows and columns, 9 pixels, disconnected). Optionally move to larger pattern windows and margins, which needs factory changes. Recertify.",
+   "patch_priority": "medium",
+   "uncertainties": "Whether disconnected or partial-row patterns belong to the task (no fixture). The key glyphs are only defined at 3x3.",
+   "adequacy": "needs_constructor_work",
+   "evidence": [
+    "probes/fixture_stats_batch6.py",
+    "arc_agi2/colour_evidence.py",
+    "arc_agi2/direct_factories/ed74f2f2.json",
+    "arc_agi2/direct_factories/task_ed74f2f2.py"
+   ],
+   "certificate_note": "direct_factory record arc_agi2/direct_factories/ed74f2f2.json: passed=True, 1000 fresh / 8000 augmented / 16 fixture variants, 472 unique base inputs, constructor 97a3a3c1, factory ec26acfc. The constructor hash and the factory/program hash equal the current files, so the state is current, and the production lookup (certified_factory_source / certified_source) returned a program in the probe. A passed certificate is a finite audit, not a proof.",
+   "admission": "Not admitted: absent from every prepare registry (including REPAIRED and REVIEWED_NATIVE) and from RE-ARC admission.json at baseline 59d03df. release_ready stays false.",
+   "audit_note": "The 128-sample domain audit (fork cdf50ed) matches this constructor, which is unchanged since the ordering commit; native draws 128/128 valid, 109 unique inputs. Its figures are quoted alongside the probe.",
+   "certified_evidence": "current",
+   "release_ready": false
+  },
+  "ed98d772": {
+   "status": "reviewed",
+   "reviewer": "claude-opus-5-5 (hybrid-claude-native-review-current worktree)",
+   "reviewed_on": "2026-10-25",
+   "review_batch": 6,
+   "review_kind": "first_review",
+   "constructor_sha256": "a8a7ddf2746a8021fb1f80e7781830b716164744d23e4a6262e6eb0706b6f116",
+   "baseline_commit": "59d03df8b76e537ef9cb08c3b1e5890501c024c9",
+   "mechanism": "Literal 3x3 binary input in one hue 1..9, non-constant (28-31, 33). The 6x6 output has four quadrants: the input (TL), rotated 90 anticlockwise (TR), 180 (BL) and 270 (BR) (34-40).",
+   "fixture_evidence": "6 pairs (5 train, 1 test), 3x3 -> 6x6. The domain is (2^9-2) x 9 = 4590 inputs; the audit saw 127/128 unique and 45 orbits, the certificate 878/1000. Probe: the factory matches an independent reference (which replays all 6 pairs) on 400/400 square inputs, n in 1..15 except 3.",
+   "axes": {
+    "dimensions": {
+     "disposition": "mixed",
+     "lines": [
+      33
+     ],
+     "why": "Squareness is rule-supported (quarter turns), and the size 3 is incidental (2n <= 30, probe 400/400)."
+    },
+    "objects": {
+     "disposition": "broadly_variable",
+     "lines": [
+      30
+     ],
+     "why": "There are no objects; every non-constant 3x3 mask is reachable."
+    },
+    "placement": {
+     "disposition": "intrinsic_or_rule_supported",
+     "lines": [
+      37
+     ],
+     "why": "Whole-grid rotations fill the four quadrants; positions only matter through the rotations."
+    },
+    "density_colours": {
+     "disposition": "mixed",
+     "lines": [
+      28,
+      30
+     ],
+     "why": "One hue with fair-coin cells; other densities are rare but the rule ignores them."
+    },
+    "rule_parameters": {
+     "disposition": "intrinsic_or_rule_supported",
+     "lines": [
+      37,
+      38,
+      39,
+      40
+     ],
+     "why": "Fixed quadrant rotations: 0, 90, 180 and 270 degrees anticlockwise."
+    },
+    "demonstration_context": {
+     "disposition": "intrinsic_or_rule_supported",
+     "lines": [
+      40
+     ],
+     "why": "The factory's solve() reads only the query grid, never the demonstrations, and nothing in the rule depends on episode context."
+    }
+   },
+   "proposal": "Medium. Sample square n in 2..15 and a per-scene density; recertify.",
+   "patch_priority": "medium",
+   "uncertainties": "Non-square inputs are out of scope (the factory raises on them).",
+   "adequacy": "needs_constructor_work",
+   "evidence": [
+    "probes/fixture_stats_batch6.py",
+    "arc_agi2/direct_factories/ed98d772.json",
+    "arc_agi2/direct_factories/task_ed98d772.py"
+   ],
+   "certificate_note": "direct_factory record arc_agi2/direct_factories/ed98d772.json: passed=True, 1000 fresh / 8000 augmented / 16 fixture variants, 878 unique base inputs, constructor a8a7ddf2, factory 78d16108. The constructor hash and the factory/program hash equal the current files, so the state is current, and the production lookup (certified_factory_source / certified_source) returned a program in the probe. A passed certificate is a finite audit, not a proof.",
+   "admission": "Not admitted: absent from every prepare registry (including REPAIRED and REVIEWED_NATIVE) and from RE-ARC admission.json at baseline 59d03df. release_ready stays false.",
+   "audit_note": "The 128-sample domain audit (fork cdf50ed) matches this constructor, which is unchanged since the ordering commit; native draws 128/128 valid, 127 unique inputs. Its figures are quoted alongside the probe.",
    "certified_evidence": "current",
    "release_ready": false
   },

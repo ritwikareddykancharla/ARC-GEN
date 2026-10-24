@@ -174,6 +174,46 @@ labels pass the program once the modal background is mapped to 0. They are
 not adopted. Adoption needs a per-family review of fixed colours, plus
 refreshed certificates for every role family after `colour_roles.py` changes.
 
+## Third reviewed colour-role batch
+
+Ten of those candidates were reviewed against their RE-ARC generator and
+verifier, native constructor, and saved program. They are now in `ROLE_SPECS`.
+Each natively has a fixed size or square grids; RE-ARC sizes height and width
+independently. Only the background moves; programs, labels and fixtures are
+unchanged. Each fixed colour is an output colour that RE-ARC never samples for
+background or foreground:
+
+| Family | Fixed | Input colours | Rule |
+|---|---|---|---|
+| `834ec97d` | 4 | 2 | one pixel moves down under yellow stripes |
+| `a5313dff` | 1 | any | enclosed background turns blue; wall colour generic |
+| `a5f85a15` | 4 | 2 | every second diagonal cell turns yellow |
+| `a79310a0` | 2 | 2 | shape moves down one row and turns red |
+| `aba27056` | 4 | 2 | cup fills and spills yellow |
+| `ae4f1146` | 1 | any | crop the card with the most blue; card colour generic |
+| `cdecee7f` | none | any | pixels by column into a 3×3 snake |
+| `d06dbe63` | 5 | 2 | grey staircase from every dot |
+| `d5d6de2d` | 3 | any | box interiors turn green; frame colours generic |
+| `fcc82909` | 3 | any | green tail, one row per box colour |
+
+Each family got 1,152 proposals and passed with at least 1,148 accepted pairs.
+Each also passed 2,048 augmented episodes (8,192 pair checks) and 16 fixture
+variants; every native fixture maps to itself. Rejections, all counted:
+- `834ec97d`: 3 duplicate inputs
+- `a5313dff`: 3 RE-ARC verifier disagreements
+- `fcc82909`: 4 modal-background ties
+- The other seven: none
+
+Certificates are in `role-certificates/`; `role-certificates/summary-subset.json`
+has summary rows for all 28 certified role families. The 18 earlier role
+certificates pin `colour_roles.py`, so all were rerun; only that hash and the
+timing changed. The first seven role families have no per-family certificate.
+Their specifications are unchanged, but admission must still be rebuilt. The six candidates still reviewed but not adopted
+are `7b6016b9`, `8eb1be9a`, `97999447`, `ba97ae07`, `d4a91cb9` and `f35d900a`;
+they are deferred to a later batch. `f8b3ba0a` is rejected because its role is
+ambiguous: in 88 of 256 sampled inputs the cell filler, not the grid-line
+colour, is modal, so the native line role would move.
+
 ## Readable episode preparation
 
 `prepare.py` prepares a **supplement**, comprising the 140 admitted families and

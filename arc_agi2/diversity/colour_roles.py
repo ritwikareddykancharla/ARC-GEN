@@ -15,7 +15,8 @@ saved direct program (see ``reports/diversity-v1/role-certificates``):
 * ``foreground``: the native colour of a single free foreground role, or None
   when the program does not name that role. The foreground is the unique input
   colour that is neither background nor fixed.
-* ``input_colours``: exact number of input colours the role assignment needs.
+* ``input_colours``: exact number of input colours the role assignment needs
+  (with no named foreground it only rejects scenes with another colour count).
 
 The background is the strict modal input colour. Ties, collisions with fixed
 colours and missing/ambiguous foregrounds raise ValueError; callers count them
@@ -56,6 +57,20 @@ ROLE_SPECS = {
     "22233c11": {"fixed": (8,)},             # cyan corner marks; square colours generic
     "543a7ed5": {"background": 8, "fixed": (3, 4)},  # native cyan bg; ring and hole
     "5c0a986e": {"fixed": (1, 2)},           # ray colours/directions per square
+    # Third batch: background alignment only; the saved programs are unchanged.
+    # Each fixed colour is an output colour that RE-ARC excludes from bg/fg sampling
+    # and the native program names; other colours are read generically.
+    # input_colours is set where both constructors draw exactly that many colours.
+    "834ec97d": {"fixed": (4,), "input_colours": 2},  # yellow stripes; one moving pixel
+    "a5313dff": {"fixed": (1,)},             # blue fill of enclosed bg; walls generic
+    "a5f85a15": {"fixed": (4,), "input_colours": 2},  # yellow on odd diagonal steps
+    "a79310a0": {"fixed": (2,), "input_colours": 2},  # red shape shifted down
+    "aba27056": {"fixed": (4,), "input_colours": 2},  # yellow fill and spill rays
+    "ae4f1146": {"fixed": (1,)},             # blue marks; card colour generic
+    "cdecee7f": {},                          # pixels to 3x3 snake; empty slots bg
+    "d06dbe63": {"fixed": (5,), "input_colours": 2},  # grey staircases per dot
+    "d5d6de2d": {"fixed": (3,)},             # green box interiors; frame colours generic
+    "fcc82909": {"fixed": (3,)},             # green tails, one row per colour
 }
 
 ROLE_ALIGNED = frozenset(ROLE_SPECS)

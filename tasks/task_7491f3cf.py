@@ -15,8 +15,8 @@
 """ARC-GEN style generator for task 7491f3cf.
 
 Rule: the grid is a one-cell frame in a frame colour. The frame colour also
-draws the dividers between four square NxN panels laid out in a row. All four
-panels share one fill colour.
+draws the dividers between four H x W panels laid out in a row. All four
+panels share one fill colour and one panel shape.
 
 Panel 1 holds two things in a line colour:
   * a wall: an 8-connected stroke that cuts the panel into exactly two
@@ -33,16 +33,29 @@ filled as follows:
 Scope:
   * Colours: the frame, fill, line, panel-2 and panel-3 colours are sampled
     as five distinct colours.
-  * Wall shapes: a straight row or column, a main diagonal, an L shape that
-    cuts off a corner, or a random monotone 8-connected path. Any of these
-    can be reflected or transposed.
+  * Panel shape: the four panels share one H x W shape. The canvas is
+    (H + 2) x (4W + 5), so W is 3..6 and H is 3..28. Nothing in the rule
+    needs square panels; every original example uses 5 x 5. A 3 x 3 panel
+    is excluded: exhaustive enumeration of every wall subset shows that 40
+    walls split a 3 x 3 panel into two regions, and none of them leaves a
+    cell that is not 8-adjacent to the wall, so no dot can be placed.
+  * Default shapes: one draw in four keeps the legacy square sizes (4, 5 or
+    6, weights 1:3:1). Otherwise W is uniform in 3..6 and H is uniform over
+    the heights allowed for that W. The shape is drawn once per call and
+    kept for every retry, so acceptance rates never reweight shapes.
+  * Wall shapes: a straight row or column, a corner-to-corner diagonal
+    (a one-cell-per-step staircase along the long axis of a rectangle), an
+    L shape that cuts off a corner, or a random monotone 8-connected path
+    crossing the panel. Square panels can be transposed; rectangular panels
+    draw the crossing axis instead. Any wall can be mirrored left-right.
   * Dot: it is placed in a randomly chosen region, away from the wall.
-  * Patterns: they come from a parametric motif family: X, plus,
-    checkerboard, corner blocks, corner L's, stripes, ring, diamond, random
-    four-fold symmetric, and fully random.
-  * Panel size: 5 is the size of every original example and the most likely
-    choice. Panel sizes 4 and 6 are synthetic extensions, giving grids of
-    6x21 and 8x29. Panels are always square.
+  * Patterns: they come from a parametric motif family: X (both diagonals),
+    plus, checkerboard, corner blocks, corner L's, row or column stripes,
+    ring, diamond, random four-fold symmetric, and fully random. On a
+    rectangle the diagonals are staircases and the diamond is the largest
+    one centred inside the panel.
+  * Legacy square panels use the exact random-draw order of the square-only
+    constructor, so explicit legacy calls replay unchanged.
 
 Every scene is checked for the following:
   * the fill colour is strictly the most common colour across panels 1-3;
@@ -58,16 +71,47 @@ import random
 
 import common
 
+# Legacy square panel_size range (explicit panel_size keeps these semantics).
 MIN_SIZE, MAX_SIZE = 4, 6
 SIZE_WEIGHTS = {4: 1, 5: 3, 6: 1}
+# Independent panel dimensions: H + 2 <= 30 and 4W + 5 <= 30.
+MIN_HEIGHT, MAX_HEIGHT = 3, 28
+MIN_WIDTH, MAX_WIDTH = 3, 6
+# Exhaustively infeasible: no 3 x 3 wall leaves room for a dot (see above).
+EXCLUDED_SHAPES = frozenset({(3, 3)})
+SHAPES = tuple((h, w) for w in range(MIN_WIDTH, MAX_WIDTH + 1)
+               for h in range(MIN_HEIGHT, MAX_HEIGHT + 1)
+               if (h, w) not in EXCLUDED_SHAPES)
+SQUARE_SHARE = 0.25
+MAX_TRIES = 400
+
+
+def _default_weights():
+  heights = {w: sum(1 for h, ww in SHAPES if ww == w)
+             for w in range(MIN_WIDTH, MAX_WIDTH + 1)}
+  total = sum(SIZE_WEIGHTS.values())
+  out = {}
+  for h, w in SHAPES:
+    p = (1 - SQUARE_SHARE) / (MAX_WIDTH - MIN_WIDTH + 1) / heights[w]
+    if h == w and h in SIZE_WEIGHTS:
+      p += SQUARE_SHARE * SIZE_WEIGHTS[h] / total
+    out[(h, w)] = p
+  return out
+
+
+# Probability of each panel shape under unconstrained sampling. Partially
+# constrained calls use this distribution conditioned on the allowed shapes.
+DEFAULT_SHAPE_WEIGHTS = _default_weights()
 
 
 def _parse(rows):
-  n = len(rows)
+  if not isinstance(rows, (list, tuple)) or not rows:
+    raise ValueError('patterns must be non-empty lists of "#"/"." strings')
+  w = len(rows[0])
   cells = set()
   for r, row in enumerate(rows):
-    if len(row) != n or any(ch not in '#.' for ch in row):
-      raise ValueError('patterns must be square lists of "#"/"." strings')
+    if len(row) != w or any(ch not in '#.' for ch in row):
+      raise ValueError('patterns must be rectangular lists of "#"/"." strings')
     cells |= {(r, c) for c, ch in enumerate(row) if ch == '#'}
   return cells
 
@@ -90,11 +134,11 @@ def _connected8(cells):
   return len(seen) == len(cells)
 
 
-def _regions(n, wall):
+def _regions(h, w, wall):
   seen = set()
   regs = []
-  for r in range(n):
-    for c in range(n):
+  for r in range(h):
+    for c in range(w):
       if (r, c) in wall or (r, c) in seen:
         continue
       seen.add((r, c))
@@ -105,7 +149,7 @@ def _regions(n, wall):
         reg.add((y, x))
         for dy, dx in ((1, 0), (-1, 0), (0, 1), (0, -1)):
           q = (y + dy, x + dx)
-          if (0 <= q[0] < n and 0 <= q[1] < n and q not in wall
+          if (0 <= q[0] < h and 0 <= q[1] < w and q not in wall
               and q not in seen):
             seen.add(q)
             stack.append(q)
@@ -113,15 +157,15 @@ def _regions(n, wall):
   return regs
 
 
-def _wall_regions(n, wall):
+def _wall_regions(h, w, wall):
   """Returns the two regions cut by a valid wall, else None."""
   if len(wall) < 2:
     return None
-  if any(not (0 <= r < n and 0 <= c < n) for r, c in wall):
+  if any(not (0 <= r < h and 0 <= c < w) for r, c in wall):
     return None
   if not _connected8(wall):
     return None
-  regs = _regions(n, wall)
+  regs = _regions(h, w, wall)
   if len(regs) != 2 or min(len(r) for r in regs) < 2:
     return None
   return regs
@@ -136,80 +180,103 @@ def _near(cell, wall):
   return False
 
 
-def _sample_line(n):
-  kind = random.choices(['straight', 'diagonal', 'ell', 'path'],
-                        weights=[2, 1, 3, 4])[0]
+def _staircase(h, w):
+  """Corner-to-corner diagonal: one cell per step along the long axis."""
+  if h >= w:
+    return {(r, (r * (w - 1)) // max(1, h - 1)) for r in range(h)}
+  return {((c * (h - 1)) // max(1, w - 1), c) for c in range(w)}
+
+
+def _line_cells(kind, a, b):
+  """A wall of the given kind crossing an a x b frame from top to bottom."""
   if kind == 'straight':
-    k = random.randint(1, n - 2)
-    cells = {(k, c) for c in range(n)}
-  elif kind == 'diagonal':
-    cells = {(i, i) for i in range(n)}
-  elif kind == 'ell':
-    r = random.randint(1, n - 2)
-    c = random.randint(1, n - 2)
-    rows = range(0, r + 1) if random.random() < 0.5 else range(r, n)
-    cols = range(0, c + 1) if random.random() < 0.5 else range(c, n)
-    cells = {(i, c) for i in rows} | {(r, j) for j in cols}
-  else:
-    col = random.randint(0, n - 1)
-    cells = {(0, col)}
-    for row in range(1, n):
-      col += random.choice([d for d in (-1, 0, 1) if 0 <= col + d < n])
-      cells.add((row, col))
-  if random.random() < 0.5:
-    cells = {(c, r) for r, c in cells}
-  if random.random() < 0.5:
-    cells = {(r, n - 1 - c) for r, c in cells}
+    k = random.randint(1, a - 2)
+    return {(k, c) for c in range(b)}
+  if kind == 'diagonal':
+    return _staircase(a, b)
+  if kind == 'ell':
+    r = random.randint(1, a - 2)
+    c = random.randint(1, b - 2)
+    rows = range(0, r + 1) if random.random() < 0.5 else range(r, a)
+    cols = range(0, c + 1) if random.random() < 0.5 else range(c, b)
+    return {(i, c) for i in rows} | {(r, j) for j in cols}
+  col = random.randint(0, b - 1)
+  cells = {(0, col)}
+  for row in range(1, a):
+    col += random.choice([d for d in (-1, 0, 1) if 0 <= col + d < b])
+    cells.add((row, col))
   return cells
 
 
-def _mirror(cells, n):
+def _sample_line(h, w):
+  """Returns (kind, cells) of a candidate wall for an h x w panel."""
+  kind = random.choices(['straight', 'diagonal', 'ell', 'path'],
+                        weights=[2, 1, 3, 4])[0]
+  if h == w:
+    # Legacy square draw order: build, then transpose.
+    cells = _line_cells(kind, h, w)
+    if random.random() < 0.5:
+      cells = {(c, r) for r, c in cells}
+  else:
+    # A rectangle cannot be transposed in place; choose the crossing axis.
+    if random.random() < 0.5:
+      cells = {(c, r) for r, c in _line_cells(kind, w, h)}
+    else:
+      cells = _line_cells(kind, h, w)
+  if random.random() < 0.5:
+    cells = {(r, w - 1 - c) for r, c in cells}
+  return kind, cells
+
+
+def _mirror(cells, h, w):
   out = set()
   for r, c in cells:
-    out |= {(r, c), (r, n - 1 - c), (n - 1 - r, c), (n - 1 - r, n - 1 - c)}
+    out |= {(r, c), (r, w - 1 - c), (h - 1 - r, c), (h - 1 - r, w - 1 - c)}
   return out
 
 
-def _sample_pattern(n):
-  m = n // 2
+def _sample_pattern(h, w):
+  """Returns (kind, cells) of a candidate pattern for an h x w panel."""
   kind = random.choice(['x', 'plus', 'checker', 'blocks', 'ells', 'stripes',
                         'ring', 'diamond', 'sym', 'sym', 'random'])
-  allc = [(r, c) for r in range(n) for c in range(n)]
+  allc = [(r, c) for r in range(h) for c in range(w)]
   if kind == 'x':
-    return {(i, i) for i in range(n)} | {(i, n - 1 - i) for i in range(n)}
+    diag = _staircase(h, w)
+    return kind, diag | {(r, w - 1 - c) for r, c in diag}
   if kind == 'plus':
-    r0 = random.randint(1, n - 2)
-    c0 = random.randint(1, n - 2)
-    return {(r0, j) for j in range(n)} | {(i, c0) for i in range(n)}
+    r0 = random.randint(1, h - 2)
+    c0 = random.randint(1, w - 2)
+    return kind, {(r0, j) for j in range(w)} | {(i, c0) for i in range(h)}
   if kind == 'checker':
     ph = random.randint(0, 1)
-    return {(r, c) for r, c in allc if (r + c) % 2 == ph}
+    return kind, {(r, c) for r, c in allc if (r + c) % 2 == ph}
   if kind == 'blocks':
-    corners = [(0, 0), (0, n - 2), (n - 2, 0), (n - 2, n - 2)]
+    corners = [(0, 0), (0, w - 2), (h - 2, 0), (h - 2, w - 2)]
     chosen = random.sample(corners, random.randint(1, 4))
     cells = set()
     for r0, c0 in chosen:
       cells |= {(r0 + a, c0 + b) for a in (0, 1) for b in (0, 1)}
-    return cells
+    return kind, cells
   if kind == 'ells':
-    return _mirror({(0, 0), (0, 1), (1, 0)}, n)
+    return kind, _mirror({(0, 0), (0, 1), (1, 0)}, h, w)
   if kind == 'stripes':
     step = random.choice([2, 3])
     ph = random.randint(0, step - 1)
-    cells = {(r, c) for r, c in allc if r % step == ph}
     if random.random() < 0.5:
-      cells = {(c, r) for r, c in cells}
-    return cells
+      return kind, {(r, c) for r, c in allc if c % step == ph}
+    return kind, {(r, c) for r, c in allc if r % step == ph}
   if kind == 'ring':
-    return {(r, c) for r, c in allc if r in (0, n - 1) or c in (0, n - 1)}
+    return kind, {(r, c) for r, c in allc
+                  if r in (0, h - 1) or c in (0, w - 1)}
   if kind == 'diamond':
-    k = random.randint(1, m)
-    return {(r, c) for r, c in allc if abs(r - m) + abs(c - m) == k}
+    mr, mc = h // 2, w // 2
+    k = random.randint(1, min(mr, mc))
+    return kind, {(r, c) for r, c in allc if abs(r - mr) + abs(c - mc) == k}
   if kind == 'sym':
-    quad = {(r, c) for r in range((n + 1) // 2) for c in range((n + 1) // 2)
+    quad = {(r, c) for r in range((h + 1) // 2) for c in range((w + 1) // 2)
             if random.random() < 0.4}
-    return _mirror(quad, n)
-  return {cell for cell in allc if random.random() < 0.3}
+    return kind, _mirror(quad, h, w)
+  return kind, {cell for cell in allc if random.random() < 0.3}
 
 
 def _colours(given):
@@ -219,38 +286,70 @@ def _colours(given):
   return [v if v is not None else pool.pop() for v in given]
 
 
-def _resolve_size(panel_size, line, dot, pattern2, pattern3):
-  if panel_size is not None and type(panel_size) is not int:
-    raise ValueError('panel_size must be an integer')
+def _shape_ok(h, w):
+  return (MIN_HEIGHT <= h <= MAX_HEIGHT and MIN_WIDTH <= w <= MAX_WIDTH
+          and (h, w) not in EXCLUDED_SHAPES)
+
+
+def _resolve_shape(panel_size, panel_height, panel_width, line, dot,
+                   pattern2, pattern3):
+  """Returns the list of allowed (H, W) panel shapes for these arguments."""
+  for name, v in (('panel_size', panel_size), ('panel_height', panel_height),
+                  ('panel_width', panel_width)):
+    if v is not None and type(v) is not int:
+      raise ValueError('%s must be an integer' % name)
   for point in list(line or []) + ([] if dot is None else [dot]):
     if len(point) != 2 or any(type(v) is not int for v in point):
       raise ValueError('line and dot coordinates must be integer pairs')
-  sizes = set()
+  heights, widths = set(), set()
   if panel_size is not None:
-    sizes.add(panel_size)
+    heights.add(panel_size)
+    widths.add(panel_size)
+  if panel_height is not None:
+    heights.add(panel_height)
+  if panel_width is not None:
+    widths.add(panel_width)
   for p in (pattern2, pattern3):
     if p is not None:
-      sizes.add(len(p))
-  if len(sizes) > 1:
-    raise ValueError('panel_size and pattern sizes disagree')
+      _parse(p)
+      heights.add(len(p))
+      widths.add(len(p[0]))
+  if len(heights) > 1 or len(widths) > 1:
+    raise ValueError('panel_size, panel_height, panel_width and pattern '
+                     'sizes disagree')
   coords = [v for p in (line or []) for v in p] + list(dot or [])
   if any(v < 0 for v in coords):
     raise ValueError('coordinates must be non-negative')
-  lo = max([MIN_SIZE] + [v + 1 for v in coords])
-  if sizes:
-    n = sizes.pop()
-    if not MIN_SIZE <= n <= MAX_SIZE or n < lo:
+  pts = list(line or []) + ([] if dot is None else [dot])
+  lo_h = max([MIN_HEIGHT] + [r + 1 for r, _ in pts])
+  lo_w = max([MIN_WIDTH] + [c + 1 for _, c in pts])
+  if panel_size is not None:
+    if not MIN_SIZE <= panel_size <= MAX_SIZE or panel_size < max(lo_h, lo_w):
       raise ValueError('panel size out of range or too small for line/dot')
-    return n, [n]
-  options = [s for s in range(MIN_SIZE, MAX_SIZE + 1) if s >= lo]
+    return [(panel_size, panel_size)]
+  if heights and not MIN_HEIGHT <= min(heights) <= MAX_HEIGHT:
+    raise ValueError('panel height must be in %d..%d' % (MIN_HEIGHT,
+                                                         MAX_HEIGHT))
+  if widths and not MIN_WIDTH <= min(widths) <= MAX_WIDTH:
+    raise ValueError('panel width must be in %d..%d' % (MIN_WIDTH, MAX_WIDTH))
+  options = [(h, w) for h, w in SHAPES
+             if (not heights or h in heights) and (not widths or w in widths)
+             and h >= lo_h and w >= lo_w]
+  if heights and widths:
+    shape = (min(heights), min(widths))
+    if shape in EXCLUDED_SHAPES:
+      raise ValueError('a 3x3 panel has no room for a dot away from any wall')
+    if shape not in options:
+      raise ValueError('panel shape too small for line/dot')
   if not options:
-    raise ValueError('line/dot coordinates exceed the largest panel size')
-  return None, options
+    raise ValueError('line/dot coordinates do not fit any allowed panel shape')
+  return options
 
 
 def generate(frame=None, background=None, line_color=None, color2=None,
              color3=None, line=None, dot=None, pattern2=None, pattern3=None,
-             panel_size=None, wall_evidence=None):
+             panel_size=None, wall_evidence=None, panel_height=None,
+             panel_width=None):
   """Returns an input/output pair for task 7491f3cf.
 
   Args:
@@ -262,12 +361,20 @@ def generate(frame=None, background=None, line_color=None, color2=None,
     line: list of (row, col) wall cells in panel 1 (local coordinates); must
       be 8-connected and split the panel into two 4-connected regions.
     dot: (row, col) of the dot in panel 1, not 8-adjacent to the wall.
-    pattern2: list of N strings with '#' for pattern cells of panel 2.
-    pattern3: list of N strings with '#' for pattern cells of panel 3.
-    panel_size: side length N of each square panel (4..6; 5 in all originals).
+    pattern2: list of H strings of length W, '#' for panel-2 pattern cells.
+    pattern3: list of H strings of length W, '#' for panel-3 pattern cells.
+    panel_size: legacy square side N (4..6; 5 in all originals). It fixes
+      an N x N panel and may be combined only with agreeing dimensions.
     wall_evidence: True requires wall cells where both patterns overlap and
       cells where only panel 3 contributes. None requires this on half of
       unconstrained calls; False allows either branch to be absent.
+    panel_height: panel rows H (3..28).
+    panel_width: panel columns W (3..6). 3 x 3 panels are infeasible.
+
+  Raises:
+    ValueError: if explicit parameters are invalid or incompatible.
+    RuntimeError: if no scene is found within MAX_TRIES tries for the chosen
+      panel shape. The shape is never changed to recover.
   """
   given = [frame, background, line_color, color2, color3]
   supplied = [v for v in given if v is not None]
@@ -275,13 +382,16 @@ def generate(frame=None, background=None, line_color=None, color2=None,
     raise ValueError('colours must be integers 0..9')
   if len(set(supplied)) != len(supplied):
     raise ValueError('the five colours must be distinct')
-  n_fixed, size_options = _resolve_size(panel_size, line, dot, pattern2,
-                                        pattern3)
+  options = _resolve_shape(panel_size, panel_height, panel_width, line, dot,
+                           pattern2, pattern3)
   fixed_line = None if line is None else {tuple(p) for p in line}
   fixed_dot = None if dot is None else tuple(dot)
   fixed_p2 = None if pattern2 is None else _parse(pattern2)
   fixed_p3 = None if pattern3 is None else _parse(pattern3)
-  geom_fixed = fixed_line is not None and n_fixed is not None
+  shape_fixed = len(options) == 1 and (
+      panel_size is not None or pattern2 is not None or pattern3 is not None
+      or (panel_height is not None and panel_width is not None))
+  geom_fixed = fixed_line is not None and shape_fixed
   dot_fixed = geom_fixed and fixed_dot is not None
   all_fixed = dot_fixed and fixed_p2 is not None and fixed_p3 is not None
   if wall_evidence is not None and type(wall_evidence) is not bool:
@@ -289,17 +399,22 @@ def generate(frame=None, background=None, line_color=None, color2=None,
   require_wall = wall_evidence if wall_evidence is not None else (
       not all_fixed and random.random() < 0.5)
   if fixed_line is not None:
-    size_options = [n for n in size_options if _wall_regions(n, fixed_line)
-                    and (fixed_dot is None or not _near(fixed_dot, fixed_line))]
-    if not size_options:
-      raise ValueError('line/dot cannot form a valid partition at any allowed size')
+    options = [s for s in options if _wall_regions(s[0], s[1], fixed_line)
+               and (fixed_dot is None or not _near(fixed_dot, fixed_line))]
+    if not options:
+      raise ValueError('line/dot cannot form a valid partition at any allowed '
+                       'size')
+  if len(options) == 1:
+    h, w = options[0]
+  else:
+    h, w = random.choices(options,
+                          weights=[DEFAULT_SHAPE_WEIGHTS[s] for s in options])[0]
 
-  for _ in range(400):
-    n = n_fixed if n_fixed is not None else random.choices(
-        size_options, weights=[SIZE_WEIGHTS[s] for s in size_options])[0]
+  for _ in range(MAX_TRIES):
     f, bg, lc, c2, c3 = _colours(given)
-    wall = set(fixed_line) if fixed_line is not None else _sample_line(n)
-    regs = _wall_regions(n, wall)
+    wall = (set(fixed_line) if fixed_line is not None
+            else _sample_line(h, w)[1])
+    regs = _wall_regions(h, w, wall)
     if regs is None:
       if geom_fixed:
         raise ValueError('line must be an 8-connected wall cutting the panel '
@@ -312,18 +427,18 @@ def generate(frame=None, background=None, line_color=None, color2=None,
           raise ValueError('dot must not touch the wall')
         continue
     else:
-      options = [sorted(c for c in reg if not _near(c, wall)) for reg in regs]
-      options = [o for o in options if o]
-      if not options:
+      choices = [sorted(c for c in reg if not _near(c, wall)) for reg in regs]
+      choices = [o for o in choices if o]
+      if not choices:
         if geom_fixed:
           raise ValueError('no room for a dot away from the wall')
         continue
-      d = random.choice(random.choice(options))
+      d = random.choice(random.choice(choices))
     dreg = regs[0] if d in regs[0] else regs[1]
     other = regs[1] if dreg is regs[0] else regs[0]
-    p2 = set(fixed_p2) if fixed_p2 is not None else _sample_pattern(n)
-    p3 = set(fixed_p3) if fixed_p3 is not None else _sample_pattern(n)
-    lim = n * n - 1
+    p2 = set(fixed_p2) if fixed_p2 is not None else _sample_pattern(h, w)[1]
+    p3 = set(fixed_p3) if fixed_p3 is not None else _sample_pattern(h, w)[1]
+    lim = h * w - 1
     if not 3 <= len(p2) <= lim:
       if fixed_p2 is not None:
         raise ValueError('pattern2 has too few or too many cells')
@@ -346,14 +461,14 @@ def generate(frame=None, background=None, line_color=None, color2=None,
         raise ValueError('both wall overlay branches must be demonstrated')
       continue
     # The fill colour must be strictly the most common across panels 1-3.
-    fill_count = 3 * n * n - (len(wall) + 1) - len(p2) - len(p3)
+    fill_count = 3 * h * w - (len(wall) + 1) - len(p2) - len(p3)
     if fill_count <= max(len(wall) + 1, len(p2), len(p3)):
       if all_fixed:
         raise ValueError('fill colour would not dominate the panels')
       continue
     result = {}
-    for r in range(n):
-      for c in range(n):
+    for r in range(h):
+      for c in range(w):
         if (r, c) in wall:
           v = c2 if (r, c) in p2 else (c3 if (r, c) in p3 else bg)
         elif (r, c) in dreg:
@@ -367,12 +482,12 @@ def generate(frame=None, background=None, line_color=None, color2=None,
       if all_fixed:
         raise ValueError('wall/dot routing would be indistinguishable from an overlay')
       continue
-    width, height = 4 * n + 5, n + 2
+    width, height = 4 * w + 5, h + 2
     grid = common.grid(width, height, f)
-    offs = [1 + k * (n + 1) for k in range(4)]
+    offs = [1 + k * (w + 1) for k in range(4)]
     for k in range(4):
-      for r in range(n):
-        for c in range(n):
+      for r in range(h):
+        for c in range(w):
           grid[1 + r][offs[k] + c] = bg
     for r, c in wall | {d}:
       grid[1 + r][offs[0] + c] = lc
@@ -384,8 +499,8 @@ def generate(frame=None, background=None, line_color=None, color2=None,
     for (r, c), v in result.items():
       out[1 + r][offs[3] + c] = v
     return {'input': grid, 'output': out}
-  raise RuntimeError('could not build a valid scene with the given '
-                     'partial parameters')
+  raise RuntimeError('could not build a valid %dx%d-panel scene with the given '
+                     'partial parameters within %d tries' % (h, w, MAX_TRIES))
 
 
 def validate():

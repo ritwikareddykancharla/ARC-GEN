@@ -229,14 +229,45 @@ def native_side_beam(grid):
     return [list(row) for row in prediction]
 
 
+def midpoint_xor_panels(grid):
+    """34b99a2b: XOR of the two equal panels around the midpoint divider.
+
+    Pair label checker only (native colours). Every canonical and teaching
+    fixture, and every constructor output, is an odd-width grid whose exact
+    midpoint column (W - 1) / 2 is a full single-colour non-zero divider with
+    equal panels on both sides. The divider is located geometrically, never
+    by scanning for the first full column, so full-height internal panel
+    columns are ordinary content. Inputs without this geometry are rejected
+    instead of guessed.
+    """
+    rows = [list(row) for row in grid]
+    width = len(rows[0]) if rows else 0
+    if not rows or width < 3 or width % 2 == 0 or any(len(r) != width for r in rows):
+        raise ValueError('Expected an odd-width grid with a midpoint divider column')
+    mid = width // 2
+    divider = {r[mid] for r in rows}
+    if len(divider) != 1 or 0 in divider:
+        raise ValueError('Midpoint column is not a full non-background divider')
+    return [[2 if (r[x] != 0) != (r[mid + 1 + x] != 0) else 0 for x in range(mid)]
+            for r in rows]
+
+
 from .joint_fragments import transform as joint_fragment_completion
 
 VERIFIERS = {'78332cb0': panel_chain, 'de493100': cropped_mirror_patch,
              '3a301edc': nested_frame_band,
              'd6542281': joint_fragment_completion,
              'aaecdb9a': legend_object_chart, '007bbfb7': self_tiling,
-             '7e2bad24': native_side_beam}
+             '7e2bad24': native_side_beam, '34b99a2b': midpoint_xor_panels}
 VERIFIER_EVIDENCE = {
+    '34b99a2b': {
+        'mode': 'reviewed_midpoint_divider_xor',
+        'module': 'arc_agi2.verified_rules.midpoint_xor_panels',
+        'reason': 'The archived solver takes the FIRST full single-colour non-zero column as the divider, so a valid left-panel column filled entirely with 8 is mistaken for the divider (230/2000 unmodified native default pairs; see counterexample). All 5 canonical and 5 teaching fixtures and every constructor output place the divider at the exact midpoint (W-1)/2 of an odd-width grid with equal panels, so this checker reads the midpoint column and XORs the panels. Full internal columns stay valid content; inputs lacking the midpoint geometry raise. The independent direct factory, colour-evidence and episode gates are unchanged.',
+        'counterexample': 'arc_agi2/reports/diversity-v1/native-batch-d/34b99a2b-archived-verifier-counterexample.json',
+        'canonical_data_changed': False,
+        'archived_reference_changed': False,
+    },
     '7e2bad24': {
         'mode': 'reviewed_native_side_contact_beam_replay',
         'module': 'arc_agi2.verified_rules.native_side_beam',

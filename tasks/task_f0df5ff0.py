@@ -80,7 +80,7 @@ def _lattice_windows(width, height, count):
 
 
 def generate(colors=None, width=None, height=None, num_boxes=None,
-             density=None):
+             density=None, num_confetti_colors=None):
   """Returns input and output grids according to the given parameters.
 
   Args:
@@ -95,6 +95,10 @@ def generate(colors=None, width=None, height=None, num_boxes=None,
       samples 2..default_max_boxes (the legacy 2..8 at 15x15).
     density: Confetti probability per cell for sampled scenes, 0 < d < 1.
       None samples 0.3..0.5 once per call (legacy 0.5).
+    num_confetti_colors: Number of distinct non-background, non-seed colours
+      actually used. None samples 1..8, bounded by the number of available
+      cells after retaining each seed and at least two background cells in
+      its window. Explicit requests keep the requested count or fail.
 
   Sampled scenes redraw layout and confetti at most MAX_ATTEMPTS times.
   Windows are placed by random sequential placement, or on a randomly
@@ -120,8 +124,8 @@ def generate(colors=None, width=None, height=None, num_boxes=None,
                for r, c in seeds(cells))
 
   explicit = colors is not None
-  if explicit and (num_boxes is not None or density is not None):
-    raise ValueError("num_boxes and density apply only to sampled scenes")
+  if explicit and (num_boxes is not None or density is not None or num_confetti_colors is not None):
+    raise ValueError("num_boxes, density and num_confetti_colors apply only to sampled scenes")
   if width is None:
     width = 15 if explicit else common.randint(6, 30)
   if height is None:
@@ -147,7 +151,6 @@ def generate(colors=None, width=None, height=None, num_boxes=None,
   capacity = window_capacity(width, height)
   if not capacity:
     raise ValueError(f"a {width}x{height} canvas cannot hold a 3x3 seed window")
-  subset = common.choices(list(range(2, 10)), 6)
   if num_boxes is None:
     num_boxes = common.randint(min(2, capacity),
                                min(capacity, default_max_boxes(width, height)))
@@ -155,6 +158,12 @@ def generate(colors=None, width=None, height=None, num_boxes=None,
     raise ValueError(f"num_boxes must be an int, got {num_boxes!r}")
   if not 1 <= num_boxes <= capacity:
     raise ValueError(f"num_boxes must be in 1..{capacity} on {width}x{height}, got {num_boxes}")
+  colour_capacity = min(8, width * height - 3 * num_boxes)
+  if num_confetti_colors is None:
+    num_confetti_colors = common.randint(1, colour_capacity)
+  if type(num_confetti_colors) is not int or not 1 <= num_confetti_colors <= colour_capacity:
+    raise ValueError(f"num_confetti_colors must be in 1..{colour_capacity} on this canvas")
+  subset = common.sample(list(range(2, 10)), num_confetti_colors)
   if density is None:
     density = random.uniform(0.3, 0.5)
   if isinstance(density, bool) or not isinstance(density, (int, float)) or not 0 < density < 1:
@@ -168,6 +177,10 @@ def generate(colors=None, width=None, height=None, num_boxes=None,
              for _ in range(width * height)]
     for brow, bcol in corners:
       cells[(brow + 1) * width + bcol + 1] = 1
+    # Require the requested distinct palette, including the seven noise
+    # colours present in canonical examples but unreachable by six old draws.
+    if set(cells) - {0, 1} != set(subset):
+      continue
     grid, output = draw(cells)
     if visible(output, cells):
       return {"input": grid, "output": output}

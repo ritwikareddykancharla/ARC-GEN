@@ -494,7 +494,11 @@ and validation is unchanged for them.
 - **`f0df5ff0`:** the confetti pool literal (line 150) excludes canonical
   `train[1]`.
 - **`f3cdc58f`:** no gate for count-ordered legends. Episodes like these would
-  pass `make_record` today.
+  pass `make_record` today. The remedy is a gate for this evidenced competitor
+  with query-fixed demonstration resampling. That leaves the constructor
+  unchanged, so valid small shapes (down to 4×4) stay in the domain. Raising the
+  random minimum height is not acceptable, because it removes valid
+  small-shape support. No gate is implemented here.
 - **Not measured:** no unmodified `prepare` export, so no production
   same-shape support, gate retry or validation-identity figures. The audit is
   stale.

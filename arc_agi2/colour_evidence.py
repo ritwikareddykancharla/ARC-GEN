@@ -214,6 +214,11 @@ def require_colour_evidence(task_id, demonstrations, queries, palette=None, d4=0
         require_panel_overlay_evidence(task_id, demonstrations, queries,
                     list(range(10)) if palette is None else palette, d4)
         return
+    if task_id in ('18447a8d', 'b4a43f3b'):
+        from .native_i_evidence import require_native_i_evidence
+        require_native_i_evidence(task_id, demonstrations, queries,
+                    list(range(10)) if palette is None else palette, d4)
+        return
     if task_id in ('0c786b71', 'e0fb7511', 'f0df5ff0'):
         from .mirror_neighbourhood_evidence import require_mirror_neighbourhood_evidence
         require_mirror_neighbourhood_evidence(task_id, demonstrations, queries,

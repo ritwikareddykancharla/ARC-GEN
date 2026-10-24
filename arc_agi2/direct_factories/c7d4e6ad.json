@@ -4,7 +4,7 @@
   "fresh_pairs_checked": 1000,
   "augmented_pair_checks": 8000,
   "fixture_variants_checked": 16,
-  "constructor_sha256": "bbdf032e5943cc3f8667ebddcab6e98c267eeafcd5fe4391a29f9494c9f94f7e",
+  "constructor_sha256": "c54d430cda95c5533a1bf76c886759e19f9e54c3ebed90ac84852a17e1e343c9",
   "auditor_sha256": "1e194cb80d11ccda4026cb83a61c6dd407f1b9d94117090b31de26b01a3f191d",
   "requires_per_episode_verification": true,
   "sampler_rejections": [],
@@ -13,7 +13,7 @@
   "factory_version": 1,
   "unique_base_inputs": 1000,
   "fixture_basis": "canonical",
-  "seconds": 3.7594386250711977,
+  "seconds": 2.85589383286424,
   "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
   "draft_notes": {
     "explanation": "In the native task, column 0 holds a colour key made of vertical runs. In the output, every non-background cell (in practice the connected grey shape) takes the key colour at column 0 of its own row. The key cells themselves keep their colour.\n\nThe factory tracks where the left edge ends up after the D4 transform. A row reversal (d4>=4) sends the left edge to the right edge. Each clockwise rotation then moves the edge one step: left -> top -> right -> bottom -> left.\n\nThe emitted program works directly in visible coordinates:\n- If the key is a vertical edge (left or right column), each row is recoloured from its key cell.\n- If the key is a horizontal edge (top or bottom row), each column is recoloured from its key cell.\n\nThe background is the constant palette[0]. The program reproduces the generator's rule exactly: every cell that is not background becomes the key colour of its line. It needs no colour inference and does not depend on the grey colour palette[5].",
@@ -47,5 +47,5 @@
     "host_review": "Read mechanism, evidence, limitations and context requirements. Host reflects columns before clockwise rotation, tests all eight D4 indices, and applies a shared palette permutation after generation. Fixture audit verifies all train/test supplied pairs at every tested orientation/palette, not one pair per variant. Per-episode execution verification and conflicting-context rejection remain required."
   },
   "previous_constructor_sha256": "6c88d33d0ea07a8a0287037d101dcca94647f3be73cf0a746ab224908705dc04",
-  "recertification_note": "Recertified by native batch c7d4/d47a after a constructor domain expansion (canvas 3..30 x 3..30, legend height 2..H at any offset, 2..8 legend colours, grey box from column >= 2). The factory is unchanged. The draft notes below describe the legacy 10x10 domain; their rule statement (recolour every non-background cell from its line's key cell on the transformed column-0 edge) still holds, and the constructor keeps every grey row inside the legend span."
+  "recertification_note": "Recertified by native batch c7d4/d47a after a constructor domain expansion (canvas 4..30 x 4..30, legend height 2..H at any offset, 2..8 legend colours, grey box from column >= 2). The factory is unchanged. The draft notes below describe the legacy 10x10 domain; their rule statement (recolour every non-background cell from its line's key cell on the transformed column-0 edge) still holds, and the constructor keeps every grey row inside the legend span."
 }

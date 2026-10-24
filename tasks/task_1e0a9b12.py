@@ -17,26 +17,34 @@
 import common
 
 
-def generate(colors=None, active=None):
+def generate(colors=None, active=None, height=None, width=None):
   """Returns input and output grids according to the given parameters.
 
   Args:
     colors: a list of digits representing different colors
     active: a list for each color, indicating which rows that color is active
+    height: rows; random scenes span 4..30, explicit colours default to a square.
+    width: columns; random scenes span 4..30.
   """
   if colors is None:
-    size = common.randint(4, 6)
-    colors = common.random_colors(size)
+    height = height if height is not None else common.randint(4, 30)
+    width = width if width is not None else common.randint(4, 30)
+    if not (4 <= height <= 30 and 4 <= width <= 30):
+      raise ValueError('Random dimensions must be 4..30')
+    colors = common.choices(list(range(1, 10)), k=width)
     while True:
-      counts = common.choices(range((size + 3) // 2), k=size)
-      active = [common.sample(range(size), count) for count in counts]
-      if sum([len(c) for c in active]) >= size: break
+      counts = common.choices(range((height + 1) // 2), k=width)
+      active = [common.sample(range(height), count) for count in counts]
+      if sum(len(c) for c in active) >= max(1, width // 2): break
 
-  size = len(colors)
-  grid, output = common.grids(size, size)
-  for c in range(size):
+  height = height if height is not None else len(colors)
+  width = width if width is not None else len(colors)
+  if width != len(colors) or len(active) != width:
+    raise ValueError('One colour and active-row list are required per column')
+  grid, output = common.grids(width, height)
+  for c in range(width):
     for r in range(len(active[c])):
-      output[size - r - 1][c] = grid[active[c][r]][c] = colors[c]
+      output[height - r - 1][c] = grid[active[c][r]][c] = colors[c]
   return {"input": grid, "output": output}
 
 

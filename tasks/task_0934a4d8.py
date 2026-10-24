@@ -169,6 +169,9 @@ def generate(quadrant=None, box=None, num_colors=None, palette=None,
       raise ValueError('block_size conflicts with explicit quadrant')
     block_size = inferred
   else:
+    # Choose the mechanism before size, avoiding a hidden 11.25% edge rate.
+    if layout is None and block_size is None and block_symmetry:
+      layout = 'edge' if random.random() < 0.3 else 'interior'
     if block_size is None:
       block_size = 8 if layout == 'edge' else random.choices([4,5,6,7,8], [1,2,3,4,6])[0]
     if block_size not in range(4, 9):

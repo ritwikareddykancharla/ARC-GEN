@@ -22,9 +22,9 @@ noise colours usually have more cells overall than the winning blob, but
 they are split into many tiny pieces.
 
 Scope of the random generator:
-  * grid sizes 15..25 per side (originals are 20x20),
+  * grid sizes 15..30 per side (originals are 20x20),
   * 3..5 blobs, each a rectangle 3..7 per side with optional corner
-    staircase chips, pairwise separated by at least one cell,
+    staircase chips, sheared bands or connected polyominoes, pairwise separated by at least one cell,
   * distinct blob colours, a unique largest blob (margin >= 2 cells),
   * 2..3 noise colours disjoint from blob colours scattered at density
     0.3..0.5, with every noise cluster (even 8-connected) strictly smaller
@@ -51,6 +51,30 @@ def _staircase_shape(h, w):
           r = i if corner < 2 else h - 1 - i
           c = j if corner % 2 == 0 else w - 1 - j
           cells.discard((r, c))
+  return sorted(cells)
+
+
+def _varied_shape(h, w, family=None):
+  """Connected shapes with rectangular, sheared and irregular topology."""
+  family = family or random.choice(('staircase', 'sheared', 'polyomino'))
+  if family == 'staircase':
+    return _staircase_shape(h, w)
+  if family == 'sheared':
+    thickness = random.randint(2, max(2, w - 1))
+    shifts = [round(r * (w - thickness) / max(1, h - 1)) for r in range(h)]
+    if random.random() < 0.5:
+      shifts.reverse()
+    return [(r, c) for r, shift in enumerate(shifts)
+            for c in range(shift, shift + thickness)]
+  if family != 'polyomino':
+    raise ValueError('shape_family must be staircase, sheared or polyomino')
+  cells = {(random.randrange(h), random.randrange(w))}
+  target = random.randint(max(h, w), h * w)
+  while len(cells) < target:
+    frontier = {(r+dr, c+dc) for r,c in cells
+                for dr,dc in ((1,0),(-1,0),(0,1),(0,-1))
+                if 0 <= r+dr < h and 0 <= c+dc < w} - cells
+    cells.add(random.choice(sorted(frontier)))
   return sorted(cells)
 
 
@@ -86,11 +110,13 @@ def _largest_component(grid, colors, eight):
   return best_size, best_color
 
 
-def _sample_scene():
+def _sample_scene(height=None, width=None, shape_family=None):
   """Samples height, width, blobs, noise colours and density."""
   for _ in range(300):
-    height = random.randint(15, 25)
-    width = random.randint(15, 25)
+    height = height if height is not None else random.randint(15, 30)
+    width = width if width is not None else random.randint(15, 30)
+    if not (10 <= height <= 30 and 10 <= width <= 30):
+      raise ValueError("height and width must be 10..30")
     count = random.randint(3, 5)
     palette = list(range(1, 10))
     random.shuffle(palette)
@@ -113,7 +139,7 @@ def _sample_scene():
         if clash:
           continue
         boxes.append((top, left, top + h - 1, left + w - 1))
-        blobs.append((color, top, left, _staircase_shape(h, w)))
+        blobs.append((color, top, left, _varied_shape(h, w, shape_family)))
         placed = True
         break
       if not placed:
@@ -130,12 +156,13 @@ def _sample_scene():
 
 
 def generate(height=None, width=None, blobs=None, noise_colors=None,
-             density=None, input_grid=None):
+             density=None, input_grid=None, shape_family=None):
   """Returns input and output grids according to the given parameters.
 
   Args:
-    height: grid height.
-    width: grid width.
+    height: grid height (10..30); explicit requests are honored.
+    width: grid width (10..30); explicit requests are honored.
+    shape_family: staircase, sheared, polyomino, or None for a mixture.
     blobs: list of (color, top, left, cells) tuples; cells are (dr, dc)
       offsets of a connected single-colour blob.  The blob with the most
       cells must be unique; its colour is the answer.
@@ -155,7 +182,9 @@ def generate(height=None, width=None, blobs=None, noise_colors=None,
 
   for _ in range(300):
     if height is None or width is None or blobs is None:
-      h, w, bl, nc, dn = _sample_scene()
+      h, w, bl, nc, dn = _sample_scene(height, width, shape_family)
+      if noise_colors is not None: nc = noise_colors
+      if density is not None: dn = density
     else:
       h, w, bl, nc, dn = height, width, blobs, noise_colors, density
     if nc is None:

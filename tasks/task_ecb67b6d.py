@@ -20,7 +20,7 @@ entirely to 8 when it contains a straight diagonal run of at least three
 5-cells in either diagonal direction; every other shape stays 5.  Nothing
 moves and nothing is added.
 
-Scope: grids from 5x4 up to 22x22 with several separated shapes drawn from
+Scope: grids from 5x4 up to 30x30 with several separated shapes drawn from
 two families.  "Diagonal" shapes contain a 3+ diagonal run (pure diagonal
 lines, diagonal lines with extra attached cells, orthogonal blobs with a
 diagonal tail).  "Plain" shapes never contain such a run (singletons,
@@ -115,7 +115,27 @@ def _blob_with_tail():
   return _random_flip(sorted(cells))
 
 
+def _irregular_shape(want_diagonal):
+  """Grow larger 8-connected shapes, keeping the requested diagonal predicate."""
+  for _ in range(120):
+    cells = {(0,0),(1,1),(2,2)} if want_diagonal else {(0,0)}
+    size = random.randint(7, 18)
+    for _ in range(150):
+      if len(cells) >= size:
+        return _random_flip(sorted(cells))
+      r,c = random.choice(sorted(cells))
+      dr,dc = random.choice(NEIGHBOURS8)
+      proposed = cells | {(r+dr,c+dc)}
+      h,w = _bbox(_normalise(proposed))
+      if max(h,w) > 9: continue
+      if not want_diagonal and _has_diagonal_run(proposed): continue
+      cells = proposed
+  raise RuntimeError('could not grow requested irregular shape')
+
+
 def _random_diag_shape():
+  if random.random() < 0.35:
+    return _irregular_shape(True)
   roll = random.random()
   if roll < 0.40:
     return _diag_line()
@@ -181,6 +201,8 @@ def _plain_blob():
 
 
 def _random_plain_shape():
+  if random.random() < 0.35:
+    return _irregular_shape(False)
   roll = random.random()
   if roll < 0.15:
     cells = _singleton()
@@ -248,8 +270,8 @@ def generate(width=None, height=None, shapes=None):
   """Returns input and output grids according to the given parameters.
 
   Args:
-    width: grid width (sampled 5..22 when None).
-    height: grid height (sampled 4..22 when None).
+    width: grid width (sampled 5..30 when None).
+    height: grid height (sampled 4..30 when None).
     shapes: optional explicit list of shapes, each a list of (row, col)
       cells of a single 8-connected grey component.  Shapes must not
       overlap and should be separated by at least one background cell so
@@ -259,8 +281,8 @@ def generate(width=None, height=None, shapes=None):
   if shapes is None:
     kinds = None
     for _ in range(80):
-      w = width if width is not None else random.randint(5, 22)
-      h = height if height is not None else random.randint(4, 22)
+      w = width if width is not None else random.randint(5, 30)
+      h = height if height is not None else random.randint(4, 30)
       scene = _random_scene(w, h)
       present = {kind for kind, _ in scene}
       if "diag" in present and "plain" in present:
@@ -268,10 +290,8 @@ def generate(width=None, height=None, shapes=None):
         kinds = [kind for kind, _ in scene]
         shapes = [cells for _, cells in scene]
         break
-    if kinds is None:  # extremely unlikely; fall back to a tiny valid scene
-      width, height = 7, 5
-      shapes = [[(0, 0), (1, 1), (2, 2)], [(4, 5), (4, 6)]]
-      kinds = ["diag", "plain"]
+    if kinds is None:
+      raise RuntimeError("could not place both shape classes; no fixed fallback")
   else:
     if width is None or height is None:
       raise ValueError("width and height are required with explicit shapes")

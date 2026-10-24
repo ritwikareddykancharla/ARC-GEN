@@ -139,11 +139,65 @@ def cropped_mirror_patch(grid):
     return check_grid(output)
 
 
+def self_tiling(grid):
+    """007bbfb7: a copy of the input replaces every nonzero input cell."""
+    height, width = len(grid), len(grid[0])
+    return [[grid[r % height][c % width] if grid[r // height][c // width] else 0
+             for c in range(width * width)] for r in range(height * height)]
+
+
+def legend_object_chart(grid):
+    """aaecdb9a: count 8-connected objects; background is the legend's colour 7.
+
+    Dense scenes can contain more cells of a legend colour than background.
+    The modal colour therefore cannot identify background for this rule.
+    """
+    legend = (5, 2, 8, 9, 6)
+    if any(value not in (*legend, 7) for row in grid for value in row):
+        raise ValueError('Colour outside the aaecdb9a legend')
+    counts = []
+    for colour in legend:
+        remaining = {(r, c) for r, row in enumerate(grid)
+                     for c, value in enumerate(row) if value == colour}
+        count = 0
+        while remaining:
+            count += 1
+            frontier = [remaining.pop()]
+            while frontier:
+                r, c = frontier.pop()
+                neighbours = {(r + dr, c + dc) for dr in (-1, 0, 1)
+                              for dc in (-1, 0, 1)} & remaining
+                remaining -= neighbours
+                frontier.extend(neighbours)
+        counts.append(count)
+    height = max(counts)
+    if height == 0:
+        raise ValueError('Expected at least one legend object')
+    return [[colour if r >= height - count else 7
+             for colour, count in zip(legend, counts)] for r in range(height)]
+
+
 from .joint_fragments import transform as joint_fragment_completion
 
 VERIFIERS = {'78332cb0': panel_chain, 'de493100': cropped_mirror_patch,
-             'd6542281': joint_fragment_completion}
+             'd6542281': joint_fragment_completion,
+             'aaecdb9a': legend_object_chart, '007bbfb7': self_tiling}
 VERIFIER_EVIDENCE = {
+    '007bbfb7': {
+        'mode': 'dimension_aware_self_tiling',
+        'module': 'arc_agi2.verified_rules.self_tiling',
+        'reason': 'Archived solver allocates h*3 by w*3 although its block writes require h*h by w*w. The constructor already supported non-3 square sizes; this extension independently varies height and width in 2..5.',
+        'canonical_data_changed': False,
+        'archived_reference_changed': False,
+    },
+    'aaecdb9a': {
+        'mode': 'fixed_legend_background_component_count',
+        'module': 'arc_agi2.verified_rules.legend_object_chart',
+        'reason': 'The archived modal-colour heuristic treats colour 9 as background in a valid dense scene. The task has fixed background 7 and five fixed legend colours; count 8-connected objects of those colours directly.',
+        'counterexample': 'arc_agi2/reports/diversity-v1/aaecdb9a-dense-counterexample.json',
+        'canonical_data_changed': False,
+        'archived_reference_changed': False,
+    },
     'd6542281': {
         'mode': 'reviewed_joint_fragment_exact_cover',
         'module': 'arc_agi2.joint_fragments.transform',

@@ -1,0 +1,2890 @@
+{
+  "kind": "expanded-domain supplement; not full 1120-family release",
+  "source_signature": "45c3fde3add0cb32ea1244b80b7ba15107292be99ab65a869de1299f8ed54ff0",
+  "requested_families": 121,
+  "completed_families": 121,
+  "quota_complete_families": 113,
+  "counts": {
+    "train": 242,
+    "validation": 226
+  },
+  "reports": [
+    {
+      "task_id": "007bbfb7",
+      "counts": {
+        "train": 2,
+        "validation": 2
+      },
+      "requested": {
+        "train": 2,
+        "validation": 2
+      },
+      "pool_counts": {
+        "train": 813,
+        "validation": 43
+      },
+      "pool_sources": {
+        "native": 856
+      },
+      "rejections": {
+        "duplicate_input": 40
+      },
+      "seconds": 0.48,
+      "complete": true
+    },
+    {
+      "task_id": "09629e4f",
+      "counts": {
+        "train": 2,
+        "validation": 2
+      },
+      "requested": {
+        "train": 2,
+        "validation": 2
+      },
+      "pool_counts": {
+        "train": 662,
+        "validation": 42
+      },
+      "pool_sources": {
+        "native": 342,
+        "rearc-compatible-v1": 362
+      },
+      "rejections": {},
+      "seconds": 1.61,
+      "complete": true
+    },
+    {
+      "task_id": "045e512c",
+      "counts": {
+        "train": 2,
+        "validation": 2
+      },
+      "requested": {
+        "train": 2,
+        "validation": 2
+      },
+      "pool_counts": {
+        "train": 986,
+        "validation": 40
+      },
+      "pool_sources": {
+        "rearc-compatible-v1": 403,
+        "native": 623
+      },
+      "rejections": {
+        "pair:ValueError:Fork/RE-ARC domain disagreement": 185,
+        "pair:ValueError:Independent verifier disagrees": 5
+      },
+      "seconds": 2.83,
+      "complete": true
+    },
+    {
+      "task_id": "178fcbfb",
+      "counts": {
+        "train": 2,
+        "validation": 2
+      },
+      "requested": {
+        "train": 2,
+        "validation": 2
+      },
+      "pool_counts": {
+        "train": 918,
+        "validation": 42
+      },
+      "pool_sources": {
+        "rearc-compatible-v1": 493,
+        "native": 467
+      },
+      "rejections": {},
+      "seconds": 3.1,
+      "complete": true
+    },
+    {
+      "task_id": "1c786137",
+      "counts": {
+        "train": 2,
+        "validation": 2
+      },
+      "requested": {
+        "train": 2,
+        "validation": 2
+      },
+      "pool_counts": {
+        "train": 920,
+        "validation": 40
+      },
+      "pool_sources": {
+        "native": 504,
+        "rearc-compatible-v1": 456
+      },
+      "rejections": {},
+      "seconds": 3.16,
+      "complete": true
+    },
+    {
+      "task_id": "1e0a9b12",
+      "counts": {
+        "train": 2,
+        "validation": 2
+      },
+      "requested": {
+        "train": 2,
+        "validation": 2
+      },
+      "pool_counts": {
+        "train": 790,
+        "validation": 42
+      },
+      "pool_sources": {
+        "native": 832
+      },
+      "rejections": {},
+      "seconds": 1.14,
+      "complete": true
+    },
+    {
+      "task_id": "1cf80156",
+      "counts": {
+        "train": 2,
+        "validation": 2
+      },
+      "requested": {
+        "train": 2,
+        "validation": 2
+      },
+      "pool_counts": {
+        "train": 916,
+        "validation": 41
+      },
+      "pool_sources": {
+        "native": 495,
+        "rearc-compatible-v1": 462
+      },
+      "rejections": {
+        "pair:ValueError:Fork/RE-ARC domain disagreement": 3
+      },
+      "seconds": 2.42,
+      "complete": true
+    },
+    {
+      "task_id": "1e32b0e9",
+      "counts": {
+        "train": 2,
+        "validation": 2
+      },
+      "requested": {
+        "train": 2,
+        "validation": 2
+      },
+      "pool_counts": {
+        "train": 853,
+        "validation": 43
+      },
+      "pool_sources": {
+        "rearc-compatible-v1": 466,
+        "native": 430
+      },
+      "rejections": {},
+      "seconds": 1.82,
+      "complete": true
+    },
+    {
+      "task_id": "1f876c06",
+      "counts": {
+        "train": 2,
+        "validation": 2
+      },
+      "requested": {
+        "train": 2,
+        "validation": 2
+      },
+      "pool_counts": {
+        "train": 918,
+        "validation": 42
+      },
+      "pool_sources": {
+        "rearc-compatible-v1": 498,
+        "native": 462
+      },
+      "rejections": {},
+      "seconds": 1.32,
+      "complete": true
+    },
+    {
+      "task_id": "1f642eb9",
+      "counts": {
+        "train": 2,
+        "validation": 2
+      },
+      "requested": {
+        "train": 2,
+        "validation": 2
+      },
+      "pool_counts": {
+        "train": 662,
+        "validation": 41
+      },
+      "pool_sources": {
+        "rearc-compatible-v1": 349,
+        "native": 354
+      },
+      "rejections": {
+        "duplicate_input": 1
+      },
+      "seconds": 2.31,
+      "complete": true
+    },
+    {
+      "task_id": "2204b7a8",
+      "counts": {
+        "train": 2,
+        "validation": 2
+      },
+      "requested": {
+        "train": 2,
+        "validation": 2
+      },
+      "pool_counts": {
+        "train": 662,
+        "validation": 40
+      },
+      "pool_sources": {
+        "rearc-compatible-v1": 352,
+        "native": 350
+      },
+      "rejections": {
+        "pair:ValueError:Fork/RE-ARC domain disagreement": 2
+      },
+      "seconds": 1.1,
+      "complete": true
+    },
+    {
+      "task_id": "0962bcdd",
+      "counts": {
+        "train": 2,
+        "validation": 2
+      },
+      "requested": {
+        "train": 2,
+        "validation": 2
+      },
+      "pool_counts": {
+        "train": 2233,
+        "validation": 154
+      },
+      "pool_sources": {
+        "rearc-compatible-v1": 1204,
+        "native": 1183
+      },
+      "rejections": {
+        "duplicate_input": 45
+      },
+      "seconds": 6.38,
+      "complete": true
+    },
+    {
+      "task_id": "25d8a9c8",
+      "counts": {
+        "train": 2,
+        "validation": 2
+      },
+      "requested": {
+        "train": 2,
+        "validation": 2
+      },
+      "pool_counts": {
+        "train": 787,
+        "validation": 40
+      },
+      "pool_sources": {
+        "rearc-compatible-v1": 428,
+        "native": 399
+      },
+      "rejections": {
+        "duplicate_input": 5
+      },
+      "seconds": 0.69,
+      "complete": true
+    },
+    {
+      "task_id": "1f85a75f",
+      "counts": {
+        "train": 2,
+        "validation": 2
+      },
+      "requested": {
+        "train": 2,
+        "validation": 2
+      },
+      "pool_counts": {
+        "train": 915,
+        "validation": 43
+      },
+      "pool_sources": {
+        "native": 476,
+        "rearc-compatible-v1": 482
+      },
+      "rejections": {
+        "pair:ValueError:Fork/RE-ARC domain disagreement": 2
+      },
+      "seconds": 3.26,
+      "complete": true
+    },
+    {
+      "task_id": "29623171",
+      "counts": {
+        "train": 2,
+        "validation": 2
+      },
+      "requested": {
+        "train": 2,
+        "validation": 2
+      },
+      "pool_counts": {
+        "train": 726,
+        "validation": 42
+      },
+      "pool_sources": {
+        "native": 403,
+        "rearc-compatible-v1": 365
+      },
+      "rejections": {},
+      "seconds": 1.24,
+      "complete": true
+    },
+    {
+      "task_id": "23b5c85d",
+      "counts": {
+        "train": 2,
+        "validation": 2
+      },
+      "requested": {
+        "train": 2,
+        "validation": 2
+      },
+      "pool_counts": {
+        "train": 932,
+        "validation": 48
+      },
+      "pool_sources": {
+        "rearc-compatible-v1": 495,
+        "native": 485
+      },
+      "rejections": {
+        "pair:ValueError:Independent verifier disagrees": 145,
+        "pair:ValueError:Fork/RE-ARC domain disagreement": 155
+      },
+      "seconds": 3.36,
+      "complete": true
+    },
+    {
+      "task_id": "28e73c20",
+      "counts": {
+        "train": 2,
+        "validation": 2
+      },
+      "requested": {
+        "train": 2,
+        "validation": 2
+      },
+      "pool_counts": {
+        "train": 991,
+        "validation": 47
+      },
+      "pool_sources": {
+        "native": 16,
+        "rearc-compatible-v1": 1022
+      },
+      "rejections": {
+        "duplicate_input": 1010
+      },
+      "seconds": 3.48,
+      "complete": true
+    },
+    {
+      "task_id": "2c608aff",
+      "counts": {
+        "train": 2,
+        "validation": 2
+      },
+      "requested": {
+        "train": 2,
+        "validation": 2
+      },
+      "pool_counts": {
+        "train": 734,
+        "validation": 44
+      },
+      "pool_sources": {
+        "native": 621,
+        "rearc-compatible-v1": 157
+      },
+      "rejections": {
+        "pair:ValueError:Fork/RE-ARC domain disagreement": 469,
+        "pair:ValueError:Independent verifier disagrees": 33
+      },
+      "seconds": 4.43,
+      "complete": true
+    },
+    {
+      "task_id": "3af2c5a8",
+      "counts": {
+        "train": 2,
+        "validation": 2
+      },
+      "requested": {
+        "train": 2,
+        "validation": 2
+      },
+      "pool_counts": {
+        "train": 791,
+        "validation": 40
+      },
+      "pool_sources": {
+        "native": 402,
+        "rearc-compatible-v1": 429
+      },
+      "rejections": {
+        "duplicate_input": 1
+      },
+      "seconds": 0.62,
+      "complete": true
+    },
+    {
+      "task_id": "3c9b0459",
+      "counts": {
+        "train": 2,
+        "validation": 2
+      },
+      "requested": {
+        "train": 2,
+        "validation": 2
+      },
+      "pool_counts": {
+        "train": 663,
+        "validation": 41
+      },
+      "pool_sources": {
+        "native": 343,
+        "rearc-compatible-v1": 361
+      },
+      "rejections": {},
+      "seconds": 0.89,
+      "complete": true
+    },
+    {
+      "task_id": "2dd70a9a",
+      "counts": {
+        "train": 2,
+        "validation": 2
+      },
+      "requested": {
+        "train": 2,
+        "validation": 2
+      },
+      "pool_counts": {
+        "train": 1042,
+        "validation": 48
+      },
+      "pool_sources": {
+        "native": 580,
+        "rearc-compatible-v1": 510
+      },
+      "rejections": {
+        "pair:ValueError:Fork/RE-ARC domain disagreement": 123,
+        "pair:ValueError:RE-ARC constructor/verifier disagreement": 3
+      },
+      "seconds": 5.46,
+      "complete": true
+    },
+    {
+      "task_id": "39e1d7f9",
+      "counts": {
+        "train": 2,
+        "validation": 2
+      },
+      "requested": {
+        "train": 2,
+        "validation": 2
+      },
+      "pool_counts": {
+        "train": 832,
+        "validation": 40
+      },
+      "pool_sources": {
+        "rearc-compatible-v1": 400,
+        "native": 472
+      },
+      "rejections": {
+        "pair:ValueError:RE-ARC constructor/verifier disagreement": 37,
+        "pair:ValueError:Fork/RE-ARC domain disagreement": 51
+      },
+      "seconds": 3.69,
+      "complete": true
+    },
+    {
+      "task_id": "0934a4d8",
+      "counts": {
+        "train": 2,
+        "validation": 2
+      },
+      "requested": {
+        "train": 2,
+        "validation": 2
+      },
+      "pool_counts": {
+        "train": 789,
+        "validation": 43
+      },
+      "pool_sources": {
+        "native": 832
+      },
+      "rejections": {},
+      "seconds": 13.43,
+      "complete": true
+    },
+    {
+      "task_id": "3de23699",
+      "counts": {
+        "train": 2,
+        "validation": 2
+      },
+      "requested": {
+        "train": 2,
+        "validation": 2
+      },
+      "pool_counts": {
+        "train": 721,
+        "validation": 43
+      },
+      "pool_sources": {
+        "rearc-compatible-v1": 363,
+        "native": 401
+      },
+      "rejections": {
+        "pair:ValueError:RE-ARC constructor/verifier disagreement": 1,
+        "pair:ValueError:Fork/RE-ARC domain disagreement": 3
+      },
+      "seconds": 1.3,
+      "complete": true
+    },
+    {
+      "task_id": "42a50994",
+      "counts": {
+        "train": 2,
+        "validation": 2
+      },
+      "requested": {
+        "train": 2,
+        "validation": 2
+      },
+      "pool_counts": {
+        "train": 787,
+        "validation": 43
+      },
+      "pool_sources": {
+        "rearc-compatible-v1": 428,
+        "native": 402
+      },
+      "rejections": {
+        "duplicate_input": 2
+      },
+      "seconds": 1.73,
+      "complete": true
+    },
+    {
+      "task_id": "4093f84a",
+      "counts": {
+        "train": 2,
+        "validation": 2
+      },
+      "requested": {
+        "train": 2,
+        "validation": 2
+      },
+      "pool_counts": {
+        "train": 692,
+        "validation": 42
+      },
+      "pool_sources": {
+        "native": 408,
+        "rearc-compatible-v1": 326
+      },
+      "rejections": {
+        "pair:ValueError:Fork/RE-ARC domain disagreement": 98
+      },
+      "seconds": 2.07,
+      "complete": true
+    },
+    {
+      "task_id": "46442a0e",
+      "counts": {
+        "train": 2,
+        "validation": 2
+      },
+      "requested": {
+        "train": 2,
+        "validation": 2
+      },
+      "pool_counts": {
+        "train": 1051,
+        "validation": 41
+      },
+      "pool_sources": {
+        "rearc-compatible-v1": 561,
+        "native": 531
+      },
+      "rejections": {
+        "duplicate_input": 60
+      },
+      "seconds": 0.86,
+      "complete": true
+    },
+    {
+      "task_id": "47c1f68c",
+      "counts": {
+        "train": 2,
+        "validation": 2
+      },
+      "requested": {
+        "train": 2,
+        "validation": 2
+      },
+      "pool_counts": {
+        "train": 782,
+        "validation": 45
+      },
+      "pool_sources": {
+        "rearc-compatible-v1": 416,
+        "native": 411
+      },
+      "rejections": {
+        "duplicate_input": 5
+      },
+      "seconds": 2.3,
+      "complete": true
+    },
+    {
+      "task_id": "49d1d64f",
+      "counts": {
+        "train": 2,
+        "validation": 2
+      },
+      "requested": {
+        "train": 2,
+        "validation": 2
+      },
+      "pool_counts": {
+        "train": 1035,
+        "validation": 40
+      },
+      "pool_sources": {
+        "rearc-compatible-v1": 545,
+        "native": 530
+      },
+      "rejections": {
+        "duplicate_input": 13
+      },
+      "seconds": 1.84,
+      "complete": true
+    },
+    {
+      "task_id": "4c4377d9",
+      "counts": {
+        "train": 2,
+        "validation": 2
+      },
+      "requested": {
+        "train": 2,
+        "validation": 2
+      },
+      "pool_counts": {
+        "train": 721,
+        "validation": 45
+      },
+      "pool_sources": {
+        "native": 365,
+        "rearc-compatible-v1": 401
+      },
+      "rejections": {
+        "duplicate_input": 2
+      },
+      "seconds": 0.6,
+      "complete": true
+    },
+    {
+      "task_id": "4c5c2cf0",
+      "counts": {
+        "train": 2,
+        "validation": 2
+      },
+      "requested": {
+        "train": 2,
+        "validation": 2
+      },
+      "pool_counts": {
+        "train": 600,
+        "validation": 40
+      },
+      "pool_sources": {
+        "native": 309,
+        "rearc-compatible-v1": 331
+      },
+      "rejections": {},
+      "seconds": 1.35,
+      "complete": true
+    },
+    {
+      "task_id": "11852cab",
+      "counts": {
+        "train": 2,
+        "validation": 2
+      },
+      "requested": {
+        "train": 2,
+        "validation": 2
+      },
+      "pool_counts": {
+        "train": 1184,
+        "validation": 41
+      },
+      "pool_sources": {
+        "native": 970,
+        "rearc-compatible-v1": 255
+      },
+      "rejections": {
+        "pair:ValueError:RE-ARC constructor/verifier disagreement": 131,
+        "pair:ValueError:Fork/RE-ARC domain disagreement": 561,
+        "duplicate_input": 3
+      },
+      "seconds": 20.92,
+      "complete": true
+    },
+    {
+      "task_id": "4be741c5",
+      "counts": {
+        "train": 2,
+        "validation": 2
+      },
+      "requested": {
+        "train": 2,
+        "validation": 2
+      },
+      "pool_counts": {
+        "train": 658,
+        "validation": 45
+      },
+      "pool_sources": {
+        "native": 337,
+        "rearc-compatible-v1": 366
+      },
+      "rejections": {
+        "pair:ValueError:Invalid ARC grid": 1
+      },
+      "seconds": 3.83,
+      "complete": true
+    },
+    {
+      "task_id": "53b68214",
+      "counts": {
+        "train": 2,
+        "validation": 2
+      },
+      "requested": {
+        "train": 2,
+        "validation": 2
+      },
+      "pool_counts": {
+        "train": 851,
+        "validation": 49
+      },
+      "pool_sources": {
+        "rearc-compatible-v1": 538,
+        "native": 362
+      },
+      "rejections": {
+        "duplicate_input": 121,
+        "pair:ValueError:RE-ARC constructor/verifier disagreement": 3
+      },
+      "seconds": 1.81,
+      "complete": true
+    },
+    {
+      "task_id": "5582e5ca",
+      "counts": {
+        "train": 2,
+        "validation": 2
+      },
+      "requested": {
+        "train": 2,
+        "validation": 2
+      },
+      "pool_counts": {
+        "train": 791,
+        "validation": 41
+      },
+      "pool_sources": {
+        "native": 435,
+        "rearc-compatible-v1": 397
+      },
+      "rejections": {},
+      "seconds": 0.78,
+      "complete": true
+    },
+    {
+      "task_id": "54d9e175",
+      "counts": {
+        "train": 2,
+        "validation": 2
+      },
+      "requested": {
+        "train": 2,
+        "validation": 2
+      },
+      "pool_counts": {
+        "train": 986,
+        "validation": 42
+      },
+      "pool_sources": {
+        "native": 535,
+        "rearc-compatible-v1": 493
+      },
+      "rejections": {
+        "pair:ValueError:Fork/RE-ARC domain disagreement": 565,
+        "duplicate_input": 455
+      },
+      "seconds": 2.92,
+      "complete": true
+    },
+    {
+      "task_id": "39a8645d",
+      "counts": {
+        "train": 2,
+        "validation": 2
+      },
+      "requested": {
+        "train": 2,
+        "validation": 2
+      },
+      "pool_counts": {
+        "train": 725,
+        "validation": 43
+      },
+      "pool_sources": {
+        "native": 379,
+        "rearc-compatible-v1": 389
+      },
+      "rejections": {},
+      "seconds": 15.77,
+      "complete": true
+    },
+    {
+      "task_id": "56ff96f3",
+      "counts": {
+        "train": 2,
+        "validation": 2
+      },
+      "requested": {
+        "train": 2,
+        "validation": 2
+      },
+      "pool_counts": {
+        "train": 982,
+        "validation": 42
+      },
+      "pool_sources": {
+        "rearc-compatible-v1": 516,
+        "native": 508
+      },
+      "rejections": {},
+      "seconds": 2.21,
+      "complete": true
+    },
+    {
+      "task_id": "62c24649",
+      "counts": {
+        "train": 2,
+        "validation": 2
+      },
+      "requested": {
+        "train": 2,
+        "validation": 2
+      },
+      "pool_counts": {
+        "train": 664,
+        "validation": 40
+      },
+      "pool_sources": {
+        "rearc-compatible-v1": 337,
+        "native": 367
+      },
+      "rejections": {},
+      "seconds": 0.46,
+      "complete": true
+    },
+    {
+      "task_id": "6150a2bd",
+      "counts": {
+        "train": 2,
+        "validation": 2
+      },
+      "requested": {
+        "train": 2,
+        "validation": 2
+      },
+      "pool_counts": {
+        "train": 1685,
+        "validation": 42
+      },
+      "pool_sources": {
+        "native": 841,
+        "rearc-compatible-v1": 886
+      },
+      "rejections": {
+        "duplicate_input": 1
+      },
+      "seconds": 1.92,
+      "complete": true
+    },
+    {
+      "task_id": "5daaa586",
+      "counts": {
+        "train": 2,
+        "validation": 2
+      },
+      "requested": {
+        "train": 2,
+        "validation": 2
+      },
+      "pool_counts": {
+        "train": 563,
+        "validation": 40
+      },
+      "pool_sources": {
+        "native": 425,
+        "rearc-compatible-v1": 178
+      },
+      "rejections": {
+        "pair:ValueError:RE-ARC constructor/verifier disagreement": 229
+      },
+      "seconds": 2.28,
+      "complete": true
+    },
+    {
+      "task_id": "662c240a",
+      "counts": {
+        "train": 2,
+        "validation": 2
+      },
+      "requested": {
+        "train": 2,
+        "validation": 2
+      },
+      "pool_counts": {
+        "train": 834,
+        "validation": 44
+      },
+      "pool_sources": {
+        "native": 434,
+        "rearc-compatible-v1": 444
+      },
+      "rejections": {
+        "pair:StopIteration:": 18
+      },
+      "seconds": 0.63,
+      "complete": true
+    },
+    {
+      "task_id": "3194b014",
+      "counts": {
+        "train": 2,
+        "validation": 2
+      },
+      "requested": {
+        "train": 2,
+        "validation": 2
+      },
+      "pool_counts": {
+        "train": 3218,
+        "validation": 174
+      },
+      "pool_sources": {
+        "native": 3392
+      },
+      "rejections": {},
+      "seconds": 19.34,
+      "complete": true
+    },
+    {
+      "task_id": "67a3c6ac",
+      "counts": {
+        "train": 2,
+        "validation": 2
+      },
+      "requested": {
+        "train": 2,
+        "validation": 2
+      },
+      "pool_counts": {
+        "train": 727,
+        "validation": 41
+      },
+      "pool_sources": {
+        "native": 401,
+        "rearc-compatible-v1": 367
+      },
+      "rejections": {},
+      "seconds": 1.06,
+      "complete": true
+    },
+    {
+      "task_id": "68b16354",
+      "counts": {
+        "train": 2,
+        "validation": 2
+      },
+      "requested": {
+        "train": 2,
+        "validation": 2
+      },
+      "pool_counts": {
+        "train": 856,
+        "validation": 40
+      },
+      "pool_sources": {
+        "native": 459,
+        "rearc-compatible-v1": 437
+      },
+      "rejections": {},
+      "seconds": 0.99,
+      "complete": true
+    },
+    {
+      "task_id": "67e8384a",
+      "counts": {
+        "train": 2,
+        "validation": 2
+      },
+      "requested": {
+        "train": 2,
+        "validation": 2
+      },
+      "pool_counts": {
+        "train": 919,
+        "validation": 41
+      },
+      "pool_sources": {
+        "rearc-compatible-v1": 509,
+        "native": 451
+      },
+      "rejections": {},
+      "seconds": 1.7,
+      "complete": true
+    },
+    {
+      "task_id": "6d0aefbc",
+      "counts": {
+        "train": 2,
+        "validation": 2
+      },
+      "requested": {
+        "train": 2,
+        "validation": 2
+      },
+      "pool_counts": {
+        "train": 660,
+        "validation": 42
+      },
+      "pool_sources": {
+        "native": 359,
+        "rearc-compatible-v1": 343
+      },
+      "rejections": {
+        "duplicate_input": 2
+      },
+      "seconds": 0.52,
+      "complete": true
+    },
+    {
+      "task_id": "539a4f51",
+      "counts": {
+        "train": 2,
+        "validation": 2
+      },
+      "requested": {
+        "train": 2,
+        "validation": 2
+      },
+      "pool_counts": {
+        "train": 2267,
+        "validation": 85
+      },
+      "pool_sources": {
+        "native": 1683,
+        "rearc-compatible-v1": 669
+      },
+      "rejections": {
+        "pair:ValueError:Fork/RE-ARC domain disagreement": 1015,
+        "pair:ZeroDivisionError:integer modulo by zero": 945,
+        "duplicate_input": 936
+      },
+      "seconds": 9.28,
+      "complete": true
+    },
+    {
+      "task_id": "6e02f1e3",
+      "counts": {
+        "train": 2,
+        "validation": 2
+      },
+      "requested": {
+        "train": 2,
+        "validation": 2
+      },
+      "pool_counts": {
+        "train": 957,
+        "validation": 47
+      },
+      "pool_sources": {
+        "native": 413,
+        "rearc-compatible-v1": 591
+      },
+      "rejections": {
+        "duplicate_input": 340
+      },
+      "seconds": 1.08,
+      "complete": true
+    },
+    {
+      "task_id": "6cdd2623",
+      "counts": {
+        "train": 2,
+        "validation": 2
+      },
+      "requested": {
+        "train": 2,
+        "validation": 2
+      },
+      "pool_counts": {
+        "train": 727,
+        "validation": 41
+      },
+      "pool_sources": {
+        "native": 376,
+        "rearc-compatible-v1": 392
+      },
+      "rejections": {
+        "episode:TargetError:Program not exact: [true, true, true, false]": 1,
+        "episode:TargetError:Program not exact: [true, true, false, true]": 1
+      },
+      "seconds": 2.32,
+      "complete": true
+    },
+    {
+      "task_id": "6fa7a44f",
+      "counts": {
+        "train": 2,
+        "validation": 2
+      },
+      "requested": {
+        "train": 2,
+        "validation": 2
+      },
+      "pool_counts": {
+        "train": 664,
+        "validation": 40
+      },
+      "pool_sources": {
+        "rearc-compatible-v1": 380,
+        "native": 324
+      },
+      "rejections": {},
+      "seconds": 0.61,
+      "complete": true
+    },
+    {
+      "task_id": "6f8cd79b",
+      "counts": {
+        "train": 2,
+        "validation": 2
+      },
+      "requested": {
+        "train": 2,
+        "validation": 2
+      },
+      "pool_counts": {
+        "train": 799,
+        "validation": 43
+      },
+      "pool_sources": {
+        "rearc-compatible-v1": 793,
+        "native": 49
+      },
+      "rejections": {
+        "duplicate_input": 758
+      },
+      "seconds": 1.7,
+      "complete": true
+    },
+    {
+      "task_id": "6e19193c",
+      "counts": {
+        "train": 2,
+        "validation": 2
+      },
+      "requested": {
+        "train": 2,
+        "validation": 2
+      },
+      "pool_counts": {
+        "train": 863,
+        "validation": 41
+      },
+      "pool_sources": {
+        "rearc-compatible-v1": 422,
+        "native": 482
+      },
+      "rejections": {
+        "pair:ValueError:Fork/RE-ARC domain disagreement": 55,
+        "duplicate_input": 1
+      },
+      "seconds": 2.83,
+      "complete": true
+    },
+    {
+      "task_id": "7fe24cdd",
+      "counts": {
+        "train": 2,
+        "validation": 2
+      },
+      "requested": {
+        "train": 2,
+        "validation": 2
+      },
+      "pool_counts": {
+        "train": 788,
+        "validation": 40
+      },
+      "pool_sources": {
+        "native": 395,
+        "rearc-compatible-v1": 433
+      },
+      "rejections": {
+        "duplicate_input": 4
+      },
+      "seconds": 0.53,
+      "complete": true
+    },
+    {
+      "task_id": "74dd1130",
+      "counts": {
+        "train": 2,
+        "validation": 2
+      },
+      "requested": {
+        "train": 2,
+        "validation": 2
+      },
+      "pool_counts": {
+        "train": 598,
+        "validation": 42
+      },
+      "pool_sources": {
+        "native": 312,
+        "rearc-compatible-v1": 328
+      },
+      "rejections": {},
+      "seconds": 0.74,
+      "complete": true
+    },
+    {
+      "task_id": "746b3537",
+      "counts": {
+        "train": 2,
+        "validation": 2
+      },
+      "requested": {
+        "train": 2,
+        "validation": 2
+      },
+      "pool_counts": {
+        "train": 980,
+        "validation": 44
+      },
+      "pool_sources": {
+        "rearc-compatible-v1": 509,
+        "native": 515
+      },
+      "rejections": {},
+      "seconds": 1.61,
+      "complete": true
+    },
+    {
+      "task_id": "6ecd11f4",
+      "counts": {
+        "train": 2,
+        "validation": 2
+      },
+      "requested": {
+        "train": 2,
+        "validation": 2
+      },
+      "pool_counts": {
+        "train": 1044,
+        "validation": 44
+      },
+      "pool_sources": {
+        "rearc-compatible-v1": 506,
+        "native": 582
+      },
+      "rejections": {},
+      "seconds": 4.13,
+      "complete": true
+    },
+    {
+      "task_id": "0d3d703e",
+      "counts": {
+        "train": 2
+      },
+      "requested": {
+        "train": 2,
+        "validation": 2
+      },
+      "pool_counts": {
+        "train": 3398,
+        "validation": 165
+      },
+      "pool_sources": {
+        "native": 336,
+        "rearc-compatible-v1": 3227
+      },
+      "rejections": {
+        "duplicate_input": 2837
+      },
+      "seconds": 33.73,
+      "complete": false
+    },
+    {
+      "task_id": "8f2ea7aa",
+      "counts": {
+        "train": 2,
+        "validation": 2
+      },
+      "requested": {
+        "train": 2,
+        "validation": 2
+      },
+      "pool_counts": {
+        "train": 904,
+        "validation": 41
+      },
+      "pool_sources": {
+        "native": 693,
+        "rearc-compatible-v1": 252
+      },
+      "rejections": {
+        "pair:ValueError:could not broadcast input array from shape (5,5) into shape (5,1)": 81,
+        "pair:ValueError:could not broadcast input array from shape (8,8) into shape (8,0)": 40,
+        "pair:ValueError:could not broadcast input array from shape (5,5) into shape (1,5)": 38,
+        "pair:ValueError:Fork/RE-ARC domain disagreement": 160,
+        "pair:ValueError:could not broadcast input array from shape (5,5) into shape (1,0)": 23,
+        "pair:ValueError:could not broadcast input array from shape (8,8) into shape (0,0)": 54,
+        "pair:ValueError:could not broadcast input array from shape (8,8) into shape (0,8)": 28,
+        "pair:ValueError:could not broadcast input array from shape (5,5) into shape (1,1)": 20,
+        "pair:ValueError:could not broadcast input array from shape (5,5) into shape (5,0)": 47,
+        "pair:ValueError:could not broadcast input array from shape (8,8) into shape (8,1)": 11,
+        "pair:ValueError:could not broadcast input array from shape (5,5) into shape (0,5)": 27,
+        "pair:ValueError:could not broadcast input array from shape (5,5) into shape (0,0)": 26,
+        "duplicate_input": 70,
+        "pair:ValueError:could not broadcast input array from shape (8,8) into shape (0,1)": 7,
+        "pair:ValueError:could not broadcast input array from shape (5,5) into shape (0,1)": 20,
+        "pair:ValueError:could not broadcast input array from shape (8,8) into shape (1,8)": 1,
+        "pair:ValueError:could not broadcast input array from shape (8,8) into shape (1,0)": 2
+      },
+      "seconds": 1.16,
+      "complete": true
+    },
+    {
+      "task_id": "85c4e7cd",
+      "counts": {
+        "train": 2,
+        "validation": 2
+      },
+      "requested": {
+        "train": 2,
+        "validation": 2
+      },
+      "pool_counts": {
+        "train": 1912,
+        "validation": 40
+      },
+      "pool_sources": {
+        "rearc-compatible-v1": 975,
+        "native": 977
+      },
+      "rejections": {
+        "duplicate_input": 32
+      },
+      "seconds": 3.46,
+      "complete": true
+    },
+    {
+      "task_id": "8731374e",
+      "counts": {
+        "train": 2,
+        "validation": 2
+      },
+      "requested": {
+        "train": 2,
+        "validation": 2
+      },
+      "pool_counts": {
+        "train": 717,
+        "validation": 44
+      },
+      "pool_sources": {
+        "rearc-compatible-v1": 373,
+        "native": 388
+      },
+      "rejections": {
+        "pair:ValueError:RE-ARC constructor/verifier disagreement": 29,
+        "pair:ValueError:Fork/RE-ARC domain disagreement": 34,
+        "pair:ValueError:Independent verifier disagrees": 8
+      },
+      "seconds": 3.73,
+      "complete": true
+    },
+    {
+      "task_id": "8d5021e8",
+      "counts": {
+        "train": 2,
+        "validation": 2
+      },
+      "requested": {
+        "train": 2,
+        "validation": 2
+      },
+      "pool_counts": {
+        "train": 2362,
+        "validation": 101
+      },
+      "pool_sources": {
+        "rearc-compatible-v1": 1914,
+        "native": 549
+      },
+      "rejections": {
+        "duplicate_input": 1377
+      },
+      "seconds": 2.55,
+      "complete": true
+    },
+    {
+      "task_id": "91413438",
+      "counts": {
+        "train": 2,
+        "validation": 2
+      },
+      "requested": {
+        "train": 2,
+        "validation": 2
+      },
+      "pool_counts": {
+        "train": 1107,
+        "validation": 41
+      },
+      "pool_sources": {
+        "rearc-compatible-v1": 588,
+        "native": 560
+      },
+      "rejections": {
+        "duplicate_input": 68
+      },
+      "seconds": 0.76,
+      "complete": true
+    },
+    {
+      "task_id": "9172f3a0",
+      "counts": {
+        "train": 2,
+        "validation": 2
+      },
+      "requested": {
+        "train": 2,
+        "validation": 2
+      },
+      "pool_counts": {
+        "train": 662,
+        "validation": 41
+      },
+      "pool_sources": {
+        "native": 345,
+        "rearc-compatible-v1": 358
+      },
+      "rejections": {
+        "duplicate_input": 1
+      },
+      "seconds": 0.52,
+      "complete": true
+    },
+    {
+      "task_id": "90c28cc7",
+      "counts": {
+        "train": 2,
+        "validation": 2
+      },
+      "requested": {
+        "train": 2,
+        "validation": 2
+      },
+      "pool_counts": {
+        "train": 875,
+        "validation": 41
+      },
+      "pool_sources": {
+        "native": 443,
+        "rearc-compatible-v1": 473
+      },
+      "rejections": {
+        "pair:ValueError:Fork/RE-ARC domain disagreement": 61,
+        "pair:ValueError:Independent verifier disagrees": 111
+      },
+      "seconds": 1.78,
+      "complete": true
+    },
+    {
+      "task_id": "928ad970",
+      "counts": {
+        "train": 2,
+        "validation": 2
+      },
+      "requested": {
+        "train": 2,
+        "validation": 2
+      },
+      "pool_counts": {
+        "train": 728,
+        "validation": 40
+      },
+      "pool_sources": {
+        "native": 414,
+        "rearc-compatible-v1": 354
+      },
+      "rejections": {},
+      "seconds": 1.4,
+      "complete": true
+    },
+    {
+      "task_id": "9565186b",
+      "counts": {
+        "train": 2,
+        "validation": 2
+      },
+      "requested": {
+        "train": 2,
+        "validation": 2
+      },
+      "pool_counts": {
+        "train": 596,
+        "validation": 42
+      },
+      "pool_sources": {
+        "rearc-compatible-v1": 316,
+        "native": 322
+      },
+      "rejections": {
+        "duplicate_input": 1,
+        "pair:ValueError:RE-ARC constructor/verifier disagreement": 1
+      },
+      "seconds": 1.18,
+      "complete": true
+    },
+    {
+      "task_id": "44f52bb0",
+      "counts": {
+        "train": 2
+      },
+      "requested": {
+        "train": 2,
+        "validation": 2
+      },
+      "pool_counts": {
+        "train": 2426,
+        "validation": 138
+      },
+      "pool_sources": {
+        "native": 213,
+        "rearc-compatible-v1": 2351
+      },
+      "rejections": {
+        "pair:ValueError:Fork/RE-ARC domain disagreement": 858,
+        "duplicate_input": 2978
+      },
+      "seconds": 25.24,
+      "complete": false
+    },
+    {
+      "task_id": "963e52fc",
+      "counts": {
+        "train": 2,
+        "validation": 2
+      },
+      "requested": {
+        "train": 2,
+        "validation": 2
+      },
+      "pool_counts": {
+        "train": 1268,
+        "validation": 40
+      },
+      "pool_sources": {
+        "rearc-compatible-v1": 642,
+        "native": 666
+      },
+      "rejections": {
+        "duplicate_input": 23,
+        "pair:ValueError:RE-ARC constructor/verifier disagreement": 13
+      },
+      "seconds": 1.88,
+      "complete": true
+    },
+    {
+      "task_id": "8be77c9e",
+      "counts": {
+        "train": 2,
+        "validation": 2
+      },
+      "requested": {
+        "train": 2,
+        "validation": 2
+      },
+      "pool_counts": {
+        "train": 3019,
+        "validation": 136
+      },
+      "pool_sources": {
+        "native": 507,
+        "rearc-compatible-v1": 2648
+      },
+      "rejections": {
+        "duplicate_input": 2157
+      },
+      "seconds": 8.3,
+      "complete": true
+    },
+    {
+      "task_id": "9af7a82c",
+      "counts": {
+        "train": 2,
+        "validation": 2
+      },
+      "requested": {
+        "train": 2,
+        "validation": 2
+      },
+      "pool_counts": {
+        "train": 968,
+        "validation": 42
+      },
+      "pool_sources": {
+        "native": 496,
+        "rearc-compatible-v1": 514
+      },
+      "rejections": {
+        "duplicate_input": 14
+      },
+      "seconds": 1.24,
+      "complete": true
+    },
+    {
+      "task_id": "98cf29f8",
+      "counts": {
+        "train": 2,
+        "validation": 2
+      },
+      "requested": {
+        "train": 2,
+        "validation": 2
+      },
+      "pool_counts": {
+        "train": 783,
+        "validation": 41
+      },
+      "pool_sources": {
+        "rearc-compatible-v1": 391,
+        "native": 433
+      },
+      "rejections": {
+        "pair:ValueError:Fork/RE-ARC domain disagreement": 8
+      },
+      "seconds": 3.41,
+      "complete": true
+    },
+    {
+      "task_id": "a416b8f3",
+      "counts": {
+        "train": 2,
+        "validation": 2
+      },
+      "requested": {
+        "train": 2,
+        "validation": 2
+      },
+      "pool_counts": {
+        "train": 727,
+        "validation": 41
+      },
+      "pool_sources": {
+        "rearc-compatible-v1": 384,
+        "native": 384
+      },
+      "rejections": {},
+      "seconds": 0.83,
+      "complete": true
+    },
+    {
+      "task_id": "9edfc990",
+      "counts": {
+        "train": 2,
+        "validation": 2
+      },
+      "requested": {
+        "train": 2,
+        "validation": 2
+      },
+      "pool_counts": {
+        "train": 792,
+        "validation": 40
+      },
+      "pool_sources": {
+        "rearc-compatible-v1": 415,
+        "native": 417
+      },
+      "rejections": {},
+      "seconds": 2.65,
+      "complete": true
+    },
+    {
+      "task_id": "9dfd6313",
+      "counts": {
+        "train": 2,
+        "validation": 2
+      },
+      "requested": {
+        "train": 2,
+        "validation": 2
+      },
+      "pool_counts": {
+        "train": 886,
+        "validation": 46
+      },
+      "pool_sources": {
+        "rearc-compatible-v1": 221,
+        "native": 711
+      },
+      "rejections": {
+        "pair:ValueError:Fork/RE-ARC domain disagreement": 616,
+        "duplicate_input": 52
+      },
+      "seconds": 2.7,
+      "complete": true
+    },
+    {
+      "task_id": "a48eeaf7",
+      "counts": {
+        "train": 2,
+        "validation": 2
+      },
+      "requested": {
+        "train": 2,
+        "validation": 2
+      },
+      "pool_counts": {
+        "train": 536,
+        "validation": 40
+      },
+      "pool_sources": {
+        "rearc-compatible-v1": 296,
+        "native": 280
+      },
+      "rejections": {},
+      "seconds": 1.24,
+      "complete": true
+    },
+    {
+      "task_id": "aaecdb9a",
+      "counts": {
+        "train": 2,
+        "validation": 2
+      },
+      "requested": {
+        "train": 2,
+        "validation": 2
+      },
+      "pool_counts": {
+        "train": 1046,
+        "validation": 42
+      },
+      "pool_sources": {
+        "native": 1088
+      },
+      "rejections": {},
+      "seconds": 1.25,
+      "complete": true
+    },
+    {
+      "task_id": "b1948b0a",
+      "counts": {
+        "train": 2,
+        "validation": 2
+      },
+      "requested": {
+        "train": 2,
+        "validation": 2
+      },
+      "pool_counts": {
+        "train": 664,
+        "validation": 40
+      },
+      "pool_sources": {
+        "rearc-compatible-v1": 358,
+        "native": 346
+      },
+      "rejections": {},
+      "seconds": 1.51,
+      "complete": true
+    },
+    {
+      "task_id": "3eda0437",
+      "counts": {
+        "train": 2,
+        "validation": 2
+      },
+      "requested": {
+        "train": 2,
+        "validation": 2
+      },
+      "pool_counts": {
+        "train": 883,
+        "validation": 40
+      },
+      "pool_sources": {
+        "native": 499,
+        "rearc-compatible-v1": 424
+      },
+      "rejections": {
+        "pair:ValueError:Fork/RE-ARC domain disagreement": 101
+      },
+      "seconds": 32.33,
+      "complete": true
+    },
+    {
+      "task_id": "b7249182",
+      "counts": {
+        "train": 2,
+        "validation": 2
+      },
+      "requested": {
+        "train": 2,
+        "validation": 2
+      },
+      "pool_counts": {
+        "train": 535,
+        "validation": 41
+      },
+      "pool_sources": {
+        "rearc-compatible-v1": 287,
+        "native": 289
+      },
+      "rejections": {},
+      "seconds": 1.01,
+      "complete": true
+    },
+    {
+      "task_id": "b91ae062",
+      "counts": {
+        "train": 2,
+        "validation": 2
+      },
+      "requested": {
+        "train": 2,
+        "validation": 2
+      },
+      "pool_counts": {
+        "train": 724,
+        "validation": 40
+      },
+      "pool_sources": {
+        "rearc-compatible-v1": 380,
+        "native": 384
+      },
+      "rejections": {
+        "duplicate_input": 4
+      },
+      "seconds": 0.54,
+      "complete": true
+    },
+    {
+      "task_id": "b94a9452",
+      "counts": {
+        "train": 2,
+        "validation": 2
+      },
+      "requested": {
+        "train": 2,
+        "validation": 2
+      },
+      "pool_counts": {
+        "train": 806,
+        "validation": 41
+      },
+      "pool_sources": {
+        "native": 472,
+        "rearc-compatible-v1": 375
+      },
+      "rejections": {
+        "pair:ValueError:Fork/RE-ARC domain disagreement": 48,
+        "pair:ValueError:RE-ARC constructor/verifier disagreement": 1
+      },
+      "seconds": 1.46,
+      "complete": true
+    },
+    {
+      "task_id": "b8825c91",
+      "counts": {
+        "train": 2,
+        "validation": 2
+      },
+      "requested": {
+        "train": 2,
+        "validation": 2
+      },
+      "pool_counts": {
+        "train": 856,
+        "validation": 40
+      },
+      "pool_sources": {
+        "rearc-compatible-v1": 453,
+        "native": 443
+      },
+      "rejections": {},
+      "seconds": 4.14,
+      "complete": true
+    },
+    {
+      "task_id": "be94b721",
+      "counts": {
+        "train": 2,
+        "validation": 2
+      },
+      "requested": {
+        "train": 2,
+        "validation": 2
+      },
+      "pool_counts": {
+        "train": 678,
+        "validation": 41
+      },
+      "pool_sources": {
+        "native": 417,
+        "rearc-compatible-v1": 302
+      },
+      "rejections": {
+        "pair:ValueError:Fork/RE-ARC domain disagreement": 111,
+        "pair:ValueError:RE-ARC constructor/verifier disagreement": 2
+      },
+      "seconds": 2.57,
+      "complete": true
+    },
+    {
+      "task_id": "c3e719e8",
+      "counts": {
+        "train": 2,
+        "validation": 2
+      },
+      "requested": {
+        "train": 2,
+        "validation": 2
+      },
+      "pool_counts": {
+        "train": 715,
+        "validation": 46
+      },
+      "pool_sources": {
+        "native": 394,
+        "rearc-compatible-v1": 367
+      },
+      "rejections": {
+        "duplicate_input": 7
+      },
+      "seconds": 0.52,
+      "complete": true
+    },
+    {
+      "task_id": "91714a58",
+      "counts": {
+        "train": 2,
+        "validation": 2
+      },
+      "requested": {
+        "train": 2,
+        "validation": 2
+      },
+      "pool_counts": {
+        "train": 583,
+        "validation": 46
+      },
+      "pool_sources": {
+        "native": 309,
+        "rearc-compatible-v1": 320
+      },
+      "rejections": {
+        "pair:ValueError:RE-ARC constructor/verifier disagreement": 11
+      },
+      "seconds": 17.1,
+      "complete": true
+    },
+    {
+      "task_id": "bda2d7a6",
+      "counts": {
+        "train": 2,
+        "validation": 2
+      },
+      "requested": {
+        "train": 2,
+        "validation": 2
+      },
+      "pool_counts": {
+        "train": 2075,
+        "validation": 42
+      },
+      "pool_sources": {
+        "native": 1104,
+        "rearc-compatible-v1": 1013
+      },
+      "rejections": {
+        "pair:ValueError:Fork/RE-ARC domain disagreement": 1042,
+        "duplicate_input": 1001
+      },
+      "seconds": 6.76,
+      "complete": true
+    },
+    {
+      "task_id": "c59eb873",
+      "counts": {
+        "train": 2,
+        "validation": 2
+      },
+      "requested": {
+        "train": 2,
+        "validation": 2
+      },
+      "pool_counts": {
+        "train": 880,
+        "validation": 41
+      },
+      "pool_sources": {
+        "rearc-compatible-v1": 469,
+        "native": 452
+      },
+      "rejections": {
+        "duplicate_input": 39
+      },
+      "seconds": 0.89,
+      "complete": true
+    },
+    {
+      "task_id": "c444b776",
+      "counts": {
+        "train": 2,
+        "validation": 2
+      },
+      "requested": {
+        "train": 2,
+        "validation": 2
+      },
+      "pool_counts": {
+        "train": 791,
+        "validation": 40
+      },
+      "pool_sources": {
+        "rearc-compatible-v1": 419,
+        "native": 412
+      },
+      "rejections": {
+        "pair:ValueError:RE-ARC constructor/verifier disagreement": 1
+      },
+      "seconds": 1.54,
+      "complete": true
+    },
+    {
+      "task_id": "c8f0f002",
+      "counts": {
+        "train": 2,
+        "validation": 2
+      },
+      "requested": {
+        "train": 2,
+        "validation": 2
+      },
+      "pool_counts": {
+        "train": 855,
+        "validation": 41
+      },
+      "pool_sources": {
+        "native": 463,
+        "rearc-compatible-v1": 433
+      },
+      "rejections": {},
+      "seconds": 2.26,
+      "complete": true
+    },
+    {
+      "task_id": "c909285e",
+      "counts": {
+        "train": 2,
+        "validation": 2
+      },
+      "requested": {
+        "train": 2,
+        "validation": 2
+      },
+      "pool_counts": {
+        "train": 789,
+        "validation": 41
+      },
+      "pool_sources": {
+        "rearc-compatible-v1": 433,
+        "native": 397
+      },
+      "rejections": {
+        "pair:ValueError:RE-ARC constructor/verifier disagreement": 2
+      },
+      "seconds": 2.9,
+      "complete": true
+    },
+    {
+      "task_id": "cce03e0d",
+      "counts": {
+        "train": 2,
+        "validation": 2
+      },
+      "requested": {
+        "train": 2,
+        "validation": 2
+      },
+      "pool_counts": {
+        "train": 712,
+        "validation": 44
+      },
+      "pool_sources": {
+        "native": 377,
+        "rearc-compatible-v1": 379
+      },
+      "rejections": {
+        "duplicate_input": 12
+      },
+      "seconds": 0.43,
+      "complete": true
+    },
+    {
+      "task_id": "b9b7f026",
+      "counts": {
+        "train": 2,
+        "validation": 2
+      },
+      "requested": {
+        "train": 2,
+        "validation": 2
+      },
+      "pool_counts": {
+        "train": 982,
+        "validation": 42
+      },
+      "pool_sources": {
+        "native": 535,
+        "rearc-compatible-v1": 489
+      },
+      "rejections": {},
+      "seconds": 12.96,
+      "complete": true
+    },
+    {
+      "task_id": "9d9215db",
+      "counts": {
+        "train": 2,
+        "validation": 2
+      },
+      "requested": {
+        "train": 2,
+        "validation": 2
+      },
+      "pool_counts": {
+        "train": 2992,
+        "validation": 75
+      },
+      "pool_sources": {
+        "native": 1398,
+        "rearc-compatible-v1": 1669
+      },
+      "rejections": {
+        "duplicate_input": 197
+      },
+      "seconds": 19.84,
+      "complete": true
+    },
+    {
+      "task_id": "cbded52d",
+      "counts": {
+        "train": 2,
+        "validation": 2
+      },
+      "requested": {
+        "train": 2,
+        "validation": 2
+      },
+      "pool_counts": {
+        "train": 1435,
+        "validation": 40
+      },
+      "pool_sources": {
+        "rearc-compatible-v1": 626,
+        "native": 849
+      },
+      "rejections": {
+        "pair:ValueError:Fork/RE-ARC domain disagreement": 383,
+        "duplicate_input": 126
+      },
+      "seconds": 3.64,
+      "complete": true
+    },
+    {
+      "task_id": "d10ecb37",
+      "counts": {
+        "train": 2,
+        "validation": 2
+      },
+      "requested": {
+        "train": 2,
+        "validation": 2
+      },
+      "pool_counts": {
+        "train": 791,
+        "validation": 41
+      },
+      "pool_sources": {
+        "native": 413,
+        "rearc-compatible-v1": 419
+      },
+      "rejections": {},
+      "seconds": 1.23,
+      "complete": true
+    },
+    {
+      "task_id": "d511f180",
+      "counts": {
+        "train": 2,
+        "validation": 2
+      },
+      "requested": {
+        "train": 2,
+        "validation": 2
+      },
+      "pool_counts": {
+        "train": 914,
+        "validation": 46
+      },
+      "pool_sources": {
+        "native": 465,
+        "rearc-compatible-v1": 495
+      },
+      "rejections": {},
+      "seconds": 2.76,
+      "complete": true
+    },
+    {
+      "task_id": "a78176bb",
+      "counts": {
+        "train": 2
+      },
+      "requested": {
+        "train": 2,
+        "validation": 2
+      },
+      "pool_counts": {
+        "train": 3140,
+        "validation": 149
+      },
+      "pool_sources": {
+        "native": 1541,
+        "rearc-compatible-v1": 1748
+      },
+      "rejections": {
+        "pair:TypeError:'>' not supported between instances of 'int' and 'NoneType'": 194,
+        "pair:ValueError:Fork/RE-ARC domain disagreement": 1128,
+        "duplicate_input": 1704,
+        "pair:ValueError:RE-ARC constructor/verifier disagreement": 85
+      },
+      "seconds": 20.38,
+      "complete": false
+    },
+    {
+      "task_id": "d89b689b",
+      "counts": {
+        "train": 2,
+        "validation": 2
+      },
+      "requested": {
+        "train": 2,
+        "validation": 2
+      },
+      "pool_counts": {
+        "train": 791,
+        "validation": 41
+      },
+      "pool_sources": {
+        "native": 423,
+        "rearc-compatible-v1": 409
+      },
+      "rejections": {},
+      "seconds": 1.84,
+      "complete": true
+    },
+    {
+      "task_id": "ce602527",
+      "counts": {
+        "train": 2,
+        "validation": 2
+      },
+      "requested": {
+        "train": 2,
+        "validation": 2
+      },
+      "pool_counts": {
+        "train": 765,
+        "validation": 45
+      },
+      "pool_sources": {
+        "rearc-compatible-v1": 380,
+        "native": 430
+      },
+      "rejections": {
+        "pair:ValueError:Independent verifier disagrees": 9,
+        "pair:ValueError:RE-ARC constructor/verifier disagreement": 8,
+        "pair:ValueError:Fork/RE-ARC domain disagreement": 5
+      },
+      "seconds": 8.64,
+      "complete": true
+    },
+    {
+      "task_id": "c9e6f938",
+      "counts": {
+        "train": 2
+      },
+      "requested": {
+        "train": 2,
+        "validation": 2
+      },
+      "pool_counts": {
+        "train": 3539,
+        "validation": 166
+      },
+      "pool_sources": {
+        "rearc-compatible-v1": 3194,
+        "native": 511
+      },
+      "rejections": {
+        "duplicate_input": 2695
+      },
+      "seconds": 12.4,
+      "complete": false
+    },
+    {
+      "task_id": "ded97339",
+      "counts": {
+        "train": 2,
+        "validation": 2
+      },
+      "requested": {
+        "train": 2,
+        "validation": 2
+      },
+      "pool_counts": {
+        "train": 789,
+        "validation": 42
+      },
+      "pool_sources": {
+        "native": 403,
+        "rearc-compatible-v1": 428
+      },
+      "rejections": {
+        "duplicate_input": 1
+      },
+      "seconds": 1.3,
+      "complete": true
+    },
+    {
+      "task_id": "952a094c",
+      "counts": {
+        "train": 2
+      },
+      "requested": {
+        "train": 2,
+        "validation": 2
+      },
+      "pool_counts": {
+        "train": 6068,
+        "validation": 329
+      },
+      "pool_sources": {
+        "native": 3259,
+        "rearc-compatible-v1": 3138
+      },
+      "rejections": {
+        "duplicate_input": 3
+      },
+      "seconds": 31.22,
+      "complete": false
+    },
+    {
+      "task_id": "e26a3af2",
+      "counts": {
+        "train": 2,
+        "validation": 2
+      },
+      "requested": {
+        "train": 2,
+        "validation": 2
+      },
+      "pool_counts": {
+        "train": 845,
+        "validation": 41
+      },
+      "pool_sources": {
+        "rearc-compatible-v1": 342,
+        "native": 544
+      },
+      "rejections": {
+        "pair:ValueError:Invalid ARC grid": 128,
+        "pair:ValueError:RE-ARC constructor/verifier disagreement": 72,
+        "pair:ValueError:Fork/RE-ARC domain disagreement": 2
+      },
+      "seconds": 2.39,
+      "complete": true
+    },
+    {
+      "task_id": "e8dc4411",
+      "counts": {
+        "train": 2,
+        "validation": 2
+      },
+      "requested": {
+        "train": 2,
+        "validation": 2
+      },
+      "pool_counts": {
+        "train": 766,
+        "validation": 41
+      },
+      "pool_sources": {
+        "native": 425,
+        "rearc-compatible-v1": 382
+      },
+      "rejections": {
+        "pair:ValueError:RE-ARC constructor/verifier disagreement": 10,
+        "pair:ValueError:Fork/RE-ARC domain disagreement": 14,
+        "duplicate_input": 1
+      },
+      "seconds": 2.01,
+      "complete": true
+    },
+    {
+      "task_id": "eb281b96",
+      "counts": {
+        "train": 2,
+        "validation": 2
+      },
+      "requested": {
+        "train": 2,
+        "validation": 2
+      },
+      "pool_counts": {
+        "train": 567,
+        "validation": 42
+      },
+      "pool_sources": {
+        "rearc-compatible-v1": 573,
+        "native": 36
+      },
+      "rejections": {
+        "duplicate_input": 543
+      },
+      "seconds": 0.88,
+      "complete": true
+    },
+    {
+      "task_id": "ec883f72",
+      "counts": {
+        "train": 2,
+        "validation": 2
+      },
+      "requested": {
+        "train": 2,
+        "validation": 2
+      },
+      "pool_counts": {
+        "train": 786,
+        "validation": 42
+      },
+      "pool_sources": {
+        "rearc-compatible-v1": 397,
+        "native": 431
+      },
+      "rejections": {
+        "pair:ValueError:Fork/RE-ARC domain disagreement": 3,
+        "duplicate_input": 1
+      },
+      "seconds": 1.43,
+      "complete": true
+    },
+    {
+      "task_id": "eb5a1d5d",
+      "counts": {
+        "train": 2,
+        "validation": 2
+      },
+      "requested": {
+        "train": 2,
+        "validation": 2
+      },
+      "pool_counts": {
+        "train": 938,
+        "validation": 42
+      },
+      "pool_sources": {
+        "native": 543,
+        "rearc-compatible-v1": 437
+      },
+      "rejections": {
+        "pair:ValueError:Fork/RE-ARC domain disagreement": 173,
+        "pair:ValueError:Independent verifier disagrees": 63
+      },
+      "seconds": 1.99,
+      "complete": true
+    },
+    {
+      "task_id": "ecdecbb3",
+      "counts": {
+        "train": 2,
+        "validation": 2
+      },
+      "requested": {
+        "train": 2,
+        "validation": 2
+      },
+      "pool_counts": {
+        "train": 762,
+        "validation": 44
+      },
+      "pool_sources": {
+        "rearc-compatible-v1": 340,
+        "native": 466
+      },
+      "rejections": {
+        "pair:ValueError:RE-ARC constructor/verifier disagreement": 89,
+        "duplicate_input": 1
+      },
+      "seconds": 2.21,
+      "complete": true
+    },
+    {
+      "task_id": "e9afcf9a",
+      "counts": {
+        "train": 2,
+        "validation": 2
+      },
+      "requested": {
+        "train": 2,
+        "validation": 2
+      },
+      "pool_counts": {
+        "train": 1900,
+        "validation": 102
+      },
+      "pool_sources": {
+        "rearc-compatible-v1": 1930,
+        "native": 72
+      },
+      "rejections": {
+        "duplicate_input": 1902
+      },
+      "seconds": 8.58,
+      "complete": true
+    },
+    {
+      "task_id": "d07ae81c",
+      "counts": {
+        "train": 2,
+        "validation": 2
+      },
+      "requested": {
+        "train": 2,
+        "validation": 2
+      },
+      "pool_counts": {
+        "train": 800,
+        "validation": 42
+      },
+      "pool_sources": {
+        "native": 391,
+        "rearc-compatible-v1": 451
+      },
+      "rejections": {
+        "pair:ValueError:Independent verifier disagrees": 41,
+        "pair:ValueError:Fork/RE-ARC domain disagreement": 12,
+        "pair:ValueError:RE-ARC constructor/verifier disagreement": 1
+      },
+      "seconds": 18.43,
+      "complete": true
+    },
+    {
+      "task_id": "f76d97a5",
+      "counts": {
+        "train": 2,
+        "validation": 2
+      },
+      "requested": {
+        "train": 2,
+        "validation": 2
+      },
+      "pool_counts": {
+        "train": 914,
+        "validation": 40
+      },
+      "pool_sources": {
+        "rearc-compatible-v1": 453,
+        "native": 501
+      },
+      "rejections": {
+        "duplicate_input": 6
+      },
+      "seconds": 0.93,
+      "complete": true
+    },
+    {
+      "task_id": "f25fbde4",
+      "counts": {
+        "train": 2,
+        "validation": 2
+      },
+      "requested": {
+        "train": 2,
+        "validation": 2
+      },
+      "pool_counts": {
+        "train": 760,
+        "validation": 42
+      },
+      "pool_sources": {
+        "rearc-compatible-v1": 406,
+        "native": 396
+      },
+      "rejections": {
+        "duplicate_input": 30
+      },
+      "seconds": 1.99,
+      "complete": true
+    },
+    {
+      "task_id": "ecb67b6d",
+      "counts": {
+        "train": 2,
+        "validation": 2
+      },
+      "requested": {
+        "train": 2,
+        "validation": 2
+      },
+      "pool_counts": {
+        "train": 728,
+        "validation": 40
+      },
+      "pool_sources": {
+        "native": 768
+      },
+      "rejections": {},
+      "seconds": 8.99,
+      "complete": true
+    },
+    {
+      "task_id": "feca6190",
+      "counts": {
+        "train": 2
+      },
+      "requested": {
+        "train": 2,
+        "validation": 2
+      },
+      "pool_counts": {
+        "train": 4199,
+        "validation": 89
+      },
+      "pool_sources": {
+        "rearc-compatible-v1": 2088,
+        "native": 2200
+      },
+      "rejections": {
+        "duplicate_input": 2112
+      },
+      "seconds": 2.51,
+      "complete": false
+    },
+    {
+      "task_id": "6aa20dc0",
+      "counts": {
+        "train": 2,
+        "validation": 2
+      },
+      "requested": {
+        "train": 2,
+        "validation": 2
+      },
+      "pool_counts": {
+        "train": 943,
+        "validation": 41
+      },
+      "pool_sources": {
+        "native": 537,
+        "rearc-compatible-v1": 447
+      },
+      "rejections": {
+        "pair:ValueError:Fork/RE-ARC domain disagreement": 51,
+        "pair:ValueError:RE-ARC constructor/verifier disagreement": 45,
+        "pair:ValueError:Independent verifier disagrees": 1
+      },
+      "seconds": 54.6,
+      "complete": true
+    },
+    {
+      "task_id": "d22278a0",
+      "counts": {
+        "train": 2,
+        "validation": 2
+      },
+      "requested": {
+        "train": 2,
+        "validation": 2
+      },
+      "pool_counts": {
+        "train": 1106,
+        "validation": 41
+      },
+      "pool_sources": {
+        "native": 581,
+        "rearc-compatible-v1": 566
+      },
+      "rejections": {
+        "duplicate_input": 5
+      },
+      "seconds": 25.5,
+      "complete": true
+    },
+    {
+      "task_id": "e6721834",
+      "counts": {
+        "train": 2,
+        "validation": 2
+      },
+      "requested": {
+        "train": 2,
+        "validation": 2
+      },
+      "pool_counts": {
+        "train": 864,
+        "validation": 41
+      },
+      "pool_sources": {
+        "rearc-compatible-v1": 291,
+        "native": 614
+      },
+      "rejections": {
+        "pair:ValueError:Fork/RE-ARC domain disagreement": 464,
+        "pair:ValueError:Independent verifier disagrees": 171,
+        "pair:ValueError:RE-ARC constructor/verifier disagreement": 60
+      },
+      "seconds": 21.31,
+      "complete": true
+    },
+    {
+      "task_id": "d631b094",
+      "counts": {
+        "train": 2
+      },
+      "requested": {
+        "train": 2,
+        "validation": 2
+      },
+      "pool_counts": {
+        "train": 4776,
+        "validation": 205
+      },
+      "pool_sources": {
+        "rearc-compatible-v1": 3262,
+        "native": 1719
+      },
+      "rejections": {
+        "duplicate_input": 1419
+      },
+      "seconds": 26.8,
+      "complete": false
+    },
+    {
+      "task_id": "ed36ccf7",
+      "counts": {
+        "train": 2
+      },
+      "requested": {
+        "train": 2,
+        "validation": 2
+      },
+      "pool_counts": {
+        "train": 5013,
+        "validation": 196
+      },
+      "pool_sources": {
+        "native": 1958,
+        "rearc-compatible-v1": 3251
+      },
+      "rejections": {
+        "duplicate_input": 1191
+      },
+      "seconds": 22.3,
+      "complete": false
+    },
+    {
+      "task_id": "f9012d9b",
+      "counts": {
+        "train": 2,
+        "validation": 2
+      },
+      "requested": {
+        "train": 2,
+        "validation": 2
+      },
+      "pool_counts": {
+        "train": 915,
+        "validation": 40
+      },
+      "pool_sources": {
+        "native": 472,
+        "rearc-compatible-v1": 483
+      },
+      "rejections": {
+        "duplicate_input": 5
+      },
+      "seconds": 23.67,
+      "complete": true
+    }
+  ]
+}

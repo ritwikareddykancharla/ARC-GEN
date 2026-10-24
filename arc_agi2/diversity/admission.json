@@ -1,0 +1,1089 @@
+{
+  "version": "rearc-compatible-v1",
+  "source_hashes": {
+    "rearc/LICENSE": "60ea7c0edc4c765357257e31ad7c5f7d3ba7007329703d1fcfc3abbcbbd36efd",
+    "rearc/__init__.py": "a9c84112fb29519583d64684308b9bcf80d517f5c8a5a182ec9e5130b64ca526",
+    "rearc/dsl.py": "878755e72d28c0b269d793260412f26b466b3bafb006a6a83ff8bf6d4d03f1b1",
+    "rearc/generators.py": "7eb7b6620afe08760fb52761c7dd46796e9e44958714efc950b11e923a8281ae",
+    "rearc/provenance.json": "187e1b4d256213f86f414001055ac38ca359dde9356af39da44a1c8c59fd3cd7",
+    "rearc/utils.py": "fe5660f1ad717048786e59ee13bd5f18dce14b9a7b187e81a6f25ef0a366d444",
+    "rearc/verifiers.py": "1a79a559f670943968c9dbee66a0b02d71d71296adb922330fe72935f7ef7ddd"
+  },
+  "target_source_hashes": {
+    "arc_agi2/direct_programs.py": "ca303d8069010a148aa40ee6c2bd6043f30f5a8a8b6281d345893f13ef3ba82b",
+    "arc_agi2/direct_certificates.py": "34f8c88f025236f1a632753329e2a815e2deea9352cddb3a298e9e84f100af15",
+    "arc_agi2/verified_rules.py": "99dd929089f9c224c1ccbbf5302da989acc13196a1219d999677d10479e35e70",
+    "arc_agi2/program_targets.py": "88298f336ca6a50ee91e58a08f24a4997c7c49e832eda1e68f98153dd59ed790",
+    "arc_agi2/runtime.py": "193bd69c8c2114da2a9b2bbc73805742164b3c0f214279d832317e6f5b52e839",
+    "arc_agi2/helpers.py": "7bbe003f70d11c949b9a7827da7d3659a7da0c247c1dfbf2cd18785e477bfa92",
+    "tasks/task_045e512c.py": "464954ca7bbd5ee9f37a1d5273e56cac62b3cab746032dbc5b9873b7375c258f",
+    "arc_agi2/direct_factories/task_045e512c.py": "dccc0da6ba5d992158e75c404582e989387eefb24a055f0c2c4bb555c2f8ba0f",
+    "arc_agi2/direct_factories/045e512c.json": "52f2c6976d64ceb185d767f4c4d906cef4ed1d805a96f4eebd350bd2258e102e",
+    "tasks/task_09629e4f.py": "58ba2fbe872f13e834059dff1c19ff080defcb163ad5f9ffcd82e930adc31b1e",
+    "arc_agi2/reports/direct-certificates/09629e4f.json": "92db70990308d96814033f253e5027af897df715aa45cba6bcbed39ae1122b7b",
+    "tasks/task_0962bcdd.py": "90e706d0a84489df5e4b1f3afe34fae810c7823ca3cdaab4e6ef18300596cce3",
+    "arc_agi2/reports/direct-certificates/0962bcdd.json": "29998593e99453df2a3b6bf4488f7af8ec308e9d9d35d8177087ed4509ad4e3a",
+    "tasks/task_0d3d703e.py": "415c3ef4385b4d64d93dec67f339de4d12eeeae09a4f4593ec30d5ad7a52e431",
+    "arc_agi2/direct_factories/task_0d3d703e.py": "89d49cb35125b57ad7a009ba630b3d0962ff17e791aea1a2efcc22ba12161a73",
+    "arc_agi2/direct_factories/0d3d703e.json": "c1684119fa380d8c8941b7f6a0bac23852a2586a2e987f776d1a30a113164479",
+    "tasks/task_11852cab.py": "f1ba8ead50f679c80b444ec98bf0f9ec4e5ec5828eb2b57bf3f476dc29cda1a1",
+    "arc_agi2/reports/direct-certificates/11852cab.json": "fc9dfb22cfeb2e560f4bba5af67c70fb7422ac8cdbf1fafa9ce99669777e1387",
+    "tasks/task_178fcbfb.py": "3894e445c73d617be02d71369cc1939746636fa80d6e34bd7eadf2477f722991",
+    "arc_agi2/direct_factories/task_178fcbfb.py": "bfe36ad36a15a07255c89e6c4dcb945d187f720543ba52578edb0516c60aa27e",
+    "arc_agi2/direct_factories/178fcbfb.json": "09425ed400708fde33bb0fa1204124da30441984cf9a0dd69a8c2e3b57879188",
+    "tasks/task_1c786137.py": "997abb391c710ca8ebc57ec42a1ad8a3c9f54ec1a0c66f9f584b05fe9e86f605",
+    "arc_agi2/reports/direct-certificates/1c786137.json": "d16780964a32763412fa065697454afecce69748f04f9c25b031a43cb8c9e225",
+    "tasks/task_1cf80156.py": "d569b00bd2059dadd7c5f12febace8b316c93413d15942f91258509242e6c7a8",
+    "arc_agi2/reports/direct-certificates/1cf80156.json": "8bedac4d2d993d7fcca2f4b23597352c0121e8de45d7d2c419fc1026c5000228",
+    "tasks/task_1e32b0e9.py": "8161b656eddd7a631fdd5324af71d7a6e2ab33fc4bb94ca5921125aeacba363e",
+    "arc_agi2/reports/direct-certificates/1e32b0e9.json": "aa1580607511d09c8385141b207f64162b19e977c68a3d9962b7eb5103392048",
+    "tasks/task_1f642eb9.py": "ce2748e77ebb64068a07a94d874d131fe4a472f50832740a2fbd1094a195a418",
+    "arc_agi2/reports/direct-certificates/1f642eb9.json": "4f2b38e43d8784f49f6c7c3d11a22b7acf7dd25f8ef8abe294ef9b4ce5c36f07",
+    "tasks/task_1f85a75f.py": "50b2b58a56ab5be6d50f2fd9004362a99283897c137279d5a0d3a81e4feb3688",
+    "arc_agi2/reports/direct-certificates/1f85a75f.json": "a12a676ab9300fa7a9101896b80ef9b4eb53d788a747aea180ed16b24772c873",
+    "tasks/task_1f876c06.py": "061e6097cbf764e8f30badb419df3e419d726ddbf2fe94017cd6e3b55587ab70",
+    "arc_agi2/reports/direct-certificates/1f876c06.json": "2ff0364d18dc5f0652e5eed4459e88f77af41a4c72e434bc7815f64f22fef7e2",
+    "tasks/task_2204b7a8.py": "fb464b699cb8254046ff7b8e1ecd8dd143151c5fa16c2e7578ab4b433c9e615f",
+    "arc_agi2/reports/direct-certificates/2204b7a8.json": "8c7fd2a5f58a04e34c1ad060cf1e56a1e82068099e99bf6cb29b30cb660a45e6",
+    "tasks/task_23b5c85d.py": "17d25738d4cabcd749e49fc838a74926583ca8c203e663702663a1708ce9fed1",
+    "arc_agi2/direct_factories/task_23b5c85d.py": "328f9b1ee0f095a570251d83456fc58615b19f316a3463387fa5c11820c54168",
+    "arc_agi2/direct_factories/23b5c85d.json": "3b6d52230bd5c9c6d5d31421e94314d88d2e9ed5d24f468c6eff6541962257e3",
+    "tasks/task_25d8a9c8.py": "830b1fb2dc8ebad33007b840683b6aebe8168335a7d6f551d58e937f9310aa8d",
+    "arc_agi2/direct_factories/task_25d8a9c8.py": "6ea934d47559301563bb6dfb1587192934e2e4ca99ef84f39511f53f0882482d",
+    "arc_agi2/direct_factories/25d8a9c8.json": "265c1915d963fce462b852d84ddc400c94cc9ebba0fe36c414dc537c05298b27",
+    "tasks/task_28e73c20.py": "08a8cb67f978dc93d95f213a58ad2f3c59fe31e6bce9614a41172a51e8687677",
+    "arc_agi2/direct_factories/task_28e73c20.py": "92861e28aeb0aeed2cde3db89709845545bc7701d50c7c3159a656cca0aa4781",
+    "arc_agi2/direct_factories/28e73c20.json": "8819d52e016f0661acdec354086ad62ef43347858640c289cfb74eb3ee60f1ea",
+    "tasks/task_29623171.py": "2cff276a0c3955c725ebca41b2f9a6cad7d4b3c4b43f88040e6d179be44e386c",
+    "arc_agi2/reports/direct-certificates/29623171.json": "b6fa773121d0f27d02c8780cf5c3f3f907ad68f667b252c723a82e36088c5caf",
+    "tasks/task_2c608aff.py": "665c805d5ed714c4f9f2541e5fcb055af8a51ba2d3bb08cf9061dac2410b4eed",
+    "arc_agi2/direct_factories/task_2c608aff.py": "73d7f58b6af0b855370a418f6d451d6b54df8782b2f8acf82d9b095149c22dfc",
+    "arc_agi2/direct_factories/2c608aff.json": "916a3abb071a57af557ee490621b523aa514871e57730fe7067eba823be2997d",
+    "tasks/task_2dd70a9a.py": "5d43c4d4d54cdd01df888e515b609eae9be2275a848ccbc41f7540c7bb76e953",
+    "arc_agi2/direct_factories/task_2dd70a9a.py": "9369a8a1454ee73928edc9ce9b0d9520abddd040044ce16d348b774cdaad364f",
+    "arc_agi2/direct_factories/2dd70a9a.json": "cf343414e3071cad76667129e95cd4f8797886c27af37ae3c467577bfa2b484b",
+    "tasks/task_39a8645d.py": "1ac0d70d43647130c526de8ba89b9d336f93be26269e4c2e8596934dc2c3f5d5",
+    "arc_agi2/reports/direct-certificates/39a8645d.json": "21f187778c58a5050ee17728745337a22a4a6fe62e7a47b158c2c9f343b34e6c",
+    "tasks/task_39e1d7f9.py": "e08b7fc1c7d7c6e0583c88014fdb8fc8ada36fffdaf0bb26eae2333f834d9efc",
+    "arc_agi2/direct_factories/task_39e1d7f9.py": "9453e1f600f41e8239e299a4249f43b196936d052c20e435891aa938c5671b60",
+    "arc_agi2/direct_factories/39e1d7f9.json": "cc302dd8fcc83e9af56b55e3f27c30fca51de9c110e78a1b4f21be4c35e85c79",
+    "tasks/task_3af2c5a8.py": "770f7f982e8e6d926ab4eac5d98bdd3ec4ceb8c1f0a391a700d8f17fbb1f7273",
+    "arc_agi2/direct_factories/task_3af2c5a8.py": "6d291555f6838efec38bcde4f28806f0e644deedb4b21cd9e24144f8a81b3f06",
+    "arc_agi2/direct_factories/3af2c5a8.json": "1f592ff90baf67ce93c8db10a88fbb4b5c70c06f8d7299e9307f45e84d20a1e2",
+    "tasks/task_3c9b0459.py": "ac1fae6d09183a5d7ca7d859106ee9b55c938121a889bc82d75bd04a21ad7694",
+    "arc_agi2/reports/direct-certificates/3c9b0459.json": "d0f9fa26a460f5a4482f26fb2bf256ca45aafc81794c41d8fbf4ce3cddce34a4",
+    "tasks/task_3de23699.py": "f0d943a3b5e8894332a090afc63bd028c531a81f8b15812fb6a99b66a76aff0a",
+    "arc_agi2/reports/direct-certificates/3de23699.json": "d8cd24e2dc5a66c5fd2fcfeefb8ef88800fbf97ab4eb5f82cc335fc57a67dcb7",
+    "tasks/task_3eda0437.py": "4b31d03f5416d965b570ac510e7116f89c2cdff054f385f7dabd9ff23e7e3e68",
+    "arc_agi2/direct_factories/task_3eda0437.py": "59df8dfe254d43353ebd334d92614ff853ca498228f13c3d1ed31d3037878ec3",
+    "arc_agi2/direct_factories/3eda0437.json": "a385c172251d2536de5faea9e0b4bd9eff819ab36bfeac2f067c719d8391081a",
+    "tasks/task_4093f84a.py": "4a9d736e3e9a7359b630b69a3d1c7fd1f8d407fbd8359550d057f820a40993ed",
+    "arc_agi2/reports/direct-certificates/4093f84a.json": "97bb7d6004734dbe29a27682b5c3125958919193b81d1a6421b12e6ed9f31d94",
+    "tasks/task_42a50994.py": "a918270269a05d175affd07f8c5c8dc6aab912a9190399e81734010167a9d8e9",
+    "arc_agi2/reports/direct-certificates/42a50994.json": "fad368215de67f8f6a942b7e273fbc5afb72a11719afa9ca900b106e87204113",
+    "tasks/task_44f52bb0.py": "ac73b53e66bd2baf664ec87574236d27687dcbbbd5770e6c5a928e534023d959",
+    "arc_agi2/direct_factories/task_44f52bb0.py": "6d81bb050d3b2e37e34a431b01b7279116564bc89330a8c094786b1409e16a58",
+    "arc_agi2/direct_factories/44f52bb0.json": "8544f6e6fe648f78ba59e237bccebae44793b681bfcf03b6e6ece379b5d2d62e",
+    "tasks/task_46442a0e.py": "475e1a558d8b12e8bf528d531c481361c077135f43ac421cb8965e5687726bd6",
+    "arc_agi2/direct_factories/task_46442a0e.py": "d4d370a37fe17903c2be228f2d56129bfa9a295c20d762627a1376e6344967c6",
+    "arc_agi2/direct_factories/46442a0e.json": "7ad2f2e93e419cd3e5e131662eb0df49bef5da52da131a1a110d7db8ef2e7f61",
+    "tasks/task_47c1f68c.py": "1d77b02ab6d2769a162df5a50f7df5acd797ee63fef6d46e60e0e92a4ae4af11",
+    "arc_agi2/reports/direct-certificates/47c1f68c.json": "b5e6d36a2fa35c6a0a5f5f19ddc5a6f055c7f255452732fbdae2dad95a05a831",
+    "tasks/task_49d1d64f.py": "bcfb4a7f5a88fdd75fa12b0b74e8c057debc4f030a64f7fb61822eae0d5e72d0",
+    "arc_agi2/direct_factories/task_49d1d64f.py": "5a113a1d9e7f67416b37db227a5f7cbff3c686ee0fe6dba6da760cb08d350ece",
+    "arc_agi2/direct_factories/49d1d64f.json": "eb1233945dce5aad676d24a7673bba4597f8012442aae48f375035b0e191a58a",
+    "tasks/task_4be741c5.py": "531879dd76206f0556dd709de8e16b7fc9e479d60d5e2f39ac7561d3cb2ffe4c",
+    "arc_agi2/reports/direct-certificates/4be741c5.json": "4a957778274a25cdf736247a9cbde0cb26a7fca7a35474d9866257430dcbe015",
+    "tasks/task_4c4377d9.py": "24bb7cb479d9b4713de738247df45cb00e9b0f06cedf04fe6629080b725a0596",
+    "arc_agi2/direct_factories/task_4c4377d9.py": "8837234dc70c1651cb135e8cdd7ee721a859a3260323097f685e842c4bae8ab5",
+    "arc_agi2/direct_factories/4c4377d9.json": "00cdde41c3a0d9640a58fad9ce20b042620783fa53dddb4de6d94be5a2af78ee",
+    "tasks/task_4c5c2cf0.py": "421ce0309578c434ba615c4cc00d02607bf3253c933be05277869d3b6c1348b1",
+    "arc_agi2/reports/direct-certificates/4c5c2cf0.json": "f5fb5aae69fe27c40c5c724f4f1d26873d516f5e89264e4d6d9565ecaaf6bc77",
+    "tasks/task_539a4f51.py": "bab5e22173c84278cd72252173f309d77bb0d001bd05676562efaef7a8c8c3d3",
+    "arc_agi2/direct_factories/task_539a4f51.py": "6ed37ffeb1650e1cc5fbc8b841a49a85cc8521ec55abcc56e5c419332823120d",
+    "arc_agi2/direct_factories/539a4f51.json": "2a6cbf61a493c1ff9f9587697f7e8fa920923dd2201f8b6e1daa33175d358686",
+    "tasks/task_53b68214.py": "e303c8141b506c4d1b513e17a32d80e8be2f51435397a2c46edd8d2f22c164ce",
+    "arc_agi2/direct_factories/task_53b68214.py": "b1a43da8fb19bf543a80ab8c92ecb2232c700e3d3cba037e9e0eb5e8fac744f0",
+    "arc_agi2/direct_factories/53b68214.json": "21a91ccd4bf82efdcdda9704f65c06e8214fab0d39b294a905df9c5dff7fdf4c",
+    "tasks/task_54d9e175.py": "f2a275e8e01702f1ac337006a8a39a570b2b5929483ee00e16ff44cc43154bb2",
+    "arc_agi2/direct_factories/task_54d9e175.py": "072eba25537f8796ab8a98e815ebb11cca7a32b480cad7d887745491e85fa049",
+    "arc_agi2/direct_factories/54d9e175.json": "0f83742394ebbbb09f24c786f05493e38642536707921618fb48631bde192ba3",
+    "tasks/task_5582e5ca.py": "420c9451714219f0286c215253d362bb97461e5909ef5593f43de5ae68007d35",
+    "arc_agi2/reports/direct-certificates/5582e5ca.json": "fffcac356d6c1f524b5f23449c62b3b827561f3d9805e2c162baad652b5c765d",
+    "tasks/task_56ff96f3.py": "4c55e73a080b0a2c2b161b9a95f9eccd61bfcb3336482ee574d0123bbd387c4d",
+    "arc_agi2/reports/direct-certificates/56ff96f3.json": "10aff4ff05e7a11d0f18f80b35556c26eefc9b48c19dea0c79168653edffc3e0",
+    "tasks/task_5daaa586.py": "8059b7a79d8f55eef0c58ef216470fb17c5f75f8992c0781bfbebbdd893cb477",
+    "arc_agi2/reports/direct-certificates/5daaa586.json": "140f66823d93c7de7fe1556a420437d327aebeb608489aebe1b3550aedb6dbcb",
+    "tasks/task_6150a2bd.py": "56e54e5abe929bc20430e91fd0460747f7f6c3463587640d52e6705aaefe1a85",
+    "arc_agi2/reports/direct-certificates/6150a2bd.json": "7bc71e82e8331156c78470edafe5a704a975fb71b7daec17f789857fd8c57025",
+    "tasks/task_62c24649.py": "60059424930a1555cb518bd368fb4f2322c61631c6c18197938e2d7640b8baa9",
+    "arc_agi2/direct_factories/task_62c24649.py": "6d291555f6838efec38bcde4f28806f0e644deedb4b21cd9e24144f8a81b3f06",
+    "arc_agi2/direct_factories/62c24649.json": "7bb3497938a0fb64dc5d0a26fe4a09625c8da2779506b5dc7cc7e394753f0700",
+    "tasks/task_662c240a.py": "3bf6ce3cffb169e88830c80cb7a58863797d83be0103903907d530fe88568ec7",
+    "arc_agi2/direct_factories/task_662c240a.py": "d9a32afc26708e06ec6399ac5ea766f8e3ccd0ad65b64678d52e34b29eed4a6d",
+    "arc_agi2/direct_factories/662c240a.json": "0d6ae522686a0c37e51fc9c100d22a66a0b26f1d4ba2588303b04cfdf99a2b11",
+    "tasks/task_67a3c6ac.py": "81524c67099c529cc336b7375bdef14867d9140e82b7d0333c11ab4f21c7e57b",
+    "arc_agi2/direct_factories/task_67a3c6ac.py": "78e95be79228e53dac4f3aa48fbbf7e2ab9be61fde9c00f43d12106be9f3e01b",
+    "arc_agi2/direct_factories/67a3c6ac.json": "a4582daf3b92ebde7f8dc5c4a04ea14415b24eb53a494b53ed346099994eb3bc",
+    "tasks/task_67e8384a.py": "858b9e5012d44c44dc321dd43fc2e0d259942c4321d51a1a2bd0bc0d71d68b18",
+    "arc_agi2/direct_factories/task_67e8384a.py": "985e168bb3bb98fd09389b4c243464c3c31741ce4f8b56e928bda158ff3c5ad2",
+    "arc_agi2/direct_factories/67e8384a.json": "882e8e164763b7bff7464d8fbaeb45939a3bbd4f96d869b6cee5822c3ff5350c",
+    "tasks/task_68b16354.py": "ddd8923362ec5d7b79f2e7e7cc52af939946b1262c2de4c22a98429a9c43ee19",
+    "arc_agi2/direct_factories/task_68b16354.py": "b2cce7419c40d2674276747c482fe43dca5e041313d8ddea243c3d531a5ac694",
+    "arc_agi2/direct_factories/68b16354.json": "54665f1ca0c7f0683a63984b65d46172cf2e3bfdbf6f18a23501738922af5bd7",
+    "tasks/task_6aa20dc0.py": "3b0a14519b460807a4e5b39b40e8d4a6805700ab48bc24751d6070cc80d2f716",
+    "arc_agi2/reports/direct-certificates/6aa20dc0.json": "75069a74a7f162fe8d341d90f93c16c357547386e70e4e8c21597a625e94ad61",
+    "tasks/task_6cdd2623.py": "a079acfd316270afda2746d9a104cf657bb8c458c0e5fe6eaebb42fc4c74299f",
+    "arc_agi2/reports/direct-certificates/6cdd2623.json": "aa301b1822ecb5984bef1f03f810a28daee53daef32799399529f8dbd70f202e",
+    "tasks/task_6d0aefbc.py": "56fa164bd6f0b7091da5c7229cb97b0aacd105e3c1994c9494fa0909d2a40a7c",
+    "arc_agi2/direct_factories/task_6d0aefbc.py": "7fe464d38185274dd68d2244fa1c477e1e198a9481266a63c12271b3e39c52e9",
+    "arc_agi2/direct_factories/6d0aefbc.json": "e2d8c594b03bd047fc181f1e5f1c96e6b131cd526c58ea0b9e4fc35642254d58",
+    "tasks/task_6e02f1e3.py": "2f58b5063e45360c265219d8bc81d2ecf8c3a1a69baf71584639b0d2801b1cbd",
+    "arc_agi2/direct_factories/task_6e02f1e3.py": "e5ee3ab3f2955f743433cdcaa63ccf1132e1bb55ee8ea1400f0ae25a61d39cce",
+    "arc_agi2/direct_factories/6e02f1e3.json": "4ba3446f738c95cf976aae3049b1c52e753855009b6e63580ae5e693783337a5",
+    "tasks/task_6e19193c.py": "0e35a953042c5889ea0f195050c6d838bf7723d992311a91bd6cce7a901fa9b3",
+    "arc_agi2/reports/direct-certificates/6e19193c.json": "9f1549617882a3b300be93013cf7fbf85152d858336d48a310f549f5b1aa27e1",
+    "tasks/task_6ecd11f4.py": "c4e635360d877f63af83130b782a9581639d895d4d6d87c454036594556b140b",
+    "arc_agi2/reports/direct-certificates/6ecd11f4.json": "2dad8321cbdd13566f24f71b80e31ee539663f1f49d2e8964a595bf7bbdd6fa4",
+    "tasks/task_6f8cd79b.py": "a8202458cc44e57ddbff4d9ab25be775e56a94cc5f5bb6857b0411cf42b66ca4",
+    "arc_agi2/direct_factories/task_6f8cd79b.py": "b9bb4b16646daf02ff4a58f117362f855e88661804b9a7dd4475f4451b9ce170",
+    "arc_agi2/direct_factories/6f8cd79b.json": "c6f88ee588aee5faaed4848189aaae8b44c08a1b2f99e42cb5238bdc679cea96",
+    "tasks/task_6fa7a44f.py": "7d74eaed9f8606dbea75c6c85c91c011f8059c23acf7a62137233ac8f2915233",
+    "arc_agi2/direct_factories/task_6fa7a44f.py": "81817b621f2fbaf74649f53b80fa6b082df9bd6a1f9393a914f263495158e01a",
+    "arc_agi2/direct_factories/6fa7a44f.json": "e2f657698850acfa7c05ec6c87f0535c5f6213a90016960a15a288fdaeece546",
+    "tasks/task_746b3537.py": "21bee80e129363a194ad25020cd5c1ee9bd8ef74ff549997860392fb65cdd212",
+    "arc_agi2/reports/direct-certificates/746b3537.json": "574e59e931db6807d7e884a040f6613fec0716b31a2358e8536fcc61df951b3c",
+    "tasks/task_74dd1130.py": "e4bd25979b40f72df9826e7e2f48a53326a1b1b73ecad5b880fb56ff41c42b59",
+    "arc_agi2/direct_factories/task_74dd1130.py": "ebd27e0e0a889acb56f28cd685e31c008f4489d945c06e70556ba5f60b987ab1",
+    "arc_agi2/direct_factories/74dd1130.json": "e7faddd84bf027eec435ab882538b8db92569cf2d10cccb93052f5c02fa01c80",
+    "tasks/task_7fe24cdd.py": "1ce197218db66b0cdca41c4aee6f3782a10c18d817866603e3fcbb7d099cf74b",
+    "arc_agi2/direct_factories/task_7fe24cdd.py": "c4af5de9a15a14b81a192d1ef89ece3be210c09e8660c686e554662219a63529",
+    "arc_agi2/direct_factories/7fe24cdd.json": "369eec8bf5de4ad9471df9e29ba86bc846492d2e548a36fd785ebaeafe2d4cc8",
+    "tasks/task_85c4e7cd.py": "6f0d24121935c4e4cc6a92f665f54ad722257e0e04056eb66fb4a0eadf5515b4",
+    "arc_agi2/reports/direct-certificates/85c4e7cd.json": "a39e2fdb1e1a24c825072af3f94c2c968783182a2450259b67b0b9339439228c",
+    "tasks/task_8731374e.py": "5de597bf13862a2fddc835dd3ea1932ba3c6154df3c7ce6602b903f0ecc4747f",
+    "arc_agi2/direct_factories/task_8731374e.py": "0a1a09eb360dade83a630f87d915ef73064e041069f0f656aeac8644e17ad97d",
+    "arc_agi2/direct_factories/8731374e.json": "cc8f9f5fff1c3b4616d09079fc7a1d65a2a10378cfe302ce7df09841471b5567",
+    "tasks/task_8be77c9e.py": "8fd8ad0c1b26150951843fa4c72defb3d16f5cddb78113b8bc70f5725ef756ba",
+    "arc_agi2/direct_factories/task_8be77c9e.py": "bb92fcdf69a337202aae612e45661ac3f94068322c4efaf2282110fa44ee1cac",
+    "arc_agi2/direct_factories/8be77c9e.json": "88c9a087857286443f7d74908adc953c052401cdef64aa9471e45b6ea02f9a3a",
+    "tasks/task_8d5021e8.py": "93486456ec377e340cae0a6fe86efcbc7a7bd4d9929faec119675b4e12e6ef69",
+    "arc_agi2/direct_factories/task_8d5021e8.py": "e5c4efcddb668d677fba0c08a8537b6c24838e871468cafbce30ea1a0eb4d36d",
+    "arc_agi2/direct_factories/8d5021e8.json": "ed6387db7d139455ee4a6b1e393e83b1cfc7b3a7338f22b010b45c1b3eccfd9e",
+    "tasks/task_8f2ea7aa.py": "c6f3ff405cc91ee9cda47e5349831bc75519186493d1f48133b5c2f3a874d58e",
+    "arc_agi2/reports/direct-certificates/8f2ea7aa.json": "32ecbf5378d261b72eca83a9dfe5d93d0063816230be3960636c2f1ea3a47503",
+    "tasks/task_90c28cc7.py": "133304296365a214309f47952d7a1895ce9821c7d06b1d1f66b107d6b95c9c8e",
+    "arc_agi2/direct_factories/task_90c28cc7.py": "88ead9f2133c3438c75e1c65514c2e565b6b6b893fdb428bc50d14303cd300c8",
+    "arc_agi2/direct_factories/90c28cc7.json": "c66ae23e3ce7700924f4bbe66bc98e53ed627bb2621e9884aefd87b6e9c98f0e",
+    "tasks/task_91413438.py": "ff8cafe002bdf53b9d8bfe175a5ccc7f7dcabadd58694dc4dfbe04250f7fe4f1",
+    "arc_agi2/direct_factories/task_91413438.py": "95bdc330348fd51f3ffa308775666baa2649dd8be85ad2ac244393e845a6582e",
+    "arc_agi2/direct_factories/91413438.json": "e25588d023d638821a44335a4a93ee241996113cdaae65a1efa817a9bfc4f489",
+    "tasks/task_91714a58.py": "4321899542d913a3d6be7fc1c71c27187c0cf4de3808669b0c9656283d6d448d",
+    "arc_agi2/reports/direct-certificates/91714a58.json": "f4f2fbab06f2df9b6a385ec7db508908c16f8905d7f206b6aa1b1d171f558c4c",
+    "tasks/task_9172f3a0.py": "78bf9f4d1797189db7921727bf0860405acd9b53314857ce038b2f81bcdf4fcf",
+    "arc_agi2/reports/direct-certificates/9172f3a0.json": "5ba89092726599845f3b5f70694df27e94a02c7ab47443d584dc0729e2d58903",
+    "tasks/task_928ad970.py": "5582b9ed8452c7e25b13251618622c8580c40b44fd75142768632377b94189fe",
+    "arc_agi2/reports/direct-certificates/928ad970.json": "da94768c95a5ba2bf8a0d11051226a1b6fe082de3858980fafa3b548944cfb24",
+    "tasks/task_952a094c.py": "2d23083c96dfe8a6a275d1b1653f9ebd779f6c83d3b3364cdb17a57c8036ad12",
+    "arc_agi2/reports/direct-certificates/952a094c.json": "919f750b7cb2fc2ae6f90a8ba85d1f8946b050f2a9aff0d7100f149abc660cbc",
+    "tasks/task_9565186b.py": "f756a8ea7addfce2b7f3690a40138e53e76f65ee18e594caa48e97d2b91f443e",
+    "arc_agi2/direct_factories/task_9565186b.py": "aba9f7a09a6df9e1de43b2925c151531ff2c722a077da594185ba111feeb5bdc",
+    "arc_agi2/direct_factories/9565186b.json": "13519b12ac8ea71437cd4acae10f35b26d9a05aed606ab99e5af8db9ecfbaca9",
+    "tasks/task_963e52fc.py": "e35d1e4077203da6ca8b664513f65373a9885df200c30e3e61dcb1f35f5c6504",
+    "arc_agi2/direct_factories/task_963e52fc.py": "628e0d99cbabd93151d0a00fc8d6ee80805ee70cf5f8d8832815c217a3b53829",
+    "arc_agi2/direct_factories/963e52fc.json": "a10d6fbc4f4a3de1e55f43f3f9b717d743e723b7988fe64dfdf850705025ad9c",
+    "tasks/task_98cf29f8.py": "bbb3e20545e54e6001490db432c38d5d7fbb9c3f7b553f8c5e6b0b143457e243",
+    "arc_agi2/reports/direct-certificates/98cf29f8.json": "280770eaac845e4aff000a3a78a93614a455732065de6d74891f4117058b6030",
+    "tasks/task_9af7a82c.py": "1c16c85b0b539ed427ae181ed4e309c26d81991a21c6bad9c5153468d362d55e",
+    "arc_agi2/direct_factories/task_9af7a82c.py": "130826b1ad5b3a0b3236c1f9d5ff70ed84370f036a27bb9d3c5ded10a6df6e20",
+    "arc_agi2/direct_factories/9af7a82c.json": "3fad1a354d7eb6c91d229d61db97323958124d0e2c029afcae3bab3522db9ad1",
+    "tasks/task_9d9215db.py": "1b61943e8183a4af60c234301cc9c40e433699f23e1c5b03e33d7342e6f1cf84",
+    "arc_agi2/reports/direct-certificates/9d9215db.json": "31d251bc95c4fff269f8f6e33e36cf5363d5d7fcabd6ea8a98d539a108bfb83a",
+    "tasks/task_9dfd6313.py": "442cb60b69dd7dcdbbca388fb4337e19840ef7af41e779e546f4e18c7c1b96c9",
+    "arc_agi2/direct_factories/task_9dfd6313.py": "cc50d362a49d1fda47feaf2664d664a796d59b7a8c3e4a3bca4b59f325a1b8ac",
+    "arc_agi2/direct_factories/9dfd6313.json": "ce6a908f188808a5724505384254e546caa9f2942ebc5edfaf40260ce8f719bd",
+    "tasks/task_9edfc990.py": "7ee740a5aecedf0b41303bb59332d779b0b28570ac519041d006bde7f32c929d",
+    "arc_agi2/direct_factories/task_9edfc990.py": "e9334c1e9ed74f0c1241a9c74651006d764766708c1b87f3144aeac97807985c",
+    "arc_agi2/direct_factories/9edfc990.json": "f9fec624e452abea34bcb815ee624ef0281c5844d7b59d16815ff379014c5259",
+    "tasks/task_a416b8f3.py": "4fcab563f8446d6c7b36458c9ef596b13e0a83a8f4bbb11da26d57a5d42d6886",
+    "arc_agi2/direct_factories/task_a416b8f3.py": "8dc9ec7d2b619bd846be2c21635963fd31386400f202b9bc99d4a3d9642e79c9",
+    "arc_agi2/direct_factories/a416b8f3.json": "08edad17730cfcbb4525d5b312e61cb3be3b570084e10a1851e61145971d3dad",
+    "tasks/task_a48eeaf7.py": "05654d09b55c2445466ae90c0c0527bbd701053db2e1ce43edc91743bbbae50f",
+    "arc_agi2/reports/direct-certificates/a48eeaf7.json": "dfb20e8189c3639f05481eef11f4058c7528bb78c7cc33852326663b0f03a202",
+    "tasks/task_a78176bb.py": "c777d7c55a9d615493293450629d8570a096c16d2b5ff7a788b1e07d7aa37fa7",
+    "arc_agi2/reports/direct-certificates/a78176bb.json": "b3b64562715e7ed774837d4431a903edba706909faee207b9d151752daef1d48",
+    "tasks/task_b1948b0a.py": "3fad7225ba4b67f4a9b383d64f3bc5c41b0508733dbdbe990cfb7b7afa82331e",
+    "arc_agi2/direct_factories/task_b1948b0a.py": "7d9d8ed986aa2f664bcf729e3a03568c8fc7208a48eddb12804da7625bd1df51",
+    "arc_agi2/direct_factories/b1948b0a.json": "54b4276360669e363db9e9ae0edeef38a1639a25ea5225b788f9c47e0c913a69",
+    "tasks/task_b7249182.py": "2f446aebf92c6560c800185af02e8d6362625d6bf13c3a06acf6ec28e52a5679",
+    "arc_agi2/reports/direct-certificates/b7249182.json": "22906d032e184080c80f7ac3ae5afc3e456973807d416d1105d8b5e27f9decb6",
+    "tasks/task_b8825c91.py": "aef351291cc7fa55432b333ac35044a42b1798c8ba868a9d1cef3275d6629360",
+    "arc_agi2/direct_factories/task_b8825c91.py": "5ca191cbd822dae130f14910ae28320c39d57a8edf60ab758aaf0a45409e4f00",
+    "arc_agi2/direct_factories/b8825c91.json": "9e7da58927c665102be9a23bd1b48b372f92a64886742df3801abeb0954e88cc",
+    "tasks/task_b91ae062.py": "80919c96d1ab04d6a784303180f940a451c49def59ba7573e2583d6363e61327",
+    "arc_agi2/reports/direct-certificates/b91ae062.json": "33698db735fec36912ff87ac7aad28166a736287c86a3458d900687405a6271c",
+    "tasks/task_b94a9452.py": "508a3b0254f2d39bdcbf796826035cc57bbe3d1a5163e4e33007ac84bbcd2197",
+    "arc_agi2/reports/direct-certificates/b94a9452.json": "a28cd60ba64ee4687bee61d5c95eee6b1a53f24f17b6b81a2b6d07d002bf951e",
+    "tasks/task_b9b7f026.py": "d8334417b4547746a5d3f084c3cd8f0050bd6d59c7ef4ac7aed2e6edf367f5cc",
+    "arc_agi2/reports/direct-certificates/b9b7f026.json": "9a47b99d71b1b3177de0757975f56b593f914a520bcec9a320ed8f3db5d1d90b",
+    "tasks/task_bda2d7a6.py": "2903b625f23383cf37a347087a97136a168e58868bc8f28ed6709b424e98901a",
+    "arc_agi2/reports/direct-certificates/bda2d7a6.json": "a82b0f7664b170cd56616c85a640451a3b73bd69bba4add7c2145250f3964cfb",
+    "tasks/task_be94b721.py": "17c4a207cc07212c08227a5e23751cedae019e4efe895fe57a8bc9fa17d3a3e0",
+    "arc_agi2/reports/direct-certificates/be94b721.json": "1d38ca5fb9793cb26e34cd391b017fbab4192c5fd836dd808ac94517de025811",
+    "tasks/task_c3e719e8.py": "5e18fd9498379552b81cdb99ce96e6f0a1e9f5edc1ac94209da70459a696c8be",
+    "arc_agi2/direct_factories/task_c3e719e8.py": "6d1599b2e924f8f7943e3c547efa13db565d391063a8566c340557f1f6586665",
+    "arc_agi2/direct_factories/c3e719e8.json": "5c58f9d297e31e61d1c08b5279751ad09baf4c83e00a015a22d8db65c6c3c7b2",
+    "tasks/task_c444b776.py": "93463654798041ffce66a622728e301be5bb9c26acc61891d8ae9ad0bb96472f",
+    "arc_agi2/reports/direct-certificates/c444b776.json": "84488ecf31d16aa96f51b0357e6e03c28a80f08fe40d8db81b66353aad459c2c",
+    "tasks/task_c59eb873.py": "9615636065748649c64d366d03f9d6d020d83509f8aca46855ddd041d275ceac",
+    "arc_agi2/reports/direct-certificates/c59eb873.json": "c272b3dc89d8e53ab6522c651553135ae2b77c5851365cb69c2da68ee00c7828",
+    "tasks/task_c8f0f002.py": "afd6eb34f85cc5c6b815b0a37ee47efcada1ef8333d62cb310cde93b43147001",
+    "arc_agi2/direct_factories/task_c8f0f002.py": "6a62b045b364a7ac0eaa9b67ab714c2e7f525574db7a12698bc8d44f1e74c25f",
+    "arc_agi2/direct_factories/c8f0f002.json": "ebf5c06a59cdd073228101ab82599061a3231de4a679aaebff922d2056473d3e",
+    "tasks/task_c909285e.py": "a1ceb292ff1201a5aafcf90f9b27695caf32bb5b63616bbbd4df2d99b70e792a",
+    "arc_agi2/reports/direct-certificates/c909285e.json": "f3ca0735ea82da2739e8d978a4e24721bcfd5535d56392fb9e3ca07ba9ea5087",
+    "tasks/task_c9e6f938.py": "47ae89677d714a7a46cc8a98c1d4a75f7c3ed3100fad4ce61caa7281317ce043",
+    "arc_agi2/direct_factories/task_c9e6f938.py": "1ab07b19944bf10c0dfc1e49106500d417e5f702e5289c3c3bbdce8d662ffa94",
+    "arc_agi2/direct_factories/c9e6f938.json": "4ac15a12f8a903f2590ce69655e5d272d4b3e60e226d85ae4d5b418547e1dc67",
+    "tasks/task_cbded52d.py": "ff17a3d4479433a99fd1bd410c331a0755c6e71de6455d30a5689330c5c10d90",
+    "arc_agi2/reports/direct-certificates/cbded52d.json": "cbe0a97da059622a9b9eb264fa4143f1f41e676de703e484961a5edbed4ca36d",
+    "tasks/task_cce03e0d.py": "4b2ed363b01a2e00b277be49ae997d65c9e2eda6b9ce204d0f3af60410920dbf",
+    "arc_agi2/direct_factories/task_cce03e0d.py": "0b62b72388c06c81d2f324544fbaec862779f19b87df0387bc446d2db67ed909",
+    "arc_agi2/direct_factories/cce03e0d.json": "486ccdbe46d6d2a66133377ceb9fbc43dc6b81d5df174353040c1210b341440d",
+    "tasks/task_ce602527.py": "932fea3545da1cd1dde5d9abdfccac9064efed863d6eec86bfe21773801165a2",
+    "arc_agi2/direct_factories/task_ce602527.py": "cb44ce2d823455e8bcab858db86acbc745f1848b0eb45a7c20e8e1f9d7e70513",
+    "arc_agi2/direct_factories/ce602527.json": "03776454cd4bf0b97bdb42cbc23144b5ebab08c737cfceb162ab1273caed3c22",
+    "tasks/task_d07ae81c.py": "04ff514c125cb18f3bcb34db2433d70d1a1f3ccf171545f6ddb59767984d15ad",
+    "arc_agi2/direct_factories/task_d07ae81c.py": "fa6cf2e789a4fb66a282e32c421debb717dd58c81b83b1146ba9a5e00c6f91a1",
+    "arc_agi2/direct_factories/d07ae81c.json": "e5a5408f1a4e225a92ec627f905a821cb4cd979a053a1271454168b70bdc9050",
+    "tasks/task_d10ecb37.py": "0b5cc4c6f437756c6679cc52606eeeda3f652c684b5261a066442eb0630fb9a7",
+    "arc_agi2/direct_factories/task_d10ecb37.py": "876649499212561ac4975e0ca37bec4b4f14f4607a0d1e56d8fb25180fd9b0af",
+    "arc_agi2/direct_factories/d10ecb37.json": "0464d46619df6d2a2a4899a6f142880c0d938f1d905961cb20cb82c28ff218a2",
+    "tasks/task_d22278a0.py": "dc8bfa0b8cb9201bb276a92e9e320bf6e1f780b18b02dc9ce72d5ce5990724f8",
+    "arc_agi2/reports/direct-certificates/d22278a0.json": "e64613846ef3e470d19add3b25cd064b27c85de98993049da5f623af40f8ed16",
+    "tasks/task_d511f180.py": "d2217d734e4a979975df38405d630feb952dd39558578350de368910d61bfee6",
+    "arc_agi2/direct_factories/task_d511f180.py": "58b803ec45621a7fc6e56c3c100d482db433cc26eb726b976da503f4ad6b7b40",
+    "arc_agi2/direct_factories/d511f180.json": "c3d23faeba526ee669b1a72cfc25ccd6f9b4d2236109ebb6e311bcaf685fc797",
+    "tasks/task_d631b094.py": "bb3f0133abf59fcb8c0ea867ad492558a43d8567d0fde21c02245b598c18e924",
+    "arc_agi2/direct_factories/task_d631b094.py": "9c45ae9fc4b09d488e9d1b36746ac2090c2428c984b1cd5364338cd9c35d435c",
+    "arc_agi2/direct_factories/d631b094.json": "7d19a0d4d85a0ff479a23e13054be58fa9dd8fdc39744b10b3fe5ab4603803b3",
+    "tasks/task_d89b689b.py": "7f89fb91f58fbc1cf4ff71a15ef0c456fa54606558be0d5c171d908075e5ff7d",
+    "arc_agi2/reports/direct-certificates/d89b689b.json": "90849524e29a1c3aecafab8775fcd8077acafa4bdec713865408cc8ccc1ae462",
+    "tasks/task_ded97339.py": "f58f4f1340d3d9c0fd2dfc08e71bdde346a6c1d3f0bb7b00841f344af9dd2ead",
+    "arc_agi2/reports/direct-certificates/ded97339.json": "88c2a46cd11824fd1b280d0a7ff9804a9f4714234ca87dace7a6ca9015919628",
+    "tasks/task_e26a3af2.py": "1b97892eadf7510697f533b18dd03f5813406699bfbf3fa410ae71bfc569311e",
+    "arc_agi2/reports/direct-certificates/e26a3af2.json": "9e71ebad616206e829314316578262436b4ff9c57336e8127d361f77517bd5c5",
+    "tasks/task_e6721834.py": "25bbb0ebb7070f004b61330f3814630776e23db7af9bd19b3fbf4811ca3aab87",
+    "arc_agi2/direct_factories/task_e6721834.py": "ef9474de27e50ed12c581b8f04e030b7a025af1843847cab5938bf880638a73f",
+    "arc_agi2/direct_factories/e6721834.json": "ac49828f07bc12330a9de9fd874d97bd231ca353f8c1fe044b64e52d6f5a5d26",
+    "tasks/task_e8dc4411.py": "f31d4950097d6c834b28893fa8b711cac63e197860d28c7cd697d9fab0741070",
+    "arc_agi2/reports/direct-certificates/e8dc4411.json": "22ca491d240db111589f656b910069e928175559063a794da5964113b71318e1",
+    "tasks/task_e9afcf9a.py": "b209e052a8edc34dd31b13a697d90622d452b62330db275aac9fb615d0228756",
+    "arc_agi2/direct_factories/task_e9afcf9a.py": "4bf29c0730268f92a6f8c20df019bfbbd9f4179174ef9af8c17f783056f1bc2f",
+    "arc_agi2/direct_factories/e9afcf9a.json": "5527b9c2c8a075c0a76eaa390fe1e6256c1160f8c3ba335cb4f550888b0d9ef6",
+    "tasks/task_eb281b96.py": "93fba00583e96aca3c00ac85eb59e14015613d66ae549def4d28c8e432634471",
+    "arc_agi2/direct_factories/task_eb281b96.py": "d2c5ae44fc16c24747890c66458611c74113f894579b7260c5d914c77865d794",
+    "arc_agi2/direct_factories/eb281b96.json": "e8b6eeeb598b9fb07378b2f900dfbcab0d65dc5f9eb58cf15a0d231689dc3c7a",
+    "tasks/task_eb5a1d5d.py": "ad6e5edd3d99283c73b20ae1a934fcea7bf34fd52d9b3fc97b06c6fbe7ff667c",
+    "arc_agi2/direct_factories/task_eb5a1d5d.py": "6d742120b727f05905e78d3e7d1766bc03c171b77d8c2fe605a87aec5e94ec59",
+    "arc_agi2/direct_factories/eb5a1d5d.json": "5528cf318756c60089d57c3d50b320bab71e60177cc0d74d11005fdc1b9829b8",
+    "tasks/task_ec883f72.py": "7018db0d83c57ccbedcb51874b07da47dda45aa57f83b71efb9321cdc519bdb8",
+    "arc_agi2/reports/direct-certificates/ec883f72.json": "64732e80cc66b857b807ae3a474d52f072526c4bf6a9eaeb1cbcf1e1247a2d0a",
+    "tasks/task_ecdecbb3.py": "b217fe4d820bc14a6776b044d8a69733ae63f09ede2e1759d5188509dfad78bf",
+    "arc_agi2/reports/direct-certificates/ecdecbb3.json": "197b61351797d52dd7695a6168f01ea4f9f268f1b7d1d040b1662a3d782d19c0",
+    "tasks/task_ed36ccf7.py": "b1268de911953d0af8c8baf79255411307679974677e4eb9b1e8f8beb529adf0",
+    "arc_agi2/direct_factories/task_ed36ccf7.py": "bb8f5012859d4ddad03dd3d5c6033228dcce8c5746ad508f63a46ee8e6a4cf8b",
+    "arc_agi2/direct_factories/ed36ccf7.json": "f5fceb107810eb8b2eee1973b4850e646ec139ce9a968484a73849bee4d77838",
+    "tasks/task_f25fbde4.py": "c789e3bc5d2f8b9e6045c8bc2f42fccc27c9fdc02c03e82e78fb9ffee8642d43",
+    "arc_agi2/reports/direct-certificates/f25fbde4.json": "0ec58ff7ff6291ec7f43cbddc013d553d0cdae2820d65f54f9ffca774b1caf6f",
+    "tasks/task_f76d97a5.py": "1b8488c7519f68666bfbd35b500199e93b4dec8f94963c1c337dcaa4d865b2a1",
+    "arc_agi2/direct_factories/task_f76d97a5.py": "3c97ae6bfae503d63f2ca518fe58723a30a22072f70ea7da28a03709679f61ad",
+    "arc_agi2/direct_factories/f76d97a5.json": "125fee7d6658cd43fe7a021a24f03bb6c6542982e54d2f48ddf6bf331beba662",
+    "tasks/task_f9012d9b.py": "d8c30c25b6ebac87d74b8083ff96971f9c5fcbdbcc89ce3bde52e83d9794b6ab",
+    "arc_agi2/direct_factories/task_f9012d9b.py": "6d0e6d1d1078c8a4f2c63837bf2a0cc29a4ae1332c88fcac0f80938fa70737b6",
+    "arc_agi2/direct_factories/f9012d9b.json": "38d1b072322c07e68d738463421a1cdfecb0e5484c46e6754de585959ef50e5f",
+    "tasks/task_feca6190.py": "7569a9b066a540e062e3fa7c5f53ca37d648632052463f6234f92299ce79e687",
+    "arc_agi2/direct_factories/task_feca6190.py": "f369f110dd19aad8af4042f0e147971b0c4031bf47849a97c14e179f1480fedb",
+    "arc_agi2/direct_factories/feca6190.json": "67b391864ef87855dde02b3c3437e61eeea91998a4c367f1507cc07f720921f8"
+  },
+  "candidate_families": 127,
+  "admitted": {
+    "045e512c": {
+      "task_id": "045e512c",
+      "verified_variants": 64,
+      "passed": true,
+      "program_sha256": "aecc18f897f4974336c27c62c808616eb6275a61aaba49714a3a15b9e7891fa9"
+    },
+    "09629e4f": {
+      "task_id": "09629e4f",
+      "verified_variants": 64,
+      "passed": true,
+      "program_sha256": "96cc4e9a6d8da79c520b5a694f226e7ad9ee27ca9989776326257db7bb16f33f"
+    },
+    "0962bcdd": {
+      "task_id": "0962bcdd",
+      "verified_variants": 64,
+      "passed": true,
+      "program_sha256": "587ddc46de939e0e88e49d2de069b82094d3a73835ff9c330083128a1c732e10"
+    },
+    "0d3d703e": {
+      "task_id": "0d3d703e",
+      "verified_variants": 64,
+      "passed": true,
+      "program_sha256": "db48272aa7340db00a806fe3f3314e1550734962fab356683c5b61ec21a72ae1"
+    },
+    "11852cab": {
+      "task_id": "11852cab",
+      "verified_variants": 64,
+      "passed": true,
+      "program_sha256": "be067ddd3cc240768a4aca0501a712e07165d372a9ac69d608454702decd7666"
+    },
+    "178fcbfb": {
+      "task_id": "178fcbfb",
+      "verified_variants": 64,
+      "passed": true,
+      "program_sha256": "bd2be9781e6403390fc16029f37bdd4f0ddf364ed9d36eaf8b0aacc4c9689a2e"
+    },
+    "1c786137": {
+      "task_id": "1c786137",
+      "verified_variants": 64,
+      "passed": true,
+      "program_sha256": "f96ff6037acbcee766d3aa9c60e797541397f4f6fb145dd3a1563ee0b5e9e8b8"
+    },
+    "1cf80156": {
+      "task_id": "1cf80156",
+      "verified_variants": 64,
+      "passed": true,
+      "program_sha256": "38f52b291de47500245a98d0c6859ef1bb7fec29ff0c54be7a31ca2ebb0a8520"
+    },
+    "1e32b0e9": {
+      "task_id": "1e32b0e9",
+      "verified_variants": 64,
+      "passed": true,
+      "program_sha256": "122811dd2dc17336861c625bb44e48d0e1a48776d0e338a3298de322cf46138b"
+    },
+    "1f642eb9": {
+      "task_id": "1f642eb9",
+      "verified_variants": 64,
+      "passed": true,
+      "program_sha256": "8e2bdaa47c4a2179657bfd23a37a0065fe9da4c67c9064d03eb41891a2edfcdf"
+    },
+    "1f85a75f": {
+      "task_id": "1f85a75f",
+      "verified_variants": 64,
+      "passed": true,
+      "program_sha256": "11775d387eae7bae77d1a25ab23650a28099273a43160c7be51d7031001e793a"
+    },
+    "1f876c06": {
+      "task_id": "1f876c06",
+      "verified_variants": 64,
+      "passed": true,
+      "program_sha256": "abe704f96ecbf3d7adbc52bd103cf28de5d76386fd6455cab6d2289ef849879a"
+    },
+    "2204b7a8": {
+      "task_id": "2204b7a8",
+      "verified_variants": 64,
+      "passed": true,
+      "program_sha256": "31bc5a4c1c37bdaa4831fa14c22f925161aba3204953d0fa0fea1f3760182cde"
+    },
+    "23b5c85d": {
+      "task_id": "23b5c85d",
+      "verified_variants": 64,
+      "passed": true,
+      "program_sha256": "9e00836f72c5bb5ee254021885a31e6b9e1ab2338ade3249519bb84556fe7d84"
+    },
+    "25d8a9c8": {
+      "task_id": "25d8a9c8",
+      "verified_variants": 64,
+      "passed": true,
+      "program_sha256": "b84a31ac45c4970c573887df445fa096069b8ee1e51e2b3c521eaf461e0ba217"
+    },
+    "28e73c20": {
+      "task_id": "28e73c20",
+      "verified_variants": 64,
+      "passed": true,
+      "program_sha256": "dad2618b2c8ced704e53ddc7d967e0786f1bd97b6ffd6f9a210e7a7d76955811"
+    },
+    "29623171": {
+      "task_id": "29623171",
+      "verified_variants": 64,
+      "passed": true,
+      "program_sha256": "977ece7663f11f1e687e07788cb9ec4f059720d68fd66cd1e1898481cbbb7ff6"
+    },
+    "2c608aff": {
+      "task_id": "2c608aff",
+      "verified_variants": 64,
+      "passed": true,
+      "program_sha256": "3c52688e9c143f222b07ee743beadf622858a2c4cf92366f34f9c371320f6ed6"
+    },
+    "2dd70a9a": {
+      "task_id": "2dd70a9a",
+      "verified_variants": 64,
+      "passed": true,
+      "program_sha256": "2501a68f85cb8eb7a7547ea13886c2e59543f2b633b9b52a4d78b7a9ace60623"
+    },
+    "39a8645d": {
+      "task_id": "39a8645d",
+      "verified_variants": 64,
+      "passed": true,
+      "program_sha256": "a4c0e47f9922f143624484fcd73483c2fa12049444503376f90ce6c7acd96b30"
+    },
+    "39e1d7f9": {
+      "task_id": "39e1d7f9",
+      "verified_variants": 64,
+      "passed": true,
+      "program_sha256": "21937e50d562ecf1eedf67bd3941e1b333f080e08d62076f55117e473e5a1189"
+    },
+    "3af2c5a8": {
+      "task_id": "3af2c5a8",
+      "verified_variants": 64,
+      "passed": true,
+      "program_sha256": "777b57eb1b46bbaa7d5412ae2bf5677b6bbc238d070f4701381e5c14afd1e53a"
+    },
+    "3c9b0459": {
+      "task_id": "3c9b0459",
+      "verified_variants": 64,
+      "passed": true,
+      "program_sha256": "7def969663e2d4affea2c27d7781dfad2b987722b1ad478fccf106356410bd4d"
+    },
+    "3de23699": {
+      "task_id": "3de23699",
+      "verified_variants": 64,
+      "passed": true,
+      "program_sha256": "d27963de4ed1c7ee1885d10fba6efaf0150f31875a272fd8771da943844144c8"
+    },
+    "3eda0437": {
+      "task_id": "3eda0437",
+      "verified_variants": 64,
+      "passed": true,
+      "program_sha256": "14b71a6baa94ff6a34c29664c321ca26a456adc197c8ceaa0f1a5fbaebff2468"
+    },
+    "4093f84a": {
+      "task_id": "4093f84a",
+      "verified_variants": 64,
+      "passed": true,
+      "program_sha256": "4c930caf4a720aa98c1a21ac5f3feb33799ce7089b57adb917e57ea6da27a639"
+    },
+    "42a50994": {
+      "task_id": "42a50994",
+      "verified_variants": 64,
+      "passed": true,
+      "program_sha256": "35a39a439338865e72748d01fe332db0a1166cd62ee0a0d0dfc46a80b8b951ed"
+    },
+    "44f52bb0": {
+      "task_id": "44f52bb0",
+      "verified_variants": 64,
+      "passed": true,
+      "program_sha256": "748f467b7d7cb5d405a7a5af5716fe5ada3b0a0100c42915dab8b415461a6bdc"
+    },
+    "46442a0e": {
+      "task_id": "46442a0e",
+      "verified_variants": 64,
+      "passed": true,
+      "program_sha256": "44d6bbbddcc4734a0f2a77dd27114d0ae7726070f4a6701a01f90a9a567f7d49"
+    },
+    "47c1f68c": {
+      "task_id": "47c1f68c",
+      "verified_variants": 64,
+      "passed": true,
+      "program_sha256": "d8f74f81651cab3efc08eb69591b6d316043e0e4e5a6b85035858ff27062eb97"
+    },
+    "49d1d64f": {
+      "task_id": "49d1d64f",
+      "verified_variants": 64,
+      "passed": true,
+      "program_sha256": "80b51890afbaaab0070c2400ea2e40a45314d6f72f38bdc79bc549d203e02e23"
+    },
+    "4be741c5": {
+      "task_id": "4be741c5",
+      "verified_variants": 64,
+      "passed": true,
+      "program_sha256": "8982347416f60cb865d205dc2a718a3fa3e7577a50fc774acff56e01aba02003"
+    },
+    "4c4377d9": {
+      "task_id": "4c4377d9",
+      "verified_variants": 64,
+      "passed": true,
+      "program_sha256": "01be457b2d9a0ac8038fa340f0ecfa9f9897f11017277bd0acff18964633c6ca"
+    },
+    "4c5c2cf0": {
+      "task_id": "4c5c2cf0",
+      "verified_variants": 64,
+      "passed": true,
+      "program_sha256": "c3cd04905a5298d23900e927b8de78a514e3fe2ab3ac824bc6038eedf8d267cf"
+    },
+    "539a4f51": {
+      "task_id": "539a4f51",
+      "verified_variants": 64,
+      "passed": true,
+      "program_sha256": "c96677468e25b6bd4c74d24596376fa6425d19dd5a63f429a4db52c5f6e7e106"
+    },
+    "53b68214": {
+      "task_id": "53b68214",
+      "verified_variants": 64,
+      "passed": true,
+      "program_sha256": "cbf59a2a2a02f222d4b855bda81b25c2a92caccaf049526e3285c1d77e93c4a0"
+    },
+    "54d9e175": {
+      "task_id": "54d9e175",
+      "verified_variants": 64,
+      "passed": true,
+      "program_sha256": "038088d5afa0809afd2b9c51c4eddd02c24c66fbba2b9d68bd91d973a17484c0"
+    },
+    "5582e5ca": {
+      "task_id": "5582e5ca",
+      "verified_variants": 64,
+      "passed": true,
+      "program_sha256": "281458330f8d32807c5d5e703eb968b27b9be4eceb1cb37d058e6803ce167b76"
+    },
+    "56ff96f3": {
+      "task_id": "56ff96f3",
+      "verified_variants": 64,
+      "passed": true,
+      "program_sha256": "57bd48f5cfc62b4a3034fc931c6d21d39d69c777d4beb31ac3ffa8e26e1b09b0"
+    },
+    "5daaa586": {
+      "task_id": "5daaa586",
+      "verified_variants": 64,
+      "passed": true,
+      "program_sha256": "790ec4943ba137dbf3c2c0f5f09d6c3183c4d32d52fd517d1bd9453267c7b88e"
+    },
+    "6150a2bd": {
+      "task_id": "6150a2bd",
+      "verified_variants": 64,
+      "passed": true,
+      "program_sha256": "88497fec369cfa2354feb005c8b82511115064156b1ed362f7c28d3635583db2"
+    },
+    "62c24649": {
+      "task_id": "62c24649",
+      "verified_variants": 64,
+      "passed": true,
+      "program_sha256": "777b57eb1b46bbaa7d5412ae2bf5677b6bbc238d070f4701381e5c14afd1e53a"
+    },
+    "662c240a": {
+      "task_id": "662c240a",
+      "verified_variants": 64,
+      "passed": true,
+      "program_sha256": "6956ecb008c11e366edb13b900394fb9879808f306635408993c2fc12af63f52"
+    },
+    "67a3c6ac": {
+      "task_id": "67a3c6ac",
+      "verified_variants": 64,
+      "passed": true,
+      "program_sha256": "7dd8cf5be09c1b5dd85b0c41657e091dee96df6bf493c4be3a3d2aa7aedcd9f6"
+    },
+    "67e8384a": {
+      "task_id": "67e8384a",
+      "verified_variants": 64,
+      "passed": true,
+      "program_sha256": "c591fd999af8adb7b2c05f7b1e67fbba024c8e6e1c4efd063abeddbeed203a1f"
+    },
+    "68b16354": {
+      "task_id": "68b16354",
+      "verified_variants": 64,
+      "passed": true,
+      "program_sha256": "57c2a655fcc2c98aabe0b8efad0f82eb33b82c364284d8a2c98b1131db1f2902"
+    },
+    "6aa20dc0": {
+      "task_id": "6aa20dc0",
+      "verified_variants": 64,
+      "passed": true,
+      "program_sha256": "b24cd1f07db89a1193bc61a5c9d308eac41a1a10933840d0962599bc364c25c5"
+    },
+    "6cdd2623": {
+      "task_id": "6cdd2623",
+      "verified_variants": 64,
+      "passed": true,
+      "program_sha256": "80f0f5897cdc83e28ccda3a28868133f68568c843523e2d4f48b1b2154b631a6"
+    },
+    "6d0aefbc": {
+      "task_id": "6d0aefbc",
+      "verified_variants": 64,
+      "passed": true,
+      "program_sha256": "a00aaf8529b1002db09759f8ad54d5f5a09b184810278e3e4f2a0729b675ac11"
+    },
+    "6e02f1e3": {
+      "task_id": "6e02f1e3",
+      "verified_variants": 64,
+      "passed": true,
+      "program_sha256": "e560bbf90f356bfac3d3bfffd2a83cf0980c5299c7d44dd28202699aefa4d4d3"
+    },
+    "6e19193c": {
+      "task_id": "6e19193c",
+      "verified_variants": 64,
+      "passed": true,
+      "program_sha256": "e9086276cf6b014d301f6b1e622431711cff8285d45bc0c6222acbecb2beace1"
+    },
+    "6ecd11f4": {
+      "task_id": "6ecd11f4",
+      "verified_variants": 64,
+      "passed": true,
+      "program_sha256": "25cb5cd305618d47c5df77773668ba382437b31fd58d93fb894c6989c74a65fb"
+    },
+    "6f8cd79b": {
+      "task_id": "6f8cd79b",
+      "verified_variants": 64,
+      "passed": true,
+      "program_sha256": "d7aac6e7443001a0a4fce4a661e63d235deb0675d904cc363e7582be61bb8781"
+    },
+    "6fa7a44f": {
+      "task_id": "6fa7a44f",
+      "verified_variants": 64,
+      "passed": true,
+      "program_sha256": "54bfb6e5fa4c9fe24578b6bd4cc06da76b4ea40a756c4af9f9181cdb5f7a79b3"
+    },
+    "746b3537": {
+      "task_id": "746b3537",
+      "verified_variants": 64,
+      "passed": true,
+      "program_sha256": "250f42bf7f182af31558f8964a1990370448363e58e7ad8cfef8d63c42be041b"
+    },
+    "74dd1130": {
+      "task_id": "74dd1130",
+      "verified_variants": 64,
+      "passed": true,
+      "program_sha256": "218d53f7404ea93ddc8548725dbd25d5bdeeb565b972e2058a20cca60d9936d1"
+    },
+    "7fe24cdd": {
+      "task_id": "7fe24cdd",
+      "verified_variants": 64,
+      "passed": true,
+      "program_sha256": "f746704eec816e865ebe327aa38c6fee616e952605f68275a2f33c6915fb3717"
+    },
+    "85c4e7cd": {
+      "task_id": "85c4e7cd",
+      "verified_variants": 64,
+      "passed": true,
+      "program_sha256": "f56674ae1337cadf6ec9416713cfbbcaadda4df5ef615900bccfc40f8b89a3e3"
+    },
+    "8731374e": {
+      "task_id": "8731374e",
+      "verified_variants": 64,
+      "passed": true,
+      "program_sha256": "f123ea6792c0038b64cd0fcffa179c58e30a11276d2cec9348c83f569dc02c87"
+    },
+    "8be77c9e": {
+      "task_id": "8be77c9e",
+      "verified_variants": 64,
+      "passed": true,
+      "program_sha256": "2782e69dfcae1913541d8682c0c0cb0a3ac573484f7a3e47ddce7b45c19e7b33"
+    },
+    "8d5021e8": {
+      "task_id": "8d5021e8",
+      "verified_variants": 64,
+      "passed": true,
+      "program_sha256": "4486342294f37cb83f067c7313d1b1d4bf68dcbf73d9d4b8cde967e41f141565"
+    },
+    "8f2ea7aa": {
+      "task_id": "8f2ea7aa",
+      "verified_variants": 64,
+      "passed": true,
+      "program_sha256": "b9c1de5df4b753553eb64f7a4d1e02eb09b8273b4ab3f5e74b8e44dfba0d4fce"
+    },
+    "90c28cc7": {
+      "task_id": "90c28cc7",
+      "verified_variants": 64,
+      "passed": true,
+      "program_sha256": "828d7402e066449bdba115ff897d9f5282f9aaef32277385aa6ac882aff482a3"
+    },
+    "91413438": {
+      "task_id": "91413438",
+      "verified_variants": 64,
+      "passed": true,
+      "program_sha256": "9d4b43bb56f23ceb72eb58e93b8b2f19695b9c07eccfc1d715151e14f6301732"
+    },
+    "91714a58": {
+      "task_id": "91714a58",
+      "verified_variants": 64,
+      "passed": true,
+      "program_sha256": "70b5ba086b90ee09723cd0fd880861a2b568d0a859d8e4f2dff45dffab8059e4"
+    },
+    "9172f3a0": {
+      "task_id": "9172f3a0",
+      "verified_variants": 64,
+      "passed": true,
+      "program_sha256": "7d05ef14b23e7b6ca7dab7f4da62afb0f8fdae95651b08186216e998b8ac6101"
+    },
+    "928ad970": {
+      "task_id": "928ad970",
+      "verified_variants": 64,
+      "passed": true,
+      "program_sha256": "586bb363db7e0f6d98a9e7881e2465e71890acf9c3811b9965f71bb9b3ae9c06"
+    },
+    "952a094c": {
+      "task_id": "952a094c",
+      "verified_variants": 64,
+      "passed": true,
+      "program_sha256": "b14582b02ef437804387a0db378df80da224b8b701dbbfbab0801a9ad5019e79"
+    },
+    "9565186b": {
+      "task_id": "9565186b",
+      "verified_variants": 64,
+      "passed": true,
+      "program_sha256": "5e1256252fcb93f02df0d407e199f6a01d53da45ccac08bf0438cf33d9601f3d"
+    },
+    "963e52fc": {
+      "task_id": "963e52fc",
+      "verified_variants": 64,
+      "passed": true,
+      "program_sha256": "cd24894e8e06bce95c2c17709c3e483ac5d6506ca1e1be542c8bd24d319549d1"
+    },
+    "98cf29f8": {
+      "task_id": "98cf29f8",
+      "verified_variants": 64,
+      "passed": true,
+      "program_sha256": "8f3fc87fc3fd1e13e8fc1a9c9a216b0b712c4c07a524fc526db6379695afa331"
+    },
+    "9af7a82c": {
+      "task_id": "9af7a82c",
+      "verified_variants": 64,
+      "passed": true,
+      "program_sha256": "326615e61fdfeb91a7324fcfc0921858f1c34624d6fab945fdd663c4dda36db6"
+    },
+    "9d9215db": {
+      "task_id": "9d9215db",
+      "verified_variants": 64,
+      "passed": true,
+      "program_sha256": "9f632f6fef477ec560e3cf3429a03a139affa8f2d64c7990b698c934499479fe"
+    },
+    "9dfd6313": {
+      "task_id": "9dfd6313",
+      "verified_variants": 64,
+      "passed": true,
+      "program_sha256": "638a8c80608acbc1ce1d154bf0390d9f4a4855f06b57ea464cb78254327385c0"
+    },
+    "9edfc990": {
+      "task_id": "9edfc990",
+      "verified_variants": 64,
+      "passed": true,
+      "program_sha256": "e7221f2ceecc0b774b7b400c50babb70cf8a9e341711f1e7d5f69894d0400b42"
+    },
+    "a416b8f3": {
+      "task_id": "a416b8f3",
+      "verified_variants": 64,
+      "passed": true,
+      "program_sha256": "4ff9da7a5fd8caa779aac05bc4f7a0cadf777efc3ccce7fae34c497ce616de43"
+    },
+    "a48eeaf7": {
+      "task_id": "a48eeaf7",
+      "verified_variants": 64,
+      "passed": true,
+      "program_sha256": "1dab27e15dc5a27b2f013f56a99395ff0ddaf39657e262b2296cffe1fefda197"
+    },
+    "a78176bb": {
+      "task_id": "a78176bb",
+      "verified_variants": 64,
+      "passed": true,
+      "program_sha256": "cdd3b6f31d9236218bf9774bc18220d91b303db74877b5e313028c93686b45a3"
+    },
+    "b1948b0a": {
+      "task_id": "b1948b0a",
+      "verified_variants": 64,
+      "passed": true,
+      "program_sha256": "f39b9fc83234a63bb3af9badc96f44fe3f92f0b90e388d003222fdfbe42deba3"
+    },
+    "b7249182": {
+      "task_id": "b7249182",
+      "verified_variants": 64,
+      "passed": true,
+      "program_sha256": "307968b4a0e2493e22fb19f7edaaf4dc2e8d52f18d90c9f9e36692ea3c974f0e"
+    },
+    "b8825c91": {
+      "task_id": "b8825c91",
+      "verified_variants": 64,
+      "passed": true,
+      "program_sha256": "e194b60a2eeb0b3e786aec6ca7127b1d2b7d3a8b37de5ee9a5f716ffab4b4958"
+    },
+    "b91ae062": {
+      "task_id": "b91ae062",
+      "verified_variants": 64,
+      "passed": true,
+      "program_sha256": "c65db715bad98ebdc9f2a2a680d4b165c03d5a8854967b4befe5a859808d8c07"
+    },
+    "b94a9452": {
+      "task_id": "b94a9452",
+      "verified_variants": 64,
+      "passed": true,
+      "program_sha256": "d9d8e0733da04e8cc7cc922722b18e7aebb09dad9b9187ec7902d282d222db13"
+    },
+    "b9b7f026": {
+      "task_id": "b9b7f026",
+      "verified_variants": 64,
+      "passed": true,
+      "program_sha256": "a21acc30b382845d8e0826ab6a3c69e9cf551a853cec040f1abaf51eab35045e"
+    },
+    "bda2d7a6": {
+      "task_id": "bda2d7a6",
+      "verified_variants": 64,
+      "passed": true,
+      "program_sha256": "40557efcf8316e9eeaaaab229338ccde31d11d2708d695108b5f64714f933fc1"
+    },
+    "be94b721": {
+      "task_id": "be94b721",
+      "verified_variants": 64,
+      "passed": true,
+      "program_sha256": "11478727b89465e953b8770cab385bd514b7d1ff57cfa021657ab648ae0dcee0"
+    },
+    "c3e719e8": {
+      "task_id": "c3e719e8",
+      "verified_variants": 64,
+      "passed": true,
+      "program_sha256": "22d5a1a24ccb9cf7eb8158f7fed621c4c9ce5821007c25e4d69d343ea991ac4d"
+    },
+    "c444b776": {
+      "task_id": "c444b776",
+      "verified_variants": 64,
+      "passed": true,
+      "program_sha256": "b1884342914f1ccd2f76009037ba1cb42f697d4d5bca6f1a042b3ba866e85fa6"
+    },
+    "c59eb873": {
+      "task_id": "c59eb873",
+      "verified_variants": 64,
+      "passed": true,
+      "program_sha256": "fa5d2f08204cf3d26bb3549cabb3697026cde30b02bdfb561e6f5743381ab6e9"
+    },
+    "c8f0f002": {
+      "task_id": "c8f0f002",
+      "verified_variants": 64,
+      "passed": true,
+      "program_sha256": "03a5787f824f283885149bf04012d1df3019aca147fdacccbe80004320bc6291"
+    },
+    "c909285e": {
+      "task_id": "c909285e",
+      "verified_variants": 64,
+      "passed": true,
+      "program_sha256": "bd3b4fd232c224d2b671db19e1917242a67f8c640dc9dc3ba2758cc998a41bbb"
+    },
+    "c9e6f938": {
+      "task_id": "c9e6f938",
+      "verified_variants": 64,
+      "passed": true,
+      "program_sha256": "030bd61008ce899cd7f11b556e6d8b6d52c0f3d898ebb14ad046bf3f658843de"
+    },
+    "cbded52d": {
+      "task_id": "cbded52d",
+      "verified_variants": 64,
+      "passed": true,
+      "program_sha256": "47428ce9162fe0df358b164be3e1ca714438986e4fbef014745b5956879330fa"
+    },
+    "cce03e0d": {
+      "task_id": "cce03e0d",
+      "verified_variants": 64,
+      "passed": true,
+      "program_sha256": "a9aee30167489020f4628f0157e6f4f6a323d13bc564f97df0980723be4ba65e"
+    },
+    "ce602527": {
+      "task_id": "ce602527",
+      "verified_variants": 64,
+      "passed": true,
+      "program_sha256": "8f6fa37f47af68591144e0249c110e42b1994d1adb037c5cf482957f65888330"
+    },
+    "d07ae81c": {
+      "task_id": "d07ae81c",
+      "verified_variants": 64,
+      "passed": true,
+      "program_sha256": "ca047aca246ad2c4262fc407344ad888d88ae7808735db22cc39ecf5e191dc87"
+    },
+    "d10ecb37": {
+      "task_id": "d10ecb37",
+      "verified_variants": 64,
+      "passed": true,
+      "program_sha256": "db849b45fbb8e7564a4a0d1cf7bf657b6035a168095b2b8f82feb2b10e88345b"
+    },
+    "d22278a0": {
+      "task_id": "d22278a0",
+      "verified_variants": 64,
+      "passed": true,
+      "program_sha256": "8e230bcd33432c2410630ade89c60b9e02ee365cc9d6ce5af06a06a87a0d80a3"
+    },
+    "d511f180": {
+      "task_id": "d511f180",
+      "verified_variants": 64,
+      "passed": true,
+      "program_sha256": "4f0148eacd9680733ddaa91cc11948333b777163f2e4b03cddbddd2c2cd20450"
+    },
+    "d631b094": {
+      "task_id": "d631b094",
+      "verified_variants": 64,
+      "passed": true,
+      "program_sha256": "aebf575f388ab0b35812dce979c65500eb56adfdcf9b8701b6015c8dd6757c33"
+    },
+    "d89b689b": {
+      "task_id": "d89b689b",
+      "verified_variants": 64,
+      "passed": true,
+      "program_sha256": "b0b841e6d89cdf834abee50d5c9d6d51fe53f99f9d2c99d5ab53d14454ae7693"
+    },
+    "ded97339": {
+      "task_id": "ded97339",
+      "verified_variants": 64,
+      "passed": true,
+      "program_sha256": "51b4a3aa782a0ae133e5ac91fda1ce2ae2d6db0eff877f44cac60b6cea7210fa"
+    },
+    "e26a3af2": {
+      "task_id": "e26a3af2",
+      "verified_variants": 64,
+      "passed": true,
+      "program_sha256": "31dd752749c03b2ed0b4fd41a5736bbaf9fa5c9d695891d6a6056f5b70bffb9e"
+    },
+    "e6721834": {
+      "task_id": "e6721834",
+      "verified_variants": 64,
+      "passed": true,
+      "program_sha256": "38f4ffcd7c8294360ff4ffa43dfcb4c531ea4c5515d277cc27cdd5b6e5cb6b26"
+    },
+    "e8dc4411": {
+      "task_id": "e8dc4411",
+      "verified_variants": 64,
+      "passed": true,
+      "program_sha256": "8b051345b8b3337dafbd04414d6afa53677d9c6889025478080bab8319b4a5b6"
+    },
+    "e9afcf9a": {
+      "task_id": "e9afcf9a",
+      "verified_variants": 64,
+      "passed": true,
+      "program_sha256": "afe997ec9b4da4aa19c226b9c940c10df064be31399862898646bd8d548187f3"
+    },
+    "eb281b96": {
+      "task_id": "eb281b96",
+      "verified_variants": 64,
+      "passed": true,
+      "program_sha256": "cb14518590379e2a4da01c03a91b4f0af6612fe8d41e874f8a96df9f602113d9"
+    },
+    "eb5a1d5d": {
+      "task_id": "eb5a1d5d",
+      "verified_variants": 64,
+      "passed": true,
+      "program_sha256": "0ddc619942a3b9e5ad45f652fd8b75e8bb419fdbb74b668abfc5f59554aa2e64"
+    },
+    "ec883f72": {
+      "task_id": "ec883f72",
+      "verified_variants": 64,
+      "passed": true,
+      "program_sha256": "784d973bbfeea9042bf511745286756253e8a8ff4b4c4b4c3463f55fee98c3a6"
+    },
+    "ecdecbb3": {
+      "task_id": "ecdecbb3",
+      "verified_variants": 64,
+      "passed": true,
+      "program_sha256": "0e2ca8eb010f3183513db678debdef3074a19c6a0e71728f278b59ba78bbd38d"
+    },
+    "ed36ccf7": {
+      "task_id": "ed36ccf7",
+      "verified_variants": 64,
+      "passed": true,
+      "program_sha256": "70fd5bf3ea9e5ab20f0c6fd2895676836e0c5dc1b915acc0f200e2dae9701105"
+    },
+    "f25fbde4": {
+      "task_id": "f25fbde4",
+      "verified_variants": 64,
+      "passed": true,
+      "program_sha256": "edb31c7734abd7be5a2c4b005c8012a4c4c7dd1e46ff4d1e4837b4c81fd388dc"
+    },
+    "f76d97a5": {
+      "task_id": "f76d97a5",
+      "verified_variants": 64,
+      "passed": true,
+      "program_sha256": "c77cf6e17d8e43c306b5598c1ea702b9044fe68077dce599d8afdef554ebe946"
+    },
+    "f9012d9b": {
+      "task_id": "f9012d9b",
+      "verified_variants": 64,
+      "passed": true,
+      "program_sha256": "fc8e165b4697ae3c85a631bb7e4ca7b853dbb79c7854d2dd6498b983faf15158"
+    },
+    "feca6190": {
+      "task_id": "feca6190",
+      "verified_variants": 64,
+      "passed": true,
+      "program_sha256": "bd1b775a9603e0a2fc032e97f428595170819d59607f1843c66faf90a0dfcd34"
+    }
+  },
+  "not_admitted": [
+    {
+      "task_id": "0b148d64",
+      "verified_variants": 16,
+      "passed": false,
+      "program_sha256": "4260fe95777f3a7e8aee291e54faa006ae00a82ae58cf284e02367e8e11132b0",
+      "error": "TargetError('Program not exact: [false, true, true, true]')"
+    },
+    {
+      "task_id": "1a07d186",
+      "verified_variants": 1,
+      "passed": false,
+      "program_sha256": "24c6272570581c297d11aac4dffedc4f2fd13e7949b241421768937121eb7f7e",
+      "error": "TargetError('Program not exact: [true, false, true, true]')"
+    },
+    {
+      "task_id": "1b2d62fb",
+      "verified_variants": 48,
+      "passed": false,
+      "program_sha256": "649fa109fcf54bd1f8d868732eb3b9780e0e39292b82ac12e722b626c34898d0",
+      "error": "TargetError('Program not exact: [true, false, true, true]')"
+    },
+    {
+      "task_id": "264363fd",
+      "verified_variants": 1,
+      "passed": false,
+      "program_sha256": "630434f8433e7d88dc4e47397348c8ffb577d1ecbb4d5cfab1bc596fb1e645f6",
+      "error": "TargetError('Program not exact: [true, true, true, false]')"
+    },
+    {
+      "task_id": "272f95fa",
+      "verified_variants": 24,
+      "passed": false,
+      "program_sha256": "af7262847124c4b00ba3a21077d44f61ea4cfd362e91d640915ce4878337aaa3",
+      "error": "TargetError('Program not exact: [false, true, true, true]')"
+    },
+    {
+      "task_id": "57aa92db",
+      "verified_variants": 49,
+      "passed": false,
+      "program_sha256": "edc30f73cc8839ea5f2b863079cbdf17c3245843ff0517c6547ce5be83d5b07f",
+      "error": "TargetError('Program not exact: [false, true, true, true]')"
+    },
+    {
+      "task_id": "63613498",
+      "verified_variants": 34,
+      "passed": false,
+      "program_sha256": "c0525674945a726b3ef3318e677fbecfcdf8085c5037da8390d6866f3b0f1ed4",
+      "error": "TargetError('Program not exact: [true, true, true, false]')"
+    },
+    {
+      "task_id": "8403a5d5",
+      "verified_variants": 16,
+      "passed": false,
+      "program_sha256": "b4c485dc10a20588799d08e58c53c92441ae31d41d823d999078c4911f0eacc3",
+      "error": "TargetError('Program not exact: [false, true, true, true]')"
+    },
+    {
+      "task_id": "aabf363d",
+      "verified_variants": 1,
+      "passed": false,
+      "program_sha256": "4b0bd83926bd604dc33e4fe4911ee7998f2a3eb6e177c68f05a3022349e18b11",
+      "error": "TargetError('Program not exact: [true, false, false, false]')"
+    },
+    {
+      "task_id": "c8cbb738",
+      "verified_variants": 17,
+      "passed": false,
+      "program_sha256": "dee50948efaaa6ab9e3f76f79630d15a2d8634938afc4f4e464c259c74094fed",
+      "error": "TargetError('Program not exact: [true, false, false, true]')"
+    },
+    {
+      "task_id": "de1cd16c",
+      "verified_variants": 24,
+      "passed": false,
+      "program_sha256": "bd9e1897e4d0802f6402dbef57a11f78389c476d788dc35b9a388647ba498f57",
+      "error": "TargetError('Program not exact: [false, true, true, true]')"
+    },
+    {
+      "task_id": "fcb5c309",
+      "verified_variants": 1,
+      "passed": false,
+      "program_sha256": "0d1c12da450668dc217df7c0a15bbc6b2a67c97f08ffbf545422451cd778b816",
+      "error": "TargetError('Program not exact: [true, false, true, true]')"
+    }
+  ],
+  "policy": "Supplement native constructors only. Check each proposed label with both verifiers; independently verify every final augmented program/episode. No changed labels. Context evidence and global input-orbit splitting remain required."
+}

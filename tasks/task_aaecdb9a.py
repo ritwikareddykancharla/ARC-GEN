@@ -120,14 +120,15 @@ def _sample_objects():
     for c in colours:
       plan += [c] * counts[c]
     random.shuffle(plan)
-    many = len(plan) > 8
     occupied = {}
     objects = []
     ok = True
-    for c in plan:
+    # Sample geometry before placement; retries must not simplify the shape.
+    specs = [(c, _random_shape(small_only=False)) for c in plan]
+    specs.sort(key=lambda item: len(item[1]), reverse=True)
+    for c, shape in specs:
       placed = False
       for attempt in range(120):
-        shape = _random_shape(small_only=(many or attempt > 40))
         hgt = max(y for y, _ in shape) + 1
         wid = max(x for _, x in shape) + 1
         if hgt > SIZE or wid > SIZE:

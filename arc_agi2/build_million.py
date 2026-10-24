@@ -62,6 +62,9 @@ POOL_SIZE=int(os.environ.get('ARCGEN_POOL_SIZE','1200'))
 FAMILY_SECONDS=int(os.environ.get('ARCGEN_FAMILY_SECONDS','900'))
 TARGET=int(os.environ.get('ARCGEN_TARGET_EPISODES',str(POLICY['planned_dataset']['fresh_episode_target'])))
 VAL_TARGET=int(os.environ.get('ARCGEN_VALIDATION_EPISODES','20000'))
+DIVERSITY_PROFILE=os.environ.get('ARCGEN_DIVERSITY_PROFILE','native')
+if DIVERSITY_PROFILE not in ('native','rearc-compatible-v1'):
+    raise ValueError('Unknown generator diversity profile')
 
 def compact(x):return json.dumps(x,separators=(',',':'),sort_keys=True)
 def digest(x):return hashlib.sha256(compact(x).encode()).hexdigest()
@@ -179,6 +182,9 @@ def pool_signature(tid,configs):
     files=[Path(__file__),BASE/'runtime.py',BASE/'verified_rules.py',BASE/'joint_fragments.py',BASE/'contextual.py',BASE/'motif_context.py',BASE/'repeat_tile_context.py',BASE/'program_targets.py',BASE/'direct_programs.py',BASE/'fixture_policy.py',BASE/'helpers.py',BASE/'training_policy.json',
            BASE/'references'/f'{tid}.json',BASE.parent/'common.py',BASE/'task_registry.py']
     files+=sorted((BASE/'generators').glob('*.py'))
+    if DIVERSITY_PROFILE != 'native':
+        files+=sorted((BASE/'diversity').rglob('*.py'))
+        files.append(BASE/'diversity/admission.json')
     # Evidence policies and target factories affect which inputs/contexts are
     # eligible. A pool built under an older policy must not silently resume.
     files+=sorted(p for p in BASE.glob('*.py') if not p.name.startswith('test_'))
@@ -194,6 +200,7 @@ def pool_signature(tid,configs):
     if tid == '1b8318e3':files.append(BASE/'audit_support/task_1b8318e3_raw_pool.jsonl')
     hashes={str(p.relative_to(BASE.parent)):hashlib.sha256(p.read_bytes()).hexdigest() for p in files}
     return digest({'source_hashes':hashes,'approved_parameters':configs,'reviewed_standalone':tid in NEW_TASK_IDS,'output_format':OUTPUT_FORMAT,
+                   'diversity_profile':DIVERSITY_PROFILE,
                    'finite_input_policy_signature':FINITE_INPUT_POLICY_SIGNATURE,
                    'family_budget_seconds':family_budget_seconds(tid,FAMILY_SECONDS),'sampling_timeout_limits':timeout_limits(tid)})
 
@@ -213,6 +220,12 @@ def make_pool(tid):
     native=native_module.generate if existing else None
     refs=verification_solver(tid) if tid in GENERATORS or tid not in UPSTREAM_IDS else None
     if configs and refs is None:refs=verification_solver(tid)
+    broader=False
+    if (DIVERSITY_PROFILE != 'native' and tid not in STORED_CONTEXT_TASK_IDS
+            and not getattr(native_module, 'SYNTHETIC_VARIANT', None)):
+        from .diversity.sampler import eligible, sample_checked
+        broader=eligible(tid)
+        if broader and refs is None:refs=verification_solver(tid)
     seed_records,seed_pool_metadata=load_native_seed_pool(tid,native) if native else ([],None)
     seed_record_cursor=0;sampling_modes=Counter();timeout_records=[];termination_reason=None
     rows=[];seen={};canonical=set();reject=Counter();stale=0;trials=0
@@ -225,6 +238,8 @@ def make_pool(tid):
             pass  # Reviewed standalone replaces, rather than mixes with, its archived draft.
         elif tid in GENERATORS and (native is None or rng.random()<.6):mode='extension'
         elif configs and rng.random()<.6:kw=rng.choice(configs)['parameters'];mode='parameter_override'
+        if broader and rng.random()<.5:
+            mode='rearc-compatible-v1';kw={}
         contextual=None;sampling_metadata=None;phase='sampling'
         try:
             if seed_record_cursor < len(seed_records):
@@ -252,7 +267,9 @@ def make_pool(tid):
                 p={k:four[-1][k] for k in ['input','output']}
                 mode='episode_shared_picture'
             else:
-                if mode=='extension':
+                if mode=='rearc-compatible-v1':
+                    p,sampling_metadata=sample_checked(tid,s)
+                elif mode=='extension':
                     p,sampling_metadata=sample_native(tid,lambda:generate(tid,s),s,use_compiled=False)
                     sampling_metadata['mode']='legacy_extension'
                 else:
@@ -789,6 +806,7 @@ def main():
     m={'status':'generating_pair_pools','target_train_fresh_episodes':TARGET,'target_validation_fresh_episodes':VAL_TARGET,
        'train_spatial_variant_upper_bound':8*TARGET,'validation_spatial_variant_upper_bound':8*VAL_TARGET,
        'source_commit':os.environ.get('ARCGEN_SOURCE_COMMIT','local'),'seed':SEED,'workers':WORKERS,
+       'diversity_profile':DIVERSITY_PROFILE,
        'task_ids':eligible,'excluded_task_ids':POLICY['excluded_task_ids'],
        'former_holdout_ids':inv['summary']['holdouts'],'training_policy':POLICY,
        'approved_teaching_corrections':APPROVED_CORRECTIONS,

@@ -31,7 +31,9 @@ REPAIRED = ("007bbfb7", "009d5c81", "00dbd492", "0934a4d8", "09c534e7", "1e0a9b1
             # Native batch B (reports/diversity-v1/native-batch-b-domains.json).
             "03560426", "0becf7df", "0f63c0b9", "14b8e18c", "21f83797", "2685904e", "2a28add5",
             # Native batch C: orientation and rectangular domain coverage.
-            "7e2bad24", "7e576d6e", "94414823", "50c07299")
+            "7e2bad24", "7e576d6e", "94414823", "50c07299",
+            # Native batch D: rectangular panel domains with context evidence gates.
+            "195ba7dc", "281123b4", "31d5ba1a", "34b99a2b")
 
 # Reviewed adequate existing domains, not constructor expansions. Each has a
 # current semantic review and fresh 1000/8000/16 native recertification.

@@ -81,6 +81,7 @@ def main():
             "helpers.py",
             "colour_evidence.py",
             "feca6190_evidence.py",
+            "panel_overlay_evidence.py",
         )
     ]
     for result in results:

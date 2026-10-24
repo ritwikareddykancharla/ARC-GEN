@@ -12,12 +12,13 @@
   "target_source_hashes": {
     "arc_agi2/direct_programs.py": "ca303d8069010a148aa40ee6c2bd6043f30f5a8a8b6281d345893f13ef3ba82b",
     "arc_agi2/direct_certificates.py": "34f8c88f025236f1a632753329e2a815e2deea9352cddb3a298e9e84f100af15",
-    "arc_agi2/verified_rules.py": "055138a0c04a16268dd1e899881ae0a284340af8a7be749b62394d60e52f050b",
+    "arc_agi2/verified_rules.py": "8ad9a385e545b8a2ca8b5eab3e8deb72bf9f9eb2152a585dc9e68116a457f853",
     "arc_agi2/program_targets.py": "88298f336ca6a50ee91e58a08f24a4997c7c49e832eda1e68f98153dd59ed790",
     "arc_agi2/runtime.py": "193bd69c8c2114da2a9b2bbc73805742164b3c0f214279d832317e6f5b52e839",
     "arc_agi2/helpers.py": "7bbe003f70d11c949b9a7827da7d3659a7da0c247c1dfbf2cd18785e477bfa92",
-    "arc_agi2/colour_evidence.py": "9547c45531a383f9601c4e25d07689c8200d4ed79bbf65664d44f5c74d161d33",
+    "arc_agi2/colour_evidence.py": "2617143cf4e358a97cc0f9eccfce5f586ced33cb319062270040835ed2d682eb",
     "arc_agi2/feca6190_evidence.py": "8e828e49c3107548822d51075f45fb07df320812b0c8a076268a5c278f5e2cfe",
+    "arc_agi2/panel_overlay_evidence.py": "b78b1542898c7879f6d92b2bbe53cb555b6fc25e663373b236b4fae515fb9861",
     "tasks/task_00d62c1b.py": "e33e7be5230856701352d5efc919b5ab4e34d98cb2a538bf77736df208355162",
     "arc_agi2/direct_factories/task_00d62c1b.py": "c4cbc7236285f803e82b499b57d4b4eb9eae7d1287bda2c69a47fa089f8d1c33",
     "arc_agi2/direct_factories/00d62c1b.json": "6e83c95db6973ad36d623af6dca0d7bc2bd937c54f5fb5d7f6dcfacda30436de",
@@ -50,7 +51,7 @@
     "arc_agi2/direct_factories/178fcbfb.json": "09425ed400708fde33bb0fa1204124da30441984cf9a0dd69a8c2e3b57879188",
     "tasks/task_1a07d186.py": "a2e7699b565ee1dffde1cffbb872cd7f363345934a4b9862b12d2a47fd5debaf",
     "arc_agi2/direct_factories/task_1a07d186.py": "eaf82c412064e9f1e3cca4f4684cd7d6e9b483a6e0428a5130956bbf8e447b24",
-    "arc_agi2/direct_factories/1a07d186.json": "d70d583afcdc62224b47b39b205c0e5b0479529bba3355b0197157e9e8fea352",
+    "arc_agi2/direct_factories/1a07d186.json": "73479e45e7e44524f3f5bb6f901b0d9d32bc891f12f628c725f0a77d06b27c29",
     "arc_agi2/reports/direct-certificates/1a07d186.json": "e3398a23b7d5af46fcd44863a13a76f90e66ffe328bb050dcdd8b9903fb5095b",
     "tasks/task_1c786137.py": "997abb391c710ca8ebc57ec42a1ad8a3c9f54ec1a0c66f9f584b05fe9e86f605",
     "arc_agi2/reports/direct-certificates/1c786137.json": "d16780964a32763412fa065697454afecce69748f04f9c25b031a43cb8c9e225",
@@ -96,7 +97,7 @@
     "arc_agi2/reports/direct-certificates/264363fd.json": "ebd210e637604ab1ba4ecae8e2480f48039d23aabbb29ccbbf56c716b6708494",
     "tasks/task_272f95fa.py": "a51db186c79069b74c953444bd66b6ff007aa64f574e8f422f27c687236078f4",
     "arc_agi2/direct_factories/task_272f95fa.py": "280a62d1f0e609779fc3584144a707691ad1c6a78bbea4a08c5b57bf0d0777ec",
-    "arc_agi2/direct_factories/272f95fa.json": "4a2c3d572e517c1b9eb63239a25f310cd123136a815e019060c07bcbbd7f8e8b",
+    "arc_agi2/direct_factories/272f95fa.json": "3fb6bfe1e7ce7db9c7588aabc1b5ae892974adc7e1632305c31ca89d1c788cd6",
     "tasks/task_28e73c20.py": "08a8cb67f978dc93d95f213a58ad2f3c59fe31e6bce9614a41172a51e8687677",
     "arc_agi2/direct_factories/task_28e73c20.py": "92861e28aeb0aeed2cde3db89709845545bc7701d50c7c3159a656cca0aa4781",
     "arc_agi2/direct_factories/28e73c20.json": "8819d52e016f0661acdec354086ad62ef43347858640c289cfb74eb3ee60f1ea",
@@ -187,7 +188,7 @@
     "arc_agi2/reports/direct-certificates/56ff96f3.json": "10aff4ff05e7a11d0f18f80b35556c26eefc9b48c19dea0c79168653edffc3e0",
     "tasks/task_57aa92db.py": "d8e1b8345162548d7c53fca689ee3e1c3214bdb7bd3bcd5d48c15d07c29eb19c",
     "arc_agi2/direct_factories/task_57aa92db.py": "2e3034d9127c2288b6f155b57524763339887e59c9a155291b78d0fee15d53ad",
-    "arc_agi2/direct_factories/57aa92db.json": "81cbf011356c8b3a3615f01ca45f714ec7921ff1d27cd7fc1a649a932e162f92",
+    "arc_agi2/direct_factories/57aa92db.json": "530767fba66cf4640621daf2b792e76ecb8630514cc4f5ad837271911082ea15",
     "arc_agi2/reports/direct-certificates/57aa92db.json": "8f76a7ba538e46a63e40023ff8436a68ee7da766b51ddebb3275e7c5d26fd255",
     "tasks/task_5c0a986e.py": "d98accc3badc1b8a1dc652bee4555985a3331c47c04c4e08310ce91127c411b6",
     "arc_agi2/direct_factories/task_5c0a986e.py": "94d659c010f645d188cda5f4cba996e2ba231a48cf9cd0cbe5ae8d31d759866b",
@@ -204,7 +205,7 @@
     "arc_agi2/direct_factories/62c24649.json": "7bb3497938a0fb64dc5d0a26fe4a09625c8da2779506b5dc7cc7e394753f0700",
     "tasks/task_63613498.py": "e9c334f4cc1461e54936756da028642df7620951a10d6a0e0acdfb5250718f90",
     "arc_agi2/direct_factories/task_63613498.py": "6baf618e186934df60fa02a39c419e5dcf0e88dc5faf4945c32f383230f65348",
-    "arc_agi2/direct_factories/63613498.json": "30eb17c8452d6be56cb155c8c83aabba92f6d3e2bf13a961e491ffc8ad765d71",
+    "arc_agi2/direct_factories/63613498.json": "eca36254f34725a83847e523a9d332c8bb3fb49f86b85bd087057ae3b3735c4d",
     "arc_agi2/reports/direct-certificates/63613498.json": "9ccb9c770383fb6573431bc7d330cd2e89baba0b79bfc7338501a21f9383a5aa",
     "tasks/task_662c240a.py": "3bf6ce3cffb169e88830c80cb7a58863797d83be0103903907d530fe88568ec7",
     "arc_agi2/direct_factories/task_662c240a.py": "d9a32afc26708e06ec6399ac5ea766f8e3ccd0ad65b64678d52e34b29eed4a6d",
@@ -252,14 +253,23 @@
     "tasks/task_74dd1130.py": "e4bd25979b40f72df9826e7e2f48a53326a1b1b73ecad5b880fb56ff41c42b59",
     "arc_agi2/direct_factories/task_74dd1130.py": "ebd27e0e0a889acb56f28cd685e31c008f4489d945c06e70556ba5f60b987ab1",
     "arc_agi2/direct_factories/74dd1130.json": "e7faddd84bf027eec435ab882538b8db92569cf2d10cccb93052f5c02fa01c80",
+    "tasks/task_7b6016b9.py": "a867483a4f09e43a2f683cc360d05ac42f9b560f78bb7aad82ee85000ebb4fc3",
+    "arc_agi2/direct_factories/task_7b6016b9.py": "3b145c8e10cb8f0ca6672365a63a162c6b53cb507afec0e092bddc4490634e61",
+    "arc_agi2/direct_factories/7b6016b9.json": "43f5c594a8640fb7fca90420a4b0d4bcc8d86ea0df603c63617a8fa1b3dfb1e2",
     "tasks/task_7fe24cdd.py": "1ce197218db66b0cdca41c4aee6f3782a10c18d817866603e3fcbb7d099cf74b",
     "arc_agi2/direct_factories/task_7fe24cdd.py": "c4af5de9a15a14b81a192d1ef89ece3be210c09e8660c686e554662219a63529",
     "arc_agi2/direct_factories/7fe24cdd.json": "369eec8bf5de4ad9471df9e29ba86bc846492d2e548a36fd785ebaeafe2d4cc8",
+    "tasks/task_834ec97d.py": "28b56a9646026c3b23574c33e2ffb443968f738ebeaaf8463753b8da1305f8c2",
+    "arc_agi2/direct_factories/task_834ec97d.py": "17086ae7c8a485e9f219a3c45c3ebed4b247f17fb19cb49c2952d80b72e01caf",
+    "arc_agi2/direct_factories/834ec97d.json": "222babba72d54a043732ffecf345679d4da3c762bea06368472ed29fc139fe80",
     "tasks/task_8403a5d5.py": "341ba3209edcdd02946b1e9eab136d529152adc7ded2ed1a45bda71fe194cb5e",
     "arc_agi2/direct_factories/task_8403a5d5.py": "c51608dbce8c34a50201432a8496a7927f913e09ea0e72618ef60a5c8bea2c95",
     "arc_agi2/direct_factories/8403a5d5.json": "bd64d299549cc71ad4583b6b3ff2e632eff1ed6a5ac9e0229037ca0823737ad9",
     "tasks/task_85c4e7cd.py": "6f0d24121935c4e4cc6a92f665f54ad722257e0e04056eb66fb4a0eadf5515b4",
     "arc_agi2/reports/direct-certificates/85c4e7cd.json": "a39e2fdb1e1a24c825072af3f94c2c968783182a2450259b67b0b9339439228c",
+    "tasks/task_868de0fa.py": "ba622b127c137a2d9f3e82b2c8449344f1b5cff79c6443fc03fa23fb9d409d98",
+    "arc_agi2/direct_factories/task_868de0fa.py": "65ac7aef7d8fcc5c4b98d36120c20799c871518fa2b2bf96738977549679cc71",
+    "arc_agi2/direct_factories/868de0fa.json": "a44484f573d1847a97b5da31f5dc570c6cc70b6f735577d5275f1e7f07ff349b",
     "tasks/task_8731374e.py": "5de597bf13862a2fddc835dd3ea1932ba3c6154df3c7ce6602b903f0ecc4747f",
     "arc_agi2/direct_factories/task_8731374e.py": "0a1a09eb360dade83a630f87d915ef73064e041069f0f656aeac8644e17ad97d",
     "arc_agi2/direct_factories/8731374e.json": "cc8f9f5fff1c3b4616d09079fc7a1d65a2a10378cfe302ce7df09841471b5567",
@@ -269,6 +279,9 @@
     "tasks/task_8d5021e8.py": "93486456ec377e340cae0a6fe86efcbc7a7bd4d9929faec119675b4e12e6ef69",
     "arc_agi2/direct_factories/task_8d5021e8.py": "e5c4efcddb668d677fba0c08a8537b6c24838e871468cafbce30ea1a0eb4d36d",
     "arc_agi2/direct_factories/8d5021e8.json": "ed6387db7d139455ee4a6b1e393e83b1cfc7b3a7338f22b010b45c1b3eccfd9e",
+    "tasks/task_8eb1be9a.py": "e8416f1cdb42de3b0ba1b8b21d069748d9edc0eda072a9383fe2551ce49cef87",
+    "arc_agi2/direct_factories/task_8eb1be9a.py": "313ee8fed73bb552b240ea8d8eb3ccf533150f088cae987afdd8e86985b34a1f",
+    "arc_agi2/direct_factories/8eb1be9a.json": "0793c8d977e7dbb69d2a4a9b383700250e25eeae33b9e9c1098c91343c49d8b9",
     "tasks/task_8f2ea7aa.py": "c6f3ff405cc91ee9cda47e5349831bc75519186493d1f48133b5c2f3a874d58e",
     "arc_agi2/reports/direct-certificates/8f2ea7aa.json": "32ecbf5378d261b72eca83a9dfe5d93d0063816230be3960636c2f1ea3a47503",
     "tasks/task_90c28cc7.py": "133304296365a214309f47952d7a1895ce9821c7d06b1d1f66b107d6b95c9c8e",
@@ -288,9 +301,15 @@
     "tasks/task_9565186b.py": "f756a8ea7addfce2b7f3690a40138e53e76f65ee18e594caa48e97d2b91f443e",
     "arc_agi2/direct_factories/task_9565186b.py": "aba9f7a09a6df9e1de43b2925c151531ff2c722a077da594185ba111feeb5bdc",
     "arc_agi2/direct_factories/9565186b.json": "13519b12ac8ea71437cd4acae10f35b26d9a05aed606ab99e5af8db9ecfbaca9",
+    "tasks/task_95990924.py": "6b99db36599a7c48cb8f006ede587f0b8416c96820c75b74331be9a61222a1f5",
+    "arc_agi2/direct_factories/task_95990924.py": "e1a3bd6b0ec0c97920cc818b1d6771f897d54bcdcbbd32e5eb18a634529ba731",
+    "arc_agi2/direct_factories/95990924.json": "e60cbf610ebd5c5faf9c8d510e005a56e4df69c16a66ae9de81e33d7fad4f056",
     "tasks/task_963e52fc.py": "e35d1e4077203da6ca8b664513f65373a9885df200c30e3e61dcb1f35f5c6504",
     "arc_agi2/direct_factories/task_963e52fc.py": "628e0d99cbabd93151d0a00fc8d6ee80805ee70cf5f8d8832815c217a3b53829",
     "arc_agi2/direct_factories/963e52fc.json": "a10d6fbc4f4a3de1e55f43f3f9b717d743e723b7988fe64dfdf850705025ad9c",
+    "tasks/task_97999447.py": "3b87aabd119526bca3bc8acc8d27239b844f42a692f90aa1f45b215d51c5da8b",
+    "arc_agi2/direct_factories/task_97999447.py": "af98ae8ec577070bc7f467ba93561434623807905761b867580629313ca1d0c9",
+    "arc_agi2/direct_factories/97999447.json": "b51709464fac6e55655baf62ca2f35c86004137555d37522134469e13e49ebec",
     "tasks/task_98cf29f8.py": "bbb3e20545e54e6001490db432c38d5d7fbb9c3f7b553f8c5e6b0b143457e243",
     "arc_agi2/reports/direct-certificates/98cf29f8.json": "280770eaac845e4aff000a3a78a93614a455732065de6d74891f4117058b6030",
     "tasks/task_9af7a82c.py": "1c16c85b0b539ed427ae181ed4e309c26d81991a21c6bad9c5153468d362d55e",
@@ -309,15 +328,33 @@
     "arc_agi2/direct_factories/a416b8f3.json": "08edad17730cfcbb4525d5b312e61cb3be3b570084e10a1851e61145971d3dad",
     "tasks/task_a48eeaf7.py": "05654d09b55c2445466ae90c0c0527bbd701053db2e1ce43edc91743bbbae50f",
     "arc_agi2/reports/direct-certificates/a48eeaf7.json": "dfb20e8189c3639f05481eef11f4058c7528bb78c7cc33852326663b0f03a202",
+    "tasks/task_a5313dff.py": "0a27c713c1a05943bb26ba9715486684db349fc4a0eb7513f121fe9244ebd976",
+    "arc_agi2/direct_factories/task_a5313dff.py": "cce99ce2b8252f5c06d9ab17096078ad975d04b118e876940cc23e598f4c19a1",
+    "arc_agi2/direct_factories/a5313dff.json": "28dfe4ba6ff4f29ff346739457a966037e309e032cb24f3dd84ae31224e0af41",
+    "tasks/task_a5f85a15.py": "e4e392715ac1f929c621dbc64bc6879453d60d7069c31700df60b7df67d7fede",
+    "arc_agi2/direct_factories/task_a5f85a15.py": "869c5c84775b3e784565aceab526fb76c2159da13316b78c263d7d2591412edb",
+    "arc_agi2/direct_factories/a5f85a15.json": "d30313c5c3d45583d008c6afb1b62d608435d02bfaf8de8e744ff2570888caed",
     "tasks/task_a78176bb.py": "c777d7c55a9d615493293450629d8570a096c16d2b5ff7a788b1e07d7aa37fa7",
     "arc_agi2/reports/direct-certificates/a78176bb.json": "b3b64562715e7ed774837d4431a903edba706909faee207b9d151752daef1d48",
+    "tasks/task_a79310a0.py": "346d8983944251eefcfac8e348d238948c9a733f13cfcbc5c4d48dff30b502ab",
+    "arc_agi2/direct_factories/task_a79310a0.py": "0213ee488e0fde5107e347850c2450c7c73561d954f4c6e79493407cb2140934",
+    "arc_agi2/direct_factories/a79310a0.json": "102138228db26204c8d9e216bc85f0f3103f61799273e526c879042d4f6c9424",
     "tasks/task_aabf363d.py": "708b05791cba73aaed9d4651549fc63a3e5e096b60224bac72471c3438fa86f2",
     "arc_agi2/direct_factories/task_aabf363d.py": "8d63e759d762fdd47b413758e53f4d1b3ddafd24f9aa445cdb8010c0d9f62b92",
-    "arc_agi2/direct_factories/aabf363d.json": "8c4897412f8368dbc494e9fc1a560448905d5ba201430ef7e7bedf1366aafaa7",
+    "arc_agi2/direct_factories/aabf363d.json": "fd81556f1a084f3f4ea0788266c983febff92d0a54f41e9a5e754b3dc47f53fc",
     "arc_agi2/reports/direct-certificates/aabf363d.json": "7378bb7749cbc5c3d3a04f1fce96c0084f6398bc4f657fcc0a8ce9576576d884",
+    "tasks/task_aba27056.py": "c7b6daa108efb436a70b454114db409f221c8b3e171ea59be5e1d5a242b21d5a",
+    "arc_agi2/direct_factories/task_aba27056.py": "e2353b20cb28e45136aa044e9b52c3f66959af9694fd4af7e1cd190187b6129b",
+    "arc_agi2/direct_factories/aba27056.json": "37463232d59a5af1294fb2083eb880fd59c6d82c83108bd943f72674167565e9",
+    "tasks/task_ae4f1146.py": "826f0b686fb64410e9baa3b7afb97f059c4a9f5e523b2b106fcdd84af94cd19b",
+    "arc_agi2/direct_factories/task_ae4f1146.py": "fe2bf20c2cc1a57a946f9d0bfa245b6f88c5ec372bab1a54d1f5556cce0ad3cd",
+    "arc_agi2/direct_factories/ae4f1146.json": "d074a99316274d36a6444b8a3ffa62be90c73456333645d69e702a944119aba9",
     "tasks/task_b1948b0a.py": "3fad7225ba4b67f4a9b383d64f3bc5c41b0508733dbdbe990cfb7b7afa82331e",
     "arc_agi2/direct_factories/task_b1948b0a.py": "7d9d8ed986aa2f664bcf729e3a03568c8fc7208a48eddb12804da7625bd1df51",
     "arc_agi2/direct_factories/b1948b0a.json": "54b4276360669e363db9e9ae0edeef38a1639a25ea5225b788f9c47e0c913a69",
+    "tasks/task_b60334d2.py": "817dbdd894a9dbf39a0636eda46f309369f16b1049dac690e6c3ce4b506079d3",
+    "arc_agi2/direct_factories/task_b60334d2.py": "3850bdaf512bbfc9aa7d901b1400174f7fd46935f553efa0976d6f5ee2663ae1",
+    "arc_agi2/direct_factories/b60334d2.json": "c0bc9a765fc0a74df24f8bf1ff8f3dcf4321bcb77156ac6420c4bec1f617d5af",
     "tasks/task_b7249182.py": "2f446aebf92c6560c800185af02e8d6362625d6bf13c3a06acf6ec28e52a5679",
     "arc_agi2/reports/direct-certificates/b7249182.json": "22906d032e184080c80f7ac3ae5afc3e456973807d416d1105d8b5e27f9decb6",
     "tasks/task_b8825c91.py": "aef351291cc7fa55432b333ac35044a42b1798c8ba868a9d1cef3275d6629360",
@@ -329,6 +366,9 @@
     "arc_agi2/reports/direct-certificates/b94a9452.json": "a28cd60ba64ee4687bee61d5c95eee6b1a53f24f17b6b81a2b6d07d002bf951e",
     "tasks/task_b9b7f026.py": "d8334417b4547746a5d3f084c3cd8f0050bd6d59c7ef4ac7aed2e6edf367f5cc",
     "arc_agi2/reports/direct-certificates/b9b7f026.json": "9a47b99d71b1b3177de0757975f56b593f914a520bcec9a320ed8f3db5d1d90b",
+    "tasks/task_ba97ae07.py": "dea1d5bc54f9db4cb22e740b4f457de8c6f98b2ff37c4b269e3c59e00c4f0d54",
+    "arc_agi2/direct_factories/task_ba97ae07.py": "438a815ed977bb843f90174b574a81c131c08cdebe4b8ff77daf6fdb02d7e72d",
+    "arc_agi2/direct_factories/ba97ae07.json": "53ec08928f1a41ce7236874e65d98e9c06ade8e3a084982bab9d41991877dac0",
     "tasks/task_bda2d7a6.py": "2903b625f23383cf37a347087a97136a168e58868bc8f28ed6709b424e98901a",
     "arc_agi2/reports/direct-certificates/bda2d7a6.json": "a82b0f7664b170cd56616c85a640451a3b73bd69bba4add7c2145250f3964cfb",
     "tasks/task_be94b721.py": "17c4a207cc07212c08227a5e23751cedae019e4efe895fe57a8bc9fa17d3a3e0",
@@ -357,9 +397,18 @@
     "tasks/task_cce03e0d.py": "4b2ed363b01a2e00b277be49ae997d65c9e2eda6b9ce204d0f3af60410920dbf",
     "arc_agi2/direct_factories/task_cce03e0d.py": "0b62b72388c06c81d2f324544fbaec862779f19b87df0387bc446d2db67ed909",
     "arc_agi2/direct_factories/cce03e0d.json": "486ccdbe46d6d2a66133377ceb9fbc43dc6b81d5df174353040c1210b341440d",
+    "tasks/task_cdecee7f.py": "d4074226fd9e34cb1120705dec4597b1e401a43570cd0a1d5947ac35cd28f3af",
+    "arc_agi2/direct_factories/task_cdecee7f.py": "afc22bc614171473b301038af8ead67643cc5b2c3884963585dac5a877540931",
+    "arc_agi2/direct_factories/cdecee7f.json": "d9be16bedc105961a16af653eae8088f27a4380d36489dcbf61e50c1078b5824",
+    "tasks/task_ce22a75a.py": "0439c3b437aca818d761b3bd1702bf591896e827243f2f3ab71cd7a386926a86",
+    "arc_agi2/direct_factories/task_ce22a75a.py": "3404ab711e5b6cad43fd054c9d07e8c126b48235b28e2a55c86680089989dbee",
+    "arc_agi2/direct_factories/ce22a75a.json": "83b8aae98052a62a99cfc8afb6a9b5f7ce09425b65574217268bcad61c602624",
     "tasks/task_ce602527.py": "932fea3545da1cd1dde5d9abdfccac9064efed863d6eec86bfe21773801165a2",
     "arc_agi2/direct_factories/task_ce602527.py": "cb44ce2d823455e8bcab858db86acbc745f1848b0eb45a7c20e8e1f9d7e70513",
     "arc_agi2/direct_factories/ce602527.json": "03776454cd4bf0b97bdb42cbc23144b5ebab08c737cfceb162ab1273caed3c22",
+    "tasks/task_d06dbe63.py": "238ae2813122cb1e528e34fc33ac9b0335135e607cd0e91fc4574d60baddef53",
+    "arc_agi2/direct_factories/task_d06dbe63.py": "ed3fa87c6e761d576246fa15b505ddeb9f2b3c047e961ced15f7b065158c4d1e",
+    "arc_agi2/direct_factories/d06dbe63.json": "9256955113a44002f33d1dfee42ad5f6716dd3e5ac536c2e3234de3f5e07a5c3",
     "tasks/task_d07ae81c.py": "04ff514c125cb18f3bcb34db2433d70d1a1f3ccf171545f6ddb59767984d15ad",
     "arc_agi2/direct_factories/task_d07ae81c.py": "fa6cf2e789a4fb66a282e32c421debb717dd58c81b83b1146ba9a5e00c6f91a1",
     "arc_agi2/direct_factories/d07ae81c.json": "e5a5408f1a4e225a92ec627f905a821cb4cd979a053a1271454168b70bdc9050",
@@ -371,9 +420,15 @@
     "arc_agi2/direct_factories/d13f3404.json": "fe9bc37e9fe254d00010ec4987aa3a0e7a01d667ba166d0f333addde99e2dd5e",
     "tasks/task_d22278a0.py": "dc8bfa0b8cb9201bb276a92e9e320bf6e1f780b18b02dc9ce72d5ce5990724f8",
     "arc_agi2/reports/direct-certificates/d22278a0.json": "e64613846ef3e470d19add3b25cd064b27c85de98993049da5f623af40f8ed16",
+    "tasks/task_d4a91cb9.py": "3b58ed15ee5d1daddb6af15d23759dfee81b97d9adaeae73674c0457b1cabf49",
+    "arc_agi2/direct_factories/task_d4a91cb9.py": "d45588a98b1b556b605782787b1d443bd0d7a64f6c541c0cc9e30c043b2375c0",
+    "arc_agi2/direct_factories/d4a91cb9.json": "2fb1d172b7f019e79c34c61bb4069b9bd52097b9fbadcb70b360db5e7df75f13",
     "tasks/task_d511f180.py": "d2217d734e4a979975df38405d630feb952dd39558578350de368910d61bfee6",
     "arc_agi2/direct_factories/task_d511f180.py": "58b803ec45621a7fc6e56c3c100d482db433cc26eb726b976da503f4ad6b7b40",
     "arc_agi2/direct_factories/d511f180.json": "c3d23faeba526ee669b1a72cfc25ccd6f9b4d2236109ebb6e311bcaf685fc797",
+    "tasks/task_d5d6de2d.py": "c6cdc232c7e3d44e7ba0e408e0ef40a5706b00f81848de63d02d88afa619a725",
+    "arc_agi2/direct_factories/task_d5d6de2d.py": "a190537c308820db672cdf39704a0a974d948e66a0177463059d13c4d211fdab",
+    "arc_agi2/direct_factories/d5d6de2d.json": "5514453f1c207154fb10550fbe4f90f7280407e07c507c5ad85d62c2daf9f295",
     "tasks/task_d631b094.py": "bb3f0133abf59fcb8c0ea867ad492558a43d8567d0fde21c02245b598c18e924",
     "arc_agi2/direct_factories/task_d631b094.py": "9c45ae9fc4b09d488e9d1b36746ac2090c2428c984b1cd5364338cd9c35d435c",
     "arc_agi2/direct_factories/d631b094.json": "7d19a0d4d85a0ff479a23e13054be58fa9dd8fdc39744b10b3fe5ab4603803b3",
@@ -406,6 +461,9 @@
     "arc_agi2/direct_factories/ed36ccf7.json": "f5fceb107810eb8b2eee1973b4850e646ec139ce9a968484a73849bee4d77838",
     "tasks/task_f25fbde4.py": "c789e3bc5d2f8b9e6045c8bc2f42fccc27c9fdc02c03e82e78fb9ffee8642d43",
     "arc_agi2/reports/direct-certificates/f25fbde4.json": "0ec58ff7ff6291ec7f43cbddc013d553d0cdae2820d65f54f9ffca774b1caf6f",
+    "tasks/task_f35d900a.py": "9ce95cc4e3df7a6c54d4a673865d5abc54c9fe4aef0388efee263647b29433fc",
+    "arc_agi2/direct_factories/task_f35d900a.py": "b4813b3823641992c61dd5d74d397cfb4684439823fd504ceef99b6bdfee3b0a",
+    "arc_agi2/direct_factories/f35d900a.json": "e5b113a1dfa2102fab2184f8d6d753a793c96a93d78068d018f07c68ec10c60e",
     "tasks/task_f76d97a5.py": "1b8488c7519f68666bfbd35b500199e93b4dec8f94963c1c337dcaa4d865b2a1",
     "arc_agi2/direct_factories/task_f76d97a5.py": "3c97ae6bfae503d63f2ca518fe58723a30a22072f70ea7da28a03709679f61ad",
     "arc_agi2/direct_factories/f76d97a5.json": "125fee7d6658cd43fe7a021a24f03bb6c6542982e54d2f48ddf6bf331beba662",
@@ -414,16 +472,19 @@
     "arc_agi2/direct_factories/f9012d9b.json": "38d1b072322c07e68d738463421a1cdfecb0e5484c46e6754de585959ef50e5f",
     "tasks/task_fcb5c309.py": "aae25cde3f9562f38b8bca72aa90a00f58f91550313ec0fe8886c58f02c597c2",
     "arc_agi2/direct_factories/task_fcb5c309.py": "9d23688380908b8bf09de4cd37648839f184ef046464622cd1e4e04f57da2ce9",
-    "arc_agi2/direct_factories/fcb5c309.json": "4c7c23469f60d399129e6c0f6c066e158b959bbd6c4ca55f2f3119acca1ecc1b",
+    "arc_agi2/direct_factories/fcb5c309.json": "a8c1d9b5d737c9e5e706ec8dfdfb580acf383a4f89acfe9d30bdee22ae7a2c6a",
     "arc_agi2/reports/direct-certificates/fcb5c309.json": "742b39c05d26b621844e5ac49817c71cbadbd8defc81d324256a3c0c299dee56",
+    "tasks/task_fcc82909.py": "c052d2f62454cd9200903d0f26d718b81dd9f7d250296f6b92cc32e23e67e2c2",
+    "arc_agi2/direct_factories/task_fcc82909.py": "26237f0fe91fea8c40fd4d336c787b28c407870aedf3534a144d45c8fc10ca0b",
+    "arc_agi2/direct_factories/fcc82909.json": "90c7db244afc025a357fb35c153065e37e2ed681616530c423b1e0dfb0a50968",
     "tasks/task_feca6190.py": "8f0e4466a7bc422a26182eff55968c7428baa11cc1a2537bc89e1948c3087411",
     "arc_agi2/direct_factories/task_feca6190.py": "f369f110dd19aad8af4042f0e147971b0c4031bf47849a97c14e179f1480fedb",
     "arc_agi2/direct_factories/feca6190.json": "fc02c268112a715d1eb124bb779675ee2a6cf8db7a0226a9688cfd9a896718a7"
   },
   "proposal_source_hashes": {
-    "colour_roles.py": "c25d988bc8c4b5e69045d6f59e444986b1a060c85814ea3b0939bbce17f071b1"
+    "colour_roles.py": "fe906192eb7807f32cef0c1a367097fc337c01e490b5dd58708331085e3ac0f2"
   },
-  "candidate_families": 153,
+  "candidate_families": 173,
   "admitted": {
     "00d62c1b": {
       "task_id": "00d62c1b",
@@ -1113,6 +1174,14 @@
       "available_pairs": 128,
       "requested_pair_checks": 32
     },
+    "7b6016b9": {
+      "task_id": "7b6016b9",
+      "verified_variants": 2048,
+      "passed": true,
+      "program_sha256": "33e84be47688d31840f5683e48ad22c67bad53b55f8ad10fbba559f8ff41504e",
+      "available_pairs": 1149,
+      "requested_pair_checks": 1024
+    },
     "7fe24cdd": {
       "task_id": "7fe24cdd",
       "verified_variants": 64,
@@ -1120,6 +1189,14 @@
       "program_sha256": "f746704eec816e865ebe327aa38c6fee616e952605f68275a2f33c6915fb3717",
       "available_pairs": 128,
       "requested_pair_checks": 32
+    },
+    "834ec97d": {
+      "task_id": "834ec97d",
+      "verified_variants": 2048,
+      "passed": true,
+      "program_sha256": "b7330290f4ae8e06975046e961dbde177d92ecf8e5fb5102b9dc858ceababedd",
+      "available_pairs": 1149,
+      "requested_pair_checks": 1024
     },
     "8403a5d5": {
       "task_id": "8403a5d5",
@@ -1136,6 +1213,14 @@
       "program_sha256": "f56674ae1337cadf6ec9416713cfbbcaadda4df5ef615900bccfc40f8b89a3e3",
       "available_pairs": 128,
       "requested_pair_checks": 32
+    },
+    "868de0fa": {
+      "task_id": "868de0fa",
+      "verified_variants": 2048,
+      "passed": true,
+      "program_sha256": "911d485f937605c99501fbc72bdf6f8912f5cebc8b0eb50d4074f71d8c89ccf3",
+      "available_pairs": 1152,
+      "requested_pair_checks": 1024
     },
     "8731374e": {
       "task_id": "8731374e",
@@ -1160,6 +1245,14 @@
       "program_sha256": "4486342294f37cb83f067c7313d1b1d4bf68dcbf73d9d4b8cde967e41f141565",
       "available_pairs": 128,
       "requested_pair_checks": 32
+    },
+    "8eb1be9a": {
+      "task_id": "8eb1be9a",
+      "verified_variants": 2048,
+      "passed": true,
+      "program_sha256": "4ba43508d160ba782d79238c32a3ed41a65775831bccd3df444d0776ee41099b",
+      "available_pairs": 1152,
+      "requested_pair_checks": 1024
     },
     "8f2ea7aa": {
       "task_id": "8f2ea7aa",
@@ -1225,6 +1318,14 @@
       "available_pairs": 128,
       "requested_pair_checks": 32
     },
+    "95990924": {
+      "task_id": "95990924",
+      "verified_variants": 2048,
+      "passed": true,
+      "program_sha256": "67b006d35940c9d0f9c1c03f8cb26ba3720ab6d5bc7a866cb6b13fd9b5d5f44c",
+      "available_pairs": 1146,
+      "requested_pair_checks": 1024
+    },
     "963e52fc": {
       "task_id": "963e52fc",
       "verified_variants": 64,
@@ -1232,6 +1333,14 @@
       "program_sha256": "cd24894e8e06bce95c2c17709c3e483ac5d6506ca1e1be542c8bd24d319549d1",
       "available_pairs": 124,
       "requested_pair_checks": 32
+    },
+    "97999447": {
+      "task_id": "97999447",
+      "verified_variants": 2048,
+      "passed": true,
+      "program_sha256": "bcdb232a64f21a087b70d021718e642f444a143aaa5d2c23c34e2d8e49bf60cd",
+      "available_pairs": 1152,
+      "requested_pair_checks": 1024
     },
     "98cf29f8": {
       "task_id": "98cf29f8",
@@ -1289,6 +1398,22 @@
       "available_pairs": 128,
       "requested_pair_checks": 32
     },
+    "a5313dff": {
+      "task_id": "a5313dff",
+      "verified_variants": 2048,
+      "passed": true,
+      "program_sha256": "aaada6f65322a83187bf6070705d28aef264fcc802dfbe60ede16d391379a811",
+      "available_pairs": 1149,
+      "requested_pair_checks": 1024
+    },
+    "a5f85a15": {
+      "task_id": "a5f85a15",
+      "verified_variants": 2048,
+      "passed": true,
+      "program_sha256": "b574d82c890e8009edb93a41256d274dfa59b513c239460477381a053382d043",
+      "available_pairs": 1152,
+      "requested_pair_checks": 1024
+    },
     "a78176bb": {
       "task_id": "a78176bb",
       "verified_variants": 64,
@@ -1296,6 +1421,14 @@
       "program_sha256": "cdd3b6f31d9236218bf9774bc18220d91b303db74877b5e313028c93686b45a3",
       "available_pairs": 70,
       "requested_pair_checks": 32
+    },
+    "a79310a0": {
+      "task_id": "a79310a0",
+      "verified_variants": 2048,
+      "passed": true,
+      "program_sha256": "e64a6cf6f836e21c762db9c1ca5f46d5307d16e5e6f3325a35daaaac84892a3d",
+      "available_pairs": 1152,
+      "requested_pair_checks": 1024
     },
     "aabf363d": {
       "task_id": "aabf363d",
@@ -1305,6 +1438,22 @@
       "available_pairs": 1269,
       "requested_pair_checks": 1024
     },
+    "aba27056": {
+      "task_id": "aba27056",
+      "verified_variants": 2048,
+      "passed": true,
+      "program_sha256": "e0e23efbe4af86acf2299317cf10eff4f4cbfc9979d282ad70908fa6b7cb6cf0",
+      "available_pairs": 1152,
+      "requested_pair_checks": 1024
+    },
+    "ae4f1146": {
+      "task_id": "ae4f1146",
+      "verified_variants": 2048,
+      "passed": true,
+      "program_sha256": "2dd31916b6905f895e55f7c65d3cb70205a5d167ce6275dd8ff9f9e500b019b1",
+      "available_pairs": 1152,
+      "requested_pair_checks": 1024
+    },
     "b1948b0a": {
       "task_id": "b1948b0a",
       "verified_variants": 64,
@@ -1312,6 +1461,14 @@
       "program_sha256": "f39b9fc83234a63bb3af9badc96f44fe3f92f0b90e388d003222fdfbe42deba3",
       "available_pairs": 128,
       "requested_pair_checks": 32
+    },
+    "b60334d2": {
+      "task_id": "b60334d2",
+      "verified_variants": 2048,
+      "passed": true,
+      "program_sha256": "de6188bd81be6d513355633565b447454ebacf14b49b663aa01eb7e74a7007e5",
+      "available_pairs": 1152,
+      "requested_pair_checks": 1024
     },
     "b7249182": {
       "task_id": "b7249182",
@@ -1352,6 +1509,14 @@
       "program_sha256": "a21acc30b382845d8e0826ab6a3c69e9cf551a853cec040f1abaf51eab35045e",
       "available_pairs": 128,
       "requested_pair_checks": 32
+    },
+    "ba97ae07": {
+      "task_id": "ba97ae07",
+      "verified_variants": 2048,
+      "passed": true,
+      "program_sha256": "9f92c1d032dd7d992ad50d386ce0da0c9972383a729470152a44d8fd9c23b5bb",
+      "available_pairs": 1152,
+      "requested_pair_checks": 1024
     },
     "bda2d7a6": {
       "task_id": "bda2d7a6",
@@ -1441,6 +1606,22 @@
       "available_pairs": 128,
       "requested_pair_checks": 32
     },
+    "cdecee7f": {
+      "task_id": "cdecee7f",
+      "verified_variants": 2048,
+      "passed": true,
+      "program_sha256": "1b614535b7e0105db495191dd57573bb3239b42659e180ab863979bd217f3347",
+      "available_pairs": 1152,
+      "requested_pair_checks": 1024
+    },
+    "ce22a75a": {
+      "task_id": "ce22a75a",
+      "verified_variants": 2048,
+      "passed": true,
+      "program_sha256": "3b326d2c1cdc8eb7173d4de6b3a9fee819e090cf977a8c0d488e9c9a947f9bdf",
+      "available_pairs": 1152,
+      "requested_pair_checks": 1024
+    },
     "ce602527": {
       "task_id": "ce602527",
       "verified_variants": 64,
@@ -1448,6 +1629,14 @@
       "program_sha256": "8f6fa37f47af68591144e0249c110e42b1994d1adb037c5cf482957f65888330",
       "available_pairs": 122,
       "requested_pair_checks": 32
+    },
+    "d06dbe63": {
+      "task_id": "d06dbe63",
+      "verified_variants": 2048,
+      "passed": true,
+      "program_sha256": "78849144e5f7b3c7b0b672f57a135feb637be50e172663789acb0d48ea855415",
+      "available_pairs": 1152,
+      "requested_pair_checks": 1024
     },
     "d07ae81c": {
       "task_id": "d07ae81c",
@@ -1481,6 +1670,14 @@
       "available_pairs": 128,
       "requested_pair_checks": 32
     },
+    "d4a91cb9": {
+      "task_id": "d4a91cb9",
+      "verified_variants": 2048,
+      "passed": true,
+      "program_sha256": "96819eda781e26b965a4c348c6c54b90dabcc0d2c136278144c3f0c4ef0f9b4c",
+      "available_pairs": 1151,
+      "requested_pair_checks": 1024
+    },
     "d511f180": {
       "task_id": "d511f180",
       "verified_variants": 64,
@@ -1488,6 +1685,14 @@
       "program_sha256": "4f0148eacd9680733ddaa91cc11948333b777163f2e4b03cddbddd2c2cd20450",
       "available_pairs": 128,
       "requested_pair_checks": 32
+    },
+    "d5d6de2d": {
+      "task_id": "d5d6de2d",
+      "verified_variants": 2048,
+      "passed": true,
+      "program_sha256": "583f112f6fecb855801a6aff56afc6afb74f9bfc8e365c8fccd09ef5349e085b",
+      "available_pairs": 1152,
+      "requested_pair_checks": 1024
     },
     "d631b094": {
       "task_id": "d631b094",
@@ -1593,6 +1798,14 @@
       "available_pairs": 128,
       "requested_pair_checks": 32
     },
+    "f35d900a": {
+      "task_id": "f35d900a",
+      "verified_variants": 2048,
+      "passed": true,
+      "program_sha256": "b7701cad1afd99bd293b3796ca4098742db84a69c482e9d80d060afb18cb3115",
+      "available_pairs": 1152,
+      "requested_pair_checks": 1024
+    },
     "f76d97a5": {
       "task_id": "f76d97a5",
       "verified_variants": 64,
@@ -1615,6 +1828,14 @@
       "passed": true,
       "program_sha256": "11df0386a661bac23cd78b947f4ca088f5e90825865bde3fd65b0073befc3132",
       "available_pairs": 1132,
+      "requested_pair_checks": 1024
+    },
+    "fcc82909": {
+      "task_id": "fcc82909",
+      "verified_variants": 2048,
+      "passed": true,
+      "program_sha256": "61a0a1b4e52c350705f185485ad9693c51a0d8a5af7a96262a55e8a47c1b435c",
+      "available_pairs": 1148,
       "requested_pair_checks": 1024
     },
     "feca6190": {

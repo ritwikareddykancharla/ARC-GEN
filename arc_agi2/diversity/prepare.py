@@ -30,6 +30,10 @@ REPAIRED = ("007bbfb7", "009d5c81", "00dbd492", "0934a4d8", "09c534e7", "1e0a9b1
             # Native batch B (reports/diversity-v1/native-batch-b-domains.json).
             "03560426", "0becf7df", "0f63c0b9", "14b8e18c", "21f83797", "2685904e", "2a28add5")
 
+# Reviewed adequate existing domains, not constructor expansions. Each has a
+# current semantic review and fresh 1000/8000/16 native recertification.
+REVIEWED_NATIVE = ("981571dc",)
+
 
 def digest(value):
     return hashlib.sha256(
@@ -415,7 +419,7 @@ def main():
     parser.add_argument("--seed", type=int, default=2026102401)
     parser.add_argument("--tasks", nargs="+")
     args = parser.parse_args()
-    ids = sorted(set(admission()["admitted"]) | set(REPAIRED))
+    ids = sorted(set(admission()["admitted"]) | set(REPAIRED) | set(REVIEWED_NATIVE))
     if args.tasks:
         if not set(args.tasks) <= set(ids):
             raise ValueError("Only reviewed supplement families are supported")

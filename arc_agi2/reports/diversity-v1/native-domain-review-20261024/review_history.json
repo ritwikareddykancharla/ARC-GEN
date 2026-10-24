@@ -1,0 +1,3023 @@
+{
+ "note": "Superseded semantic reviews, kept verbatim. Each entry holds the full earlier review, its constructor source binding and the mechanical inventory record it was written against. extract.py --check verifies every entry against git. Nothing here is a current review.",
+ "history": {
+  "03560426": [
+   {
+    "superseded_on": "2026-10-24",
+    "reason": "Constructor changed by native batch B (cf6f34b); this review's constructor_sha256 no longer matched, so extract.py reported it stale.",
+    "first_committed_in": "991db6cea36c686503d73965d2ec701ce9afbaec",
+    "archived_from_commit": "8395c38ba950e45e1e23e6b8d81c434e048d62bd",
+    "source_binding": {
+     "path": "tasks/task_03560426.py",
+     "constructor_sha256": "2e1e4c08b6868224dd5ab3a56c641773f011af3f56dd0ded9a1eed0d9fca6e65",
+     "verified_at_commit": "5436f3fe035f261cdcf7996565c108148efa37fb",
+     "last_commit_with_this_source": "cf6f34b87730a2ba9ec5d7f9bf13d25126db8b7b^",
+     "replaced_by_commit": "cf6f34b87730a2ba9ec5d7f9bf13d25126db8b7b",
+     "replacement_constructor_sha256": "230912e67d063d1f62f9258ff8b0911fbe092b13120a78f7d130f960af618dbe"
+    },
+    "mechanical_record_at_review": {
+     "audit": {
+      "audit_matches_current_source": true,
+      "audit_source_sha256": "2e1e4c08b6868224dd5ab3a56c641773f011af3f56dd0ded9a1eed0d9fca6e65",
+      "configured": null,
+      "legacy_extension_available": false,
+      "native": {
+       "attempted": 128,
+       "colour_count": [
+        4,
+        5
+       ],
+       "components": [
+        3,
+        4
+       ],
+       "errors": 0,
+       "input_h": [
+        10,
+        10
+       ],
+       "input_shapes": 1,
+       "input_w": [
+        10,
+        10
+       ],
+       "nonmodal_fraction": [
+        0.14,
+        0.35
+       ],
+       "output_h": [
+        10,
+        10
+       ],
+       "output_shapes": 1,
+       "output_w": [
+        10,
+        10
+       ],
+       "rect_rate": 0.0,
+       "requested": 128,
+       "sample_shortfall": false,
+       "seconds": 0.111,
+       "shape_relation": {
+        "same": 128
+       },
+       "unique_input_orbits": 123,
+       "unique_inputs": 128,
+       "valid": 128
+      }
+     },
+     "certified_evidence": {
+      "records": [
+       {
+        "constructor_sha256_matches": true,
+        "factory_sha256_matches": true,
+        "kind": "direct_factory",
+        "passed": true,
+        "path": "arc_agi2/direct_factories/03560426.json"
+       }
+      ],
+      "state": "current"
+     },
+     "factory": {
+      "path": "arc_agi2/direct_factories/task_03560426.py",
+      "references_demonstrations_beyond_signature": false,
+      "sha256": "14e627c66e888f1dd6519d1eb32da20882ec3b612f9c7331e3f8deb9dcc8bd3f"
+     },
+     "fixture": {
+      "input_colours": [
+       0,
+       1,
+       2,
+       3,
+       4,
+       6,
+       7,
+       8
+      ],
+      "input_shapes": [
+       "10x10",
+       "10x10",
+       "10x10",
+       "10x10"
+      ],
+      "output_shapes": [
+       "10x10",
+       "10x10",
+       "10x10",
+       "10x10"
+      ],
+      "test": 1,
+      "train": 3
+     },
+     "generate": {
+      "body_lines": 36,
+      "constraint_lines_total": 6,
+      "constraints": [
+       {
+        "kind": [
+         "canvas"
+        ],
+        "line": 30,
+        "text": "grid, output = common.grids(10, 10)"
+       },
+       {
+        "kind": [
+         "loop"
+        ],
+        "line": 46,
+        "text": "while True:"
+       },
+       {
+        "kind": [
+         "draw"
+        ],
+        "line": 47,
+        "text": "num_boxes = common.randint(3, 4)"
+       },
+       {
+        "kind": [
+         "draw"
+        ],
+        "line": 48,
+        "text": "widths = [common.randint(1, 4) for _ in range(num_boxes)]"
+       },
+       {
+        "kind": [
+         "draw"
+        ],
+        "line": 49,
+        "text": "heights = [common.randint(2, 5) for _ in range(num_boxes)]"
+       },
+       {
+        "kind": [
+         "draw"
+        ],
+        "line": 50,
+        "text": "colors = common.random_colors(num_boxes)"
+       }
+      ],
+      "end_line": 55,
+      "kind_counts": {
+       "canvas": 1,
+       "draw": 4,
+       "loop": 1
+      },
+      "parameters": [
+       "widths=None",
+       "heights=None",
+       "colors=None"
+      ],
+      "start_line": 20
+     },
+     "priority": {
+      "audit_stale_at_ordering_commit": false,
+      "batch": 1,
+      "rank": 1,
+      "tier": "A_fixed_dims_ge8"
+     },
+     "release_ready": false,
+     "source": {
+      "lines": 68,
+      "path": "tasks/task_03560426.py",
+      "sha256": "2e1e4c08b6868224dd5ab3a56c641773f011af3f56dd0ded9a1eed0d9fca6e65",
+      "uncommitted_change": false
+     },
+     "task_id": "03560426",
+     "worklist": {
+      "native_repaired": false,
+      "pending_checks": [
+       "no_rearc_counterpart_review_native_domain"
+      ]
+     }
+    },
+    "review": {
+     "status": "reviewed",
+     "reviewer": "claude-opus-5-5 (hybrid-claude-native worktree)",
+     "reviewed_on": "2026-10-24",
+     "constructor_sha256": "2e1e4c08b6868224dd5ab3a56c641773f011af3f56dd0ded9a1eed0d9fca6e65",
+     "baseline_commit": "5436f3fe035f261cdcf7996565c108148efa37fb",
+     "mechanism": "3-4 solid boxes (w 1-4, h 2-5, distinct colours) stand on the bottom row left to right with one-column gaps; the output re-stacks them as a top-left-anchored cascade where each next box's top-left cell sits on the previous box's bottom-right cell and overwrites it.",
+     "fixture_evidence": "4 canonical pairs, all 10x10 in and out; pair 0 boxes 888/77/222 span cols 0-9 (grid_col=11) and cascade shows 8877 overlap row, i.e. later box overwrites the shared corner.",
+     "axes": {
+      "dimensions": {
+       "disposition": "incidental_restriction",
+       "lines": [
+        30,
+        35,
+        36,
+        42
+       ],
+       "why": "Canvas is common.grids(10, 10) and bounds 10/[10,11] are literals; the cascade and bottom-row layout only need sum(w)+n-1 <= W and sum(h)-(n-1) <= H, nothing in the rule references 10."
+      },
+      "objects": {
+       "disposition": "mixed",
+       "lines": [
+        47,
+        48,
+        49
+       ],
+       "why": "Box count 3-4 and sizes w1-4/h2-5 are literals sized to a 10-wide row (incidental); solid rectangular boxes are rule-supported because the cascade overlap is defined by box corners. Height 1 is excluded without a visible rule reason."
+      },
+      "placement": {
+       "disposition": "mixed",
+       "lines": [
+        37,
+        39,
+        42
+       ],
+       "why": "Bottom alignment and left-to-right order define the cascade order (rule-supported); line 42 forces the row to end at col 8 or 9, i.e. the boxes must nearly fill the width, which is a generator choice not required by the rule."
+      },
+      "density_colours": {
+       "disposition": "intrinsic_or_rule_supported",
+       "lines": [
+        50
+       ],
+       "why": "random_colors gives distinct box colours, which keeps the overwritten corner cell visible as a colour change; with equal neighbouring colours the overlap would still be well defined but harder to read, so distinctness is a reasonable rule-support choice. Density follows from box sizes."
+      },
+      "rule_parameters": {
+       "disposition": "intrinsic_or_rule_supported",
+       "lines": [
+        40,
+        41
+       ],
+       "why": "The only rule parameters are the fixed down-right cascade offsets (w-1, h-1) and overwrite order, which define the task."
+      },
+      "demonstration_context": {
+       "disposition": "intrinsic_or_rule_supported",
+       "lines": [
+        38,
+        40,
+        41
+       ],
+       "why": "Output is a deterministic function of one input; the corner-overwrite convention is visible in any pair with >=2 boxes. Factory program does not consult demonstrations."
+      }
+     },
+     "proposal": "Parameterise H,W (e.g. 5-30 each) and replace literals 10/[10,11] at lines 30, 35, 36, 42 with W/H; allow trailing empty columns and n boxes 2..k with w,h ranges scaled to W/H. Keep distinct colours and cascade semantics. Requires recertification.",
+     "patch_priority": "high",
+     "uncertainties": "Whether the original ARC intent requires the boxes to fill the row (line 42) is not established by 4 fixtures; allowing h=1 boxes changes cascade appearance (horizontal run) and should be checked against the verifier.",
+     "certified_evidence": "current",
+     "release_ready": false
+    }
+   }
+  ],
+  "0becf7df": [
+   {
+    "superseded_on": "2026-10-24",
+    "reason": "Constructor changed by native batch B (cf6f34b); this review's constructor_sha256 no longer matched, so extract.py reported it stale.",
+    "first_committed_in": "991db6cea36c686503d73965d2ec701ce9afbaec",
+    "archived_from_commit": "8395c38ba950e45e1e23e6b8d81c434e048d62bd",
+    "source_binding": {
+     "path": "tasks/task_0becf7df.py",
+     "constructor_sha256": "d130195460ba0e6b72ae7f85a62bb4ad5f8c8b636f4aee4359c3402d3ee47f5c",
+     "verified_at_commit": "5436f3fe035f261cdcf7996565c108148efa37fb",
+     "last_commit_with_this_source": "cf6f34b87730a2ba9ec5d7f9bf13d25126db8b7b^",
+     "replaced_by_commit": "cf6f34b87730a2ba9ec5d7f9bf13d25126db8b7b",
+     "replacement_constructor_sha256": "e1e2c0568baab8c110e2c4b9581b3e915b04b3b5adcb0db4c703fa341d40e057"
+    },
+    "mechanical_record_at_review": {
+     "audit": {
+      "audit_matches_current_source": true,
+      "audit_source_sha256": "d130195460ba0e6b72ae7f85a62bb4ad5f8c8b636f4aee4359c3402d3ee47f5c",
+      "configured": null,
+      "legacy_extension_available": false,
+      "native": {
+       "attempted": 128,
+       "colour_count": [
+        5,
+        5
+       ],
+       "components": [
+        8,
+        15
+       ],
+       "errors": 0,
+       "input_h": [
+        10,
+        10
+       ],
+       "input_shapes": 1,
+       "input_w": [
+        10,
+        10
+       ],
+       "nonmodal_fraction": [
+        0.16000000000000003,
+        0.48
+       ],
+       "output_h": [
+        10,
+        10
+       ],
+       "output_shapes": 1,
+       "output_w": [
+        10,
+        10
+       ],
+       "rect_rate": 0.0,
+       "requested": 128,
+       "sample_shortfall": false,
+       "seconds": 0.158,
+       "shape_relation": {
+        "same": 128
+       },
+       "unique_input_orbits": 128,
+       "unique_inputs": 128,
+       "valid": 128
+      }
+     },
+     "certified_evidence": {
+      "records": [
+       {
+        "constructor_sha256_matches": true,
+        "factory_sha256_matches": true,
+        "kind": "direct_factory",
+        "passed": true,
+        "path": "arc_agi2/direct_factories/0becf7df.json"
+       }
+      ],
+      "state": "current"
+     },
+     "factory": {
+      "path": "arc_agi2/direct_factories/task_0becf7df.py",
+      "references_demonstrations_beyond_signature": false,
+      "sha256": "9ab49e10182a1f3ea3b1c709e4ff494d4bd47dd99e1a2889c7724bd966de8972"
+     },
+     "fixture": {
+      "input_colours": [
+       0,
+       1,
+       2,
+       3,
+       4,
+       6,
+       7,
+       8,
+       9
+      ],
+      "input_shapes": [
+       "10x10",
+       "10x10",
+       "10x10",
+       "10x10"
+      ],
+      "output_shapes": [
+       "10x10",
+       "10x10",
+       "10x10",
+       "10x10"
+      ],
+      "test": 1,
+      "train": 3
+     },
+     "generate": {
+      "body_lines": 49,
+      "constraint_lines_total": 14,
+      "constraints": [
+       {
+        "kind": [
+         "draw"
+        ],
+        "line": 28,
+        "text": "legend = common.random_colors(4)"
+       },
+       {
+        "kind": [
+         "loop"
+        ],
+        "line": 29,
+        "text": "while True:"
+       },
+       {
+        "kind": [
+         "canvas"
+        ],
+        "line": 30,
+        "text": "grid = common.grid(10, 10)"
+       },
+       {
+        "kind": [
+         "loop"
+        ],
+        "line": 32,
+        "text": "while i < 10 or len(set(common.flatten(grid))) < 5:"
+       },
+       {
+        "kind": [
+         "draw"
+        ],
+        "line": 33,
+        "text": "color = common.choice(legend + [0])"
+       },
+       {
+        "kind": [
+         "draw"
+        ],
+        "line": 34,
+        "text": "if common.randint(0, 1):"
+       },
+       {
+        "kind": [
+         "draw"
+        ],
+        "line": 35,
+        "text": "row = common.randint(0, 7)"
+       },
+       {
+        "kind": [
+         "draw"
+        ],
+        "line": 36,
+        "text": "length = common.randint(1, 6)"
+       },
+       {
+        "kind": [
+         "draw"
+        ],
+        "line": 37,
+        "text": "col = common.randint(0, 6 - length)"
+       },
+       {
+        "kind": [
+         "draw"
+        ],
+        "line": 41,
+        "text": "col = common.randint(0, 5)"
+       },
+       {
+        "kind": [
+         "draw"
+        ],
+        "line": 42,
+        "text": "length = common.randint(1, 8)"
+       },
+       {
+        "kind": [
+         "draw"
+        ],
+        "line": 43,
+        "text": "row = common.randint(0, 8 - length)"
+       },
+       {
+        "kind": [
+         "retry"
+        ],
+        "line": 47,
+        "text": "if grid[0][2] or grid[1][2] or grid[2][2]: continue"
+       },
+       {
+        "kind": [
+         "canvas"
+        ],
+        "line": 59,
+        "text": "grid, output = common.grids(10, 10)"
+       }
+      ],
+      "end_line": 68,
+      "kind_counts": {
+       "canvas": 2,
+       "draw": 9,
+       "loop": 2,
+       "retry": 1
+      },
+      "parameters": [
+       "colors=None"
+      ],
+      "start_line": 20
+     },
+     "priority": {
+      "audit_stale_at_ordering_commit": false,
+      "batch": 1,
+      "rank": 5,
+      "tier": "A_fixed_dims_ge8"
+     },
+     "release_ready": false,
+     "source": {
+      "lines": 117,
+      "path": "tasks/task_0becf7df.py",
+      "sha256": "d130195460ba0e6b72ae7f85a62bb4ad5f8c8b636f4aee4359c3402d3ee47f5c",
+      "uncommitted_change": false
+     },
+     "task_id": "0becf7df",
+     "worklist": {
+      "native_repaired": false,
+      "pending_checks": [
+       "no_rearc_counterpart_review_native_domain"
+      ]
+     }
+    },
+    "review": {
+     "status": "reviewed",
+     "reviewer": "claude-opus-5-5 (hybrid-claude-native worktree)",
+     "reviewed_on": "2026-10-24",
+     "constructor_sha256": "d130195460ba0e6b72ae7f85a62bb4ad5f8c8b636f4aee4359c3402d3ee47f5c",
+     "baseline_commit": "5436f3fe035f261cdcf7996565c108148efa37fb",
+     "mechanism": "10x10 with a 2x2 legend [[a,b],[c,d]] in the top-left corner and one connected figure built from random strokes of legend colours; output swaps a<->b and c<->d inside the figure, legend unchanged.",
+     "fixture_evidence": "4 canonical pairs, all 10x10, legend at (0..1, 0..1) in every pair; each figure uses all four legend colours.",
+     "axes": {
+      "dimensions": {
+       "disposition": "incidental_restriction",
+       "lines": [
+        30,
+        35,
+        36,
+        41,
+        42,
+        59
+       ],
+       "why": "Canvas literal 10 and stroke ranges 0-7/1-6/0-5/1-8 are tied to 10; legend lookup is position-based in the corner and would work on any canvas >= ~5."
+      },
+      "objects": {
+       "disposition": "mixed",
+       "lines": [
+        32,
+        36,
+        42,
+        52
+       ],
+       "why": "Single connected figure from >=10 strokes is a generator style (incidental); requiring all five colours present (32) is rule-supported because every swap pair must be evidenced."
+      },
+      "placement": {
+       "disposition": "mixed",
+       "lines": [
+        39,
+        45,
+        47,
+        53,
+        56
+       ],
+       "why": "Legend fixed at the top-left corner is the task convention (augmentation moves it); figure confined to cols 2-9 and kept off cells (0..2, 2) to separate it from the legend, which is rule-supporting."
+      },
+      "density_colours": {
+       "disposition": "intrinsic_or_rule_supported",
+       "lines": [
+        28,
+        33
+       ],
+       "why": "Four distinct legend colours are necessary for two unambiguous swap pairs; figure colours drawn from legend plus black."
+      },
+      "rule_parameters": {
+       "disposition": "intrinsic_or_rule_supported",
+       "lines": [
+        64,
+        65,
+        66,
+        67
+       ],
+       "why": "The swap pairs are the legend rows; this is the rule."
+      },
+      "demonstration_context": {
+       "disposition": "intrinsic_or_rule_supported",
+       "lines": [
+        64,
+        66
+       ],
+       "why": "Pairing along legend rows (not columns) is a convention that demonstrations must disambiguate, and transpose augmentation flips it, so episodes must use one consistent D4 transform; the factory hardcodes it rather than reading demonstrations."
+      }
+     },
+     "proposal": "Parameterise H,W (e.g. 6-30) and scale stroke ranges and the figure region to the canvas; keep the corner legend and separation gap. Recertify.",
+     "patch_priority": "medium",
+     "uncertainties": "Whether figures that do not touch the legend gap or multiple disconnected figures are acceptable to the verifier was not inspected.",
+     "certified_evidence": "current",
+     "release_ready": false
+    }
+   }
+  ],
+  "0f63c0b9": [
+   {
+    "superseded_on": "2026-10-24",
+    "reason": "Constructor changed by native batch B (cf6f34b); this review's constructor_sha256 no longer matched, so extract.py reported it stale.",
+    "first_committed_in": "991db6cea36c686503d73965d2ec701ce9afbaec",
+    "archived_from_commit": "8395c38ba950e45e1e23e6b8d81c434e048d62bd",
+    "source_binding": {
+     "path": "tasks/task_0f63c0b9.py",
+     "constructor_sha256": "413699f1715314922fba70011e71d31260046443a48e19c2c6d1cd2c5cf313ab",
+     "verified_at_commit": "5436f3fe035f261cdcf7996565c108148efa37fb",
+     "last_commit_with_this_source": "cf6f34b87730a2ba9ec5d7f9bf13d25126db8b7b^",
+     "replaced_by_commit": "cf6f34b87730a2ba9ec5d7f9bf13d25126db8b7b",
+     "replacement_constructor_sha256": "af3a801d16ee5d923ffdc0070a28865ba9d57ec5a7b752d7bea7e021aadd2f2b"
+    },
+    "mechanical_record_at_review": {
+     "audit": {
+      "audit_matches_current_source": true,
+      "audit_source_sha256": "413699f1715314922fba70011e71d31260046443a48e19c2c6d1cd2c5cf313ab",
+      "configured": null,
+      "legacy_extension_available": false,
+      "native": {
+       "attempted": 128,
+       "colour_count": [
+        4,
+        5
+       ],
+       "components": [
+        3,
+        4
+       ],
+       "errors": 0,
+       "input_h": [
+        15,
+        15
+       ],
+       "input_shapes": 1,
+       "input_w": [
+        15,
+        15
+       ],
+       "nonmodal_fraction": [
+        0.013333333333333308,
+        0.01777777777777778
+       ],
+       "output_h": [
+        15,
+        15
+       ],
+       "output_shapes": 1,
+       "output_w": [
+        15,
+        15
+       ],
+       "rect_rate": 0.0,
+       "requested": 128,
+       "sample_shortfall": false,
+       "seconds": 0.106,
+       "shape_relation": {
+        "same": 128
+       },
+       "unique_input_orbits": 128,
+       "unique_inputs": 128,
+       "valid": 128
+      }
+     },
+     "certified_evidence": {
+      "records": [
+       {
+        "constructor_sha256_matches": true,
+        "factory_sha256_matches": true,
+        "kind": "direct_factory",
+        "passed": true,
+        "path": "arc_agi2/direct_factories/0f63c0b9.json"
+       }
+      ],
+      "state": "current"
+     },
+     "factory": {
+      "path": "arc_agi2/direct_factories/task_0f63c0b9.py",
+      "references_demonstrations_beyond_signature": false,
+      "sha256": "2ee340a2b143d9491d7a09876e038f4a8e784be3bd95ebadb380a24b7fcde47d"
+     },
+     "fixture": {
+      "input_colours": [
+       0,
+       1,
+       2,
+       3,
+       6,
+       7,
+       8,
+       9
+      ],
+      "input_shapes": [
+       "15x15",
+       "15x15",
+       "15x15",
+       "15x15",
+       "15x15"
+      ],
+      "output_shapes": [
+       "15x15",
+       "15x15",
+       "15x15",
+       "15x15",
+       "15x15"
+      ],
+      "test": 1,
+      "train": 4
+     },
+     "generate": {
+      "body_lines": 31,
+      "constraint_lines_total": 5,
+      "constraints": [
+       {
+        "kind": [
+         "draw"
+        ],
+        "line": 31,
+        "text": "colors = common.random_colors(common.randint(3, 4))"
+       },
+       {
+        "kind": [
+         "loop"
+        ],
+        "line": 32,
+        "text": "while True:"
+       },
+       {
+        "kind": [
+         "draw"
+        ],
+        "line": 33,
+        "text": "prows = sorted(common.sample(range(1, size - 1), len(colors)))"
+       },
+       {
+        "kind": [
+         "draw"
+        ],
+        "line": 34,
+        "text": "pcols = common.sample(range(3, size - 3), len(colors))"
+       },
+       {
+        "kind": [
+         "canvas"
+        ],
+        "line": 38,
+        "text": "grid, output = common.grids(15, 15)"
+       }
+      ],
+      "end_line": 50,
+      "kind_counts": {
+       "canvas": 1,
+       "draw": 3,
+       "loop": 1
+      },
+      "parameters": [
+       "prows=None",
+       "pcols=None",
+       "colors=None",
+       "size=15"
+      ],
+      "start_line": 20
+     },
+     "priority": {
+      "audit_stale_at_ordering_commit": false,
+      "batch": 1,
+      "rank": 7,
+      "tier": "A_fixed_dims_ge8"
+     },
+     "release_ready": false,
+     "source": {
+      "lines": 64,
+      "path": "tasks/task_0f63c0b9.py",
+      "sha256": "413699f1715314922fba70011e71d31260046443a48e19c2c6d1cd2c5cf313ab",
+      "uncommitted_change": false
+     },
+     "task_id": "0f63c0b9",
+     "worklist": {
+      "native_repaired": false,
+      "pending_checks": [
+       "no_rearc_counterpart_review_native_domain"
+      ]
+     }
+    },
+    "review": {
+     "status": "reviewed",
+     "reviewer": "claude-opus-5-5 (hybrid-claude-native worktree)",
+     "reviewed_on": "2026-10-24",
+     "constructor_sha256": "413699f1715314922fba70011e71d31260046443a48e19c2c6d1cd2c5cf313ab",
+     "baseline_commit": "5436f3fe035f261cdcf7996565c108148efa37fb",
+     "mechanism": "15x15 with 3-4 pixels in rows separated by >=2; output draws a full row line at each pixel row, colours the left/right borders by nearest pixel row (ties to the upper pixel), and the top/bottom border rows with the first/last colour.",
+     "fixture_evidence": "5 canonical pairs, all 15x15; pair 0 rows 3/7/12 show gap rows 4-5 coloured 2 and row 6 coloured 7, i.e. the odd-gap middle row goes to the upper pixel.",
+     "axes": {
+      "dimensions": {
+       "disposition": "incidental_restriction",
+       "lines": [
+        20,
+        33,
+        34,
+        38
+       ],
+       "why": "A size parameter exists (20) and drives the loops, but the canvas is still grids(15, 15) at line 38, so size != 15 would be inconsistent; width and height are not independent. The rule (row lines + nearest-row borders) is size-agnostic."
+      },
+      "objects": {
+       "disposition": "incidental_restriction",
+       "lines": [
+        31
+       ],
+       "why": "3-4 pixels is a literal; 2 or more pixels with row gaps >1 keep the rule well defined."
+      },
+      "placement": {
+       "disposition": "mixed",
+       "lines": [
+        33,
+        34,
+        36
+       ],
+       "why": "Row gaps >1 (36) are rule-supporting (each border segment exists); columns limited to 3..size-4 have no effect on the output and are incidental; rows exclude the outer rows."
+      },
+      "density_colours": {
+       "disposition": "intrinsic_or_rule_supported",
+       "lines": [
+        31,
+        42,
+        46
+       ],
+       "why": "Distinct pixel colours are required so border segments are attributable."
+      },
+      "rule_parameters": {
+       "disposition": "intrinsic_or_rule_supported",
+       "lines": [
+        43,
+        44,
+        48,
+        49
+       ],
+       "why": "Nearest-row split with upper-wins tie and top/bottom border colours are the rule."
+      },
+      "demonstration_context": {
+       "disposition": "mixed",
+       "lines": [
+        43,
+        44
+       ],
+       "why": "The odd-gap tie-break (upper pixel wins) is only demonstrated when some pair has an odd gap; vertical-flip augmentation inverts it, so episodes need a consistent transform and should include an odd gap. Whether sampled episodes guarantee that was not checked."
+      }
+     },
+     "proposal": "Use independent H,W (replace 15 at line 38 and use H for rows, W for columns), sample 2-k pixels with row gaps >=2 and columns from the full width. Consider an episode-level requirement that at least one demonstration has an odd gap. Recertify.",
+     "patch_priority": "high",
+     "uncertainties": "Episode assembly behaviour for the tie-break evidence is not inspected; the archived verifier's handling of other sizes is unverified.",
+     "certified_evidence": "current",
+     "release_ready": false
+    }
+   }
+  ],
+  "14b8e18c": [
+   {
+    "superseded_on": "2026-10-24",
+    "reason": "Constructor changed by native batch B (cf6f34b); this review's constructor_sha256 no longer matched, so extract.py reported it stale.",
+    "first_committed_in": "991db6cea36c686503d73965d2ec701ce9afbaec",
+    "archived_from_commit": "8395c38ba950e45e1e23e6b8d81c434e048d62bd",
+    "source_binding": {
+     "path": "tasks/task_14b8e18c.py",
+     "constructor_sha256": "bd5ad202edd6904337b4999fb1064e8f9e24ed9768d89b9a0022305c0433ab1c",
+     "verified_at_commit": "5436f3fe035f261cdcf7996565c108148efa37fb",
+     "last_commit_with_this_source": "cf6f34b87730a2ba9ec5d7f9bf13d25126db8b7b^",
+     "replaced_by_commit": "cf6f34b87730a2ba9ec5d7f9bf13d25126db8b7b",
+     "replacement_constructor_sha256": "6b117ab876066d0b4701422c4506c0585360cc73f3a8a56875785f867ecc9505"
+    },
+    "mechanical_record_at_review": {
+     "audit": {
+      "audit_matches_current_source": true,
+      "audit_source_sha256": "bd5ad202edd6904337b4999fb1064e8f9e24ed9768d89b9a0022305c0433ab1c",
+      "configured": null,
+      "legacy_extension_available": false,
+      "native": {
+       "attempted": 43,
+       "colour_count": [
+        2,
+        2
+       ],
+       "components": [
+        1,
+        8
+       ],
+       "errors": 2,
+       "input_h": [
+        10,
+        10
+       ],
+       "input_shapes": 1,
+       "input_w": [
+        10,
+        10
+       ],
+       "nonmodal_fraction": [
+        0.040000000000000036,
+        0.33999999999999997
+       ],
+       "output_h": [
+        10,
+        10
+       ],
+       "output_shapes": 1,
+       "output_w": [
+        10,
+        10
+       ],
+       "rect_rate": 0.0,
+       "requested": 128,
+       "sample_shortfall": true,
+       "seconds": 12.401,
+       "shape_relation": {
+        "same": 41
+       },
+       "unique_input_orbits": 41,
+       "unique_inputs": 41,
+       "valid": 41
+      }
+     },
+     "certified_evidence": {
+      "records": [
+       {
+        "constructor_sha256_matches": true,
+        "factory_sha256_matches": true,
+        "kind": "direct_factory",
+        "passed": true,
+        "path": "arc_agi2/direct_factories/14b8e18c.json"
+       }
+      ],
+      "state": "current"
+     },
+     "factory": {
+      "path": "arc_agi2/direct_factories/task_14b8e18c.py",
+      "references_demonstrations_beyond_signature": false,
+      "sha256": "cd3bf23e37df17cd1601de1dc36e80d723fa31725cc7149aa21ef323083c15c2"
+     },
+     "fixture": {
+      "input_colours": [
+       6,
+       7,
+       8
+      ],
+      "input_shapes": [
+       "10x10",
+       "10x10",
+       "10x10",
+       "10x10"
+      ],
+      "output_shapes": [
+       "10x10",
+       "10x10",
+       "10x10",
+       "10x10"
+      ],
+      "test": 1,
+      "train": 3
+     },
+     "generate": {
+      "body_lines": 69,
+      "constraint_lines_total": 11,
+      "constraints": [
+       {
+        "kind": [
+         "canvas"
+        ],
+        "line": 33,
+        "text": "grid, output = common.grids(10, 10, 7)"
+       },
+       {
+        "kind": [
+         "retry"
+        ],
+        "line": 56,
+        "text": "if wide != tall or style != 0: continue"
+       },
+       {
+        "kind": [
+         "draw"
+        ],
+        "line": 74,
+        "text": "num_boxes, color = common.randint(2, 5), common.random_color(exclude=[2, 7])"
+       },
+       {
+        "kind": [
+         "loop"
+        ],
+        "line": 75,
+        "text": "while True:"
+       },
+       {
+        "kind": [
+         "draw"
+        ],
+        "line": 76,
+        "text": "wides = [common.randint(1, 4) for _ in range(num_boxes)]"
+       },
+       {
+        "kind": [
+         "draw"
+        ],
+        "line": 77,
+        "text": "talls = [common.randint(1 if wide > 2 else 2, 4) for wide in wides]"
+       },
+       {
+        "kind": [
+         "draw"
+        ],
+        "line": 79,
+        "text": "if common.randint(0, 4) == 0: wides[i] = 8"
+       },
+       {
+        "kind": [
+         "draw"
+        ],
+        "line": 80,
+        "text": "if common.randint(0, 4) == 0: talls[i] = 8"
+       },
+       {
+        "kind": [
+         "draw"
+        ],
+        "line": 81,
+        "text": "brows = [common.randint(0, 10 - tall) for tall in talls]"
+       },
+       {
+        "kind": [
+         "draw"
+        ],
+        "line": 82,
+        "text": "bcols = [common.randint(0, 10 - wide) for wide in wides]"
+       },
+       {
+        "kind": [
+         "draw"
+        ],
+        "line": 83,
+        "text": "styles = [0 if wide != tall else common.randint(0, 2) for wide, tall in zip(wides, talls)]"
+       }
+      ],
+      "end_line": 88,
+      "kind_counts": {
+       "canvas": 1,
+       "draw": 8,
+       "loop": 1,
+       "retry": 1
+      },
+      "parameters": [
+       "wides=None",
+       "talls=None",
+       "brows=None",
+       "bcols=None",
+       "styles=None",
+       "color=None"
+      ],
+      "start_line": 20
+     },
+     "priority": {
+      "audit_stale_at_ordering_commit": false,
+      "batch": 1,
+      "rank": 10,
+      "tier": "A_fixed_dims_ge8"
+     },
+     "release_ready": false,
+     "source": {
+      "lines": 101,
+      "path": "tasks/task_14b8e18c.py",
+      "sha256": "bd5ad202edd6904337b4999fb1064e8f9e24ed9768d89b9a0022305c0433ab1c",
+      "uncommitted_change": false
+     },
+     "task_id": "14b8e18c",
+     "worklist": {
+      "native_repaired": false,
+      "pending_checks": [
+       "no_rearc_counterpart_review_native_domain"
+      ]
+     }
+    },
+    "review": {
+     "status": "reviewed",
+     "reviewer": "claude-opus-5-5 (hybrid-claude-native worktree)",
+     "reviewed_on": "2026-10-24",
+     "constructor_sha256": "bd5ad202edd6904337b4999fb1064e8f9e24ed9768d89b9a0022305c0433ab1c",
+     "baseline_commit": "5436f3fe035f261cdcf7996565c108148efa37fb",
+     "mechanism": "10x10 orange background with 2-5 same-colour shapes: hollow rectangles, or diagonals when square; only hollow squares get eight red 'ear' pixels just outside their corners in the output. Non-square rectangles, diagonals and length-8 bars are distractors.",
+     "fixture_evidence": "4 canonical pairs, all 10x10; pair 0 has a 4x4 hollow square with ears plus 2x2 diagonals and a 4x2 rectangle without ears; pair 2 nests a 2x2 square inside an 8x8 square.",
+     "axes": {
+      "dimensions": {
+       "disposition": "incidental_restriction",
+       "lines": [
+        33,
+        79,
+        80,
+        81,
+        82
+       ],
+       "why": "Canvas literal 10 and the length-8 special case (79-80) are tied to 10; ears and square detection are size-agnostic."
+      },
+      "objects": {
+       "disposition": "mixed",
+       "lines": [
+        74,
+        76,
+        77,
+        83
+       ],
+       "why": "Distinguishing squares from non-squares and hollow from diagonal is the rule (rule-supported); 2-5 shapes and sides 1-4 (plus 8) are literals."
+      },
+      "placement": {
+       "disposition": "intrinsic_or_rule_supported",
+       "lines": [
+        48,
+        49,
+        50,
+        51,
+        52,
+        68
+       ],
+       "why": "A clear background ring around each shape and non-colliding, in-canvas ears are required for the ears to be unambiguous."
+      },
+      "density_colours": {
+       "disposition": "intrinsic_or_rule_supported",
+       "lines": [
+        74,
+        69
+       ],
+       "why": "One shape colour excluding 2 and 7, and red ears, are role colours."
+      },
+      "rule_parameters": {
+       "disposition": "intrinsic_or_rule_supported",
+       "lines": [
+        56,
+        59,
+        60,
+        61,
+        62,
+        63,
+        64,
+        65,
+        66
+       ],
+       "why": "The eight ear offsets are fixed by the rule."
+      },
+      "demonstration_context": {
+       "disposition": "intrinsic_or_rule_supported",
+       "lines": [
+        56,
+        70
+       ],
+       "why": "At least one square per scene (70) means every pair demonstrates ears; the square-only criterion is learnt from contrasts across pairs. Factory does not consult demonstrations."
+      }
+     },
+     "proposal": "Parameterise H,W and replace the literal 8 with a 'long bar' length drawn relative to the canvas. Also move num_boxes and colour inside the rejection loop or bound it: the audit attempted only 43 draws (41 valid, 2 TimeoutErrors) in its time budget, so the sampled 41 unique inputs reflect slowness, not domain size. Recertify.",
+     "patch_priority": "high",
+     "uncertainties": "Acceptance rate of the rejection loop at 5 boxes was not measured; whether nested squares (pair 2) remain well handled on larger canvases is unverified.",
+     "certified_evidence": "current",
+     "release_ready": false
+    }
+   }
+  ],
+  "21f83797": [
+   {
+    "superseded_on": "2026-10-24",
+    "reason": "Constructor changed by native batch B (cf6f34b); this review's constructor_sha256 no longer matched, so extract.py reported it stale.",
+    "first_committed_in": "991db6cea36c686503d73965d2ec701ce9afbaec",
+    "archived_from_commit": "8395c38ba950e45e1e23e6b8d81c434e048d62bd",
+    "source_binding": {
+     "path": "tasks/task_21f83797.py",
+     "constructor_sha256": "bc2081d029e34c2bd023e91a2d38895cd62bbdc0a99681d7f3704fc723575c78",
+     "verified_at_commit": "5436f3fe035f261cdcf7996565c108148efa37fb",
+     "last_commit_with_this_source": "cf6f34b87730a2ba9ec5d7f9bf13d25126db8b7b^",
+     "replaced_by_commit": "cf6f34b87730a2ba9ec5d7f9bf13d25126db8b7b",
+     "replacement_constructor_sha256": "6b6ba6874f377675c2409c6afe048b74a34a4e60b0e75575f6448fd8246a2ccd"
+    },
+    "mechanical_record_at_review": {
+     "audit": {
+      "audit_matches_current_source": true,
+      "audit_source_sha256": "bc2081d029e34c2bd023e91a2d38895cd62bbdc0a99681d7f3704fc723575c78",
+      "configured": null,
+      "legacy_extension_available": false,
+      "native": {
+       "attempted": 128,
+       "colour_count": [
+        2,
+        2
+       ],
+       "components": [
+        2,
+        2
+       ],
+       "errors": 0,
+       "input_h": [
+        13,
+        13
+       ],
+       "input_shapes": 1,
+       "input_w": [
+        13,
+        13
+       ],
+       "nonmodal_fraction": [
+        0.011834319526627168,
+        0.011834319526627168
+       ],
+       "output_h": [
+        13,
+        13
+       ],
+       "output_shapes": 1,
+       "output_w": [
+        13,
+        13
+       ],
+       "rect_rate": 0.0,
+       "requested": 128,
+       "sample_shortfall": false,
+       "seconds": 0.096,
+       "shape_relation": {
+        "same": 128
+       },
+       "unique_input_orbits": 100,
+       "unique_inputs": 117,
+       "valid": 128
+      }
+     },
+     "certified_evidence": {
+      "records": [
+       {
+        "constructor_sha256_matches": true,
+        "factory_sha256_matches": true,
+        "kind": "direct_factory",
+        "passed": true,
+        "path": "arc_agi2/direct_factories/21f83797.json"
+       }
+      ],
+      "state": "current"
+     },
+     "factory": {
+      "path": "arc_agi2/direct_factories/task_21f83797.py",
+      "references_demonstrations_beyond_signature": false,
+      "sha256": "f166650361e30abe5d50587f7b5c0f5bcc2dda892eb3e6f4afe43ad7ccc163a3"
+     },
+     "fixture": {
+      "input_colours": [
+       0,
+       2
+      ],
+      "input_shapes": [
+       "13x13",
+       "13x13",
+       "13x13"
+      ],
+      "output_shapes": [
+       "13x13",
+       "13x13",
+       "13x13"
+      ],
+      "test": 1,
+      "train": 2
+     },
+     "generate": {
+      "body_lines": 23,
+      "constraint_lines_total": 3,
+      "constraints": [
+       {
+        "kind": [
+         "draw"
+        ],
+        "line": 31,
+        "text": "width, height = common.randint(3, 11), common.randint(3, 11)"
+       },
+       {
+        "kind": [
+         "draw"
+        ],
+        "line": 32,
+        "text": "brow, bcol = common.randint(1, 12 - height), common.randint(1, 12 - width)"
+       },
+       {
+        "kind": [
+         "canvas"
+        ],
+        "line": 34,
+        "text": "grid, output = common.grids(13, 13)"
+       }
+      ],
+      "end_line": 42,
+      "kind_counts": {
+       "canvas": 1,
+       "draw": 2
+      },
+      "parameters": [
+       "width=None",
+       "height=None",
+       "brow=None",
+       "bcol=None"
+      ],
+      "start_line": 20
+     },
+     "priority": {
+      "audit_stale_at_ordering_commit": false,
+      "batch": 1,
+      "rank": 18,
+      "tier": "A_fixed_dims_ge8"
+     },
+     "release_ready": false,
+     "source": {
+      "lines": 54,
+      "path": "tasks/task_21f83797.py",
+      "sha256": "bc2081d029e34c2bd023e91a2d38895cd62bbdc0a99681d7f3704fc723575c78",
+      "uncommitted_change": false
+     },
+     "task_id": "21f83797",
+     "worklist": {
+      "native_repaired": false,
+      "pending_checks": [
+       "no_rearc_counterpart_review_native_domain"
+      ]
+     }
+    },
+    "review": {
+     "status": "reviewed",
+     "reviewer": "claude-opus-5-5 (hybrid-claude-native worktree)",
+     "reviewed_on": "2026-10-24",
+     "constructor_sha256": "bc2081d029e34c2bd023e91a2d38895cd62bbdc0a99681d7f3704fc723575c78",
+     "baseline_commit": "5436f3fe035f261cdcf7996565c108148efa37fb",
+     "mechanism": "13x13 with two red pixels at the top-left and bottom-right corners of an implied box (3-11 per side); output fills the box with blue and draws full-length red lines along both box rows and both box columns.",
+     "fixture_evidence": "3 canonical pairs, all 13x13; boxes 9x5, 6x7, 6x10, always TL/BR marker pairs.",
+     "axes": {
+      "dimensions": {
+       "disposition": "incidental_restriction",
+       "lines": [
+        31,
+        32,
+        34,
+        39
+       ],
+       "why": "Canvas literal 13 and loop range(13); line extension and fill are size-agnostic and H,W could differ."
+      },
+      "objects": {
+       "disposition": "mixed",
+       "lines": [
+        31,
+        36,
+        37,
+        38
+       ],
+       "why": "Box sides >= 3 give a visible interior (rule-supported); <= 11 follows from the canvas."
+      },
+      "placement": {
+       "disposition": "incidental_restriction",
+       "lines": [
+        32,
+        35
+       ],
+       "why": "A one-cell margin is forced (brow >= 1, brow+height <= 12) and markers are always TL/BR (TR/BL only via augmentation); neither is needed by the rule."
+      },
+      "density_colours": {
+       "disposition": "intrinsic_or_rule_supported",
+       "lines": [
+        35,
+        38,
+        40
+       ],
+       "why": "Role colours 2 markers/lines and 1 fill on black."
+      },
+      "rule_parameters": {
+       "disposition": "intrinsic_or_rule_supported",
+       "lines": [
+        39,
+        40,
+        41
+       ],
+       "why": "Full-length lines through both box rows and columns, with lines over fill."
+      },
+      "demonstration_context": {
+       "disposition": "intrinsic_or_rule_supported",
+       "lines": [
+        35
+       ],
+       "why": "Box fully specified by the query markers; factory does not consult demonstrations."
+      }
+     },
+     "proposal": "Sample H,W independently (e.g. 3-30), box sides 3..H/W and any offset including the border; optionally sample TR/BL marker pairs natively. Recertify.",
+     "patch_priority": "medium",
+     "uncertainties": "Behaviour when the box touches the canvas border was not checked against the verifier.",
+     "certified_evidence": "current",
+     "release_ready": false
+    }
+   }
+  ],
+  "2685904e": [
+   {
+    "superseded_on": "2026-10-24",
+    "reason": "Constructor changed by native batch B (cf6f34b); this review's constructor_sha256 no longer matched, so extract.py reported it stale.",
+    "first_committed_in": "991db6cea36c686503d73965d2ec701ce9afbaec",
+    "archived_from_commit": "8395c38ba950e45e1e23e6b8d81c434e048d62bd",
+    "source_binding": {
+     "path": "tasks/task_2685904e.py",
+     "constructor_sha256": "791b606c4af8b9546fbe9e2b0a765790c802430cea4abf388c4e7c6936a97199",
+     "verified_at_commit": "5436f3fe035f261cdcf7996565c108148efa37fb",
+     "last_commit_with_this_source": "cf6f34b87730a2ba9ec5d7f9bf13d25126db8b7b^",
+     "replaced_by_commit": "cf6f34b87730a2ba9ec5d7f9bf13d25126db8b7b",
+     "replacement_constructor_sha256": "803b8e0c1ba6a922fa6606bd7b9cda8b6509e555bc48247a23ab2011467feb37"
+    },
+    "mechanical_record_at_review": {
+     "audit": {
+      "audit_matches_current_source": true,
+      "audit_source_sha256": "791b606c4af8b9546fbe9e2b0a765790c802430cea4abf388c4e7c6936a97199",
+      "configured": null,
+      "legacy_extension_available": false,
+      "native": {
+       "attempted": 128,
+       "colour_count": [
+        4,
+        8
+       ],
+       "components": [
+        6,
+        12
+       ],
+       "errors": 0,
+       "input_h": [
+        10,
+        10
+       ],
+       "input_shapes": 1,
+       "input_w": [
+        10,
+        10
+       ],
+       "nonmodal_fraction": [
+        0.20999999999999996,
+        0.25
+       ],
+       "output_h": [
+        10,
+        10
+       ],
+       "output_shapes": 1,
+       "output_w": [
+        10,
+        10
+       ],
+       "rect_rate": 0.0,
+       "requested": 128,
+       "sample_shortfall": false,
+       "seconds": 0.066,
+       "shape_relation": {
+        "same": 128
+       },
+       "unique_input_orbits": 127,
+       "unique_inputs": 128,
+       "valid": 128
+      }
+     },
+     "certified_evidence": {
+      "records": [
+       {
+        "constructor_sha256_matches": true,
+        "factory_sha256_matches": true,
+        "kind": "direct_factory",
+        "passed": true,
+        "path": "arc_agi2/direct_factories/2685904e.json"
+       }
+      ],
+      "state": "current"
+     },
+     "factory": {
+      "path": "arc_agi2/direct_factories/task_2685904e.py",
+      "references_demonstrations_beyond_signature": false,
+      "sha256": "4de00b5b012aef2473a584dfc1ca91b90233728a1c3998080d53a09522e7bbbe"
+     },
+     "fixture": {
+      "input_colours": [
+       0,
+       1,
+       2,
+       3,
+       4,
+       5,
+       6,
+       7,
+       8,
+       9
+      ],
+      "input_shapes": [
+       "10x10",
+       "10x10",
+       "10x10",
+       "10x10",
+       "10x10",
+       "10x10",
+       "10x10"
+      ],
+      "output_shapes": [
+       "10x10",
+       "10x10",
+       "10x10",
+       "10x10",
+       "10x10",
+       "10x10",
+       "10x10"
+      ],
+      "test": 1,
+      "train": 6
+     },
+     "generate": {
+      "body_lines": 33,
+      "constraint_lines_total": 6,
+      "constraints": [
+       {
+        "kind": [
+         "canvas"
+        ],
+        "line": 29,
+        "text": "grid, output = common.grids(10, 10)"
+       },
+       {
+        "kind": [
+         "retry"
+        ],
+        "line": 36,
+        "text": "if colors.count(color) != length: continue"
+       },
+       {
+        "kind": [
+         "draw"
+        ],
+        "line": 44,
+        "text": "length = common.randint(1, 5)"
+       },
+       {
+        "kind": [
+         "draw"
+        ],
+        "line": 45,
+        "text": "subset = common.sample([1, 2, 3, 4, 6, 7, 8, 9], common.randint(2, 5))"
+       },
+       {
+        "kind": [
+         "loop"
+        ],
+        "line": 46,
+        "text": "while True:"
+       },
+       {
+        "kind": [
+         "draw"
+        ],
+        "line": 47,
+        "text": "colors = common.choices(subset, 10)"
+       }
+      ],
+      "end_line": 52,
+      "kind_counts": {
+       "canvas": 1,
+       "draw": 3,
+       "loop": 1,
+       "retry": 1
+      },
+      "parameters": [
+       "length=None",
+       "colors=None"
+      ],
+      "start_line": 20
+     },
+     "priority": {
+      "audit_stale_at_ordering_commit": false,
+      "batch": 1,
+      "rank": 21,
+      "tier": "A_fixed_dims_ge8"
+     },
+     "release_ready": false,
+     "source": {
+      "lines": 68,
+      "path": "tasks/task_2685904e.py",
+      "sha256": "791b606c4af8b9546fbe9e2b0a765790c802430cea4abf388c4e7c6936a97199",
+      "uncommitted_change": false
+     },
+     "task_id": "2685904e",
+     "worklist": {
+      "native_repaired": false,
+      "pending_checks": [
+       "no_rearc_counterpart_review_native_domain"
+      ]
+     }
+    },
+    "review": {
+     "status": "reviewed",
+     "reviewer": "claude-opus-5-5 (hybrid-claude-native worktree)",
+     "reviewed_on": "2026-10-24",
+     "constructor_sha256": "791b606c4af8b9546fbe9e2b0a765790c802430cea4abf388c4e7c6936a97199",
+     "baseline_commit": "5436f3fe035f261cdcf7996565c108148efa37fb",
+     "mechanism": "10x10: an 8-bar of length L (1-5) on row 0, a grey line on row 6 and a colour row on row 8; columns whose colour occurs exactly L times in that row get a bar of height L above the grey line.",
+     "fixture_evidence": "7 canonical pairs, all 10x10; L values 1-4 appear.",
+     "axes": {
+      "dimensions": {
+       "disposition": "incidental_restriction",
+       "lines": [
+        29,
+        31,
+        34,
+        35,
+        39
+       ],
+       "why": "Canvas literal 10 and fixed rows 0/6/8 with bars at rows 5-r; the counting rule only needs room for an L-tall bar between row 0 and the grey row, and any row width."
+      },
+      "objects": {
+       "disposition": "mixed",
+       "lines": [
+        44
+       ],
+       "why": "L in 1-5 is bounded by the 5 rows between bar row and grey line (structural for a 10-high canvas) but a taller canvas would allow larger L."
+      },
+      "placement": {
+       "disposition": "mixed",
+       "lines": [
+        31,
+        34,
+        35
+       ],
+       "why": "Row positions 0, 6, 8 are fixed; the vertical layout order is the task convention, absolute rows are not."
+      },
+      "density_colours": {
+       "disposition": "broadly_variable",
+       "lines": [
+        45,
+        47
+       ],
+       "why": "2-5 colours from eight non-role colours with repetition give varied count profiles."
+      },
+      "rule_parameters": {
+       "disposition": "intrinsic_or_rule_supported",
+       "lines": [
+        36,
+        38,
+        39,
+        40
+       ],
+       "why": "Count equals L is the rule; at least one match required (40) so every pair shows output bars."
+      },
+      "demonstration_context": {
+       "disposition": "intrinsic_or_rule_supported",
+       "lines": [
+        31,
+        36
+       ],
+       "why": "L is visible in the query; factory does not consult demonstrations."
+      }
+     },
+     "proposal": "Sample W (colour-row length, e.g. 5-30) and H >= L+5, place the 8-bar/grey/colour rows relative to H, and let L range up to H-5 and the row width. Recertify.",
+     "patch_priority": "medium",
+     "uncertainties": "Whether the 8-bar length can exceed the colour-row width in the verifier, and whether row gaps (rows 7, 9) are required, was not checked.",
+     "certified_evidence": "current",
+     "release_ready": false
+    }
+   }
+  ],
+  "2a28add5": [
+   {
+    "superseded_on": "2026-10-24",
+    "reason": "Constructor changed by native batch B (cf6f34b); this review's constructor_sha256 no longer matched, so extract.py reported it stale.",
+    "first_committed_in": "991db6cea36c686503d73965d2ec701ce9afbaec",
+    "archived_from_commit": "8395c38ba950e45e1e23e6b8d81c434e048d62bd",
+    "source_binding": {
+     "path": "tasks/task_2a28add5.py",
+     "constructor_sha256": "76df60f513bf478a2cf14cae152c8f7635c92d8865acbd133932c248308b6015",
+     "verified_at_commit": "5436f3fe035f261cdcf7996565c108148efa37fb",
+     "last_commit_with_this_source": "cf6f34b87730a2ba9ec5d7f9bf13d25126db8b7b^",
+     "replaced_by_commit": "cf6f34b87730a2ba9ec5d7f9bf13d25126db8b7b",
+     "replacement_constructor_sha256": "612452c02ecbf7164bac75985e05c3fa9a6df22787288d5b54be796604110df1"
+    },
+    "mechanical_record_at_review": {
+     "audit": {
+      "audit_matches_current_source": true,
+      "audit_source_sha256": "76df60f513bf478a2cf14cae152c8f7635c92d8865acbd133932c248308b6015",
+      "configured": null,
+      "legacy_extension_available": false,
+      "native": {
+       "attempted": 128,
+       "colour_count": [
+        5,
+        10
+       ],
+       "components": [
+        24,
+        54
+       ],
+       "errors": 0,
+       "input_h": [
+        10,
+        10
+       ],
+       "input_shapes": 1,
+       "input_w": [
+        10,
+        10
+       ],
+       "nonmodal_fraction": [
+        0.26,
+        0.64
+       ],
+       "output_h": [
+        10,
+        10
+       ],
+       "output_shapes": 1,
+       "output_w": [
+        10,
+        10
+       ],
+       "rect_rate": 0.0,
+       "requested": 128,
+       "sample_shortfall": false,
+       "seconds": 0.079,
+       "shape_relation": {
+        "same": 128
+       },
+       "unique_input_orbits": 128,
+       "unique_inputs": 128,
+       "valid": 128
+      }
+     },
+     "certified_evidence": {
+      "records": [
+       {
+        "constructor_sha256_matches": true,
+        "factory_sha256_matches": true,
+        "kind": "direct_factory",
+        "passed": true,
+        "path": "arc_agi2/direct_factories/2a28add5.json"
+       }
+      ],
+      "state": "current"
+     },
+     "factory": {
+      "path": "arc_agi2/direct_factories/task_2a28add5.py",
+      "references_demonstrations_beyond_signature": false,
+      "sha256": "af195e315024ee30ffcc278e990f71407489a47dae60bbbe11120e423a469a29"
+     },
+     "fixture": {
+      "input_colours": [
+       0,
+       1,
+       2,
+       3,
+       4,
+       5,
+       6,
+       7,
+       8,
+       9
+      ],
+      "input_shapes": [
+       "10x10",
+       "10x10",
+       "10x10"
+      ],
+      "output_shapes": [
+       "10x10",
+       "10x10",
+       "10x10"
+      ],
+      "test": 1,
+      "train": 2
+     },
+     "generate": {
+      "body_lines": 38,
+      "constraint_lines_total": 9,
+      "constraints": [
+       {
+        "kind": [
+         "canvas"
+        ],
+        "line": 28,
+        "text": "grid, output = common.grids(10, 10, 7)"
+       },
+       {
+        "kind": [
+         "retry"
+        ],
+        "line": 33,
+        "text": "if grid[row][col] != 6: continue"
+       },
+       {
+        "kind": [
+         "draw"
+        ],
+        "line": 44,
+        "text": "subset = common.sample([0, 1, 2, 3, 4, 5, 8, 9], common.randint(3, 8))"
+       },
+       {
+        "kind": [
+         "canvas"
+        ],
+        "line": 45,
+        "text": "grid = common.grid(10, 10, 7)"
+       },
+       {
+        "kind": [
+         "draw"
+        ],
+        "line": 46,
+        "text": "freq = common.randint(1, 2)"
+       },
+       {
+        "kind": [
+         "draw",
+         "retry"
+        ],
+        "line": 49,
+        "text": "if common.randint(0, freq): continue"
+       },
+       {
+        "kind": [
+         "draw"
+        ],
+        "line": 50,
+        "text": "grid[row][col] = common.choice(subset)"
+       },
+       {
+        "kind": [
+         "draw",
+         "retry"
+        ],
+        "line": 52,
+        "text": "if common.randint(0, 1): continue"
+       },
+       {
+        "kind": [
+         "draw"
+        ],
+        "line": 53,
+        "text": "grid[row][common.randint(0, 9)] = 6"
+       }
+      ],
+      "end_line": 57,
+      "kind_counts": {
+       "canvas": 2,
+       "draw": 6,
+       "retry": 3
+      },
+      "parameters": [
+       "colors=None"
+      ],
+      "start_line": 20
+     },
+     "priority": {
+      "audit_stale_at_ordering_commit": false,
+      "batch": 1,
+      "rank": 23,
+      "tier": "A_fixed_dims_ge8"
+     },
+     "release_ready": false,
+     "source": {
+      "lines": 96,
+      "path": "tasks/task_2a28add5.py",
+      "sha256": "76df60f513bf478a2cf14cae152c8f7635c92d8865acbd133932c248308b6015",
+      "uncommitted_change": false
+     },
+     "task_id": "2a28add5",
+     "worklist": {
+      "native_repaired": false,
+      "pending_checks": [
+       "no_rearc_counterpart_review_native_domain"
+      ]
+     }
+    },
+    "review": {
+     "status": "reviewed",
+     "reviewer": "claude-opus-5-5 (hybrid-claude-native worktree)",
+     "reviewed_on": "2026-10-24",
+     "constructor_sha256": "76df60f513bf478a2cf14cae152c8f7635c92d8865acbd133932c248308b6015",
+     "baseline_commit": "5436f3fe035f261cdcf7996565c108148efa37fb",
+     "mechanism": "10x10 orange background with random coloured noise and at most one magenta pixel per row; output is all orange except, in each magenta row, an azure run whose extent left/right of the magenta equals the number of non-orange cells left/right of it.",
+     "fixture_evidence": "3 canonical pairs, all 10x10; pair 0 shows rows with 6 producing runs of the row's non-background count.",
+     "axes": {
+      "dimensions": {
+       "disposition": "incidental_restriction",
+       "lines": [
+        28,
+        31,
+        32,
+        37,
+        45,
+        47,
+        48,
+        53
+       ],
+       "why": "Canvas literal 10; the per-row count rule allows any H and W independently."
+      },
+      "objects": {
+       "disposition": "intrinsic_or_rule_supported",
+       "lines": [
+        51,
+        52,
+        53
+       ],
+       "why": "At most one magenta per row is needed so each row's run is uniquely defined."
+      },
+      "placement": {
+       "disposition": "broadly_variable",
+       "lines": [
+        49,
+        50,
+        53
+       ],
+       "why": "Noise and magenta positions are uniform over the canvas."
+      },
+      "density_colours": {
+       "disposition": "mixed",
+       "lines": [
+        44,
+        46,
+        49
+       ],
+       "why": "Noise density 1/2 or 1/3 and 3-8 colours excluding the 6/7 roles; reasonable but only two densities."
+      },
+      "rule_parameters": {
+       "disposition": "intrinsic_or_rule_supported",
+       "lines": [
+        36,
+        38,
+        39,
+        40
+       ],
+       "why": "Counts left/right of the magenta define the run; no hidden parameter."
+      },
+      "demonstration_context": {
+       "disposition": "intrinsic_or_rule_supported",
+       "lines": [
+        39,
+        40
+       ],
+       "why": "Determined by the query; factory does not consult demonstrations."
+      }
+     },
+     "proposal": "Sample H,W independently (e.g. 3-30) and a continuous noise density. Recertify.",
+     "patch_priority": "medium",
+     "uncertainties": "Rows with magenta but no other non-background cells produce a single-cell run; whether that case is in the verifier's tested domain was not checked.",
+     "certified_evidence": "current",
+     "release_ready": false
+    }
+   }
+  ],
+  "50c07299": [
+   {
+    "superseded_on": "2026-10-24",
+    "reason": "Constructor changed by native batch C (a5251a7); this review's constructor_sha256 no longer matched, so extract.py reported it stale.",
+    "first_committed_in": "6eaf44175edb1c8b9274815dbba4791d08984425",
+    "archived_from_commit": "8395c38ba950e45e1e23e6b8d81c434e048d62bd",
+    "source_binding": {
+     "path": "tasks/task_50c07299.py",
+     "constructor_sha256": "90b211c615ab300c4c99d0a30d9f341f004342393d6050cc8a5b97fae9109585",
+     "verified_at_commit": "f7353826fdd001ce808b911ad4bb984a404b99d0",
+     "last_commit_with_this_source": "a5251a710d67d8cd30eb5e0f5b55f27552490e04^",
+     "replaced_by_commit": "a5251a710d67d8cd30eb5e0f5b55f27552490e04",
+     "replacement_constructor_sha256": "72f9cb131f29d764d62a0a3f8c06fcd8078118c035607b5a71cfa7768b62ea41"
+    },
+    "mechanical_record_at_review": {
+     "audit": {
+      "audit_matches_current_source": true,
+      "audit_source_sha256": "90b211c615ab300c4c99d0a30d9f341f004342393d6050cc8a5b97fae9109585",
+      "configured": null,
+      "legacy_extension_available": false,
+      "native": {
+       "attempted": 128,
+       "colour_count": [
+        2,
+        2
+       ],
+       "components": [
+        1,
+        7
+       ],
+       "errors": 0,
+       "input_h": [
+        16,
+        16
+       ],
+       "input_shapes": 1,
+       "input_w": [
+        16,
+        16
+       ],
+       "nonmodal_fraction": [
+        0.00390625,
+        0.02734375
+       ],
+       "output_h": [
+        16,
+        16
+       ],
+       "output_shapes": 1,
+       "output_w": [
+        16,
+        16
+       ],
+       "rect_rate": 0.0,
+       "requested": 128,
+       "sample_shortfall": false,
+       "seconds": 0.091,
+       "shape_relation": {
+        "same": 128
+       },
+       "unique_input_orbits": 35,
+       "unique_inputs": 44,
+       "valid": 128
+      }
+     },
+     "certified_evidence": {
+      "records": [
+       {
+        "constructor_sha256_matches": true,
+        "factory_sha256_matches": true,
+        "kind": "direct_factory",
+        "passed": true,
+        "path": "arc_agi2/direct_factories/50c07299.json"
+       }
+      ],
+      "state": "current"
+     },
+     "factory": {
+      "path": "arc_agi2/direct_factories/task_50c07299.py",
+      "references_demonstrations_beyond_signature": false,
+      "sha256": "061d19f17c2a1dc57ab4cc55c5945d736f69adea7ae55fcf3bc890ecbc3b9283"
+     },
+     "fixture": {
+      "input_colours": [
+       2,
+       7
+      ],
+      "input_shapes": [
+       "16x16",
+       "16x16",
+       "16x16",
+       "16x16"
+      ],
+      "output_shapes": [
+       "16x16",
+       "16x16",
+       "16x16",
+       "16x16"
+      ],
+      "test": 1,
+      "train": 3
+     },
+     "generate": {
+      "body_lines": 18,
+      "constraint_lines_total": 3,
+      "constraints": [
+       {
+        "kind": [
+         "draw"
+        ],
+        "line": 29,
+        "text": "length = common.randint(1, 7)"
+       },
+       {
+        "kind": [
+         "draw"
+        ],
+        "line": 30,
+        "text": "row = common.randint(0, 15 - length * 2)"
+       },
+       {
+        "kind": [
+         "canvas"
+        ],
+        "line": 32,
+        "text": "grid, output = common.grids(16, 16, 7)"
+       }
+      ],
+      "end_line": 37,
+      "kind_counts": {
+       "canvas": 1,
+       "draw": 2
+      },
+      "parameters": [
+       "row=None",
+       "length=None"
+      ],
+      "start_line": 20
+     },
+     "priority": {
+      "audit_stale_at_ordering_commit": false,
+      "batch": 2,
+      "rank": 36,
+      "tier": "A_fixed_dims_ge8"
+     },
+     "release_ready": false,
+     "source": {
+      "lines": 50,
+      "path": "tasks/task_50c07299.py",
+      "sha256": "90b211c615ab300c4c99d0a30d9f341f004342393d6050cc8a5b97fae9109585",
+      "uncommitted_change": false
+     },
+     "task_id": "50c07299",
+     "worklist": {
+      "native_repaired": false,
+      "pending_checks": [
+       "no_rearc_counterpart_review_native_domain"
+      ]
+     }
+    },
+    "review": {
+     "status": "reviewed",
+     "reviewer": "claude-opus-5-5 (hybrid-claude-native worktree)",
+     "reviewed_on": "2026-10-24",
+     "review_batch": 2,
+     "constructor_sha256": "90b211c615ab300c4c99d0a30d9f341f004342393d6050cc8a5b97fae9109585",
+     "baseline_commit": "f7353826fdd001ce808b911ad4bb984a404b99d0",
+     "mechanism": "16x16 orange (7) canvas with a red (2) anti-diagonal segment of length L lying on r+c=15 starting at (15-row,row); output erases it and draws the next segment of length L+1 immediately up-right on the same anti-diagonal.",
+     "fixture_evidence": "4 canonical pairs, 16x16. The fixtures follow the triangular sequence: (L,row) = (2,1),(1,0),(3,3) train and (4,6) test, i.e. row = L(L-1)/2, so every canonical input is the L-th segment of a corner-anchored 1,2,3,... series. The native sampler draws row uniformly in 0..15-2L (line 30), which is broader than but consistent with the canonical examples.",
+     "axes": {
+      "dimensions": {
+       "disposition": "incidental_restriction",
+       "lines": [
+        30,
+        32,
+        34,
+        36
+       ],
+       "why": "16x16 literal canvas and the 15 used for the anti-diagonal; the continue-the-segment rule works on any canvas with room for 2L+1 diagonal cells."
+      },
+      "objects": {
+       "disposition": "mixed",
+       "lines": [
+        29,
+        33,
+        34
+       ],
+       "why": "One diagonal segment is the rule's object; L 1..7 is bounded by fitting L+(L+1) cells on a 16-cell diagonal (rule-supported given the canvas)."
+      },
+      "placement": {
+       "disposition": "mixed",
+       "lines": [
+        30,
+        34
+       ],
+       "why": "All segments sit on the main anti-diagonal r+c=15 (line 34). The fixtures do the same, so this is fixture-faithful; but the up-right continuation rule does not require the line to pass through the corner, so diagonal offset is an incidental restriction."
+      },
+      "density_colours": {
+       "disposition": "incidental_restriction",
+       "lines": [
+        32,
+        34,
+        36
+       ],
+       "why": "Background 7 and line 2 are literals; factory palette permutation is the only colour variation."
+      },
+      "rule_parameters": {
+       "disposition": "mixed",
+       "lines": [
+        30,
+        36
+       ],
+       "why": "Output length L+1 and adjacency are the rule. The fixtures also satisfy row = L(L-1)/2 (an alternative 'next term of the corner series' reading); the generator's uniform row (line 30) intentionally or not drops that coupling. Both readings give the same output for any input, so the label is not ambiguous."
+      },
+      "demonstration_context": {
+       "disposition": "intrinsic_or_rule_supported",
+       "lines": [
+        34,
+        36
+       ],
+       "why": "Deterministic per query; no demonstration-dependent choice; factory does not reference demonstrations."
+      }
+     },
+     "proposal": "Tiny finite domain: sum_{L=1..7}(16-2L) = 56 inputs (audit 44 unique / 35 orbits in 128). Sample H,W (e.g. 8-30), a diagonal offset k (line r+c=k or the main diagonal direction via D4 in the factory), L up to the room available, and the segment start along that line; keep the 'length+1, adjacent up-right' rule. Recertify.",
+     "patch_priority": "high",
+     "uncertainties": "Whether the original task intends the triangular corner-series position (fixtures are all triangular) is unknown; the proposed broadening keeps the generator's adjacent-continuation semantics, which agree with all fixtures.",
+     "certified_evidence": "current",
+     "release_ready": false
+    }
+   }
+  ],
+  "7e2bad24": [
+   {
+    "superseded_on": "2026-10-24",
+    "reason": "Constructor changed by native batch C (a5251a7); this review's constructor_sha256 no longer matched, so extract.py reported it stale.",
+    "first_committed_in": "6eaf44175edb1c8b9274815dbba4791d08984425",
+    "archived_from_commit": "8395c38ba950e45e1e23e6b8d81c434e048d62bd",
+    "source_binding": {
+     "path": "tasks/task_7e2bad24.py",
+     "constructor_sha256": "ef1dd4b8df2b8fecb704fdb4c862f62c42560c832daa4271fd247f03606ecad8",
+     "verified_at_commit": "f7353826fdd001ce808b911ad4bb984a404b99d0",
+     "last_commit_with_this_source": "a5251a710d67d8cd30eb5e0f5b55f27552490e04^",
+     "replaced_by_commit": "a5251a710d67d8cd30eb5e0f5b55f27552490e04",
+     "replacement_constructor_sha256": "9c4feecc11acb97c0af1666de85e10afcbf8a56c2defce193a26f09de93d0e6b"
+    },
+    "mechanical_record_at_review": {
+     "audit": {
+      "audit_matches_current_source": true,
+      "audit_source_sha256": "ef1dd4b8df2b8fecb704fdb4c862f62c42560c832daa4271fd247f03606ecad8",
+      "configured": null,
+      "legacy_extension_available": false,
+      "native": {
+       "attempted": 128,
+       "colour_count": [
+        4,
+        4
+       ],
+       "components": [
+        9,
+        13
+       ],
+       "errors": 0,
+       "input_h": [
+        16,
+        16
+       ],
+       "input_shapes": 1,
+       "input_w": [
+        16,
+        16
+       ],
+       "nonmodal_fraction": [
+        0.17578125,
+        0.34765625
+       ],
+       "output_h": [
+        16,
+        16
+       ],
+       "output_shapes": 1,
+       "output_w": [
+        16,
+        16
+       ],
+       "rect_rate": 0.0,
+       "requested": 128,
+       "sample_shortfall": false,
+       "seconds": 2.185,
+       "shape_relation": {
+        "same": 128
+       },
+       "unique_input_orbits": 128,
+       "unique_inputs": 128,
+       "valid": 128
+      }
+     },
+     "certified_evidence": {
+      "records": [
+       {
+        "constructor_sha256_matches": true,
+        "factory_sha256_matches": true,
+        "kind": "direct_factory",
+        "passed": true,
+        "path": "arc_agi2/direct_factories/7e2bad24.json"
+       }
+      ],
+      "state": "current"
+     },
+     "factory": {
+      "path": "arc_agi2/direct_factories/task_7e2bad24.py",
+      "references_demonstrations_beyond_signature": true,
+      "sha256": "122fe26edde63d5fab8f04cb4956922f68e68cdcb9ed9275598617925384e7a4"
+     },
+     "fixture": {
+      "input_colours": [
+       0,
+       1,
+       2,
+       3
+      ],
+      "input_shapes": [
+       "16x16",
+       "16x16",
+       "16x16",
+       "16x16",
+       "16x16"
+      ],
+      "output_shapes": [
+       "16x16",
+       "16x16",
+       "16x16",
+       "16x16",
+       "16x16"
+      ],
+      "test": 2,
+      "train": 3
+     },
+     "generate": {
+      "body_lines": 60,
+      "constraint_lines_total": 11,
+      "constraints": [
+       {
+        "kind": [
+         "canvas"
+        ],
+        "line": 38,
+        "text": "grid, output = common.grids(16, 16)"
+       },
+       {
+        "kind": [
+         "loop"
+        ],
+        "line": 46,
+        "text": "while c < 16 and r >= 0 and r < 16:"
+       },
+       {
+        "kind": [
+         "loop"
+        ],
+        "line": 62,
+        "text": "while True:"
+       },
+       {
+        "kind": [
+         "draw"
+        ],
+        "line": 65,
+        "text": "row = common.randint(0, 4)"
+       },
+       {
+        "kind": [
+         "loop"
+        ],
+        "line": 66,
+        "text": "while row < 16:"
+       },
+       {
+        "kind": [
+         "draw"
+        ],
+        "line": 68,
+        "text": "lengths.append(common.randint(4, 14))"
+       },
+       {
+        "kind": [
+         "draw"
+        ],
+        "line": 69,
+        "text": "cols.append(common.randint(1, 15 - lengths[-1]))"
+       },
+       {
+        "kind": [
+         "draw"
+        ],
+        "line": 71,
+        "text": "row += common.randint(3, 5)"
+       },
+       {
+        "kind": [
+         "draw"
+        ],
+        "line": 72,
+        "text": "if common.randint(0, 1): prow, pcol = 0, common.randint(0, 6)"
+       },
+       {
+        "kind": [
+         "draw"
+        ],
+        "line": 73,
+        "text": "else: prow, pcol = common.randint(0, 6), 0"
+       },
+       {
+        "kind": [
+         "draw"
+        ],
+        "line": 74,
+        "text": "shown = common.randint(3, 6)"
+       }
+      ],
+      "end_line": 79,
+      "kind_counts": {
+       "canvas": 1,
+       "draw": 7,
+       "loop": 3
+      },
+      "parameters": [
+       "rows=None",
+       "cols=None",
+       "lengths=None",
+       "colors=None",
+       "prow=None",
+       "pcol=None",
+       "shown=None",
+       "flip=None",
+       "flop=None",
+       "xpose=None"
+      ],
+      "start_line": 20
+     },
+     "priority": {
+      "audit_stale_at_ordering_commit": false,
+      "batch": 2,
+      "rank": 54,
+      "tier": "A_fixed_dims_ge8"
+     },
+     "release_ready": false,
+     "source": {
+      "lines": 100,
+      "path": "tasks/task_7e2bad24.py",
+      "sha256": "ef1dd4b8df2b8fecb704fdb4c862f62c42560c832daa4271fd247f03606ecad8",
+      "uncommitted_change": false
+     },
+     "task_id": "7e2bad24",
+     "worklist": {
+      "native_repaired": false,
+      "pending_checks": [
+       "no_rearc_counterpart_review_native_domain"
+      ]
+     }
+    },
+    "review": {
+     "status": "reviewed",
+     "reviewer": "claude-opus-5-5 (hybrid-claude-native worktree)",
+     "reviewed_on": "2026-10-24",
+     "review_batch": 2,
+     "constructor_sha256": "ef1dd4b8df2b8fecb704fdb4c862f62c42560c832daa4271fd247f03606ecad8",
+     "baseline_commit": "f7353826fdd001ce808b911ad4bb984a404b99d0",
+     "mechanism": "16x16: horizontal red (2, mirror) and green (3, glass) segments, and a partly shown blue (1) diagonal beam starting at the top or left edge; the output continues the beam diagonally rightward, reversing its vertical direction when the cell vertically ahead in the current column is red (line 53) and painting over green.",
+     "fixture_evidence": "5 canonical pairs, 16x16, using five different flip/flop/transpose settings (validate lines 85-95); within one episode walls are horizontal in some pairs and vertical in others. The random branch (lines 61-76) never assigns flip/flop/xpose, so they stay None: a local check of 200 native draws (probes/orientation_blockers.py) found walls horizontal in all 200, with the beam always starting on the top or left edge.",
+     "axes": {
+      "dimensions": {
+       "disposition": "incidental_restriction",
+       "lines": [
+        38,
+        46,
+        52
+       ],
+       "why": "16x16 literals; the bounce rule is size-independent."
+      },
+      "objects": {
+       "disposition": "mixed",
+       "lines": [
+        64,
+        68,
+        71
+       ],
+       "why": "Red and green parallel segments every 3-5 rows with lengths 4-14 are incidental; both roles are needed to show reflect-versus-pass (rule-supported)."
+      },
+      "placement": {
+       "disposition": "incidental_restriction",
+       "lines": [
+        56,
+        57,
+        58,
+        72,
+        73
+       ],
+       "why": "Orientation transforms exist (lines 56-58) but the native branch never sets them, so native episodes never mix orientations, unlike the fixtures. The beam start is limited to rows/cols 0-6 on the top/left edge."
+      },
+      "density_colours": {
+       "disposition": "incidental_restriction",
+       "lines": [
+        44,
+        48,
+        64
+       ],
+       "why": "Beam 1, mirror 2, glass 3 and background 0 are literals; the factory palette substitution is the only variation."
+      },
+      "rule_parameters": {
+       "disposition": "mixed",
+       "lines": [
+        53,
+        55
+       ],
+       "why": "Bounce is tested on the vertical neighbour only; the factory keeps four rival readings (side/either/target/target_axis) that differ only at mirror-end corner contacts. Line 55 requires >=13 steps and >=1 touch."
+      },
+      "demonstration_context": {
+       "disposition": "mixed",
+       "lines": [
+        53
+       ],
+       "why": "Factory analyse() filters the four endpoint readings by demonstrations and raises 'Unresolved mirror-end interpretation' when they disagree on the query; it also infers wall axis per grid because fixtures mix orientations within an episode. Native episodes cannot exercise per-pair orientation mixing."
+      }
+     },
+     "proposal": "In the random branch, sample flip/flop/xpose per pair (lines 61-76) so native episodes mix orientations as the fixtures do; then sample H,W (e.g. 12-24). Optionally reject mirror-end corner contacts so all four factory readings agree. Bound the while True at line 62. Recertify.",
+     "patch_priority": "high",
+     "uncertainties": "How often native draws hit the mirror-end ambiguity (the factory's Undetermined path) was not measured; whether the vertical-neighbour test equals the original task's reading is the open question the factory encodes.",
+     "certified_evidence": "current",
+     "release_ready": false
+    }
+   }
+  ],
+  "7e576d6e": [
+   {
+    "superseded_on": "2026-10-24",
+    "reason": "Constructor changed by native batch C (a5251a7); this review's constructor_sha256 no longer matched, so extract.py reported it stale.",
+    "first_committed_in": "6eaf44175edb1c8b9274815dbba4791d08984425",
+    "archived_from_commit": "8395c38ba950e45e1e23e6b8d81c434e048d62bd",
+    "source_binding": {
+     "path": "tasks/task_7e576d6e.py",
+     "constructor_sha256": "f0d7abe2c143ceadc6fc3b7c2ba0c8e48a45a345d139131d0d16a09627dfbd8a",
+     "verified_at_commit": "f7353826fdd001ce808b911ad4bb984a404b99d0",
+     "last_commit_with_this_source": "a5251a710d67d8cd30eb5e0f5b55f27552490e04^",
+     "replaced_by_commit": "a5251a710d67d8cd30eb5e0f5b55f27552490e04",
+     "replacement_constructor_sha256": "ecc2c19fec958ca35233dea93ebb951220318c52048fe8b646fccd4810692b26"
+    },
+    "mechanical_record_at_review": {
+     "audit": {
+      "audit_matches_current_source": true,
+      "audit_source_sha256": "f0d7abe2c143ceadc6fc3b7c2ba0c8e48a45a345d139131d0d16a09627dfbd8a",
+      "configured": null,
+      "legacy_extension_available": false,
+      "native": {
+       "attempted": 128,
+       "colour_count": [
+        4,
+        4
+       ],
+       "components": [
+        11,
+        14
+       ],
+       "errors": 0,
+       "input_h": [
+        30,
+        30
+       ],
+       "input_shapes": 1,
+       "input_w": [
+        30,
+        30
+       ],
+       "nonmodal_fraction": [
+        0.10222222222222221,
+        0.13555555555555554
+       ],
+       "output_h": [
+        30,
+        30
+       ],
+       "output_shapes": 1,
+       "output_w": [
+        30,
+        30
+       ],
+       "rect_rate": 0.0,
+       "requested": 128,
+       "sample_shortfall": false,
+       "seconds": 0.161,
+       "shape_relation": {
+        "same": 128
+       },
+       "unique_input_orbits": 128,
+       "unique_inputs": 128,
+       "valid": 128
+      }
+     },
+     "certified_evidence": {
+      "records": [
+       {
+        "constructor_sha256_matches": true,
+        "factory_sha256_matches": true,
+        "kind": "direct_factory",
+        "passed": true,
+        "path": "arc_agi2/direct_factories/7e576d6e.json"
+       }
+      ],
+      "state": "current"
+     },
+     "factory": {
+      "path": "arc_agi2/direct_factories/task_7e576d6e.py",
+      "references_demonstrations_beyond_signature": false,
+      "sha256": "b7e2c5c97a577acdd8a72ec39f4e51374c1ed862a499eccf55d55f8330ac7c65"
+     },
+     "fixture": {
+      "input_colours": [
+       1,
+       2,
+       3,
+       4,
+       6,
+       8,
+       9
+      ],
+      "input_shapes": [
+       "30x30",
+       "30x30",
+       "30x30",
+       "30x30"
+      ],
+      "output_shapes": [
+       "30x30",
+       "30x30",
+       "30x30",
+       "30x30"
+      ],
+      "test": 1,
+      "train": 3
+     },
+     "generate": {
+      "body_lines": 66,
+      "constraint_lines_total": 14,
+      "constraints": [
+       {
+        "kind": [
+         "canvas"
+        ],
+        "line": 36,
+        "text": "grid, output = common.grids(30, 30, colors[0])"
+       },
+       {
+        "kind": [
+         "loop"
+        ],
+        "line": 48,
+        "text": "while r + 1 < row:"
+       },
+       {
+        "kind": [
+         "loop"
+        ],
+        "line": 54,
+        "text": "while c != col:"
+       },
+       {
+        "kind": [
+         "loop"
+        ],
+        "line": 57,
+        "text": "while r < end_row:"
+       },
+       {
+        "kind": [
+         "loop"
+        ],
+        "line": 62,
+        "text": "while c != end_col:"
+       },
+       {
+        "kind": [
+         "draw"
+        ],
+        "line": 69,
+        "text": "colors = common.random_colors(4)"
+       },
+       {
+        "kind": [
+         "draw"
+        ],
+        "line": 70,
+        "text": "start_row, start_col = 1, common.randint(4, 25)"
+       },
+       {
+        "kind": [
+         "draw"
+        ],
+        "line": 71,
+        "text": "end_row, end_col = common.randint(25, 28), common.randint(4, 25)"
+       },
+       {
+        "kind": [
+         "loop"
+        ],
+        "line": 72,
+        "text": "while True:"
+       },
+       {
+        "kind": [
+         "loop"
+        ],
+        "line": 74,
+        "text": "while True:"
+       },
+       {
+        "kind": [
+         "draw"
+        ],
+        "line": 75,
+        "text": "row += common.randint(3, 8)"
+       },
+       {
+        "kind": [
+         "retry"
+        ],
+        "line": 78,
+        "text": "if len(rows) not in [3, 4]: continue"
+       },
+       {
+        "kind": [
+         "draw"
+        ],
+        "line": 79,
+        "text": "cols = common.sample(list(range(4, 25)), len(rows))"
+       },
+       {
+        "kind": [
+         "retry"
+        ],
+        "line": 80,
+        "text": "if start_col in cols or end_col in cols: continue  # Undefined."
+       }
+      ],
+      "end_line": 85,
+      "kind_counts": {
+       "canvas": 1,
+       "draw": 5,
+       "loop": 6,
+       "retry": 2
+      },
+      "parameters": [
+       "start_row=None",
+       "start_col=None",
+       "end_row=None",
+       "end_col=None",
+       "rows=None",
+       "cols=None",
+       "colors=None",
+       "xpose=None"
+      ],
+      "start_line": 20
+     },
+     "priority": {
+      "audit_stale_at_ordering_commit": false,
+      "batch": 2,
+      "rank": 55,
+      "tier": "A_fixed_dims_ge8"
+     },
+     "release_ready": false,
+     "source": {
+      "lines": 106,
+      "path": "tasks/task_7e576d6e.py",
+      "sha256": "f0d7abe2c143ceadc6fc3b7c2ba0c8e48a45a345d139131d0d16a09627dfbd8a",
+      "uncommitted_change": false
+     },
+     "task_id": "7e576d6e",
+     "worklist": {
+      "native_repaired": false,
+      "pending_checks": [
+       "no_rearc_counterpart_review_native_domain"
+      ]
+     }
+    },
+    "review": {
+     "status": "reviewed",
+     "reviewer": "claude-opus-5-5 (hybrid-claude-native worktree)",
+     "reviewed_on": "2026-10-24",
+     "review_batch": 2,
+     "constructor_sha256": "f0d7abe2c143ceadc6fc3b7c2ba0c8e48a45a345d139131d0d16a09627dfbd8a",
+     "baseline_commit": "f7353826fdd001ce808b911ad4bb984a404b99d0",
+     "mechanism": "30x30 background with 3-4 full-width horizontal lines (colour 1), each carrying a 3-cell marker (colour 2), and start/end pixels (colour 3); the output draws a path from the start down to just above each line, across to the marker column, through the marker, and finally to the end pixel. Horizontal directions must alternate (lines 52, 61).",
+     "fixture_evidence": "4 canonical pairs, 30x30; train pairs 0 and 1 are transposed (vertical lines) and pair 2 is not, so orientation varies within an episode. The random branch (lines 68-82) never sets xpose; a local check of 100 native draws (probes/orientation_blockers.py) found horizontal lines in all 100.",
+     "axes": {
+      "dimensions": {
+       "disposition": "incidental_restriction",
+       "lines": [
+        36,
+        38,
+        76
+       ],
+       "why": "30x30 literal and line-spacing bound 30; the path rule works on any canvas tall enough for the lines."
+      },
+      "objects": {
+       "disposition": "mixed",
+       "lines": [
+        75,
+        78
+       ],
+       "why": "3-4 lines spaced 3-8 rows apart are incidental counts; one start and one end pixel are rule objects."
+      },
+      "placement": {
+       "disposition": "mixed",
+       "lines": [
+        70,
+        71,
+        79,
+        80,
+        65
+       ],
+       "why": "Start always on row 1 and end on rows 25-28 (incidental). Marker columns must differ from start/end columns (line 80, rule-supported: otherwise the turn direction is undefined). Transpose is never sampled natively (line 65 unreachable from the random branch)."
+      },
+      "density_colours": {
+       "disposition": "intrinsic_or_rule_supported",
+       "lines": [
+        69
+       ],
+       "why": "Four distinct random colours for background, line, marker and path roles."
+      },
+      "rule_parameters": {
+       "disposition": "unknown",
+       "lines": [
+        52,
+        61
+       ],
+       "why": "Rejecting consecutive same-direction turns makes every native path zigzag, as all fixtures do; the path rule itself would be defined without it, so whether this is fidelity or an incidental filter is not established."
+      },
+      "demonstration_context": {
+       "disposition": "intrinsic_or_rule_supported",
+       "lines": [
+        47,
+        51,
+        57
+       ],
+       "why": "Deterministic per query; factory does not reference demonstrations. Within-episode orientation mixing exists only in the canonical fixtures, not in native draws."
+      }
+     },
+     "proposal": "Sample xpose (and flips) per pair in the random branch so native episodes match the fixtures' mixed orientation; allow the start/end rows to vary and sample H,W (e.g. 16-30). Keep or make optional the zigzag filter after verifier review. Recertify.",
+     "patch_priority": "high",
+     "uncertainties": "Whether the zigzag constraint is part of the original rule is unknown; the 100-draw orientation check is a heuristic (no column uniform) backed by the source reading.",
+     "certified_evidence": "current",
+     "release_ready": false
+    }
+   }
+  ],
+  "94414823": [
+   {
+    "superseded_on": "2026-10-24",
+    "reason": "Constructor changed by native batch C (a5251a7); this review's constructor_sha256 no longer matched, so extract.py reported it stale.",
+    "first_committed_in": "6eaf44175edb1c8b9274815dbba4791d08984425",
+    "archived_from_commit": "8395c38ba950e45e1e23e6b8d81c434e048d62bd",
+    "source_binding": {
+     "path": "tasks/task_94414823.py",
+     "constructor_sha256": "d4c881e833258ea3a81fc6b578b97400675ba6c5803fbc977870383c197ec405",
+     "verified_at_commit": "f7353826fdd001ce808b911ad4bb984a404b99d0",
+     "last_commit_with_this_source": "a5251a710d67d8cd30eb5e0f5b55f27552490e04^",
+     "replaced_by_commit": "a5251a710d67d8cd30eb5e0f5b55f27552490e04",
+     "replacement_constructor_sha256": "3097acd02d02b6ae1e78be8ada029dd376d83130beca31a52faa84fb591ae7c7"
+    },
+    "mechanical_record_at_review": {
+     "audit": {
+      "audit_matches_current_source": true,
+      "audit_source_sha256": "d4c881e833258ea3a81fc6b578b97400675ba6c5803fbc977870383c197ec405",
+      "configured": null,
+      "legacy_extension_available": false,
+      "native": {
+       "attempted": 128,
+       "colour_count": [
+        4,
+        4
+       ],
+       "components": [
+        3,
+        3
+       ],
+       "errors": 0,
+       "input_h": [
+        10,
+        10
+       ],
+       "input_shapes": 1,
+       "input_w": [
+        10,
+        10
+       ],
+       "nonmodal_fraction": [
+        0.21999999999999997,
+        0.21999999999999997
+       ],
+       "output_h": [
+        10,
+        10
+       ],
+       "output_shapes": 1,
+       "output_w": [
+        10,
+        10
+       ],
+       "rect_rate": 0.0,
+       "requested": 128,
+       "sample_shortfall": false,
+       "seconds": 0.117,
+       "shape_relation": {
+        "same": 128
+       },
+       "unique_input_orbits": 1,
+       "unique_inputs": 99,
+       "valid": 128
+      }
+     },
+     "certified_evidence": {
+      "records": [
+       {
+        "constructor_sha256_matches": true,
+        "kind": "direct_certificate",
+        "passed": true,
+        "path": "arc_agi2/reports/direct-certificates/94414823.json"
+       }
+      ],
+      "state": "current"
+     },
+     "factory": null,
+     "fixture": {
+      "input_colours": [
+       0,
+       1,
+       2,
+       3,
+       4,
+       5,
+       6,
+       7,
+       8,
+       9
+      ],
+      "input_shapes": [
+       "10x10",
+       "10x10",
+       "10x10",
+       "10x10"
+      ],
+      "output_shapes": [
+       "10x10",
+       "10x10",
+       "10x10",
+       "10x10"
+      ],
+      "test": 1,
+      "train": 3
+     },
+     "generate": {
+      "body_lines": 30,
+      "constraint_lines_total": 3,
+      "constraints": [
+       {
+        "kind": [
+         "draw"
+        ],
+        "line": 30,
+        "text": "colors = common.random_colors(2, exclude=[5])"
+       },
+       {
+        "kind": [
+         "draw"
+        ],
+        "line": 31,
+        "text": "flip, xpose = common.randint(0, 1), common.randint(0, 1)"
+       },
+       {
+        "kind": [
+         "canvas"
+        ],
+        "line": 33,
+        "text": "grid, output = common.grids(10, 10)"
+       }
+      ],
+      "end_line": 49,
+      "kind_counts": {
+       "canvas": 1,
+       "draw": 2
+      },
+      "parameters": [
+       "colors=None",
+       "flip=None",
+       "xpose=None"
+      ],
+      "start_line": 20
+     },
+     "priority": {
+      "audit_stale_at_ordering_commit": false,
+      "batch": 2,
+      "rank": 61,
+      "tier": "A_fixed_dims_ge8"
+     },
+     "release_ready": false,
+     "source": {
+      "lines": 62,
+      "path": "tasks/task_94414823.py",
+      "sha256": "d4c881e833258ea3a81fc6b578b97400675ba6c5803fbc977870383c197ec405",
+      "uncommitted_change": false
+     },
+     "task_id": "94414823",
+     "worklist": {
+      "native_repaired": false,
+      "pending_checks": [
+       "no_rearc_counterpart_review_native_domain"
+      ]
+     }
+    },
+    "review": {
+     "status": "reviewed",
+     "reviewer": "claude-opus-5-5 (hybrid-claude-native worktree)",
+     "reviewed_on": "2026-10-24",
+     "review_batch": 2,
+     "constructor_sha256": "d4c881e833258ea3a81fc6b578b97400675ba6c5803fbc977870383c197ec405",
+     "baseline_commit": "f7353826fdd001ce808b911ad4bb984a404b99d0",
+     "mechanism": "Fixed 10x10 geometry: a grey (5) 6x6 hollow square at rows/cols 2-7 and two marker pixels at the outside corners (1,1) and (1,8); the output fills the 4x4 interior as 2x2 quadrants, with each marker's colour in its nearest quadrant and the diagonally opposite one. Orientation varies via flip and transpose.",
+     "fixture_evidence": "4 canonical pairs, all the same geometry under different flip/transpose and colours. The audit found 99 unique inputs and exactly 1 orbit in 128 draws: the native domain is one scene up to colour and symmetry.",
+     "axes": {
+      "dimensions": {
+       "disposition": "incidental_restriction",
+       "lines": [
+        33,
+        34
+       ],
+       "why": "10x10 canvas and the square at 2..7 are literals; the quadrant rule needs only a square of even interior."
+      },
+      "objects": {
+       "disposition": "incidental_restriction",
+       "lines": [
+        34,
+        35,
+        36,
+        37,
+        38
+       ],
+       "why": "Square size is fixed at 6 (interior 4, quadrants 2x2); any even interior >= 2 supports the same rule."
+      },
+      "placement": {
+       "disposition": "incidental_restriction",
+       "lines": [
+        39,
+        40,
+        45,
+        47
+       ],
+       "why": "Square position is fixed and markers sit at two adjacent outside corners; only flip and transpose move them."
+      },
+      "density_colours": {
+       "disposition": "mixed",
+       "lines": [
+        30
+       ],
+       "why": "Two distinct non-grey marker colours (rule-supported); grey frame and black background are literals."
+      },
+      "rule_parameters": {
+       "disposition": "intrinsic_or_rule_supported",
+       "lines": [
+        41,
+        42,
+        43,
+        44
+       ],
+       "why": "Nearest plus opposite quadrant per marker is the rule."
+      },
+      "demonstration_context": {
+       "disposition": "intrinsic_or_rule_supported",
+       "lines": [
+        41,
+        43
+       ],
+       "why": "Deterministic per query; there is no direct factory (the certified evidence is a direct-source certificate)."
+      }
+     },
+     "proposal": "Sample canvas H,W (e.g. 8-20), square side 2k+2 (k = 1..5) at any position with room for outside-corner markers, and the corner pair (any two adjacent corners). This replaces a domain of 56 colour pairs x 4 orientations = 224 inputs. Recertify.",
+     "patch_priority": "high",
+     "uncertainties": "Whether markers may sit on diagonal corners is not defined (the quadrant claims would conflict); the proposal keeps adjacent corners.",
+     "certified_evidence": "current",
+     "release_ready": false
+    }
+   }
+  ]
+ }
+}

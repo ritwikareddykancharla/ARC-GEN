@@ -18,6 +18,12 @@ Inputs (read only):
   * certificate records: arc_agi2/direct_factories/<id>.json,
     arc_agi2/reports/direct-certificates/<id>.json,
     arc_agi2/reports/diversity-v1/native-certificates/<id>.json
+  * review_history.json  (superseded reviews; each entry is checked against git:
+    verbatim review text at its commits, constructor hash at its source commits,
+    and the mechanical record it was written against)
+
+Every reviewed record must also bind to the constructor at its own
+baseline_commit, not only to the current file.
 
 Batch order is pinned to ORDERING_COMMIT so that later constructor edits do not
 reshuffle batches.  Tier A = audit-sampled input height and width both fixed and
@@ -224,6 +230,68 @@ def tier_key(rec, ordering_sha):
     return (1, 0 if fixed else (1 if one_fixed else 2), n["input_shapes"], rec["task_id"])
 
 
+def load_history():
+    p = HERE / "review_history.json"
+    return json.loads(p.read_text())["history"] if p.exists() else {}
+
+
+def git_blob(commit, path):
+    """Bytes of path at commit, or None if absent."""
+    r = subprocess.run(["git", "-C", str(ROOT), "show", f"{commit}:{path}"], capture_output=True)
+    return r.stdout if r.returncode == 0 else None
+
+
+def check_history(reviews, history, recs):
+    """Superseded reviews must be verbatim, source-bound and linked from a current rereview."""
+    errs = []
+    cur = {r["task_id"]: r["source"]["sha256"] for r in recs}
+    review_rel = rel(HERE / "semantic_reviews.json")
+    inventory_rel = rel(HERE / "inventory.jsonl")
+    for tid, entries in sorted(history.items()):
+        rv = reviews.get(tid)
+        if not entries or rv is None or "supersedes" not in rv:
+            errs.append(f"{tid}: history without a current superseding review")
+            continue
+        sup = rv["supersedes"]
+        idx = sup.get("history_index")
+        if not isinstance(idx, int) or not 0 <= idx < len(entries) or idx != len(entries) - 1:
+            errs.append(f"{tid}: supersedes.history_index does not point at the latest history entry")
+            continue
+        if entries[idx]["review"].get("constructor_sha256") != sup.get("constructor_sha256"):
+            errs.append(f"{tid}: supersedes.constructor_sha256 does not match the history entry")
+        for n, e in enumerate(entries):
+            old, sb = e["review"], e["source_binding"]
+            if old.get("status") != "reviewed" or old.get("constructor_sha256") == cur[tid]:
+                errs.append(f"{tid}: history[{n}] is not a superseded reviewed record")
+            if sb["constructor_sha256"] != old.get("constructor_sha256"):
+                errs.append(f"{tid}: history[{n}] source binding disagrees with its review")
+            for c in (sb["verified_at_commit"], sb["last_commit_with_this_source"]):
+                b = git_blob(c, sb["path"])
+                if b is None or sha(b) != sb["constructor_sha256"]:
+                    errs.append(f"{tid}: history[{n}] constructor hash not found at {c}")
+            b = git_blob(sb["replaced_by_commit"], sb["path"])
+            if b is None or sha(b) == sb["constructor_sha256"]:
+                errs.append(f"{tid}: history[{n}] replaced_by_commit does not change the constructor")
+            for c in (e["first_committed_in"], e["archived_from_commit"]):
+                b = git_blob(c, review_rel)
+                if b is None or json.loads(b)["reviews"].get(tid) != old:
+                    errs.append(f"{tid}: history[{n}] review is not verbatim at {c}")
+            b = git_blob(e["first_committed_in"], inventory_rel)
+            mech = None
+            for line in (b or b"").decode().splitlines():
+                r = json.loads(line)
+                if r["task_id"] == tid:
+                    r.pop("semantic_review", None)
+                    mech = r
+            if mech is None or mech != e.get("mechanical_record_at_review"):
+                errs.append(f"{tid}: history[{n}] mechanical record differs from {e['first_committed_in'][:7]}")
+    for tid, rv in reviews.items():
+        if ("supersedes" in rv or rv.get("review_kind") == "rereview_after_native_repair") \
+                and tid not in history:
+            errs.append(f"{tid}: rereview without preserved history")
+    return errs
+
+
 def build():
     wl = json.loads(WORKLIST.read_text())
     ids = sorted(f["task_id"] for f in wl["families"] if f["rearc_overlap"] is False)
@@ -234,6 +302,7 @@ def build():
     sys.path.insert(0, str(ROOT))
     from arc_agi2 import runtime
     reviews = json.loads((HERE / "semantic_reviews.json").read_text())["reviews"]
+    history = load_history()
     recs = []
     for tid in ids:
         path = ROOT / "tasks" / f"task_{tid}.py"
@@ -276,6 +345,8 @@ def build():
             if rv["constructor_sha256"] != r["source"]["sha256"]:
                 rv["status"] = "stale"
             r["semantic_review"] = rv
+        # Superseded reviews live in review_history.json; only their count is copied here.
+        r["semantic_review_history"] = len(history.get(r["task_id"], []))
     meta = {"baseline_commit": head, "ordering_commit": ordering,
             "audit_fork_commit": json.loads((AUDIT / "provenance.json").read_text())["fork_commit"],
             "worklist": str(WORKLIST), "audit_dir": str(AUDIT),
@@ -326,6 +397,24 @@ def check(meta, recs, ids):
         if sr.get("certified_evidence") not in EVIDENCE_STATES or \
                 sr["certified_evidence"] != r["certified_evidence"]["state"]:
             errs.append(f"{tid}: certified_evidence disagrees with mechanical state")
+        # Source binding: the reviewed constructor must be the one at the review's baseline.
+        b = git_blob(sr.get("baseline_commit", ""), r["source"]["path"])
+        if b is None or sha(b) != sr["constructor_sha256"]:
+            errs.append(f"{tid}: constructor_sha256 is not the source at baseline_commit")
+        if sr.get("review_kind") == "rereview_after_native_repair":
+            rd = sr.get("repair_delta", {})
+            if any(len(str(rd.get(k, ""))) < 4 for k in ("expanded", "retained", "unsolved")):
+                errs.append(f"{tid}: rereview repair_delta incomplete")
+            if sr.get("review_batch") != r["priority"]["batch"]:
+                errs.append(f"{tid}: rereview review_batch disagrees with inventory batch")
+            if git_blob(sr.get("repair_commit", ""), r["source"]["path"]) is None:
+                errs.append(f"{tid}: rereview repair_commit missing")
+            for ev in sr.get("evidence") or [None]:
+                p = str(ev).split(" (")[0]
+                if not ((HERE / p).exists() if p.startswith("probes/") else (ROOT / p).exists()):
+                    errs.append(f"{tid}: rereview evidence path missing: {ev}")
+    reviews = json.loads((HERE / "semantic_reviews.json").read_text())["reviews"]
+    errs += check_history(reviews, load_history(), recs)
     others = [r for r in recs if r["priority"]["batch"] not in REVIEWED_BATCHES]
     for r in others:
         if r["semantic_review"]["status"] != "pending":
@@ -354,6 +443,11 @@ def summarise(meta, recs):
         "reviewed_axis_dispositions": disp,
         "reviewed_patch_priority": dict(collections.Counter(r["semantic_review"]["patch_priority"] for r in rev)),
         "reviewed_batches": list(REVIEWED_BATCHES),
+        "rereviewed_ids": [r["task_id"] for r in rev
+                           if r["semantic_review"].get("review_kind") == "rereview_after_native_repair"],
+        "review_history_ids": [r["task_id"] for r in recs if r["semantic_review_history"]],
+        "stale_reviewed_constructors": [r["task_id"] for r in recs
+                                        if r["semantic_review"]["status"] == "stale"],
         "next_batch": batches.get(max(REVIEWED_BATCHES) + 1, []),
         "batches": {str(k): v for k, v in batches.items()},
     }

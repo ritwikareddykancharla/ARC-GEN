@@ -5,9 +5,15 @@ prepare/admission or release-readiness code was changed. `release_ready` is
 `false` for every record. A source review is not enough to set it, and neither
 is a smoke test.
 
-**Progress:** 128 of 729 families have hand-written semantic reviews (batches
-1–4). The other 601 are `pending`. Not all 729 families have been
-semantically reviewed.
+**Progress:** 128 of 729 families have current, hand-written semantic reviews
+(batches 1–4). None is stale. The other 601 are `pending`. Not all 729 families
+have been semantically reviewed.
+
+**Rereview (2026-10-24):** 11 of the 128 reviews went stale when native batches B
+and C changed their constructors. They were reviewed again against the
+current source, fixtures, factories, verifiers, certificates and repair
+measurements; see [Rereview of 11 repaired constructors](#rereview-of-11-repaired-constructors-native-batches-b-and-c).
+The superseded reviews are kept verbatim in `review_history.json`.
 
 ## Files
 
@@ -15,9 +21,10 @@ semantically reviewed.
 |---|---|
 | `extract.py` | Reproducible extraction, merge and validation (`--check` validates without writing) |
 | `inventory.jsonl` | One record per family (729), sorted by review rank |
-| `semantic_reviews.json` | Hand-written semantic reviews (batches 1–4, 128 families), each bound to a constructor sha256 |
-| `probes/` | Small read-only, seeded measurement scripts cited by batch-2, batch-3 and batch-4 reviews |
-| `summary.json` | Counts, ID lists, all batches, validation errors (currently none) |
+| `semantic_reviews.json` | Current hand-written semantic reviews (batches 1–4, 128 families), each bound to a constructor sha256 and to the source at its `baseline_commit` |
+| `review_history.json` | Superseded reviews (11 families), each kept verbatim with its constructor binding and the mechanical record it was written against |
+| `probes/` | Small read-only, seeded measurement scripts cited by the batch-2 to batch-4 reviews and the rereview (`rereview_batch_bc.py`) |
+| `summary.json` | Counts, ID lists, all batches, rereviewed and history IDs, validation errors (currently none) |
 
 ```bash
 PYTHONPATH=. .venv/bin/python arc_agi2/reports/diversity-v1/native-domain-review-20261024/extract.py
@@ -28,17 +35,44 @@ Running the script twice gives byte-identical `inventory.jsonl` and
 which batches must be fully and currently reviewed. Validation fails if any
 other batch has a non-`pending` record.
 
+Validation also checks:
+- every reviewed record's `constructor_sha256` equals the constructor at its own
+  `baseline_commit`;
+- every `review_history.json` entry is byte-for-byte the review at the commit
+  where it was first written and at its archive commit;
+- the hash it records is the constructor at its review baseline and just
+  before the repair commit;
+- its mechanical record equals the inventory line at the review commit;
+- the current rereview's `supersedes` link points at it;
+- every rereview has a complete `repair_delta` and existing `evidence` paths.
+
+Negative tests of these checks (edited history text, dropped entry, wrong
+binding or baseline, missing field or evidence path) were run in scratch, and
+each one failed validation as intended.
+
 ## Provenance
 
-- **Baseline (worktree HEAD at extraction):** `5436f3fe035f261cdcf7996565c108148efa37fb`.
-  This commit includes the seven native repairs of `1ed7790`.
-- **Ordering commit (pinned):** the same sha. Batch membership uses constructor
+- **Current baseline (worktree HEAD at the rereview):**
+  `8395c38ba950e45e1e23e6b8d81c434e048d62bd`, the batch-4 review commit.
+  It sits on the integrated ARC-GEN baseline
+  `9c53b2c517da9b7fee67e8ecbb2e2d581a21a586`, which includes native batches B
+  (`cf6f34b`) and C (`a5251a7`), their supplement admission (`c75138a`,
+  `a534dfe`) and the `verified_rules.py` change of `485b4ac`.
+- **Original extraction baseline:** `5436f3fe035f261cdcf7996565c108148efa37fb`.
+  This commit includes the seven native repairs of `1ed7790`. Batches 1–4
+  were first reviewed at `5436f3f`, `f735382`, `f1b8bb9` and `a59e28a`.
+- **Ordering commit (pinned):** `5436f3f`. Batch membership uses constructor
   hashes at this commit, so later edits do not reshuffle batches.
 - **Audit:** `output/generator-domain-audit-20261024`, fork `cdf50ed`,
-  128 samples per sampler. 713 of 729 audit records match the current
-  constructor hash. 16 are stale and must be remeasured. These are the seven
-  `1ed7790` repairs, plus `aaecdb9a`, `45bbe264`, `0934a4d8`, `00dbd492`,
-  `3a301edc`, `009d5c81`, `3194b014`, `09c534e7` and `ecb67b6d`.
+  128 samples per sampler.
+  - At the original extraction, 713 of 729 audit records matched the
+    constructor, and 16 were stale: the seven `1ed7790` repairs, plus
+    `aaecdb9a`, `45bbe264`, `0934a4d8`, `00dbd492`, `3a301edc`, `009d5c81`,
+    `3194b014`, `09c534e7` and `ecb67b6d`.
+  - Now 702 of 729 match. The 11 rereviewed families are also stale, because
+    the audit describes their pre-repair constructors. Their current domains
+    come from the repair reports and `probes/rereview_batch_bc.py`. All 27
+    must be remeasured.
 - **Selection:** `docs/hybrid-generator-review/family-worklist.json` with
   `rearc_overlap == false`. This gives exactly 729 IDs, and validation checks
   them against this list.
@@ -85,7 +119,145 @@ Batches of 32, in this order:
 
 There are 23 batches; the last has 25 families.
 
+## Rereview of 11 repaired constructors (native batches B and C)
+
+**Scope:** 7 batch-1 families changed by native batch B (`cf6f34b`):
+`03560426`, `0becf7df`, `0f63c0b9`, `14b8e18c`, `21f83797`, `2685904e` and
+`2a28add5`. 4 batch-2 families changed by native batch C (`a5251a7`):
+`50c07299`, `7e2bad24`, `7e576d6e` and `94414823`. Each old review's
+constructor hash equals the source just before its repair commit, and was
+unchanged from first commit (`991db6c` or `6eaf441`) to `8395c38`.
+
+**What was read, for each family:**
+- the whole current constructor, and its diff against the reviewed source;
+- every canonical train/test pair (`validate()` replays all of them exactly);
+- the factory, or for `94414823` the direct-source program;
+- the independent pair verifier;
+- every certificate record, with its dependency hashes;
+- `native-batch-b-domains.json` or `native-batch-c/README.md`, and
+  `test_native_batch_b.py` or `test_native_batch_c.py`. Both test files pass
+  at `8395c38` (63 tests).
+
+No factory changed after the earlier reviews:
+- `5f3a2b8`: `03560426`, `0becf7df`, `0f63c0b9` and `14b8e18c`;
+- `f103328`: `21f83797`, `2685904e` and `2a28add5`;
+- `a51474e`: `50c07299` and `7e576d6e`;
+- `ad3a6a9`: `7e2bad24`.
+
+Pair verifiers are the archived solvers, except for `7e2bad24`, which uses
+`verified_rules.native_side_beam`.
+
+**Code run:** `probes/rereview_batch_bc.py` (seed 0). It is read-only. Apart
+from its timing section, two runs gave byte-identical output.
+
+**What changed in the records:**
+- Every axis disposition, proposal, priority and uncertainty was rewritten from
+  the current source, with current line numbers.
+- New fields: `repair_delta`, `evidence`, `certificate_note`, `admission`,
+  `audit_note` and `supersedes`. `repair_delta` separates newly expanded axes,
+  retained rules and unsolved restrictions.
+- Nothing was refreshed by hash alone.
+
+### Per-family result
+
+| ID | Priority (old → new) | Newly expanded | Still restricted or open |
+|---|---|---|---|
+| `03560426` | high → low | Height 6..30, box-derived width ≤ 30, 3–8 boxes; exact fixed-width compositions | Height-1 boxes; box caps 5/8 do not scale, so tall canvases are mostly empty (median 29% of rows used vs 40–50% canonical) |
+| `0becf7df` | medium → low | Independent 7..30 canvas, stroke count scaled | One connected figure; figure density median 0.52 vs canonical 0.27–0.48 |
+| `0f63c0b9` | high → low | 9..30 × 7..30, 3–6 seeds, exact gap sampler; `size` defect fixed | 2 seeds excluded. Tie-break concern resolved: 918/1000 pairs tie, and only 9 of 18,292 simulated episodes leave it undemonstrated |
+| `14b8e18c` | high → low | 6..30 canvas, box count scaled, long sides 5..side-2; bounded loops; merged-diagonal mislabel removed | Short sides 1..4; nested squares rare (9/400). Feasibility resolved: median 1.5 ms per draw |
+| `21f83797` | medium → low | Independent 5..30 canvas; box sides 3..side-2 | One-cell margin and TL/BR markers only |
+| `2685904e` | medium → none | Width 4..30, height 6..30, free divider/data rows, L up to 15, 2–8 colours | None beyond fixture-faithful layout order |
+| `2a28add5` | medium → low | Independent 5..30 canvas; anchor and dominance guard | Two noise levels only (canonical train[1] at 0.18 is below 1000 native draws). Single-cell runs: 81/81 verifier agreement |
+| `50c07299` | high → medium | Independent 5..30 canvas, L up to 14; 31,304 exact inputs (was 56) | Segment always on the corner anti-diagonal; literal colours |
+| `7e2bad24` | high → medium | Per-pair flip/flop/xpose (152 h / 148 v); bounded loop; side-contact verifier | 16×16 canvas; endpoint convention learnt from demonstrations (102/300 sensitive pairs) |
+| `7e576d6e` | high → medium | Per-pair transpose (260 h / 240 v); bounded loop | 30×30 canvas; start row 1 and end rows 25–28; zigzag filter rejects 79% of layouts (still `unknown`) |
+| `94414823` | high → none | Canvas 5..30 × 6..30, even side 4..28, free position; 79,803,360 exact inputs (was 224) | Literal frame and background colours |
+
+Disposition counts for the 11 current rereviews:
+
+| Axis | incidental | mixed | intrinsic / rule-supported | broadly variable | unknown |
+|---|---|---|---|---|---|
+| dimensions | 2 | 0 | 0 | 9 | 0 |
+| objects | 0 | 6 | 4 | 1 | 0 |
+| placement | 1 | 8 | 1 | 1 | 0 |
+| density / colours | 2 | 3 | 5 | 1 | 0 |
+| rule parameters | 0 | 2 | 8 | 0 | 1 |
+| demonstration context | 0 | 1 | 10 | 0 | 0 |
+
+### Adequacy and admission
+
+- **Domain-adequate now, already admitted (source and measurement
+  evidence):**
+  - `2685904e` and `94414823` (`none`);
+  - `03560426`, `0becf7df`, `0f63c0b9`, `14b8e18c`, `21f83797` and `2a28add5`
+    (`low`, optional refinements only).
+
+  All eight are in `prepare.REPAIRED` (native batch B: `c75138a`; batch C:
+  `a534dfe`). They are supplement admissions, not RE-ARC `admission.json`
+  entries. None is a new admission candidate, and none is release-ready.
+- **Already admitted, with further constructor work proposed (`medium`):**
+  - `50c07299`: diagonal offset;
+  - `7e2bad24`: canvas size;
+  - `7e576d6e`: canvas size, start/end rows, zigzag review.
+- **No future admission candidates arise from this rereview:** all 11 are
+  already in `prepare.REPAIRED`.
+
+### Certificate evidence
+
+All 11 records are `current`: constructor and factory/program hashes match, and
+production lookup (`certified_factory_source` / `certified_source`) returns
+a source. The probe found two dependency hashes that `extract.py` does not bind,
+neither of which affects these families:
+
+- **`auditor_sha256 c7c525a7`** (10 `recertify` certificates): this is
+  `recertify.py` as of `cf79bbc`. The current file `1e194cb8` (`5fdfb65`) only
+  adds the `FINITE_DOMAINS` branch for families with fewer than 100 unique
+  inputs. None of these 10 is such a family.
+- **`7e2bad24` `pair_verifier_sha256 d0b43e04`:** this is `verified_rules.py`
+  before `485b4ac`. The current file `055138a0` only adds the `34b99a2b` checker.
+  `native_side_beam` is unchanged by diff, and `admission.json` pins the
+  current file.
+
+No certificate was rerun. A passed certificate is a finite audit (1000 fresh,
+8000 augmented, 16 fixture checks), not a proof or release readiness.
+
+**Other reviewed families:** two had their certificate JSON reissued after
+review: `981571dc` (`a534dfe`) and `dc2aa30b` (`8f7a9db`), each as a
+`recertify` 1000/8000/16 record for `prepare.REVIEWED_NATIVE`. Their
+constructor and factory hashes are unchanged, and their state is still
+`current`. Their reviews are byte-identical, and no metadata update was needed.
+The other 115 reviews, including the `782b5218` erratum, are byte-identical to
+`8395c38`.
+
+### Remaining gaps
+
+- **Stale audit:** the 128-sample domain audit is stale for all 11 and must be
+  rerun on the current constructors.
+- **No production export:** no unmodified `prepare` 200/20 export is recorded
+  for the batch-B or batch-C families. The batch-C 200/20 runs waived the
+  `verified_rules.py` pin.
+- **Thin validation support:** the canonical episodes are uniform-shape, so
+  production episodes need three demonstrations of the query's shape. The
+  nine canvas-expanded families spread 1000 draws over 388–526 shapes (batch-B
+  report and probe), with at most 10 draws on any one shape. Batch C measured only 23 (`50c07299`) and 24 (`94414823`)
+  validation query identities against 20 requested.
+- **Open semantics:**
+  - `7e576d6e`: whether the zigzag is part of the rule;
+  - `7e2bad24`: which endpoint reading is original;
+  - `50c07299`: whether the triangular series is intended;
+  - `03560426`: whether the row must reach the right edge.
+- **Sample statistics:** every density, tie and timing figure above is a
+  seeded sample from one local run, not an audit.
+
 ## Batch 1 semantic review (32 families)
+
+> **Historical record.** This section describes the batch-1 reviews as first
+> written at `5436f3f`, and its tables count those records. Seven of them
+> (`03560426`, `0becf7df`, `0f63c0b9`, `14b8e18c`, `21f83797`, `2685904e`,
+> `2a28add5`) are superseded by the rereview above; their original text is in
+> `review_history.json`. Current batch-1 counts are in `summary.json`. Current
+> batch-1 priorities: high 8, medium 14, low 9, none 1.
 
 For each family, the generator body, its helpers and `validate()` were read,
 alongside the canonical fixture grids and the audit record. Factory code was
@@ -107,9 +279,12 @@ about verifier behaviour is listed as an uncertainty.
 | demonstration context | 0 | 7 | 24 | 0 | 1 |
 
 **Patch priority:**
-- **High (11):** `03560426`, `0a1d4ef5`, `0b17323b`, `0f63c0b9`, `1478ab18`,
-  `14b8e18c`, `1b8318e3`, `1c02dbbe`, `332202d5`, `342ae2ed`, `42f14c03`.
-- **Medium (18).**
+- **High (11, as first written):** `03560426`, `0a1d4ef5`, `0b17323b`,
+  `0f63c0b9`, `1478ab18`, `14b8e18c`, `1b8318e3`, `1c02dbbe`, `332202d5`,
+  `342ae2ed`, `42f14c03`. `03560426`, `0f63c0b9` and `14b8e18c` are now `low`
+  after native batch B and the rereview.
+- **Medium (18, as first written).** `0becf7df`, `21f83797` and `2a28add5` are
+  now `low` and `2685904e` is `none`.
 - **Low (3):** `15113be4`, `319f2597`, `465b7d93`. Their configured
   parameter path already adds sizes.
 
@@ -128,10 +303,12 @@ tied to the canvas.
     "fixed 10×10" is an artefact. `num_pixels ≥ size` (line 86) is above the
     canonical 5–12 pixels, and it makes unique docking rarely satisfiable.
   - `342ae2ed`: 10 valid out of 12, with 2 timeouts.
-  - `14b8e18c`: 41 valid out of 43, with 2 timeouts.
+  - `14b8e18c`: 41 valid out of 43, with 2 timeouts. *Resolved by native
+    batch B (bounded loops; rereview probe median 1.5 ms per draw).*
   - `20fb2937` and `22806e14` used up the 16 s budget at 76 and 104 draws.
 
-  Fix feasibility first and re-audit before judging diversity.
+  For `1b8318e3`, `342ae2ed`, `20fb2937` and `22806e14`, fix feasibility
+  first and re-audit before judging diversity.
 - **Canonical fixtures outside the native domain:**
   - `1c02dbbe`: a 10×10 grey rectangle, where the native range is 11–13.
   - `332202d5`: a line at row 14, where native rows are 1–13.
@@ -142,9 +319,10 @@ tied to the canvas.
 - **Tiny finite domains:**
   - `0b17323b`: the whole native domain is 6 inputs (3 spacings × 2 starts).
   - `1478ab18`: the whole native domain is 220 scenes.
-- **Latent source defects (no patch applied):**
-  - `0f63c0b9`: it has a `size` parameter, but the canvas is a literal
-    `grids(15, 15)` (line 38).
+- **Latent source defects (no patch applied by this review):**
+  - `0f63c0b9`: it had a `size` parameter, but the canvas was a literal
+    `grids(15, 15)` (line 38 of the reviewed source). *Fixed in `cf6f34b`:
+    current lines 33–36 and 54.*
   - `0a1d4ef5`: the noise-patch check indexes the 30-wide canvas with the
     lattice width (line 68).
   - `319f2597`: the guard at line 45 counts blacked cells. It never ensures a
@@ -155,7 +333,8 @@ tied to the canvas.
   - Factories that pick rules from demonstrations: `1b8318e3` (docking rule)
     and `4852f2fa` (crop/axis hypotheses).
   - Conventions that only some pairs reveal:
-    - `0f63c0b9`: the odd-gap tie-break;
+    - `0f63c0b9`: the odd-gap tie-break. *Measured in the rereview: 918/1000
+      native pairs show it;*
     - `1d61978c`: the majority orientation versus a fixed mapping;
     - `22806e14`: both plus outcomes;
     - `332202d5`: equal-colour band merging;
@@ -164,6 +343,12 @@ tied to the canvas.
   Episode-level coverage of these was not measured.
 
 ## Batch 2 semantic review (32 families, ranks 33–64)
+
+> **Historical record.** This section describes the batch-2 reviews as first
+> written at `f735382`, and its tables count those records. Four of them
+> (`50c07299`, `7e2bad24`, `7e576d6e`, `94414823`) are superseded by the rereview
+> above; their original text is in `review_history.json`. Current batch-2
+> priorities: high 3, medium 26, low 2, none 1.
 
 **Scope:** tier A, all audit-current. Every constructor sha256 is unchanged
 from the ordering commit to the review baseline `f735382`. Every family has a
@@ -193,8 +378,10 @@ was rerun.
 | demonstration context | 0 | 6 | 26 | 0 | 0 |
 
 **Patch priority:**
-- **High (7):** `4f537728`, `50c07299`, `54db823b`, `7e2bad24`, `7e576d6e`,
-  `917bccba`, `94414823`.
+- **High (7, as first written):** `4f537728`, `50c07299`, `54db823b`,
+  `7e2bad24`, `7e576d6e`, `917bccba`, `94414823`. After native batch C and the
+  rereview, `50c07299`, `7e2bad24` and `7e576d6e` are `medium` and `94414823`
+  is `none`.
 - **Medium (23).** Includes `782b5218`, which was originally rated high; see
   the erratum below.
 - **Low (2):** `5b37cb25` and `981571dc`. Both already have wide variety
@@ -225,6 +412,8 @@ As in batch 1, a fixed literal canvas is the main incidental restriction:
     and 100/100 native draws.
   - For `7e2bad24`, the factory also keeps four rival mirror-end readings and
     picks between them using demonstrations.
+  - *Resolved by native batch C (`a5251a7`): both now sample orientation per
+    pair. The rereview probe measured 152 h / 148 v and 260 h / 240 v.*
 - **Bottom exits in `782b5218` are fixture-supported (corrected; see
   erratum).** Line 52 rejects lines that leave the top edge, but lines may
   leave through the bottom. Canonical `train[2]` (identical to
@@ -251,9 +440,10 @@ As in batch 1, a fixed literal canvas is the main incidental restriction:
   > generalisation and a bounded loop (medium).
 - **Tiny or single-geometry domains.**
   - `94414823`: one geometry. The domain is 56 colour pairs × 4 orientations;
-    the audit found 1 orbit.
+    the audit found 1 orbit. *Resolved by batch C: 79,803,360 inputs.*
   - `50c07299`: 56 inputs. Every segment lies on the main anti-diagonal.
     Every canonical example is also the L-th term of a corner-anchored series.
+    *Batch C widened this to 31,304 inputs; the corner anti-diagonal remains.*
   - `4f537728`: 800 inputs (35 orbits).
   - `917bccba`: about 424 geometries (51 orbits).
   - `95755ff2`: the diamond geometry is fixed.
@@ -281,13 +471,17 @@ As in batch 1, a fixed literal canvas is the main incidental restriction:
 ### Unknowns
 
 - `7e576d6e`, rule parameters: whether the zigzag filter (lines 52 and 61) is
-  part of the original rule.
+  part of the original rule. *Still open after the rereview; the filter rejects
+  79% of layouts that reach `draw()`.*
 - `692cd3b6`: whether the extra-bit rules for the 12 opening-direction
   combinations not in the fixtures are faithful.
 - `7c9b52a0`: why 3×3 and 5×5 windows are excluded.
 - Domain sizes for `4e469f39`, `917bccba` and `692cd3b6` are hand counts, not
   enumerations.
-- No proposed patch has been implemented or recertified.
+- When batch 2 was written, no proposed patch had been implemented or
+  recertified. Since then, native batch C implemented and recertified patches
+  for the four families above. Every other batch-2 proposal is still
+  unimplemented.
 
 ## Batch 3 semantic review (32 families, ranks 65–96)
 
@@ -413,16 +607,19 @@ The shared worklist was edited after `f735382`. The regenerated
 - the 7 already audit-stale families `137f0df0`, `31adaf00`, `84db8fc4`,
   `a406ac07`, `ce039d91`, `d282b262` and `f45f5ca7`.
 
-The 7 batch-1 families have different constructors in ARC-GEN than in this
-worktree. Their reviews are `current` here, but would be stale against
-ARC-GEN. They were left byte-for-byte unchanged. Re-review them once those
-constructors land in this tree.
+At the time, the 7 batch-1 families had different constructors in ARC-GEN
+than in this worktree, so their reviews were `current` here but would have
+been stale against ARC-GEN. They were left byte-for-byte unchanged.
 
 By the time of the `782b5218` correction commit, the worklist also flagged 4
 batch-2 families: `50c07299`, `7e2bad24`, `7e576d6e` and `94414823`. Their
-ARC-GEN constructors differ from this worktree, and their reviews are
-likewise unchanged. Only their mechanical `worklist` fields were regenerated.
-`782b5218` has the same constructor in both places.
+ARC-GEN constructors differed from this worktree, and their reviews were
+likewise left unchanged. Only their mechanical `worklist` fields were
+regenerated. `782b5218` has the same constructor in both places.
+
+*Resolved:* those constructors landed with the integrated baseline `9c53b2c`,
+and all 11 were rereviewed (see the rereview section). The superseded texts are
+in `review_history.json`.
 
 ## Batch 4 semantic review (32 families, ranks 97–128)
 
@@ -534,8 +731,9 @@ audit was rerun.
 
 ## Not covered
 
-- **No changes:** constructors, factories, fixtures and admission code are
-  untouched. No certificate was rerun.
+- **No changes:** constructors, factories, verifiers, fixtures, labels and
+  admission/prepare code are untouched by this review record, including the
+  rereview. No certificate or audit was rerun.
 - **Dispositions are judgements:** they rest on reading the source; fixtures
   are finite examples. "Intrinsic" means the cited line serves the rule.
   It does not mean the original task forbids alternatives.
@@ -545,7 +743,13 @@ audit was rerun.
   They are smaller than the 128-sample audit and use a different time limit.
   They do not replace re-auditing after a patch.
 - **Stale reviews:** if a constructor changes after review, `extract.py` marks
-  that review `stale`.
+  that review `stale`, and the batch fails validation until it is rereviewed.
+  A rereview moves the old record into `review_history.json` verbatim; it
+  does not just refresh the hash.
+- **Certificate dependencies:** `extract.py` binds certificates only by
+  constructor and factory hash, as production lookup does. Auditor, harness
+  and pair-verifier hashes are reported by `probes/rereview_batch_bc.py` for
+  the 11 rereviewed families only.
 
 ## Next batch (batch 5, ranks 129–160)
 
@@ -556,4 +760,6 @@ audit was rerun.
 
 All are tier B. Another lane owns implementation work for `195ba7dc`,
 `281123b4`, `31d5ba1a` and `34b99a2b`; check their constructor hashes before
-reviewing.
+reviewing. At `8395c38` their constructors were unchanged since `a15cbdb`.
+`34b99a2b` gained a pair verifier (`verified_rules.midpoint_xor_panels`,
+`485b4ac`).

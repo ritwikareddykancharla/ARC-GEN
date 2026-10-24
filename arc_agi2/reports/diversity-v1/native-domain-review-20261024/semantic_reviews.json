@@ -83,69 +83,103 @@
   },
   "03560426": {
    "status": "reviewed",
-   "reviewer": "claude-opus-5-5 (hybrid-claude-native worktree)",
+   "reviewer": "claude-opus-5-5 (hybrid-claude-native-review-current worktree)",
    "reviewed_on": "2026-10-24",
-   "constructor_sha256": "2e1e4c08b6868224dd5ab3a56c641773f011af3f56dd0ded9a1eed0d9fca6e65",
-   "baseline_commit": "5436f3fe035f261cdcf7996565c108148efa37fb",
-   "mechanism": "3-4 solid boxes (w 1-4, h 2-5, distinct colours) stand on the bottom row left to right with one-column gaps; the output re-stacks them as a top-left-anchored cascade where each next box's top-left cell sits on the previous box's bottom-right cell and overwrites it.",
-   "fixture_evidence": "4 canonical pairs, all 10x10 in and out; pair 0 boxes 888/77/222 span cols 0-9 (grid_col=11) and cascade shows 8877 overlap row, i.e. later box overwrites the shared corner.",
+   "review_batch": 1,
+   "review_kind": "rereview_after_native_repair",
+   "constructor_sha256": "230912e67d063d1f62f9258ff8b0911fbe092b13120a78f7d130f960af618dbe",
+   "baseline_commit": "8395c38ba950e45e1e23e6b8d81c434e048d62bd",
+   "integration_baseline_commit": "9c53b2c517da9b7fee67e8ecbb2e2d581a21a586",
+   "repair_commit": "cf6f34b87730a2ba9ec5d7f9bf13d25126db8b7b",
+   "supersedes": {
+    "constructor_sha256": "2e1e4c08b6868224dd5ab3a56c641773f011af3f56dd0ded9a1eed0d9fca6e65",
+    "baseline_commit": "5436f3fe035f261cdcf7996565c108148efa37fb",
+    "history_file": "review_history.json",
+    "history_index": 0
+   },
+   "mechanism": "3-8 solid boxes (widths 1-5, heights 2-8, distinct colours) stand on the bottom row from column 0 with one blank column between neighbours, the row ending at the right edge or one column before it; the output re-stacks them as a top-left cascade in which each next box's top-left cell overwrites the previous box's bottom-right cell. Canvas height is drawn 6..30; in the default sampler the width is the box span (+0 or +1), and a requested width is filled by exact compositions.",
+   "fixture_evidence": "4 canonical pairs (3 train, 1 test), all 10x10; validate() (lines 126-133) replays them exactly (probe bindings). Widths 1-4, heights 2-5, 3-4 boxes. Train rows end at column 9 (no trailing blank); test widths 1,2,1,2 end at column 8, so both end conventions of line 81 are canonical. Every canonical box is at least 2 tall. Canonical inputs use 40-50% of the rows.",
    "axes": {
     "dimensions": {
-     "disposition": "incidental_restriction",
+     "disposition": "broadly_variable",
      "lines": [
-      30,
-      35,
-      36,
-      42
+      93,
+      104,
+      108,
+      109,
+      117,
+      118
      ],
-     "why": "Canvas is common.grids(10, 10) and bounds 10/[10,11] are literals; the cascade and bottom-row layout only need sum(w)+n-1 <= W and sum(h)-(n-1) <= H, nothing in the rule references 10."
+     "why": "Height is drawn 6..30 (lines 93, 104) and the canvas follows the boxes: width = span + 0/1 (line 108) capped at 30 (line 109); explicit box lists keep the 10x10 default (117-118). Batch-B measurement (1000 draws) gives 388 shapes, H 6-30, W 6-30; probe gives 390 shapes, 698/1000 taller than wide. Width is coupled to the box row by design (line 81), not an incidental literal."
     },
     "objects": {
      "disposition": "mixed",
      "lines": [
-      47,
+      41,
       48,
-      49
+      49,
+      105,
+      106,
+      110,
+      111
      ],
-     "why": "Box count 3-4 and sizes w1-4/h2-5 are literals sized to a 10-wide row (incidental); solid rectangular boxes are rule-supported because the cascade overlap is defined by box corners. Height 1 is excluded without a visible rule reason."
+     "why": "Box count 3..min(8, H-1) (105, 41), widths 1..5 (106, 48) and heights 2..min(8, H-2, H-n+1) (110-111, 49) are wider than the old 3-4 / 1-4 / 2-5. Solid rectangles stay rule-supported. Still unexplained: height 1 boxes are never drawn, although width-1 boxes are canonical. The 5 and 8 caps do not grow with a 30-row canvas."
     },
     "placement": {
      "disposition": "mixed",
      "lines": [
-      37,
-      39,
-      42
+      74,
+      81,
+      108
      ],
-     "why": "Bottom alignment and left-to-right order define the cascade order (rule-supported); line 42 forces the row to end at col 8 or 9, i.e. the boxes must nearly fill the width, which is a generator choice not required by the rule."
+     "why": "Bottom alignment and left-to-right order define the cascade order (rule-supported, line 74). The row must still start at column 0 and end at W-1 or W-2 (line 81). Canonical pairs show both endings, so this is now kept as fixture-faithful, but no fixture shows it is required. Height is drawn independently of the box heights. Probe: input boxes use a median 29% of rows (10-90%: 22-43%), versus 40-50% canonically, so tall canvases are mostly empty above the row."
     },
     "density_colours": {
      "disposition": "intrinsic_or_rule_supported",
      "lines": [
-      50
+      96,
+      112
      ],
-     "why": "random_colors gives distinct box colours, which keeps the overwritten corner cell visible as a colour change; with equal neighbouring colours the overlap would still be well defined but harder to read, so distinctness is a reasonable rule-support choice. Density follows from box sizes."
+     "why": "common.random_colors(n) gives n distinct non-zero colours (up to 8 of 9), which keeps each overwritten corner visible as a colour change. Black background is the canonical background. Ink density follows box sizes; see placement for the empty-canvas drift."
     },
     "rule_parameters": {
      "disposition": "intrinsic_or_rule_supported",
      "lines": [
-      40,
-      41
+      75,
+      76,
+      77,
+      78
      ],
-     "why": "The only rule parameters are the fixed down-right cascade offsets (w-1, h-1) and overwrite order, which define the task."
+     "why": "The only rule parameters are the cascade offsets (output_col += w-1, output_row += h-1, lines 77-78) and later-box-overwrites order (line 75). They are unchanged and define the task."
     },
     "demonstration_context": {
      "disposition": "intrinsic_or_rule_supported",
      "lines": [
-      38,
-      40,
-      41
+      75,
+      77,
+      78
      ],
-     "why": "Output is a deterministic function of one input; the corner-overwrite convention is visible in any pair with >=2 boxes. Factory program does not consult demonstrations."
+     "why": "Output is a deterministic function of one input. The corner-overwrite convention is visible in any pair with at least two boxes, which is every pair (3+ boxes). The factory (direct_factories/task_03560426.py, unchanged since 5f3a2b8) does not read demonstrations and sorts components along the chain axis for any H, W."
     }
    },
-   "proposal": "Parameterise H,W (e.g. 5-30 each) and replace literals 10/[10,11] at lines 30, 35, 36, 42 with W/H; allow trailing empty columns and n boxes 2..k with w,h ranges scaled to W/H. Keep distinct colours and cascade semantics. Requires recertification.",
-   "patch_priority": "high",
-   "uncertainties": "Whether the original ARC intent requires the boxes to fill the row (line 42) is not established by 4 fixtures; allowing h=1 boxes changes cascade appearance (horizontal run) and should be checked against the verifier.",
+   "repair_delta": {
+    "expanded": "Canvas height 6..30 and box-derived width up to 30; 3-8 boxes, widths 1-5, heights 2-8; fixed-width requests built from exact compositions (lines 32-51, 90-98); bounded 1000-try rejection with RuntimeError (103, 115-116).",
+    "retained": "Cascade offsets and overwrite order (75-78); bottom-row layout starting at column 0 and ending at W-1 or W-2 (81); distinct colours (96, 112); legacy 10x10 for explicit boxes (117-118).",
+    "unsolved": "Height-1 boxes; box-size caps that do not scale with height; empty upper canvas on tall scenes; width cannot be drawn independently in the default sampler."
+   },
+   "proposal": "Low. The old high-priority canvas proposal is implemented (lines 93, 104-111). Optional, after a verifier check: allow height-1 boxes, and let the box-height cap grow with H (line 110), so tall canvases are not mostly empty. Any change needs recertification. Separately, rerun the 128-sample domain audit, which still describes the old 10x10 constructor.",
+   "patch_priority": "low",
+   "uncertainties": "Whether the original rule requires the row to reach the right edge (line 81) is not settled by 4 fixtures. Height-1 boxes would make horizontal runs that the factory and archived verifier have not been tested on. Certificate and batch-B boundary sweep (3000 draws, 0 verifier disagreements) are finite. No unmodified prepare 200/20 export of batch B is recorded.",
+   "evidence": [
+    "arc_agi2/reports/diversity-v1/native-batch-b-domains.json",
+    "arc_agi2/diversity/test_native_batch_b.py",
+    "arc_agi2/direct_factories/03560426.json",
+    "arc_agi2/reports/diversity-v1/native-certificates/03560426.json",
+    "probes/rereview_batch_bc.py"
+   ],
+   "certificate_note": "auditor_sha256 c7c525a7 is recertify.py as of cf79bbc; the current file (1e194cb8, 5fdfb65) only adds the FINITE_DOMAINS exhaustive branch, which runs only for families with fewer than 100 unique fresh inputs, so this family's fresh/augmented/fixture path is unchanged. Production lookup binds only constructor and factory/program hashes, and both match.",
+   "admission": "Admitted to the supplement via arc_agi2/diversity/prepare.py REPAIRED (native batch B, line 32; added in c75138a). Not in RE-ARC admission.json. release_ready stays false.",
+   "audit_note": "The 128-sample domain audit (fork cdf50ed) measured the superseded constructor and is stale; current-domain statistics come from the repair report and the probe.",
    "certified_evidence": "current",
    "release_ready": false
   },
@@ -434,76 +468,104 @@
   },
   "0becf7df": {
    "status": "reviewed",
-   "reviewer": "claude-opus-5-5 (hybrid-claude-native worktree)",
+   "reviewer": "claude-opus-5-5 (hybrid-claude-native-review-current worktree)",
    "reviewed_on": "2026-10-24",
-   "constructor_sha256": "d130195460ba0e6b72ae7f85a62bb4ad5f8c8b636f4aee4359c3402d3ee47f5c",
-   "baseline_commit": "5436f3fe035f261cdcf7996565c108148efa37fb",
-   "mechanism": "10x10 with a 2x2 legend [[a,b],[c,d]] in the top-left corner and one connected figure built from random strokes of legend colours; output swaps a<->b and c<->d inside the figure, legend unchanged.",
-   "fixture_evidence": "4 canonical pairs, all 10x10, legend at (0..1, 0..1) in every pair; each figure uses all four legend colours.",
+   "review_batch": 1,
+   "review_kind": "rereview_after_native_repair",
+   "constructor_sha256": "e1e2c0568baab8c110e2c4b9581b3e915b04b3b5adcb0db4c703fa341d40e057",
+   "baseline_commit": "8395c38ba950e45e1e23e6b8d81c434e048d62bd",
+   "integration_baseline_commit": "9c53b2c517da9b7fee67e8ecbb2e2d581a21a586",
+   "repair_commit": "cf6f34b87730a2ba9ec5d7f9bf13d25126db8b7b",
+   "supersedes": {
+    "constructor_sha256": "d130195460ba0e6b72ae7f85a62bb4ad5f8c8b636f4aee4359c3402d3ee47f5c",
+    "baseline_commit": "5436f3fe035f261cdcf7996565c108148efa37fb",
+    "history_file": "review_history.json",
+    "history_index": 0
+   },
+   "mechanism": "H x W canvas (each 7..30, independent) with a 2x2 legend [[a,b],[c,d]] in the top-left corner and one 4-connected figure of horizontal/vertical strokes in legend colours plus black, drawn in rows 1..H-2 and columns 2..W-3; the output swaps a<->b and c<->d inside the figure and keeps the legend.",
+   "fixture_evidence": "4 canonical pairs (3 train, 1 test), all 10x10, replayed exactly by validate() lines 106-149. The legend is at (0..1, 0..1) and every figure uses all four legend colours. Figure-region ink density (rows 1..H-2, cols 2..W-3) is 0.479, 0.438, 0.271 and 0.479 (probe).",
    "axes": {
     "dimensions": {
-     "disposition": "incidental_restriction",
+     "disposition": "broadly_variable",
      "lines": [
-      30,
-      35,
-      36,
-      41,
-      42,
-      59
+      45,
+      46,
+      47,
+      53
      ],
-     "why": "Canvas literal 10 and stroke ranges 0-7/1-6/0-5/1-8 are tied to 10; legend lookup is position-based in the corner and would work on any canvas >= ~5."
+     "why": "Width and height are drawn independently in 7..30 (45-47), and the stroke region is derived from them (line 53) instead of the old literal 10 and 0-7/1-6/0-5/1-8 ranges. Batch B: 462 shapes in 1000 draws, 972 rectangular. Probe: 323 shapes in 500, 244 taller / 235 wider."
     },
     "objects": {
      "disposition": "mixed",
      "lines": [
-      32,
-      36,
-      42,
-      52
+      55,
+      59,
+      60,
+      75,
+      77
      ],
-     "why": "Single connected figure from >=10 strokes is a generator style (incidental); requiring all five colours present (32) is rule-supported because every swap pair must be evidenced."
+     "why": "All five colours present (line 75) is rule-supported: both swap pairs must be evidenced. The stroke count now scales with region area (line 55), bounded at 10x target (line 60). Still unexplained: there is exactly one 4-connected figure (line 77), never several pieces."
     },
     "placement": {
      "disposition": "mixed",
      "lines": [
-      39,
-      45,
-      47,
-      53,
-      56
+      63,
+      65,
+      69,
+      71,
+      76,
+      80
      ],
-     "why": "Legend fixed at the top-left corner is the task convention (augmentation moves it); figure confined to cols 2-9 and kept off cells (0..2, 2) to separate it from the legend, which is rule-supporting."
+     "why": "The legend is fixed in the top-left corner (line 80), which is the task convention; D4 augmentation moves it. Strokes stay in rows 1..H-2 and columns 2..W-3 (63-73), scaled from the original margins, and line 76 keeps the gap next to the legend. The margins are fixture-faithful but the rule does not need them."
     },
     "density_colours": {
-     "disposition": "intrinsic_or_rule_supported",
+     "disposition": "mixed",
      "lines": [
-      28,
-      33
+      49,
+      54,
+      55,
+      61
      ],
-     "why": "Four distinct legend colours are necessary for two unambiguous swap pairs; figure colours drawn from legend plus black."
+     "why": "Four distinct legend colours (49) are needed for two unambiguous swaps (rule-supported). The stroke-count formula (54-55) aims at the canonical density, but the probe gives figure-region density median 0.52 (10-90%: 0.41-0.64; 0.51 when both sides >= 20), above all canonical values 0.27-0.48. That is an upward density drift."
     },
     "rule_parameters": {
      "disposition": "intrinsic_or_rule_supported",
      "lines": [
-      64,
-      65,
-      66,
-      67
+      92,
+      97,
+      98,
+      99,
+      100
      ],
-     "why": "The swap pairs are the legend rows; this is the rule."
+     "why": "Swap pairs are read from the legend rows (line 92: colors[0], [1], [width], [width+1]) and applied outside the legend (97-100). The old literal 10/11 offsets are now width-based. This is the rule."
     },
     "demonstration_context": {
      "disposition": "intrinsic_or_rule_supported",
      "lines": [
-      64,
-      66
+      92,
+      95
      ],
-     "why": "Pairing along legend rows (not columns) is a convention that demonstrations must disambiguate, and transpose augmentation flips it, so episodes must use one consistent D4 transform; the factory hardcodes it rather than reading demonstrations."
+     "why": "Pairing along legend rows rather than columns is a convention. Transpose augmentation flips it, so it is fixed per episode. The unchanged factory hard-codes the legend cell positions per D4 and does not read demonstrations. Every pair shows the convention because all four legend colours occur in the figure."
     }
    },
-   "proposal": "Parameterise H,W (e.g. 6-30) and scale stroke ranges and the figure region to the canvas; keep the corner legend and separation gap. Recertify.",
-   "patch_priority": "medium",
-   "uncertainties": "Whether figures that do not touch the legend gap or multiple disconnected figures are acceptable to the verifier was not inspected.",
+   "repair_delta": {
+    "expanded": "Independent 7..30 canvas; stroke region and stroke count scaled to the canvas; iterative connectivity check (20-32); bounded 200-try / 10x-target loops with RuntimeError (56, 60, 78-79).",
+    "retained": "Corner legend, swap along legend rows, all-colours-present and legend-gap guards (75-76), single connected figure (77).",
+    "unsolved": "Single-figure style; upward ink-density drift against the fixtures."
+   },
+   "proposal": "Low. The canvas proposal is implemented. Optional: calibrate the target at line 55 so figure density matches the canonical 0.27-0.48 range, and consider letting the figure be several components once the verifier's handling of them is checked. Recertify after any change; rerun the stale 128-sample audit.",
+   "patch_priority": "low",
+   "uncertainties": "Disconnected figures, and figures not touching the legend gap, remain unexplored against the verifier. The density statistic is a seeded sample (N=500), not an audit. Certificate, batch-B 1000-draw measurement and 3000-draw boundary sweep (0 disagreements) are finite evidence.",
+   "evidence": [
+    "arc_agi2/reports/diversity-v1/native-batch-b-domains.json",
+    "arc_agi2/diversity/test_native_batch_b.py",
+    "arc_agi2/direct_factories/0becf7df.json",
+    "arc_agi2/reports/diversity-v1/native-certificates/0becf7df.json",
+    "probes/rereview_batch_bc.py"
+   ],
+   "certificate_note": "auditor_sha256 c7c525a7 is recertify.py as of cf79bbc; the current file (1e194cb8, 5fdfb65) only adds the FINITE_DOMAINS exhaustive branch, which runs only for families with fewer than 100 unique fresh inputs, so this family's fresh/augmented/fixture path is unchanged. Production lookup binds only constructor and factory/program hashes, and both match.",
+   "admission": "Admitted to the supplement via arc_agi2/diversity/prepare.py REPAIRED (native batch B, line 32; added in c75138a). Not in RE-ARC admission.json. release_ready stays false.",
+   "audit_note": "The 128-sample domain audit (fork cdf50ed) measured the superseded constructor and is stale; current-domain statistics come from the repair report and the probe.",
    "certified_evidence": "current",
    "release_ready": false
   },
@@ -710,70 +772,99 @@
   },
   "0f63c0b9": {
    "status": "reviewed",
-   "reviewer": "claude-opus-5-5 (hybrid-claude-native worktree)",
+   "reviewer": "claude-opus-5-5 (hybrid-claude-native-review-current worktree)",
    "reviewed_on": "2026-10-24",
-   "constructor_sha256": "413699f1715314922fba70011e71d31260046443a48e19c2c6d1cd2c5cf313ab",
-   "baseline_commit": "5436f3fe035f261cdcf7996565c108148efa37fb",
-   "mechanism": "15x15 with 3-4 pixels in rows separated by >=2; output draws a full row line at each pixel row, colours the left/right borders by nearest pixel row (ties to the upper pixel), and the top/bottom border rows with the first/last colour.",
-   "fixture_evidence": "5 canonical pairs, all 15x15; pair 0 rows 3/7/12 show gap rows 4-5 coloured 2 and row 6 coloured 7, i.e. the odd-gap middle row goes to the upper pixel.",
+   "review_batch": 1,
+   "review_kind": "rereview_after_native_repair",
+   "constructor_sha256": "af3a801d16ee5d923ffdc0070a28865ba9d57ec5a7b752d7bea7e021aadd2f2b",
+   "baseline_commit": "8395c38ba950e45e1e23e6b8d81c434e048d62bd",
+   "integration_baseline_commit": "9c53b2c517da9b7fee67e8ecbb2e2d581a21a586",
+   "repair_commit": "cf6f34b87730a2ba9ec5d7f9bf13d25126db8b7b",
+   "supersedes": {
+    "constructor_sha256": "413699f1715314922fba70011e71d31260046443a48e19c2c6d1cd2c5cf313ab",
+    "baseline_commit": "5436f3fe035f261cdcf7996565c108148efa37fb",
+    "history_file": "review_history.json",
+    "history_index": 0
+   },
+   "mechanism": "H x W canvas (W 9..30, H 7..30) with 3-6 seed pixels in distinct rows at least 2 apart and distinct columns; the output draws a full row line through each seed, colours both side borders by nearest seed row with the odd-gap middle row going to the upper seed, and caps the top/bottom rows with the first/last seed colour.",
+   "fixture_evidence": "5 canonical pairs (4 train, 1 test), all 15x15, replayed exactly (validate lines 71-79). Pair 0 rows 3/7/12 colour row 5 with the upper colour 2. Every canonical pair has at least one tie gap (probe counts 1, 3, 1, 1, 1). Train[1] puts a seed in row 1, next to the top cap.",
    "axes": {
     "dimensions": {
-     "disposition": "incidental_restriction",
+     "disposition": "broadly_variable",
      "lines": [
-      20,
       33,
-      34,
-      38
+      36,
+      38,
+      39,
+      40,
+      54
      ],
-     "why": "A size parameter exists (20) and drives the loops, but the canvas is still grids(15, 15) at line 38, so size != 15 would be inconsistent; width and height are not independent. The rule (row lines + nearest-row borders) is size-agnostic."
+     "why": "The old latent defect is fixed: size now sets width = height (33-36), and the canvas is grids(width, height) (line 54) rather than a literal 15x15. Random W 9..30 and H 7..30 are independent (38-40). Batch B: 452 shapes in 1000; probe: 441 shapes, 406 taller / 550 wider."
     },
     "objects": {
-     "disposition": "incidental_restriction",
+     "disposition": "mixed",
      "lines": [
-      31
+      44,
+      45
      ],
-     "why": "3-4 pixels is a literal; 2 or more pixels with row gaps >1 keep the rule well defined."
+     "why": "Seed count is 3..min(6, (H-1)//2, W-6) (line 44): wider than the old 3-4 and bounded by room. Probe: 396/249/175/180 scenes with 3/4/5/6 seeds. Two-seed scenes keep the rule well defined but are still excluded by the literal 3. The cap 6 does not grow on a 30-row canvas."
     },
     "placement": {
      "disposition": "mixed",
      "lines": [
-      33,
-      34,
-      36
+      48,
+      49,
+      50
      ],
-     "why": "Row gaps >1 (36) are rule-supporting (each border segment exists); columns limited to 3..size-4 have no effect on the output and are incidental; rows exclude the outer rows."
+     "why": "Rows are an exact uniform sample of sorted rows with gaps of at least 2 (48-49). That replaces the old rejection loop and is rule-supporting: every border segment exists. Columns 3..W-4 (50) do not affect the output and are an incidental restriction."
     },
     "density_colours": {
      "disposition": "intrinsic_or_rule_supported",
      "lines": [
-      31,
-      42,
-      46
+      45,
+      56,
+      58
      ],
-     "why": "Distinct pixel colours are required so border segments are attributable."
+     "why": "Distinct seed colours (random_colors, line 45) make each border segment attributable to one seed. Black background and the seed-coloured lines (56-58) are role colours."
     },
     "rule_parameters": {
      "disposition": "intrinsic_or_rule_supported",
      "lines": [
-      43,
-      44,
-      48,
-      49
+      59,
+      60,
+      62,
+      64,
+      65
      ],
-     "why": "Nearest-row split with upper-wins tie and top/bottom border colours are the rule."
+     "why": "The nearest-row split with the upper seed winning ties (lb_row/ub_row, 59-60), side borders (62) and first/last caps (64-65) are the rule, unchanged except that 15 became width/height."
     },
     "demonstration_context": {
-     "disposition": "mixed",
+     "disposition": "intrinsic_or_rule_supported",
      "lines": [
-      43,
-      44
+      59,
+      60
      ],
-     "why": "The odd-gap tie-break (upper pixel wins) is only demonstrated when some pair has an odd gap; vertical-flip augmentation inverts it, so episodes need a consistent transform and should include an odd gap. Whether sampled episodes guarantee that was not checked."
+     "why": "The old concern was that the upper-wins tie-break might go undemonstrated. Probe: 918/1000 native pairs contain a tie gap. Of 18,292 simulated 3-demo episodes with a tied query, only 9 had no tied demonstration (independent draws, shape policy ignored). The factory hard-codes the preferred side per D4 and does not read demonstrations."
     }
    },
-   "proposal": "Use independent H,W (replace 15 at line 38 and use H for rows, W for columns), sample 2-k pixels with row gaps >=2 and columns from the full width. Consider an episode-level requirement that at least one demonstration has an odd gap. Recertify.",
-   "patch_priority": "high",
-   "uncertainties": "Episode assembly behaviour for the tie-break evidence is not inspected; the archived verifier's handling of other sizes is unverified.",
+   "repair_delta": {
+    "expanded": "Independent W 9..30 and H 7..30; 3-6 seeds; exact gap-preserving row sampling with no retries (48-49); size parameter defect fixed (33-36, 54).",
+    "retained": "Nearest-row border rule with upper-wins ties, caps, distinct colours, columns 3..W-4.",
+    "unsolved": "Two-seed scenes and more than 6 seeds; incidental column margin."
+   },
+   "proposal": "Low. Both old high-priority items are resolved: the canvas is generalised and the size defect is fixed (33-36, 54). The episode tie-break concern is resolved for the native domain by measurement. Optional: allow 2 seeds and scale the cap at line 44. Rerun the stale 128-sample audit.",
+   "patch_priority": "low",
+   "uncertainties": "The tie statistic ignores the production uniform-shape policy. Same-shape episodes draw from the same per-pair distribution, so the rate should be similar, but that is not measured. Archived-verifier agreement on other sizes rests on the finite certificate (1000 fresh, 8000 augmented) and the batch-B 3000-draw boundary sweep (0 disagreements).",
+   "evidence": [
+    "arc_agi2/reports/diversity-v1/native-batch-b-domains.json",
+    "arc_agi2/diversity/test_native_batch_b.py",
+    "arc_agi2/direct_factories/0f63c0b9.json",
+    "arc_agi2/reports/diversity-v1/native-certificates/0f63c0b9.json",
+    "probes/rereview_batch_bc.py"
+   ],
+   "certificate_note": "auditor_sha256 c7c525a7 is recertify.py as of cf79bbc; the current file (1e194cb8, 5fdfb65) only adds the FINITE_DOMAINS exhaustive branch, which runs only for families with fewer than 100 unique fresh inputs, so this family's fresh/augmented/fixture path is unchanged. Production lookup binds only constructor and factory/program hashes, and both match.",
+   "admission": "Admitted to the supplement via arc_agi2/diversity/prepare.py REPAIRED (native batch B, line 32; added in c75138a). Not in RE-ARC admission.json. release_ready stays false.",
+   "audit_note": "The 128-sample domain audit (fork cdf50ed) measured the superseded constructor and is stale; current-domain statistics come from the repair report and the probe.",
    "certified_evidence": "current",
    "release_ready": false
   },
@@ -1004,81 +1095,104 @@
   },
   "14b8e18c": {
    "status": "reviewed",
-   "reviewer": "claude-opus-5-5 (hybrid-claude-native worktree)",
+   "reviewer": "claude-opus-5-5 (hybrid-claude-native-review-current worktree)",
    "reviewed_on": "2026-10-24",
-   "constructor_sha256": "bd5ad202edd6904337b4999fb1064e8f9e24ed9768d89b9a0022305c0433ab1c",
-   "baseline_commit": "5436f3fe035f261cdcf7996565c108148efa37fb",
-   "mechanism": "10x10 orange background with 2-5 same-colour shapes: hollow rectangles, or diagonals when square; only hollow squares get eight red 'ear' pixels just outside their corners in the output. Non-square rectangles, diagonals and length-8 bars are distractors.",
-   "fixture_evidence": "4 canonical pairs, all 10x10; pair 0 has a 4x4 hollow square with ears plus 2x2 diagonals and a 4x2 rectangle without ears; pair 2 nests a 2x2 square inside an 8x8 square.",
+   "review_batch": 1,
+   "review_kind": "rereview_after_native_repair",
+   "constructor_sha256": "6b117ab876066d0b4701422c4506c0585360cc73f3a8a56875785f867ecc9505",
+   "baseline_commit": "8395c38ba950e45e1e23e6b8d81c434e048d62bd",
+   "integration_baseline_commit": "9c53b2c517da9b7fee67e8ecbb2e2d581a21a586",
+   "repair_commit": "cf6f34b87730a2ba9ec5d7f9bf13d25126db8b7b",
+   "supersedes": {
+    "constructor_sha256": "bd5ad202edd6904337b4999fb1064e8f9e24ed9768d89b9a0022305c0433ab1c",
+    "baseline_commit": "5436f3fe035f261cdcf7996565c108148efa37fb",
+    "history_file": "review_history.json",
+    "history_index": 0
+   },
+   "mechanism": "H x W orange (7) canvas (each 6..30) with 2..max(2, min(12, HW//20)) same-colour boxes: hollow rectangles or, when square, optional diagonals. Boxes are disjoint or strictly nested inside a hollow box. Only hollow squares get eight red (2) ear pixels just outside their corners; non-square rectangles, bars and diagonals are distractors, and every scene has at least one marked square.",
+   "fixture_evidence": "4 canonical pairs (3 train, 1 test), all 10x10, replayed exactly (validate lines 144-151). Pair 0: 4x4 hollow square with ears, two 2x2 anti-diagonals and a 4x2 rectangle without. Pair 2: an 8x8 frame holding a nested solid 2x2, both marked. Test: an 8x1 bar on the bottom row. All are reachable by the new sampler (long side 8 on a 10 canvas, line 96).",
    "axes": {
     "dimensions": {
-     "disposition": "incidental_restriction",
+     "disposition": "broadly_variable",
      "lines": [
-      33,
-      79,
-      80,
-      81,
-      82
+      36,
+      99,
+      100,
+      101
      ],
-     "why": "Canvas literal 10 and the length-8 special case (79-80) are tied to 10; ears and square detection are size-agnostic."
+     "why": "Canvas 6..30 per side (99-101) replaces the literal 10, and the long side is now drawn 5..side-2 (line 96) instead of the literal 8. Batch B: 497 shapes in 1000, 971 rectangular; probe: 291 shapes in 400."
     },
     "objects": {
      "disposition": "mixed",
      "lines": [
-      74,
-      76,
-      77,
-      83
+      105,
+      110,
+      114,
+      115,
+      116,
+      119,
+      123
      ],
-     "why": "Distinguishing squares from non-squares and hollow from diagonal is the rule (rule-supported); 2-5 shapes and sides 1-4 (plus 8) are literals."
+     "why": "Rule-supported: telling squares from non-squares, and hollow boxes from diagonals (123). The box count scales with area (105, 110), and long sides or large squares are drawn up to side-2 (116-122). Short sides stay at literals 1..4 (114-115). Probe: 358/400 scenes have exactly one marked square, 38 have two and 4 have three; 9 squares hold nested content."
     },
     "placement": {
      "disposition": "intrinsic_or_rule_supported",
      "lines": [
-      48,
-      49,
-      50,
       51,
-      52,
-      68
+      55,
+      71,
+      76,
+      86,
+      90
      ],
-     "why": "A clear background ring around each shape and non-colliding, in-canvas ears are required for the ears to be unambiguous."
+     "why": "A clear background ring (51-55) and in-canvas, non-colliding ears (71) are needed for unambiguous ears. The new separate() (76-90) requires disjoint bounding boxes or strict nesting inside a hollow box. That removes the merged-diagonal mislabel batch B found in 1/1000 old draws (native-batch-b-domains.json notes)."
     },
     "density_colours": {
      "disposition": "intrinsic_or_rule_supported",
      "lines": [
-      74,
-      69
+      36,
+      72,
+      106
      ],
-     "why": "One shape colour excluding 2 and 7, and red ears, are role colours."
+     "why": "One shape colour excluding the role colours 2 and 7 (line 106), orange background (36) and red ears (72) are role colours, unchanged."
     },
     "rule_parameters": {
      "disposition": "intrinsic_or_rule_supported",
      "lines": [
-      56,
       59,
-      60,
-      61,
       62,
-      63,
-      64,
       65,
-      66
+      68,
+      69
      ],
-     "why": "The eight ear offsets are fixed by the rule."
+     "why": "The eight ear offsets (62-69) for hollow squares only (59) are fixed by the rule and unchanged."
     },
     "demonstration_context": {
      "disposition": "intrinsic_or_rule_supported",
      "lines": [
-      56,
-      70
+      73
      ],
-     "why": "At least one square per scene (70) means every pair demonstrates ears; the square-only criterion is learnt from contrasts across pairs. Factory does not consult demonstrations."
+     "why": "Every random scene has at least one marked square (line 73), so every pair shows ears. The square-only criterion is learnt from contrast with distractors. The unchanged factory marks every same-colour 4-connected component with a square bounding box of side >= 2, without reading demonstrations."
     }
    },
-   "proposal": "Parameterise H,W and replace the literal 8 with a 'long bar' length drawn relative to the canvas. Also move num_boxes and colour inside the rejection loop or bound it: the audit attempted only 43 draws (41 valid, 2 TimeoutErrors) in its time budget, so the sampled 41 unique inputs reflect slowness, not domain size. Recertify.",
-   "patch_priority": "high",
-   "uncertainties": "Acceptance rate of the rejection loop at 5 boxes was not measured; whether nested squares (pair 2) remain well handled on larger canvases is unverified.",
+   "repair_delta": {
+    "expanded": "6..30 canvases; box count scaled to area; long sides 5..side-2; incremental per-box placement with bounded 50/1000-try loops and RuntimeError (109-134).",
+    "retained": "Ear rule, safe ring, at-least-one-square guard, role colours, short sides 1..4.",
+    "unsolved": "Nested squares are rare (9/400 scenes); short-side literals; random scenes cannot overlap boxes (deliberately, to keep labels correct)."
+   },
+   "proposal": "Low. Both old high-priority findings are resolved. Canvas and long-bar literals are generalised (96, 99-105). The feasibility problem is gone: the old audit had 41/43 valid draws with 2 timeouts; now loops are bounded (109, 113, 133-134), the probe median is 1.5 ms (max 6.9 ms in 100 draws), and the certificate and batch-B 1000-draw measurement show no sampler errors. Optional: raise the nested-square rate. Rerun the stale 128-sample audit.",
+   "patch_priority": "low",
+   "uncertainties": "Small canvases rarely admit a markable square (source comment, line 107); acceptance by canvas size was not measured here. The explicit path still accepts overlapping boxes (the batch-B test shows the mislabel); only random scenes are protected. Timings are one local run.",
+   "evidence": [
+    "arc_agi2/reports/diversity-v1/native-batch-b-domains.json",
+    "arc_agi2/diversity/test_native_batch_b.py",
+    "arc_agi2/direct_factories/14b8e18c.json",
+    "arc_agi2/reports/diversity-v1/native-certificates/14b8e18c.json",
+    "probes/rereview_batch_bc.py"
+   ],
+   "certificate_note": "auditor_sha256 c7c525a7 is recertify.py as of cf79bbc; the current file (1e194cb8, 5fdfb65) only adds the FINITE_DOMAINS exhaustive branch, which runs only for families with fewer than 100 unique fresh inputs, so this family's fresh/augmented/fixture path is unchanged. Production lookup binds only constructor and factory/program hashes, and both match.",
+   "admission": "Admitted to the supplement via arc_agi2/diversity/prepare.py REPAIRED (native batch B, line 32; added in c75138a). Not in RE-ARC admission.json. release_ready stays false.",
+   "audit_note": "The 128-sample domain audit (fork cdf50ed) measured the superseded constructor and is stale; current-domain statistics come from the repair report and the probe.",
    "certified_evidence": "current",
    "release_ready": false
   },
@@ -1726,70 +1840,96 @@
   },
   "21f83797": {
    "status": "reviewed",
-   "reviewer": "claude-opus-5-5 (hybrid-claude-native worktree)",
+   "reviewer": "claude-opus-5-5 (hybrid-claude-native-review-current worktree)",
    "reviewed_on": "2026-10-24",
-   "constructor_sha256": "bc2081d029e34c2bd023e91a2d38895cd62bbdc0a99681d7f3704fc723575c78",
-   "baseline_commit": "5436f3fe035f261cdcf7996565c108148efa37fb",
-   "mechanism": "13x13 with two red pixels at the top-left and bottom-right corners of an implied box (3-11 per side); output fills the box with blue and draws full-length red lines along both box rows and both box columns.",
-   "fixture_evidence": "3 canonical pairs, all 13x13; boxes 9x5, 6x7, 6x10, always TL/BR marker pairs.",
+   "review_batch": 1,
+   "review_kind": "rereview_after_native_repair",
+   "constructor_sha256": "6b6ba6874f377675c2409c6afe048b74a34a4e60b0e75575f6448fd8246a2ccd",
+   "baseline_commit": "8395c38ba950e45e1e23e6b8d81c434e048d62bd",
+   "integration_baseline_commit": "9c53b2c517da9b7fee67e8ecbb2e2d581a21a586",
+   "repair_commit": "cf6f34b87730a2ba9ec5d7f9bf13d25126db8b7b",
+   "supersedes": {
+    "constructor_sha256": "bc2081d029e34c2bd023e91a2d38895cd62bbdc0a99681d7f3704fc723575c78",
+    "baseline_commit": "5436f3fe035f261cdcf7996565c108148efa37fb",
+    "history_file": "review_history.json",
+    "history_index": 0
+   },
+   "mechanism": "Canvas of independent width/height 5..30 with two red pixels at the top-left and bottom-right corners of an implied box (sides 3..side-2, one-cell margin); the output fills the box interior with blue and draws full-length red lines along both box rows and both box columns.",
+   "fixture_evidence": "3 canonical pairs (2 train, 1 test), all 13x13, replayed exactly (validate lines 61-67). Boxes are 9x5, 6x7 and 6x10 (width x height), always with TL/BR markers. The test box starts at row 1, so it reaches the margin limit.",
    "axes": {
     "dimensions": {
-     "disposition": "incidental_restriction",
+     "disposition": "broadly_variable",
      "lines": [
-      31,
-      32,
       34,
-      39
+      35,
+      36,
+      47
      ],
-     "why": "Canvas literal 13 and loop range(13); line extension and fill are size-agnostic and H,W could differ."
+     "why": "grid_width and grid_height are drawn independently in 5..30 (34-36), replacing the literal 13 canvas and loop. Batch B: 515 shapes in 1000, 998 unique, both sides reach 5 and 30. Lines are drawn along the full width (52) and height (54)."
     },
     "objects": {
-     "disposition": "mixed",
+     "disposition": "intrinsic_or_rule_supported",
      "lines": [
-      31,
-      36,
-      37,
-      38
+      40,
+      41
      ],
-     "why": "Box sides >= 3 give a visible interior (rule-supported); <= 11 follows from the canvas."
+     "why": "Box sides are 3..side-2 (40-41) and now scale with the canvas. Sides >= 3 keep a visible interior, which is rule-supported. The batch-B test reaches both a 3-cell side and the full-canvas side H-2."
     },
     "placement": {
      "disposition": "incidental_restriction",
      "lines": [
-      32,
-      35
+      42,
+      43,
+      48
      ],
-     "why": "A one-cell margin is forced (brow >= 1, brow+height <= 12) and markers are always TL/BR (TR/BL only via augmentation); neither is needed by the rule."
+     "why": "A one-cell margin is still forced (42-43: brow >= 1 and brow + height <= H-1). Markers are always TL/BR (48), and TR/BL only arise through D4 augmentation, which is uniform within an episode. The rule needs neither."
     },
     "density_colours": {
      "disposition": "intrinsic_or_rule_supported",
      "lines": [
-      35,
-      38,
-      40
+      48,
+      51,
+      53,
+      55
      ],
-     "why": "Role colours 2 markers/lines and 1 fill on black."
+     "why": "Role colours: red markers and lines (48, 53, 55), blue fill (51), black background. They are unchanged."
     },
     "rule_parameters": {
      "disposition": "intrinsic_or_rule_supported",
      "lines": [
-      39,
-      40,
-      41
+      52,
+      53,
+      54,
+      55
      ],
-     "why": "Full-length lines through both box rows and columns, with lines over fill."
+     "why": "Full-length lines through both box rows and columns, drawn over the fill (52-55), are the rule. They now span grid_width/grid_height separately."
     },
     "demonstration_context": {
      "disposition": "intrinsic_or_rule_supported",
      "lines": [
-      35
+      48
      ],
-     "why": "Box fully specified by the query markers; factory does not consult demonstrations."
+     "why": "The two query markers fully specify the box (48). The unchanged factory reads only the query and draws lines through every seed row and column."
     }
    },
-   "proposal": "Sample H,W independently (e.g. 3-30), box sides 3..H/W and any offset including the border; optionally sample TR/BL marker pairs natively. Recertify.",
-   "patch_priority": "medium",
-   "uncertainties": "Behaviour when the box touches the canvas border was not checked against the verifier.",
+   "repair_delta": {
+    "expanded": "Independent 5..30 canvas; box sides 3..side-2 scale with it (34-43).",
+    "retained": "One-cell margin; TL/BR marker diagonal; role colours and line/fill rule.",
+    "unsolved": "Border-touching boxes and native TR/BL marker pairs."
+   },
+   "proposal": "Low. The canvas proposal is implemented. Optional, after verifier review: allow boxes touching the border (lines 42-43) and native TR/BL marker pairs. Rerun the stale 128-sample audit.",
+   "patch_priority": "low",
+   "uncertainties": "Behaviour when the box touches the canvas border is still untested. It is outside both the fixtures and the native domain. Certificate and the 3000-draw boundary sweep (0 disagreements) are finite. Certificate unique_base_inputs is 995/1000 because tiny canvases repeat.",
+   "evidence": [
+    "arc_agi2/reports/diversity-v1/native-batch-b-domains.json",
+    "arc_agi2/diversity/test_native_batch_b.py",
+    "arc_agi2/direct_factories/21f83797.json",
+    "arc_agi2/reports/diversity-v1/native-certificates/21f83797.json",
+    "probes/rereview_batch_bc.py"
+   ],
+   "certificate_note": "auditor_sha256 c7c525a7 is recertify.py as of cf79bbc; the current file (1e194cb8, 5fdfb65) only adds the FINITE_DOMAINS exhaustive branch, which runs only for families with fewer than 100 unique fresh inputs, so this family's fresh/augmented/fixture path is unchanged. Production lookup binds only constructor and factory/program hashes, and both match.",
+   "admission": "Admitted to the supplement via arc_agi2/diversity/prepare.py REPAIRED (native batch B, line 32; added in c75138a). Not in RE-ARC admission.json. release_ready stays false.",
+   "audit_note": "The 128-sample domain audit (fork cdf50ed) measured the superseded constructor and is stale; current-domain statistics come from the repair report and the probe.",
    "certified_evidence": "current",
    "release_ready": false
   },
@@ -1938,70 +2078,95 @@
   },
   "2685904e": {
    "status": "reviewed",
-   "reviewer": "claude-opus-5-5 (hybrid-claude-native worktree)",
+   "reviewer": "claude-opus-5-5 (hybrid-claude-native-review-current worktree)",
    "reviewed_on": "2026-10-24",
-   "constructor_sha256": "791b606c4af8b9546fbe9e2b0a765790c802430cea4abf388c4e7c6936a97199",
-   "baseline_commit": "5436f3fe035f261cdcf7996565c108148efa37fb",
-   "mechanism": "10x10: an 8-bar of length L (1-5) on row 0, a grey line on row 6 and a colour row on row 8; columns whose colour occurs exactly L times in that row get a bar of height L above the grey line.",
-   "fixture_evidence": "7 canonical pairs, all 10x10; L values 1-4 appear.",
+   "review_batch": 1,
+   "review_kind": "rereview_after_native_repair",
+   "constructor_sha256": "803b8e0c1ba6a922fa6606bd7b9cda8b6509e555bc48247a23ab2011467feb37",
+   "baseline_commit": "8395c38ba950e45e1e23e6b8d81c434e048d62bd",
+   "integration_baseline_commit": "9c53b2c517da9b7fee67e8ecbb2e2d581a21a586",
+   "repair_commit": "cf6f34b87730a2ba9ec5d7f9bf13d25126db8b7b",
+   "supersedes": {
+    "constructor_sha256": "791b606c4af8b9546fbe9e2b0a765790c802430cea4abf388c4e7c6936a97199",
+    "baseline_commit": "5436f3fe035f261cdcf7996565c108148efa37fb",
+    "history_file": "review_history.json",
+    "history_index": 0
+   },
+   "mechanism": "W x H canvas (W 4..30 = data-row length, H 6..30): an 8-bar of length L from the top-left corner, a full grey divider row, and a full data row at least two rows below it. Columns whose colour occurs exactly L times in the data row get an L-tall bar rising from the divider; at least one column matches.",
+   "fixture_evidence": "7 canonical pairs (6 train, 1 test), all 10x10 with counter row 0, divider 6 and data row 8. validate() lines 79-89 replays them exactly. L values are 1-4. Train[4] uses colour 8 in the data row, the counter's colour, so the data palette including 8 is canonical.",
    "axes": {
     "dimensions": {
-     "disposition": "incidental_restriction",
+     "disposition": "broadly_variable",
      "lines": [
-      29,
-      31,
-      34,
-      35,
-      39
+      32,
+      33,
+      52,
+      53
      ],
-     "why": "Canvas literal 10 and fixed rows 0/6/8 with bars at rows 5-r; the counting rule only needs room for an L-tall bar between row 0 and the grey row, and any row width."
+     "why": "Width is the data-row length drawn 4..30 (52, 32), and height is drawn 6..30 (53), replacing the literal 10. Batch B: 526 shapes in 1000; probe: 525 shapes, 537 taller / 414 wider."
     },
     "objects": {
-     "disposition": "mixed",
+     "disposition": "intrinsic_or_rule_supported",
      "lines": [
-      44
+      60
      ],
-     "why": "L in 1-5 is bounded by the 5 rows between bar row and grey line (structural for a 10-high canvas) but a taller canvas would allow larger L."
+     "why": "L is drawn 1..min(divider-1, W-1) (line 60). Bars never reach the counter row, and the counter never spans the row (the source comment says a full counter would look like a divider). Probe: L reaches 15, with L >= 6 in 144/1000. The old cap of 5 is gone."
     },
     "placement": {
      "disposition": "mixed",
      "lines": [
-      31,
       34,
-      35
+      43,
+      57,
+      58
      ],
-     "why": "Row positions 0, 6, 8 are fixed; the vertical layout order is the task convention, absolute rows are not."
+     "why": "Kept as the task convention: counter at the top-left of row 0 (34), bars rising from the divider (43), and order counter / divider / data. Divider row 2..H-3 (57) and data row divider+2..H-1 (58) are now free. The blank row above the data is kept; a blank row below is not (data on the last row in 296/1000). Neither is shown to be necessary."
     },
     "density_colours": {
      "disposition": "broadly_variable",
      "lines": [
-      45,
-      47
+      61,
+      63
      ],
-     "why": "2-5 colours from eight non-role colours with repetition give varied count profiles."
+     "why": "2..8 data colours (up from 2..5) from eight non-grey colours, with repetition (61, 63). Probe: matching colours per scene are 1 (719), 2 (197), 3 (59) and 4-6 (25)."
     },
     "rule_parameters": {
      "disposition": "intrinsic_or_rule_supported",
      "lines": [
-      36,
-      38,
-      39,
-      40
+      40,
+      42,
+      43,
+      44
      ],
-     "why": "Count equals L is the rule; at least one match required (40) so every pair shows output bars."
+     "why": "The rule is 'count equals L' (40), with bars of height L (42-43). Line 44 requires at least one match, so every pair shows output bars."
     },
     "demonstration_context": {
      "disposition": "intrinsic_or_rule_supported",
      "lines": [
-      31,
-      36
+      34,
+      40
      ],
-     "why": "L is visible in the query; factory does not consult demonstrations."
+     "why": "L is visible in the query's counter (34). The unchanged factory reads only the query."
     }
    },
-   "proposal": "Sample W (colour-row length, e.g. 5-30) and H >= L+5, place the 8-bar/grey/colour rows relative to H, and let L range up to H-5 and the row width. Recertify.",
-   "patch_priority": "medium",
-   "uncertainties": "Whether the 8-bar length can exceed the colour-row width in the verifier, and whether row gaps (rows 7, 9) are required, was not checked.",
+   "repair_delta": {
+    "expanded": "Width 4..30, height 6..30, free divider and data rows, L up to divider-1 and W-1, 2..8 colours; bounded 100x20 tries with RuntimeError (51-68).",
+    "retained": "Counter/divider/data order, at least one blank row above the data row, count-equals-L rule, at-least-one-match guard.",
+    "unsolved": "None identified beyond fixture-faithful layout order."
+   },
+   "proposal": "None for diversity. The old proposal is implemented, and both old uncertainties are settled in source: the counter is shorter than the row (line 60), the gap above the data is required (58) and the gap below is optional. Only the stale 128-sample audit rerun and a production export remain.",
+   "patch_priority": "none",
+   "uncertainties": "Whether the original task requires a blank row between divider and data is not settled; the constructor keeps it as in all fixtures. Evidence is the finite certificate, the batch-B 1000-draw measurement and the height boundary sweep. Width extremes are only sampled, not swept separately (native-batch-b-domains.json boundary note).",
+   "evidence": [
+    "arc_agi2/reports/diversity-v1/native-batch-b-domains.json",
+    "arc_agi2/diversity/test_native_batch_b.py",
+    "arc_agi2/direct_factories/2685904e.json",
+    "arc_agi2/reports/diversity-v1/native-certificates/2685904e.json",
+    "probes/rereview_batch_bc.py"
+   ],
+   "certificate_note": "auditor_sha256 c7c525a7 is recertify.py as of cf79bbc; the current file (1e194cb8, 5fdfb65) only adds the FINITE_DOMAINS exhaustive branch, which runs only for families with fewer than 100 unique fresh inputs, so this family's fresh/augmented/fixture path is unchanged. Production lookup binds only constructor and factory/program hashes, and both match.",
+   "admission": "Admitted to the supplement via arc_agi2/diversity/prepare.py REPAIRED (native batch B, line 32; added in c75138a). Not in RE-ARC admission.json. release_ready stays false.",
+   "audit_note": "The 128-sample domain audit (fork cdf50ed) measured the superseded constructor and is stale; current-domain statistics come from the repair report and the probe.",
    "certified_evidence": "current",
    "release_ready": false
   },
@@ -2076,76 +2241,102 @@
   },
   "2a28add5": {
    "status": "reviewed",
-   "reviewer": "claude-opus-5-5 (hybrid-claude-native worktree)",
+   "reviewer": "claude-opus-5-5 (hybrid-claude-native-review-current worktree)",
    "reviewed_on": "2026-10-24",
-   "constructor_sha256": "76df60f513bf478a2cf14cae152c8f7635c92d8865acbd133932c248308b6015",
-   "baseline_commit": "5436f3fe035f261cdcf7996565c108148efa37fb",
-   "mechanism": "10x10 orange background with random coloured noise and at most one magenta pixel per row; output is all orange except, in each magenta row, an azure run whose extent left/right of the magenta equals the number of non-orange cells left/right of it.",
-   "fixture_evidence": "3 canonical pairs, all 10x10; pair 0 shows rows with 6 producing runs of the row's non-background count.",
+   "review_batch": 1,
+   "review_kind": "rereview_after_native_repair",
+   "constructor_sha256": "612452c02ecbf7164bac75985e05c3fa9a6df22787288d5b54be796604110df1",
+   "baseline_commit": "8395c38ba950e45e1e23e6b8d81c434e048d62bd",
+   "integration_baseline_commit": "9c53b2c517da9b7fee67e8ecbb2e2d581a21a586",
+   "repair_commit": "cf6f34b87730a2ba9ec5d7f9bf13d25126db8b7b",
+   "supersedes": {
+    "constructor_sha256": "76df60f513bf478a2cf14cae152c8f7635c92d8865acbd133932c248308b6015",
+    "baseline_commit": "5436f3fe035f261cdcf7996565c108148efa37fb",
+    "history_file": "review_history.json",
+    "history_index": 0
+   },
+   "mechanism": "Orange (7) canvas with independent width/height 5..30, random noise from 3-8 non-role colours at density about 1/2 or 1/3, and at most one magenta (6) pixel per row (at least one overall, with orange strictly dominant); in each magenta row the output's azure (8) run extends left/right of the magenta by the number of non-orange cells on that side; everything else becomes orange.",
+   "fixture_evidence": "3 canonical pairs (2 train, 1 test), all 10x10, replayed exactly (validate lines 80-113). Noise density excluding magenta is 0.36, 0.18 and 0.49 (probe). Noise includes 0 and 8, as allowed at line 50.",
    "axes": {
     "dimensions": {
-     "disposition": "incidental_restriction",
+     "disposition": "broadly_variable",
      "lines": [
-      28,
-      31,
-      32,
-      37,
-      45,
+      30,
+      46,
       47,
-      48,
-      53
+      48
      ],
-     "why": "Canvas literal 10; the per-row count rule allows any H and W independently."
+     "why": "Width and height are drawn independently in 5..30 (46-48), and draw() uses them (30, 33-39) instead of literal 10s. Batch B: 525 shapes in 1000; probe: 520 shapes, 483 taller / 478 wider."
     },
     "objects": {
      "disposition": "intrinsic_or_rule_supported",
      "lines": [
-      51,
-      52,
-      53
+      58,
+      59,
+      60,
+      64
      ],
-     "why": "At most one magenta per row is needed so each row's run is uniquely defined."
+     "why": "At most one magenta per row (58-60) keeps each row's run uniquely defined. The new guard (64) requires at least one magenta, so every pair has a run, and a dominant orange background."
     },
     "placement": {
      "disposition": "broadly_variable",
      "lines": [
-      49,
-      50,
-      53
+      56,
+      59,
+      60
      ],
-     "why": "Noise and magenta positions are uniform over the canvas."
+     "why": "Noise cells and the magenta columns are uniform over the canvas (56, 60). Each row independently has a magenta with probability 1/2 (59)."
     },
     "density_colours": {
      "disposition": "mixed",
      "lines": [
-      44,
-      46,
-      49
+      50,
+      51,
+      56,
+      64
      ],
-     "why": "Noise density 1/2 or 1/3 and 3-8 colours excluding the 6/7 roles; reasonable but only two densities."
+     "why": "Role colours 6 and 7 are excluded from the noise subset (50), which is rule-supported. Noise probability is still one of two levels, 1/2 or 1/3 (51, 56). Probe noise density is 0.21-0.63 (median 0.38). Canonical train[1] at 0.18 is below all 1000 native draws: reachable but rare."
     },
     "rule_parameters": {
      "disposition": "intrinsic_or_rule_supported",
      "lines": [
       36,
+      37,
       38,
       39,
-      40
+      40,
+      41,
+      42
      ],
-     "why": "Counts left/right of the magenta define the run; no hidden parameter."
+     "why": "The non-orange counts left and right of the magenta (36-40) set the run extent (41-42). There is no hidden parameter."
     },
     "demonstration_context": {
      "disposition": "intrinsic_or_rule_supported",
      "lines": [
-      39,
+      38,
       40
      ],
-     "why": "Determined by the query; factory does not consult demonstrations."
+     "why": "The query determines the output. The unchanged factory reads only the query."
     }
    },
-   "proposal": "Sample H,W independently (e.g. 3-30) and a continuous noise density. Recertify.",
-   "patch_priority": "medium",
-   "uncertainties": "Rows with magenta but no other non-background cells produce a single-cell run; whether that case is in the verifier's tested domain was not checked.",
+   "repair_delta": {
+    "expanded": "Independent 5..30 canvas; bounded 100-try anchor/dominance rejection (52-66).",
+    "retained": "Two-level noise probability, one magenta per row, role-colour exclusions, run rule.",
+    "unsolved": "Continuous noise density (sparse canonical train[1] is a tail case)."
+   },
+   "proposal": "Low. The canvas proposal is implemented. The remaining old item is a continuous noise probability in place of randint(1, 2) at line 51; it would cover sparse scenes like canonical train[1]. Recertify if changed, and rerun the stale 128-sample audit.",
+   "patch_priority": "low",
+   "uncertainties": "The old uncertainty about single-cell runs (a magenta row with no other ink) is settled finitely. Probe: 113 of 8,918 magenta rows, in 81 of 1000 pairs, and the archived verifier agrees on all 81. Density and agreement figures are a seeded sample, not a proof.",
+   "evidence": [
+    "arc_agi2/reports/diversity-v1/native-batch-b-domains.json",
+    "arc_agi2/diversity/test_native_batch_b.py",
+    "arc_agi2/direct_factories/2a28add5.json",
+    "arc_agi2/reports/diversity-v1/native-certificates/2a28add5.json",
+    "probes/rereview_batch_bc.py"
+   ],
+   "certificate_note": "auditor_sha256 c7c525a7 is recertify.py as of cf79bbc; the current file (1e194cb8, 5fdfb65) only adds the FINITE_DOMAINS exhaustive branch, which runs only for families with fewer than 100 unique fresh inputs, so this family's fresh/augmented/fixture path is unchanged. Production lookup binds only constructor and factory/program hashes, and both match.",
+   "admission": "Admitted to the supplement via arc_agi2/diversity/prepare.py REPAIRED (native batch B, line 32; added in c75138a). Not in RE-ARC admission.json. release_ready stays false.",
+   "audit_note": "The 128-sample domain audit (fork cdf50ed) measured the superseded constructor and is stale; current-domain statistics come from the repair report and the probe.",
    "certified_evidence": "current",
    "release_ready": false
   },
@@ -3075,70 +3266,94 @@
   },
   "50c07299": {
    "status": "reviewed",
-   "reviewer": "claude-opus-5-5 (hybrid-claude-native worktree)",
+   "reviewer": "claude-opus-5-5 (hybrid-claude-native-review-current worktree)",
    "reviewed_on": "2026-10-24",
    "review_batch": 2,
-   "constructor_sha256": "90b211c615ab300c4c99d0a30d9f341f004342393d6050cc8a5b97fae9109585",
-   "baseline_commit": "f7353826fdd001ce808b911ad4bb984a404b99d0",
-   "mechanism": "16x16 orange (7) canvas with a red (2) anti-diagonal segment of length L lying on r+c=15 starting at (15-row,row); output erases it and draws the next segment of length L+1 immediately up-right on the same anti-diagonal.",
-   "fixture_evidence": "4 canonical pairs, 16x16. The fixtures follow the triangular sequence: (L,row) = (2,1),(1,0),(3,3) train and (4,6) test, i.e. row = L(L-1)/2, so every canonical input is the L-th segment of a corner-anchored 1,2,3,... series. The native sampler draws row uniformly in 0..15-2L (line 30), which is broader than but consistent with the canonical examples.",
+   "review_kind": "rereview_after_native_repair",
+   "constructor_sha256": "72f9cb131f29d764d62a0a3f8c06fcd8078118c035607b5a71cfa7768b62ea41",
+   "baseline_commit": "8395c38ba950e45e1e23e6b8d81c434e048d62bd",
+   "integration_baseline_commit": "9c53b2c517da9b7fee67e8ecbb2e2d581a21a586",
+   "repair_commit": "a5251a710d67d8cd30eb5e0f5b55f27552490e04",
+   "supersedes": {
+    "constructor_sha256": "90b211c615ab300c4c99d0a30d9f341f004342393d6050cc8a5b97fae9109585",
+    "baseline_commit": "f7353826fdd001ce808b911ad4bb984a404b99d0",
+    "history_file": "review_history.json",
+    "history_index": 0
+   },
+   "mechanism": "Orange (7) canvas of independent height/width 5..30 with a red (2) segment of length L on the anti-diagonal through the bottom-left corner (r + c = H-1), its lower-left cell at offset row along that diagonal; the output erases it and draws the next segment of length L+1 immediately up-right on the same diagonal.",
+   "fixture_evidence": "4 canonical pairs (3 train, 1 test), all 16x16, replayed exactly (validate lines 59-66; an explicit row keeps the 16x16 default, lines 42-43). (L, row) = (2,1), (1,0), (3,3) and (4,6) follow row = L(L-1)/2, the corner-anchored triangular series. Every canonical segment lies on the corner anti-diagonal.",
    "axes": {
     "dimensions": {
-     "disposition": "incidental_restriction",
+     "disposition": "broadly_variable",
      "lines": [
-      30,
-      32,
       34,
-      36
+      35,
+      36,
+      49
      ],
-     "why": "16x16 literal canvas and the 15 used for the anti-diagonal; the continue-the-segment rule works on any canvas with room for 2L+1 diagonal cells."
+     "why": "Height and width are drawn independently in 5..30 (34-35). The diagonal length is c = min(H, W) (36), and the canvas is grids(width, height, 7) (49) instead of the literal 16. Probe: 506 shapes in 1000. Certificate: 942/1000 unique, up from 56 (batch-C README)."
     },
     "objects": {
-     "disposition": "mixed",
+     "disposition": "intrinsic_or_rule_supported",
      "lines": [
-      29,
-      33,
-      34
+      37,
+      39
      ],
-     "why": "One diagonal segment is the rule's object; L 1..7 is bounded by fitting L+(L+1) cells on a 16-cell diagonal (rule-supported given the canvas)."
+     "why": "One diagonal segment is the rule's object. L is drawn 1..(c-1)//2 (39) so that L + (L+1) cells fit (guard 37). Probe max L is 14. This bound is rule-supported, not a literal."
     },
     "placement": {
      "disposition": "mixed",
      "lines": [
-      30,
-      34
+      40,
+      51,
+      53
      ],
-     "why": "All segments sit on the main anti-diagonal r+c=15 (line 34). The fixtures do the same, so this is fixture-faithful; but the up-right continuation rule does not require the line to pass through the corner, so diagonal offset is an incidental restriction."
+     "why": "The offset along the diagonal is uniform, 0..c-1-2L (40), but the segment stays on the anti-diagonal through the bottom-left corner (51, 53). That matches every fixture, but the up-right continuation, and the factory's projection-based solver, would work on any parallel diagonal, so the offset limit is incidental. On non-square canvases the diagonal runs from the corner to an edge."
     },
     "density_colours": {
      "disposition": "incidental_restriction",
      "lines": [
-      32,
-      34,
-      36
+      49,
+      51,
+      53
      ],
-     "why": "Background 7 and line 2 are literals; factory palette permutation is the only colour variation."
+     "why": "Orange background and red segment are literals (49, 51, 53). The only colour variation is the factory/augmentation palette."
     },
     "rule_parameters": {
      "disposition": "mixed",
      "lines": [
-      30,
-      36
+      40,
+      53
      ],
-     "why": "Output length L+1 and adjacency are the rule. The fixtures also satisfy row = L(L-1)/2 (an alternative 'next term of the corner series' reading); the generator's uniform row (line 30) intentionally or not drops that coupling. Both readings give the same output for any input, so the label is not ambiguous."
+     "why": "Output length L+1 and adjacency (53) are the rule. Fixtures also fit 'next term of the corner-anchored series' (row = L(L-1)/2). The uniform row (40) drops that coupling. Both readings give the same output for any input, so labels are not ambiguous."
     },
     "demonstration_context": {
      "disposition": "intrinsic_or_rule_supported",
      "lines": [
-      34,
-      36
+      51,
+      53
      ],
-     "why": "Deterministic per query; no demonstration-dependent choice; factory does not reference demonstrations."
+     "why": "Deterministic per query. The unchanged factory (task_50c07299.py, a51474e) derives the direction from the D4 element and does not read demonstrations."
     }
    },
-   "proposal": "Tiny finite domain: sum_{L=1..7}(16-2L) = 56 inputs (audit 44 unique / 35 orbits in 128). Sample H,W (e.g. 8-30), a diagonal offset k (line r+c=k or the main diagonal direction via D4 in the factory), L up to the room available, and the segment start along that line; keep the 'length+1, adjacent up-right' rule. Recertify.",
-   "patch_priority": "high",
-   "uncertainties": "Whether the original task intends the triangular corner-series position (fixtures are all triangular) is unknown; the proposed broadening keeps the generator's adjacent-continuation semantics, which agree with all fixtures.",
+   "repair_delta": {
+    "expanded": "Independent 5..30 canvas, L up to 14, offset 0..c-1-2L. Exact default support is 31,304 inputs (probe enumeration of lines 34-40), up from 56.",
+    "retained": "Corner anti-diagonal, up-right continuation of length L+1, orange/red literals, legacy 16x16 for explicit row.",
+    "unsolved": "Diagonal offset away from the corner; literal colours."
+   },
+   "proposal": "Medium. The tiny finite domain (56 inputs) is resolved: 31,304 inputs, 942/1000 unique in the certificate. Still open from the old proposal: a diagonal offset k (line r + c = k). It is not in any fixture and could conflict with the triangular-series reading, so it needs a verifier review first. Production note: batch C measured only 23 validation query identities against 20 requested under the strict uniform-shape policy (at most 6 draws per shape in 1000). Rerun the stale 128-sample audit.",
+   "patch_priority": "medium",
+   "uncertainties": "Whether the original task intends the triangular corner-series position is unknown, and both readings agree on labels. The batch-C 200/20 measurement waived the verified_rules.py pin and is not production validation. No unmodified export is recorded.",
+   "evidence": [
+    "arc_agi2/reports/diversity-v1/native-batch-c/README.md",
+    "arc_agi2/diversity/test_native_batch_c.py",
+    "arc_agi2/direct_factories/50c07299.json",
+    "arc_agi2/reports/diversity-v1/native-certificates/50c07299.json",
+    "probes/rereview_batch_bc.py"
+   ],
+   "certificate_note": "auditor_sha256 c7c525a7 is recertify.py as of cf79bbc; the current file (1e194cb8, 5fdfb65) only adds the FINITE_DOMAINS exhaustive branch, which runs only for families with fewer than 100 unique fresh inputs, so this family's fresh/augmented/fixture path is unchanged. Production lookup binds only constructor and factory/program hashes, and both match.",
+   "admission": "Admitted to the supplement via arc_agi2/diversity/prepare.py REPAIRED (native batch C, line 34; added in a534dfe). Not in RE-ARC admission.json. release_ready stays false.",
+   "audit_note": "The 128-sample domain audit (fork cdf50ed) measured the superseded constructor and is stale; current-domain statistics come from the repair report and the probe.",
    "certified_evidence": "current",
    "release_ready": false
   },
@@ -4377,51 +4592,63 @@
   },
   "7e2bad24": {
    "status": "reviewed",
-   "reviewer": "claude-opus-5-5 (hybrid-claude-native worktree)",
+   "reviewer": "claude-opus-5-5 (hybrid-claude-native-review-current worktree)",
    "reviewed_on": "2026-10-24",
    "review_batch": 2,
-   "constructor_sha256": "ef1dd4b8df2b8fecb704fdb4c862f62c42560c832daa4271fd247f03606ecad8",
-   "baseline_commit": "f7353826fdd001ce808b911ad4bb984a404b99d0",
-   "mechanism": "16x16: horizontal red (2, mirror) and green (3, glass) segments, and a partly shown blue (1) diagonal beam starting at the top or left edge; the output continues the beam diagonally rightward, reversing its vertical direction when the cell vertically ahead in the current column is red (line 53) and painting over green.",
-   "fixture_evidence": "5 canonical pairs, 16x16, using five different flip/flop/transpose settings (validate lines 85-95); within one episode walls are horizontal in some pairs and vertical in others. The random branch (lines 61-76) never assigns flip/flop/xpose, so they stay None: a local check of 200 native draws (probes/orientation_blockers.py) found walls horizontal in all 200, with the beam always starting on the top or left edge.",
+   "review_kind": "rereview_after_native_repair",
+   "constructor_sha256": "9c4feecc11acb97c0af1666de85e10afcbf8a56c2defce193a26f09de93d0e6b",
+   "baseline_commit": "8395c38ba950e45e1e23e6b8d81c434e048d62bd",
+   "integration_baseline_commit": "9c53b2c517da9b7fee67e8ecbb2e2d581a21a586",
+   "repair_commit": "a5251a710d67d8cd30eb5e0f5b55f27552490e04",
+   "supersedes": {
+    "constructor_sha256": "ef1dd4b8df2b8fecb704fdb4c862f62c42560c832daa4271fd247f03606ecad8",
+    "baseline_commit": "f7353826fdd001ce808b911ad4bb984a404b99d0",
+    "history_file": "review_history.json",
+    "history_index": 0
+   },
+   "mechanism": "16x16: red (2, mirror) and green (3, glass) wall segments on parallel lines, and a partly shown blue (1) diagonal beam from the top or left edge; the output continues the beam, reversing its cross-wall direction when the cell across the wall axis is a mirror (side-contact reading, line 53) and painting over glass. Each random pair now draws its own flip/flop/transpose.",
+   "fixture_evidence": "5 canonical pairs (3 train, 2 test), all 16x16, replayed exactly (validate lines 93-108) with flip/flop/xpose (T,T,F), (T,F,T), (F,F,T), (F,F,T), (T,F,T). Walls are horizontal in train[0] and vertical in the other four pairs, so orientation is mixed within the episode.",
    "axes": {
     "dimensions": {
      "disposition": "incidental_restriction",
      "lines": [
       38,
       46,
-      52
+      52,
+      76
      ],
-     "why": "16x16 literals; the bounce rule is size-independent."
+     "why": "Still a fixed 16x16 canvas: grids(16, 16) (38), the loop bound 16 (46, 52) and wall columns 1..15-len (76). Probe: 300/300 draws are 16x16. The bounce rule does not depend on size. The old H,W part of the proposal was not implemented."
     },
     "objects": {
      "disposition": "mixed",
      "lines": [
-      64,
-      68,
-      71
+      71,
+      75,
+      78
      ],
-     "why": "Red and green parallel segments every 3-5 rows with lengths 4-14 are incidental; both roles are needed to show reflect-versus-pass (rule-supported)."
+     "why": "Unchanged: red and green walls every 3-5 lines (78), lengths 4-14 (75), starting rows 0-4 (72). Both roles are needed to show reflect versus pass (rule-supported); the counts are literals."
     },
     "placement": {
-     "disposition": "incidental_restriction",
+     "disposition": "mixed",
      "lines": [
       56,
       57,
       58,
-      72,
-      73
+      64,
+      65,
+      66,
+      79,
+      80
      ],
-     "why": "Orientation transforms exist (lines 56-58) but the native branch never sets them, so native episodes never mix orientations, unlike the fixtures. The beam start is limited to rows/cols 0-6 on the top/left edge."
+     "why": "Resolved: flip/flop/xpose are drawn per pair when None (64-66) and applied in draw (56-58). Probe: 152 horizontal / 148 vertical walls in 300 draws. Batch C: 1004/996 of 2000, and 209/250 certificate episodes mix axes. Before the patch, 200/200 were horizontal. Still literal: the beam starts in rows/cols 0-6 of the top/left edge (79-80); transforms move that edge."
     },
     "density_colours": {
      "disposition": "incidental_restriction",
      "lines": [
       44,
-      48,
-      64
+      48
      ],
-     "why": "Beam 1, mirror 2, glass 3 and background 0 are literals; the factory palette substitution is the only variation."
+     "why": "Beam 1, mirror 2, glass 3 and background 0 are literals (44, 48). The only variation is the factory/augmentation palette."
     },
     "rule_parameters": {
      "disposition": "mixed",
@@ -4429,66 +4656,94 @@
       53,
       55
      ],
-     "why": "Bounce is tested on the vertical neighbour only; the factory keeps four rival readings (side/either/target/target_axis) that differ only at mirror-end corner contacts. Line 55 requires >=13 steps and >=1 touch."
+     "why": "The bounce tests the cell across the wall axis (53), the side-contact reading. The archived solver uses a diagonal-target reading, and the two differ on endpoint-sensitive scenes. Probe: 102/300 native pairs have differing readings (batch C: 385/1000). verified_rules.native_side_beam checks labels with the side reading. Line 55 still requires >= 13 steps and >= 1 touch."
     },
     "demonstration_context": {
      "disposition": "mixed",
      "lines": [
-      53
+      53,
+      64
      ],
-     "why": "Factory analyse() filters the four endpoint readings by demonstrations and raises 'Unresolved mirror-end interpretation' when they disagree on the query; it also infers wall axis per grid because fixtures mix orientations within an episode. Native episodes cannot exercise per-pair orientation mixing."
+     "why": "The factory filters four endpoint readings by demonstrations and raises when they disagree on the query. The v2 certificate kept all 250 queries, re-drew 99 contexts (up to 64 per query) and accepted 91 endpoint-sensitive queries. Native episodes now exercise per-pair orientation (64). Endpoint evidence still depends on informative contexts."
     }
    },
-   "proposal": "In the random branch, sample flip/flop/xpose per pair (lines 61-76) so native episodes mix orientations as the fixtures do; then sample H,W (e.g. 12-24). Optionally reject mirror-end corner contacts so all four factory readings agree. Bound the while True at line 62. Recertify.",
-   "patch_priority": "high",
-   "uncertainties": "How often native draws hit the mirror-end ambiguity (the factory's Undetermined path) was not measured; whether the vertical-neighbour test equals the original task's reading is the open question the factory encodes.",
+   "repair_delta": {
+    "expanded": "Per-pair flip/flop/xpose (64-66); bounded 20000-try layout loop with RuntimeError (69, 84-85); side-contact pair verifier and query-preserving certificate.",
+    "retained": "Side-contact bounce rule (53), >= 13 steps and >= 1 touch (55), 16x16 canvas, literal colours, four-reading factory.",
+    "unsolved": "Canvas size; endpoint-convention ambiguity, which is by design learnt from demonstrations; beam-start window."
+   },
+   "proposal": "Medium. Orientation mixing, the main old finding, is resolved and measured, and the loop is bounded. Still open: canvas size (lines 38, 46, 52, 76). The optional rejection of mirror-end contacts was deliberately not applied (certificate diagnosis), and that is kept. Any canvas change needs the query-preserving certificate harness and the side verifier rerun.",
+   "patch_priority": "medium",
+   "uncertainties": "Whether side contact is the original task's reading is open; the factory keeps four candidates. The certificate's pair_verifier_sha256 (d0b43e04) is verified_rules.py before 485b4ac; the current file (055138a0) only adds midpoint_xor_panels for 34b99a2b, and native_side_beam is unchanged by diff. admission.json pins the current file. No unmodified prepare export is recorded (the batch-C 200/20 run waived the pin).",
+   "evidence": [
+    "arc_agi2/reports/diversity-v1/native-batch-c/README.md",
+    "arc_agi2/diversity/test_native_batch_c.py",
+    "arc_agi2/direct_factories/7e2bad24.json",
+    "arc_agi2/reports/diversity-v1/native-certificates/7e2bad24.json",
+    "probes/rereview_batch_bc.py",
+    "arc_agi2/reports/diversity-v1/native-batch-c/certify_7e2bad24.py",
+    "arc_agi2/reports/diversity-v1/native-batch-c/7e2bad24-archived-verifier-counterexample.json",
+    "arc_agi2/verified_rules.py (native_side_beam)"
+   ],
+   "certificate_note": "Certified by the query-preserving harness certify_7e2bad24.py v2. Its harness, factory, constructor and beam_endpoint_evidence hashes match the current files. pair_verifier_sha256 d0b43e04 is verified_rules.py before 485b4ac; the current file 055138a0 only adds the 34b99a2b checker, and native_side_beam is byte-identical by diff.",
+   "admission": "Admitted to the supplement via arc_agi2/diversity/prepare.py REPAIRED (native batch C, line 34; added in a534dfe). Not in RE-ARC admission.json. release_ready stays false.",
+   "audit_note": "The 128-sample domain audit (fork cdf50ed) measured the superseded constructor and is stale; current-domain statistics come from the repair report and the probe.",
    "certified_evidence": "current",
    "release_ready": false
   },
   "7e576d6e": {
    "status": "reviewed",
-   "reviewer": "claude-opus-5-5 (hybrid-claude-native worktree)",
+   "reviewer": "claude-opus-5-5 (hybrid-claude-native-review-current worktree)",
    "reviewed_on": "2026-10-24",
    "review_batch": 2,
-   "constructor_sha256": "f0d7abe2c143ceadc6fc3b7c2ba0c8e48a45a345d139131d0d16a09627dfbd8a",
-   "baseline_commit": "f7353826fdd001ce808b911ad4bb984a404b99d0",
-   "mechanism": "30x30 background with 3-4 full-width horizontal lines (colour 1), each carrying a 3-cell marker (colour 2), and start/end pixels (colour 3); the output draws a path from the start down to just above each line, across to the marker column, through the marker, and finally to the end pixel. Horizontal directions must alternate (lines 52, 61).",
-   "fixture_evidence": "4 canonical pairs, 30x30; train pairs 0 and 1 are transposed (vertical lines) and pair 2 is not, so orientation varies within an episode. The random branch (lines 68-82) never sets xpose; a local check of 100 native draws (probes/orientation_blockers.py) found horizontal lines in all 100.",
+   "review_kind": "rereview_after_native_repair",
+   "constructor_sha256": "ecc2c19fec958ca35233dea93ebb951220318c52048fe8b646fccd4810692b26",
+   "baseline_commit": "8395c38ba950e45e1e23e6b8d81c434e048d62bd",
+   "integration_baseline_commit": "9c53b2c517da9b7fee67e8ecbb2e2d581a21a586",
+   "repair_commit": "a5251a710d67d8cd30eb5e0f5b55f27552490e04",
+   "supersedes": {
+    "constructor_sha256": "f0d7abe2c143ceadc6fc3b7c2ba0c8e48a45a345d139131d0d16a09627dfbd8a",
+    "baseline_commit": "f7353826fdd001ce808b911ad4bb984a404b99d0",
+    "history_file": "review_history.json",
+    "history_index": 0
+   },
+   "mechanism": "30x30 background with 3-4 full-width lines (colour 1), each carrying a 3-cell marker (colour 2), plus start/end pixels (colour 3); the output draws a path from the start across each line through its marker column to the end pixel, with horizontal turns that must alternate. Each random pair now draws its own transpose.",
+   "fixture_evidence": "4 canonical pairs (3 train, 1 test), all 30x30, replayed exactly (validate lines 95-110). Train[0] and train[1] are transposed (vertical lines); train[2] and the test are upright. Starts are on row 1 (column 1 when transposed), ends on rows 26-28, and every path zigzags.",
    "axes": {
     "dimensions": {
      "disposition": "incidental_restriction",
      "lines": [
       36,
       38,
-      76
+      79
      ],
-     "why": "30x30 literal and line-spacing bound 30; the path rule works on any canvas tall enough for the lines."
+     "why": "Still a literal 30x30: grids(30, 30) (36), the line loop range(30) (38) and the spacing bound row + 7 >= 30 (79). The path rule would work on any canvas tall enough for the lines. The old H,W proposal was not implemented."
     },
     "objects": {
      "disposition": "mixed",
      "lines": [
-      75,
-      78
+      78,
+      81
      ],
-     "why": "3-4 lines spaced 3-8 rows apart are incidental counts; one start and one end pixel are rule objects."
+     "why": "Unchanged: 3-4 lines (81) spaced 3-8 rows (78) are incidental counts. One start and one end pixel are rule objects."
     },
     "placement": {
      "disposition": "mixed",
      "lines": [
-      70,
-      71,
-      79,
-      80,
-      65
+      65,
+      72,
+      73,
+      74,
+      83
      ],
-     "why": "Start always on row 1 and end on rows 25-28 (incidental). Marker columns must differ from start/end columns (line 80, rule-supported: otherwise the turn direction is undefined). Transpose is never sampled natively (line 65 unreachable from the random branch)."
+     "why": "Resolved: xpose is drawn per pair when None (72) and applied at 65. Probe: 260 horizontal / 240 vertical in 500 draws; batch C: 486/1000 horizontal, and before the patch 100/100 were. Still literal: start row 1 (73) and end rows 25-28 (74). Marker columns differing from start/end columns (83) are rule-supported."
     },
     "density_colours": {
      "disposition": "intrinsic_or_rule_supported",
      "lines": [
       69
      ],
-     "why": "Four distinct random colours for background, line, marker and path roles."
+     "why": "Four distinct random colours (69) for background, line, marker and path roles, unchanged."
     },
     "rule_parameters": {
      "disposition": "unknown",
@@ -4496,21 +4751,35 @@
       52,
       61
      ],
-     "why": "Rejecting consecutive same-direction turns makes every native path zigzag, as all fixtures do; the path rule itself would be defined without it, so whether this is fidelity or an incidental filter is not established."
+     "why": "Lines 52 and 61 reject consecutive same-direction turns, so every native path zigzags, as all fixtures do. Probe: the filter rejects 1505 of the 1897 layouts reaching draw() (79%). Whether alternation belongs to the original rule or is an incidental filter is still not established."
     },
     "demonstration_context": {
      "disposition": "intrinsic_or_rule_supported",
      "lines": [
-      47,
-      51,
-      57
+      65,
+      72
      ],
-     "why": "Deterministic per query; factory does not reference demonstrations. Within-episode orientation mixing exists only in the canonical fixtures, not in native draws."
+     "why": "Deterministic per query. The unchanged factory sets travel signs for row walls and column walls, so it handles both axes in one episode, and does not read demonstrations. Native episodes now mix orientation as the fixtures do (72)."
     }
    },
-   "proposal": "Sample xpose (and flips) per pair in the random branch so native episodes match the fixtures' mixed orientation; allow the start/end rows to vary and sample H,W (e.g. 16-30). Keep or make optional the zigzag filter after verifier review. Recertify.",
-   "patch_priority": "high",
-   "uncertainties": "Whether the zigzag constraint is part of the original rule is unknown; the 100-draw orientation check is a heuristic (no column uniform) backed by the source reading.",
+   "repair_delta": {
+    "expanded": "Per-pair transpose (72); bounded 1000-try loop with RuntimeError (75, 86-87).",
+    "retained": "Zigzag filter (52, 61); 30x30; start row 1 and end rows 25-28; 3-4 lines.",
+    "unsolved": "Canvas size; start/end rows; zigzag status unknown."
+   },
+   "proposal": "Medium. Orientation mixing is resolved. Still open: canvas size (36, 38, 79) and free start/end rows (73-74). Making the zigzag filter optional needs verifier review first, because the factory and verifier have only seen alternating paths. Recertify after any change.",
+   "patch_priority": "medium",
+   "uncertainties": "Whether the zigzag is part of the original rule is unknown. The 79% rejection share replays the source's layout draw in the probe and is a sample statistic. No unmodified prepare export is recorded; the batch-C 200/20 run waived the verified_rules.py pin.",
+   "evidence": [
+    "arc_agi2/reports/diversity-v1/native-batch-c/README.md",
+    "arc_agi2/diversity/test_native_batch_c.py",
+    "arc_agi2/direct_factories/7e576d6e.json",
+    "arc_agi2/reports/diversity-v1/native-certificates/7e576d6e.json",
+    "probes/rereview_batch_bc.py"
+   ],
+   "certificate_note": "auditor_sha256 c7c525a7 is recertify.py as of cf79bbc; the current file (1e194cb8, 5fdfb65) only adds the FINITE_DOMAINS exhaustive branch, which runs only for families with fewer than 100 unique fresh inputs, so this family's fresh/augmented/fixture path is unchanged. Production lookup binds only constructor and factory/program hashes, and both match.",
+   "admission": "Admitted to the supplement via arc_agi2/diversity/prepare.py REPAIRED (native batch C, line 34; added in a534dfe). Not in RE-ARC admission.json. release_ready stays false.",
+   "audit_note": "The 128-sample domain audit (fork cdf50ed) measured the superseded constructor and is stale; current-domain statistics come from the repair report and the probe.",
    "certified_evidence": "current",
    "release_ready": false
   },
@@ -4926,72 +5195,103 @@
   },
   "94414823": {
    "status": "reviewed",
-   "reviewer": "claude-opus-5-5 (hybrid-claude-native worktree)",
+   "reviewer": "claude-opus-5-5 (hybrid-claude-native-review-current worktree)",
    "reviewed_on": "2026-10-24",
    "review_batch": 2,
-   "constructor_sha256": "d4c881e833258ea3a81fc6b578b97400675ba6c5803fbc977870383c197ec405",
-   "baseline_commit": "f7353826fdd001ce808b911ad4bb984a404b99d0",
-   "mechanism": "Fixed 10x10 geometry: a grey (5) 6x6 hollow square at rows/cols 2-7 and two marker pixels at the outside corners (1,1) and (1,8); the output fills the 4x4 interior as 2x2 quadrants, with each marker's colour in its nearest quadrant and the diagonally opposite one. Orientation varies via flip and transpose.",
-   "fixture_evidence": "4 canonical pairs, all the same geometry under different flip/transpose and colours. The audit found 99 unique inputs and exactly 1 orbit in 128 draws: the native domain is one scene up to colour and symmetry.",
+   "review_kind": "rereview_after_native_repair",
+   "constructor_sha256": "3097acd02d02b6ae1e78be8ada029dd376d83130beca31a52faa84fb591ae7c7",
+   "baseline_commit": "8395c38ba950e45e1e23e6b8d81c434e048d62bd",
+   "integration_baseline_commit": "9c53b2c517da9b7fee67e8ecbb2e2d581a21a586",
+   "repair_commit": "a5251a710d67d8cd30eb5e0f5b55f27552490e04",
+   "supersedes": {
+    "constructor_sha256": "d4c881e833258ea3a81fc6b578b97400675ba6c5803fbc977870383c197ec405",
+    "baseline_commit": "f7353826fdd001ce808b911ad4bb984a404b99d0",
+    "history_file": "review_history.json",
+    "history_index": 0
+   },
+   "mechanism": "Black canvas (H 5..30, W 6..30 before transpose) with a grey (5) hollow square of even side 4..28 at a free position, and two marker pixels just outside its two top corners; the output splits the interior into four equal quadrants, giving each marker's colour to its nearest quadrant and the diagonally opposite one. Flip and transpose move the marker pair to any of the four sides.",
+   "fixture_evidence": "4 canonical pairs (3 train, 1 test), all 10x10 with a side-6 square at (2,2), replayed exactly. validate() (lines 88-95) passes explicit colours, so lines 56-60 keep the legacy geometry. The pairs differ only by flip/transpose and colours. This geometry lies inside the new random support (H 10, W 10, side 6, brow 2, bcol 2).",
    "axes": {
     "dimensions": {
-     "disposition": "incidental_restriction",
+     "disposition": "broadly_variable",
      "lines": [
-      33,
-      34
+      47,
+      48,
+      61,
+      62,
+      63,
+      68
      ],
-     "why": "10x10 canvas and the square at 2..7 are literals; the quadrant rule needs only a square of even interior."
+     "why": "Height 5..30 and width 6..30 (47-48), with a feasibility guard (61-64), replace the literal 10x10. Probe: 510 shapes in 1000. Certificate: 1000/1000 unique, up from 222 (audit: one orbit)."
     },
     "objects": {
-     "disposition": "incidental_restriction",
+     "disposition": "broadly_variable",
      "lines": [
-      34,
-      35,
-      36,
-      37,
-      38
+      49,
+      52,
+      61
      ],
-     "why": "Square size is fixed at 6 (interior 4, quadrants 2x2); any even interior >= 2 supports the same rule."
+     "why": "The square side is 2*randint(2, min(H-1, W-2)//2) (52): even, so quadrants are equal (guard 61, rule-supported), and up to 28. Probe sides: 4 (357), 6 (195), 8 (143), ..., 26 (1). Small squares dominate, but every even side that fits is reachable."
     },
     "placement": {
-     "disposition": "incidental_restriction",
+     "disposition": "mixed",
      "lines": [
-      39,
-      40,
-      45,
-      47
+      53,
+      54,
+      73,
+      74,
+      79,
+      81
      ],
-     "why": "Square position is fixed and markers sit at two adjacent outside corners; only flip and transpose move them."
+     "why": "Now free: brow 1..H-size and bcol 1..W-size-1 (53-54). Markers stay at the two adjacent outside corners of the top side (73-74); flip and transpose (79-82) give all four sides. Diagonal-corner markers are excluded, which is rule-supported because their quadrant claims would conflict."
     },
     "density_colours": {
      "disposition": "mixed",
      "lines": [
-      30
+      42,
+      68,
+      72
      ],
-     "why": "Two distinct non-grey marker colours (rule-supported); grey frame and black background are literals."
+     "why": "Two distinct non-grey marker colours (42) are rule-supported. The grey frame (72) and black background (68) are literals."
     },
     "rule_parameters": {
      "disposition": "intrinsic_or_rule_supported",
      "lines": [
-      41,
-      42,
-      43,
-      44
+      75,
+      76,
+      77,
+      78
      ],
-     "why": "Nearest plus opposite quadrant per marker is the rule."
+     "why": "The nearest-plus-opposite quadrant rule (75-78) is unchanged and now uses half = size // 2 for any even size."
     },
     "demonstration_context": {
      "disposition": "intrinsic_or_rule_supported",
      "lines": [
-      41,
-      43
+      73,
+      74,
+      77
      ],
-     "why": "Deterministic per query; there is no direct factory (the certified evidence is a direct-source certificate)."
+     "why": "Deterministic per query. There is no factory. The direct-source program (sha 617c4a43, current per probe) finds the frame as the largest object and assigns markers by side of the centre, reading only the query."
     }
    },
-   "proposal": "Sample canvas H,W (e.g. 8-20), square side 2k+2 (k = 1..5) at any position with room for outside-corner markers, and the corner pair (any two adjacent corners). This replaces a domain of 56 colour pairs x 4 orientations = 224 inputs. Recertify.",
-   "patch_priority": "high",
-   "uncertainties": "Whether markers may sit on diagonal corners is not defined (the quadrant claims would conflict); the proposal keeps adjacent corners.",
+   "repair_delta": {
+    "expanded": "Canvas 5..30 x 6..30, even side 4..28, free position. Exact default support is 356,265 geometries x 56 ordered colour pairs x 4 transforms = 79,803,360 inputs (probe enumeration of lines 47-54), up from 224.",
+    "retained": "Even interior split, adjacent-corner marker pair, grey frame and black background literals, legacy 10x10 for explicit colours.",
+    "unsolved": "Literal frame/background colours only (diagonal markers are undefined by the rule)."
+   },
+   "proposal": "None for the constructor. The old high-priority single-geometry finding is resolved (lines 47-54). Remaining work is production: batch C measured only 24 validation query identities against 20 requested under the strict uniform-shape policy (at most 7 draws per shape in 1000). Rerun the stale 128-sample audit.",
+   "patch_priority": "none",
+   "uncertainties": "The direct-source program reads the background as the most common colour and the frame as the largest object. That holds on every certified draw, but there is no proof for all 79.8M inputs. No unmodified prepare export is recorded; the batch-C 200/20 run waived the verified_rules.py pin.",
+   "evidence": [
+    "arc_agi2/reports/diversity-v1/native-batch-c/README.md",
+    "arc_agi2/diversity/test_native_batch_c.py",
+    "arc_agi2/reports/diversity-v1/native-certificates/94414823.json",
+    "probes/rereview_batch_bc.py",
+    "arc_agi2/reports/direct-certificates/94414823.json"
+   ],
+   "certificate_note": "auditor_sha256 c7c525a7 is recertify.py as of cf79bbc; the current file (1e194cb8, 5fdfb65) only adds the FINITE_DOMAINS exhaustive branch, which runs only for families with fewer than 100 unique fresh inputs, so this family's fresh/augmented/fixture path is unchanged. Production lookup binds only constructor and factory/program hashes, and both match.",
+   "admission": "Admitted to the supplement via arc_agi2/diversity/prepare.py REPAIRED (native batch C, line 34; added in a534dfe). Not in RE-ARC admission.json. release_ready stays false.",
+   "audit_note": "The 128-sample domain audit (fork cdf50ed) measured the superseded constructor and is stale; current-domain statistics come from the repair report and the probe.",
    "certified_evidence": "current",
    "release_ready": false
   },

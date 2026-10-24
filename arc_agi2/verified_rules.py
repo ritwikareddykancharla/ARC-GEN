@@ -369,13 +369,58 @@ def fixed_colour_histogram(grid):
 
 from .joint_fragments import transform as joint_fragment_completion
 
+def separated_motif_stamp(grid):
+    """b4a43f3b: stamp the 3x3 motif shown above the colour-5 separator.
+
+    Pair label checker only (native colours), reconstructed from the native
+    layout rather than from a uniform-row heuristic. Every canonical and
+    teaching fixture and every constructor output is W = 3s wide (motif
+    scale s = 1..3; canonical s = 2). Rows 0..W-1 are the 3x3 motif upscaled
+    by s, so the top block is a W x W square. Row W is the separator and is
+    entirely colour 5. The rows below are the placement map (height 1..10),
+    where any non-0 cell is marked. The answer is 3h x 3W: each marked map
+    cell becomes a copy of the motif, zeros included, and unmarked cells
+    become 3x3 zero tiles.
+
+    The separator is located by this geometry, never by searching for a
+    uniform line. So motif rows that are full single-colour lines, including
+    full lines of colour 5 in legacy explicit scenes, are ordinary content.
+    Empty maps and all-0 motifs stay valid. Inputs outside the layout raise:
+    a width not divisible by 3, a row W that is not all 5, a top block that
+    is not an exact s-fold upscale, or a map taller than 10.
+    """
+    rows = [list(row) for row in grid]
+    width = len(rows[0]) if rows else 0
+    if not rows or not width or any(len(r) != width for r in rows):
+        raise ValueError('Expected a rectangular grid')
+    if width % 3 or width > 9:
+        raise ValueError('Width is not 3 * scale for a scale of 1..3')
+    scale, height = width // 3, len(rows) - width - 1
+    if not 1 <= height <= 10:
+        raise ValueError('No placement map of height 1..10 below the motif square')
+    if any(v != 5 for v in rows[width]):
+        raise ValueError('Row W is not the colour-5 separator')
+    motif = [[rows[scale * r][scale * c] for c in range(3)] for r in range(3)]
+    if any(rows[i][j] != motif[i // scale][j // scale]
+           for i in range(width) for j in range(width)):
+        raise ValueError('Top block is not an exact upscale of a 3x3 motif')
+    out = [[0] * (3 * width) for _ in range(3 * height)]
+    for i, line in enumerate(rows[width + 1:]):
+        for j, cell in enumerate(line):
+            if cell:
+                for r in range(3):
+                    out[3 * i + r][3 * j:3 * j + 3] = motif[r]
+    return out
+
+
 VERIFIERS = {'78332cb0': panel_chain, 'de493100': cropped_mirror_patch,
              '3a301edc': nested_frame_band,
              'd6542281': joint_fragment_completion,
              'aaecdb9a': legend_object_chart, '007bbfb7': self_tiling,
              '7e2bad24': native_side_beam, '34b99a2b': midpoint_xor_panels,
              '195ba7dc': midpoint_or_panels, '281123b4': separated_priority_panels,
-             'e0fb7511': native_zero_adjacency, 'f3cdc58f': fixed_colour_histogram}
+             'e0fb7511': native_zero_adjacency, 'f3cdc58f': fixed_colour_histogram,
+             'b4a43f3b': separated_motif_stamp}
 VERIFIER_EVIDENCE = {
     'e0fb7511': {
         'mode': 'reviewed_native_zero_four_adjacency',
@@ -473,5 +518,13 @@ VERIFIER_EVIDENCE = {
         'canonical_data_changed': False,
         'archived_reference_changed': False,
         'synthetic_extension': 'Even square sizes 12..30; original size 30 and its weak transpose fallback preserved.',
+    },
+    'b4a43f3b': {
+        'mode': 'reviewed_geometric_separator_motif_stamp',
+        'module': 'arc_agi2.verified_rules.separated_motif_stamp',
+        'reason': 'The archived solver takes as separator the FIRST full uniform non-background row whose colour occurs only there, else the first uniform non-background row. At motif scale 1 a full single-colour motif row is such a row. The legal native scene with motif 111/202/030 (all rows and columns occupied, 8-connected) has three 1s, all in row 0, so the archived solver cuts at row 0 and returns an empty 0x9 grid. In legacy explicit 13x6 scenes with a motif row of colour 5, no row passes the uniqueness test, and the fallback takes that motif row. Every canonical and teaching fixture and every constructor output places the motif square in rows 0..W-1 of a W = 3s wide grid and the colour-5 separator at row W, with any non-0 map cell marked. So this checker reads that geometry. The direct factory, which locates palette[5], is unchanged.',
+        'counterexample': 'arc_agi2/reports/diversity-v1/native-batch-i/b4a43f3b-archived-verifier-counterexample.json',
+        'canonical_data_changed': False,
+        'archived_reference_changed': False,
     },
 }

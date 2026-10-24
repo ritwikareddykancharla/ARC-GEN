@@ -1,0 +1,261 @@
+{
+ "task_id": "b4a43f3b",
+ "checker": "arc_agi2.verified_rules.separated_motif_stamp",
+ "source_sha256": {
+  "verified_rules": "3a3425ae44e64be437e071b01c833eb5684a1646fe74adf5f2fbeab8df03d02f",
+  "constructor": "774437b8b7991ca9d443f6833f09e782cf7ba1b6526b725ab343d14f08cf0080",
+  "factory": "ad0f0f59c49f06b2b0d7fbec9a0a3ff461a34973b540e34543e16fb15012bc7c",
+  "harness": "05ae48353106120b14168a4c798108a9ff7690190a4a3ef5ceb7d9b577423d11"
+ },
+ "fixtures": {
+  "pairs": 10,
+  "reviewed_exact": 10,
+  "archived_exact": 10
+ },
+ "old_1000": {
+  "draws": 1000,
+  "reviewed_agree": 1000,
+  "archived_agree": 1000,
+  "archived_disagreement_draws": [],
+  "unique_inputs": 1000,
+  "constructor_sha256": "62217bdcedb23b02fef3dce69643bdf6dd86853741e25c77b62453195337896d"
+ },
+ "new_1000": {
+  "draws": 1000,
+  "reviewed_agree": 1000,
+  "archived_agree": 998,
+  "archived_disagreement_draws": [
+   569,
+   932
+  ],
+  "unique_inputs": 1000
+ },
+ "adversarial": {
+  "cases": 14,
+  "reviewed_exact": 14,
+  "archived_exact": 10,
+  "details": [
+   {
+    "kwargs": {
+     "colors": "111202030",
+     "pattern": "020222020000",
+     "scale": 1
+    },
+    "reviewed_exact": true,
+    "archived_exact": false,
+    "archived_shape": [
+     0,
+     9
+    ],
+    "archived_error": "ValueError('Invalid ARC grid')",
+    "factory_domain": true,
+    "factory_8d4_checks": 16
+   },
+   {
+    "kwargs": {
+     "colors": "020333010",
+     "pattern": "222",
+     "scale": 1
+    },
+    "reviewed_exact": true,
+    "archived_exact": false,
+    "archived_shape": [
+     3,
+     9
+    ],
+    "archived_error": null,
+    "factory_domain": true,
+    "factory_8d4_checks": 16
+   },
+   {
+    "kwargs": {
+     "colors": "606060222",
+     "pattern": "200020002",
+     "scale": 1
+    },
+    "reviewed_exact": true,
+    "archived_exact": true,
+    "archived_shape": [
+     9,
+     9
+    ],
+    "archived_error": null,
+    "factory_domain": true,
+    "factory_8d4_checks": 16
+   },
+   {
+    "kwargs": {
+     "colors": "111111111",
+     "pattern": "222222222222222222222222222222",
+     "scale": 1
+    },
+    "reviewed_exact": true,
+    "archived_exact": true,
+    "archived_shape": [
+     30,
+     9
+    ],
+    "archived_error": null,
+    "factory_domain": true,
+    "factory_8d4_checks": 16
+   },
+   {
+    "kwargs": {
+     "colors": "123000333",
+     "pattern": "020",
+     "scale": 1
+    },
+    "reviewed_exact": true,
+    "archived_exact": true,
+    "archived_shape": [
+     3,
+     9
+    ],
+    "archived_error": null,
+    "factory_domain": true,
+    "factory_8d4_checks": 16
+   },
+   {
+    "kwargs": {
+     "colors": "555010101",
+     "pattern": "000000002000022220002000000000000000"
+    },
+    "reviewed_exact": true,
+    "archived_exact": false,
+    "archived_shape": [
+     0,
+     36
+    ],
+    "archived_error": "ValueError('Invalid ARC grid')",
+    "factory_domain": false,
+    "factory_8d4_checks": 0
+   },
+   {
+    "kwargs": {
+     "colors": "101555010",
+     "pattern": "202000002000222222002000002000002000"
+    },
+    "reviewed_exact": true,
+    "archived_exact": false,
+    "archived_shape": [
+     20,
+     36
+    ],
+    "archived_error": "ValueError('Invalid ARC grid')",
+    "factory_domain": false,
+    "factory_8d4_checks": 0
+   },
+   {
+    "kwargs": {
+     "colors": "000000000",
+     "pattern": "000000220000220000002000000200000000"
+    },
+    "reviewed_exact": true,
+    "archived_exact": true,
+    "archived_shape": [
+     18,
+     18
+    ],
+    "archived_error": null,
+    "factory_domain": true,
+    "factory_8d4_checks": 16
+   },
+   {
+    "kwargs": {
+     "colors": "136010221",
+     "pattern": "000000000000000000000000000000000000"
+    },
+    "reviewed_exact": true,
+    "archived_exact": true,
+    "archived_shape": [
+     18,
+     18
+    ],
+    "archived_error": null,
+    "factory_domain": true,
+    "factory_8d4_checks": 16
+   },
+   {
+    "kwargs": {
+     "colors": "101020320",
+     "pattern": "999000999000999000999000999000999000"
+    },
+    "reviewed_exact": true,
+    "archived_exact": true,
+    "archived_shape": [
+     18,
+     18
+    ],
+    "archived_error": null,
+    "factory_domain": true,
+    "factory_8d4_checks": 16
+   },
+   {
+    "kwargs": {
+     "colors": "222222222",
+     "pattern": "222222222",
+     "scale": 3,
+     "map_height": 1
+    },
+    "reviewed_exact": true,
+    "archived_exact": true,
+    "archived_shape": [
+     3,
+     27
+    ],
+    "archived_error": null,
+    "factory_domain": true,
+    "factory_8d4_checks": 16
+   },
+   {
+    "kwargs": {
+     "colors": "101010101",
+     "pattern": "200000000200000000200000000200000000200000000200000000200000000200000000200000000200000000",
+     "scale": 3
+    },
+    "reviewed_exact": true,
+    "archived_exact": true,
+    "archived_shape": [
+     30,
+     27
+    ],
+    "archived_error": null,
+    "factory_domain": true,
+    "factory_8d4_checks": 16
+   },
+   {
+    "kwargs": {
+     "colors": "333030333",
+     "pattern": "222222222222222222222222222222222222222222222222222222222222",
+     "scale": 2
+    },
+    "reviewed_exact": true,
+    "archived_exact": true,
+    "archived_shape": [
+     30,
+     18
+    ],
+    "archived_error": null,
+    "factory_domain": true,
+    "factory_8d4_checks": 16
+   },
+   {
+    "kwargs": {
+     "colors": "010101010",
+     "pattern": "000000000000000000000000000002",
+     "scale": 1
+    },
+    "reviewed_exact": true,
+    "archived_exact": true,
+    "archived_shape": [
+     30,
+     9
+    ],
+    "archived_error": null,
+    "factory_domain": true,
+    "factory_8d4_checks": 16
+   }
+  ]
+ },
+ "passed": true
+}

@@ -1,21 +1,24 @@
 {
   "task_id": "5b6cbef5",
-  "factory_sha256": "fd5d91b9ef3074cf5bc6f85d64c7cd7378851ac6ebb5053dc776ccac93217a4e",
-  "constructor_sha256": "7037789f7a5655b1bd06bcfbad383bdfc7b8c9d91f7a6b4c04c4f73df692aa24",
   "passed": true,
   "fresh_pairs_checked": 1000,
   "augmented_pair_checks": 8000,
   "fixture_variants_checked": 16,
-  "sampler_rejections": [],
-  "seed": 118126128836793,
-  "d4": 7,
-  "unique_base_inputs": 996,
-  "seconds": 2.7155296250712126,
-  "factory_version": 1,
+  "constructor_sha256": "2d4fa5b4f4522443b000e26832efb92e7d32f114a6223ab1d0b006aef6b20bac",
+  "auditor_sha256": "1e194cb80d11ccda4026cb83a61c6dd407f1b9d94117090b31de26b01a3f191d",
   "requires_per_episode_verification": true,
+  "sampler_rejections": [],
+  "program_provider": "factory",
+  "factory_sha256": "fd5d91b9ef3074cf5bc6f85d64c7cd7378851ac6ebb5053dc776ccac93217a4e",
+  "factory_version": 1,
+  "unique_base_inputs": 981,
+  "fixture_basis": "canonical",
+  "seconds": 0.605359666980803,
   "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
   "draft_notes": {
     "explanation": "The input is used both as the stamp and as the map of where to place it. Output block (i, j) has size h x w. It gets a full copy of the input when input cell (i, j) is not the empty colour, and stays empty otherwise. This mechanism commutes with every D4 transform. Reversing columns sends output column 4c+d to 4(3-c)+(3-d), which matches reversing both the block index and the index inside the block. Transposing swaps the row and column roles together. So d4 needs no change to the direction logic, and the emitted program works directly on the visible grid. Colours enter only through the empty colour, which is original 0. It is emitted as the constant palette[0] and used for both the 'non-empty' test and the canvas fill. The stamp's own colours are copied straight from the visible input, so no colours are remapped.",
     "limitations": "The empty colour is taken to be palette[0], as the generator always uses 0 for blank cells; it is not inferred from the demonstrations. The program is written for the constructor's 4x4 inputs. For any h x w grid it still builds an (h*h) x (w*w) self-similar output with h x w blocks. I have not run any tests. The fixtures are consistent with one uniform rule."
-  }
+  },
+  "previous_constructor_sha256": "7037789f7a5655b1bd06bcfbad383bdfc7b8c9d91f7a6b4c04c4f73df692aa24",
+  "recertification_note": "Native batch F recertified this unchanged factory on a widened constructor: input height and width are sampled independently in 2..5 (output H*H x W*W <= 25x25). Non-empty single-ink masks, ink 1..9 (legacy 1..4), fair-coin cells. The draft notes below were written for the legacy 4x4 domain and are kept verbatim. The factory already handled general H x W inputs."
 }

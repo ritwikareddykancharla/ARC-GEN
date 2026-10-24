@@ -16,37 +16,91 @@
 
 import common
 
+# The output is (H*H) x (W*W), so each input axis is limited to 2..5 (25 <= 30).
+MIN_SIZE, MAX_SIZE = 2, 5
+LEGACY_SIZE = 3            # explicit colours with an omitted dimension
+MIN_COLORS, MAX_COLORS = 3, 5
+MAX_ATTEMPTS = 200
 
-def generate(colors=None):
+
+def _int(value, name):
+  if isinstance(value, bool) or not isinstance(value, int):
+    raise ValueError(f"{name} must be an int")
+  return value
+
+
+def _modal(colors):
+  """The unique most frequent colour; None when tied or only one colour."""
+  counts = sorted(((colors.count(c), c) for c in set(colors)), reverse=True)
+  if len(counts) < 2 or counts[0][0] == counts[1][0]: return None
+  return counts[0][1]
+
+
+def generate(colors=None, height=None, width=None, num_colors=None):
   """Returns input and output grids according to the given parameters.
 
   Args:
-    colors: A list of colors to use.
+    colors: A row-major list of the input colours (0..9). At least two colours
+      must be present and the most frequent one must be unique (the legacy
+      generator returned None grids for ties and failed on one colour). Random
+      inputs never contain 0, the output fill.
+    height: Input height, 2..5. Sampled when omitted and colours are random;
+      3 (legacy) when colours are explicit.
+    width: Input width, 2..5, with the same defaults as height.
+    num_colors: Sampling only: how many distinct colours (3..5) the input
+      uses. A unique maximum needs height * width >= num_colors + 1.
   """
+  for name, value in (("height", height), ("width", width)):
+    if value is not None and not MIN_SIZE <= _int(value, name) <= MAX_SIZE:
+      raise ValueError(f"{name} must be in {MIN_SIZE}..{MAX_SIZE}")
+  if colors is not None:
+    if num_colors is not None:
+      raise ValueError("num_colors is a sampling argument; omit it with explicit colors")
+    height = LEGACY_SIZE if height is None else height
+    width = LEGACY_SIZE if width is None else width
+    colors = list(colors)
+    if len(colors) != height * width:
+      raise ValueError("colors must have height * width entries")
+    for color in colors:
+      if not 0 <= _int(color, "color") <= 9:
+        raise ValueError("colors must be in 0..9")
+    if _modal(colors) is None:
+      raise ValueError("needs two or more colours with a unique most frequent one")
+  else:
+    if num_colors is not None:
+      if not MIN_COLORS <= _int(num_colors, "num_colors") <= MAX_COLORS:
+        raise ValueError(f"num_colors must be in {MIN_COLORS}..{MAX_COLORS}")
+      # Sample omitted dimensions only among canvases that can hold the request.
+      sizes = range(MIN_SIZE, MAX_SIZE + 1)
+      shapes = [(h, w) for h in ([height] if height is not None else sizes)
+                for w in ([width] if width is not None else sizes)
+                if h * w >= num_colors + 1]
+      if not shapes:
+        raise ValueError("infeasible: a unique most frequent colour among "
+                         f"{num_colors} used colours needs at least {num_colors + 1} cells")
+      if height is None or width is None:
+        height, width = common.choice(shapes)
+    height = common.randint(MIN_SIZE, MAX_SIZE) if height is None else height
+    width = common.randint(MIN_SIZE, MAX_SIZE) if width is None else width
+    area = height * width
+    if num_colors is None:
+      num_colors = common.randint(MIN_COLORS, min(MAX_COLORS, area - 1))
+    subset = common.random_colors(num_colors)
+    for _ in range(MAX_ATTEMPTS):
+      colors = common.choices(subset, area)
+      if len(set(colors)) == num_colors and _modal(colors) is not None: break
+    else:
+      raise RuntimeError("attempt budget exhausted before a unique modal colour")
 
-  def draw():
-    grid, output = common.grid(3, 3), common.grid(9, 9)
-    counts_to_colors = [(colors.count(c), c) for c in set(colors)]
-    counts_to_colors.sort(reverse=True)
-    if counts_to_colors[0][0] == counts_to_colors[1][0]: return None, None
-    for row in range(3):
-      for col in range(3):
-        grid[row][col] = colors[row * 3 + col]
-        if colors[row * 3 + col] != counts_to_colors[0][1]: continue
-        for r in range(3):
-          for c in range(3):
-            output[row * 3 + r][col * 3 + c] = colors[r * 3 + c]
-    return grid, output
-
-  if colors is None:
-    subset = common.random_colors(common.randint(3, 5))
-    while True:
-      colors = common.choices(subset, 9)
-      if len(set(colors)) != len(subset): continue
-      grid, _ = draw()
-      if grid: break
-
-  grid, output = draw()
+  modal = _modal(colors)
+  grid, output = common.grid(width, height), common.grid(width * width, height * height)
+  for row in range(height):
+    for col in range(width):
+      grid[row][col] = colors[row * width + col]
+      if grid[row][col] != modal: continue
+      for r in range(height):
+        for c in range(width):
+          output[row * height + r][col * width + c] = colors[r * width + c]
   return {"input": grid, "output": output}
 
 

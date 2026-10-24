@@ -1,21 +1,24 @@
 {
   "task_id": "27f8ce4f",
-  "factory_sha256": "f49052a7c88c047ead6075da34e9fe73c6a8a16303400fe15e4731cc6fd111ad",
-  "constructor_sha256": "70c1d22e63c495fb6406e92fc0f616939995b39333bc8cf2fee2d2a62b1e3e78",
   "passed": true,
   "fresh_pairs_checked": 1000,
   "augmented_pair_checks": 8000,
   "fixture_variants_checked": 16,
-  "sampler_rejections": [],
-  "seed": 186003360747389,
-  "d4": 7,
-  "unique_base_inputs": 1000,
-  "seconds": 1.555080124991946,
-  "factory_version": 1,
+  "constructor_sha256": "dc392a5eed8aeda53b8c84f023bff42ddc492de138c2adc8339e0abbbb8cae20",
+  "auditor_sha256": "1e194cb80d11ccda4026cb83a61c6dd407f1b9d94117090b31de26b01a3f191d",
   "requires_per_episode_verification": true,
+  "sampler_rejections": [],
+  "program_provider": "factory",
+  "factory_sha256": "f49052a7c88c047ead6075da34e9fe73c6a8a16303400fe15e4731cc6fd111ad",
+  "factory_version": 1,
+  "unique_base_inputs": 1000,
+  "fixture_basis": "canonical",
+  "seconds": 0.6798536251299083,
   "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
   "draft_notes": {
     "explanation": "Each output is a fractal self-stamp. The output is an (h*h) x (w*w) canvas filled with the background colour. A full copy of the visible input tile is placed in block (y,x) wherever input cell (y,x) holds the most frequent input colour. This construction commutes with every D4 transform. Transforming the tile moves block positions and block contents in the same way. So the same visible-coordinate program is correct for all d4 values, and no axis or direction needs specializing. Only the background colour depends on the palette: original 0 becomes palette[0], which is emitted as the constant FILL. The dominant colour is inferred from the pixels of the query, so it holds under any palette.",
     "limitations": "None of this has been tested. The generator always produces a 3x3 input with a unique dominant colour. If a tie ever occurs, the emitted program picks the tied colour that appears first in row-major order; this choice is arbitrary and not part of the original rule. The fill colour is fixed to palette[0] rather than inferred from the demonstrations. No contradictions between the fixtures and the rule were found."
-  }
+  },
+  "previous_constructor_sha256": "70c1d22e63c495fb6406e92fc0f616939995b39333bc8cf2fee2d2a62b1e3e78",
+  "recertification_note": "Native batch F recertified this unchanged factory on a widened constructor: input height and width are sampled independently in 2..5 (output H*H x W*W <= 25x25). 3..min(5, H*W-1) colours, all used, unique modal colour. The draft notes below were written for the legacy 3x3 domain and are kept verbatim. The factory already handled general H x W inputs."
 }

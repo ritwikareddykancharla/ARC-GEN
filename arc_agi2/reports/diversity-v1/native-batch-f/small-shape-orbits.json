@@ -1,0 +1,138 @@
+{
+  "method": "exhaustive restricted-growth enumeration; prepare.input_orbit; finite_input_policy.input_split",
+  "source_sha256": {
+    "arc_agi2/diversity/prepare.py": "9f12746d9ccf5b8484702d8a4884ffcdbb25a43ad2a4cd731e35931e35827d9d",
+    "arc_agi2/finite_input_policy.py": "3ce236d975f85f35b587ea8d5337e621dcb1177d51d65fe935aa766f0440cbd3",
+    "tasks/task_27f8ce4f.py": "f3e490b105954ef9457accb9ec11bb4eb5bbf19ca61c364d822832b629a7f546",
+    "tasks/task_48f8583b.py": "b3443161b61b812d01e7b7da044cd48a5f402edd4f948df67ad3af6baf5927cb",
+    "tasks/task_5b6cbef5.py": "2d4fa5b4f4522443b000e26832efb92e7d32f114a6223ab1d0b006aef6b20bac"
+  },
+  "families": {
+    "27f8ce4f": {
+      "2x2": {
+        "labellings": 6,
+        "orbits": 2,
+        "train_orbits": 2,
+        "validation_orbits": 0,
+        "four_distinct_orbits_train": false,
+        "four_distinct_orbits_validation": false
+      },
+      "2x3": {
+        "labellings": 110,
+        "orbits": 34,
+        "train_orbits": 32,
+        "validation_orbits": 2,
+        "four_distinct_orbits_train": true,
+        "four_distinct_orbits_validation": false
+      },
+      "3x2": {
+        "labellings": 110,
+        "orbits": 34,
+        "train_orbits": 32,
+        "validation_orbits": 2,
+        "four_distinct_orbits_train": true,
+        "four_distinct_orbits_validation": false
+      },
+      "2x4": {
+        "labellings": 2632,
+        "orbits": 688,
+        "train_orbits": 652,
+        "validation_orbits": 36,
+        "four_distinct_orbits_train": true,
+        "four_distinct_orbits_validation": true
+      },
+      "3x3": {
+        "labellings": 12846,
+        "orbits": 1785,
+        "train_orbits": 1698,
+        "validation_orbits": 87,
+        "four_distinct_orbits_train": true,
+        "four_distinct_orbits_validation": true
+      }
+    },
+    "48f8583b": {
+      "2x2": {
+        "labellings": 5,
+        "orbits": 2,
+        "train_orbits": 2,
+        "validation_orbits": 0,
+        "four_distinct_orbits_train": false,
+        "four_distinct_orbits_validation": false
+      },
+      "2x3": {
+        "labellings": 82,
+        "orbits": 25,
+        "train_orbits": 24,
+        "validation_orbits": 1,
+        "four_distinct_orbits_train": true,
+        "four_distinct_orbits_validation": false
+      },
+      "3x2": {
+        "labellings": 82,
+        "orbits": 25,
+        "train_orbits": 24,
+        "validation_orbits": 1,
+        "four_distinct_orbits_train": true,
+        "four_distinct_orbits_validation": false
+      },
+      "2x4": {
+        "labellings": 1661,
+        "orbits": 431,
+        "train_orbits": 409,
+        "validation_orbits": 22,
+        "four_distinct_orbits_train": true,
+        "four_distinct_orbits_validation": true
+      },
+      "3x3": {
+        "labellings": 6997,
+        "orbits": 970,
+        "train_orbits": 919,
+        "validation_orbits": 51,
+        "four_distinct_orbits_train": true,
+        "four_distinct_orbits_validation": true
+      }
+    },
+    "5b6cbef5": {
+      "2x2": {
+        "labellings": 15,
+        "orbits": 4,
+        "train_orbits": 4,
+        "validation_orbits": 0,
+        "four_distinct_orbits_train": true,
+        "four_distinct_orbits_validation": false
+      },
+      "2x3": {
+        "labellings": 63,
+        "orbits": 14,
+        "train_orbits": 13,
+        "validation_orbits": 1,
+        "four_distinct_orbits_train": true,
+        "four_distinct_orbits_validation": false
+      },
+      "3x2": {
+        "labellings": 63,
+        "orbits": 14,
+        "train_orbits": 13,
+        "validation_orbits": 1,
+        "four_distinct_orbits_train": true,
+        "four_distinct_orbits_validation": false
+      },
+      "2x4": {
+        "labellings": 255,
+        "orbits": 44,
+        "train_orbits": 40,
+        "validation_orbits": 4,
+        "four_distinct_orbits_train": true,
+        "four_distinct_orbits_validation": true
+      },
+      "3x3": {
+        "labellings": 511,
+        "orbits": 51,
+        "train_orbits": 50,
+        "validation_orbits": 1,
+        "four_distinct_orbits_train": true,
+        "four_distinct_orbits_validation": false
+      }
+    }
+  }
+}

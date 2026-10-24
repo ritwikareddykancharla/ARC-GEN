@@ -16,30 +16,77 @@
 
 import common
 
+# The output is (H*H) x (W*W), so each input axis is limited to 2..5 (25 <= 30).
+MIN_SIZE, MAX_SIZE = 2, 5
+LEGACY_SIZE = 3            # explicit colours with an omitted dimension
+MIN_COLORS, MAX_COLORS = 2, 4
+MAX_ATTEMPTS = 200
 
-def generate(colors=None):
+
+def _int(value, name):
+  if isinstance(value, bool) or not isinstance(value, int):
+    raise ValueError(f"{name} must be an int")
+  return value
+
+
+def _unique_minimum(colors):
+  counts = sorted(colors.count(c) for c in set(colors))
+  return counts.count(counts[0]) == 1
+
+
+def generate(colors=None, height=None, width=None, num_colors=None):
   """Returns input and output grids according to the given parameters.
 
   Args:
-    colors: The colors of the pixels.
+    colors: A row-major list of the input colours (0..9). As in the legacy
+      generator, explicit colours are labelled as given: the selected colour is
+      the least frequent one, ties going to the smallest colour value. Random
+      inputs always have a unique least frequent colour and never contain 0.
+    height: Input height, 2..5. Sampled when omitted and colours are random;
+      3 (legacy) when colours are explicit.
+    width: Input width, 2..5, with the same defaults as height.
+    num_colors: Sampling only: the size (2..4) of the colour subset the cells
+      are drawn from. As in the legacy generator, not every subset colour has
+      to appear, so a sampled input uses 1..num_colors colours (a one-colour
+      input has a unique minimum: every cell is selected).
   """
+  for name, value in (("height", height), ("width", width)):
+    if value is not None and not MIN_SIZE <= _int(value, name) <= MAX_SIZE:
+      raise ValueError(f"{name} must be in {MIN_SIZE}..{MAX_SIZE}")
+  if colors is not None:
+    if num_colors is not None:
+      raise ValueError("num_colors is a sampling argument; omit it with explicit colors")
+    height = LEGACY_SIZE if height is None else height
+    width = LEGACY_SIZE if width is None else width
+    colors = list(colors)
+    if len(colors) != height * width:
+      raise ValueError("colors must have height * width entries")
+    for color in colors:
+      if not 0 <= _int(color, "color") <= 9:
+        raise ValueError("colors must be in 0..9")
+  else:
+    height = common.randint(MIN_SIZE, MAX_SIZE) if height is None else height
+    width = common.randint(MIN_SIZE, MAX_SIZE) if width is None else width
+    if num_colors is None:
+      num_colors = common.randint(MIN_COLORS, MAX_COLORS)
+    elif not MIN_COLORS <= _int(num_colors, "num_colors") <= MAX_COLORS:
+      raise ValueError(f"num_colors must be in {MIN_COLORS}..{MAX_COLORS}")
+    subset = common.random_colors(num_colors)
+    for _ in range(MAX_ATTEMPTS):
+      colors = common.choices(subset, height * width)
+      if _unique_minimum(colors): break
+    else:
+      raise RuntimeError("attempt budget exhausted before a unique least frequent colour")
 
-  if colors is None:
-    subset = common.random_colors(common.randint(2, 4))
-    while True:
-      colors = common.choices(subset, 9)
-      counts = sorted([colors.count(c) for c in set(colors)])
-      if counts.count(counts[0]) == 1: break
-
-  grid, output = common.grid(3, 3), common.grid(9, 9)
+  grid, output = common.grid(width, height), common.grid(width * width, height * height)
   for i, color in enumerate(colors):
-    grid[i // 3][i % 3] = color
+    grid[i // width][i % width] = color
   min_color = sorted([(colors.count(c), c) for c in set(colors)])[0][1]
-  for row in range(3):
-    for col in range(3):
-      if colors[row * 3 + col] != min_color: continue
+  for row in range(height):
+    for col in range(width):
+      if colors[row * width + col] != min_color: continue
       for i, color in enumerate(colors):
-        output[3 * row + i // 3][3 * col + i % 3] = color
+        output[height * row + i // width][width * col + i % width] = color
   return {"input": grid, "output": output}
 
 

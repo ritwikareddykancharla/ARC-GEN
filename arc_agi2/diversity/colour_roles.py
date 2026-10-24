@@ -71,6 +71,13 @@ ROLE_SPECS = {
     "d06dbe63": {"fixed": (5,), "input_colours": 2},  # grey staircases per dot
     "d5d6de2d": {"fixed": (3,)},             # green box interiors; frame colours generic
     "fcc82909": {"fixed": (3,)},             # green tails, one row per colour
+    # Fourth batch: background alignment only, same review rules as the third batch.
+    "7b6016b9": {"fixed": (2, 3), "input_colours": 2},  # red enclosed, green open bg
+    "8eb1be9a": {},                          # band tiled vertically; colours generic
+    "97999447": {"fixed": (5,)},             # alternating grey ray right of each dot
+    "ba97ae07": {"input_colours": 3},        # swap top band at the crossing
+    "d4a91cb9": {"fixed": (2, 4, 8), "input_colours": 3},  # yellow elbow cyan->red
+    "f35d900a": {"fixed": (5,), "input_colours": 3},  # partner rings; grey edge dots
 }
 
 ROLE_ALIGNED = frozenset(ROLE_SPECS)

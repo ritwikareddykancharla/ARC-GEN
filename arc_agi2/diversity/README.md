@@ -208,11 +208,40 @@ Certificates are in `role-certificates/`; `role-certificates/summary-subset.json
 has summary rows for all 28 certified role families. The 18 earlier role
 certificates pin `colour_roles.py`, so all were rerun; only that hash and the
 timing changed. The first seven role families have no per-family certificate.
-Their specifications are unchanged, but admission must still be rebuilt. The six candidates still reviewed but not adopted
-are `7b6016b9`, `8eb1be9a`, `97999447`, `ba97ae07`, `d4a91cb9` and `f35d900a`;
-they are deferred to a later batch. `f8b3ba0a` is rejected because its role is
+Their specifications are unchanged, but admission must still be rebuilt. `f8b3ba0a` is rejected because its role is
 ambiguous: in 88 of 256 sampled inputs the cell filler, not the grid-line
 colour, is modal, so the native line role would move.
+
+## Fourth reviewed colour-role batch
+
+The six deferred candidates are now adopted under the same rules: background
+alignment only, with programs, labels and fixtures unchanged. Each fixed colour
+is hard-coded with the same meaning by both constructors. Most are output colours
+that RE-ARC never samples for background or foreground. In `d4a91cb9`, cyan 8
+and red 2 are also the input endpoints.
+
+| Family | Fixed | Input colours | Rule |
+|---|---|---|---|
+| `7b6016b9` | 2, 3 | 2 | enclosed background turns red, open background green |
+| `8eb1be9a` | none | any | the occupied band tiles vertically with its own height |
+| `97999447` | 5 | any | each dot shoots a ray right, alternating with grey |
+| `ba97ae07` | none | 3 | the hidden band is drawn on top at the crossing |
+| `d4a91cb9` | 2, 4, 8 | 3 | yellow elbow from cyan along its column, then to red |
+| `f35d900a` | 5 | 3 | partner-colour rings at corners; grey dots along the edges |
+
+Each family got 1,152 proposals and passed with at least 1,149 accepted
+pairs. Each also passed 2,048 augmented episodes (8,192 pair checks) and 16
+fixture variants; every native fixture maps to itself. Rejections, all
+counted:
+- `7b6016b9`: 1 modal tie. In 2 more inputs the line colour is modal, so
+  input-only inference assigns the wrong role. The archived verifier rejects
+  those labels, so they are excluded.
+- `d4a91cb9`: 1 duplicate input
+- The other four: none
+
+Because `colour_roles.py` changed, all 28 earlier role certificates were rerun.
+Only that hash and the timing changed. `role-certificates/summary-subset.json`
+now has 34 rows. Admission is rebuilt separately.
 
 ## Readable episode preparation
 

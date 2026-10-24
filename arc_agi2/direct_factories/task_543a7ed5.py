@@ -1,13 +1,15 @@
+# Repair (RE-ARC domain review): objects are the four-connected components of
+# every non-background input colour, not only native pink (palette[6]). Native
+# inputs contain one object colour, so their result is unchanged; RE-ARC draws
+# up to seven object colours and its verifier rings every univalued object.
 def build_program(d4, palette):
     bg = int(palette[8])
-    obj = int(palette[6])
     ring = int(palette[3])
     hole = int(palette[4])
     src = '''import numpy as np
 from collections import deque
 
 BG = __BG__
-OBJ = __OBJ__
 RING = __RING__
 HOLE = __HOLE__
 
@@ -41,8 +43,12 @@ def solve(demonstrations, grid):
         if not any(y == 0 or y == H - 1 or x == 0 or x == W - 1 for y, x in comp):
             for y, x in comp:
                 out[y, x] = HOLE
-    # one-cell ring around each object's bounding box, painted on background only
-    for comp in _components(g == OBJ):
+    # one-cell ring around each object's bounding box, painted on background only;
+    # every non-background colour forms objects (one per four-connected component)
+    comps = []
+    for colour in sorted(set(g.ravel().tolist()) - {BG}):
+        comps.extend(_components(g == colour))
+    for comp in comps:
         ys = [c[0] for c in comp]
         xs = [c[1] for c in comp]
         y0, y1, x0, x1 = min(ys), max(ys), min(xs), max(xs)
@@ -52,6 +58,6 @@ def solve(demonstrations, grid):
                     out[y, x] = RING
     return out.tolist()
 '''
-    src = src.replace('__BG__', str(bg)).replace('__OBJ__', str(obj))
+    src = src.replace('__BG__', str(bg))
     src = src.replace('__RING__', str(ring)).replace('__HOLE__', str(hole))
     return src

@@ -1,21 +1,17 @@
 {
   "task_id": "22233c11",
-  "factory_sha256": "3c9abd837e59da7550218edcd749d3e7b79ff4ac87826c11388f010a45c4d304",
-  "constructor_sha256": "47d21acafcc8a5d9ae166cf37f6b258d40822cb92eb9b8c4c118aaea0a7974d5",
   "passed": true,
   "fresh_pairs_checked": 1000,
   "augmented_pair_checks": 8000,
   "fixture_variants_checked": 16,
-  "sampler_rejections": [],
-  "seed": 130125623425798,
-  "d4": 7,
-  "unique_base_inputs": 233,
-  "seconds": 3.917378583922982,
-  "factory_version": 1,
+  "constructor_sha256": "47d21acafcc8a5d9ae166cf37f6b258d40822cb92eb9b8c4c118aaea0a7974d5",
+  "auditor_sha256": "c7c525a7ef21debe8a3e1cd459009003846a69e4a45d032a5447efc16b14f283",
   "requires_per_episode_verification": true,
-  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
-  "draft_notes": {
-    "explanation": "Each green square pair consists of two equal s\u00d7s squares that touch only at a corner. Together they sit on one diagonal of a 2s\u00d72s block square. The other two corners of that block are empty: one at (y1,x2) and one at (y2,x1). Each empty corner is moved one block further out along the perpendicular diagonal, giving cyan squares at (y1-dy, x2+dx) and (y2+dy, x1-dx), clipped to the grid. The rule is written in terms of a corner-touching relationship and a diagonal offset vector, and both are preserved by every rotation and reflection. A transformed episode therefore runs the same mechanism directly in visible coordinates. Mirroring or rotating the scene simply changes the signs of dy and dx, and the formula reverses the push direction to match. No wrapper or coordinate normalisation is used, so d4 needs no explicit specialisation. The colour roles are taken from the palette as constants: green = palette[3] marks the squares and cyan = palette[8] is what gets drawn. Square objects are found as 4-connected components of the green colour, kept only if they are full squares, then paired as the archived solver does: same size, with |dy| = |dx| = s. Grids may be rectangular, and partially off-grid stamps are clipped.",
-    "limitations": "This assumes the palette maps original colours injectively, so palette[3] and palette[8] are distinct from the background. Green components that are not full squares are ignored, which never happens in the generator's domain. Pairing checks every pair of equal-size squares in the grid. The generator separates its two pairs by a column gap of at least s, so squares from different pairs can never be diagonally adjacent and no false pairs arise. Cyan is written over whatever is underneath; in the generator's domain it never overlaps green. The fixtures agree with a single uniform rule, and no contradictions were found."
-  }
+  "sampler_rejections": [],
+  "program_provider": "factory",
+  "factory_sha256": "65fd833aa069a916b218fd35185b0b97c9e900c04e531b154e1b147196ab355e",
+  "factory_version": 1,
+  "unique_base_inputs": 220,
+  "fixture_basis": "canonical",
+  "seconds": 2.3953534169122577
 }

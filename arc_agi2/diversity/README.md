@@ -74,9 +74,9 @@ Each passed 1,024 accepted pairs grouped into fresh episodes under all eight
 spatial transforms: 2,048 episode checks, or 8,192 pair checks, per family.
 Every exported episode is checked again with its own demonstrations and palette.
 
-A second reviewed batch adds fifteen families to `ROLE_SPECS` in
-`colour_roles.py`. Their RE-ARC constructors differ from the native programs only
-by colour roles. Background only: `0a938d79`, `25ff71a9`, `4347f46a`, `46f33fce`
+A second reviewed batch adds eighteen families to `ROLE_SPECS` in
+`colour_roles.py`. For fifteen of them, the RE-ARC constructors differ from the
+native programs only by colour roles. Background only: `0a938d79`, `25ff71a9`, `4347f46a`, `46f33fce`
 and `7468f01a`. Background with fixed constructor markers kept in place:
 `0ca9ddb6`, `1caeab9d`, `31aa019c`, `50cb2852` and `60b61512`. Background plus
 one named foreground: `3aa6fb7a`, `4258a5f9`, `6d75e8bb` and `6e82a1ae`, plus
@@ -90,8 +90,18 @@ Recorded alignment rejections:
 - `46f33fce`: 84 of 1,152, all single-colour, empty inputs.
 - `3aa6fb7a`: 2 of 1,152, both modal ties.
 
-These families still need the regenerated `admission.json` before the sampler
-uses them.
+Three more families needed reviewed program repairs as well as alignment. The
+native programs assumed one object colour or one object per colour, so in
+roughly 97% of aligned RE-ARC pairs they did not reproduce the label:
+- `22233c11`: diagonal square pairs may now use any non-cyan colour and pair within their own colour.
+- `543a7ed5`: objects of every non-background colour get rings and hole fills; the background is aligned to native cyan.
+- `5c0a986e`: each square shoots its own ray.
+
+Native inputs give unchanged results. The repaired factories were re-certified
+on 1,000 fresh native pairs and 16 fixture variants. Both verifiers agree with
+them on the broader domain, and all three passed the same 2,048-episode gate.
+All eighteen families still need the regenerated `admission.json` before the
+sampler uses them.
 
 A separate 1,000-sample measurement records actual generated variation in
 `extension-domain-measurements.json`: `09c534e7` has 943 rectangular scenes and

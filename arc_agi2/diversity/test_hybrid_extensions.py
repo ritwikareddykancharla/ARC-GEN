@@ -37,7 +37,8 @@ def test_alignment_preserves_constructor_relation(tid):
             continue
         aligned, palette = align_pair(tid, raw)
         assert sorted(palette) == list(range(10))
-        assert palette[counts[0][0]] == 0 and all(palette[c] == c for c in fixed)
+        assert palette[counts[0][0]] == spec.get("background", 0)
+        assert all(palette[c] == c for c in fixed)
         if "foreground" in spec:
             assert palette[free[0]] == spec["foreground"]
         for key in ("input", "output"):

@@ -15,7 +15,7 @@ from arc_agi2.runtime import call, grid, reference, verification_solver
 
 BATCH2 = ("0a938d79", "0ca9ddb6", "1caeab9d", "25ff71a9", "31aa019c", "3aa6fb7a",
           "4258a5f9", "4347f46a", "46f33fce", "50cb2852", "56dc2b01", "60b61512",
-          "6d75e8bb", "6e82a1ae", "7468f01a")
+          "6d75e8bb", "6e82a1ae", "7468f01a", "22233c11", "543a7ed5", "5c0a986e")
 ROOT = Path(__file__).parent
 CERTS = ROOT.parent / "reports/diversity-v1/role-certificates"
 
@@ -104,3 +104,52 @@ def test_certificate_matches_current_sources(tid):
         assert digest == hashlib.sha256((ROOT.parent / name).read_bytes()).hexdigest(), name
     text, _ = compile_target(tid)
     assert cert["program_sha256"] == hashlib.sha256(text.encode()).hexdigest()
+
+
+def _run(tid, grid_in):
+    text, _ = compile_target(tid)
+    namespace = {}
+    exec(compile(text, "<target>", "exec"), namespace)
+    return namespace["solve"]([], grid_in)
+
+
+def test_rays_leave_every_square():
+    # 5c0a986e: two blue squares each shoot up-left; one red square shoots down-right.
+    g = [[0] * 9 for _ in range(9)]
+    for r, c, colour in ((2, 2, 1), (4, 7, 1), (6, 1, 2)):
+        for dr in (0, 1):
+            for dc in (0, 1):
+                g[r + dr][c + dc] = colour
+    out = _run("5c0a986e", g)
+    assert out[1][1] == out[0][0] == 1
+    # The former union-bounding-box program drew no ray from the second square.
+    assert out[3][6] == out[2][5] == out[1][4] == out[0][3] == 1
+    assert out[8][3] == 2 and out[4][4] == 0
+    assert sum(v != 0 for row in out for v in row) == 12 + 2 + 4 + 1
+
+
+def test_rings_for_every_object_colour():
+    # 543a7ed5 (native background cyan 8): a pink and a blue object both get green rings.
+    g = [[8] * 12 for _ in range(8)]
+    for r in range(2, 5):
+        for c in range(2, 5):
+            g[r][c] = 6
+        for c in range(7, 10):
+            g[r][c] = 1
+    g[3][8] = 8
+    out = _run("543a7ed5", g)
+    assert out[1][1] == out[5][5] == out[1][6] == out[5][10] == 3
+    assert out[3][8] == 4 and out[3][3] == 6 and out[0][0] == 8
+
+
+def test_square_pairs_match_within_one_colour():
+    # 22233c11: a green and a blue diagonal pair each emit cyan marks; a mixed-colour
+    # diagonal contact does not.
+    g = [[0] * 14 for _ in range(10)]
+    g[2][2] = g[3][3] = 3
+    g[2][10] = g[3][9] = 1
+    g[7][7], g[8][8] = 4, 5
+    out = _run("22233c11", g)
+    assert out[1][4] == out[4][1] == 8
+    assert out[1][8] == out[4][11] == 8
+    assert out[6][9] == out[9][6] == 0

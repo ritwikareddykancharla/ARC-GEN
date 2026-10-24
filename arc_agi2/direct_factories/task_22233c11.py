@@ -1,12 +1,14 @@
+# Repair (RE-ARC domain review): diagonal square pairs may use any colour other
+# than background and the cyan marker, pairing only same-colour squares. Native
+# inputs use green alone, so their result is unchanged; RE-ARC draws up to
+# eight square colours in one grid.
 def build_program(d4, palette):
-    G = int(palette[3])
     C = int(palette[8])
     BG = int(palette[0])
     src = '''
 import numpy as np
 from collections import deque
 
-GREEN = %d
 CYAN = %d
 BG = %d
 
@@ -35,15 +37,17 @@ def solve(demonstrations, grid):
     g = np.array(grid, dtype=int)
     H, W = g.shape
     out = g.copy()
+    # Squares pair up only with squares of their own colour.
     squares = []
-    for cells in _components(g == GREEN):
-        ys = [c[0] for c in cells]
-        xs = [c[1] for c in cells]
-        y0, x0, y1, x1 = min(ys), min(xs), max(ys), max(xs)
-        hh, ww = y1 - y0 + 1, x1 - x0 + 1
-        if hh != ww or len(cells) != hh * ww:
-            continue
-        squares.append((y0, x0, hh))
+    for colour in sorted(set(g.ravel().tolist()) - {BG, CYAN}):
+        for cells in _components(g == colour):
+            ys = [c[0] for c in cells]
+            xs = [c[1] for c in cells]
+            y0, x0, y1, x1 = min(ys), min(xs), max(ys), max(xs)
+            hh, ww = y1 - y0 + 1, x1 - x0 + 1
+            if hh != ww or len(cells) != hh * ww:
+                continue
+            squares.append((y0, x0, hh, colour))
     squares.sort()
 
     def stamp(y, x, s):
@@ -55,9 +59,9 @@ def solve(demonstrations, grid):
     n = len(squares)
     for i in range(n):
         for j in range(i + 1, n):
-            ya, xa, sa = squares[i]
-            yb, xb, sb = squares[j]
-            if sa != sb:
+            ya, xa, sa, ca = squares[i]
+            yb, xb, sb, cb = squares[j]
+            if sa != sb or ca != cb:
                 continue
             s = sa
             dy, dx = yb - ya, xb - xa
@@ -68,5 +72,5 @@ def solve(demonstrations, grid):
             stamp(ya - dy, xb + dx, s)
             stamp(yb + dy, xa - dx, s)
     return out.tolist()
-''' % (G, C, BG)
+''' % (C, BG)
     return src

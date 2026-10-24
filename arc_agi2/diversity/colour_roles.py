@@ -1,12 +1,14 @@
 """Reviewed bijective colour alignment for broader constructor domains.
 
-These families use background=0 in the native program, while RE-ARC samples
-the background. Align that role before the shared episode palette is sampled.
-This changes neither geometry nor the constructor's input/output relation.
+These families use a fixed background (usually 0) in the native program, while
+RE-ARC samples the background. Align that role before the shared episode
+palette is sampled. This changes neither geometry nor the constructor's
+input/output relation.
 
 Each entry in ``ROLE_SPECS`` was reviewed against the RE-ARC generator and the
 saved direct program (see ``reports/diversity-v1/role-certificates``):
 
+* ``background``: native background colour (default 0).
 * ``fixed``: colours the RE-ARC constructor hard-codes with the same meaning as
   the native program (output markers, anchors, seed legends). They must stay
   fixed points of the mapping and may never be the background or foreground.
@@ -49,6 +51,11 @@ ROLE_SPECS = {
     "6d75e8bb": {"fixed": (2,), "foreground": 8, "input_colours": 2},
     "6e82a1ae": {"fixed": (1, 2, 3), "foreground": 5, "input_colours": 2},
     "56dc2b01": {"fixed": (2, 8), "foreground": 3, "input_colours": 3},  # bar, marker; shape
+    # Second batch: alignment plus reviewed program repairs for several objects
+    # or colours per grid (see the factory headers in direct_factories/).
+    "22233c11": {"fixed": (8,)},             # cyan corner marks; square colours generic
+    "543a7ed5": {"background": 8, "fixed": (3, 4)},  # native cyan bg; ring and hole
+    "5c0a986e": {"fixed": (1, 2)},           # ray colours/directions per square
 }
 
 ROLE_ALIGNED = frozenset(ROLE_SPECS)
@@ -73,8 +80,11 @@ def align_pair(task_id, pair):
         raise ValueError("Background collides with the family's output marker")
     if "input_colours" in spec and len(counts) != spec["input_colours"]:
         raise ValueError("Unexpected number of input colours for this role assignment")
+    native_background = spec.get("background", 0)
+    if native_background in fixed:
+        raise ValueError("Invalid role specification")
     palette = list(range(10))
-    _swap_target(palette, background, 0)
+    _swap_target(palette, background, native_background)
     target = spec.get("foreground")
     if target is not None:
         free = [c for c, _ in counts if c != background and c not in fixed]
@@ -82,7 +92,7 @@ def align_pair(task_id, pair):
             raise ValueError("Foreground role requires one colour distinct from fixed markers")
         # RE-ARC randomizes this colour; the native program names it explicitly.
         _swap_target(palette, free[0], target)
-    if palette[background] != 0 or any(palette[c] != c for c in fixed):
+    if palette[background] != native_background or any(palette[c] != c for c in fixed):
         raise ValueError("Alignment would move a fixed colour role")
     aligned = {k: [[palette[c] for c in row] for row in pair[k]]
                for k in ("input", "output")}

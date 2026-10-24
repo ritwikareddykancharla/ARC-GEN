@@ -1,21 +1,17 @@
 {
   "task_id": "5c0a986e",
-  "factory_sha256": "3d20bb2a034cb14e372f1c31a57ed220f5ab57a5967a03311541dd4b8ef1b81b",
-  "constructor_sha256": "d98accc3badc1b8a1dc652bee4555985a3331c47c04c4e08310ce91127c411b6",
   "passed": true,
   "fresh_pairs_checked": 1000,
   "augmented_pair_checks": 8000,
   "fixture_variants_checked": 16,
-  "sampler_rejections": [],
-  "seed": 192299735030963,
-  "d4": 7,
-  "unique_base_inputs": 801,
-  "seconds": 3.1778355829883367,
-  "factory_version": 1,
+  "constructor_sha256": "d98accc3badc1b8a1dc652bee4555985a3331c47c04c4e08310ce91127c411b6",
+  "auditor_sha256": "c7c525a7ef21debe8a3e1cd459009003846a69e4a45d032a5447efc16b14f283",
   "requires_per_episode_verification": true,
-  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
-  "draft_notes": {
-    "explanation": "In canonical coordinates the colour-1 2x2 square emits a diagonal ray from its top-left corner in direction (-1,-1), and the colour-2 square emits one from its bottom-right corner in direction (+1,+1). Each ray runs to the grid border and paints only background cells. The factory moves each direction vector through the D4 transform. A horizontal flip negates dc, and each clockwise rotation maps (dr,dc) to (dc,-dr). Colour roles become the constants palette[0] (background), palette[1] and palette[2]. The emitted program finds each coloured square's bounding box in visible coordinates. It starts the ray at the box corner that lies furthest along the transformed direction, which is the box extreme on each axis, and steps diagonally until it leaves the grid, painting only background cells. It uses the actual H and W of the grid, so rectangular grids are handled.",
-    "limitations": "The program assumes one connected square per colour, as the generator produces, and uses the bounding box of all cells of that colour. If a colour is missing, no ray is drawn for it. Rays never overwrite non-background cells. The generator's diagonal-separation constraint means rays never cross or hit the other square, so this matches the generator. The fixtures agree with the uniform rule. I have not run any tests."
-  }
+  "sampler_rejections": [],
+  "program_provider": "factory",
+  "factory_sha256": "94d659c010f645d188cda5f4cba996e2ba231a48cf9cd0cbe5ae8d31d759866b",
+  "factory_version": 1,
+  "unique_base_inputs": 794,
+  "fixture_basis": "canonical",
+  "seconds": 2.7715974589809775
 }

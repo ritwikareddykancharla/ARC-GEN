@@ -23,7 +23,9 @@ The superseded reviews are kept verbatim in `review_history.json`.
 `f0df5ff0` and `f3cdc58f` in batch 4) went stale when native batch E
 (`a7edea3`) changed their constructors. They were reviewed again at the frozen
 integrated HEAD `e64baab`; see [Rereview of 4 repaired constructors](#rereview-of-4-repaired-constructors-native-batch-e).
-`review_history.json` now holds 15 superseded reviews.
+`review_history.json` now holds 15 superseded reviews. A separate review queue,
+[`implementation-priorities.json`](#implementation-priorities-review-queue), lists
+suggested next repair candidates. It is not an approval or an admission.
 
 ## Files
 
@@ -33,8 +35,9 @@ integrated HEAD `e64baab`; see [Rereview of 4 repaired constructors](#rereview-o
 | `inventory.jsonl` | One record per family (729), sorted by review rank |
 | `semantic_reviews.json` | Current hand-written semantic reviews (batches 1–6 and 22, 224 families), each bound to a constructor sha256 and to the source at its `baseline_commit` |
 | `review_history.json` | Superseded reviews (15 families: 11 from batches B/C, 4 from batch E), each kept verbatim with its constructor binding and the mechanical record it was written against |
-| `probes/` | Small read-only, seeded measurement scripts cited by the batch-2 to batch-6 and batch-22 reviews and the rereviews (`rereview_batch_bc.py`, `rereview_batch_e.py`) |
+| `probes/` | Small read-only, seeded measurement scripts cited by the batch-2 to batch-6 and batch-22 reviews, the rereviews (`rereview_batch_bc.py`, `rereview_batch_e.py`) and the priority queue (`priority_candidates.py`) |
 | `summary.json` | Counts, ID lists, all batches, reviewed and pending batch numbers, the next pending batch, rereviewed and history IDs, validation errors (currently none) |
+| `implementation-priorities.json` | Review queue of suggested next repairs, with already-implemented, in-progress (lane-owned), proposed and pending status. Not an approval, admission or source reservation |
 
 ```bash
 PYTHONPATH=. .venv/bin/python arc_agi2/reports/diversity-v1/native-domain-review-20261024/extract.py
@@ -503,6 +506,50 @@ and validation is unchanged for them.
   competitors are hypotheses too.
 - **Sample statistics:** every probe figure is a seeded local sample, not an
   audit.
+
+## Implementation priorities (review queue)
+
+`implementation-priorities.json` is a machine-readable review queue. It does
+not approve, admit, certify or reserve anything. `reserves_sources` is false,
+and root's paired-source priority comes first. Each record has one status:
+
+- **`already_implemented`:** the 38 `prepare.REPAIRED` families, grouped by
+  repair batch. It also lists two proposed batch-E follow-ups: the `f0df5ff0`
+  line-150 confetti pool, and an `f3cdc58f` legend gate.
+- **`in_progress`:** lane-owned work, as recorded from supervisor coordination
+  and checked against the lane branches. None of it is in HEAD.
+  - root native H: `6d1d5c90`;
+  - episode_sampling native F: `27f8ce4f`, `48f8583b`, `5b6cbef5`;
+  - rearc_domains native G: `8ba14f53`, `4cd1b7b2`.
+
+  All three lanes edit `colour_evidence.py`. On integration, its
+  `admission.json` pin and the batch-E context-audit pin must be refreshed.
+- **`proposed`:** unowned reviewed candidates. For each, the constructor and
+  its factory or certified program were read, and the record cites file lines
+  and probe paths.
+  - **Next native F batch:**
+    - `18447a8d`: band count 2..7. Canonical `train[1]` is unreachable today.
+    - `c7d4e6ad`: canvas, legend placement and shape placement.
+    - `d47aa2ff`: panel size and pixel count.
+  - **Next native G fallback:** `4f537728`, an 800-input lattice cross. Its
+    certified program and archived verifier infer roles by frequency, so a
+    denser lattice needs verifier work first.
+  - **Follow-up:** `b4a43f3b`. Its native three-segment sampler omits the
+    canonical four-segment map. Map resizing needs a layout decision and a
+    factory probe first.
+- **`pending`:** all 729 families keep their status in `inventory.jsonl` (224
+  reviewed, 505 pending). The shortlist never implies all-family completion.
+
+**Evidence for the candidates.** `probes/priority_candidates.py` (read-only,
+seeded, two runs byte-identical) checks the two candidates whose explicit
+constructor paths already reach the proposed domain:
+- **`18447a8d`:** n = 2..7 agrees with the archived verifier and the 8-D4
+  factory on 1537/1537 scenes. The uniqueness guard accepts 298/300 layouts at
+  n = 2 and only 210/300 at n = 7, so the loop at lines 53–64 must be bounded.
+- **`b4a43f3b`:** 1..8 segments plus free cells on 6×6 agree on 2400/2400.
+
+`c7d4e6ad`, `d47aa2ff` and `4f537728` have no size path, so they were not probed
+off-domain. Their records say so.
 
 ## Batch 1 semantic review (32 families)
 

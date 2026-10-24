@@ -1,0 +1,598 @@
+{
+ "schema": "native-implementation-priorities-v1",
+ "kind": "review_queue",
+ "note": "Review queue only. Nothing here approves, admits, certifies or reserves a source. release_ready is false for every family. Ownership is recorded from supervisor coordination and lane branches; root's paired-source priority takes precedence over every proposed item.",
+ "reserves_sources": false,
+ "release_ready": false,
+ "bound_to": {
+  "sources_at_commit": "e64baab92377355d6f9335ddf10a0fbda1e0e6a3",
+  "review_record_commit": "97f75b9a747b52e3aca4bda6db1a087f21edc5ea",
+  "note": "no constructor, factory, verifier or gate changed between the two commits"
+ },
+ "status_vocabulary": {
+  "already_implemented": "constructor repair landed in HEAD and registered in prepare.REPAIRED",
+  "in_progress": "owned by an active lane; changes are on a lane branch, not in HEAD",
+  "proposed": "suggested next work from a current review; unowned and unreserved",
+  "pending": "no current semantic review (inventory status pending)"
+ },
+ "already_implemented": {
+  "registered_in": "arc_agi2/diversity/prepare.py REPAIRED (lines 27-38)",
+  "groups": {
+   "early_repairs": [
+    "007bbfb7",
+    "009d5c81",
+    "00dbd492",
+    "0934a4d8",
+    "09c534e7",
+    "1e0a9b12",
+    "3194b014",
+    "3a301edc",
+    "45bbe264",
+    "aaecdb9a",
+    "ecb67b6d",
+    "feca6190"
+   ],
+   "native_expansion_A": [
+    "137f0df0",
+    "31adaf00",
+    "84db8fc4",
+    "a406ac07",
+    "ce039d91",
+    "d282b262",
+    "f45f5ca7"
+   ],
+   "native_batch_B": [
+    "03560426",
+    "0becf7df",
+    "0f63c0b9",
+    "14b8e18c",
+    "21f83797",
+    "2685904e",
+    "2a28add5"
+   ],
+   "native_batch_C": [
+    "7e2bad24",
+    "7e576d6e",
+    "94414823",
+    "50c07299"
+   ],
+   "native_batch_D": [
+    "195ba7dc",
+    "281123b4",
+    "31d5ba1a",
+    "34b99a2b"
+   ],
+   "native_batch_E": [
+    "0c786b71",
+    "e0fb7511",
+    "f0df5ff0",
+    "f3cdc58f"
+   ]
+  },
+  "count": 38,
+  "note": "registration is not a production export and not release readiness",
+  "proposed_follow_ups": [
+   {
+    "task_id": "f0df5ff0",
+    "status": "proposed",
+    "owner": null,
+    "priority": "high",
+    "item": "line 150 confetti pool common.choices(range(2, 10), 6) excludes canonical train[1] (7 colours); draw the pool size per scene, then recertify and rerun the context audit",
+    "evidence": "arc_agi2/reports/diversity-v1/native-domain-review-20261024/probes/rereview_batch_e.py"
+   },
+   {
+    "task_id": "f3cdc58f",
+    "status": "proposed",
+    "owner": null,
+    "priority": "medium",
+    "item": "no evidence gate: an ascending-count legend fits all demos and changes the query in 67/2000 4x4 contexts; add a root-authorised legend gate or raise the random minimum height, then rerun the context audit",
+    "evidence": "arc_agi2/reports/diversity-v1/native-domain-review-20261024/probes/rereview_batch_e.py"
+   }
+  ]
+ },
+ "in_progress": [
+  {
+   "lane": "root native H",
+   "branch": "hybrid-native-h-20261025",
+   "branch_tip": "41c465a",
+   "task_ids": [
+    "6d1d5c90"
+   ],
+   "integrated_in_head": false,
+   "changes_on_branch": [
+    "tasks/task_6d1d5c90.py",
+    "arc_agi2/colour_evidence.py"
+   ]
+  },
+  {
+   "lane": "episode_sampling native F",
+   "branch": "hybrid-claude-native-f-20261025",
+   "branch_tip": "d940084",
+   "task_ids": [
+    "27f8ce4f",
+    "48f8583b",
+    "5b6cbef5"
+   ],
+   "integrated_in_head": false,
+   "changes_on_branch": [
+    "tasks/task_27f8ce4f.py",
+    "tasks/task_48f8583b.py",
+    "tasks/task_5b6cbef5.py",
+    "arc_agi2/colour_evidence.py",
+    "batch D and E context-audit reruns"
+   ]
+  },
+  {
+   "lane": "rearc_domains native G",
+   "branch": "hybrid-claude-native-g-20261025",
+   "branch_tip": "db62a9e",
+   "task_ids": [
+    "8ba14f53",
+    "4cd1b7b2"
+   ],
+   "integrated_in_head": false,
+   "changes_on_branch": [
+    "tasks/task_8ba14f53.py",
+    "tasks/task_4cd1b7b2.py",
+    "arc_agi2/colour_evidence.py"
+   ]
+  }
+ ],
+ "in_progress_note": "The six in-progress families have current batch-5 reviews at HEAD; they will go stale when the lanes integrate and then need rereview. All three lanes edit colour_evidence.py, so on integration the admission.json pin and the batch-E context-audit pin (colour_evidence 6789d3d8) must be refreshed or rerun.",
+ "proposed": [
+  {
+   "task_id": "18447a8d",
+   "status": "proposed",
+   "queue": "next_native_F_batch",
+   "order": 1,
+   "owner": null,
+   "suggested_lane": "episode_sampling native F (after its current batch)",
+   "review": {
+    "batch": 6,
+    "rank": 183,
+    "review_baseline_commit": "59d03df8b76e537ef9cb08c3b1e5890501c024c9",
+    "review_patch_priority": "high",
+    "review_adequacy": "needs_constructor_work",
+    "review_kind": "first_review"
+   },
+   "sources": {
+    "constructor": {
+     "path": "tasks/task_18447a8d.py",
+     "sha256": "616d77deeef304c5cb79adb4dbc21c0c2ae35626c8da863b6162e283c9fc5e1f"
+    },
+    "program": {
+     "kind": "direct_factory",
+     "path": "arc_agi2/direct_factories/task_18447a8d.py",
+     "lines_read": "1-80 (bands from contiguous non-background rows 34-39; key width from area/total 40-45; first unused matching key 62-67)",
+     "sha256": "63b5acbc604c009c247b775ba46f5e55c24f9e9e18105dc2bc0d54b19d0ed19d"
+    },
+    "pair_verifier": "archived reference (runtime.verification_solver; applied to native pairs at arc_agi2/diversity/prepare.py line 330)",
+    "evidence_gate": "none dispatched in arc_agi2/colour_evidence.py",
+    "registration": "not in prepare.REPAIRED, prepare.REVIEWED_NATIVE or admission.json",
+    "certificate_state": "current"
+   },
+   "finding": "Canonical train[1] has 2 bands; line 52 draws n = randint(3, 4), so it is unreachable (probes/fixture_stats_batch6.py line 236).",
+   "proposed_axes": [
+    {
+     "axis": "objects/dimensions: band count",
+     "lines": [
+      39,
+      52
+     ],
+     "current": "n = 3..4 (52); canvas 11 x (4n+1) (39)",
+     "proposal": "n = 2..7 (4n+1 <= 30; seven key colours excluding 7 and 8 suffice)",
+     "evidence": "Explicit path, n = 2..7: archived verifier and the certified factory under all 8 D4 with a seeded palette agree on 1537/1537 accepted scenes (probes/priority_candidates.py). Batch-6 d4=0 factory check: 400/400 for n in {2,5,6,7} (probes/fixture_stats_batch6.py lines 686-707)."
+    },
+    {
+     "axis": "optional: total key+lock width and canvas width",
+     "lines": [
+      39,
+      46,
+      58,
+      59
+     ],
+     "current": "total 5 and width 11 in every fixture",
+     "proposal": "only if root wants it; undemonstrated",
+     "evidence": "factory derives the width from area/total (factory lines 40-45); not probed"
+    }
+   ],
+   "retained_rules": [
+    "background 7, lock colour 8 at the left, key at the right (lines 46, 48)",
+    "three-row bands separated by blank rows (lines 39, 44)",
+    "each key completes exactly one lock (uniqueness guard, line 42)",
+    "key colours distinct, excluding 7 and 8 (line 52); keys shuffled across bands (line 62)"
+   ],
+   "expected_work": {
+    "constructor": "Sample n in 2..7; add explicit-argument validation; bound the unbounded rejection loop (lines 53-64) with a RuntimeError. Uniqueness-guard acceptance falls from 298/300 (n=2) to 210/300 (n=7) in probes/priority_candidates.py.",
+    "verifier": "none expected: the archived reference agreed on every probed scene",
+    "gate": "none expected: the factory reads no demonstrations and the guard keeps matches unique",
+    "certification": "fresh 1000/8000/16 recertification, fixture replay, 128-sample audit rerun"
+   },
+   "uncertainties": [
+    "Total-width and canvas-width variation is undemonstrated and unprobed.",
+    "The factory takes the first matching key (factory line 67); only the constructor guard prevents ties."
+   ],
+   "priority": "high",
+   "priority_rationale": "canonical input unreachable; one literal range plus loop bounding; verifier and factory already agree on the target domain"
+  },
+  {
+   "task_id": "c7d4e6ad",
+   "status": "proposed",
+   "queue": "next_native_F_batch",
+   "order": 2,
+   "owner": null,
+   "suggested_lane": "episode_sampling native F (after its current batch)",
+   "review": {
+    "batch": 3,
+    "rank": 85,
+    "review_baseline_commit": "f1b8bb9548c0361b9a9d93cbbf8b24ec81966baa",
+    "review_patch_priority": "medium",
+    "review_adequacy": null,
+    "review_kind": "first_review"
+   },
+   "sources": {
+    "constructor": {
+     "path": "tasks/task_c7d4e6ad.py",
+     "sha256": "6c88d33d0ea07a8a0287037d101dcca94647f3be73cf0a746ab224908705dc04"
+    },
+    "program": {
+     "kind": "direct_factory",
+     "path": "arc_agi2/direct_factories/task_c7d4e6ad.py",
+     "lines_read": "1-49 (key edge from d4, lines 4-8; each non-background cell takes its row's or column's key, lines 20-47; any h x w)",
+     "sha256": "e7d7c61c30b96650b766573b16545a3a639303a257a553c3c16a6fdc56e72c7f"
+    },
+    "pair_verifier": "archived reference (runtime.verification_solver; applied to native pairs at arc_agi2/diversity/prepare.py line 330)",
+    "evidence_gate": "none dispatched in arc_agi2/colour_evidence.py",
+    "registration": "not in prepare.REPAIRED, prepare.REVIEWED_NATIVE or admission.json",
+    "certificate_state": "current"
+   },
+   "finding": "Fixed 10x10 canvas: the explicit path is a flat 100-cell list (lines 72-74). Legend height 7..8 (29), start row 1..9-height (30), 2..4 legend colours (31), grey start column 3 (49, 55) and width 3..5 (42) are literals.",
+   "proposed_axes": [
+    {
+     "axis": "dimensions",
+     "lines": [
+      36,
+      72,
+      73,
+      74
+     ],
+     "current": "10x10",
+     "proposal": "independent H, W (review: about 8..16), with explicit width/height arguments"
+    },
+    {
+     "axis": "legend placement",
+     "lines": [
+      29,
+      30,
+      33,
+      34
+     ],
+     "current": "height 7..8, start 1..9-height, segments 1..4 summing to the height",
+     "proposal": "legend height up to H-2 and free start row; segment lengths scaled to the height"
+    },
+    {
+     "axis": "shape placement",
+     "lines": [
+      42,
+      49,
+      55
+     ],
+     "current": "start column 3, width 3..5",
+     "proposal": "free start column with at least one blank column after the legend; width scaled to W"
+    },
+    {
+     "axis": "optional: legend colour count",
+     "lines": [
+      31
+     ],
+     "current": "2..4",
+     "proposal": "2..6 distinct non-grey colours"
+    }
+   ],
+   "retained_rules": [
+    "legend in column 0; every non-black cell takes its row's legend colour (lines 39, 77)",
+    "one connected grey (5) shape (line 69)",
+    "every legend row contains grey (lines 57-63); grey only within legend rows (lines 47, 52-54)",
+    "legend colours distinct and not grey (line 31)"
+   ],
+   "expected_work": {
+    "constructor": "Size and legend parameters; bound both unbounded loops (segment-sum rejection 32-34; grey growth 43-69, which only stops when every legend row has grey and the shape is connected).",
+    "verifier": "archived reference not yet checked at other sizes (needs the explicit-size path first)",
+    "gate": "none expected by source reading: the key edge comes from d4 metadata",
+    "certification": "recertify 1000/8000/16; audit rerun; timing of the growth loop at large H"
+   },
+   "uncertainties": [
+    "Not probed off-domain: the constructor has no size path, so factory genericity rests on reading lines 16-47.",
+    "Whether grey outside the legend span belongs to the task (the review's open question)."
+   ],
+   "priority": "medium",
+   "priority_rationale": "all canonical inputs reachable; tiny-variety literal canvas and placement"
+  },
+  {
+   "task_id": "d47aa2ff",
+   "status": "proposed",
+   "queue": "next_native_F_batch",
+   "order": 3,
+   "owner": null,
+   "suggested_lane": "episode_sampling native F (after its current batch)",
+   "review": {
+    "batch": 3,
+    "rank": 89,
+    "review_baseline_commit": "f1b8bb9548c0361b9a9d93cbbf8b24ec81966baa",
+    "review_patch_priority": "medium",
+    "review_adequacy": null,
+    "review_kind": "first_review"
+   },
+   "sources": {
+    "constructor": {
+     "path": "tasks/task_d47aa2ff.py",
+     "sha256": "fd5d1120f720c045ea6668bc1690ef50c035540e87d23f5e6b0a9bb81fd135ea"
+    },
+    "program": {
+     "kind": "direct_factory",
+     "path": "arc_agi2/direct_factories/task_d47aa2ff.py",
+     "lines_read": "1-81 (divider = full DIV line nearest the centre, lines 26-30 / 53-57; occupancy difference vacated/arrived, lines 41-45 / 68-72; any size)",
+     "sha256": "5206d6b295169148e5f9308909721afcbfc8daa84b6099af8d51c8387b8e34b0"
+    },
+    "pair_verifier": "archived reference (runtime.verification_solver; applied to native pairs at arc_agi2/diversity/prepare.py line 330)",
+    "evidence_gate": "none dispatched in arc_agi2/colour_evidence.py",
+    "registration": "not in prepare.REPAIRED, prepare.REVIEWED_NATIVE or admission.json",
+    "certificate_state": "current"
+   },
+   "finding": "Fixed 10x10 panels on a 21x10 canvas (lines 39-41, bounds 44-46); 5..10 pixels (64) and 1..2 movers (65).",
+   "proposed_axes": [
+    {
+     "axis": "dimensions",
+     "lines": [
+      39,
+      40,
+      41,
+      44,
+      45,
+      46
+     ],
+     "current": "panels 10x10",
+     "proposal": "panel H 1..30 and W with 2W+1 <= 30 (review: about 6..14), explicit arguments"
+    },
+    {
+     "axis": "objects",
+     "lines": [
+      63,
+      64,
+      65
+     ],
+     "current": "2..3 colours, 5..10 pixels, 1..2 movers",
+     "proposal": "pixel count scaled with panel area; movers up to the colour count"
+    }
+   ],
+   "retained_rules": [
+    "two equal panels split by a grey (5) column (lines 39-41)",
+    "pixel colours exclude 1, 2 and 5 (line 63)",
+    "initial spacing (line 33) and at most one mover per colour (lines 36-37)",
+    "displacement within 5x5, not zero and not a corner jump (lines 72-75)",
+    "no overwrite and in-bounds moves (lines 44-51); output marks old cell 2 and new cell 1 (55-59)"
+   ],
+   "expected_work": {
+    "constructor": "size parameters; bound the loops at 66-80 and 71-76; scale counts with area",
+    "verifier": "archived reference not yet checked at other sizes",
+    "gate": "none expected: the factory reads no demonstrations; its occupancy reading equals the movement reading only while the no-overwrite and spacing guards hold",
+    "certification": "recertify 1000/8000/16; audit rerun; spacing-guard feasibility at high counts"
+   },
+   "uncertainties": [
+    "Not probed off-domain: no explicit size path.",
+    "Larger displacements are undemonstrated (the fixtures move at most 2)."
+   ],
+   "priority": "medium",
+   "priority_rationale": "all canonical inputs reachable; literal panel size and counts"
+  },
+  {
+   "task_id": "4f537728",
+   "status": "proposed",
+   "queue": "next_native_G_fallback",
+   "order": 1,
+   "owner": null,
+   "suggested_lane": "rearc_domains native G (fallback after 8ba14f53/4cd1b7b2)",
+   "review": {
+    "batch": 2,
+    "rank": 35,
+    "review_baseline_commit": "f7353826fdd001ce808b911ad4bb984a404b99d0",
+    "review_patch_priority": "high",
+    "review_adequacy": null,
+    "review_kind": "first_review"
+   },
+   "sources": {
+    "constructor": {
+     "path": "tasks/task_4f537728.py",
+     "sha256": "9316c916d142dc2a84fb0884be301c7975ee5a0b90a7a46ecd09656ec7678d77"
+    },
+    "program": {
+     "kind": "direct_certificate (saved_teacher_transform)",
+     "path": "arc_agi2/reports/direct-certificates/4f537728.json",
+     "lines_read": "certified_source('4f537728') program lines 12-37: background = modal colour (18), lattice = most frequent other colour (19-20), paint the marker's cell rows and columns (26-33)"
+    },
+    "pair_verifier": "archived reference (runtime.verification_solver; applied to native pairs at arc_agi2/diversity/prepare.py line 330)",
+    "evidence_gate": "none dispatched in arc_agi2/colour_evidence.py",
+    "registration": "not in prepare.REPAIRED, prepare.REVIEWED_NATIVE or admission.json",
+    "certificate_state": "current"
+   },
+   "finding": "Whole native domain is 800 inputs: marker row, col 1..5 (31) x 8 colours (32) x offsets 0/1 (33) on a literal 20x20 canvas with a 7x7 lattice of 2x2 blocks, period 3 (35-41). The certificate saw 578 unique inputs in 1000; the audit 120 unique and 35 orbits.",
+   "proposed_axes": [
+    {
+     "axis": "dimensions/objects",
+     "lines": [
+      35,
+      36,
+      37,
+      39,
+      41
+     ],
+     "current": "20x20 canvas, 7x7 lattice, 2x2 blocks, gap 1",
+     "proposal": "lattice rows/cols, block size and gap sampled, canvas derived (review proposal)"
+    },
+    {
+     "axis": "placement",
+     "lines": [
+      31,
+      33
+     ],
+     "current": "marker index 1..5, offsets 0/1",
+     "proposal": "any index whose block is whole (index 6 is always whole and excluded today)"
+    },
+    {
+     "axis": "colours",
+     "lines": [
+      32,
+      38,
+      40
+     ],
+     "current": "lattice colour literal 1",
+     "proposal": "lattice colour sampled, distinct from the marker"
+    }
+   ],
+   "retained_rules": [
+    "one marker block; every block sharing its lattice row or column takes its colour (line 40)",
+    "marker colour differs from the lattice colour (line 32)"
+   ],
+   "expected_work": {
+    "constructor": "parameterise lattice geometry and colours; keep the explicit legacy path",
+    "verifier": "Required. Both the certified program and the archived reference infer roles by frequency. Natively the background is modal by only 8 cells at offsets 0/0 (196 of 400 cells are lattice or marker, lines 35-41), so denser lattices (for example 3x3 blocks with gap 1, about 56% lattice) would invert the roles. Either bound the lattice fill below one half or add a root-authorised fixed-colour checker and program.",
+    "gate": "none expected: one marker fixes the cross",
+    "certification": "new direct certificate (certified_source rebuilds the program and checks the constructor hash, so any constructor change invalidates the current one); audit rerun"
+   },
+   "uncertainties": [
+    "Whether several markers belong to the task (not proposed).",
+    "Behaviour of cut marker blocks under a generalised lattice is unprobed."
+   ],
+   "priority": "high",
+   "priority_rationale": "800-input finite domain; expansion needs verifier/program work, so it is a fallback after the paired-source priority"
+  },
+  {
+   "task_id": "b4a43f3b",
+   "status": "proposed",
+   "queue": "follow_up",
+   "order": 1,
+   "owner": null,
+   "suggested_lane": "unassigned follow-up",
+   "review": {
+    "batch": 6,
+    "rank": 165,
+    "review_baseline_commit": "59d03df8b76e537ef9cb08c3b1e5890501c024c9",
+    "review_patch_priority": "high",
+    "review_adequacy": "needs_constructor_work",
+    "review_kind": "first_review"
+   },
+   "sources": {
+    "constructor": {
+     "path": "tasks/task_b4a43f3b.py",
+     "sha256": "62217bdcedb23b02fef3dce69643bdf6dd86853741e25c77b62453195337896d"
+    },
+    "program": {
+     "kind": "direct_factory",
+     "path": "arc_agi2/direct_factories/task_b4a43f3b.py",
+     "lines_read": "1-62 (divider line search 19-38; motif sampled as region // 3, lines 51-53; stamp every non-background map cell, 56-60)",
+     "sha256": "ad0f0f59c49f06b2b0d7fbec9a0a3ff461a34973b540e34543e16fb15012bc7c"
+    },
+    "pair_verifier": "archived reference (runtime.verification_solver; applied to native pairs at arc_agi2/diversity/prepare.py line 330)",
+    "evidence_gate": "none dispatched in arc_agi2/colour_evidence.py",
+    "registration": "not in prepare.REPAIRED, prepare.REVIEWED_NATIVE or admission.json",
+    "certificate_state": "current"
+   },
+   "finding": "Canonical train[1]'s map needs four axis segments; the random path draws exactly three (line 35), so it is unreachable (probes/fixture_stats_batch6.py lines 229-232).",
+   "proposed_axes": [
+    {
+     "axis": "objects: map segments on 6x6",
+     "lines": [
+      35,
+      36,
+      37,
+      38,
+      39,
+      40,
+      41
+     ],
+     "current": "exactly 3 axis segments",
+     "proposal": "1..k segments plus free cells on the 6x6 map",
+     "evidence": "Explicit pattern path: k = 1..8 segments plus 0..2 free cells, archived verifier and 8-D4 factory agree on 2400/2400 (probes/priority_candidates.py)."
+    },
+    {
+     "axis": "colours",
+     "lines": [
+      33
+     ],
+     "current": "motif colours {1,2,3,6}",
+     "proposal": "1..9 except the divider 5 (review proposal); unprobed"
+    },
+    {
+     "axis": "dimensions: map size",
+     "lines": [
+      34,
+      44,
+      50,
+      51,
+      52,
+      53
+     ],
+     "current": "6x6 map, 13x6 input, 18x18 output",
+     "proposal": "P x Q maps up to 10x10 only after a layout decision and a factory probe: the motif region shares the map width, and the factory samples the motif as region // 3 (factory lines 51-53)"
+    }
+   ],
+   "retained_rules": [
+    "3x3 diagonally connected motif shown 2x upscaled above the divider (lines 29, 47-49)",
+    "grey (5) divider row (lines 45-46); map colour 2 (lines 41, 53)",
+    "stamp the motif at every map cell (lines 54-56)"
+   ],
+   "expected_work": {
+    "constructor": "segment count first (canonical-restoring); motif colours; map resizing only after the factory probe",
+    "verifier": "none expected for 6x6 maps (probe); unknown for resized layouts",
+    "gate": "none expected: the factory reads no demonstrations",
+    "certification": "recertify 1000/8000/16; audit rerun; factory probe before any map resizing"
+   },
+   "uncertainties": [
+    "Factory behaviour on non-6x6 maps and narrower motif regions is untested."
+   ],
+   "priority": "high",
+   "priority_rationale": "canonical input unreachable; the 6x6 segment fix is probed, map resizing is not"
+  }
+ ],
+ "proposed_order": {
+  "next_native_F_batch": [
+   "18447a8d",
+   "c7d4e6ad",
+   "d47aa2ff"
+  ],
+  "next_native_G_fallback": [
+   "4f537728"
+  ],
+  "follow_up": [
+   "b4a43f3b"
+  ],
+  "precedence": "subject to root's paired-source priority"
+ },
+ "pending": {
+  "note": "All 729 families keep their review status in inventory.jsonl. This shortlist is a few reviewed candidates and never implies that every family was reviewed or prioritised.",
+  "inventory": "arc_agi2/reports/diversity-v1/native-domain-review-20261024/inventory.jsonl",
+  "semantic_status": {
+   "reviewed": 224,
+   "pending": 505
+  },
+  "pending_batches": [
+   7,
+   8,
+   9,
+   10,
+   11,
+   12,
+   13,
+   14,
+   15,
+   16,
+   17,
+   18,
+   19,
+   20,
+   21,
+   23
+  ],
+  "next_review_batch": 7
+ }
+}

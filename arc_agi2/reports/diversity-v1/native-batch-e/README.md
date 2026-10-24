@@ -139,11 +139,12 @@ after. These come from a bounded pool, so they are not a finite-capacity claim.
 
 ## Limits
 
-- **e0fb7511 low densities.** Explicit densities well below 0.15 on large canvases cannot meet the area-scaled azure floor: 30×30 at 0.10 gives a bounded `RuntimeError` in about 0.1 s. Pass `min_marked` to lower the floor. The random range starts at 0.15 for this reason; the review suggested 0.10.
+- **e0fb7511 low densities.** Explicit densities well below 0.15 on large canvases can make the area-scaled azure floor unlikely within the attempt budget: all five measured 30×30 draws at 0.10 exhausted the budget in about 0.1 s each. This is not proof of impossibility. Pass `min_marked` to lower the floor. The random range starts at 0.15 for this reason; the review suggested 0.10.
 - **f0df5ff0 dense explicit requests.** At full capacity, all windows can still fail the per-window visibility guard within 200 attempts (about 3% success per attempt at confetti 0.5 with 100 windows), which raises `RuntimeError`. Dense lattice layouts are also more regular than the scattered default.
 - **Random minima are a sampling choice**, not a semantic restriction: 0c 2, e0/f0 6, f3 4. Explicit sizes go lower.
 - **Production shape support.** Strict same-shape support in the production pool was estimated only from draw statistics (shapes with ≥ 4 pairs). No prepare run was done.
 - **Batch D re-certification.** Batch D's `context-audit.json` pins the old shared hashes. Root authorised a real rerun, which is committed separately after this one.
+- **Batch D rerun comparison.** Semantic metrics and retry counts reproduced exactly. The shared dependency hashes and measured runtimes changed; the preceding report is preserved as `context-audit-pre-batch-e-db16125.json`.
 
 ## Tests
 

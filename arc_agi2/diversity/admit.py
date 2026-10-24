@@ -83,6 +83,10 @@ def main():
             "feca6190_evidence.py",
             "panel_overlay_evidence.py",
             "mirror_neighbourhood_evidence.py",
+            "self_tiler_evidence.py",
+            "hole_tally_8ba14f53_evidence.py",
+            "latin_fill_4cd1b7b2_evidence.py",
+            "marker_roll_evidence.py",
         )
     ]
     for result in results:

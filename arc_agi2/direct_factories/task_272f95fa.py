@@ -1,3 +1,20 @@
+"""Grid-line region fill (272f95fa), reviewed for the broader RE-ARC domain.
+
+Rule (native constructor and RE-ARC ``generate_272f95fa``): two full rows and
+two full columns of one colour cut the grid into nine regions. The five
+non-corner regions are filled by visible position: top 2, left 4, centre 6,
+right 3 and bottom 1. Both constructors fix these fill colours. RE-ARC
+transforms the input first and then assigns colours by position, so the
+legend remains a palette role that moves with the D4 index.
+
+The earlier factory looked for palette[8] lines and, failing that, searched
+other colours but skipped palette[0]. RE-ARC samples the line colour from
+0, 5, 7, 8 and 9, so its black-line scenes were returned unchanged. The line
+colour is now the unique colour with exactly two full rows and two full
+columns. Zero or several candidates raise an error instead of returning the input.
+"""
+
+
 def build_program(d4, palette):
     legend = {(0, 1): 2, (1, 0): 4, (1, 1): 6, (1, 2): 3, (2, 1): 1}
     vis = {}
@@ -8,13 +25,9 @@ def build_program(d4, palette):
         for _ in range(d4 % 4):
             r, c = c, 2 - r
         vis[(r, c)] = int(palette[col])
-    div = int(palette[8])
-    bg = int(palette[0])
     lines = []
     lines.append('import numpy as np')
     lines.append('')
-    lines.append('DIV = %d' % div)
-    lines.append('BG = %d' % bg)
     lines.append('FILL = %r' % (vis,))
     lines.append('')
     lines.append('def _find(g, colour):')
@@ -31,17 +44,17 @@ def build_program(d4, palette):
     lines.append('    g = np.array(grid, dtype=int)')
     lines.append('    out = g.copy()')
     lines.append('    H, W = g.shape')
-    lines.append('    rows, cols = _find(g, DIV)')
-    lines.append('    if len(rows) != 2 or len(cols) != 2:')
-    lines.append('        for colour in sorted(set(g.ravel().tolist())):')
-    lines.append('            if colour == BG:')
-    lines.append('                continue')
-    lines.append('            r2, c2 = _find(g, colour)')
-    lines.append('            if len(r2) == 2 and len(c2) == 2:')
-    lines.append('                rows, cols = r2, c2')
-    lines.append('                break')
-    lines.append('    if len(rows) != 2 or len(cols) != 2:')
-    lines.append('        return out.tolist()')
+    # The grid lines are the unique colour with exactly two full rows and two
+    # full columns. RE-ARC samples both line and background colours, so the
+    # line colour may be any palette entry, including palette[0].
+    lines.append('    found = []')
+    lines.append('    for colour in sorted(set(g.ravel().tolist())):')
+    lines.append('        r2, c2 = _find(g, colour)')
+    lines.append('        if len(r2) == 2 and len(c2) == 2:')
+    lines.append('            found.append((r2, c2))')
+    lines.append('    if len(found) != 1:')
+    lines.append('        raise ValueError("Expected one colour forming two full rows and two full columns")')
+    lines.append('    rows, cols = found[0]')
     lines.append('    rs = _spans(sorted(rows), H)')
     lines.append('    cs = _spans(sorted(cols), W)')
     lines.append('    for (ri, ci), colour in FILL.items():')

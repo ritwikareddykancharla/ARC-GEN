@@ -123,6 +123,42 @@ The original 121-family, 200/20 export completed with 24,054 training and 2,358
 validation episodes; 113 families met both quotas. That export predates these
 new fixes and is an intermediate artifact, not the complete hybrid dataset.
 
+## Reviewed program repairs without colour alignment
+
+Twelve probe-ready families failed the augmented admission gate even though
+both verifiers accepted their RE-ARC labels. Their programs made assumptions
+the broader domain violates. Seven are repaired in `direct_factories/`; each
+factory header states the rule and the defect. Each program reads its roles
+from the visible grid and rejects ambiguous scenes instead of guessing.
+
+| Family | Earlier assumption | Reviewed rule |
+|---|---|---|
+| `63613498` | frame = largest object (reading-order ties) | corner bracket found geometrically |
+| `57aa92db` | template = best ratio (complete scaled copies tie) | ties go to the unscaled, then largest, object |
+| `aabf363d` | marker = smallest component; modal background | rarer colour; border background |
+| `1a07d186` | strays cleared and redrawn one at a time | clear all strays, then dock |
+| `fcb5c309` | largest box | box enclosing the most dots |
+| `272f95fa` | palette[0] lines skipped | unique colour with two full rows and columns |
+| `8403a5d5` | background palette[0] | background = everything but the seed |
+
+`recertify` gave each factory a native certificate: 1,000 fresh pairs, 8,000
+D4 checks and 16 fixture variants. `8403a5d5` has 80 possible native inputs,
+so all of them are also enumerated (`recertify.FINITE_DOMAINS`).
+`certify_programs.py` then applies the role-family budget. Each family has at
+least 1,024 accepted pairs and 2,048 augmented episodes (8,192 pair checks).
+Certificates are in `reports/diversity-v1/program-certificates/`. They include
+`summary-subset.json`, rows for the shared summary.
+
+The archived verifier still filters proposals, and its rejections remain
+excluded. The repaired program reproduced every RE-ARC label in those rejected
+cases but one, so archived-verifier defects now limit acceptance.
+`63613498` accepts 1,177 of 3,456 proposals, `fcb5c309` 1,132 of 3,456 and
+`aabf363d` 1,269 of 2,688. `0b148d64` and `1b2d62fb` have candidate repairs
+that are exact on the RE-ARC domain. Native recertification rejects them
+because their archived verifiers disagree with the native constructor
+(`blocked-verifier-defects.json`), so their factories are unchanged pending a
+reviewed verifier.
+
 ## Readable episode preparation
 
 `prepare.py` prepares a **supplement**, comprising the 140 admitted families and

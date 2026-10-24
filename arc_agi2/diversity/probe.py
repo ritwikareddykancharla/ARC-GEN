@@ -21,7 +21,8 @@ from .colour_roles import align_pair
 from .rearc import generators, utils, verifiers
 
 
-def probe(item):
+def probe(item, deadline=35):
+    """``deadline`` bounds proposal sampling; exceeding it sets ``bounded_stop``."""
     tid, count = item
     began = time.monotonic()
     gen = getattr(generators, "generate_" + tid)
@@ -48,7 +49,7 @@ def probe(item):
         result["setup_error"] = repr(exc)
         return result
     for i in range(count):
-        if time.monotonic() - began > 35:
+        if time.monotonic() - began > deadline:
             result["bounded_stop"] = True
             break
         seed = int(hashlib.sha256(f"diversity-v1:{tid}:{i}".encode()).hexdigest()[:8], 16)

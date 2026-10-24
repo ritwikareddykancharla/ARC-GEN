@@ -1,29 +1,25 @@
 {
   "task_id": "8403a5d5",
-  "factory_sha256": "e5bf94046afda8c13c86f58453c6cd8d7b74c020f5042af0cc79eb35490eb960",
-  "constructor_sha256": "341ba3209edcdd02946b1e9eab136d529152adc7ded2ed1a45bda71fe194cb5e",
   "passed": true,
   "fresh_pairs_checked": 1000,
   "augmented_pair_checks": 8000,
   "fixture_variants_checked": 16,
+  "constructor_sha256": "341ba3209edcdd02946b1e9eab136d529152adc7ded2ed1a45bda71fe194cb5e",
+  "auditor_sha256": "1e194cb80d11ccda4026cb83a61c6dd407f1b9d94117090b31de26b01a3f191d",
+  "requires_per_episode_verification": true,
   "sampler_rejections": [],
-  "seed": 128512344154093,
-  "d4": 7,
+  "program_provider": "factory",
+  "factory_sha256": "c51608dbce8c34a50201432a8496a7927f913e09ea0e72618ef60a5c8bea2c95",
+  "factory_version": 1,
   "unique_base_inputs": 80,
-  "seconds": 5.208258750033565,
   "finite_default_domain": {
     "exhaustive": true,
     "cases_checked": 80,
     "augmented_checks": 1280,
-    "definition": "All ten seed positions times eight permitted non-background, non-grey colours: 80.",
+    "definition": "All ten seed columns times eight non-black, non-grey seed colours: 80.",
     "query_distinct_from_demos": true,
     "scope": "Default native parameter distribution only; finite input count is not inflated by repeated sampling."
   },
-  "factory_version": 1,
-  "requires_per_episode_verification": true,
-  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
-  "draft_notes": {
-    "explanation": "In the canonical puzzle a single seed sits on the bottom edge. Starting at the seed, every second column toward the right edge becomes a full stripe in the seed colour. The columns in between (gaps) each get one grey cell: the first gap's grey is at the far edge (row 0), the second at the seed's edge (bottom row), and so on alternately. The factory maps two canonical unit vectors through the D4 transform: progress (0,1) and seed-edge direction (1,0). It applies a horizontal flip first for indices>=4, then (dr,dc)->(dc,-dr) for each clockwise turn. The emitted program finds the non-background seed in visible coordinates. It then walks from the seed in steps along the transformed progress vector. On even steps it fills a full line parallel to the seed-edge axis (a column if that axis is vertical, a row if it is horizontal). On odd steps it places palette[5] at the far edge or the seed edge, alternating with the gap index. Background is palette[0], falling back to the most common colour. Grey is palette[5], and the seed colour is read from the pixel. Because the seed-edge direction comes from d4 rather than the seed's position, corner seeds are unambiguous.",
-    "limitations": "This has not been run or tested. It assumes the constructor's domain: exactly one seed pixel on the transformed seed edge, with a background of palette[0]. If several non-background pixels exist, the first one in row-major order is used. Rectangular grids are handled, but the generator only produces square 10x10 grids. No constructor defects were found: the fixtures match the generator's uniform rule, including a trailing gap column at the edge, which still gets its alternating grey cell."
-  }
+  "fixture_basis": "canonical",
+  "seconds": 2.72720466600731
 }

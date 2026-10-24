@@ -24,6 +24,40 @@ def sha(value):
     return hashlib.sha256(value).hexdigest()
 
 
+# Reviewed finite native parameter domains. A family whose default sampler has
+# fewer than 100 distinct inputs is certified only if every case is enumerated,
+# verified and observed among the fresh samples; repeats never inflate counts.
+FINITE_DOMAINS = {
+    "8403a5d5": (
+        "All ten seed columns times eight non-black, non-grey seed colours: 80.",
+        lambda: [dict(col=c, color=k) for c in range(10) for k in (1, 2, 3, 4, 6, 7, 8, 9)],
+    ),
+}
+
+
+def exhaustive_check(tid, module, checker, source, seen):
+    definition, cases = FINITE_DOMAINS[tid]
+    pairs = [{k: grid(v) for k, v in call(module.generate, seconds=3, **kw).items()}
+             for kw in cases()]
+    keys = [sha(json.dumps(p["input"]).encode()) for p in pairs]
+    if len(set(keys)) != len(pairs) or not seen <= set(keys) or len(seen) != len(pairs):
+        raise ValueError("Fresh samples do not match the enumerated finite domain")
+    checks = 0
+    for i, pair in enumerate(pairs):
+        if grid(call(checker, pair["input"])) != pair["output"]:
+            raise ValueError("Independent verifier disagrees with an enumerated case")
+        # Three other enumerated cases serve as demonstrations; the query is distinct.
+        four = [pairs[(i + j) % len(pairs)] for j in (1, 2, 3)] + [pair]
+        for palette in (list(range(10)), [3, 9, 0, 7, 2, 8, 1, 6, 4, 5]):
+            for d4 in range(8):
+                verify(source(d4, palette), episode(four, d4, palette), seconds=2)
+                checks += 1
+    return {"exhaustive": True, "cases_checked": len(pairs), "augmented_checks": checks,
+            "definition": definition, "query_distinct_from_demos": True,
+            "scope": "Default native parameter distribution only; finite input count "
+                     "is not inflated by repeated sampling."}
+
+
 def episode(pairs, d4, palette):
     four = [{k: transformed(p[k], d4, palette) for k in ("input", "output")} for p in pairs]
     return {
@@ -114,7 +148,10 @@ def check(tid):
             if report["fresh_pairs_checked"] >= 1000:
                 break
         report["unique_base_inputs"] = len(seen)
-        if report["fresh_pairs_checked"] < 1000 or len(seen) < 100:
+        if len(seen) < 100 and tid in FINITE_DOMAINS:
+            report["finite_default_domain"] = exhaustive_check(tid, module, checker, source, seen)
+        if report["fresh_pairs_checked"] < 1000 or (
+                len(seen) < 100 and "finite_default_domain" not in report):
             raise ValueError("Insufficient verified fresh examples")
         report.update(passed=True, fixture_basis="canonical", seconds=time.monotonic() - started)
     except Exception as exc:

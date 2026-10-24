@@ -28,7 +28,9 @@ REPAIRED = ("007bbfb7", "009d5c81", "00dbd492", "0934a4d8", "09c534e7", "1e0a9b1
             # Native domain expansion A (reports/diversity-v1/native-domain-expansion-20261024).
             "137f0df0", "31adaf00", "84db8fc4", "a406ac07", "ce039d91", "d282b262", "f45f5ca7",
             # Native batch B (reports/diversity-v1/native-batch-b-domains.json).
-            "03560426", "0becf7df", "0f63c0b9", "14b8e18c", "21f83797", "2685904e", "2a28add5")
+            "03560426", "0becf7df", "0f63c0b9", "14b8e18c", "21f83797", "2685904e", "2a28add5",
+            # Native batch C: orientation and rectangular domain coverage.
+            "7e2bad24", "7e576d6e", "94414823", "50c07299")
 
 # Reviewed adequate existing domains, not constructor expansions. Each has a
 # current semantic review and fresh 1000/8000/16 native recertification.

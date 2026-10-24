@@ -1,5 +1,5 @@
 {
- "baseline_commit": "ce6fb52bbfe2f3c90016a12e3023652085458b69",
+ "baseline_commit": "4f2ec866610ed91927c90a6935a589540cc9ca77",
  "ordering_commit": "5436f3fe035f261cdcf7996565c108148efa37fb",
  "audit_fork_commit": "cdf50ed9c057c6c11b679fc3e67243bcc0ffc597",
  "worklist": "/Users/ritwika/projects/arc-agi2/docs/hybrid-generator-review/family-worklist.json",
@@ -9,8 +9,8 @@
  "note": "mechanical fields are extraction, not semantic review; release_ready is never set",
  "certified_evidence_basis": "current = some certificate's constructor sha256 (and factory sha256 for direct factories) equals the current file; direct-source program hashes are not rebuilt here; a certificate is a finite audit, not a proof",
  "semantic_status": {
-  "reviewed": 192,
-  "pending": 537
+  "reviewed": 224,
+  "pending": 505
  },
  "tiers": {
   "A_fixed_dims_ge8": 122,
@@ -133,7 +133,23 @@
    "8597cfd7",
    "d017b73f",
    "42f83767",
-   "e87109e9"
+   "e87109e9",
+   "4b6b68e5",
+   "50f325b5",
+   "7bb29440",
+   "e12f9a14",
+   "5dbc8537",
+   "e4888269",
+   "1a6449f1",
+   "28a6681f",
+   "446ef5d2",
+   "5545f144",
+   "5b692c0f",
+   "825aa9e9",
+   "9720b24f",
+   "d4c90558",
+   "247ef758",
+   "a04b2602"
   ],
   "medium": [
    "05a7bcf2",
@@ -259,7 +275,9 @@
    "b0722778",
    "9b30e358",
    "ba1aa698",
-   "0607ce86"
+   "0607ce86",
+   "a2d730bd",
+   "396d80d7"
   ],
   "low": [
    "03560426",
@@ -288,7 +306,16 @@
    "34b99a2b",
    "d19f7514",
    "e133d23d",
-   "e345f17b"
+   "e345f17b",
+   "269e22fb",
+   "2b9ef948",
+   "79369cc6",
+   "7acdf6d3",
+   "c9680e90",
+   "cb2d8a2c",
+   "64efde09",
+   "31f7f899",
+   "963f59bc"
   ],
   "none": [
    "2685904e",
@@ -298,52 +325,57 @@
    "a406ac07",
    "ce039d91",
    "d282b262",
-   "f45f5ca7"
+   "f45f5ca7",
+   "c6141b15",
+   "d6542281",
+   "80a900e0",
+   "bf32578f",
+   "dfadab01"
   ]
  },
  "reviewed_axis_dispositions": {
   "dimensions": {
-   "broadly_variable": 19,
-   "incidental_restriction": 134,
-   "mixed": 34,
+   "broadly_variable": 49,
+   "incidental_restriction": 135,
+   "mixed": 35,
    "unknown": 5
   },
   "objects": {
-   "mixed": 117,
-   "intrinsic_or_rule_supported": 36,
-   "incidental_restriction": 19,
-   "broadly_variable": 20
+   "mixed": 130,
+   "intrinsic_or_rule_supported": 40,
+   "incidental_restriction": 29,
+   "broadly_variable": 25
   },
   "placement": {
-   "mixed": 79,
-   "incidental_restriction": 9,
-   "intrinsic_or_rule_supported": 84,
-   "broadly_variable": 20
+   "mixed": 89,
+   "incidental_restriction": 12,
+   "intrinsic_or_rule_supported": 90,
+   "broadly_variable": 33
   },
   "density_colours": {
-   "intrinsic_or_rule_supported": 74,
-   "mixed": 84,
-   "incidental_restriction": 31,
-   "broadly_variable": 3
+   "intrinsic_or_rule_supported": 77,
+   "mixed": 99,
+   "incidental_restriction": 32,
+   "broadly_variable": 16
   },
   "rule_parameters": {
-   "intrinsic_or_rule_supported": 166,
-   "incidental_restriction": 1,
+   "intrinsic_or_rule_supported": 195,
+   "incidental_restriction": 2,
    "broadly_variable": 2,
-   "mixed": 20,
+   "mixed": 22,
    "unknown": 3
   },
   "demonstration_context": {
-   "intrinsic_or_rule_supported": 163,
-   "mixed": 28,
+   "intrinsic_or_rule_supported": 193,
+   "mixed": 30,
    "unknown": 1
   }
  },
  "reviewed_patch_priority": {
-  "low": 27,
-  "medium": 124,
-  "high": 33,
-  "none": 8
+  "low": 36,
+  "medium": 126,
+  "high": 49,
+  "none": 13
  },
  "reviewed_batches": [
   1,
@@ -351,7 +383,8 @@
   3,
   4,
   5,
-  6
+  6,
+  22
  ],
  "rereviewed_ids": [
   "03560426",
@@ -380,6 +413,25 @@
   "94414823"
  ],
  "stale_reviewed_constructors": [],
+ "pending_batches": [
+  7,
+  8,
+  9,
+  10,
+  11,
+  12,
+  13,
+  14,
+  15,
+  16,
+  17,
+  18,
+  19,
+  20,
+  21,
+  23
+ ],
+ "next_batch_number": 7,
  "next_batch": [
   "817e6c09",
   "c1990cce",

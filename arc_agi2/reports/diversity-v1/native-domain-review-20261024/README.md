@@ -5,9 +5,13 @@ prepare/admission or release-readiness code was changed. `release_ready` is
 `false` for every record. A source review is not enough to set it, and neither
 is a smoke test.
 
-**Progress:** 192 of 729 families have current, hand-written semantic reviews
-(batches 1–6). None is stale. The other 537 are `pending`. Not all 729 families
-have been semantically reviewed.
+**Progress:** 224 of 729 families have current, hand-written semantic reviews:
+batches 1–6 (ranks 1–192) and batch 22 (ranks 673–704). None is stale.
+Coverage is **not consecutive**. Batches 7–21 (ranks 193–672) and batch 23
+(ranks 705–729) are `pending`: 505 families with no semantic review. Batch 22 was
+reviewed ahead of order to assess families that already sample shapes broadly.
+Nothing in this record implies that a skipped batch was reviewed. The next
+pending batch is **batch 7**.
 
 **Rereview (2026-10-24):** 11 of the 128 reviews went stale when native batches B
 and C changed their constructors. They were reviewed again against the
@@ -21,21 +25,31 @@ The superseded reviews are kept verbatim in `review_history.json`.
 |---|---|
 | `extract.py` | Reproducible extraction, merge and validation (`--check` validates without writing) |
 | `inventory.jsonl` | One record per family (729), sorted by review rank |
-| `semantic_reviews.json` | Current hand-written semantic reviews (batches 1–6, 192 families), each bound to a constructor sha256 and to the source at its `baseline_commit` |
+| `semantic_reviews.json` | Current hand-written semantic reviews (batches 1–6 and 22, 224 families), each bound to a constructor sha256 and to the source at its `baseline_commit` |
 | `review_history.json` | Superseded reviews (11 families), each kept verbatim with its constructor binding and the mechanical record it was written against |
-| `probes/` | Small read-only, seeded measurement scripts cited by the batch-2 to batch-6 reviews and the rereview (`rereview_batch_bc.py`) |
-| `summary.json` | Counts, ID lists, all batches, rereviewed and history IDs, validation errors (currently none) |
+| `probes/` | Small read-only, seeded measurement scripts cited by the batch-2 to batch-6 and batch-22 reviews and the rereview (`rereview_batch_bc.py`) |
+| `summary.json` | Counts, ID lists, all batches, reviewed and pending batch numbers, the next pending batch, rereviewed and history IDs, validation errors (currently none) |
 
 ```bash
 PYTHONPATH=. .venv/bin/python arc_agi2/reports/diversity-v1/native-domain-review-20261024/extract.py
 ```
 
 Running the script twice gives byte-identical `inventory.jsonl` and
-`summary.json`. `REVIEWED_BATCHES` in `extract.py` (currently `(1, 2, 3, 4, 5, 6)`) sets
-which batches must be fully and currently reviewed. Validation fails if any
-other batch has a non-`pending` record.
+`summary.json`. `REVIEWED_BATCHES` in `extract.py` (currently
+`(1, 2, 3, 4, 5, 6, 22)`) sets which batches must be fully and currently
+reviewed. Validation fails if any other batch has a non-`pending` record.
+
+`summary.json` lists `reviewed_batches`, `pending_batches` (currently 7–21 and
+23), `next_batch_number` and `next_batch`. The next batch is the **first
+unreviewed batch in the fixed batch order**, not `max(reviewed) + 1`, so it is
+batch 7 after the jump to batch 22. Batch membership itself is unchanged: it is
+still pinned to the ordering commit.
 
 Validation also checks:
+- the next-batch selector (`next_pending_batch`) on six fixed reviewed-set
+  cases, including `(1..6, 22) -> 7`, all 23 batches reviewed `-> None`, and an
+  empty set `-> 1`; and that, on the real inventory, the selected batch is
+  unreviewed and every earlier batch is reviewed;
 - every reviewed record's `constructor_sha256` equals the constructor at its own
   `baseline_commit`;
 - every `review_history.json` entry is byte-for-byte the review at the commit
@@ -48,11 +62,18 @@ Validation also checks:
 
 Negative tests of these checks (edited history text, dropped entry, wrong
 binding or baseline, missing field or evidence path) were run in scratch, and
-each one failed validation as intended.
+each one failed validation as intended. These were not repeated for batch 22,
+which did not change those checks. Only the new selector check was exercised:
+the seeded wrong-selector cases are listed in the batch-22 section.
 
 ## Provenance
 
-- **Batch 6 (latest):** records bind to `59d03df` (root integration, which
+- **Batch 22 (latest, reviewed out of order):** records bind to `59d03df`,
+  like batch 6. The worktree HEAD at extraction was the batch-6 report commit
+  `4f2ec86`, which changed no constructor. All 32 constructors are identical
+  from the ordering commit `5436f3f` through `59d03df` and HEAD, and equal the
+  ARC-GEN files.
+- **Batch 6:** records bind to `59d03df` (root integration, which
   registered native batch D and refreshed role admissions). The worktree HEAD
   at extraction was the batch-5 report commit `ce6fb52`; no constructor
   changed between the two. The rereview and batch 1–5 baselines below are kept
@@ -102,8 +123,9 @@ each one failed validation as intended.
   `demonstrations`. That flag is a lead only.
 - **Priority:** rank, batch and tier.
 
-Mechanical extraction is not semantic review. All 537 families outside
-batches 1–6 are `semantic_review.status = "pending"`.
+Mechanical extraction is not semantic review. All 505 families outside
+batches 1–6 and 22 (that is, batches 7–21 and 23) are
+`semantic_review.status = "pending"`.
 
 Totals:
 - **Tiers:** Tier A has 122 families: the audit-sampled input height and width
@@ -1101,6 +1123,213 @@ ambiguous beams. It still cannot produce its canonical test input.
   certificate or audit was rerun. The `9110e3c5` `direct-candidate-audit.json`
   failure was not traced to a specific candidate version.
 
+## Batch 22 semantic review (32 families, ranks 673–704; reviewed out of order)
+
+**Why this batch:** it was reviewed ahead of batches 7–21. Its families already
+sample shapes broadly in the audit (110–113 input shapes and 128/128 unique
+inputs each). The aim was to test whether broad sampling means an adequate
+domain, and to find adequate families that need no change.
+
+**Batches 7–21 and 23 remain unreviewed.** Their 505 records are `pending`.
+Nothing in this section describes them.
+
+**Scope:**
+- 32 tier-B first reviews.
+- Every constructor sha256 is identical at the ordering commit `5436f3f`, at
+  `59d03df` and at HEAD `4f2ec86`, and equals ARC-GEN. Every record binds to
+  `59d03df`.
+- **Audit:** the 128-sample audit matches all 32, with no shortfall.
+- **Certificates:** all 32 are `current`, all 1000/8000/16:
+  - 20 `direct_factory`;
+  - 12 `direct_certificate`: 10 saved-teacher transforms, plus
+    `d6542281` (reviewed joint-fragment exact cover) and `269e22fb`
+    (demonstration-conditioned shared picture).
+  - `e12f9a14` is certified on its teaching fixture.
+- **Admission:** none of the 32 is admitted. All are absent from
+  `prepare.REPAIRED`, `prepare.REVIEWED_NATIVE` and `admission.json`, and
+  `family-status.csv` has `broader_source_admitted=False`.
+- **Original ARC-GEN constructors:** four are inherited unchanged from upstream
+  ARC-GEN: `a2d730bd`, `2b9ef948`, `1a6449f1` and `a04b2602`.
+
+**What was read, for each family:**
+- the whole constructor;
+- every canonical train/test pair (`runtime.reference(tid)["canonical"]`);
+- the audit and certificate records;
+- the factory draft notes or certificate basis.
+
+Also read:
+- `prepare.py`: native pairs are drawn by `module.generate` and must agree
+  with `runtime.verification_solver`; episodes apply a random palette and D4
+  transform;
+- `episode_shape_policy.py`;
+- `colour_evidence.py` dispatch: only `dfadab01` has a gate, `motif_evidence`;
+- `verified_rules.VERIFIERS`: only `d6542281` has an override;
+- `contextual.py` and `admit.py`, for `269e22fb`;
+- the `e12f9a14` label review.
+
+**Code run:** a new read-only, seeded probe, `probes/fixture_stats_batch22.py`
+(N = 200, seed 0). Two runs gave byte-identical output (sha256 `52f19e8f…`); the
+`--timing` section is excluded. It has three parts:
+- **A.** Canonical latent parameters are captured by wrapping `generate()`
+  during `validate()`, then checked against the random path's ranges and
+  grammar. The derived checks each have a native self-test, and each passes on
+  every native case:
+  - the `9720b24f` outline checker accepts 616/616 native containers;
+  - the `446ef5d2` accent classifier recognises 600/600 native accents;
+  - `28a6681f` terrain statistics, `5b692c0f` axis statistics and `247ef758`
+    legend/marker statistics are also checked against native draws.
+- **B.** Native draws, checked with the production verifier
+  (`verification_solver`) and the certified program.
+- **C.** Certified programs past literal caps, using the constructor as
+  reference.
+
+### Axis dispositions (count of families)
+
+| Axis | incidental | mixed | intrinsic / rule-supported | broadly variable | unknown |
+|---|---|---|---|---|---|
+| dimensions | 1 | 1 | 0 | 30 | 0 |
+| objects | 10 | 13 | 4 | 5 | 0 |
+| placement | 3 | 10 | 6 | 13 | 0 |
+| density / colours | 1 | 15 | 3 | 13 | 0 |
+| rule parameters | 1 | 2 | 29 | 0 | 0 |
+| demonstration context | 0 | 2 | 30 | 0 | 0 |
+
+**Shape variety did not mean adequacy.** Dimensions are broadly variable in
+30 of 32 families. But in 16 families at least one canonical input is
+unreachable because of an object, placement or scene-grammar bound.
+
+**Patch priority:**
+- **High (16).** At least one canonical input is unreachable:
+  `4b6b68e5`, `50f325b5`, `7bb29440`, `e12f9a14`, `5dbc8537`, `e4888269`,
+  `1a6449f1`, `28a6681f`, `446ef5d2`, `5545f144`, `5b692c0f`, `825aa9e9`,
+  `9720b24f`, `d4c90558`, `247ef758` and `a04b2602`.
+- **Medium (2):**
+  - `a2d730bd`: 4/200 draws raise, and 5/196 have order-dependent colliding
+    structures that the archived verifier labels differently;
+  - `396d80d7`: 127/200 native figures are fragmented, against single compact
+    canonical figures.
+- **Low (9):** `269e22fb` (pipeline only), `79369cc6` (motif literal 3x3), and
+  the seven `low` candidates below (optional refinements).
+- **None (5):** the five `none` candidates below.
+
+### Adequate unchanged candidates (12)
+
+`c6141b15`, `d6542281`, `80a900e0`, `bf32578f` and `dfadab01` (priority none),
+and `2b9ef948`, `7acdf6d3`, `c9680e90`, `cb2d8a2c`, `64efde09`, `31f7f899` and
+`963f59bc` (priority low, optional refinements only).
+
+**Evidence for each:**
+- **Canonical reach:** every canonical input is inside the random path, by its
+  latent parameters (probe A).
+- **Broad sampling:** dimensions are broadly variable. Objects, placement and
+  colours are broadly variable, or mixed only because of task roles that
+  episode palette/D4 permutation covers, or because of fixture-spanning ranges.
+- **Agreement:** the production verifier and the certified program each agree
+  on 200/200 native draws (probe B).
+- **Speed:** draws take at most 8 ms (timing, not reproducible).
+- **Context:** every program is query-only. Only `dfadab01` is gated, by
+  `motif_evidence`.
+- **Literal caps:** wherever a fixture-spanning literal cap remains (segments,
+  cup sizes, ones, chains, device length, bar count, box size), the certified
+  program matched the constructor past it on 200/200 (probe C). So the cap is
+  not a program limit.
+
+**Constraints before admission (root):**
+1. Fresh 1000/8000/16 native recertification of the unchanged constructor
+   (`recertify`), as `REVIEWED_NATIVE` requires.
+   - `d6542281` must keep the `joint_fragments` verifier override pinned.
+   - `dfadab01` must keep the `motif_evidence` gate pinned, and should
+     report the gate retry rate.
+2. Registration in `prepare.REVIEWED_NATIVE`.
+3. An unmodified `prepare` 200/20 export that reports same-shape support.
+   - Canonical profiles are mixed/novel, except `c6141b15` and `dfadab01`
+     (mixed/seen).
+   - Native draws spread over 143–174 shapes per 200.
+
+None is release-ready.
+
+**Not candidates, although close:**
+- `79369cc6`: the motif is always 3x3, and the factory assumes it. A single
+  literal value is incidental (batch-5 lesson).
+- `a2d730bd`: collisions and the sampling error.
+- `396d80d7`: fragmentation.
+- `269e22fb`: the domain is adequate for an episode-context family, but
+  `prepare` samples pairs independently and checks them with the archived
+  verifier. That verifier agrees on 0/200 native pairs, while the contextual
+  verifier passes 50/50 episodes. `admit.py` line 60 excludes the family, so
+  episode-level sampling is needed first.
+
+### Discoveries
+
+- **Canonical inputs outside the native domain (probe A).**
+  - **Literal caps:**
+    - `4b6b68e5`: single outline, outline over 11.
+    - `5dbc8537`: pieces over 6 per side or over 24 in area; 15 pieces.
+    - `1a6449f1`: frames of 12.
+    - `d4c90558`: thickness 4, 10x15 interior.
+    - `9720b24f`: a 3x3 grid.
+    - `5b692c0f`: length 10.
+  - **Scene grammar:**
+    - `28a6681f`, all 4 pairs: tall pillars, several staircases, 3-wide
+      steps, two water pockets.
+    - `825aa9e9`: skylines outside the five styles.
+    - `446ef5d2`: free-form accents. Canonical pieces are straight-cut in
+      22/24 cases, against 96/1732 (5.5%) native pieces.
+    - `247ef758`: legend gap 5, shared legend rows, unmatched distractor
+      columns, a corner mark.
+    - `9720b24f`: stepped container outlines.
+    - `e4888269`: no pixels, 9 shapes up to 59 cells.
+  - **Guards stricter than the fixtures:**
+    - `7bb29440`: diagonal-only specials in 4 of 6 pairs; 0/820 native
+      rectangles.
+    - `5545f144`: walk shapes touch later dots, even at unshown positions.
+    - `5b692c0f`: intact rows without the cell next to the axis, or empty.
+    - `a04b2602`: rectangles one row apart.
+  - **Canonical conventions removed by native filters:**
+    - `50f325b5` train[1]: an overlapping mirrored placement shows the
+      unmirrored-first order; the repair removes it, 0/200 native.
+    - `e12f9a14` train[0] and test[0]: the tie flag.
+- **Verifier disagreements.** These are not counted as invalidity, because
+  `prepare` would reject such pairs. They do show where the domain is
+  undetermined.
+  - `a2d730bd`: 5/196, from overlapping pluses of adjacent pixels.
+  - `1a6449f1`: 4/200; cause not fully traced.
+- **Sampling defect.** In `a2d730bd`, 4/200 draws raise `ValueError` from
+  `common.sample` (lines 91–95) instead of retrying.
+- **Distribution drift.** In `396d80d7`, only 73/200 native figures are one
+  8-connected component.
+
+### Remaining gaps
+
+- **Not run:**
+  - no certificate, audit or `prepare` export was rerun;
+  - the candidate list is a recommendation, not an admission.
+- **Not measured:**
+  - the `motif_evidence` gate retry rate for `dfadab01`;
+  - same-shape support under an export;
+  - search cost after the proposed cap increases (`5dbc8537`, `446ef5d2`).
+- **Not inspected:** only two of the verifier disagreements per family
+  (`a2d730bd`, `1a6449f1`).
+- **Open semantics:**
+  - tie and collision conventions not shown by the fixtures (`e12f9a14`,
+    `a2d730bd`, `a04b2602`, `80a900e0` crossing rays);
+  - whether multi-pocket water always pours from the global top-left
+    (`28a6681f`);
+  - motif sizes other than 3x3 (`79369cc6`).
+- **Shared worklist drift:** the main-checkout `family-worklist.json` now
+  flags the nativeE families as `native_repaired` with a remeasure pending:
+  `e0fb7511` (batch 3) and `f0df5ff0`, `f3cdc58f` and `0c786b71` (batch 4).
+  - Their constructors in this worktree are unchanged, so their reviews
+    remain current here and were not edited. Only their mechanical `worklist`
+    fields were regenerated.
+  - They will become stale, and need rereview, when root's nativeE
+    integration lands.
+- **Selector check:** in scratch, replacing `next_pending_batch` with the old
+  `max(reviewed) + 1` rule failed the focused check: it gave 23 instead of 7
+  for `(1..6, 22)` and 3 instead of 1 for `(2,)`. An off-by-one variant
+  failed six ways. The restored selector passed. The older validator negative
+  tests were not repeated, because those checks did not change.
+
 ## Not covered
 
 - **No changes:** constructors, factories, verifiers, fixtures, labels and
@@ -1123,7 +1352,18 @@ ambiguous beams. It still cannot produce its canonical test input.
   and pair-verifier hashes are reported by `probes/rereview_batch_bc.py` for
   the 11 rereviewed families only.
 
-## Next batch (batch 7, ranks 193–224)
+## Coverage and next batch
+
+| Batches | Ranks | Families | Status |
+|---|---|---|---|
+| 1–6 | 1–192 | 192 | reviewed (current) |
+| 7–21 | 193–672 | 480 | **pending, not reviewed** |
+| 22 | 673–704 | 32 | reviewed (current, out of order) |
+| 23 | 705–729 | 25 | **pending, not reviewed** |
+
+The next pending batch is the first unreviewed batch in fixed order: **batch 7
+(ranks 193–224)**, which is `summary.json` `next_batch`. Batch membership is
+unchanged.
 
 `817e6c09 c1990cce 98c475bf 456873bc 458e3a53 470c91de 52fd389e 5783df64
 5ecac7f7 758abdf0 762cd429 7d7772cc 8fbca751 981add89 985ae207 c8b7cc0f

@@ -48,8 +48,9 @@ ORDERING_COMMIT = "5436f3fe035f261cdcf7996565c108148efa37fb"
 BATCH = 32
 MAX_CONSTRAINTS = 28
 # Batches whose every family must carry a hand-written, current semantic review.
-# All other batches must stay "pending".
-REVIEWED_BATCHES = (1, 2, 3, 4, 5, 6)
+# All other batches must stay "pending". Coverage need not be consecutive:
+# batch 22 was reviewed ahead of batches 7..21, which remain pending.
+REVIEWED_BATCHES = (1, 2, 3, 4, 5, 6, 22)
 
 CERT_DIRS = {
     "direct_factory": ROOT / "arc_agi2/direct_factories",
@@ -358,8 +359,38 @@ def build():
     return meta, recs, ids
 
 
+def next_pending_batch(batch_numbers, reviewed):
+    """First batch in the fixed batch order that is not reviewed, or None.
+
+    Reviewed coverage may have holes (for example 1..6 and 22), so the next
+    batch is the lowest unreviewed number, not max(reviewed) + 1.
+    """
+    for b in sorted(batch_numbers):
+        if b not in reviewed:
+            return b
+    return None
+
+
+def check_next_batch_selector(recs):
+    """Focused check of next_pending_batch on fixed cases and on the inventory."""
+    errs = []
+    cases = [((1, 2, 3, 4, 5, 6, 22), 7), (tuple(range(1, 24)), None), ((), 1),
+             ((2,), 1), ((1, 2, 3), 4), ((1, 2, 3, 4, 5, 6), 7)]
+    for reviewed, want in cases:
+        got = next_pending_batch(range(1, 24), reviewed)
+        if got != want:
+            errs.append(f"next_pending_batch({reviewed}) = {got}, expected {want}")
+    numbers = sorted({r["priority"]["batch"] for r in recs})
+    nb = next_pending_batch(numbers, REVIEWED_BATCHES)
+    if nb is not None and (nb in REVIEWED_BATCHES
+                           or any(b not in REVIEWED_BATCHES for b in numbers if b < nb)):
+        errs.append(f"next pending batch {nb} is not the first unreviewed batch")
+    return errs
+
+
 def check(meta, recs, ids):
     errs = []
+    errs += check_next_batch_selector(recs)
     got = [r["task_id"] for r in recs]
     if len(got) != 729 or len(set(got)) != 729 or sorted(got) != ids:
         errs.append("inventory ids do not equal the 729 expected ids")
@@ -448,7 +479,9 @@ def summarise(meta, recs):
         "review_history_ids": [r["task_id"] for r in recs if r["semantic_review_history"]],
         "stale_reviewed_constructors": [r["task_id"] for r in recs
                                         if r["semantic_review"]["status"] == "stale"],
-        "next_batch": batches.get(max(REVIEWED_BATCHES) + 1, []),
+        "pending_batches": [b for b in batches if b not in REVIEWED_BATCHES],
+        "next_batch_number": next_pending_batch(batches, REVIEWED_BATCHES),
+        "next_batch": batches.get(next_pending_batch(batches, REVIEWED_BATCHES), []),
         "batches": {str(k): v for k, v in batches.items()},
     }
 

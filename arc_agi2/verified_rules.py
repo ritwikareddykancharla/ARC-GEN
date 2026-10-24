@@ -214,13 +214,37 @@ def nested_frame_band(grid):
     return out
 
 
+def native_side_beam(grid):
+    """7e2bad24: replay the declared native side-contact mirror rule.
+
+    Pair label checker only. It uses the independent coordinate replay in
+    beam_endpoint_evidence (original colours: beam 1, mirror 2, glass 3) and
+    selects the 'side' reading that the native constructor declares. Exported
+    target programs still learn the endpoint convention from demonstrations.
+    """
+    from .beam_endpoint_evidence import RULES, beam_predictions
+    prediction = beam_predictions(grid, list(range(10)))[RULES.index('side')]
+    if prediction is None:
+        raise ValueError('Visible beam prefix contradicts the side-contact rule')
+    return [list(row) for row in prediction]
+
+
 from .joint_fragments import transform as joint_fragment_completion
 
 VERIFIERS = {'78332cb0': panel_chain, 'de493100': cropped_mirror_patch,
              '3a301edc': nested_frame_band,
              'd6542281': joint_fragment_completion,
-             'aaecdb9a': legend_object_chart, '007bbfb7': self_tiling}
+             'aaecdb9a': legend_object_chart, '007bbfb7': self_tiling,
+             '7e2bad24': native_side_beam}
 VERIFIER_EVIDENCE = {
+    '7e2bad24': {
+        'mode': 'reviewed_native_side_contact_beam_replay',
+        'module': 'arc_agi2.verified_rules.native_side_beam',
+        'reason': 'The archived solver reflects only when the diagonal target is a mirror; the native constructor reflects when the cell across the wall axis is a mirror. They differ exactly on endpoint-sensitive scenes (corner contact with a mirror end), so the archived checker rejected every endpoint-sensitive native pair (c75138a constructor: 220/220 endpoint-sensitive pairs in 600 seeded draws; 400/1000 pairs overall with seed 11, see counterexample). This checker replays the side-contact reading with the independent coordinate tracer of beam_endpoint_evidence. Exported programs and the unchanged colour-evidence gate still require demonstrations to determine the convention.',
+        'counterexample': 'arc_agi2/reports/diversity-v1/native-batch-c/7e2bad24-archived-verifier-counterexample.json',
+        'canonical_data_changed': False,
+        'archived_reference_changed': False,
+    },
     '3a301edc': {
         'mode': 'nested_bounding_box_containment',
         'module': 'arc_agi2.verified_rules.nested_frame_band',

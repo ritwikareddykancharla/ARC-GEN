@@ -1,0 +1,58 @@
+{
+  "task_id": "7e2bad24",
+  "passed": true,
+  "method": "query-preserving-informative-context",
+  "method_version": 2,
+  "harness_sha256": "eee80316c79e17001d1e7a72c36365a8018908885e5c3015820636d53285c780",
+  "constructor_sha256": "9c4feecc11acb97c0af1666de85e10afcbf8a56c2defce193a26f09de93d0e6b",
+  "factory_sha256": "122fe26edde63d5fab8f04cb4956922f68e68cdcb9ed9275598617925384e7a4",
+  "factory_version": 1,
+  "evidence_gate": "arc_agi2.beam_endpoint_evidence.require_endpoint_evidence",
+  "evidence_gate_sha256": "d6812f957c1fa50b3dd4a052b873061c8753f0f087645c8c7a87187eb639bdcd",
+  "pair_verifier": {
+    "mode": "reviewed_native_side_contact_beam_replay",
+    "module": "arc_agi2.verified_rules.native_side_beam",
+    "reason": "The archived solver reflects only when the diagonal target is a mirror; the native constructor reflects when the cell across the wall axis is a mirror. They differ exactly on endpoint-sensitive scenes (corner contact with a mirror end), so the archived checker rejected every endpoint-sensitive native pair (c75138a constructor: 220/220 endpoint-sensitive pairs in 600 seeded draws; 400/1000 pairs overall with seed 11, see counterexample). This checker replays the side-contact reading with the independent coordinate tracer of beam_endpoint_evidence. Exported programs and the unchanged colour-evidence gate still require demonstrations to determine the convention.",
+    "counterexample": "arc_agi2/reports/diversity-v1/native-batch-c/7e2bad24-archived-verifier-counterexample.json",
+    "canonical_data_changed": false,
+    "archived_reference_changed": false
+  },
+  "pair_verifier_sha256": "d0b43e0404fe9e69cc625ea1a228b9f09d0aa7fbab5f13194e0e3556b9f3b06d",
+  "requires_per_episode_verification": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "queries_requested": 250,
+  "queries_accepted": 250,
+  "queries_failed": [],
+  "max_contexts_per_query": 64,
+  "context_retries": 99,
+  "context_retry_histogram": {
+    "0": 213,
+    "4": 3,
+    "1": 20,
+    "2": 4,
+    "6": 2,
+    "9": 1,
+    "3": 3,
+    "5": 3,
+    "14": 1
+  },
+  "context_failure_reasons": {
+    "7e2bad24: unresolved mirror-end convention": 99
+  },
+  "endpoint_sensitive_queries": 91,
+  "endpoint_sensitive_accepted": 91,
+  "native_pair_draws": 1297,
+  "sampler_rejections": [],
+  "mixed_orientation_episodes": 209,
+  "query_axes": {
+    "h": 120,
+    "v": 130
+  },
+  "archived_solver_pair_disagreements": 442,
+  "archived_solver_query_disagreements": 98,
+  "unique_base_inputs": 1000,
+  "fixture_basis": "canonical",
+  "seconds": 23.92
+}

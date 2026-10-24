@@ -67,9 +67,12 @@ def generate(start_row=None, start_col=None, end_row=None, end_col=None,
 
   if start_col is None:
     colors = common.random_colors(4)
+    # The canonical episode mixes transposed and upright pairs, so each pair
+    # draws its own orientation unless the caller fixes it.
+    if xpose is None: xpose = common.randint(0, 1)
     start_row, start_col = 1, common.randint(4, 25)
     end_row, end_col = common.randint(25, 28), common.randint(4, 25)
-    while True:
+    for _ in range(1000):
       row, rows = 0, []
       while True:
         row += common.randint(3, 8)
@@ -80,6 +83,8 @@ def generate(start_row=None, start_col=None, end_row=None, end_col=None,
       if start_col in cols or end_col in cols: continue  # Undefined.
       grid, _ = draw()
       if grid: break
+    else:
+      raise RuntimeError("No alternating path layout within the retry bound")
 
   grid, output = draw()
   return {"input": grid, "output": output}

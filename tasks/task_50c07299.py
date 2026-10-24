@@ -17,23 +17,40 @@
 import common
 
 
-def generate(row=None, length=None):
+def generate(row=None, length=None, height=None, width=None):
   """Returns input and output grids according to the given parameters.
 
   Args:
-    row: Row of the line.
+    row: Row of the line (offset of its lower-left cell along the diagonal).
     length: Length of the line.
+    height: Height of the canvas (16 when row is given and height is not).
+    width: Width of the canvas (16 when row is given and width is not).
   """
 
   if row is None:
-    length = common.randint(1, 7)
-    row = common.randint(0, 15 - length * 2)
+    # The segment stays on the anti-diagonal through the bottom-left corner,
+    # as in every fixture; only the canvas size is free. The diagonal has
+    # min(height, width) cells and must hold the segment and its successor.
+    if height is None: height = common.randint(5, 30)
+    if width is None: width = common.randint(5, 30)
+    cells = min(height, width)
+    if cells < 3 or (length is not None and length * 2 + 1 > cells):
+      raise ValueError("Canvas diagonal cannot hold the segment and its successor")
+    if length is None: length = common.randint(1, (cells - 1) // 2)
+    row = common.randint(0, cells - 1 - length * 2)
+  else:
+    if height is None: height = 16
+    if width is None: width = 16
+    if length is None or row < 0 or length < 1:
+      raise ValueError("Explicit row needs a positive length")
+    if row + 2 * length + 1 > min(height, width):
+      raise ValueError("Segment and successor leave the canvas diagonal")
 
-  grid, output = common.grids(16, 16, 7)
+  grid, output = common.grids(width, height, 7)
   for i in range(length):
-    grid[15 - row - i][row + i] = 2
+    grid[height - 1 - row - i][row + i] = 2
   for i in range(length + 1):
-    output[15 - row - i - length][row + i + length] = 2
+    output[height - 1 - row - i - length][row + i + length] = 2
   return {"input": grid, "output": output}
 
 

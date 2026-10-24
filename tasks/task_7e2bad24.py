@@ -59,7 +59,14 @@ def generate(rows=None, cols=None, lengths=None, colors=None, prow=None,
     return grid, output
 
   if rows is None:
-    while True:
+    # The canonical episode mixes all wall orientations, so each pair draws
+    # its own flip/flop/transpose unless the caller fixes them.
+    if flip is None: flip = common.randint(0, 1)
+    if flop is None: flop = common.randint(0, 1)
+    if xpose is None: xpose = common.randint(0, 1)
+    # Acceptance is about 1/240 per layout (max 2175 tries in 2000 seeded
+    # draws); 20000 tries leave a negligible failure probability.
+    for _ in range(20000):
       rows, cols, lengths, colors = [], [], [], []
       for color in [2, 3]:
         row = common.randint(0, 4)
@@ -74,6 +81,8 @@ def generate(rows=None, cols=None, lengths=None, colors=None, prow=None,
       shown = common.randint(3, 6)
       grid, _ = draw()
       if grid: break
+    else:
+      raise RuntimeError("No beam layout within the retry bound")
 
   grid, output = draw()
   return {"input": grid, "output": output}

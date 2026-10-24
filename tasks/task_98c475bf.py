@@ -28,8 +28,16 @@ fixed decoration, taken from a lookup table rather than derived geometrically:
   3: diamond, dy=+-2 at x=5, dy=+-1 at x=4 and x=6, line gap at x=4..6
 
 Scope:
-  - The width is fixed at 20. Decorations sit at absolute x positions, so
-    another width would leave it unclear whether they anchor left or right.
+  - The width is sampled per scene from 18..30. All fixtures are 20 wide.
+    Decorations keep their absolute x positions from the left border (the
+    rightmost is x=16, so 18 is the narrowest canvas that holds the table).
+    This is supported only for episodes whose demonstrations share the
+    query's width: the demonstrated line span then fixes the anchoring. A
+    novel query width would leave it unclear whether decorations anchor
+    left, right or scale, and the evidence gate and factory refuse it.
+  - An explicit height without a width keeps the legacy 20-wide canvas, so
+    legacy explicit calls replay unchanged. Unconstrained calls draw the
+    width once, before any retry, and never change it to recover.
   - The motif table is fixed to the five colours shown in the fixtures.
   - The height is sampled from 12..30. All fixtures are 20 tall, so other
     heights are a synthetic extension. They stay unambiguous because the rule
@@ -51,7 +59,7 @@ import random
 
 import common
 
-WIDTH = 20
+WIDTH = 20  # canonical and legacy canvas width
 CANONICAL_HEIGHT = 20
 MIN_HEIGHT = 12
 MAX_HEIGHT = 30
@@ -68,6 +76,9 @@ MOTIFS = {
     1: ([(d, x) for d in (-1, 1) for x in (14, 16)], set()),
     3: ([(-2, 5), (-1, 4), (-1, 6), (1, 4), (1, 6), (2, 5)], {4, 5, 6}),
 }
+# The interior spans x=1..W-2, so every absolute decoration x must be <= W-2.
+MIN_WIDTH = max(x for deco, _ in MOTIFS.values() for _, x in deco) + 2
+MAX_WIDTH = 30
 
 
 def _is_int(v):
@@ -134,23 +145,23 @@ def _pack(colours, height):
 
 def _stamp(g, row, colour):
   deco, gaps = MOTIFS[colour]
-  for x in range(1, WIDTH - 1):
+  for x in range(1, len(g[0]) - 1):
     if x not in gaps:
       g[row][x] = colour
   for dy, x in deco:
     g[row + dy][x] = colour
 
 
-def _canvas(border, height):
-  g = common.grid(WIDTH, height, 0)
+def _canvas(border, height, width):
+  g = common.grid(width, height, 0)
   for y in range(height):
     g[y][0] = border
-    g[y][WIDTH - 1] = border
+    g[y][width - 1] = border
   return g
 
 
 def generate(border=None, line_color=None, line_row=None, markers=None,
-             num_markers=None, height=None, marker_colours=None):
+             num_markers=None, height=None, marker_colours=None, width=None):
   """Build one input/output pair.
 
   Args:
@@ -165,21 +176,26 @@ def generate(border=None, line_color=None, line_row=None, markers=None,
     num_markers: number of marker pairs (1..4) when markers are sampled. The
       default samples 1..3. If markers is also given, it must equal
       len(markers).
-    height: int grid height (12..30). The width is fixed at 20.
+    height: int grid height (12..30).
     marker_colours: optional iterable of allowed marker colours (a non-empty
       subset of the MOTIFS keys). This also applies to explicit markers.
+    width: int grid width (18..30). If None, an explicit height keeps the
+      legacy width 20; otherwise the width is sampled uniformly.
 
   Raises:
-    ValueError: if the explicit parameters are invalid or incompatible.
+    ValueError: if the explicit parameters are invalid or incompatible, or
+      no scene is found within MAX_TRIES tries. The width never changes.
   """
   colours = sorted(MOTIFS)
   for name, v in (("border", border), ("line_color", line_color),
                   ("line_row", line_row), ("num_markers", num_markers),
-                  ("height", height)):
+                  ("height", height), ("width", width)):
     if v is not None and not _is_int(v):
       raise ValueError("%s must be an int" % name)
   if height is not None and not MIN_HEIGHT <= height <= MAX_HEIGHT:
     raise ValueError("height must be in %d..%d" % (MIN_HEIGHT, MAX_HEIGHT))
+  if width is not None and not MIN_WIDTH <= width <= MAX_WIDTH:
+    raise ValueError("width must be in %d..%d" % (MIN_WIDTH, MAX_WIDTH))
   limit = height if height is not None else MAX_HEIGHT
   if border is not None and not 1 <= border <= 9:
     raise ValueError("border must be a colour in 1..9")
@@ -278,6 +294,13 @@ def generate(border=None, line_color=None, line_row=None, markers=None,
     if need > limit:
       raise ValueError("%d marker motifs need height >= %d" % (n_min, need))
 
+  if width is not None:
+    w = width
+  elif height is not None:
+    w = WIDTH
+  else:
+    w = random.randint(MIN_WIDTH, MAX_WIDTH)
+
   for _ in range(MAX_TRIES):
     count = len(mk_in) if mk_in is not None else random.choice(count_choices)
     # Colour of the input motif line.
@@ -331,34 +354,35 @@ def generate(border=None, line_color=None, line_row=None, markers=None,
       bc = border
     else:
       bc = random.choice([c for c in range(1, 10) if c not in used])
-    gin = _canvas(bc, h)
+    gin = _canvas(bc, h, w)
     _stamp(gin, lr, lc)
     for r, c in mk:
       gin[r][1] = c
-      gin[r][WIDTH - 2] = c
-    gout = _canvas(bc, h)
+      gin[r][w - 2] = c
+    gout = _canvas(bc, h, w)
     for r, c in mk:
       _stamp(gout, r, c)
     return {"input": gin, "output": gout}
-  raise ValueError("could not construct a scene compatible with the given "
-                   "parameters (likely no free rows for the input motif)")
+  raise ValueError("could not construct a %d-wide scene compatible with the "
+                   "given parameters (likely no free rows for the input "
+                   "motif)" % w)
 
 
 def validate():
   """Reconstruct the canonical fixtures from explicit latent parameters."""
-  h = CANONICAL_HEIGHT
+  h, w = CANONICAL_HEIGHT, WIDTH
   train = [
       generate(border=9, line_color=6, line_row=2, markers=[(9, 7)],
-               height=h),
+               height=h, width=w),
       generate(border=7, line_color=1, line_row=17, markers=[(13, 6)],
-               height=h),
+               height=h, width=w),
       generate(border=5, line_color=7, line_row=7, markers=[(15, 2)],
-               height=h),
+               height=h, width=w),
       generate(border=2, line_color=3, line_row=15, markers=[(3, 1)],
-               height=h),
+               height=h, width=w),
   ]
   test = [
       generate(border=1, line_color=2, line_row=7,
-               markers=[(3, 3), (15, 6)], height=h),
+               markers=[(3, 3), (15, 6)], height=h, width=w),
   ]
   return {"train": train, "test": test}

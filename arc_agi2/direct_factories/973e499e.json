@@ -1,21 +1,24 @@
 {
   "task_id": "973e499e",
-  "factory_sha256": "59a494a18f7dd304dbef0a8f2c0fe87f716993f74216de0d865680600a7c2edb",
-  "constructor_sha256": "92c33c053ac3183b5a7c1280447bb1e65fc9afa37338fd290ee26bb9cae0a343",
   "passed": true,
   "fresh_pairs_checked": 1000,
   "augmented_pair_checks": 8000,
   "fixture_variants_checked": 16,
-  "sampler_rejections": [],
-  "seed": 89047466582318,
-  "d4": 7,
-  "unique_base_inputs": 996,
-  "seconds": 3.9054914580192417,
-  "factory_version": 1,
+  "constructor_sha256": "a7caafc85bbb84787e824a7b29a6bb57758a73d0c5cc78b4e22c3a56c798a01c",
+  "auditor_sha256": "1e194cb80d11ccda4026cb83a61c6dd407f1b9d94117090b31de26b01a3f191d",
   "requires_per_episode_verification": true,
+  "sampler_rejections": [],
+  "program_provider": "factory",
+  "factory_sha256": "59a494a18f7dd304dbef0a8f2c0fe87f716993f74216de0d865680600a7c2edb",
+  "factory_version": 1,
+  "unique_base_inputs": 1000,
+  "fixture_basis": "canonical",
+  "seconds": 0.7459969581104815,
   "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
   "draft_notes": {
     "explanation": "For any input grid g, the output contains one copy of g per input cell. Block (i,j) is placed at rows i*n..(i+1)*n and columns j*m..(j+1)*m. It keeps only the cells whose colour equals g[i][j], and every other cell becomes the fill colour. Written as a formula, out[i*n+a][j*m+b] = g[a][b] if g[a][b]==g[i][j], else fill.\n\nThis mechanism is equivariant under every D4 transform. Rotating or reflecting the input moves the outer block index and the inner cell index in exactly the same way. That is the same as applying the transform to the whole n^2 x m^2 output. So the visible-coordinate program is unchanged in form for every d4, and it needs no axis or direction specialisation.\n\nThe only colour role is the fill/background. Original colour 0 becomes palette[0], so that value is emitted as a constant. Matching colours is done on the visible pixel values, so it works for any palette permutation.",
     "limitations": "The constructor only produces square n x n grids (n from 3 to 5) that contain no original-0 cells. The emitted program also handles rectangular inputs, giving an (n*n) x (m*m) output with block (i,j) of size n x m, as in the archived solver. If an input contained the fill colour palette[0], those cells would keep their own colour inside matching blocks. Under this rule that is indistinguishable from fill, so it causes no ambiguity. No constructor defects, random tie-breaks or fixture contradictions were found: the fixtures follow the uniform rule exactly. None of this has been tested here; it is pending host verification."
-  }
+  },
+  "previous_constructor_sha256": "92c33c053ac3183b5a7c1280447bb1e65fc9afa37338fd290ee26bb9cae0a343",
+  "recertification_note": "Independent H/W 2..5; all1000 fresh pairs,8000D4,16fixture variants pass. Legacy draft notes describe prior square-only sampler. Episode-context certification remains separate."
 }

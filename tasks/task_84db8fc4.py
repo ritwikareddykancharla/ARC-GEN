@@ -17,39 +17,56 @@
 import common
 
 
-def generate(colors=None):
+def generate(colors=None, width=None, height=None):
   """Returns input and output grids according to the given parameters.
 
   Args:
-    colors: The colors of the pixels.
+    colors: The colors of the pixels (row-major, width * height entries).
+    width: Grid width; 10 for supplied colors, otherwise random 3..30.
+    height: Grid height; 10 for supplied colors, otherwise random 3..30.
   """
 
+  if colors is not None:
+    width = 10 if width is None else width
+    height = 10 if height is None else height
+    if len(colors) != width * height:
+      raise ValueError("Expected width * height colors")
+
   def draw():
-    grid, output = common.grids(10, 10)
+    grid, output = common.grids(width, height)
     queue = []
     for i, color in enumerate(colors):
-      r, c = i // 10, i % 10
+      r, c = i // width, i % width
       output[r][c] = grid[r][c] = color
-      if color == 0 and (r in [0, 9] or c in [0, 9]):
+      if color == 0 and (r in [0, height - 1] or c in [0, width - 1]):
         output[r][c] = 2
         queue.append((r, c))
     while queue:
       r, c = queue.pop()
       for dr, dc in [(0, 1), (0, -1), (1, 0), (-1, 0)]:
         nr, nc = r + dr, c + dc
-        if nr < 0 or nr >= 10 or nc < 0 or nc >= 10: continue
+        if nr < 0 or nr >= height or nc < 0 or nc >= width: continue
         if output[nr][nc] == 0:
           output[nr][nc] = 2
           queue.append((nr, nc))
-    for row in range(10):
-      for col in range(10):
+    for row in range(height):
+      for col in range(width):
         if output[row][col] == 0: output[row][col] = 5
     if len(set(common.flatten(output))) < 4: return None, None
     return grid, output
 
   if colors is None:
+    width = common.randint(3, 30) if width is None else width
+    height = common.randint(3, 30) if height is None else height
+    if not (3 <= width <= 30 and 3 <= height <= 30):
+      raise ValueError("Random dimensions must be 3..30")
     while True:
-      colors = common.choices([0, 1, 3], 100)
+      # Empty-cell and wall-colour proportions vary; the original is 1/3 each.
+      empty = common.randint(25, 45)
+      blue = common.randint(25, 75)
+      colors = [0 if common.randint(1, 100) <= empty else
+                (1 if common.randint(1, 100) <= blue else 3)
+                for _ in range(width * height)]
       grid, _ = draw()
       if grid: break
 

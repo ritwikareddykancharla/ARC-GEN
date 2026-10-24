@@ -22,34 +22,35 @@ def generate(colors=None, widths=None, heights=None):
 
   Args:
     colors: A list of colors to use.
-    widths: A list of widths to use.
-    heights: A list of heights to use.
+    widths: A list of widths to use (their sum is the grid width).
+    heights: A list of heights to use (their sum is the grid height).
   """
 
-  if colors is None:
-    num_colors = common.randint(4, 5)
-    colors = common.random_colors(num_colors)
-    widths = [2, 3, 2, 3] if num_colors == 4 else [2, 2, 2, 2, 2]
-    heights = [2, 3, 2, 3] if num_colors == 4 else [2, 2, 2, 2, 2]
-    for _ in range(10):
-      idxs, dim = common.sample(range(num_colors), 2), common.randint(0, 1)
-      min_val = 1 if idxs[0] + 1 < num_colors else 2
-      if dim == 0 and widths[idxs[0]] > min_val:
-        widths[idxs[0]] -= 1
-        widths[idxs[1]] += 1
-      elif dim == 1 and heights[idxs[0]] > min_val:
-        heights[idxs[0]] -= 1
-        heights[idxs[1]] += 1
+  def partition(total, parts):
+    # Every run is at least one cell; the last run, which contains the
+    # shared corner, is at least two so its block stays visible.
+    cuts = sorted(common.sample(range(1, total - 1), parts - 1))
+    runs = [b - a for a, b in zip([0] + cuts, cuts + [total])]
+    return runs
 
-  grid, output = common.grids(10, 10)
+  if colors is None:
+    num_colors = common.randint(2, 9)
+    colors = common.random_colors(num_colors)
+    width = common.randint(num_colors + 1, 30)
+    height = common.randint(num_colors + 1, 30)
+    widths = partition(width, num_colors)
+    heights = partition(height, num_colors)
+
+  width, height = sum(widths), sum(heights)
+  grid, output = common.grids(width, height)
   row, col = 0, 0
-  for color, width, height in zip(colors, widths, heights):
-    common.rect(output, width, height, row, col, color)
-    for _ in range(width):
-      output[9][col] = grid[9][col] = color
+  for color, wide, tall in zip(colors, widths, heights):
+    common.rect(output, wide, tall, row, col, color)
+    for _ in range(wide):
+      output[height - 1][col] = grid[height - 1][col] = color
       col += 1
-    for _ in range(height):
-      output[row][9] = grid[row][9] = color
+    for _ in range(tall):
+      output[row][width - 1] = grid[row][width - 1] = color
       row += 1
   return {"input": grid, "output": output}
 

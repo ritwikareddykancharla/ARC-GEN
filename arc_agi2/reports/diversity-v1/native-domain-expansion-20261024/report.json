@@ -1,0 +1,571 @@
+{
+ "date": "2026-10-24",
+ "worker": "native-domain expansion (no RE-ARC counterpart families)",
+ "retained": [
+  "31adaf00",
+  "84db8fc4",
+  "ce039d91",
+  "137f0df0",
+  "d282b262",
+  "a406ac07",
+  "f45f5ca7"
+ ],
+ "attempted_and_reverted": {
+  "c35c1b4c": {
+   "attempt": "Even height/width 6..30 with area-scaled blob growth.",
+   "reason": "Its factory resolves the central-colour selector and mirror axis from demonstrations and raises when they leave the query ambiguous. Under the standard recertify episode shape (3 demos + 1 query, no context retry) the ORIGINAL 10x10 constructor already fails: 59/1000 episodes raised (seeds 50000..50999); the expanded constructor raised 73/1000. Its existing certificate depends on context retries (context_retries=26), which recertify does not perform, so the change could not pass the standard gate and was reverted. Source unchanged."
+  }
+ },
+ "checks": {
+  "recertify": "python -m arc_agi2.diversity.recertify 31adaf00 84db8fc4 ce039d91 137f0df0 d282b262 a406ac07 f45f5ca7 -> all passed: 1000 fresh pairs, 8000 D4/palette pair checks, 16 original fixture variants each; 0 sampler rejections.",
+  "regression": "arc_agi2/test_native_domain_expansion_20261024.py (21 tests)",
+  "existing": "test_constructor_uniqueness, test_generator_boundaries, test_sampling_domains, test_direct_certificates, diversity/test_hybrid_extensions, test_bounded_scene_sampling: 41 passed",
+  "size_sweep": "Every allowed width x height (3 seeds each) generated without hang; worst single call 0.046 s."
+ },
+ "families": {
+  "31adaf00": {
+   "change": "Canvas: fixed 10x10 -> independent height/width 5..30. Hole count 1..10 (scaled by area), planted hole sides 2..4, grey density 62..80%. Fill scan runs over all square sides up to min(H,W) (DP), same largest-first rule.",
+   "remaining": [
+    "Two colours only (black/grey input, blue fill) as in the original rule.",
+    "Scenes where two empty windows of one size overlap are still rejected (keeps the fill order-independent, which the program relies on)."
+   ],
+   "recertification": {
+    "passed": true,
+    "fresh_pairs_checked": 1000,
+    "augmented_pair_checks": 8000,
+    "fixture_variants_checked": 16,
+    "unique_base_inputs": 1000,
+    "sampler_rejections": 0,
+    "constructor_sha256": "2aa60ad0aebbbffd4a277aba165dba4d5d00851d7d86d0e547317cf0016d924c",
+    "factory_sha256": "0f6fffb87eb57d581cd06bd973f24bd0b9f1d6bd5f2ffe3cb333881c66311e47",
+    "previous_constructor_sha256": "74ca69be1b7b08c9fcef49cfb80cb7f64c4716e3de78fe18ac221974e9fcd520",
+    "previous_factory_provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+    "previous_factory_limitations": "The program assumes the generator's guarantee that same-size all-background windows are disjoint. If an off-domain input breaks that guarantee, overlapping candidates are resolved by visible reading order, which may not match a rotated reference. The background and fill roles come from the palette rather than from the demonstrations. The fixtures are consistent with this uniform rule, and I found no contradictions. I have not run any tests."
+   },
+   "baseline_1000": {
+    "distinct_shapes": 1,
+    "shapes_with_at_least_4_samples": 1,
+    "height": {
+     "min": 10,
+     "max": 10,
+     "mean": 10.0,
+     "distinct": 1
+    },
+    "width": {
+     "min": 10,
+     "max": 10,
+     "mean": 10.0,
+     "distinct": 1
+    },
+    "rectangular_rate": 0.0,
+    "large_rate": 0.0,
+    "aspect_ratio": {
+     "min": 1.0,
+     "max": 1.0,
+     "mean": 1.0,
+     "distinct": 1
+    },
+    "input_colour_count_hist": {
+     "2": 1000
+    }
+   },
+   "current_1000": {
+    "distinct_shapes": 517,
+    "shapes_with_at_least_4_samples": 43,
+    "height": {
+     "min": 5,
+     "max": 30,
+     "mean": 17.852,
+     "distinct": 26
+    },
+    "width": {
+     "min": 5,
+     "max": 30,
+     "mean": 17.538,
+     "distinct": 26
+    },
+    "rectangular_rate": 0.967,
+    "large_rate": 0.631,
+    "aspect_ratio": {
+     "min": 1.0,
+     "max": 6.0,
+     "mean": 1.933,
+     "distinct": 218
+    },
+    "input_colour_count_hist": {
+     "2": 1000
+    }
+   }
+  },
+  "84db8fc4": {
+   "change": "Canvas: fixed 10x10 -> independent height/width 3..30. Empty-cell share 25..45% and blue/green wall mix 25..75% vary (original uniform 1/3).",
+   "remaining": [
+    "Wall colours stay blue/green; output colours red/grey are the rule's fixed roles.",
+    "Requires at least one border and one enclosed region (as before)."
+   ],
+   "recertification": {
+    "passed": true,
+    "fresh_pairs_checked": 1000,
+    "augmented_pair_checks": 8000,
+    "fixture_variants_checked": 16,
+    "unique_base_inputs": 1000,
+    "sampler_rejections": 0,
+    "constructor_sha256": "0d3632e5099c5afd31a5eec0fe9fd06989550f7e622179f537b996ff7437ea3b",
+    "factory_sha256": "9bbaef64fb5c525e2b2238c448945484ffe6397ce59794a7d80e6a31f422d435",
+    "previous_constructor_sha256": "3d18ad68e5d0997f79c0d06eeff51eb4ccf9147fde570a4a61d3858f6a5df577",
+    "previous_factory_provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+    "previous_factory_limitations": "Colour roles come from the palette, not inferred from the demonstrations. The constructor itself only makes 10x10 grids from colours {0,1,3} and rejects scenes where the output has fewer than 4 colours. No constructor defects or tie-breaks were found: the generator's stack-based flood fill gives the same result as component-wise border-touch classification. The fixtures agree with this uniform rule. Not executed or tested by me."
+   },
+   "baseline_1000": {
+    "distinct_shapes": 1,
+    "shapes_with_at_least_4_samples": 1,
+    "height": {
+     "min": 10,
+     "max": 10,
+     "mean": 10.0,
+     "distinct": 1
+    },
+    "width": {
+     "min": 10,
+     "max": 10,
+     "mean": 10.0,
+     "distinct": 1
+    },
+    "rectangular_rate": 0.0,
+    "large_rate": 0.0,
+    "aspect_ratio": {
+     "min": 1.0,
+     "max": 1.0,
+     "mean": 1.0,
+     "distinct": 1
+    },
+    "input_colour_count_hist": {
+     "3": 1000
+    }
+   },
+   "current_1000": {
+    "distinct_shapes": 553,
+    "shapes_with_at_least_4_samples": 36,
+    "height": {
+     "min": 3,
+     "max": 30,
+     "mean": 16.991,
+     "distinct": 28
+    },
+    "width": {
+     "min": 3,
+     "max": 30,
+     "mean": 17.153,
+     "distinct": 28
+    },
+    "rectangular_rate": 0.964,
+    "large_rate": 0.613,
+    "aspect_ratio": {
+     "min": 1.0,
+     "max": 10.0,
+     "mean": 2.361,
+     "distinct": 239
+    },
+    "input_colour_count_hist": {
+     "3": 1000
+    }
+   }
+  },
+  "ce039d91": {
+   "change": "Canvas: fixed 10x10 -> even width 4..30, any height 3..30. Pair/single densities vary; samples always show both mirrored (blue) and unmatched (grey) pixels; black stays modal.",
+   "remaining": [
+    "Width stays even: an odd width would add an undemonstrated self-mirror centre column, so it is treated as a rule boundary, not expanded."
+   ],
+   "recertification": {
+    "passed": true,
+    "fresh_pairs_checked": 1000,
+    "augmented_pair_checks": 8000,
+    "fixture_variants_checked": 16,
+    "unique_base_inputs": 1000,
+    "sampler_rejections": 0,
+    "constructor_sha256": "8e29bff067ef248013226dc95a184d9d626aded038add4fdd1a1a1c8e1992ada",
+    "factory_sha256": "ac3dd99c8b9612abee83726da76e30deb838b3989969e6fa98539a9bd0178d8d",
+    "previous_constructor_sha256": "1177c7d08f274e3414a2c382a6729c0c2fcdb255c6eecf8378781833f3116643",
+    "previous_factory_provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+    "previous_factory_limitations": "- **Input colours:** the program assumes query inputs contain only palette[0] and palette[5], which is what the generator produces. Any other colour is left unchanged and never counts as a partner. The archived solver instead uses the most common colour as background and tests equality with the mirror cell; on the generator's domain the two give the same result.\n- **Two-stage description:** the rule text describes the output as two canvases, left half then right half. The archived solver's left-half stage is redundant, because its final canvas is the same full symmetric recolouring. Only that final result is produced here.\n- **Fixtures:** no fixture contradictions or constructor defects were found. The generator always uses 10x10 grids, so the odd-width centre-line case is outside the constructor's domain."
+   },
+   "baseline_1000": {
+    "distinct_shapes": 1,
+    "shapes_with_at_least_4_samples": 1,
+    "height": {
+     "min": 10,
+     "max": 10,
+     "mean": 10.0,
+     "distinct": 1
+    },
+    "width": {
+     "min": 10,
+     "max": 10,
+     "mean": 10.0,
+     "distinct": 1
+    },
+    "rectangular_rate": 0.0,
+    "large_rate": 0.0,
+    "aspect_ratio": {
+     "min": 1.0,
+     "max": 1.0,
+     "mean": 1.0,
+     "distinct": 1
+    },
+    "input_colour_count_hist": {
+     "2": 1000
+    }
+   },
+   "current_1000": {
+    "distinct_shapes": 371,
+    "shapes_with_at_least_4_samples": 95,
+    "height": {
+     "min": 3,
+     "max": 30,
+     "mean": 16.166,
+     "distinct": 28
+    },
+    "width": {
+     "min": 4,
+     "max": 30,
+     "mean": 17.01,
+     "distinct": 14
+    },
+    "rectangular_rate": 0.968,
+    "large_rate": 0.548,
+    "aspect_ratio": {
+     "min": 1.0,
+     "max": 10.0,
+     "mean": 2.265,
+     "distinct": 181
+    },
+    "input_colour_count_hist": {
+     "2": 1000
+    }
+   }
+  },
+  "137f0df0": {
+   "change": "Canvas: fixed 10x10 -> independent 5..30. Block shape 2x2 -> any of 1..3 by 1..3 (non-square allowed). Lattice 2..3 per axis -> 1..6 per axis (at least one axis >=2), gaps 1..3, arbitrary margins.",
+   "remaining": [
+    "Blocks in one scene share a shape and form a full lattice (rule-defining).",
+    "Black must stay modal (archived verifier uses the modal colour), so very dense lattices are rejected."
+   ],
+   "recertification": {
+    "passed": true,
+    "fresh_pairs_checked": 1000,
+    "augmented_pair_checks": 8000,
+    "fixture_variants_checked": 16,
+    "unique_base_inputs": 999,
+    "sampler_rejections": 0,
+    "constructor_sha256": "6cef7d1dec0052f9037d562f3051a6112ba9072736902928cc5612436c17d0df",
+    "factory_sha256": "f589793a318a1384565b068980c5c93b7349c09e8d1f826117d32a34bbce7ed5",
+    "previous_constructor_sha256": "0c4c37706955e54eca8909dca362bf3dfb62970e82bba7d38f00f46ebed6acd9",
+    "previous_factory_provenance": "Opus 5.5 subscription CLI draft; host source restrictions and execution verification",
+    "previous_factory_limitations": "Assumes the background is palette[0] and that the only other colour in the input is the block colour, as the generator guarantees. The demonstrations are not used. Nothing has been tested. The fixtures and the archived solver agree with a single uniform rule; no contradictions were found."
+   },
+   "baseline_1000": {
+    "distinct_shapes": 1,
+    "shapes_with_at_least_4_samples": 1,
+    "height": {
+     "min": 10,
+     "max": 10,
+     "mean": 10.0,
+     "distinct": 1
+    },
+    "width": {
+     "min": 10,
+     "max": 10,
+     "mean": 10.0,
+     "distinct": 1
+    },
+    "rectangular_rate": 0.0,
+    "large_rate": 0.0,
+    "aspect_ratio": {
+     "min": 1.0,
+     "max": 1.0,
+     "mean": 1.0,
+     "distinct": 1
+    },
+    "input_colour_count_hist": {
+     "2": 1000
+    }
+   },
+   "current_1000": {
+    "distinct_shapes": 517,
+    "shapes_with_at_least_4_samples": 47,
+    "height": {
+     "min": 5,
+     "max": 30,
+     "mean": 17.54,
+     "distinct": 26
+    },
+    "width": {
+     "min": 5,
+     "max": 30,
+     "mean": 17.574,
+     "distinct": 26
+    },
+    "rectangular_rate": 0.964,
+    "large_rate": 0.636,
+    "aspect_ratio": {
+     "min": 1.0,
+     "max": 6.0,
+     "mean": 1.931,
+     "distinct": 218
+    },
+    "input_colour_count_hist": {
+     "2": 1000
+    }
+   }
+  },
+  "d282b262": {
+   "change": "Canvas: fixed 15x15 -> independent 6..30. Boxes: squares 2..5 -> rectangles 1..5 by 1..5 (no 1x1). Count 5..6 -> 1..9 (scaled by area).",
+   "remaining": [
+    "Boxes remain checkerboard-coloured rectangles separated by one empty cell, sliding toward one edge (rule-defining).",
+    "Box area capped below half the canvas so black stays modal for the archived verifier."
+   ],
+   "recertification": {
+    "passed": true,
+    "fresh_pairs_checked": 1000,
+    "augmented_pair_checks": 8000,
+    "fixture_variants_checked": 16,
+    "unique_base_inputs": 1000,
+    "sampler_rejections": 0,
+    "constructor_sha256": "1caa93c15ae921d4f1087049a9bca907e6a0a2242db50a07a253ef0180739c66",
+    "factory_sha256": "d3589cca95940a2b457fe2643adc6f3652fadaafe7bc36060cf26b333488fe54",
+    "previous_constructor_sha256": "73afb505f93807df009563185057fe3e670c7d2b42402ed3f59bf3eff5a78e57",
+    "previous_factory_provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+    "previous_factory_limitations": "Assumes background is palette[0] and objects are non-touching (guaranteed by the generator's padded non-overlap check). Works on rectangular grids of any size. The generator's rule text mentions only 2x2/3x3 but the constructor produces sizes 2..5; both are handled. No constructor defects or fixture contradictions found; ordering ties between equal leading edges only occur for non-interacting squares and do not affect the result."
+   },
+   "baseline_1000": {
+    "distinct_shapes": 1,
+    "shapes_with_at_least_4_samples": 1,
+    "height": {
+     "min": 15,
+     "max": 15,
+     "mean": 15.0,
+     "distinct": 1
+    },
+    "width": {
+     "min": 15,
+     "max": 15,
+     "mean": 15.0,
+     "distinct": 1
+    },
+    "rectangular_rate": 0.0,
+    "large_rate": 0.0,
+    "aspect_ratio": {
+     "min": 1.0,
+     "max": 1.0,
+     "mean": 1.0,
+     "distinct": 1
+    },
+    "input_colour_count_hist": {
+     "4": 1,
+     "5": 6,
+     "6": 92,
+     "7": 322,
+     "8": 378,
+     "9": 171,
+     "10": 30
+    }
+   },
+   "current_1000": {
+    "distinct_shapes": 491,
+    "shapes_with_at_least_4_samples": 51,
+    "height": {
+     "min": 6,
+     "max": 30,
+     "mean": 17.58,
+     "distinct": 25
+    },
+    "width": {
+     "min": 6,
+     "max": 30,
+     "mean": 18.051,
+     "distinct": 25
+    },
+    "rectangular_rate": 0.959,
+    "large_rate": 0.622,
+    "aspect_ratio": {
+     "min": 1.0,
+     "max": 5.0,
+     "mean": 1.83,
+     "distinct": 205
+    },
+    "input_colour_count_hist": {
+     "3": 204,
+     "4": 76,
+     "5": 186,
+     "6": 132,
+     "7": 150,
+     "8": 136,
+     "9": 86,
+     "10": 30
+    }
+   }
+  },
+  "a406ac07": {
+   "change": "Canvas: 10x10 square -> independent height/width (k+1)..30. Colour count 4..5 -> 2..9. Run lengths are random partitions (1..27 observed) instead of near-uniform 2..3 runs.",
+   "remaining": [
+    "Last run stays >=2 on each ruler so the corner block is visible, as in the original.",
+    "Rulers stay on the bottom row/right column in canonical orientation (D4 augmentation covers others)."
+   ],
+   "recertification": {
+    "passed": true,
+    "fresh_pairs_checked": 1000,
+    "augmented_pair_checks": 8000,
+    "fixture_variants_checked": 16,
+    "unique_base_inputs": 1000,
+    "sampler_rejections": 0,
+    "constructor_sha256": "588d161f416a02f2ab3c037b6275f461d401b30d2f2df8bc365bbef7b9f5c137",
+    "factory_sha256": "55dbd3e594a4a7fff744cf79d1a4f0f2f28a0533782a3af256ac571b0359c0ae",
+    "previous_constructor_sha256": "a6ce6e252f510796eea918da51cd77acc7f7ceb307d2bf4607f573be3572f90e",
+    "previous_factory_provenance": "Host-authored direct program with constructor/source review, source restrictions and execution verification.",
+    "previous_factory_limitations": "Requires complete edge legends, distinct nonbackground band colours and the original single background role; these are constructor invariants."
+   },
+   "baseline_1000": {
+    "distinct_shapes": 1,
+    "shapes_with_at_least_4_samples": 1,
+    "height": {
+     "min": 10,
+     "max": 10,
+     "mean": 10.0,
+     "distinct": 1
+    },
+    "width": {
+     "min": 10,
+     "max": 10,
+     "mean": 10.0,
+     "distinct": 1
+    },
+    "rectangular_rate": 0.0,
+    "large_rate": 0.0,
+    "aspect_ratio": {
+     "min": 1.0,
+     "max": 1.0,
+     "mean": 1.0,
+     "distinct": 1
+    },
+    "input_colour_count_hist": {
+     "5": 504,
+     "6": 496
+    }
+   },
+   "current_1000": {
+    "distinct_shapes": 540,
+    "shapes_with_at_least_4_samples": 41,
+    "height": {
+     "min": 3,
+     "max": 30,
+     "mean": 18.217,
+     "distinct": 28
+    },
+    "width": {
+     "min": 3,
+     "max": 30,
+     "mean": 18.192,
+     "distinct": 28
+    },
+    "rectangular_rate": 0.958,
+    "large_rate": 0.642,
+    "aspect_ratio": {
+     "min": 1.0,
+     "max": 9.333,
+     "mean": 1.844,
+     "distinct": 227
+    },
+    "input_colour_count_hist": {
+     "3": 121,
+     "4": 133,
+     "5": 136,
+     "6": 114,
+     "7": 131,
+     "8": 115,
+     "9": 122,
+     "10": 128
+    }
+   }
+  },
+  "f45f5ca7": {
+   "change": "Canvas: fixed 10x10 -> height 5..30 (number of rows/pixels) and width 5..30 independently.",
+   "remaining": [
+    "Colour->offset legend (8:1, 2:2, 4:3, 3:4) is the rule and stays fixed; width only adds empty columns.",
+    "Each grid still shows all five values (including empty rows)."
+   ],
+   "recertification": {
+    "passed": true,
+    "fresh_pairs_checked": 1000,
+    "augmented_pair_checks": 8000,
+    "fixture_variants_checked": 16,
+    "unique_base_inputs": 1000,
+    "sampler_rejections": 0,
+    "constructor_sha256": "209b010dfc8094fdcead95a17417476a06d70b78c81310e60f8d2bf18a0b26a3",
+    "factory_sha256": "8dbe9498e372ba233838ee41b54391a9603e9d84b13e79a2a1aa99a112a6ed18",
+    "previous_constructor_sha256": "3a67776ca2a4877dbcd144fe8b4b2c229ccd83147ee9dcd5932a020b348c8122",
+    "previous_factory_provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+    "previous_factory_limitations": "The colour-to-distance table is an arbitrary legend in the constructor (offsets list indexed by colour), not derived from the visible scene. It is therefore hard-coded via the palette rather than inferred from the demonstrations. Colours outside {2,3,4,8} (none occur in the generator's domain) are assigned offset 0, so they stay on the source edge; this follows the archived solver's fallback. The program assumes the background is palette[0]; the generator always uses 0 as background. Every generated scene has exactly one cell per row on the source line, so collisions cannot occur. If they did, cells would be painted in increasing offset order. No constructor defects or fixture contradictions were found: all three train pairs and the test pair agree with the uniform table. I have not run any tests."
+   },
+   "baseline_1000": {
+    "distinct_shapes": 1,
+    "shapes_with_at_least_4_samples": 1,
+    "height": {
+     "min": 10,
+     "max": 10,
+     "mean": 10.0,
+     "distinct": 1
+    },
+    "width": {
+     "min": 10,
+     "max": 10,
+     "mean": 10.0,
+     "distinct": 1
+    },
+    "rectangular_rate": 0.0,
+    "large_rate": 0.0,
+    "aspect_ratio": {
+     "min": 1.0,
+     "max": 1.0,
+     "mean": 1.0,
+     "distinct": 1
+    },
+    "input_colour_count_hist": {
+     "5": 1000
+    }
+   },
+   "current_1000": {
+    "distinct_shapes": 528,
+    "shapes_with_at_least_4_samples": 43,
+    "height": {
+     "min": 5,
+     "max": 30,
+     "mean": 17.489,
+     "distinct": 26
+    },
+    "width": {
+     "min": 5,
+     "max": 30,
+     "mean": 17.494,
+     "distinct": 26
+    },
+    "rectangular_rate": 0.949,
+    "large_rate": 0.607,
+    "aspect_ratio": {
+     "min": 1.0,
+     "max": 6.0,
+     "mean": 1.886,
+     "distinct": 218
+    },
+    "input_colour_count_hist": {
+     "5": 1000
+    }
+   }
+  }
+ },
+ "uncertainty": [
+  "Measurements are 1,000-sample statistics, not guarantees about every exported episode.",
+  "All originals use one fixed canvas (uniform/seen shape profile). With ~370-550 distinct shapes per 1,000 samples, only 36-95 shapes had >=4 samples, so the uniform-shape episode policy will often fall back unless pools are large or shape-matched demos are requested via the new width/height parameters.",
+  "These families are not in prepare.py's native-repair list or admission.json (not edited here); they need root integration before entering the supplement.",
+  "Recertify overwrote direct_factories/<id>.json; earlier provenance/limitations text is preserved here under previous_factory_*."
+ ]
+}

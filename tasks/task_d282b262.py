@@ -17,49 +17,70 @@
 import common
 
 
-def generate(sizes=None, brows=None, bcols=None, evens=None, odds=None):
+def generate(sizes=None, brows=None, bcols=None, evens=None, odds=None,
+             talls=None, width=None, height=None):
   """Returns input and output grids according to the given parameters.
 
   Args:
-    sizes: The sizes of the boxes.
+    sizes: The widths of the boxes (and heights unless talls is given).
     brows: The rows of the boxes.
     bcols: The columns of the boxes.
     evens: The "even" colors.
     odds: The "odd" colors.
+    talls: Optional box heights; random boxes are rectangles of side 1..5.
+    width: Grid width; 15 for supplied boxes, otherwise random 6..30.
+    height: Grid height; 15 for supplied boxes, otherwise random 6..30.
   """
 
   if sizes is None:
-    num_boxes = common.randint(5, 6)
+    width = common.randint(6, 30) if width is None else width
+    height = common.randint(6, 30) if height is None else height
+    if not (6 <= width <= 30 and 6 <= height <= 30):
+      raise ValueError("Random dimensions must be 6..30")
+    area = width * height
     while True:
-      sizes = [common.randint(2, 5) for _ in range(num_boxes)]
-      brows = [common.randint(0, 15 - s) for s in sizes]
-      bcols = [common.randint(0, 15 - s) for s in sizes]
-      padded = [s + 1 for s in sizes]
-      if not common.overlaps(brows, bcols, padded, padded, 0): break
+      num_boxes = common.randint(1, max(2, min(9, area // 30)))
+      sizes = [common.randint(1, 5) for _ in range(num_boxes)]
+      talls = [common.randint(1, 5) for _ in range(num_boxes)]
+      if any(w * t == 1 for w, t in zip(sizes, talls)): continue
+      sizes = [min(w, width - 1) for w in sizes]
+      talls = [min(t, height - 1) for t in talls]
+      for _ in range(100):
+        brows = [common.randint(0, height - t) for t in talls]
+        bcols = [common.randint(0, width - w) for w in sizes]
+        # One empty cell around every box keeps boxes 8-separated.
+        if not common.overlaps(brows, bcols, sizes, talls, 1): break
+      else:
+        continue
+      if 2 * sum(w * t for w, t in zip(sizes, talls)) < area: break
     evens, odds = [], []
     for _ in range(num_boxes):
       colors = common.random_colors(2)
       evens, odds = evens + [colors[0]], odds + [colors[1]]
+  talls = sizes if talls is None else talls
+  width = 15 if width is None else width
+  height = 15 if height is None else height
 
-  grid, output = common.grids(15, 15)
+  grid, output = common.grids(width, height)
   entries = []
-  for size, brow, bcol, even, odd in zip(sizes, brows, bcols, evens, odds):
-    entries.append((bcol, size, brow, even, odd))
-    for r in range(size):
-      for c in range(size):
+  for wide, tall, brow, bcol, even, odd in zip(sizes, talls, brows, bcols,
+                                               evens, odds):
+    entries.append((bcol, wide, tall, brow, even, odd))
+    for r in range(tall):
+      for c in range(wide):
         grid[brow + r][bcol + c] = even if (r + c) % 2 == 0 else odd
   entries = sorted(entries, reverse=True)
-  lengths = [0 for _ in range(15)]
+  lengths = [0 for _ in range(height)]
   for entry in entries:
-    _, size, brow, even, odd = entry
+    _, wide, tall, brow, even, odd = entry
     max_length = 0
-    for r in range(brow, brow + size):
+    for r in range(brow, brow + tall):
       max_length = max(max_length, lengths[r])
-    for r in range(brow, brow + size):
-      lengths[r] = max_length + size
-    bcol = 15 - max_length - size
-    for r in range(size):
-      for c in range(size):
+    for r in range(brow, brow + tall):
+      lengths[r] = max_length + wide
+    bcol = width - max_length - wide
+    for r in range(tall):
+      for c in range(wide):
         output[brow + r][bcol + c] = even if (r + c) % 2 == 0 else odd
   return {"input": grid, "output": output}
 

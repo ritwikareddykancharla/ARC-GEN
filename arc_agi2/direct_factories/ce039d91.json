@@ -1,47 +1,17 @@
 {
   "task_id": "ce039d91",
-  "factory_sha256": "ac3dd99c8b9612abee83726da76e30deb838b3989969e6fa98539a9bd0178d8d",
-  "constructor_sha256": "1177c7d08f274e3414a2c382a6729c0c2fcdb255c6eecf8378781833f3116643",
   "passed": true,
   "fresh_pairs_checked": 1000,
   "augmented_pair_checks": 8000,
   "fixture_variants_checked": 16,
-  "sampler_rejections": [],
-  "seed": 43157241615001,
-  "d4": 7,
-  "unique_base_inputs": 1000,
-  "seconds": 2.7845190410735086,
-  "factory_version": 1,
+  "constructor_sha256": "8e29bff067ef248013226dc95a184d9d626aded038add4fdd1a1a1c8e1992ada",
+  "auditor_sha256": "c7c525a7ef21debe8a3e1cd459009003846a69e4a45d032a5447efc16b14f283",
   "requires_per_episode_verification": true,
-  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
-  "draft_notes": {
-    "explanation": "The original mechanism recolours a foreground cell (colour 5) to 1 when its mirror partner across the vertical centre line is also foreground. The partner of column c is column W-1-c. Every other cell stays as it is.\n\nUnder D4, a reflection (indices 4 and up) keeps the left-right mirror axis. Each quarter-turn rotation swaps the role of rows and columns. So the emitted program reverses columns when d4%4 is even, and reverses rows (top-bottom partner, row H-1-r) when d4%4 is odd. It does this directly in the visible coordinates, with no rotation of the grid.\n\nColour roles become constants: background is palette[0], foreground is palette[5], and the mark colour is palette[1].\n\nThe partner is computed from the actual grid shape, so rectangular grids and edge or centre cells work. On an odd-length axis, a foreground cell on the centre line is its own partner and becomes the mark colour. Demonstrations are not needed.",
-    "limitations": "- **Input colours:** the program assumes query inputs contain only palette[0] and palette[5], which is what the generator produces. Any other colour is left unchanged and never counts as a partner. The archived solver instead uses the most common colour as background and tests equality with the mirror cell; on the generator's domain the two give the same result.\n- **Two-stage description:** the rule text describes the output as two canvases, left half then right half. The archived solver's left-half stage is redundant, because its final canvas is the same full symmetric recolouring. Only that final result is produced here.\n- **Fixtures:** no fixture contradictions or constructor defects were found. The generator always uses 10x10 grids, so the odd-width centre-line case is outside the constructor's domain.",
-    "independent_source_review": {
-      "verdict": "accept",
-      "mechanism": "Left-right mirror test on the visible input. A foreground cell (5) becomes the mark colour (1) exactly when the cell at column W-1-c in the same row is also foreground. Every other cell is unchanged. Under D4, the mirror axis becomes a row reversal when d4%4 is odd. Colours map through the palette: bg=palette[0], fg=palette[5], mark=palette[1].",
-      "evidence": [
-        "Constructor output rule: `output[row][col] = 1 if grid[row][9 - col] else 5`, applied only to nonzero input cells. The label depends only on the visible input cell and its mirror partner. There are no hidden latents, ties or random choices affecting the label.",
-        "The random sampler only places 5s, either as a mirrored pair or as a single cell, on a fixed 10x10 grid. So the input palette is {0,5} and the factory's `(g == FG) & (partner == FG)` matches the constructor's 'partner nonzero' test exactly on this domain.",
-        "Applying the rule by hand to all approved fixtures matches. Examples: pair 1, (1,9) stays 5 because (1,0)=0; pair 4 row 3 turns 1 across x=2..7; test row 8 col 7 stays 5 because col 2 is 0.",
-        "The factory computes `partner = g[:, ::-1]` or `g[::-1, :]` directly on the augmented grid. There is no untransform/solve/retransform wrapper. Specialising the axis by D4 parity is a legitimate orientation constant for a deterministic spatial rule.",
-        "Under D4 the grid stays 10x10 with even sides, so no cell is its own partner and the centre-line ambiguity is unreachable.",
-        "Host audit passed: 1000 fresh pairs, 8000 augmented checks and 16 fixture variants, with no sampler rejections."
-      ],
-      "blocking_issues": [],
-      "nonblocking_limits": [
-        "The axis choice assumes the host's D4 indexing composes reflections with rotation d4%4, so odd d4%4 swaps the axes. The prior note's wording ('reflections keep the axis') is loose, but the code uses %4 parity, and the host's augmented checks across D4 variants passed.",
-        "Colours other than palette[0] and palette[5] in a query are left unchanged and never count as partners. This is out of domain for the constructor.",
-        "The archived program's 'two-canvas' left-half stage is redundant and is not reproduced. Only the final full recolouring is emitted, which matches the constructor.",
-        "The odd-width self-partner case (a centre cell would be marked) is outside the constructor's domain."
-      ],
-      "required_context_checks": [
-        "None task-specific. The rule uses fixed colour roles and a deterministic mirror axis, so no arbitrary colour or shape association needs demonstration evidence. ce039d91 is not in the episode_evidence_checks list, which is appropriate. The standard D4 conflicting-answer policy still applies."
-      ],
-      "task_id": "ce039d91",
-      "factory_sha256": "ac3dd99c8b9612abee83726da76e30deb838b3989969e6fa98539a9bd0178d8d",
-      "constructor_sha256": "1177c7d08f274e3414a2c382a6729c0c2fcdb255c6eecf8378781833f3116643"
-    },
-    "host_review": "Read mechanism, evidence, limitations and context requirements. Host reflects columns before clockwise rotation, tests all eight D4 indices, and applies a shared palette permutation after generation. Fixture audit verifies all train/test supplied pairs at every tested orientation/palette, not one pair per variant. Per-episode execution verification and conflicting-context rejection remain required."
-  }
+  "sampler_rejections": [],
+  "program_provider": "factory",
+  "factory_sha256": "ac3dd99c8b9612abee83726da76e30deb838b3989969e6fa98539a9bd0178d8d",
+  "factory_version": 1,
+  "unique_base_inputs": 1000,
+  "fixture_basis": "canonical",
+  "seconds": 4.752420333912596
 }

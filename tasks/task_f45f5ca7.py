@@ -17,19 +17,25 @@
 import common
 
 
-def generate(colors=None):
+def generate(colors=None, width=None):
   """Returns input and output grids according to the given parameters.
 
   Args:
-    colors: The colors of the pixels.
+    colors: The colors of the pixels, one per row (the grid height).
+    width: Grid width; 10 for supplied colors, otherwise random 5..30.
   """
 
   if colors is None:
+    height = common.randint(5, 30)
     while True:
-      colors = [common.choice([0, 2, 3, 4, 8]) for _ in range(10)]
+      colors = [common.choice([0, 2, 3, 4, 8]) for _ in range(height)]
       if len(set(colors)) == 5: break
+    width = common.randint(5, 30) if width is None else width
+  width = 10 if width is None else width
+  if width < 5:
+    raise ValueError("Width must leave room for the largest offset")
 
-  grid, output = common.grids(10, 10)
+  grid, output = common.grids(width, len(colors))
   offsets = [0, 0, 2, 4, 3, 0, 0, 0, 1, 0]
   for row, color in enumerate(colors):
     grid[row][0] = color

@@ -272,7 +272,8 @@ def test_mirror_neighbourhood_witnesses_are_constructor_scenes():
     for p in witnesses.SYMMETRIC_DEMOS:
         assert gen("0c786b71", width=3, height=2,
                    colors=[v for r in p["input"] for v in r]) == p
-    for p in witnesses.NO_DIAGONAL + [witnesses.DIAGONAL_QUERY]:
+    for p in (witnesses.NO_DIAGONAL + [witnesses.DIAGONAL_QUERY] + witnesses.PAIRS_ONLY
+              + witnesses.NO_PAIR + witnesses.FOURS_ONLY + witnesses.SINGLETONS_ONLY):
         assert gen("e0fb7511", width=5, height=5, colors=[v for r in p["input"] for v in r]) == p
     for p in witnesses.CROSS_ONLY:
         assert gen("f0df5ff0", width=5, height=5, colors=[v for r in p["input"] for v in r]) == p

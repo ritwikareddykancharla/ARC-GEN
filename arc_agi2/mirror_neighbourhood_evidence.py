@@ -13,10 +13,18 @@ that the intended rule is identifiable among all possible rules.
   the candidates need no episode metadata. Demonstrations that are all
   left-right (or top-bottom) symmetric cannot separate the anchors that
   differ by that flip, so an asymmetric query is rejected.
-* e0fb7511 (target colour palette[0], mark palette[8]): a target cell is
-  marked when it has a 4-adjacent target cell, or (competitor) an 8-adjacent
-  one. Demonstrations whose target cells never touch only diagonally cannot
-  separate them.
+* e0fb7511 (target colour palette[0], mark palette[8]): candidates are
+  (connectivity, T) for 4- or 8-connected target components and every
+  positive integer threshold T; a target cell is marked iff its component
+  has at least T cells (native: 4-connected, T = 2; T = 1 marks every target
+  cell; T above the largest component marks none). Every demonstration
+  output bounds T per connectivity: a marked component of size s gives
+  T <= s, an unmarked one T > s, so the survivors form one interval per
+  connectivity. Predictions are monotone in T, so the query is checked at
+  the two extremal surviving thresholds only. Demonstrations with no
+  diagonal-only contact leave 8-connectivity alive; demonstrations without
+  an isolated target cell leave T = 1; demonstrations without a marked
+  2-cell component leave T >= 3.
 * f0df5ff0 (seed palette[1] on background palette[0]): background cells in
   the seed's 3x3 square, or (competitor) its plus-shaped cross, take the
   seed colour. Demonstrations whose seeds have no background diagonal
@@ -34,7 +42,8 @@ TASK_IDS = (ANCHOR_TASK, ADJACENCY_TASK, DILATION_TASK)
 ORTHOGONAL = ((1, 0), (-1, 0), (0, 1), (0, -1))
 DIAGONAL = ((1, 1), (1, -1), (-1, 1), (-1, -1))
 ANCHORS = ('TL', 'TR', 'BL', 'BR')          # quadrant holding the unflipped input
-ADJACENCIES = ('four', 'eight')              # index 0 is the native rule
+CONNECTIVITY = {'four': ORTHOGONAL, 'eight': ORTHOGONAL + DIAGONAL}
+NATIVE_ADJACENCY = ('four', 2)               # 4-connected components of size >= 2
 DILATIONS = ('square', 'cross')              # index 0 is the native rule
 
 
@@ -58,16 +67,92 @@ def anchor_variants(grid):
     return [_kaleidoscope([list(r) for r in f]) for f in flips]
 
 
-def adjacency_variants(grid, palette):
-    a = _rows(ADJACENCY_TASK, grid)
-    target, mark = palette[0], palette[8]
-    h, w = len(a), len(a[0])
+def _components(rows, colour, steps):
+    """Components of `colour` cells under the given neighbour steps."""
+    h, w = len(rows), len(rows[0])
+    seen, comps = set(), []
+    for y in range(h):
+        for x in range(w):
+            if rows[y][x] != colour or (y, x) in seen:
+                continue
+            seen.add((y, x))
+            cells, stack = [], [(y, x)]
+            while stack:
+                cy, cx = stack.pop()
+                cells.append((cy, cx))
+                for dy, dx in steps:
+                    ny, nx = cy + dy, cx + dx
+                    if (0 <= ny < h and 0 <= nx < w and (ny, nx) not in seen
+                            and rows[ny][nx] == colour):
+                        seen.add((ny, nx))
+                        stack.append((ny, nx))
+            comps.append(cells)
+    return comps
 
-    def marked(y, x, steps):
-        return any(0 <= y + dy < h and 0 <= x + dx < w and a[y + dy][x + dx] == target
-                   for dy, dx in steps)
-    return [[[mark if v == target and marked(y, x, steps) else v for x, v in enumerate(r)]
-             for y, r in enumerate(a)] for steps in (ORTHOGONAL, ORTHOGONAL + DIAGONAL)]
+
+def threshold_output(grid, palette, connectivity, threshold):
+    """Mark target components with at least `threshold` cells."""
+    rows = _rows(ADJACENCY_TASK, grid)
+    out = [r[:] for r in rows]
+    for cells in _components(rows, palette[0], CONNECTIVITY[connectivity]):
+        if len(cells) >= threshold:
+            for y, x in cells:
+                out[y][x] = palette[8]
+    return out
+
+
+def surviving_thresholds(demonstrations, palette=None):
+    """{connectivity: (low, high)}: thresholds low <= T <= high reproduce every
+    demonstration (high None means unbounded). Missing keys fit no threshold."""
+    palette = list(range(10)) if palette is None else list(palette)
+    target, mark = palette[0], palette[8]
+    alive = {}
+    for name, steps in CONNECTIVITY.items():
+        low, high, fits = 1, None, True
+        for demo in demonstrations:
+            rows, out = _rows(ADJACENCY_TASK, demo['input']), demo['output']
+            if len(out) != len(rows) or any(len(o) != len(rows[0]) for o in out):
+                fits = False
+                break
+            if any(v != target and out[y][x] != v
+                   for y, r in enumerate(rows) for x, v in enumerate(r)):
+                fits = False
+                break
+            for cells in _components(rows, target, steps):
+                shown = {out[y][x] for y, x in cells}
+                if shown == {mark}:
+                    high = len(cells) if high is None else min(high, len(cells))
+                elif shown == {target}:
+                    low = max(low, len(cells) + 1)
+                else:
+                    fits = False
+                    break
+            if not fits:
+                break
+        if fits and (high is None or low <= high):
+            alive[name] = (low, high)
+    return alive
+
+
+def adjacency_predictions(demonstrations, query_input, palette=None):
+    """Distinct query answers at the extremal surviving thresholds.
+
+    The marked cells grow monotonically as T decreases, so every surviving
+    (connectivity, T) agrees on the query iff this list has exactly one entry
+    (which is then the unique answer). Intermediate thresholds are not
+    listed, so with several entries the list need not be exhaustive.
+    """
+    palette = list(range(10)) if palette is None else list(palette)
+    rows = _rows(ADJACENCY_TASK, query_input)
+    answers = []
+    for name, (low, high) in surviving_thresholds(demonstrations, palette).items():
+        sizes = [len(c) for c in _components(rows, palette[0], CONNECTIVITY[name])]
+        beyond = max(sizes, default=0) + 1          # every T >= beyond marks nothing
+        for threshold in {min(low, beyond), beyond if high is None else min(high, beyond)}:
+            answer = threshold_output(rows, palette, name, threshold)
+            if answer not in answers:
+                answers.append(answer)
+    return answers
 
 
 def dilation_variants(grid, palette):
@@ -90,17 +175,16 @@ def dilation_variants(grid, palette):
 
 
 def variants_for(task_id, palette):
+    """Enumerated candidates (0c786b71, f0df5ff0); e0fb7511 uses thresholds."""
     if task_id == ANCHOR_TASK:
         return anchor_variants
-    if task_id == ADJACENCY_TASK:
-        return lambda g: adjacency_variants(g, palette)
     if task_id == DILATION_TASK:
         return lambda g: dilation_variants(g, palette)
     raise KeyError(task_id)
 
 
 def surviving_rules(task_id, demonstrations, palette=None):
-    """Indices of the candidate rules reproducing every demonstration."""
+    """Indices of the enumerated candidates reproducing every demonstration."""
     palette = list(range(10)) if palette is None else list(palette)
     variants = variants_for(task_id, palette)
     alive = None
@@ -110,8 +194,31 @@ def surviving_rules(task_id, demonstrations, palette=None):
     return set() if alive is None else alive
 
 
+def candidate_predictions(task_id, demonstrations, query_input, palette=None):
+    """Distinct query answers of candidates fitting every demonstration.
+
+    Empty if no candidate fits; exactly one entry iff all fitting candidates
+    agree. For e0fb7511 only the extremal thresholds are evaluated.
+    """
+    palette = list(range(10)) if palette is None else list(palette)
+    if task_id == ADJACENCY_TASK:
+        return adjacency_predictions(demonstrations, query_input, palette)
+    options = variants_for(task_id, palette)(query_input)
+    answers = []
+    for i in sorted(surviving_rules(task_id, demonstrations, palette)):
+        if options[i] not in answers:
+            answers.append(options[i])
+    return answers
+
+
 def require_mirror_neighbourhood_evidence(task_id, demonstrations, queries, palette=None):
     """Raise MissingColourEvidence unless every surviving rule agrees per query."""
-    from .colour_evidence import _require_rule_agreement
+    from .colour_evidence import MissingColourEvidence
     palette = list(range(10)) if palette is None else list(palette)
-    _require_rule_agreement(task_id, demonstrations, queries, variants_for(task_id, palette))
+    fitted = (surviving_thresholds(demonstrations, palette) if task_id == ADJACENCY_TASK
+              else surviving_rules(task_id, demonstrations, palette))
+    if not fitted:
+        raise MissingColourEvidence(f'{task_id}: demonstrations fit no candidate rule')
+    for query in queries:
+        if len(candidate_predictions(task_id, demonstrations, query['input'], palette)) > 1:
+            raise MissingColourEvidence(f'{task_id}: demonstrations leave query rule ambiguous')

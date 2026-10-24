@@ -1,5 +1,5 @@
 {
- "baseline_commit": "5436f3fe035f261cdcf7996565c108148efa37fb",
+ "baseline_commit": "f7353826fdd001ce808b911ad4bb984a404b99d0",
  "ordering_commit": "5436f3fe035f261cdcf7996565c108148efa37fb",
  "audit_fork_commit": "cdf50ed9c057c6c11b679fc3e67243bcc0ffc597",
  "worklist": "/Users/ritwika/projects/arc-agi2/docs/hybrid-generator-review/family-worklist.json",
@@ -9,8 +9,8 @@
  "note": "mechanical fields are extraction, not semantic review; release_ready is never set",
  "certified_evidence_basis": "current = some certificate's constructor sha256 (and factory sha256 for direct factories) equals the current file; direct-source program hashes are not rebuilt here; a certificate is a finite audit, not a proof",
  "semantic_status": {
-  "reviewed": 32,
-  "pending": 697
+  "reviewed": 64,
+  "pending": 665
  },
  "tiers": {
   "A_fixed_dims_ge8": 122,
@@ -96,7 +96,15 @@
    "1c02dbbe",
    "332202d5",
    "342ae2ed",
-   "42f14c03"
+   "42f14c03",
+   "4f537728",
+   "50c07299",
+   "54db823b",
+   "782b5218",
+   "7e2bad24",
+   "7e576d6e",
+   "917bccba",
+   "94414823"
   ],
   "medium": [
    "05a7bcf2",
@@ -116,88 +124,117 @@
    "305b1341",
    "33b52de3",
    "4852f2fa",
-   "48634b99"
+   "48634b99",
+   "4c177718",
+   "4e469f39",
+   "522fdd07",
+   "52df9849",
+   "575b1a71",
+   "5792cb4d",
+   "639f5a19",
+   "668eec9a",
+   "689c358e",
+   "68bc2e87",
+   "692cd3b6",
+   "69889d6e",
+   "73182012",
+   "7c8af763",
+   "7c9b52a0",
+   "7e02026e",
+   "7ee1c6ea",
+   "85b81ff1",
+   "8e301a54",
+   "9356391f",
+   "95755ff2",
+   "97239e3d"
   ],
   "low": [
    "15113be4",
    "319f2597",
-   "465b7d93"
+   "465b7d93",
+   "5b37cb25",
+   "981571dc"
   ],
   "none": []
  },
  "reviewed_axis_dispositions": {
   "dimensions": {
-   "incidental_restriction": 27,
-   "mixed": 5
+   "incidental_restriction": 56,
+   "mixed": 8
   },
   "objects": {
-   "mixed": 26,
-   "intrinsic_or_rule_supported": 4,
-   "incidental_restriction": 2
-  },
-  "placement": {
-   "mixed": 13,
-   "incidental_restriction": 5,
-   "intrinsic_or_rule_supported": 13,
+   "mixed": 46,
+   "intrinsic_or_rule_supported": 9,
+   "incidental_restriction": 8,
    "broadly_variable": 1
   },
+  "placement": {
+   "mixed": 30,
+   "incidental_restriction": 9,
+   "intrinsic_or_rule_supported": 22,
+   "broadly_variable": 3
+  },
   "density_colours": {
-   "intrinsic_or_rule_supported": 17,
-   "mixed": 5,
-   "incidental_restriction": 7,
+   "intrinsic_or_rule_supported": 24,
+   "mixed": 21,
+   "incidental_restriction": 16,
    "broadly_variable": 3
   },
   "rule_parameters": {
-   "intrinsic_or_rule_supported": 22,
+   "intrinsic_or_rule_supported": 49,
    "incidental_restriction": 1,
    "broadly_variable": 2,
-   "mixed": 5,
-   "unknown": 2
+   "mixed": 9,
+   "unknown": 3
   },
   "demonstration_context": {
-   "intrinsic_or_rule_supported": 24,
-   "mixed": 7,
+   "intrinsic_or_rule_supported": 50,
+   "mixed": 13,
    "unknown": 1
   }
  },
  "reviewed_patch_priority": {
-  "high": 11,
-  "medium": 18,
-  "low": 3
+  "high": 19,
+  "medium": 40,
+  "low": 5
  },
+ "reviewed_batches": [
+  1,
+  2
+ ],
  "next_batch": [
-  "4c177718",
-  "4e469f39",
-  "4f537728",
-  "50c07299",
-  "522fdd07",
-  "52df9849",
-  "54db823b",
-  "575b1a71",
-  "5792cb4d",
-  "5b37cb25",
-  "639f5a19",
-  "668eec9a",
-  "689c358e",
-  "68bc2e87",
-  "692cd3b6",
-  "69889d6e",
-  "73182012",
-  "782b5218",
-  "7c8af763",
-  "7c9b52a0",
-  "7e02026e",
-  "7e2bad24",
-  "7e576d6e",
-  "7ee1c6ea",
-  "85b81ff1",
-  "8e301a54",
-  "917bccba",
-  "9356391f",
-  "94414823",
-  "95755ff2",
-  "97239e3d",
-  "981571dc"
+  "996ec1f3",
+  "9a4bb226",
+  "9c1e755f",
+  "9caba7c3",
+  "9f27f097",
+  "9f8de559",
+  "a1aa0c1e",
+  "a416fc5b",
+  "aa300dc3",
+  "aaef0977",
+  "ad38a9d0",
+  "af24b4cc",
+  "afe3afe9",
+  "b2bc3ffd",
+  "b7fb29bc",
+  "b9630600",
+  "bb52a14b",
+  "bd283c4a",
+  "c35c1b4c",
+  "c6e1b8da",
+  "c7d4e6ad",
+  "cf133acc",
+  "cfb2ce5a",
+  "d304284e",
+  "d47aa2ff",
+  "d753a70b",
+  "d94c3b52",
+  "da2b0fe3",
+  "db7260a4",
+  "dc2aa30b",
+  "dc46ea44",
+  "e0fb7511"
  ],
  "batches": {
   "1": [

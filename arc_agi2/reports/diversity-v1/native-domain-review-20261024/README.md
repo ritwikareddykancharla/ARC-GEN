@@ -5,20 +5,28 @@ prepare/admission or release-readiness code was changed. `release_ready` is
 `false` for every record. A source review is not enough to set it, and neither
 is a smoke test.
 
+**Progress:** 64 of 729 families have hand-written semantic reviews (batches 1
+and 2). The other 665 are `pending`. Not all 729 families have been
+semantically reviewed.
+
 ## Files
 
 | File | Content |
 |---|---|
 | `extract.py` | Reproducible extraction, merge and validation (`--check` validates without writing) |
 | `inventory.jsonl` | One record per family (729), sorted by review rank |
-| `semantic_reviews.json` | Hand-written semantic reviews (batch 1, 32 families), each bound to a constructor sha256 |
+| `semantic_reviews.json` | Hand-written semantic reviews (batches 1–2, 64 families), each bound to a constructor sha256 |
+| `probes/` | Small read-only, seeded measurement scripts cited by batch-2 reviews |
 | `summary.json` | Counts, ID lists, all batches, validation errors (currently none) |
 
 ```bash
 PYTHONPATH=. .venv/bin/python arc_agi2/reports/diversity-v1/native-domain-review-20261024/extract.py
 ```
 
-Running the script twice gives byte-identical `inventory.jsonl`.
+Running the script twice gives byte-identical `inventory.jsonl` and
+`summary.json`. `REVIEWED_BATCHES` in `extract.py` (currently `(1, 2)`) sets
+which batches must be fully and currently reviewed. Validation fails if any
+other batch has a non-`pending` record.
 
 ## Provenance
 
@@ -54,8 +62,8 @@ Running the script twice gives byte-identical `inventory.jsonl`.
   `demonstrations`. That flag is a lead only.
 - **Priority:** rank, batch and tier.
 
-Mechanical extraction is not semantic review. All 697 families outside
-batch 1 are `semantic_review.status = "pending"`.
+Mechanical extraction is not semantic review. All 665 families outside
+batches 1–2 are `semantic_review.status = "pending"`.
 
 Totals:
 - **Tiers:** Tier A has 122 families: the audit-sampled input height and width
@@ -155,6 +163,112 @@ tied to the canvas.
 
   Episode-level coverage of these was not measured.
 
+## Batch 2 semantic review (32 families, ranks 33–64)
+
+**Scope:** tier A, all audit-current. Every constructor sha256 is unchanged
+from the ordering commit to the review baseline `f735382`. Every family has a
+`current` direct certificate:
+
+- 29 are `direct_factory` records;
+- 3 are `direct_certificate` records (`4f537728`, `522fdd07`, `94414823`).
+
+**What was read:** for each family, the whole `generate()` body, its helpers
+and `validate()`, plus every canonical train/test grid and the audit record.
+Factory source was read where demonstrations or orientation matter
+(`4c177718`, `4e469f39`, `73182012`, `782b5218`, `7e2bad24`).
+
+**Unlike batch 1, some code was run:** the read-only, seeded scripts in
+`probes/`. Their results are quoted in the reviews. No certificate or audit
+was rerun.
+
+### Axis dispositions (count of families)
+
+| Axis | incidental | mixed | intrinsic / rule-supported | broadly variable | unknown |
+|---|---|---|---|---|---|
+| dimensions | 29 | 3 | 0 | 0 | 0 |
+| objects | 6 | 20 | 5 | 1 | 0 |
+| placement | 4 | 17 | 9 | 2 | 0 |
+| density / colours | 9 | 16 | 7 | 0 | 0 |
+| rule parameters | 0 | 4 | 27 | 0 | 1 |
+| demonstration context | 0 | 6 | 26 | 0 | 0 |
+
+**Patch priority:**
+- **High (8):** `4f537728`, `50c07299`, `54db823b`, `782b5218`, `7e2bad24`,
+  `7e576d6e`, `917bccba`, `94414823`.
+- **Medium (22).**
+- **Low (2):** `5b37cb25` and `981571dc`. Both already have wide variety
+  (128/128 unique audit inputs). For `981571dc`, the 30×30 crop of a 32×32
+  mosaic is fixture-faithful, so no patch is justified.
+
+As in batch 1, a fixed literal canvas is the main incidental restriction:
+29 of 32 families. The three `mixed` dimension cases:
+- `668eec9a`: the 5-row output equals the maximum line count.
+- `7c9b52a0`: the output follows the window size, and 3×3/5×5 are excluded.
+- `981571dc`: the off-centre crop is canonical.
+
+### Discoveries
+
+- **Audit artefact, not infeasibility.**
+  - `54db823b`: the audit shows 1 valid draw out of 3, with 2 timeouts at the
+    2 s per-draw limit. `probes/time_draws.py` gave 70/70 valid draws (seeds
+    0 and 1, 10 s limit). The median was 2–11 ms and the maximum 3.4 s.
+  - The cause is an unbounded whole-scene rejection loop (line 36) with a
+    heavy tail. Pixel counts are assigned to boxes in sorted order without
+    regard to box area (lines 42–47), which adds rejections.
+  - Fix sampling and re-audit before judging diversity.
+- **Native orientation never varies, unlike the fixtures.**
+  - In `7e2bad24` and `7e576d6e`, the random branch never assigns
+    `flip`/`flop`/`xpose`, so they stay `None`.
+  - The canonical fixtures mix orientations within one episode.
+  - `probes/orientation_blockers.py` found horizontal walls/lines in 200/200
+    and 100/100 native draws.
+  - For `7e2bad24`, the factory also keeps four rival mirror-end readings and
+    picks between them using demonstrations.
+- **Latent defect.** In `782b5218`, line 52 rejects lines that leave the top
+  edge but not the bottom. `probes/line_span_782b5218.py` found 136 of 3000
+  native inputs (4.5%) with a column containing no red; those columns are
+  cleared to 0. The factory's flood fill agreed with the native output on all
+  3000.
+- **Tiny or single-geometry domains.**
+  - `94414823`: one geometry. The domain is 56 colour pairs × 4 orientations;
+    the audit found 1 orbit.
+  - `50c07299`: 56 inputs. Every segment lies on the main anti-diagonal.
+    Every canonical example is also the L-th term of a corner-anchored series.
+  - `4f537728`: 800 inputs (35 orbits).
+  - `917bccba`: about 424 geometries (51 orbits).
+  - `95755ff2`: the diamond geometry is fixed.
+- **Colour-role collisions.** Both are deterministic, but they make the
+  scene visually ambiguous:
+  - `95755ff2`: the dust colour can equal the diamond red, with probability
+    1/9 (line 55).
+  - `9356391f`: a legend colour can equal the grey used as the clipped-ring
+    marker.
+- **Constants that are never resampled.**
+  - `689c358e`: the plus colours always use the default `[2,5,8,9]`.
+  - `8e301a54`: the sprite colours are always `[2,5,9]`.
+- **A bound that silently does rule work.** In `689c358e`, the per-angle
+  bounds alone stop two pluses from marking the same frame line.
+  `probes/frame_marks_689c358e.py` found 0 such collisions in 2000 draws. A
+  larger canvas would need an explicit guard.
+- **Demonstration context.**
+  - `73182012`: the factory reads the quadrant size from demonstration
+    outputs, and the answer corner is a d4 convention.
+  - `782b5218`: the factory learns which edge is cleared from demonstrations.
+  - `522fdd07` and `9356391f`: a convention appears only in some pairs (the
+    pixel→9×9 wrap and the clipped-swatch grey).
+  - Episode-level coverage of these was not measured.
+
+### Unknowns
+
+- `7e576d6e`, rule parameters: whether the zigzag filter (lines 52 and 61) is
+  part of the original rule.
+- `692cd3b6`: whether the extra-bit rules for the 12 opening-direction
+  combinations not in the fixtures are faithful.
+- `7c9b52a0`: why 3×3 and 5×5 windows are excluded.
+- Domain sizes for `4e469f39`, `917bccba` and `692cd3b6` are hand counts, not
+  enumerations.
+- No proposed patch has been implemented or recertified.
+
 ## Not covered
 
 - **No changes:** constructors, factories, fixtures and admission code are
@@ -164,14 +278,18 @@ tied to the canvas.
   It does not mean the original task forbids alternatives.
 - **Proposed patches are hypotheses:** each needs recertification, and where
   noted, verifier review.
+- **Probes are not audits:** the `probes/` scripts are local seeded runs.
+  They are smaller than the 128-sample audit and use a different time limit.
+  They do not replace re-auditing after a patch.
 - **Stale reviews:** if a constructor changes after review, `extract.py` marks
   that review `stale`.
 
-## Next batch (batch 2, ranks 33–64, tier A, audit-current)
+## Next batch (batch 3, ranks 65–96, tier A, audit-current)
 
-`4c177718 4e469f39 4f537728 50c07299 522fdd07 52df9849 54db823b 575b1a71
-5792cb4d 5b37cb25 639f5a19 668eec9a 689c358e 68bc2e87 692cd3b6 69889d6e
-73182012 782b5218 7c8af763 7c9b52a0 7e02026e 7e2bad24 7e576d6e 7ee1c6ea
-85b81ff1 8e301a54 917bccba 9356391f 94414823 95755ff2 97239e3d 981571dc`
+`996ec1f3 9a4bb226 9c1e755f 9caba7c3 9f27f097 9f8de559 a1aa0c1e a416fc5b
+aa300dc3 aaef0977 ad38a9d0 af24b4cc afe3afe9 b2bc3ffd b7fb29bc b9630600
+bb52a14b bd283c4a c35c1b4c c6e1b8da c7d4e6ad cf133acc cfb2ce5a d304284e
+d47aa2ff d753a70b d94c3b52 da2b0fe3 db7260a4 dc2aa30b dc46ea44 e0fb7511`
 
-`54db823b` is also an audit-shortfall case (1 valid draw).
+`bb52a14b` is an audit-shortfall case. Before reading anything into its
+fixed-size signal, time its draws directly, as was done for `54db823b`.

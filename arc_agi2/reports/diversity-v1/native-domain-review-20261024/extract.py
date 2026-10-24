@@ -41,6 +41,9 @@ AUDIT = MAIN / "output/generator-domain-audit-20261024"
 ORDERING_COMMIT = "5436f3fe035f261cdcf7996565c108148efa37fb"
 BATCH = 32
 MAX_CONSTRAINTS = 28
+# Batches whose every family must carry a hand-written, current semantic review.
+# All other batches must stay "pending".
+REVIEWED_BATCHES = (1, 2)
 
 CERT_DIRS = {
     "direct_factory": ROOT / "arc_agi2/direct_factories",
@@ -299,12 +302,12 @@ def check(meta, recs, ids):
             errs.append(f"{r['task_id']}: fixture counts")
         if r["release_ready"] is not False:
             errs.append(f"{r['task_id']}: release_ready set")
-    first = [r for r in recs if r["priority"]["batch"] == 1]
-    for r in first:
+    reviewed_scope = [r for r in recs if r["priority"]["batch"] in REVIEWED_BATCHES]
+    for r in reviewed_scope:
         sr = r["semantic_review"]
         tid = r["task_id"]
         if sr.get("status") != "reviewed":
-            errs.append(f"{tid}: batch-1 record not reviewed ({sr.get('status')})")
+            errs.append(f"{tid}: batch-{r['priority']['batch']} record not reviewed ({sr.get('status')})")
             continue
         lines = (ROOT / r["source"]["path"]).read_text().splitlines()
         for ax in AXES:
@@ -323,9 +326,10 @@ def check(meta, recs, ids):
         if sr.get("certified_evidence") not in EVIDENCE_STATES or \
                 sr["certified_evidence"] != r["certified_evidence"]["state"]:
             errs.append(f"{tid}: certified_evidence disagrees with mechanical state")
-    others = [r for r in recs if r["priority"]["batch"] != 1]
-    if any(r["semantic_review"]["status"] != "pending" for r in others):
-        errs.append("a non-batch-1 record is not pending")
+    others = [r for r in recs if r["priority"]["batch"] not in REVIEWED_BATCHES]
+    for r in others:
+        if r["semantic_review"]["status"] != "pending":
+            errs.append(f"{r['task_id']}: record outside reviewed batches is not pending")
     return errs
 
 
@@ -349,7 +353,8 @@ def summarise(meta, recs):
                                         for p in ("high", "medium", "low", "none")},
         "reviewed_axis_dispositions": disp,
         "reviewed_patch_priority": dict(collections.Counter(r["semantic_review"]["patch_priority"] for r in rev)),
-        "next_batch": batches.get(2, []),
+        "reviewed_batches": list(REVIEWED_BATCHES),
+        "next_batch": batches.get(max(REVIEWED_BATCHES) + 1, []),
         "batches": {str(k): v for k, v in batches.items()},
     }
 

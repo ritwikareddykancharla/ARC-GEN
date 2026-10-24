@@ -1,0 +1,38 @@
+{
+  "task_id": "264363fd",
+  "passed": true,
+  "requested_proposals": 1920,
+  "colour_alignment": null,
+  "native_certificate": {
+    "fresh_pairs_checked": 1000,
+    "augmented_pair_checks": 8000,
+    "fixture_variants_checked": 16,
+    "unique_base_inputs": 1000
+  },
+  "fixture_pairs_identity_mapped": 4,
+  "fixture_variants_checked": 16,
+  "accepted_pairs": 1163,
+  "probe_rejections": {
+    "fork_verifier_disagreement": 701,
+    "rearc_verifier_disagreement": 56
+  },
+  "probe_verified_episodes": 290,
+  "bounded_stop": false,
+  "input_shape_count": 251,
+  "fork_rejection_analysis": {
+    "archived_verifier_agrees/program_exact": 1163,
+    "archived_verifier_rejects/program_exact": 701
+  },
+  "augmented_episode_checks": 2048,
+  "augmented_pair_checks": 8192,
+  "admission_gate_passed": true,
+  "program_sha256": "09fa7e7c2d5a143b850ab17ce95a75603202c154d6e6101e737a2a99eb3998f9",
+  "dependency_sha256": {
+    "diversity/rearc/generators.py": "7eb7b6620afe08760fb52761c7dd46796e9e44958714efc950b11e923a8281ae",
+    "diversity/rearc/verifiers.py": "1a79a559f670943968c9dbee66a0b02d71d71296adb922330fe72935f7ef7ddd",
+    "direct_factories/task_264363fd.py": "32b89ca625ce4d658db165b79f3079295eda3d70a5bfa4f44649ad6b4d821e50",
+    "direct_factories/264363fd.json": "2828bf675338a811aaaa8ddbcce6bc6b2143f2559228520e0181848ca7be66c6"
+  },
+  "seconds": 28.44,
+  "limitations": "Finite sampled checks of a reviewed program on archived-verifier accepted RE-ARC pairs; not proof of unrestricted semantic equivalence. Archived-verifier rejections remain excluded."
+}

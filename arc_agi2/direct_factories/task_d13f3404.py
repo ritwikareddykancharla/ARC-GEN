@@ -1,3 +1,17 @@
+"""Diagonal trails from a corner tile (d13f3404), reviewed for the broader RE-ARC domain.
+
+Rule (native constructor and RE-ARC ``generate_d13f3404``): the input sits in
+one corner of a canvas twice its size. At most one pixel lies on each
+diagonal, and each pixel extends as a trail away from that corner to the
+canvas edge. The corner and the trail direction move with the D4 index.
+
+The earlier factory fixed the background to palette[0]. RE-ARC samples the
+background, and pixels are at most one per diagonal, so the background is
+read as the strict modal input colour (ties raise an error). It fills the
+output canvas, as in both constructors.
+"""
+
+
 def build_program(d4, palette):
     # Track where the original top-left output corner (which holds the input) ends up.
     # The corner is (cr, cc); 1 means the far side (bottom row or right column).
@@ -11,11 +25,9 @@ def build_program(d4, palette):
     # The trail always runs diagonally away from the corner that holds the input.
     dr = 1 - 2 * cr
     dc = 1 - 2 * cc
-    bg = int(palette[0])
     lines = [
         'import numpy as np',
         '',
-        'BG = %d' % bg,
         'CORNER_BOTTOM = %d' % cr,
         'CORNER_RIGHT = %d' % cc,
         'DR = %d' % dr,
@@ -24,6 +36,11 @@ def build_program(d4, palette):
         'def solve(demonstrations, grid):',
         '    g = np.array(grid, dtype=int)',
         '    h, w = g.shape',
+        '    values, counts = np.unique(g, return_counts=True)',
+        '    order = np.argsort(-counts, kind="stable")',
+        '    if len(values) > 1 and counts[order[0]] == counts[order[1]]:',
+        '        raise ValueError("Expected a unique modal background")',
+        '    BG = int(values[order[0]])',
         '    H, W = 2 * h, 2 * w',
         '    out = np.full((H, W), BG, dtype=int)',
         '    r0 = h if CORNER_BOTTOM else 0',

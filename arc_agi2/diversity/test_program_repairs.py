@@ -79,8 +79,11 @@ def test_fresh_rearc_episodes_under_all_d4(tid):
                    call(getattr(generators, "generate_" + tid), 0., 1., seconds=2).items()}
         except Exception:
             continue
-        assert grid(call(getattr(verifiers, "verify_" + tid),
-                         tuple(map(tuple, raw["input"])))) == raw["output"]
+        # RE-ARC's own verifier rejects a few 264363fd labels; the probe counts
+        # those as rejections, and so does this test.
+        if grid(call(getattr(verifiers, "verify_" + tid),
+                     tuple(map(tuple, raw["input"])))) != raw["output"]:
+            continue
         try:
             agrees = grid(call(verification_solver(tid), raw["input"])) == raw["output"]
         except Exception:
@@ -210,3 +213,55 @@ def test_8403a5d5_black_seed_on_coloured_background():
     out = run("8403a5d5", g)
     assert [out[r][1] for r in range(5)] == [0] * 5 and [out[r][3] for r in range(5)] == [0] * 5
     assert out[0][2] == 5 and out[4][4] == 5 and out[2][2] == 6
+
+
+def test_c8cbb738_asymmetric_piece_returns_to_its_ring_corner():
+    # Output 4x5 ring. Piece 2 touches the left and top sides only (RE-ARC), so
+    # centring with an odd margin would shift it one column to the right.
+    g = [[0] * 10 for _ in range(10)]
+    for r, c in ((5, 4), (5, 8), (8, 4), (8, 8)):
+        g[r][c] = 1                          # corner piece fixes the 4x5 size
+    for r, c in ((0, 1), (0, 2), (1, 0), (2, 0)):
+        g[r][c] = 2
+    expected = [[1, 2, 2, 0, 1], [2, 0, 0, 0, 0], [2, 0, 0, 0, 0], [1, 0, 0, 0, 1]]
+    assert run("c8cbb738", g) == expected
+    for d4 in range(8):
+        assert (run("c8cbb738", transformed(g, d4, PALETTE), d4, PALETTE)
+                == transformed(expected, d4, PALETTE))
+
+
+def test_264363fd_one_armed_star_centre_is_its_complete_cell():
+    # RE-ARC legend with only an upward arm: its bounding box is 4 rows tall,
+    # so the floor midpoint lands on the arm instead of the centre.
+    g = [[0] * 16 for _ in range(13)]
+    for r in range(2, 5):
+        for c in range(1, 4):
+            g[r][c] = 1
+    g[3][2] = 4                              # centre colour
+    g[1][2] = g[2][2] = 2                    # two-cell arm
+    for r in range(6, 13):
+        for c in range(9):
+            g[r][c] = 8
+    g[9][4] = 4                              # marker
+    expected = [row[:] for row in g]
+    for r in range(1, 5):
+        for c in range(1, 4):
+            expected[r][c] = 0
+    for r in range(8, 11):
+        for c in range(3, 6):
+            expected[r][c] = 1
+    expected[9][4] = 4
+    for r in (6, 7, 8):
+        expected[r][4] = 2
+    assert run("264363fd", g) == expected
+    for d4 in range(8):
+        assert (run("264363fd", transformed(g, d4, PALETTE), d4, PALETTE)
+                == transformed(expected, d4, PALETTE))
+
+
+def test_d13f3404_background_is_read_from_the_grid():
+    g = [[6, 0, 6], [3, 6, 6], [6, 6, 6]]   # RE-ARC: any background, any trail colour
+    out = run("d13f3404", g)
+    assert [out[i][i + 1] for i in range(5)] == [0] * 5
+    assert [out[i + 1][i] for i in range(5)] == [3] * 5
+    assert out[0][0] == 6 and sum(row.count(6) for row in out) == 26

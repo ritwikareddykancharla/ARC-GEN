@@ -1,0 +1,170 @@
+{
+  "status": "Measured candidates only; NOT adopted. No ROLE_SPECS entry, certificate or admission change was made.",
+  "evidence": "Ignored 128-proposal probe evidence (ARC-GEN reports/diversity-v1/<id>.json, both verifiers passed). Simulated a background-only bijective alignment: the strict modal input colour is swapped with 0, reading inputs only. Then the current identity-palette program target and the archived verifier were re-run.",
+  "adoption_requirements": [
+    "Review each RE-ARC generator for fixed output/marker colours and declare them in ROLE_SPECS (fixed, foreground, input_colours), as in the earlier batches; a 128/128 simulation does not establish that fixed colours never collide.",
+    "colour_roles.py is pinned by all 25 role certificates; after the final ROLE_SPECS freeze, re-run certify_roles for every role family (old and new), then the parent rebuilds admission."
+  ],
+  "background_only_alignment_sufficient_on_sample": [
+    "7b6016b9",
+    "834ec97d",
+    "8eb1be9a",
+    "97999447",
+    "a5313dff",
+    "a5f85a15",
+    "a79310a0",
+    "aba27056",
+    "ae4f1146",
+    "ba97ae07",
+    "cdecee7f",
+    "d06dbe63",
+    "d4a91cb9",
+    "d5d6de2d",
+    "f35d900a",
+    "f8b3ba0a",
+    "fcc82909"
+  ],
+  "alignment_insufficient_needs_program_review": [
+    "868de0fa",
+    "941d9a10",
+    "95990924",
+    "b60334d2",
+    "ce22a75a"
+  ],
+  "families": {
+    "7b6016b9": {
+      "unaligned_program_exact": 17,
+      "aligned_archived_verifier_agrees": 128,
+      "aligned_program_exact": 128,
+      "pairs": 128
+    },
+    "834ec97d": {
+      "unaligned_program_exact": 14,
+      "aligned_archived_verifier_agrees": 128,
+      "aligned_program_exact": 128,
+      "pairs": 128
+    },
+    "868de0fa": {
+      "unaligned_program_exact": 0,
+      "aligned_archived_verifier_agrees": 128,
+      "aligned_program_exact": 1,
+      "pairs": 128
+    },
+    "8eb1be9a": {
+      "unaligned_program_exact": 5,
+      "aligned_archived_verifier_agrees": 128,
+      "aligned_program_exact": 128,
+      "pairs": 128
+    },
+    "941d9a10": {
+      "unaligned_program_exact": 18,
+      "aligned_archived_verifier_agrees": 121,
+      "aligned_program_exact": 12,
+      "modal_tie_rejected": 7,
+      "pairs": 128
+    },
+    "95990924": {
+      "unaligned_program_exact": 6,
+      "aligned_archived_verifier_agrees": 127,
+      "aligned_program_exact": 33,
+      "modal_tie_rejected": 1,
+      "pairs": 128
+    },
+    "97999447": {
+      "unaligned_program_exact": 16,
+      "aligned_archived_verifier_agrees": 128,
+      "aligned_program_exact": 128,
+      "pairs": 128
+    },
+    "a5313dff": {
+      "unaligned_program_exact": 7,
+      "aligned_archived_verifier_agrees": 128,
+      "aligned_program_exact": 128,
+      "pairs": 128
+    },
+    "a5f85a15": {
+      "unaligned_program_exact": 11,
+      "aligned_archived_verifier_agrees": 128,
+      "aligned_program_exact": 128,
+      "pairs": 128
+    },
+    "a79310a0": {
+      "unaligned_program_exact": 11,
+      "aligned_archived_verifier_agrees": 128,
+      "aligned_program_exact": 128,
+      "pairs": 128
+    },
+    "aba27056": {
+      "unaligned_program_exact": 14,
+      "aligned_archived_verifier_agrees": 128,
+      "aligned_program_exact": 128,
+      "pairs": 128
+    },
+    "ae4f1146": {
+      "unaligned_program_exact": 19,
+      "aligned_archived_verifier_agrees": 128,
+      "aligned_program_exact": 128,
+      "pairs": 128
+    },
+    "b60334d2": {
+      "unaligned_program_exact": 1,
+      "aligned_archived_verifier_agrees": 128,
+      "aligned_program_exact": 12,
+      "pairs": 128
+    },
+    "ba97ae07": {
+      "unaligned_program_exact": 9,
+      "aligned_archived_verifier_agrees": 128,
+      "aligned_program_exact": 128,
+      "pairs": 128
+    },
+    "cdecee7f": {
+      "unaligned_program_exact": 10,
+      "aligned_archived_verifier_agrees": 128,
+      "aligned_program_exact": 128,
+      "pairs": 128
+    },
+    "ce22a75a": {
+      "unaligned_program_exact": 3,
+      "aligned_archived_verifier_agrees": 128,
+      "aligned_program_exact": 21,
+      "pairs": 128
+    },
+    "d06dbe63": {
+      "unaligned_program_exact": 18,
+      "aligned_archived_verifier_agrees": 128,
+      "aligned_program_exact": 128,
+      "pairs": 128
+    },
+    "d4a91cb9": {
+      "unaligned_program_exact": 23,
+      "aligned_archived_verifier_agrees": 128,
+      "aligned_program_exact": 128,
+      "pairs": 128
+    },
+    "d5d6de2d": {
+      "unaligned_program_exact": 21,
+      "aligned_archived_verifier_agrees": 128,
+      "aligned_program_exact": 128,
+      "pairs": 128
+    },
+    "f35d900a": {
+      "unaligned_program_exact": 16,
+      "aligned_archived_verifier_agrees": 128,
+      "aligned_program_exact": 128,
+      "pairs": 128
+    },
+    "f8b3ba0a": {
+      "unaligned_program_exact": 16,
+      "aligned_archived_verifier_agrees": 128,
+      "aligned_program_exact": 128,
+      "pairs": 128
+    },
+    "fcc82909": {
+      "unaligned_program_exact": 11,
+      "aligned_archived_verifier_agrees": 128,
+      "aligned_program_exact": 128,
+      "pairs": 128
+    }
+  }
+}

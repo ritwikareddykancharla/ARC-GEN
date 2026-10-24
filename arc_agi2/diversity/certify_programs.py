@@ -40,11 +40,14 @@ PAIR_BUDGET, EPISODE_BUDGET = 1024, 2048
 # Proposals per family, sized from measured archived-verifier acceptance.
 PROGRAM_REPAIRS = {
     "1a07d186": 1536,
+    "264363fd": 1920,
     "272f95fa": 1152,
     "57aa92db": 1152,
     "63613498": 3456,
     "8403a5d5": 1152,
     "aabf363d": 2688,
+    "c8cbb738": 4608,
+    "d13f3404": 1152,
     "fcb5c309": 3456,
 }
 

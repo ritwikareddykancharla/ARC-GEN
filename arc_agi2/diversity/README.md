@@ -127,9 +127,10 @@ new fixes and is an intermediate artifact, not the complete hybrid dataset.
 
 Twelve probe-ready families failed the augmented admission gate even though
 both verifiers accepted their RE-ARC labels. Their programs made assumptions
-the broader domain violates. Seven are repaired in `direct_factories/`; each
-factory header states the rule and the defect. Each program reads its roles
-from the visible grid and rejects ambiguous scenes instead of guessing.
+the broader domain violates. Nine of them, plus `d13f3404`, are repaired in
+`direct_factories/`; each factory header states the rule and the defect.
+Each program reads its roles from the visible grid and rejects ambiguous
+scenes instead of guessing.
 
 | Family | Earlier assumption | Reviewed rule |
 |---|---|---|
@@ -140,6 +141,9 @@ from the visible grid and rejects ambiguous scenes instead of guessing.
 | `fcb5c309` | largest box | box enclosing the most dots |
 | `272f95fa` | palette[0] lines skipped | unique colour with two full rows and columns |
 | `8403a5d5` | background palette[0] | background = everything but the seed |
+| `c8cbb738` | each piece centred, rounding down | most cells on the ring, then exact centre |
+| `264363fd` | legend centre = floor of box midpoint | cell with a complete neighbourhood |
+| `d13f3404` | background palette[0] | strict modal input colour |
 
 `recertify` gave each factory a native certificate: 1,000 fresh pairs, 8,000
 D4 checks and 16 fixture variants. `8403a5d5` has 80 possible native inputs,
@@ -151,13 +155,24 @@ Certificates are in `reports/diversity-v1/program-certificates/`. They include
 
 The archived verifier still filters proposals, and its rejections remain
 excluded. The repaired program reproduced every RE-ARC label in those rejected
-cases but one, so archived-verifier defects now limit acceptance.
-`63613498` accepts 1,177 of 3,456 proposals, `fcb5c309` 1,132 of 3,456 and
-`aabf363d` 1,269 of 2,688. `0b148d64` and `1b2d62fb` have candidate repairs
-that are exact on the RE-ARC domain. Native recertification rejects them
-because their archived verifiers disagree with the native constructor
-(`blocked-verifier-defects.json`), so their factories are unchanged pending a
-reviewed verifier.
+cases but one, so archived-verifier defects now limit acceptance. Accepted
+proposals:
+
+- `c8cbb738`: 1,152 of 4,608
+- `fcb5c309`: 1,132 of 3,456
+- `63613498`: 1,177 of 3,456
+- `aabf363d`: 1,269 of 2,688
+- `264363fd`: 1,163 of 1,920
+
+`0b148d64`, `1b2d62fb` and `de1cd16c` have candidate repairs that are exact on
+the RE-ARC domain. Native recertification rejects them because their archived
+verifiers disagree with the native constructor. Their factories are unchanged
+pending reviewed verifiers; see `blocked-verifier-defects.json`.
+
+`background-role-candidates.json` lists 17 further families whose sampled
+labels pass the program once the modal background is mapped to 0. They are
+not adopted. Adoption needs a per-family review of fixed colours, plus
+refreshed certificates for every role family after `colour_roles.py` changes.
 
 ## Readable episode preparation
 

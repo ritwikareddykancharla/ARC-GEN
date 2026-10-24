@@ -1,50 +1,17 @@
 {
   "task_id": "d13f3404",
-  "factory_sha256": "c7c880f594e6f37adf268f144effc66ffcd355a9d3773a947d9c62776774c47c",
-  "constructor_sha256": "ed70565f833fb4d88227435b1805e533aa3ce408a18308e72e796120d3718e0c",
   "passed": true,
   "fresh_pairs_checked": 1000,
   "augmented_pair_checks": 8000,
   "fixture_variants_checked": 16,
-  "sampler_rejections": [],
-  "seed": 61374445124370,
-  "d4": 7,
-  "unique_base_inputs": 988,
-  "seconds": 1.4039024169323966,
-  "factory_version": 1,
+  "constructor_sha256": "ed70565f833fb4d88227435b1805e533aa3ce408a18308e72e796120d3718e0c",
+  "auditor_sha256": "1e194cb80d11ccda4026cb83a61c6dd407f1b9d94117090b31de26b01a3f191d",
   "requires_per_episode_verification": true,
-  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
-  "draft_notes": {
-    "explanation": "In the original task the output is a canvas twice the input's height and width, filled with background colour 0. The input occupies the canvas's top-left corner. Each non-background cell is extended along the down-right diagonal (+1,+1) until it reaches the canvas edge.\n\nUnder the D4 transform, that input block moves to a different corner of the output canvas, and the trail direction changes with it. The factory tracks the corner symbolically. A row reversal flips the column side of the corner. Each clockwise rotation maps corner (r,c) to (c,1-r). The trail direction is always the diagonal pointing away from that corner: (1-2r, 1-2c).\n\nThe emitted program works directly in visible coordinates:\n1. It allocates a canvas of size 2h x 2w filled with palette[0].\n2. It places the visible input at the computed corner offset, which is (0 or h, 0 or w).\n3. It walks each non-background cell in the fixed diagonal direction (DR, DC) until it leaves the canvas.\n\nThis keeps the mechanism of the archived solver and the generator. The generator's range(2*size - max(r,c)) is exactly the run to the canvas edge on a square grid. Rectangular inputs are handled by stopping at the edge of the 2h x 2w canvas.",
-    "limitations": "The background is fixed to palette[0], consistent with the constructor, where colour 0 is always the background. It is not inferred from the demonstrations.\n\nThe generator guarantees that the coloured cells lie on distinct diagonals, so the trails never overlap. If a hypothetical input broke that guarantee, later cells in row-major visible order would overwrite earlier ones. That is outside the constructor's domain.\n\nThe demonstrations are not used, because the rule is fully determined by d4 and the palette.\n\nI did not find any constructor defects or fixture contradictions. All approved fixtures match the uniform rule of extending each cell to the edge of the doubled canvas.",
-    "independent_source_review": {
-      "verdict": "accept",
-      "mechanism": "The output is a 2h\u00d72w canvas filled with background. The input sits in one corner of the canvas, and in native orientation that corner is top-left. Each non-background cell is extended along the diagonal pointing away from that corner until it reaches the canvas edge. The factory tracks the corner symbolically through the D4 transform: a row reversal maps cc\u21921-cc, and each clockwise turn maps (r,c)\u2192(c,1-r). It sets the trail direction to (1-2cr, 1-2cc), which is away from the corner. It then emits a solver that draws trails directly in visible coordinates.",
-      "evidence": [
-        "Constructor domain: `common.shuffle(common.all_pixels(3,3))` keeps one pixel per diagonal `c - r`. A 3\u00d73 grid has 5 diagonals, so up to 5 pixels are kept. `zip(rows, cols, colors)` with `random_colors(3)` then truncates this to 3 cells on distinct diagonals with distinct non-zero colours. Trails therefore never collide, and no ties or overwrites are reachable.",
-        "Constructor output loop: `range(2*size - max(r,c))` gives exactly the idx values with r+idx<6 and c+idx<6. That is the run to the canvas edge. The archived rule's count argument agrees: the 4 at (0,1) reaches (4,5).",
-        "The `validate()` calls reproduce all four approved fixtures. Train 3 is (0,2)=6, (1,0)=1, (1,1)=3, and the canonical output matches the to-edge trail rule. `fixture_basis` reports canonical and uncorrected.",
-        "No label depends on a hidden latent. The output is a deterministic function of visible cell positions and colours.",
-        "Factory corner algebra is correct. Mirror (0,0)\u2192(0,1). A clockwise turn sends top-left to top-right, (0,0)\u2192(0,1). The input block restricted to the transformed 6\u00d76 equals the transformed 3\u00d73 plus a corner offset (0 or h, 0 or w), so the solver's `r = y + r0, c = x + c0` placement is correct.",
-        "The solver works natively in augmented coordinates. It uses fixed DR/DC/corner constants and has no untransform/native-solve/retransform wrapper. Specializing the orientation is legitimate, because every demonstration visibly shows the corner placement and the trail direction.",
-        "BG = palette[0] matches the constructor, which always uses background 0. The archived program's most-common-colour background agrees, since 6 of 9 cells are always background.",
-        "Host audit passed: 1000 fresh pairs, 8000 augmented checks, 16 fixture variants, no sampler rejections."
-      ],
-      "blocking_issues": [],
-      "nonblocking_limits": [
-        "The background is taken from palette[0] rather than inferred from the demonstrations. This is consistent with the constructor domain.",
-        "If cells shared a diagonal, row-major overwrite order would decide the result. The constructor excludes this case.",
-        "Non-square or other-size inputs are handled by stopping at the 2h\u00d72w edge. The constructor only produces 3\u00d73 inputs, so this generalization goes untested.",
-        "The demonstrations are ignored. The trail direction is fixed per d4, and the demos teach it consistently."
-      ],
-      "required_context_checks": [
-        "No colour-association evidence check applies: d13f3404 is not in the `require_colour_evidence` list, and the rule has no arbitrary colour lookup.",
-        "The standard D4 conflicting-answer rejection in `context_policy` is sufficient. The corner and direction are visible in every demonstration output."
-      ],
-      "task_id": "d13f3404",
-      "factory_sha256": "c7c880f594e6f37adf268f144effc66ffcd355a9d3773a947d9c62776774c47c",
-      "constructor_sha256": "ed70565f833fb4d88227435b1805e533aa3ce408a18308e72e796120d3718e0c"
-    },
-    "host_review": "Read source review mechanism, evidence, limitations and context requirements. Host audit covers all eight D4 indices per fresh pair; d4=7 in report is only the final loop index. All supplied fixture pairs checked under 16 orientation/palette variants. Emitted programs operate in displayed coordinates. Per-episode verification and context-evidence checks are mandatory. "
-  }
+  "sampler_rejections": [],
+  "program_provider": "factory",
+  "factory_sha256": "e89d2c870ae958edd5713fd8459416bb420ed47ee9d476c63dfec0bccb4ce806",
+  "factory_version": 1,
+  "unique_base_inputs": 972,
+  "fixture_basis": "canonical",
+  "seconds": 0.945486709009856
 }

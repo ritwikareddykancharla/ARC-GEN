@@ -107,7 +107,9 @@ def compare(tid, make_args):
         tally[(ref_state if ref_state == "valid" else "old_" + ref_state.split(":")[0], ok)] += 1
         if not ok and len(mismatches) < 5:
             mismatches.append({"draw": i, "args": kw, "old": ref_state, "new": got_state})
-    return {"task_id": tid, "old_constructor_sha256": old_sha, "draws": DRAWS,
+    new_sha = hashlib.sha256(Path(new.__file__).read_bytes()).hexdigest()
+    return {"task_id": tid, "old_constructor_sha256": old_sha, "new_constructor_sha256": new_sha,
+            "draws": DRAWS,
             "outcomes": {f"{k[0]}|{'match' if k[1] else 'MISMATCH'}": v
                          for k, v in sorted(tally.items())},
             "mismatches": mismatches, "passed": not mismatches}

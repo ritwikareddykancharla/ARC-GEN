@@ -1,0 +1,171 @@
+{
+ "draws": 1000,
+ "families": {
+  "18447a8d": {
+   "before": {
+    "constructor_sha256": "616d77deeef304c5cb79adb4dbc21c0c2ae35626c8da863b6162e283c9fc5e1f",
+    "unique_inputs": 1000,
+    "unique_input_orbits": 999,
+    "orbit_split": {
+     "train": 957,
+     "validation": 42
+    },
+    "input_shapes": 2,
+    "shapes_with_4plus_pairs": 2,
+    "output_shapes": 2,
+    "checker_disagreements": 0,
+    "band_count": {
+     "3": 505,
+     "4": 495
+    },
+    "key_fixed_points": {
+     "0": 353,
+     "1": 430,
+     "2": 121,
+     "3": 78,
+     "4": 18
+    },
+    "all_keys_moved": 353,
+    "identity_assignment": 96
+   },
+   "after": {
+    "constructor_sha256": "8b26a6e3b26f480aafa854414462bc4c241e1016f8bbff832f29060ed92f27c3",
+    "unique_inputs": 1000,
+    "unique_input_orbits": 1000,
+    "orbit_split": {
+     "train": 947,
+     "validation": 53
+    },
+    "input_shapes": 6,
+    "shapes_with_4plus_pairs": 6,
+    "output_shapes": 6,
+    "checker_disagreements": 0,
+    "band_count": {
+     "2": 168,
+     "3": 162,
+     "4": 154,
+     "5": 177,
+     "6": 165,
+     "7": 174
+    },
+    "key_fixed_points": {
+     "0": 410,
+     "1": 309,
+     "2": 199,
+     "3": 67,
+     "4": 14,
+     "5": 1
+    },
+    "all_keys_moved": 410,
+    "identity_assignment": 107
+   }
+  },
+  "b4a43f3b": {
+   "before": {
+    "constructor_sha256": "62217bdcedb23b02fef3dce69643bdf6dd86853741e25c77b62453195337896d",
+    "unique_inputs": 1000,
+    "unique_input_orbits": 1000,
+    "orbit_split": {
+     "train": 954,
+     "validation": 46
+    },
+    "input_shapes": 1,
+    "shapes_with_4plus_pairs": 1,
+    "output_shapes": 1,
+    "checker_disagreements": 0,
+    "scale": {
+     "2": 1000
+    },
+    "map_height": {
+     "6": 1000
+    },
+    "map_occupancy_fraction": [
+     0.08,
+     0.47
+    ],
+    "full_maps": 0,
+    "occupancy_deciles": {
+     "0": 3,
+     "1": 261,
+     "2": 414,
+     "3": 283,
+     "4": 39
+    },
+    "motif_cells": {
+     "4": 482,
+     "5": 480,
+     "6": 38
+    }
+   },
+   "after": {
+    "constructor_sha256": "a2df6bffdf2c72d1fbc58d6f6c34ac5e9826b2187f5b2021bd240cf11fa3b9ec",
+    "unique_inputs": 1000,
+    "unique_input_orbits": 1000,
+    "orbit_split": {
+     "train": 953,
+     "validation": 47
+    },
+    "input_shapes": 30,
+    "shapes_with_4plus_pairs": 30,
+    "output_shapes": 30,
+    "checker_disagreements": 0,
+    "scale": {
+     "1": 347,
+     "2": 317,
+     "3": 336
+    },
+    "map_height": {
+     "1": 98,
+     "2": 105,
+     "3": 118,
+     "4": 96,
+     "5": 93,
+     "6": 104,
+     "7": 103,
+     "8": 96,
+     "9": 96,
+     "10": 91
+    },
+    "map_occupancy_fraction": [
+     0.02,
+     1.0
+    ],
+    "full_maps": 70,
+    "occupancy_deciles": {
+     "0": 50,
+     "1": 104,
+     "2": 114,
+     "3": 139,
+     "4": 124,
+     "5": 119,
+     "6": 109,
+     "7": 87,
+     "8": 65,
+     "9": 89
+    },
+    "motif_cells": {
+     "3": 7,
+     "4": 149,
+     "5": 319,
+     "6": 331,
+     "7": 140,
+     "8": 51,
+     "9": 3
+    }
+   }
+  }
+ },
+ "capacity_18447a8d_two_bands": {
+  "layouts": 8064,
+  "definition": "64 lock profiles (1..4)^3, ordered distinct pairs, 2 key orders, colours [1, 2]; input_orbit relabels colours",
+  "input_orbits": 4080,
+  "orbit_split": {
+   "train": 3892,
+   "validation": 188
+  }
+ },
+ "source_sha256": {
+  "harness": "322b03faa775f42855ee33497c12aa38268f6b16b3fac0af95ea48d4a9b69d0f",
+  "verified_rules": "3a3425ae44e64be437e071b01c833eb5684a1646fe74adf5f2fbeab8df03d02f"
+ }
+}

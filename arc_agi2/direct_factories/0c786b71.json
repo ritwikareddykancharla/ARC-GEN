@@ -1,16 +1,20 @@
 {
   "task_id": "0c786b71",
-  "factory_sha256": "871a44a1da91fce07f380c59924d0a16c5bafb10f88e910f0a36bb0fab3d9fdc",
-  "constructor_sha256": "7fc6d170003af1a888887129b02bf336afb967f350691ae23e6551c102e0d8e8",
   "passed": true,
   "fresh_pairs_checked": 1000,
   "augmented_pair_checks": 8000,
   "fixture_variants_checked": 16,
+  "constructor_sha256": "64010e00fa4b50356b829180c5d6549e84111615b0ce90d268673225f6eb9741",
+  "auditor_sha256": "1e194cb80d11ccda4026cb83a61c6dd407f1b9d94117090b31de26b01a3f191d",
+  "requires_per_episode_verification": true,
   "sampler_rejections": [],
-  "seed": 67479180522502,
-  "d4": 7,
+  "program_provider": "factory",
+  "factory_sha256": "871a44a1da91fce07f380c59924d0a16c5bafb10f88e910f0a36bb0fab3d9fdc",
+  "factory_version": 1,
   "unique_base_inputs": 1000,
-  "seconds": 1.2844272078946233,
+  "fixture_basis": "canonical",
+  "seconds": 0.9627712501678616,
   "provenance": "Opus 5.5 subscription CLI draft; host source review and execution audit",
-  "limitations": "Assumes the generator's domain: every output is the doubled kaleidoscope of the input. Demonstrations are not consulted, because the d4 constant fully determines the anchor quadrant. Any input size works. The fixtures fit the uniform rule; no contradictions were found. Not executed by me."
+  "limitations": "Assumes the generator's domain: every output is the doubled kaleidoscope of the input. Demonstrations are not consulted, because the d4 constant fully determines the anchor quadrant. Any input size works. The fixtures fit the uniform rule; no contradictions were found. Not executed by me.",
+  "previous_constructor_sha256": "7fc6d170003af1a888887129b02bf336afb967f350691ae23e6551c102e0d8e8"
 }

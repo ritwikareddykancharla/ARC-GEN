@@ -1,18 +1,19 @@
 {
   "task_id": "f3cdc58f",
-  "factory_sha256": "81c2164bbfb8fd3e335c16ef06186c432b50bf3c3e4ad7afb5b939673f3204d9",
-  "constructor_sha256": "763478e511a8fd9bd9ec13580b1bd30bfa19642e3a8f356018efa81c7c328f94",
   "passed": true,
   "fresh_pairs_checked": 1000,
   "augmented_pair_checks": 8000,
   "fixture_variants_checked": 16,
-  "sampler_rejections": [],
-  "seed": 235292718732683,
-  "d4": 7,
-  "unique_base_inputs": 1000,
-  "seconds": 4.46407020802144,
-  "factory_version": 1,
+  "constructor_sha256": "abd953bb8cd3a8c121ee081492f4c8e8df591b26cd03d3b13d01b875c9934d97",
+  "auditor_sha256": "1e194cb80d11ccda4026cb83a61c6dd407f1b9d94117090b31de26b01a3f191d",
   "requires_per_episode_verification": true,
+  "sampler_rejections": [],
+  "program_provider": "factory",
+  "factory_sha256": "81c2164bbfb8fd3e335c16ef06186c432b50bf3c3e4ad7afb5b939673f3204d9",
+  "factory_version": 1,
+  "unique_base_inputs": 1000,
+  "fixture_basis": "canonical",
+  "seconds": 1.771831750171259,
   "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
   "draft_notes": {
     "explanation": "The original rule builds a bar chart. Original colour c (1..4) gets a bar in column c-1. The bar stands on the bottom row and its length equals the number of input cells of that colour. The background is colour 0.\n\nThe factory works out the D4 geometry once. It sends three reference points of a 10x10 grid through the stated transform (reverse each row if d4>=4, then rotate clockwise d4%4 times):\n- the base of bar 0 at (9,0),\n- the next cell up that bar at (8,0),\n- the base of bar 1 at (9,1).\n\nFrom these points it gets:\n- the visible corner where the bars start, stated as the low or high end of each axis,\n- the growth vector, which says which way a bar extends,\n- the ordering vector, which says where each next bar sits.\n\nThese become constants in the emitted program. The program draws directly in visible coordinates and never rotates the grid. For example, bars become horizontal and grow from the left edge under d4=1. Reflections reverse the order of the bars, the side the bars grow from, or both, as the transform requires.\n\nColour roles are fixed constants. The bar order is palette[1], palette[2], palette[3], palette[4], following the original colour index rather than the sorted visible values. Without this, a random palette would scramble the bar order. The background is palette[0].\n\nCounts are taken over the whole query grid. Each bar is capped at the length of the growth axis, and bars beyond the ordering axis length are skipped. Both checks matter only for non-square grids; they mirror the archived solver's min(n, H) and i < W guards. The demonstrations are not needed.",
@@ -46,5 +47,6 @@
       "constructor_sha256": "763478e511a8fd9bd9ec13580b1bd30bfa19642e3a8f356018efa81c7c328f94"
     },
     "host_review": "Host checked realized post-overwrite counts and rejection of absent colours. All four colour slots occur in every demo. augmentation.py applies horizontal flip first then clockwise rotations with shared bijective palette across episode; factory corner vectors match."
-  }
+  },
+  "previous_constructor_sha256": "763478e511a8fd9bd9ec13580b1bd30bfa19642e3a8f356018efa81c7c328f94"
 }

@@ -201,6 +201,11 @@ def require_colour_evidence(task_id, demonstrations, queries, palette=None, d4=0
         require_endpoint_evidence(demonstrations, queries,
                     list(range(10)) if palette is None else palette)
         return
+    if task_id in ('281123b4', '195ba7dc', '31d5ba1a', '34b99a2b'):
+        from .panel_overlay_evidence import require_panel_overlay_evidence
+        require_panel_overlay_evidence(task_id, demonstrations, queries,
+                    list(range(10)) if palette is None else palette, d4)
+        return
     if task_id == '80214e03':
         from .mosaic_band_evidence import require_mosaic_band_evidence
         require_mosaic_band_evidence(demonstrations, queries,

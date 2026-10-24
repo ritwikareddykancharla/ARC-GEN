@@ -1,0 +1,333 @@
+{
+ "source_sha256": {
+  "verified_rules": "a54743d7f19075966af22be6abfaa09863427822593ef186b0a2da13ca8ec853",
+  "constructor_e0fb7511": "3857588ff73d8b3866193818d618dc323c66986853ee719a64ee247ff18c48f4",
+  "constructor_f3cdc58f": "763478e511a8fd9bd9ec13580b1bd30bfa19642e3a8f356018efa81c7c328f94",
+  "harness": "10ce050bc7266cee00dc2575492ca2134cf06707e6496e7ba9d65d33c6d33749"
+ },
+ "e0fb7511": {
+  "fixtures_exact": [
+   8,
+   8
+  ],
+  "legacy_default_1000": {
+   "archived_disagree": 0,
+   "reviewed_disagree": 0
+  },
+  "legacy_explicit_colours": {
+   "density_0.125": {
+    "pairs": 84,
+    "archived_disagree": 0,
+    "reviewed_disagree": 0
+   },
+   "density_0.2": {
+    "pairs": 428,
+    "archived_disagree": 0,
+    "reviewed_disagree": 0
+   },
+   "density_0.3": {
+    "pairs": 500,
+    "archived_disagree": 0,
+    "reviewed_disagree": 0
+   },
+   "density_0.35": {
+    "pairs": 500,
+    "archived_disagree": 0,
+    "reviewed_disagree": 0
+   },
+   "density_0.4": {
+    "pairs": 500,
+    "archived_disagree": 4,
+    "reviewed_disagree": 0
+   },
+   "density_0.5": {
+    "pairs": 500,
+    "archived_disagree": 256,
+    "reviewed_disagree": 0
+   },
+   "density_0.6": {
+    "pairs": 500,
+    "archived_disagree": 498,
+    "reviewed_disagree": 0
+   }
+  },
+  "adversarial": {
+   "all_black_13x13": {
+    "shape": [
+     13,
+     13
+    ],
+    "archived_agrees": false,
+    "reviewed_agrees": true
+   },
+   "all_blue_13x13": {
+    "shape": [
+     13,
+     13
+    ],
+    "archived_agrees": true,
+    "reviewed_agrees": true
+   },
+   "checkerboard_diagonal_only_13x13": {
+    "shape": [
+     13,
+     13
+    ],
+    "archived_agrees": true,
+    "reviewed_agrees": true
+   },
+   "checkerboard_diagonal_only_30x30": {
+    "shape": [
+     30,
+     30
+    ],
+    "archived_agrees": true,
+    "reviewed_agrees": true
+   },
+   "single_singleton_13x13": {
+    "shape": [
+     13,
+     13
+    ],
+    "archived_agrees": true,
+    "reviewed_agrees": true
+   },
+   "corner_pair_13x13": {
+    "shape": [
+     13,
+     13
+    ],
+    "archived_agrees": true,
+    "reviewed_agrees": true
+   },
+   "full_black_row": {
+    "shape": [
+     13,
+     13
+    ],
+    "archived_agrees": true,
+    "reviewed_agrees": true
+   },
+   "full_black_column": {
+    "shape": [
+     13,
+     13
+    ],
+    "archived_agrees": true,
+    "reviewed_agrees": true
+   },
+   "blue_full_row_on_black": {
+    "shape": [
+     13,
+     13
+    ],
+    "archived_agrees": false,
+    "reviewed_agrees": true
+   },
+   "tied_half_black_2x2": {
+    "shape": [
+     2,
+     2
+    ],
+    "archived_agrees": true,
+    "reviewed_agrees": true
+   },
+   "tied_half_black_rows_4x4": {
+    "shape": [
+     4,
+     4
+    ],
+    "archived_agrees": false,
+    "reviewed_agrees": true
+   },
+   "one_by_one_black": {
+    "shape": [
+     1,
+     1
+    ],
+    "archived_agrees": true,
+    "reviewed_agrees": true
+   },
+   "one_by_one_blue": {
+    "shape": [
+     1,
+     1
+    ],
+    "archived_agrees": true,
+    "reviewed_agrees": true
+   },
+   "one_by_two_black": {
+    "shape": [
+     1,
+     2
+    ],
+    "archived_agrees": false,
+    "reviewed_agrees": true
+   },
+   "thirty_by_one_alternating": {
+    "shape": [
+     30,
+     1
+    ],
+    "archived_agrees": true,
+    "reviewed_agrees": true
+   },
+   "one_by_thirty_black_pair_end": {
+    "shape": [
+     1,
+     30
+    ],
+    "archived_agrees": true,
+    "reviewed_agrees": true
+   },
+   "dense_30x30_p50": {
+    "shape": [
+     30,
+     30
+    ],
+    "archived_agrees": false,
+    "reviewed_agrees": true
+   },
+   "dense_30x30_p55": {
+    "shape": [
+     30,
+     30
+    ],
+    "archived_agrees": false,
+    "reviewed_agrees": true
+   },
+   "dense_30x30_p60": {
+    "shape": [
+     30,
+     30
+    ],
+    "archived_agrees": false,
+    "reviewed_agrees": true
+   },
+   "dense_30x30_p65": {
+    "shape": [
+     30,
+     30
+    ],
+    "archived_agrees": false,
+    "reviewed_agrees": true
+   },
+   "dense_30x30_p70": {
+    "shape": [
+     30,
+     30
+    ],
+    "archived_agrees": false,
+    "reviewed_agrees": true
+   },
+   "dense_30x30_p75": {
+    "shape": [
+     30,
+     30
+    ],
+    "archived_agrees": false,
+    "reviewed_agrees": true
+   }
+  },
+  "adversarial_archived_disagree": 10,
+  "adversarial_reviewed_disagree": 0
+ },
+ "f3cdc58f": {
+  "fixtures_exact": [
+   8,
+   8
+  ],
+  "legacy_default_1000": {
+   "archived_disagree": 0,
+   "reviewed_disagree": 0
+  },
+  "legacy_explicit_colours": {
+   "counts_1_to_8_10x10": {
+    "pairs": 500,
+    "archived_disagree": 0,
+    "reviewed_disagree": 0
+   },
+   "counts_1_to_10_10x10": {
+    "pairs": 500,
+    "archived_disagree": 0,
+    "reviewed_disagree": 0
+   }
+  },
+  "adversarial": {
+   "ten_each_10x4": {
+    "shape": [
+     10,
+     4
+    ],
+    "archived_agrees": false,
+    "reviewed_agrees": true
+   },
+   "colour1_modal_10x4": {
+    "shape": [
+     10,
+     4
+    ],
+    "archived_agrees": false,
+    "reviewed_agrees": true
+   },
+   "tie_black_and_4_5x4": {
+    "shape": [
+     5,
+     4
+    ],
+    "archived_agrees": false,
+    "reviewed_agrees": true
+   },
+   "no_black_background_4x4": {
+    "shape": [
+     4,
+     4
+    ],
+    "archived_agrees": false,
+    "reviewed_agrees": true
+   },
+   "one_row_1x4": {
+    "shape": [
+     1,
+     4
+    ],
+    "archived_agrees": true,
+    "reviewed_agrees": true
+   },
+   "full_columns_30x30": {
+    "shape": [
+     30,
+     30
+    ],
+    "archived_agrees": true,
+    "reviewed_agrees": true
+   },
+   "full_rows_4x30": {
+    "shape": [
+     30,
+     4
+    ],
+    "archived_agrees": true,
+    "reviewed_agrees": true
+   },
+   "counts_equal_height_5x6": {
+    "shape": [
+     5,
+     6
+    ],
+    "archived_agrees": true,
+    "reviewed_agrees": true
+   },
+   "max_30x30_dense": {
+    "shape": [
+     30,
+     30
+    ],
+    "archived_agrees": true,
+    "reviewed_agrees": true
+   }
+  },
+  "adversarial_archived_disagree": 4,
+  "adversarial_reviewed_disagree": 0
+ }
+}

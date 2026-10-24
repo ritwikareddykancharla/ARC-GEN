@@ -35,9 +35,10 @@ def test_registered_and_documented():
     ev = VERIFIER_EVIDENCE[TID]
     assert ev["canonical_data_changed"] is False and ev["archived_reference_changed"] is False
     assert (BASE.parent / ev["counterexample"]).exists()
-    # Batch D adds only this ID and the later root-authorised 195ba7dc/281123b4.
+    # Batch D adds only this ID and the later root-authorised 195ba7dc/281123b4;
+    # batch E later adds the root-authorised e0fb7511/f3cdc58f checkers.
     assert {"78332cb0", "de493100", "3a301edc", "d6542281", "aaecdb9a", "007bbfb7",
-            "7e2bad24", TID, "195ba7dc", "281123b4"} == set(VERIFIERS)
+            "7e2bad24", TID, "195ba7dc", "281123b4", "e0fb7511", "f3cdc58f"} == set(VERIFIERS)
 
 
 def test_fixture_labels_untouched_and_midpoint_geometry():

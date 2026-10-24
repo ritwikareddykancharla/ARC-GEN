@@ -64,8 +64,10 @@ def test_registered_and_documented(tid):
 
 
 def test_only_authorised_ids_added():
+    # Batch E later adds the root-authorised e0fb7511/f3cdc58f checkers.
     assert set(VERIFIERS) == {"78332cb0", "de493100", "3a301edc", "d6542281", "aaecdb9a",
-                              "007bbfb7", "7e2bad24", "34b99a2b", "195ba7dc", "281123b4"}
+                              "007bbfb7", "7e2bad24", "34b99a2b", "195ba7dc", "281123b4",
+                              "e0fb7511", "f3cdc58f"}
 
 
 @pytest.mark.parametrize("tid", sorted(FN))

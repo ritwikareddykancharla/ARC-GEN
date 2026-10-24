@@ -307,6 +307,66 @@ def separated_priority_panels(grid):
     return out
 
 
+def native_zero_adjacency(grid):
+    """e0fb7511: black (0) cells with a 4-adjacent black cell become 8.
+
+    Pair label checker only (native colours). Every canonical and teaching
+    fixture, and every constructor output, is a blue (1) field with black (0)
+    cells; a black cell whose up/down/left/right neighbour is also black turns
+    azure (8), and an isolated black cell, including one touching other black
+    cells only diagonally, stays 0. The target colour is the fixed native 0,
+    never the modal or non-modal colour, so dense, tied, all-black and
+    all-blue grids are ordinary content. Colours other than 0 and 1 raise.
+    """
+    rows = [list(row) for row in grid]
+    width = len(rows[0]) if rows else 0
+    if not rows or not width or any(len(r) != width for r in rows):
+        raise ValueError('Expected a rectangular grid')
+    if any(v not in (0, 1) for r in rows for v in r):
+        raise ValueError('Input holds a colour outside 0 and 1')
+    height = len(rows)
+
+    def black(y, x):
+        return 0 <= y < height and 0 <= x < width and rows[y][x] == 0
+    return [[8 if v == 0 and any(black(y + dy, x + dx) for dy, dx in
+                                 ((1, 0), (-1, 0), (0, 1), (0, -1))) else v
+             for x, v in enumerate(r)] for y, r in enumerate(rows)]
+
+
+def fixed_colour_histogram(grid):
+    """f3cdc58f: bottom-aligned bars of colours 1..4 in columns 0..3.
+
+    Pair label checker only (native colours). Every canonical and teaching
+    fixture, and every constructor output, is a black (0) grid holding each of
+    colours 1, 2, 3 and 4 at least once. The answer has the same shape and is
+    black except that column c - 1 holds a bar of colour c, standing on the
+    bottom row, as tall as the number of colour-c cells. The colour-to-column
+    legend is fixed by colour value, never by sorting the present non-modal
+    colours, so grids where a bar colour is modal or ties with black are
+    ordinary content. Inputs outside the domain raise instead of being
+    guessed: colours outside 0..4, a missing bar colour, width below 4, or a
+    count taller than the grid.
+    """
+    rows = [list(row) for row in grid]
+    width = len(rows[0]) if rows else 0
+    if not rows or not width or any(len(r) != width for r in rows):
+        raise ValueError('Expected a rectangular grid')
+    if any(v not in (0, 1, 2, 3, 4) for r in rows for v in r):
+        raise ValueError('Input holds a colour outside 0..4')
+    height = len(rows)
+    if width < 4:
+        raise ValueError('Grid is narrower than the four bar columns')
+    counts = Counter(v for r in rows for v in r)
+    out = [[0] * width for _ in range(height)]
+    for colour in (1, 2, 3, 4):
+        n = counts[colour]
+        if not 1 <= n <= height:
+            raise ValueError('Bar colour missing or taller than the grid')
+        for j in range(n):
+            out[height - 1 - j][colour - 1] = colour
+    return out
+
+
 from .joint_fragments import transform as joint_fragment_completion
 
 VERIFIERS = {'78332cb0': panel_chain, 'de493100': cropped_mirror_patch,
@@ -314,8 +374,25 @@ VERIFIERS = {'78332cb0': panel_chain, 'de493100': cropped_mirror_patch,
              'd6542281': joint_fragment_completion,
              'aaecdb9a': legend_object_chart, '007bbfb7': self_tiling,
              '7e2bad24': native_side_beam, '34b99a2b': midpoint_xor_panels,
-             '195ba7dc': midpoint_or_panels, '281123b4': separated_priority_panels}
+             '195ba7dc': midpoint_or_panels, '281123b4': separated_priority_panels,
+             'e0fb7511': native_zero_adjacency, 'f3cdc58f': fixed_colour_histogram}
 VERIFIER_EVIDENCE = {
+    'e0fb7511': {
+        'mode': 'reviewed_native_zero_four_adjacency',
+        'module': 'arc_agi2.verified_rules.native_zero_adjacency',
+        'reason': 'The archived solver recolours 4-connected components of the NON-MODAL colour, so it depends on blue (1) outnumbering black (0). A legal all-black scene (generate(colors=[0]*169)) is labelled all 8 by the constructor but all 0 by the archived solver, and legal explicit 13x13 scenes at black density 0.5 disagree in 258/500 draws (0.4: 2/500). All canonical and teaching fixtures and every constructor output are 0/1 grids whose label recolours exactly the black cells having a 4-adjacent black cell to 8, so this checker reads the fixed native target colour 0. Dense, tied, all-black, all-blue, diagonal-only and singleton scenes stay valid content; colours outside 0/1 raise. The independent direct factory is unchanged.',
+        'counterexample': 'arc_agi2/reports/diversity-v1/native-batch-e/e0fb7511-archived-verifier-counterexample.json',
+        'canonical_data_changed': False,
+        'archived_reference_changed': False,
+    },
+    'f3cdc58f': {
+        'mode': 'reviewed_fixed_colour_value_histogram',
+        'module': 'arc_agi2.verified_rules.fixed_colour_histogram',
+        'reason': 'The archived solver takes the modal colour as background and orders bars by the sorted remaining colours. A legal 10x4 histogram holding ten cells of each of 1, 2, 3, 4 (one per row, counts equal to the height) makes 1 the "background", so the archived answer rows read [2, 3, 4, 1] instead of [1, 2, 3, 4]. All canonical and teaching fixtures and every constructor output are black grids holding each of colours 1..4 at least once, labelled by bottom-aligned bars of colour c in column c - 1 with height equal to the count, so this checker uses that fixed legend and black background. Modal or tied bar colours stay valid content; colours outside 0..4, a missing bar colour, width below 4 or a count above the height raise. The independent direct factory is unchanged.',
+        'counterexample': 'arc_agi2/reports/diversity-v1/native-batch-e/f3cdc58f-archived-verifier-counterexample.json',
+        'canonical_data_changed': False,
+        'archived_reference_changed': False,
+    },
     '195ba7dc': {
         'mode': 'reviewed_midpoint_divider_or',
         'module': 'arc_agi2.verified_rules.midpoint_or_panels',

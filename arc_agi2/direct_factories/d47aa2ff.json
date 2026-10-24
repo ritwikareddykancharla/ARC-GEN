@@ -1,18 +1,19 @@
 {
   "task_id": "d47aa2ff",
-  "factory_sha256": "5206d6b295169148e5f9308909721afcbfc8daa84b6099af8d51c8387b8e34b0",
-  "constructor_sha256": "fd5d1120f720c045ea6668bc1690ef50c035540e87d23f5e6b0a9bb81fd135ea",
   "passed": true,
   "fresh_pairs_checked": 1000,
   "augmented_pair_checks": 8000,
   "fixture_variants_checked": 16,
-  "sampler_rejections": [],
-  "seed": 44706344275100,
-  "d4": 7,
-  "unique_base_inputs": 1000,
-  "seconds": 6.493752374895848,
-  "factory_version": 1,
+  "constructor_sha256": "cead94cfe049b8d6877c2839f33c5437365fdc67b5c03b3d8fdea566888ab9d9",
+  "auditor_sha256": "1e194cb80d11ccda4026cb83a61c6dd407f1b9d94117090b31de26b01a3f191d",
   "requires_per_episode_verification": true,
+  "sampler_rejections": [],
+  "program_provider": "factory",
+  "factory_sha256": "5206d6b295169148e5f9308909721afcbfc8daa84b6099af8d51c8387b8e34b0",
+  "factory_version": 1,
+  "unique_base_inputs": 1000,
+  "fixture_basis": "canonical",
+  "seconds": 4.037693874910474,
   "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
   "draft_notes": {
     "explanation": "In the original task a 10x21 grid has a full-height divider column of colour 5. It sits between two 10x10 panels. The right panel copies the left one except that 1-2 dots have moved. The output is the left (source) panel, recoloured in two ways. A cell that is filled in the source but background in the other panel becomes 2 (vacated). A cell that is background in the source but filled in the other panel becomes 1 (arrived).\n\nUnder the D4 transform (row reversal first for indices >= 4, then d4%4 clockwise rotations), the divider becomes a full column for even d4 and a full row for odd d4. The source panel lands at: 0 left, 1 top, 2 right, 3 bottom, 4 right, 5 bottom, 6 left, 7 top. Both panels undergo the same rigid motion, so in visible coordinates the panels stay start-aligned. Visible panel cell j on one side corresponds to cell j on the other side, a translation by divider+1.\n\nThe emitted program uses a different code path for each axis rather than transposing. It locates the divider as the full line of palette[5], choosing the one nearest the centre and falling back to the midline. It takes the source panel on the specialised side and compares it pixelwise with the other panel, using palette[0] as background. It then writes palette[2] at vacated cells and palette[1] at arrived cells. Unmoved dots and background keep the source panel's values.",
@@ -46,5 +47,7 @@
       "constructor_sha256": "fd5d1120f720c045ea6668bc1690ef50c035540e87d23f5e6b0a9bb81fd135ea"
     },
     "host_review": "Read source review mechanism, evidence, limitations and context requirements. Host audit covers all eight D4 indices per fresh pair; d4=7 in report is only the final loop index. All supplied fixture pairs checked under 16 orientation/palette variants. Emitted programs operate in displayed coordinates. Per-episode verification and context-evidence checks are mandatory. "
-  }
+  },
+  "previous_constructor_sha256": "fd5d1120f720c045ea6668bc1690ef50c035540e87d23f5e6b0a9bb81fd135ea",
+  "recertification_note": "Recertified by native batch c7d4/d47a after a constructor domain expansion (panels H 3..30 x W 3..14, input H x (2W+1); 1..6 colours; 2..max(2, HW//9) dots; 1..min(colours, dots-1) movers). The factory is unchanged. The draft notes below describe the legacy 10x21 domain; their rule statement (pixelwise panel difference across the central divider, red vacated and blue arrived) still holds, because panels stay equal and the divider stays central."
 }

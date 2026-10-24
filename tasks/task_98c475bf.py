@@ -183,8 +183,10 @@ def generate(border=None, line_color=None, line_row=None, markers=None,
       legacy width 20; otherwise the width is sampled uniformly.
 
   Raises:
-    ValueError: if the explicit parameters are invalid or incompatible, or
-      no scene is found within MAX_TRIES tries. The width never changes.
+    ValueError: if the explicit parameters are invalid or incompatible.
+    RuntimeError: if the bounded stochastic search finds no scene within
+      MAX_TRIES tries. The requested or drawn width and any requested height
+      are never changed to recover.
   """
   colours = sorted(MOTIFS)
   for name, v in (("border", border), ("line_color", line_color),
@@ -346,6 +348,11 @@ def generate(border=None, line_color=None, line_row=None, markers=None,
       cands = [r for r in range(h)
                if _fits(r, lc, h) and not _covers_marker(r, lc, mk)]
       if not cands:
+        if (mk_in is not None and line_color is not None
+            and height is not None):
+          # Nothing here was sampled, so retrying cannot help.
+          raise ValueError("no row fits the input motif beside the explicit "
+                           "markers at this height")
         continue
       lr = random.choice(cands)
     # Border colour.
@@ -363,9 +370,11 @@ def generate(border=None, line_color=None, line_row=None, markers=None,
     for r, c in mk:
       _stamp(gout, r, c)
     return {"input": gin, "output": gout}
-  raise ValueError("could not construct a %d-wide scene compatible with the "
-                   "given parameters (likely no free rows for the input "
-                   "motif)" % w)
+  raise RuntimeError("could not construct a %d-wide scene%s compatible with "
+                     "the given parameters within %d tries (likely no free "
+                     "rows for the input motif)"
+                     % (w, "" if height is None else " of height %d" % height,
+                        MAX_TRIES))
 
 
 def validate():

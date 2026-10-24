@@ -35,10 +35,18 @@ Scope:
     as five distinct colours.
   * Panel shape: the four panels share one H x W shape. The canvas is
     (H + 2) x (4W + 5), so W is 3..6 and H is 3..28. Nothing in the rule
-    needs square panels; every original example uses 5 x 5. A 3 x 3 panel
-    is excluded: exhaustive enumeration of every wall subset shows that 40
-    walls split a 3 x 3 panel into two regions, and none of them leaves a
-    cell that is not 8-adjacent to the wall, so no dot can be placed.
+    needs square panels; every original example uses 5 x 5.
+  * 3 x 3 panels are excluded because of the retained guard that each of
+    the two regions has at least two cells. This is not a geometric
+    impossibility of the task. Exhaustive enumeration of every 8-connected
+    wall of two or more cells in a 3 x 3 panel finds 192 walls that leave
+    exactly two 4-connected regions. 16 of those 192 leave a cell that is
+    not 8-adjacent to the wall, but each of these 16 has a one-cell
+    region. Only 40 walls pass the two-cell guard, and none of them leaves
+    room for a dot. Example of a scene the guard rules out: wall (0,2),
+    (1,2), (2,1), (2,0) with the dot at (0,0) gives regions of 4 and 1
+    cells. Whether one-cell regions should be allowed is a separate
+    hypothesis; this constructor keeps the guard.
   * Default shapes: one draw in four keeps the legacy square sizes (4, 5 or
     6, weights 1:3:1). Otherwise W is uniform in 3..6 and H is uniform over
     the heights allowed for that W. The shape is drawn once per call and
@@ -77,7 +85,8 @@ SIZE_WEIGHTS = {4: 1, 5: 3, 6: 1}
 # Independent panel dimensions: H + 2 <= 30 and 4W + 5 <= 30.
 MIN_HEIGHT, MAX_HEIGHT = 3, 28
 MIN_WIDTH, MAX_WIDTH = 3, 6
-# Exhaustively infeasible: no 3 x 3 wall leaves room for a dot (see above).
+# Under the retained two-cells-per-region guard, no 3 x 3 wall leaves room
+# for a dot (exhaustive enumeration; see the module docstring).
 EXCLUDED_SHAPES = frozenset({(3, 3)})
 SHAPES = tuple((h, w) for w in range(MIN_WIDTH, MAX_WIDTH + 1)
                for h in range(MIN_HEIGHT, MAX_HEIGHT + 1)
@@ -338,7 +347,8 @@ def _resolve_shape(panel_size, panel_height, panel_width, line, dot,
   if heights and widths:
     shape = (min(heights), min(widths))
     if shape in EXCLUDED_SHAPES:
-      raise ValueError('a 3x3 panel has no room for a dot away from any wall')
+      raise ValueError('3x3 panels are excluded: under the two-cells-per-region '
+                       'guard no wall leaves room for a dot')
     if shape not in options:
       raise ValueError('panel shape too small for line/dot')
   if not options:
@@ -369,7 +379,8 @@ def generate(frame=None, background=None, line_color=None, color2=None,
       cells where only panel 3 contributes. None requires this on half of
       unconstrained calls; False allows either branch to be absent.
     panel_height: panel rows H (3..28).
-    panel_width: panel columns W (3..6). 3 x 3 panels are infeasible.
+    panel_width: panel columns W (3..6). 3 x 3 panels are excluded (see
+      the two-cells-per-region guard above).
 
   Raises:
     ValueError: if explicit parameters are invalid or incompatible.

@@ -33,7 +33,9 @@ REPAIRED = ("007bbfb7", "009d5c81", "00dbd492", "0934a4d8", "09c534e7", "1e0a9b1
             # Native batch C: orientation and rectangular domain coverage.
             "7e2bad24", "7e576d6e", "94414823", "50c07299",
             # Native batch D: rectangular panel domains with context evidence gates.
-            "195ba7dc", "281123b4", "31d5ba1a", "34b99a2b")
+            "195ba7dc", "281123b4", "31d5ba1a", "34b99a2b",
+            # Native batch E: expanded sizes/counts with demonstration evidence gates.
+            "0c786b71", "e0fb7511", "f0df5ff0", "f3cdc58f")
 
 # Reviewed adequate existing domains, not constructor expansions. Each has a
 # current semantic review and fresh 1000/8000/16 native recertification.

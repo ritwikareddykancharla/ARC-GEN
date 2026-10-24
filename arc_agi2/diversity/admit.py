@@ -82,6 +82,7 @@ def main():
             "colour_evidence.py",
             "feca6190_evidence.py",
             "panel_overlay_evidence.py",
+            "mirror_neighbourhood_evidence.py",
         )
     ]
     for result in results:

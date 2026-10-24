@@ -13,5 +13,39 @@
   "factory_version": 1,
   "unique_base_inputs": 1000,
   "fixture_basis": "canonical",
-  "seconds": 3.0300437081605196
+  "seconds": 3.0300437081605196,
+  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
+  "draft_notes": {
+    "explanation": "In the native task, column 0 holds a colour key made of vertical runs. In the output, every non-background cell (in practice the connected grey shape) takes the key colour at column 0 of its own row. The key cells themselves keep their colour.\n\nThe factory tracks where the left edge ends up after the D4 transform. A row reversal (d4>=4) sends the left edge to the right edge. Each clockwise rotation then moves the edge one step: left -> top -> right -> bottom -> left.\n\nThe emitted program works directly in visible coordinates:\n- If the key is a vertical edge (left or right column), each row is recoloured from its key cell.\n- If the key is a horizontal edge (top or bottom row), each column is recoloured from its key cell.\n\nThe background is the constant palette[0]. The program reproduces the generator's rule exactly: every cell that is not background becomes the key colour of its line. It needs no colour inference and does not depend on the grey colour palette[5].",
+    "limitations": "The program assumes the key always lies on the transformed image of the original column 0, which is true for this constructor. In the generator, every grey row falls inside the keyed span, so no grey cell ever pairs with a background key. If one did, the program would copy the generator's literal behaviour and set that cell to background. No constructor defects were found: the fixtures match the uniform rule. The archived solver chooses the shape colour by counting, but that heuristic is not needed here and is not reproduced. The factory has not been tested by me.",
+    "independent_source_review": {
+      "verdict": "accept",
+      "mechanism": "Column 0 of the native grid holds a key made of 2\u20134 vertical colour runs, none of them grey, covering rows start..start+height-1. One connected grey shape sits in columns 3..7 inside exactly that row span. In the output, every non-background cell takes the key colour of its row. Key cells map to themselves. The factory works out which visible edge holds the key after the D4 transform: left for d4<4, right for d4>=4, then (start + k) % 4 clockwise. The emitted solver recolours every non-BG cell from the key cell of its row (vertical-edge key) or its column (horizontal-edge key), directly in visible coordinates.",
+      "evidence": [
+        "The constructor's recolouring expression is `if output[row][col]: output[row][col] = output[row][0]`. It is a uniform rule with no hidden latent. Applied to column 0 it is the identity, so the key is preserved.",
+        "Grey cells are drawn at `grid[start + row][3 + col]` with row in 0..height-1 and col in 0..width-1 (width<=5). This puts grey only in columns 3..7 and only in keyed rows. Every grey cell therefore pairs with a non-background key, and grey never overlaps column 0.",
+        "Key colours come from `random_colors(..., exclude=[5])` and are drawn from 1..9. They are distinct from each other and from background 0, so a recoloured cell can never become background. The 'every row has grey' check scanning column 0 cannot be fooled by the key.",
+        "The emitted solver uses `if g[y,x] != BG: out[y,x] = key` with the key taken at the transformed edge. This matches the constructor rule cell for cell, including key cells and unkeyed blank rows, where there are no non-BG cells.",
+        "The solver has no whole-grid untransform or retransform. Branches are selected by the edge constant only, and the orientation constant is visible and taught by the demonstrations.",
+        "The approved fixtures equal the constructor's validate() inputs and outputs. Pair 2's cell (8,6) correctly becomes 2.",
+        "The edge mapping depends on the order in which D4 composes flip and rotation. The source cannot verify this order, but the host audit is consistent with it: 8000 augmented checks (1000 fresh pairs \u00d7 8) and 16 fixture variants passed with no rejections."
+      ],
+      "blocking_issues": [],
+      "nonblocking_limits": [
+        "Whether the D4 convention is 'reflect then rotate' cannot be confirmed from the source alone. Correctness of KEY_EDGE for d4 in 4..7 rests on the host's augmented checks passing.",
+        "The solver recolours every non-BG cell, not only the shape colour. This is equivalent within the constructor's domain, where only key and grey cells are non-background.",
+        "The archived solver's shape-colour counting heuristic is not reproduced. It is not needed for this generator."
+      ],
+      "required_context_checks": [
+        "Confirm that the host D4 composition convention matches the factory's edge mapping (left\u2192right under reflection, then clockwise rotation) for all 8 variants. The audit's 8000 augmented checks appear to cover this.",
+        "No colour-evidence check is needed. Key colours are read directly from the visible key edge, not from an arbitrary lookup."
+      ],
+      "task_id": "c7d4e6ad",
+      "factory_sha256": "e7d7c61c30b96650b766573b16545a3a639303a257a553c3c16a6fdc56e72c7f",
+      "constructor_sha256": "6c88d33d0ea07a8a0287037d101dcca94647f3be73cf0a746ab224908705dc04"
+    },
+    "host_review": "Read mechanism, evidence, limitations and context requirements. Host reflects columns before clockwise rotation, tests all eight D4 indices, and applies a shared palette permutation after generation. Fixture audit verifies all train/test supplied pairs at every tested orientation/palette, not one pair per variant. Per-episode execution verification and conflicting-context rejection remain required."
+  },
+  "previous_constructor_sha256": "6c88d33d0ea07a8a0287037d101dcca94647f3be73cf0a746ab224908705dc04",
+  "recertification_note": "Recertified by native batch c7d4/d47a after a constructor domain expansion (canvas 3..30 x 3..30, legend height 2..H at any offset, 2..8 legend colours, grey box from column >= 2). The factory is unchanged. The draft notes below describe the legacy 10x10 domain; their rule statement (recolour every non-background cell from its line's key cell on the transformed column-0 edge) still holds, and the constructor keeps every grey row inside the legend span."
 }

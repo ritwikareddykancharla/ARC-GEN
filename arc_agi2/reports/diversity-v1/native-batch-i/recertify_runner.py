@@ -52,7 +52,11 @@ def merge(tid, report):
     record["previous_domain_limitations"] = OLD_DOMAIN[tid]
     if old.get("factory_sha256") != record.get("factory_sha256"):
         raise RuntimeError(f"{tid}: factory changed unexpectedly")
-    path.write_text(json.dumps(record, indent=2) + "\n")
+    text = json.dumps(record, indent=2) + "\n"
+    path.write_text(text)
+    # Both records are consumed by production certificate validation. Keep
+    # restored provenance in the mirror as well as in the factory record.
+    (BASE / "reports/diversity-v1/native-certificates" / f"{tid}.json").write_text(text)
     return record
 
 

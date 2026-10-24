@@ -15,7 +15,7 @@ from .colour_roles import ROLE_ALIGNED
 from .recertify import episode
 
 
-PROGRAM_REPAIRED = frozenset(("1a07d186", "272f95fa", "57aa92db", "63613498", "8403a5d5", "aabf363d", "fcb5c309"))
+PROGRAM_REPAIRED = frozenset(("1a07d186", "272f95fa", "57aa92db", "63613498", "8403a5d5", "aabf363d", "fcb5c309", "264363fd", "c8cbb738", "d13f3404"))
 
 
 def check(tid, pair_budget=None, required=None):

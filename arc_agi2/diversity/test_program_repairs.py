@@ -48,6 +48,14 @@ def test_certificate_matches_current_sources(tid):
     text, _ = compile_target(tid)
     assert cert["program_sha256"] == hashlib.sha256(text.encode()).hexdigest()
     assert certified_factory_source(tid, 5, PALETTE) is not None
+    # The native certificate must come from the current recertify.py, and the
+    # factory copy must mirror it exactly.
+    factory_cert = json.loads((ROOT.parent / "direct_factories" / (tid + ".json")).read_text())
+    native_cert = json.loads(
+        (ROOT.parent / "reports/diversity-v1/native-certificates" / (tid + ".json")).read_text())
+    assert factory_cert == native_cert
+    assert native_cert["auditor_sha256"] == hashlib.sha256(
+        (ROOT / "recertify.py").read_bytes()).hexdigest()
 
 
 @pytest.mark.parametrize("tid", FAMILIES)

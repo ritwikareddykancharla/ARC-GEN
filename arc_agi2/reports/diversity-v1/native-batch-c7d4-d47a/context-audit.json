@@ -1,0 +1,7651 @@
+{
+  "c7d4e6ad": {
+    "all_queries_accepted": true,
+    "context_failure_reasons": {
+      "duplicate_input_orbit": 24
+    },
+    "contexts_evaluated": 2000,
+    "contexts_rejected": 24,
+    "d4_inconsistent_contexts": 0,
+    "distinct_surviving_rule_sets_per_query_histogram": {
+      "1": 250
+    },
+    "first_accepted_index_histogram": {
+      "0": 249,
+      "1": 1
+    },
+    "gate_competitor_disagreements": 0,
+    "gated": false,
+    "make_record_calls": 15808,
+    "max_candidate_answers_in_panel_histogram": {
+      "1": 250
+    },
+    "max_contexts_per_query": 64,
+    "method": "gate-aware-fixed-query-same-shape-orbit-distinct-context-panel",
+    "method_version": 2,
+    "mixed_first_context_ambiguous": 0,
+    "pair_draws": 7000,
+    "panel_acceptance_rate": 0.988,
+    "panel_accepted_histogram": {
+      "2": 1,
+      "4": 1,
+      "5": 1,
+      "6": 2,
+      "7": 7,
+      "8": 238
+    },
+    "panel_contexts_per_query": 8,
+    "panel_first_context_rejected": 1,
+    "passed": true,
+    "queries_accepted": 250,
+    "queries_failed": [],
+    "queries_failed_by_reason": {},
+    "queries_needing_search_beyond_panel": 0,
+    "queries_requested": 250,
+    "query_domain": "default",
+    "query_input_shapes": 212,
+    "query_inputs_sha256": "c70110be0c983202fb535d07e044cf56ac56e78a9ff1759ccc171396a073978f",
+    "query_kwargs": {},
+    "seconds": 69.22,
+    "semantic_checks_passed": true,
+    "source_sha256": {
+      "colour_evidence": "9f9841816eaf804850493ae32372b62b3e270977a82cf01b01ad5e3dac1ec36c",
+      "competitors": "53943e24873e995091253ec8fd206a06dc5ab3520a2f5050a7f3e4d723bddf4a",
+      "constructor": "bbdf032e5943cc3f8667ebddcab6e98c267eeafcd5fe4391a29f9494c9f94f7e",
+      "dot_motion_d47aa2ff_evidence": "22a6ff5faed62f6fe4479ed8d0db6fa9c2e7946778e1340d1e8b03ee4e4f435d",
+      "factory": "e7d7c61c30b96650b766573b16545a3a639303a257a553c3c16a6fdc56e72c7f",
+      "factory_certificate": "feb4a4955e09bbf980d61dfe762ac76b31b3a21481d4f99e49afed89b2b8bd88",
+      "harness": "f11bc8b97ee2a1d94d000932e18c3308f5646c54eaed23ef8c5edc660d955259",
+      "prepare": "fa501ed06ef338fead5a5655cef07e95850576ce43ec5cc9660c817115a687fa",
+      "program_targets": "88298f336ca6a50ee91e58a08f24a4997c7c49e832eda1e68f98153dd59ed790",
+      "verified_rules": "a54743d7f19075966af22be6abfaa09863427822593ef186b0a2da13ca8ec853"
+    },
+    "task_id": "c7d4e6ad"
+  },
+  "c7d4e6ad@legacy_canvas": {
+    "all_queries_accepted": true,
+    "context_failure_reasons": {
+      "duplicate_input_orbit": 1
+    },
+    "contexts_evaluated": 2000,
+    "contexts_rejected": 1,
+    "d4_inconsistent_contexts": 0,
+    "distinct_surviving_rule_sets_per_query_histogram": {
+      "1": 250
+    },
+    "first_accepted_index_histogram": {
+      "0": 249,
+      "1": 1
+    },
+    "gate_competitor_disagreements": 0,
+    "gated": false,
+    "make_record_calls": 15992,
+    "max_candidate_answers_in_panel_histogram": {
+      "1": 250
+    },
+    "max_contexts_per_query": 64,
+    "method": "gate-aware-fixed-query-same-shape-orbit-distinct-context-panel",
+    "method_version": 2,
+    "mixed_first_context_ambiguous": 0,
+    "pair_draws": 7000,
+    "panel_acceptance_rate": 0.9995,
+    "panel_accepted_histogram": {
+      "7": 1,
+      "8": 249
+    },
+    "panel_contexts_per_query": 8,
+    "panel_first_context_rejected": 1,
+    "passed": true,
+    "queries_accepted": 250,
+    "queries_failed": [],
+    "queries_failed_by_reason": {},
+    "queries_needing_search_beyond_panel": 0,
+    "queries_requested": 250,
+    "query_domain": "legacy_canvas",
+    "query_input_shapes": 1,
+    "query_inputs_sha256": "0f717385c5a4e465223af2adea792abaa2db913d13a6b4f482f1c41aac30b933",
+    "query_kwargs": {
+      "height": 10,
+      "width": 10
+    },
+    "seconds": 37.88,
+    "semantic_checks_passed": true,
+    "source_sha256": {
+      "colour_evidence": "9f9841816eaf804850493ae32372b62b3e270977a82cf01b01ad5e3dac1ec36c",
+      "competitors": "53943e24873e995091253ec8fd206a06dc5ab3520a2f5050a7f3e4d723bddf4a",
+      "constructor": "bbdf032e5943cc3f8667ebddcab6e98c267eeafcd5fe4391a29f9494c9f94f7e",
+      "dot_motion_d47aa2ff_evidence": "22a6ff5faed62f6fe4479ed8d0db6fa9c2e7946778e1340d1e8b03ee4e4f435d",
+      "factory": "e7d7c61c30b96650b766573b16545a3a639303a257a553c3c16a6fdc56e72c7f",
+      "factory_certificate": "feb4a4955e09bbf980d61dfe762ac76b31b3a21481d4f99e49afed89b2b8bd88",
+      "harness": "f11bc8b97ee2a1d94d000932e18c3308f5646c54eaed23ef8c5edc660d955259",
+      "prepare": "fa501ed06ef338fead5a5655cef07e95850576ce43ec5cc9660c817115a687fa",
+      "program_targets": "88298f336ca6a50ee91e58a08f24a4997c7c49e832eda1e68f98153dd59ed790",
+      "verified_rules": "a54743d7f19075966af22be6abfaa09863427822593ef186b0a2da13ca8ec853"
+    },
+    "task_id": "c7d4e6ad"
+  },
+  "c7d4e6ad@max_canvas": {
+    "all_queries_accepted": true,
+    "context_failure_reasons": {},
+    "contexts_evaluated": 2000,
+    "contexts_rejected": 0,
+    "d4_inconsistent_contexts": 0,
+    "distinct_surviving_rule_sets_per_query_histogram": {
+      "1": 250
+    },
+    "first_accepted_index_histogram": {
+      "0": 250
+    },
+    "gate_competitor_disagreements": 0,
+    "gated": false,
+    "make_record_calls": 16000,
+    "max_candidate_answers_in_panel_histogram": {
+      "1": 250
+    },
+    "max_contexts_per_query": 64,
+    "method": "gate-aware-fixed-query-same-shape-orbit-distinct-context-panel",
+    "method_version": 2,
+    "mixed_first_context_ambiguous": 0,
+    "pair_draws": 7000,
+    "panel_acceptance_rate": 1.0,
+    "panel_accepted_histogram": {
+      "8": 250
+    },
+    "panel_contexts_per_query": 8,
+    "panel_first_context_rejected": 0,
+    "passed": true,
+    "queries_accepted": 250,
+    "queries_failed": [],
+    "queries_failed_by_reason": {},
+    "queries_needing_search_beyond_panel": 0,
+    "queries_requested": 250,
+    "query_domain": "max_canvas",
+    "query_input_shapes": 1,
+    "query_inputs_sha256": "b7a8a43369190b02725330938dcda6bed5bd3128f30cf7e933bf2ba0abdb548d",
+    "query_kwargs": {
+      "height": 30,
+      "width": 30
+    },
+    "seconds": 174.83,
+    "semantic_checks_passed": true,
+    "source_sha256": {
+      "colour_evidence": "9f9841816eaf804850493ae32372b62b3e270977a82cf01b01ad5e3dac1ec36c",
+      "competitors": "53943e24873e995091253ec8fd206a06dc5ab3520a2f5050a7f3e4d723bddf4a",
+      "constructor": "bbdf032e5943cc3f8667ebddcab6e98c267eeafcd5fe4391a29f9494c9f94f7e",
+      "dot_motion_d47aa2ff_evidence": "22a6ff5faed62f6fe4479ed8d0db6fa9c2e7946778e1340d1e8b03ee4e4f435d",
+      "factory": "e7d7c61c30b96650b766573b16545a3a639303a257a553c3c16a6fdc56e72c7f",
+      "factory_certificate": "feb4a4955e09bbf980d61dfe762ac76b31b3a21481d4f99e49afed89b2b8bd88",
+      "harness": "f11bc8b97ee2a1d94d000932e18c3308f5646c54eaed23ef8c5edc660d955259",
+      "prepare": "fa501ed06ef338fead5a5655cef07e95850576ce43ec5cc9660c817115a687fa",
+      "program_targets": "88298f336ca6a50ee91e58a08f24a4997c7c49e832eda1e68f98153dd59ed790",
+      "verified_rules": "a54743d7f19075966af22be6abfaa09863427822593ef186b0a2da13ca8ec853"
+    },
+    "task_id": "c7d4e6ad"
+  },
+  "c7d4e6ad@min_canvas": {
+    "all_queries_accepted": false,
+    "context_failure_reasons": {
+      "duplicate_input_orbit": 16000
+    },
+    "contexts_evaluated": 16000,
+    "contexts_rejected": 16000,
+    "d4_inconsistent_contexts": 0,
+    "distinct_surviving_rule_sets_per_query_histogram": {
+      "1": 250
+    },
+    "first_accepted_index_histogram": {},
+    "gate_competitor_disagreements": 0,
+    "gated": false,
+    "make_record_calls": 0,
+    "max_candidate_answers_in_panel_histogram": {
+      "1": 250
+    },
+    "max_contexts_per_query": 64,
+    "method": "gate-aware-fixed-query-same-shape-orbit-distinct-context-panel",
+    "method_version": 2,
+    "mixed_first_context_ambiguous": 0,
+    "pair_draws": 49000,
+    "panel_acceptance_rate": 0.0,
+    "panel_accepted_histogram": {
+      "0": 250
+    },
+    "panel_contexts_per_query": 8,
+    "panel_first_context_rejected": 250,
+    "passed": false,
+    "queries_accepted": 0,
+    "queries_failed": [
+      {
+        "capacity_draws": 2000,
+        "input": [
+          [
+            9,
+            0,
+            5
+          ],
+          [
+            1,
+            0,
+            5
+          ],
+          [
+            0,
+            0,
+            0
+          ]
+        ],
+        "query": 0,
+        "reason": "same_shape_orbit_capacity",
+        "sampled_orbits_at_shape": 1,
+        "seed": 137649995748013,
+        "shape": [
+          3,
+          3
+        ]
+      },
+      {
+        "capacity_draws": 2000,
+        "input": [
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            3,
+            0,
+            5
+          ],
+          [
+            6,
+            0,
+            5
+          ]
+        ],
+        "query": 1,
+        "reason": "same_shape_orbit_capacity",
+        "sampled_orbits_at_shape": 1,
+        "seed": 151116818978233,
+        "shape": [
+          3,
+          3
+        ]
+      },
+      {
+        "capacity_draws": 2000,
+        "input": [
+          [
+            9,
+            0,
+            5
+          ],
+          [
+            8,
+            0,
+            5
+          ],
+          [
+            0,
+            0,
+            0
+          ]
+        ],
+        "query": 2,
+        "reason": "same_shape_orbit_capacity",
+        "sampled_orbits_at_shape": 1,
+        "seed": 199029368329485,
+        "shape": [
+          3,
+          3
+        ]
+      },
+      {
+        "capacity_draws": 2000,
+        "input": [
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            8,
+            0,
+            5
+          ],
+          [
+            1,
+            0,
+            5
+          ]
+        ],
+        "query": 3,
+        "reason": "same_shape_orbit_capacity",
+        "sampled_orbits_at_shape": 1,
+        "seed": 137582974922324,
+        "shape": [
+          3,
+          3
+        ]
+      },
+      {
+        "capacity_draws": 2000,
+        "input": [
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            7,
+            0,
+            5
+          ],
+          [
+            4,
+            0,
+            5
+          ]
+        ],
+        "query": 4,
+        "reason": "same_shape_orbit_capacity",
+        "sampled_orbits_at_shape": 1,
+        "seed": 184475894360440,
+        "shape": [
+          3,
+          3
+        ]
+      },
+      {
+        "capacity_draws": 2000,
+        "input": [
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            8,
+            0,
+            5
+          ],
+          [
+            7,
+            0,
+            5
+          ]
+        ],
+        "query": 5,
+        "reason": "same_shape_orbit_capacity",
+        "sampled_orbits_at_shape": 1,
+        "seed": 85352475132139,
+        "shape": [
+          3,
+          3
+        ]
+      },
+      {
+        "capacity_draws": 2000,
+        "input": [
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            1,
+            0,
+            5
+          ],
+          [
+            6,
+            0,
+            5
+          ]
+        ],
+        "query": 6,
+        "reason": "same_shape_orbit_capacity",
+        "sampled_orbits_at_shape": 1,
+        "seed": 48303000823683,
+        "shape": [
+          3,
+          3
+        ]
+      },
+      {
+        "capacity_draws": 2000,
+        "input": [
+          [
+            8,
+            0,
+            5
+          ],
+          [
+            1,
+            0,
+            5
+          ],
+          [
+            0,
+            0,
+            0
+          ]
+        ],
+        "query": 7,
+        "reason": "same_shape_orbit_capacity",
+        "sampled_orbits_at_shape": 1,
+        "seed": 101695353053089,
+        "shape": [
+          3,
+          3
+        ]
+      },
+      {
+        "capacity_draws": 2000,
+        "input": [
+          [
+            8,
+            0,
+            5
+          ],
+          [
+            1,
+            0,
+            5
+          ],
+          [
+            0,
+            0,
+            0
+          ]
+        ],
+        "query": 8,
+        "reason": "same_shape_orbit_capacity",
+        "sampled_orbits_at_shape": 1,
+        "seed": 275224187710415,
+        "shape": [
+          3,
+          3
+        ]
+      },
+      {
+        "capacity_draws": 2000,
+        "input": [
+          [
+            4,
+            0,
+            5
+          ],
+          [
+            8,
+            0,
+            5
+          ],
+          [
+            0,
+            0,
+            0
+          ]
+        ],
+        "query": 9,
+        "reason": "same_shape_orbit_capacity",
+        "sampled_orbits_at_shape": 1,
+        "seed": 126369450443952,
+        "shape": [
+          3,
+          3
+        ]
+      },
+      {
+        "capacity_draws": 2000,
+        "input": [
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            3,
+            0,
+            5
+          ],
+          [
+            1,
+            0,
+            5
+          ]
+        ],
+        "query": 10,
+        "reason": "same_shape_orbit_capacity",
+        "sampled_orbits_at_shape": 1,
+        "seed": 266005759649787,
+        "shape": [
+          3,
+          3
+        ]
+      },
+      {
+        "capacity_draws": 2000,
+        "input": [
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            8,
+            0,
+            5
+          ],
+          [
+            6,
+            0,
+            5
+          ]
+        ],
+        "query": 11,
+        "reason": "same_shape_orbit_capacity",
+        "sampled_orbits_at_shape": 1,
+        "seed": 277369965859943,
+        "shape": [
+          3,
+          3
+        ]
+      },
+      {
+        "capacity_draws": 2000,
+        "input": [
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            1,
+            0,
+            5
+          ],
+          [
+            7,
+            0,
+            5
+          ]
+        ],
+        "query": 12,
+        "reason": "same_shape_orbit_capacity",
+        "sampled_orbits_at_shape": 1,
+        "seed": 112555909301169,
+        "shape": [
+          3,
+          3
+        ]
+      },
+      {
+        "capacity_draws": 2000,
+        "input": [
+          [
+            6,
+            0,
+            5
+          ],
+          [
+            2,
+            0,
+            5
+          ],
+          [
+            0,
+            0,
+            0
+          ]
+        ],
+        "query": 13,
+        "reason": "same_shape_orbit_capacity",
+        "sampled_orbits_at_shape": 1,
+        "seed": 251112224857682,
+        "shape": [
+          3,
+          3
+        ]
+      },
+      {
+        "capacity_draws": 2000,
+        "input": [
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            8,
+            0,
+            5
+          ],
+          [
+            2,
+            0,
+            5
+          ]
+        ],
+        "query": 14,
+        "reason": "same_shape_orbit_capacity",
+        "sampled_orbits_at_shape": 1,
+        "seed": 210608427662921,
+        "shape": [
+          3,
+          3
+        ]
+      },
+      {
+        "capacity_draws": 2000,
+        "input": [
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            2,
+            0,
+            5
+          ],
+          [
+            1,
+            0,
+            5
+          ]
+        ],
+        "query": 15,
+        "reason": "same_shape_orbit_capacity",
+        "sampled_orbits_at_shape": 1,
+        "seed": 109478164108978,
+        "shape": [
+          3,
+          3
+        ]
+      },
+      {
+        "capacity_draws": 2000,
+        "input": [
+          [
+            6,
+            0,
+            5
+          ],
+          [
+            2,
+            0,
+            5
+          ],
+          [
+            0,
+            0,
+            0
+          ]
+        ],
+        "query": 16,
+        "reason": "same_shape_orbit_capacity",
+        "sampled_orbits_at_shape": 1,
+        "seed": 77188603577158,
+        "shape": [
+          3,
+          3
+        ]
+      },
+      {
+        "capacity_draws": 2000,
+        "input": [
+          [
+            6,
+            0,
+            5
+          ],
+          [
+            3,
+            0,
+            5
+          ],
+          [
+            0,
+            0,
+            0
+          ]
+        ],
+        "query": 17,
+        "reason": "same_shape_orbit_capacity",
+        "sampled_orbits_at_shape": 1,
+        "seed": 76626309965774,
+        "shape": [
+          3,
+          3
+        ]
+      },
+      {
+        "capacity_draws": 2000,
+        "input": [
+          [
+            3,
+            0,
+            5
+          ],
+          [
+            1,
+            0,
+            5
+          ],
+          [
+            0,
+            0,
+            0
+          ]
+        ],
+        "query": 18,
+        "reason": "same_shape_orbit_capacity",
+        "sampled_orbits_at_shape": 1,
+        "seed": 19133143780577,
+        "shape": [
+          3,
+          3
+        ]
+      },
+      {
+        "capacity_draws": 2000,
+        "input": [
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            1,
+            0,
+            5
+          ],
+          [
+            2,
+            0,
+            5
+          ]
+        ],
+        "query": 19,
+        "reason": "same_shape_orbit_capacity",
+        "sampled_orbits_at_shape": 1,
+        "seed": 77326133993987,
+        "shape": [
+          3,
+          3
+        ]
+      },
+      {
+        "capacity_draws": 2000,
+        "input": [
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            7,
+            0,
+            5
+          ],
+          [
+            9,
+            0,
+            5
+          ]
+        ],
+        "query": 20,
+        "reason": "same_shape_orbit_capacity",
+        "sampled_orbits_at_shape": 1,
+        "seed": 157591125962841,
+        "shape": [
+          3,
+          3
+        ]
+      },
+      {
+        "capacity_draws": 2000,
+        "input": [
+          [
+            8,
+            0,
+            5
+          ],
+          [
+            1,
+            0,
+            5
+          ],
+          [
+            0,
+            0,
+            0
+          ]
+        ],
+        "query": 21,
+        "reason": "same_shape_orbit_capacity",
+        "sampled_orbits_at_shape": 1,
+        "seed": 121494418375781,
+        "shape": [
+          3,
+          3
+        ]
+      },
+      {
+        "capacity_draws": 2000,
+        "input": [
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            2,
+            0,
+            5
+          ],
+          [
+            6,
+            0,
+            5
+          ]
+        ],
+        "query": 22,
+        "reason": "same_shape_orbit_capacity",
+        "sampled_orbits_at_shape": 1,
+        "seed": 167672198896292,
+        "shape": [
+          3,
+          3
+        ]
+      },
+      {
+        "capacity_draws": 2000,
+        "input": [
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            4,
+            0,
+            5
+          ],
+          [
+            9,
+            0,
+            5
+          ]
+        ],
+        "query": 23,
+        "reason": "same_shape_orbit_capacity",
+        "sampled_orbits_at_shape": 1,
+        "seed": 189128675088387,
+        "shape": [
+          3,
+          3
+        ]
+      },
+      {
+        "capacity_draws": 2000,
+        "input": [
+          [
+            2,
+            0,
+            5
+          ],
+          [
+            3,
+            0,
+            5
+          ],
+          [
+            0,
+            0,
+            0
+          ]
+        ],
+        "query": 24,
+        "reason": "same_shape_orbit_capacity",
+        "sampled_orbits_at_shape": 1,
+        "seed": 137443627160030,
+        "shape": [
+          3,
+          3
+        ]
+      },
+      {
+        "capacity_draws": 2000,
+        "input": [
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            7,
+            0,
+            5
+          ],
+          [
+            3,
+            0,
+            5
+          ]
+        ],
+        "query": 25,
+        "reason": "same_shape_orbit_capacity",
+        "sampled_orbits_at_shape": 1,
+        "seed": 82504983753661,
+        "shape": [
+          3,
+          3
+        ]
+      },
+      {
+        "capacity_draws": 2000,
+        "input": [
+          [
+            4,
+            0,
+            5
+          ],
+          [
+            2,
+            0,
+            5
+          ],
+          [
+            0,
+            0,
+            0
+          ]
+        ],
+        "query": 26,
+        "reason": "same_shape_orbit_capacity",
+        "sampled_orbits_at_shape": 1,
+        "seed": 236772805491393,
+        "shape": [
+          3,
+          3
+        ]
+      },
+      {
+        "capacity_draws": 2000,
+        "input": [
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            7,
+            0,
+            5
+          ],
+          [
+            3,
+            0,
+            5
+          ]
+        ],
+        "query": 27,
+        "reason": "same_shape_orbit_capacity",
+        "sampled_orbits_at_shape": 1,
+        "seed": 157042810554087,
+        "shape": [
+          3,
+          3
+        ]
+      },
+      {
+        "capacity_draws": 2000,
+        "input": [
+          [
+            4,
+            0,
+            5
+          ],
+          [
+            1,
+            0,
+            5
+          ],
+          [
+            0,
+            0,
+            0
+          ]
+        ],
+        "query": 28,
+        "reason": "same_shape_orbit_capacity",
+        "sampled_orbits_at_shape": 1,
+        "seed": 141125863630397,
+        "shape": [
+          3,
+          3
+        ]
+      },
+      {
+        "capacity_draws": 2000,
+        "input": [
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            7,
+            0,
+            5
+          ],
+          [
+            8,
+            0,
+            5
+          ]
+        ],
+        "query": 29,
+        "reason": "same_shape_orbit_capacity",
+        "sampled_orbits_at_shape": 1,
+        "seed": 169772337956126,
+        "shape": [
+          3,
+          3
+        ]
+      },
+      {
+        "capacity_draws": 2000,
+        "input": [
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            1,
+            0,
+            5
+          ],
+          [
+            9,
+            0,
+            5
+          ]
+        ],
+        "query": 30,
+        "reason": "same_shape_orbit_capacity",
+        "sampled_orbits_at_shape": 1,
+        "seed": 258992589973256,
+        "shape": [
+          3,
+          3
+        ]
+      },
+      {
+        "capacity_draws": 2000,
+        "input": [
+          [
+            1,
+            0,
+            5
+          ],
+          [
+            9,
+            0,
+            5
+          ],
+          [
+            0,
+            0,
+            0
+          ]
+        ],
+        "query": 31,
+        "reason": "same_shape_orbit_capacity",
+        "sampled_orbits_at_shape": 1,
+        "seed": 12261582883175,
+        "shape": [
+          3,
+          3
+        ]
+      },
+      {
+        "capacity_draws": 2000,
+        "input": [
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            8,
+            0,
+            5
+          ],
+          [
+            7,
+            0,
+            5
+          ]
+        ],
+        "query": 32,
+        "reason": "same_shape_orbit_capacity",
+        "sampled_orbits_at_shape": 1,
+        "seed": 260258880436325,
+        "shape": [
+          3,
+          3
+        ]
+      },
+      {
+        "capacity_draws": 2000,
+        "input": [
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            3,
+            0,
+            5
+          ],
+          [
+            7,
+            0,
+            5
+          ]
+        ],
+        "query": 33,
+        "reason": "same_shape_orbit_capacity",
+        "sampled_orbits_at_shape": 1,
+        "seed": 154907363198355,
+        "shape": [
+          3,
+          3
+        ]
+      },
+      {
+        "capacity_draws": 2000,
+        "input": [
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            8,
+            0,
+            5
+          ],
+          [
+            6,
+            0,
+            5
+          ]
+        ],
+        "query": 34,
+        "reason": "same_shape_orbit_capacity",
+        "sampled_orbits_at_shape": 1,
+        "seed": 190877721253172,
+        "shape": [
+          3,
+          3
+        ]
+      },
+      {
+        "capacity_draws": 2000,
+        "input": [
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            7,
+            0,
+            5
+          ],
+          [
+            8,
+            0,
+            5
+          ]
+        ],
+        "query": 35,
+        "reason": "same_shape_orbit_capacity",
+        "sampled_orbits_at_shape": 1,
+        "seed": 68356469523392,
+        "shape": [
+          3,
+          3
+        ]
+      },
+      {
+        "capacity_draws": 2000,
+        "input": [
+          [
+            4,
+            0,
+            5
+          ],
+          [
+            6,
+            0,
+            5
+          ],
+          [
+            0,
+            0,
+            0
+          ]
+        ],
+        "query": 36,
+        "reason": "same_shape_orbit_capacity",
+        "sampled_orbits_at_shape": 1,
+        "seed": 238064665827923,
+        "shape": [
+          3,
+          3
+        ]
+      },
+      {
+        "capacity_draws": 2000,
+        "input": [
+          [
+            4,
+            0,
+            5
+          ],
+          [
+            2,
+            0,
+            5
+          ],
+          [
+            0,
+            0,
+            0
+          ]
+        ],
+        "query": 37,
+        "reason": "same_shape_orbit_capacity",
+        "sampled_orbits_at_shape": 1,
+        "seed": 235783500928908,
+        "shape": [
+          3,
+          3
+        ]
+      },
+      {
+        "capacity_draws": 2000,
+        "input": [
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            4,
+            0,
+            5
+          ],
+          [
+            1,
+            0,
+            5
+          ]
+        ],
+        "query": 38,
+        "reason": "same_shape_orbit_capacity",
+        "sampled_orbits_at_shape": 1,
+        "seed": 15158790758271,
+        "shape": [
+          3,
+          3
+        ]
+      },
+      {
+        "capacity_draws": 2000,
+        "input": [
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            4,
+            0,
+            5
+          ],
+          [
+            8,
+            0,
+            5
+          ]
+        ],
+        "query": 39,
+        "reason": "same_shape_orbit_capacity",
+        "sampled_orbits_at_shape": 1,
+        "seed": 190484775042897,
+        "shape": [
+          3,
+          3
+        ]
+      },
+      {
+        "capacity_draws": 2000,
+        "input": [
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            3,
+            0,
+            5
+          ],
+          [
+            2,
+            0,
+            5
+          ]
+        ],
+        "query": 40,
+        "reason": "same_shape_orbit_capacity",
+        "sampled_orbits_at_shape": 1,
+        "seed": 275027921271597,
+        "shape": [
+          3,
+          3
+        ]
+      },
+      {
+        "capacity_draws": 2000,
+        "input": [
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            1,
+            0,
+            5
+          ],
+          [
+            2,
+            0,
+            5
+          ]
+        ],
+        "query": 41,
+        "reason": "same_shape_orbit_capacity",
+        "sampled_orbits_at_shape": 1,
+        "seed": 16560263447547,
+        "shape": [
+          3,
+          3
+        ]
+      },
+      {
+        "capacity_draws": 2000,
+        "input": [
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            7,
+            0,
+            5
+          ],
+          [
+            9,
+            0,
+            5
+          ]
+        ],
+        "query": 42,
+        "reason": "same_shape_orbit_capacity",
+        "sampled_orbits_at_shape": 1,
+        "seed": 179154544700123,
+        "shape": [
+          3,
+          3
+        ]
+      },
+      {
+        "capacity_draws": 2000,
+        "input": [
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            3,
+            0,
+            5
+          ],
+          [
+            9,
+            0,
+            5
+          ]
+        ],
+        "query": 43,
+        "reason": "same_shape_orbit_capacity",
+        "sampled_orbits_at_shape": 1,
+        "seed": 203726027899226,
+        "shape": [
+          3,
+          3
+        ]
+      },
+      {
+        "capacity_draws": 2000,
+        "input": [
+          [
+            7,
+            0,
+            5
+          ],
+          [
+            2,
+            0,
+            5
+          ],
+          [
+            0,
+            0,
+            0
+          ]
+        ],
+        "query": 44,
+        "reason": "same_shape_orbit_capacity",
+        "sampled_orbits_at_shape": 1,
+        "seed": 269261694438784,
+        "shape": [
+          3,
+          3
+        ]
+      },
+      {
+        "capacity_draws": 2000,
+        "input": [
+          [
+            6,
+            0,
+            5
+          ],
+          [
+            2,
+            0,
+            5
+          ],
+          [
+            0,
+            0,
+            0
+          ]
+        ],
+        "query": 45,
+        "reason": "same_shape_orbit_capacity",
+        "sampled_orbits_at_shape": 1,
+        "seed": 61009138924939,
+        "shape": [
+          3,
+          3
+        ]
+      },
+      {
+        "capacity_draws": 2000,
+        "input": [
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            7,
+            0,
+            5
+          ],
+          [
+            3,
+            0,
+            5
+          ]
+        ],
+        "query": 46,
+        "reason": "same_shape_orbit_capacity",
+        "sampled_orbits_at_shape": 1,
+        "seed": 40913233607878,
+        "shape": [
+          3,
+          3
+        ]
+      },
+      {
+        "capacity_draws": 2000,
+        "input": [
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            7,
+            0,
+            5
+          ],
+          [
+            8,
+            0,
+            5
+          ]
+        ],
+        "query": 47,
+        "reason": "same_shape_orbit_capacity",
+        "sampled_orbits_at_shape": 1,
+        "seed": 200757050120134,
+        "shape": [
+          3,
+          3
+        ]
+      },
+      {
+        "capacity_draws": 2000,
+        "input": [
+          [
+            8,
+            0,
+            5
+          ],
+          [
+            1,
+            0,
+            5
+          ],
+          [
+            0,
+            0,
+            0
+          ]
+        ],
+        "query": 48,
+        "reason": "same_shape_orbit_capacity",
+        "sampled_orbits_at_shape": 1,
+        "seed": 246123426301093,
+        "shape": [
+          3,
+          3
+        ]
+      },
+      {
+        "capacity_draws": 2000,
+        "input": [
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            8,
+            0,
+            5
+          ],
+          [
+            9,
+            0,
+            5
+          ]
+        ],
+        "query": 49,
+        "reason": "same_shape_orbit_capacity",
+        "sampled_orbits_at_shape": 1,
+        "seed": 90651449893083,
+        "shape": [
+          3,
+          3
+        ]
+      },
+      {
+        "capacity_draws": 2000,
+        "input": [
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            2,
+            0,
+            5
+          ],
+          [
+            6,
+            0,
+            5
+          ]
+        ],
+        "query": 50,
+        "reason": "same_shape_orbit_capacity",
+        "sampled_orbits_at_shape": 1,
+        "seed": 207433313270353,
+        "shape": [
+          3,
+          3
+        ]
+      },
+      {
+        "capacity_draws": 2000,
+        "input": [
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            3,
+            0,
+            5
+          ],
+          [
+            7,
+            0,
+            5
+          ]
+        ],
+        "query": 51,
+        "reason": "same_shape_orbit_capacity",
+        "sampled_orbits_at_shape": 1,
+        "seed": 28428110685317,
+        "shape": [
+          3,
+          3
+        ]
+      },
+      {
+        "capacity_draws": 2000,
+        "input": [
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            7,
+            0,
+            5
+          ],
+          [
+            3,
+            0,
+            5
+          ]
+        ],
+        "query": 52,
+        "reason": "same_shape_orbit_capacity",
+        "sampled_orbits_at_shape": 1,
+        "seed": 87772168720456,
+        "shape": [
+          3,
+          3
+        ]
+      },
+      {
+        "capacity_draws": 2000,
+        "input": [
+          [
+            9,
+            0,
+            5
+          ],
+          [
+            7,
+            0,
+            5
+          ],
+          [
+            0,
+            0,
+            0
+          ]
+        ],
+        "query": 53,
+        "reason": "same_shape_orbit_capacity",
+        "sampled_orbits_at_shape": 1,
+        "seed": 24994156529345,
+        "shape": [
+          3,
+          3
+        ]
+      },
+      {
+        "capacity_draws": 2000,
+        "input": [
+          [
+            8,
+            0,
+            5
+          ],
+          [
+            9,
+            0,
+            5
+          ],
+          [
+            0,
+            0,
+            0
+          ]
+        ],
+        "query": 54,
+        "reason": "same_shape_orbit_capacity",
+        "sampled_orbits_at_shape": 1,
+        "seed": 160317844247907,
+        "shape": [
+          3,
+          3
+        ]
+      },
+      {
+        "capacity_draws": 2000,
+        "input": [
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            1,
+            0,
+            5
+          ],
+          [
+            6,
+            0,
+            5
+          ]
+        ],
+        "query": 55,
+        "reason": "same_shape_orbit_capacity",
+        "sampled_orbits_at_shape": 1,
+        "seed": 247470783355645,
+        "shape": [
+          3,
+          3
+        ]
+      },
+      {
+        "capacity_draws": 2000,
+        "input": [
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            6,
+            0,
+            5
+          ],
+          [
+            3,
+            0,
+            5
+          ]
+        ],
+        "query": 56,
+        "reason": "same_shape_orbit_capacity",
+        "sampled_orbits_at_shape": 1,
+        "seed": 102542345980514,
+        "shape": [
+          3,
+          3
+        ]
+      },
+      {
+        "capacity_draws": 2000,
+        "input": [
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            3,
+            0,
+            5
+          ],
+          [
+            8,
+            0,
+            5
+          ]
+        ],
+        "query": 57,
+        "reason": "same_shape_orbit_capacity",
+        "sampled_orbits_at_shape": 1,
+        "seed": 221842837515892,
+        "shape": [
+          3,
+          3
+        ]
+      },
+      {
+        "capacity_draws": 2000,
+        "input": [
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            2,
+            0,
+            5
+          ],
+          [
+            9,
+            0,
+            5
+          ]
+        ],
+        "query": 58,
+        "reason": "same_shape_orbit_capacity",
+        "sampled_orbits_at_shape": 1,
+        "seed": 2085225357479,
+        "shape": [
+          3,
+          3
+        ]
+      },
+      {
+        "capacity_draws": 2000,
+        "input": [
+          [
+            2,
+            0,
+            5
+          ],
+          [
+            7,
+            0,
+            5
+          ],
+          [
+            0,
+            0,
+            0
+          ]
+        ],
+        "query": 59,
+        "reason": "same_shape_orbit_capacity",
+        "sampled_orbits_at_shape": 1,
+        "seed": 92766011720621,
+        "shape": [
+          3,
+          3
+        ]
+      },
+      {
+        "capacity_draws": 2000,
+        "input": [
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            3,
+            0,
+            5
+          ],
+          [
+            6,
+            0,
+            5
+          ]
+        ],
+        "query": 60,
+        "reason": "same_shape_orbit_capacity",
+        "sampled_orbits_at_shape": 1,
+        "seed": 228535687483975,
+        "shape": [
+          3,
+          3
+        ]
+      },
+      {
+        "capacity_draws": 2000,
+        "input": [
+          [
+            2,
+            0,
+            5
+          ],
+          [
+            6,
+            0,
+            5
+          ],
+          [
+            0,
+            0,
+            0
+          ]
+        ],
+        "query": 61,
+        "reason": "same_shape_orbit_capacity",
+        "sampled_orbits_at_shape": 1,
+        "seed": 79179889420454,
+        "shape": [
+          3,
+          3
+        ]
+      },
+      {
+        "capacity_draws": 2000,
+        "input": [
+          [
+            7,
+            0,
+            5
+          ],
+          [
+            9,
+            0,
+            5
+          ],
+          [
+            0,
+            0,
+            0
+          ]
+        ],
+        "query": 62,
+        "reason": "same_shape_orbit_capacity",
+        "sampled_orbits_at_shape": 1,
+        "seed": 129490118890221,
+        "shape": [
+          3,
+          3
+        ]
+      },
+      {
+        "capacity_draws": 2000,
+        "input": [
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            8,
+            0,
+            5
+          ],
+          [
+            2,
+            0,
+            5
+          ]
+        ],
+        "query": 63,
+        "reason": "same_shape_orbit_capacity",
+        "sampled_orbits_at_shape": 1,
+        "seed": 129046938824752,
+        "shape": [
+          3,
+          3
+        ]
+      },
+      {
+        "capacity_draws": 2000,
+        "input": [
+          [
+            7,
+            0,
+            5
+          ],
+          [
+            6,
+            0,
+            5
+          ],
+          [
+            0,
+            0,
+            0
+          ]
+        ],
+        "query": 64,
+        "reason": "same_shape_orbit_capacity",
+        "sampled_orbits_at_shape": 1,
+        "seed": 131754211883859,
+        "shape": [
+          3,
+          3
+        ]
+      },
+      {
+        "capacity_draws": 2000,
+        "input": [
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            3,
+            0,
+            5
+          ],
+          [
+            2,
+            0,
+            5
+          ]
+        ],
+        "query": 65,
+        "reason": "same_shape_orbit_capacity",
+        "sampled_orbits_at_shape": 1,
+        "seed": 200627418967988,
+        "shape": [
+          3,
+          3
+        ]
+      },
+      {
+        "capacity_draws": 2000,
+        "input": [
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            4,
+            0,
+            5
+          ],
+          [
+            6,
+            0,
+            5
+          ]
+        ],
+        "query": 66,
+        "reason": "same_shape_orbit_capacity",
+        "sampled_orbits_at_shape": 1,
+        "seed": 277472349566440,
+        "shape": [
+          3,
+          3
+        ]
+      },
+      {
+        "capacity_draws": 2000,
+        "input": [
+          [
+            1,
+            0,
+            5
+          ],
+          [
+            2,
+            0,
+            5
+          ],
+          [
+            0,
+            0,
+            0
+          ]
+        ],
+        "query": 67,
+        "reason": "same_shape_orbit_capacity",
+        "sampled_orbits_at_shape": 1,
+        "seed": 189119407293555,
+        "shape": [
+          3,
+          3
+        ]
+      },
+      {
+        "capacity_draws": 2000,
+        "input": [
+          [
+            6,
+            0,
+            5
+          ],
+          [
+            2,
+            0,
+            5
+          ],
+          [
+            0,
+            0,
+            0
+          ]
+        ],
+        "query": 68,
+        "reason": "same_shape_orbit_capacity",
+        "sampled_orbits_at_shape": 1,
+        "seed": 129245438811232,
+        "shape": [
+          3,
+          3
+        ]
+      },
+      {
+        "capacity_draws": 2000,
+        "input": [
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            1,
+            0,
+            5
+          ],
+          [
+            2,
+            0,
+            5
+          ]
+        ],
+        "query": 69,
+        "reason": "same_shape_orbit_capacity",
+        "sampled_orbits_at_shape": 1,
+        "seed": 837593405500,
+        "shape": [
+          3,
+          3
+        ]
+      },
+      {
+        "capacity_draws": 2000,
+        "input": [
+          [
+            4,
+            0,
+            5
+          ],
+          [
+            9,
+            0,
+            5
+          ],
+          [
+            0,
+            0,
+            0
+          ]
+        ],
+        "query": 70,
+        "reason": "same_shape_orbit_capacity",
+        "sampled_orbits_at_shape": 1,
+        "seed": 254291228689647,
+        "shape": [
+          3,
+          3
+        ]
+      },
+      {
+        "capacity_draws": 2000,
+        "input": [
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            6,
+            0,
+            5
+          ],
+          [
+            3,
+            0,
+            5
+          ]
+        ],
+        "query": 71,
+        "reason": "same_shape_orbit_capacity",
+        "sampled_orbits_at_shape": 1,
+        "seed": 188322077202062,
+        "shape": [
+          3,
+          3
+        ]
+      },
+      {
+        "capacity_draws": 2000,
+        "input": [
+          [
+            8,
+            0,
+            5
+          ],
+          [
+            4,
+            0,
+            5
+          ],
+          [
+            0,
+            0,
+            0
+          ]
+        ],
+        "query": 72,
+        "reason": "same_shape_orbit_capacity",
+        "sampled_orbits_at_shape": 1,
+        "seed": 215299585556038,
+        "shape": [
+          3,
+          3
+        ]
+      },
+      {
+        "capacity_draws": 2000,
+        "input": [
+          [
+            4,
+            0,
+            5
+          ],
+          [
+            7,
+            0,
+            5
+          ],
+          [
+            0,
+            0,
+            0
+          ]
+        ],
+        "query": 73,
+        "reason": "same_shape_orbit_capacity",
+        "sampled_orbits_at_shape": 1,
+        "seed": 240222400781873,
+        "shape": [
+          3,
+          3
+        ]
+      },
+      {
+        "capacity_draws": 2000,
+        "input": [
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            7,
+            0,
+            5
+          ],
+          [
+            2,
+            0,
+            5
+          ]
+        ],
+        "query": 74,
+        "reason": "same_shape_orbit_capacity",
+        "sampled_orbits_at_shape": 1,
+        "seed": 15959225281117,
+        "shape": [
+          3,
+          3
+        ]
+      },
+      {
+        "capacity_draws": 2000,
+        "input": [
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            2,
+            0,
+            5
+          ],
+          [
+            1,
+            0,
+            5
+          ]
+        ],
+        "query": 75,
+        "reason": "same_shape_orbit_capacity",
+        "sampled_orbits_at_shape": 1,
+        "seed": 50613804627505,
+        "shape": [
+          3,
+          3
+        ]
+      },
+      {
+        "capacity_draws": 2000,
+        "input": [
+          [
+            3,
+            0,
+            5
+          ],
+          [
+            1,
+            0,
+            5
+          ],
+          [
+            0,
+            0,
+            0
+          ]
+        ],
+        "query": 76,
+        "reason": "same_shape_orbit_capacity",
+        "sampled_orbits_at_shape": 1,
+        "seed": 221060301548552,
+        "shape": [
+          3,
+          3
+        ]
+      },
+      {
+        "capacity_draws": 2000,
+        "input": [
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            1,
+            0,
+            5
+          ],
+          [
+            6,
+            0,
+            5
+          ]
+        ],
+        "query": 77,
+        "reason": "same_shape_orbit_capacity",
+        "sampled_orbits_at_shape": 1,
+        "seed": 12719245384207,
+        "shape": [
+          3,
+          3
+        ]
+      },
+      {
+        "capacity_draws": 2000,
+        "input": [
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            2,
+            0,
+            5
+          ],
+          [
+            9,
+            0,
+            5
+          ]
+        ],
+        "query": 78,
+        "reason": "same_shape_orbit_capacity",
+        "sampled_orbits_at_shape": 1,
+        "seed": 112856873787843,
+        "shape": [
+          3,
+          3
+        ]
+      },
+      {
+        "capacity_draws": 2000,
+        "input": [
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            3,
+            0,
+            5
+          ],
+          [
+            6,
+            0,
+            5
+          ]
+        ],
+        "query": 79,
+        "reason": "same_shape_orbit_capacity",
+        "sampled_orbits_at_shape": 1,
+        "seed": 78895244943149,
+        "shape": [
+          3,
+          3
+        ]
+      },
+      {
+        "capacity_draws": 2000,
+        "input": [
+          [
+            1,
+            0,
+            5
+          ],
+          [
+            3,
+            0,
+            5
+          ],
+          [
+            0,
+            0,
+            0
+          ]
+        ],
+        "query": 80,
+        "reason": "same_shape_orbit_capacity",
+        "sampled_orbits_at_shape": 1,
+        "seed": 155601046395454,
+        "shape": [
+          3,
+          3
+        ]
+      },
+      {
+        "capacity_draws": 2000,
+        "input": [
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            7,
+            0,
+            5
+          ],
+          [
+            2,
+            0,
+            5
+          ]
+        ],
+        "query": 81,
+        "reason": "same_shape_orbit_capacity",
+        "sampled_orbits_at_shape": 1,
+        "seed": 264672893559128,
+        "shape": [
+          3,
+          3
+        ]
+      },
+      {
+        "capacity_draws": 2000,
+        "input": [
+          [
+            3,
+            0,
+            5
+          ],
+          [
+            9,
+            0,
+            5
+          ],
+          [
+            0,
+            0,
+            0
+          ]
+        ],
+        "query": 82,
+        "reason": "same_shape_orbit_capacity",
+        "sampled_orbits_at_shape": 1,
+        "seed": 97431537204615,
+        "shape": [
+          3,
+          3
+        ]
+      },
+      {
+        "capacity_draws": 2000,
+        "input": [
+          [
+            1,
+            0,
+            5
+          ],
+          [
+            8,
+            0,
+            5
+          ],
+          [
+            0,
+            0,
+            0
+          ]
+        ],
+        "query": 83,
+        "reason": "same_shape_orbit_capacity",
+        "sampled_orbits_at_shape": 1,
+        "seed": 113620503528466,
+        "shape": [
+          3,
+          3
+        ]
+      },
+      {
+        "capacity_draws": 2000,
+        "input": [
+          [
+            8,
+            0,
+            5
+          ],
+          [
+            4,
+            0,
+            5
+          ],
+          [
+            0,
+            0,
+            0
+          ]
+        ],
+        "query": 84,
+        "reason": "same_shape_orbit_capacity",
+        "sampled_orbits_at_shape": 1,
+        "seed": 180416192757561,
+        "shape": [
+          3,
+          3
+        ]
+      },
+      {
+        "capacity_draws": 2000,
+        "input": [
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            3,
+            0,
+            5
+          ],
+          [
+            1,
+            0,
+            5
+          ]
+        ],
+        "query": 85,
+        "reason": "same_shape_orbit_capacity",
+        "sampled_orbits_at_shape": 1,
+        "seed": 188876362457682,
+        "shape": [
+          3,
+          3
+        ]
+      },
+      {
+        "capacity_draws": 2000,
+        "input": [
+          [
+            8,
+            0,
+            5
+          ],
+          [
+            1,
+            0,
+            5
+          ],
+          [
+            0,
+            0,
+            0
+          ]
+        ],
+        "query": 86,
+        "reason": "same_shape_orbit_capacity",
+        "sampled_orbits_at_shape": 1,
+        "seed": 246703059158556,
+        "shape": [
+          3,
+          3
+        ]
+      },
+      {
+        "capacity_draws": 2000,
+        "input": [
+          [
+            7,
+            0,
+            5
+          ],
+          [
+            6,
+            0,
+            5
+          ],
+          [
+            0,
+            0,
+            0
+          ]
+        ],
+        "query": 87,
+        "reason": "same_shape_orbit_capacity",
+        "sampled_orbits_at_shape": 1,
+        "seed": 175615209947827,
+        "shape": [
+          3,
+          3
+        ]
+      },
+      {
+        "capacity_draws": 2000,
+        "input": [
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            1,
+            0,
+            5
+          ],
+          [
+            7,
+            0,
+            5
+          ]
+        ],
+        "query": 88,
+        "reason": "same_shape_orbit_capacity",
+        "sampled_orbits_at_shape": 1,
+        "seed": 74845620730771,
+        "shape": [
+          3,
+          3
+        ]
+      },
+      {
+        "capacity_draws": 2000,
+        "input": [
+          [
+            1,
+            0,
+            5
+          ],
+          [
+            2,
+            0,
+            5
+          ],
+          [
+            0,
+            0,
+            0
+          ]
+        ],
+        "query": 89,
+        "reason": "same_shape_orbit_capacity",
+        "sampled_orbits_at_shape": 1,
+        "seed": 29200217176877,
+        "shape": [
+          3,
+          3
+        ]
+      },
+      {
+        "capacity_draws": 2000,
+        "input": [
+          [
+            9,
+            0,
+            5
+          ],
+          [
+            2,
+            0,
+            5
+          ],
+          [
+            0,
+            0,
+            0
+          ]
+        ],
+        "query": 90,
+        "reason": "same_shape_orbit_capacity",
+        "sampled_orbits_at_shape": 1,
+        "seed": 41365726084543,
+        "shape": [
+          3,
+          3
+        ]
+      },
+      {
+        "capacity_draws": 2000,
+        "input": [
+          [
+            8,
+            0,
+            5
+          ],
+          [
+            2,
+            0,
+            5
+          ],
+          [
+            0,
+            0,
+            0
+          ]
+        ],
+        "query": 91,
+        "reason": "same_shape_orbit_capacity",
+        "sampled_orbits_at_shape": 1,
+        "seed": 271138805759707,
+        "shape": [
+          3,
+          3
+        ]
+      },
+      {
+        "capacity_draws": 2000,
+        "input": [
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            3,
+            0,
+            5
+          ],
+          [
+            1,
+            0,
+            5
+          ]
+        ],
+        "query": 92,
+        "reason": "same_shape_orbit_capacity",
+        "sampled_orbits_at_shape": 1,
+        "seed": 2814662734953,
+        "shape": [
+          3,
+          3
+        ]
+      },
+      {
+        "capacity_draws": 2000,
+        "input": [
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            1,
+            0,
+            5
+          ],
+          [
+            8,
+            0,
+            5
+          ]
+        ],
+        "query": 93,
+        "reason": "same_shape_orbit_capacity",
+        "sampled_orbits_at_shape": 1,
+        "seed": 130825262333509,
+        "shape": [
+          3,
+          3
+        ]
+      },
+      {
+        "capacity_draws": 2000,
+        "input": [
+          [
+            9,
+            0,
+            5
+          ],
+          [
+            1,
+            0,
+            5
+          ],
+          [
+            0,
+            0,
+            0
+          ]
+        ],
+        "query": 94,
+        "reason": "same_shape_orbit_capacity",
+        "sampled_orbits_at_shape": 1,
+        "seed": 221724345298431,
+        "shape": [
+          3,
+          3
+        ]
+      },
+      {
+        "capacity_draws": 2000,
+        "input": [
+          [
+            8,
+            0,
+            5
+          ],
+          [
+            7,
+            0,
+            5
+          ],
+          [
+            0,
+            0,
+            0
+          ]
+        ],
+        "query": 95,
+        "reason": "same_shape_orbit_capacity",
+        "sampled_orbits_at_shape": 1,
+        "seed": 69986965894227,
+        "shape": [
+          3,
+          3
+        ]
+      },
+      {
+        "capacity_draws": 2000,
+        "input": [
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            7,
+            0,
+            5
+          ],
+          [
+            1,
+            0,
+            5
+          ]
+        ],
+        "query": 96,
+        "reason": "same_shape_orbit_capacity",
+        "sampled_orbits_at_shape": 1,
+        "seed": 140694511086268,
+        "shape": [
+          3,
+          3
+        ]
+      },
+      {
+        "capacity_draws": 2000,
+        "input": [
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            6,
+            0,
+            5
+          ],
+          [
+            8,
+            0,
+            5
+          ]
+        ],
+        "query": 97,
+        "reason": "same_shape_orbit_capacity",
+        "sampled_orbits_at_shape": 1,
+        "seed": 108000676322255,
+        "shape": [
+          3,
+          3
+        ]
+      },
+      {
+        "capacity_draws": 2000,
+        "input": [
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            8,
+            0,
+            5
+          ],
+          [
+            4,
+            0,
+            5
+          ]
+        ],
+        "query": 98,
+        "reason": "same_shape_orbit_capacity",
+        "sampled_orbits_at_shape": 1,
+        "seed": 240529400364361,
+        "shape": [
+          3,
+          3
+        ]
+      },
+      {
+        "capacity_draws": 2000,
+        "input": [
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            3,
+            0,
+            5
+          ],
+          [
+            8,
+            0,
+            5
+          ]
+        ],
+        "query": 99,
+        "reason": "same_shape_orbit_capacity",
+        "sampled_orbits_at_shape": 1,
+        "seed": 48408718135343,
+        "shape": [
+          3,
+          3
+        ]
+      },
+      {
+        "capacity_draws": 2000,
+        "input": [
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            9,
+            0,
+            5
+          ],
+          [
+            2,
+            0,
+            5
+          ]
+        ],
+        "query": 100,
+        "reason": "same_shape_orbit_capacity",
+        "sampled_orbits_at_shape": 1,
+        "seed": 238464010803887,
+        "shape": [
+          3,
+          3
+        ]
+      },
+      {
+        "capacity_draws": 2000,
+        "input": [
+          [
+            6,
+            0,
+            5
+          ],
+          [
+            8,
+            0,
+            5
+          ],
+          [
+            0,
+            0,
+            0
+          ]
+        ],
+        "query": 101,
+        "reason": "same_shape_orbit_capacity",
+        "sampled_orbits_at_shape": 1,
+        "seed": 228165251915460,
+        "shape": [
+          3,
+          3
+        ]
+      },
+      {
+        "capacity_draws": 2000,
+        "input": [
+          [
+            7,
+            0,
+            5
+          ],
+          [
+            4,
+            0,
+            5
+          ],
+          [
+            0,
+            0,
+            0
+          ]
+        ],
+        "query": 102,
+        "reason": "same_shape_orbit_capacity",
+        "sampled_orbits_at_shape": 1,
+        "seed": 139362210606487,
+        "shape": [
+          3,
+          3
+        ]
+      },
+      {
+        "capacity_draws": 2000,
+        "input": [
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            7,
+            0,
+            5
+          ],
+          [
+            3,
+            0,
+            5
+          ]
+        ],
+        "query": 103,
+        "reason": "same_shape_orbit_capacity",
+        "sampled_orbits_at_shape": 1,
+        "seed": 32158911618418,
+        "shape": [
+          3,
+          3
+        ]
+      },
+      {
+        "capacity_draws": 2000,
+        "input": [
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            9,
+            0,
+            5
+          ],
+          [
+            1,
+            0,
+            5
+          ]
+        ],
+        "query": 104,
+        "reason": "same_shape_orbit_capacity",
+        "sampled_orbits_at_shape": 1,
+        "seed": 196648448542403,
+        "shape": [
+          3,
+          3
+        ]
+      },
+      {
+        "capacity_draws": 2000,
+        "input": [
+          [
+            1,
+            0,
+            5
+          ],
+          [
+            2,
+            0,
+            5
+          ],
+          [
+            0,
+            0,
+            0
+          ]
+        ],
+        "query": 105,
+        "reason": "same_shape_orbit_capacity",
+        "sampled_orbits_at_shape": 1,
+        "seed": 178379217532756,
+        "shape": [
+          3,
+          3
+        ]
+      },
+      {
+        "capacity_draws": 2000,
+        "input": [
+          [
+            7,
+            0,
+            5
+          ],
+          [
+            3,
+            0,
+            5
+          ],
+          [
+            0,
+            0,
+            0
+          ]
+        ],
+        "query": 106,
+        "reason": "same_shape_orbit_capacity",
+        "sampled_orbits_at_shape": 1,
+        "seed": 242707701747229,
+        "shape": [
+          3,
+          3
+        ]
+      },
+      {
+        "capacity_draws": 2000,
+        "input": [
+          [
+            9,
+            0,
+            5
+          ],
+          [
+            1,
+            0,
+            5
+          ],
+          [
+            0,
+            0,
+            0
+          ]
+        ],
+        "query": 107,
+        "reason": "same_shape_orbit_capacity",
+        "sampled_orbits_at_shape": 1,
+        "seed": 142053629545738,
+        "shape": [
+          3,
+          3
+        ]
+      },
+      {
+        "capacity_draws": 2000,
+        "input": [
+          [
+            6,
+            0,
+            5
+          ],
+          [
+            7,
+            0,
+            5
+          ],
+          [
+            0,
+            0,
+            0
+          ]
+        ],
+        "query": 108,
+        "reason": "same_shape_orbit_capacity",
+        "sampled_orbits_at_shape": 1,
+        "seed": 217556038600254,
+        "shape": [
+          3,
+          3
+        ]
+      },
+      {
+        "capacity_draws": 2000,
+        "input": [
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            4,
+            0,
+            5
+          ],
+          [
+            7,
+            0,
+            5
+          ]
+        ],
+        "query": 109,
+        "reason": "same_shape_orbit_capacity",
+        "sampled_orbits_at_shape": 1,
+        "seed": 159642850027672,
+        "shape": [
+          3,
+          3
+        ]
+      },
+      {
+        "capacity_draws": 2000,
+        "input": [
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            2,
+            0,
+            5
+          ],
+          [
+            6,
+            0,
+            5
+          ]
+        ],
+        "query": 110,
+        "reason": "same_shape_orbit_capacity",
+        "sampled_orbits_at_shape": 1,
+        "seed": 197901626645949,
+        "shape": [
+          3,
+          3
+        ]
+      },
+      {
+        "capacity_draws": 2000,
+        "input": [
+          [
+            4,
+            0,
+            5
+          ],
+          [
+            7,
+            0,
+            5
+          ],
+          [
+            0,
+            0,
+            0
+          ]
+        ],
+        "query": 111,
+        "reason": "same_shape_orbit_capacity",
+        "sampled_orbits_at_shape": 1,
+        "seed": 137338679163658,
+        "shape": [
+          3,
+          3
+        ]
+      },
+      {
+        "capacity_draws": 2000,
+        "input": [
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            6,
+            0,
+            5
+          ],
+          [
+            3,
+            0,
+            5
+          ]
+        ],
+        "query": 112,
+        "reason": "same_shape_orbit_capacity",
+        "sampled_orbits_at_shape": 1,
+        "seed": 16886129956109,
+        "shape": [
+          3,
+          3
+        ]
+      },
+      {
+        "capacity_draws": 2000,
+        "input": [
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            3,
+            0,
+            5
+          ],
+          [
+            7,
+            0,
+            5
+          ]
+        ],
+        "query": 113,
+        "reason": "same_shape_orbit_capacity",
+        "sampled_orbits_at_shape": 1,
+        "seed": 268479260615525,
+        "shape": [
+          3,
+          3
+        ]
+      },
+      {
+        "capacity_draws": 2000,
+        "input": [
+          [
+            4,
+            0,
+            5
+          ],
+          [
+            2,
+            0,
+            5
+          ],
+          [
+            0,
+            0,
+            0
+          ]
+        ],
+        "query": 114,
+        "reason": "same_shape_orbit_capacity",
+        "sampled_orbits_at_shape": 1,
+        "seed": 64285955425826,
+        "shape": [
+          3,
+          3
+        ]
+      },
+      {
+        "capacity_draws": 2000,
+        "input": [
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            2,
+            0,
+            5
+          ],
+          [
+            7,
+            0,
+            5
+          ]
+        ],
+        "query": 115,
+        "reason": "same_shape_orbit_capacity",
+        "sampled_orbits_at_shape": 1,
+        "seed": 226706022339444,
+        "shape": [
+          3,
+          3
+        ]
+      },
+      {
+        "capacity_draws": 2000,
+        "input": [
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            6,
+            0,
+            5
+          ],
+          [
+            2,
+            0,
+            5
+          ]
+        ],
+        "query": 116,
+        "reason": "same_shape_orbit_capacity",
+        "sampled_orbits_at_shape": 1,
+        "seed": 35638106306984,
+        "shape": [
+          3,
+          3
+        ]
+      },
+      {
+        "capacity_draws": 2000,
+        "input": [
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            3,
+            0,
+            5
+          ],
+          [
+            7,
+            0,
+            5
+          ]
+        ],
+        "query": 117,
+        "reason": "same_shape_orbit_capacity",
+        "sampled_orbits_at_shape": 1,
+        "seed": 199573731352023,
+        "shape": [
+          3,
+          3
+        ]
+      },
+      {
+        "capacity_draws": 2000,
+        "input": [
+          [
+            1,
+            0,
+            5
+          ],
+          [
+            6,
+            0,
+            5
+          ],
+          [
+            0,
+            0,
+            0
+          ]
+        ],
+        "query": 118,
+        "reason": "same_shape_orbit_capacity",
+        "sampled_orbits_at_shape": 1,
+        "seed": 116585103127610,
+        "shape": [
+          3,
+          3
+        ]
+      },
+      {
+        "capacity_draws": 2000,
+        "input": [
+          [
+            4,
+            0,
+            5
+          ],
+          [
+            8,
+            0,
+            5
+          ],
+          [
+            0,
+            0,
+            0
+          ]
+        ],
+        "query": 119,
+        "reason": "same_shape_orbit_capacity",
+        "sampled_orbits_at_shape": 1,
+        "seed": 18428434604487,
+        "shape": [
+          3,
+          3
+        ]
+      },
+      {
+        "capacity_draws": 2000,
+        "input": [
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            1,
+            0,
+            5
+          ],
+          [
+            4,
+            0,
+            5
+          ]
+        ],
+        "query": 120,
+        "reason": "same_shape_orbit_capacity",
+        "sampled_orbits_at_shape": 1,
+        "seed": 238874706414251,
+        "shape": [
+          3,
+          3
+        ]
+      },
+      {
+        "capacity_draws": 2000,
+        "input": [
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            2,
+            0,
+            5
+          ],
+          [
+            8,
+            0,
+            5
+          ]
+        ],
+        "query": 121,
+        "reason": "same_shape_orbit_capacity",
+        "sampled_orbits_at_shape": 1,
+        "seed": 150679990541637,
+        "shape": [
+          3,
+          3
+        ]
+      },
+      {
+        "capacity_draws": 2000,
+        "input": [
+          [
+            4,
+            0,
+            5
+          ],
+          [
+            7,
+            0,
+            5
+          ],
+          [
+            0,
+            0,
+            0
+          ]
+        ],
+        "query": 122,
+        "reason": "same_shape_orbit_capacity",
+        "sampled_orbits_at_shape": 1,
+        "seed": 68317723903822,
+        "shape": [
+          3,
+          3
+        ]
+      },
+      {
+        "capacity_draws": 2000,
+        "input": [
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            8,
+            0,
+            5
+          ],
+          [
+            2,
+            0,
+            5
+          ]
+        ],
+        "query": 123,
+        "reason": "same_shape_orbit_capacity",
+        "sampled_orbits_at_shape": 1,
+        "seed": 106947039459795,
+        "shape": [
+          3,
+          3
+        ]
+      },
+      {
+        "capacity_draws": 2000,
+        "input": [
+          [
+            8,
+            0,
+            5
+          ],
+          [
+            6,
+            0,
+            5
+          ],
+          [
+            0,
+            0,
+            0
+          ]
+        ],
+        "query": 124,
+        "reason": "same_shape_orbit_capacity",
+        "sampled_orbits_at_shape": 1,
+        "seed": 199280112363457,
+        "shape": [
+          3,
+          3
+        ]
+      },
+      {
+        "capacity_draws": 2000,
+        "input": [
+          [
+            6,
+            0,
+            5
+          ],
+          [
+            8,
+            0,
+            5
+          ],
+          [
+            0,
+            0,
+            0
+          ]
+        ],
+        "query": 125,
+        "reason": "same_shape_orbit_capacity",
+        "sampled_orbits_at_shape": 1,
+        "seed": 126089162941839,
+        "shape": [
+          3,
+          3
+        ]
+      },
+      {
+        "capacity_draws": 2000,
+        "input": [
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            7,
+            0,
+            5
+          ],
+          [
+            6,
+            0,
+            5
+          ]
+        ],
+        "query": 126,
+        "reason": "same_shape_orbit_capacity",
+        "sampled_orbits_at_shape": 1,
+        "seed": 10060879244024,
+        "shape": [
+          3,
+          3
+        ]
+      },
+      {
+        "capacity_draws": 2000,
+        "input": [
+          [
+            4,
+            0,
+            5
+          ],
+          [
+            2,
+            0,
+            5
+          ],
+          [
+            0,
+            0,
+            0
+          ]
+        ],
+        "query": 127,
+        "reason": "same_shape_orbit_capacity",
+        "sampled_orbits_at_shape": 1,
+        "seed": 131103622733608,
+        "shape": [
+          3,
+          3
+        ]
+      },
+      {
+        "capacity_draws": 2000,
+        "input": [
+          [
+            9,
+            0,
+            5
+          ],
+          [
+            1,
+            0,
+            5
+          ],
+          [
+            0,
+            0,
+            0
+          ]
+        ],
+        "query": 128,
+        "reason": "same_shape_orbit_capacity",
+        "sampled_orbits_at_shape": 1,
+        "seed": 267517976169278,
+        "shape": [
+          3,
+          3
+        ]
+      },
+      {
+        "capacity_draws": 2000,
+        "input": [
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            4,
+            0,
+            5
+          ],
+          [
+            6,
+            0,
+            5
+          ]
+        ],
+        "query": 129,
+        "reason": "same_shape_orbit_capacity",
+        "sampled_orbits_at_shape": 1,
+        "seed": 265702277680167,
+        "shape": [
+          3,
+          3
+        ]
+      },
+      {
+        "capacity_draws": 2000,
+        "input": [
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            7,
+            0,
+            5
+          ],
+          [
+            1,
+            0,
+            5
+          ]
+        ],
+        "query": 130,
+        "reason": "same_shape_orbit_capacity",
+        "sampled_orbits_at_shape": 1,
+        "seed": 233367448295998,
+        "shape": [
+          3,
+          3
+        ]
+      },
+      {
+        "capacity_draws": 2000,
+        "input": [
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            9,
+            0,
+            5
+          ],
+          [
+            7,
+            0,
+            5
+          ]
+        ],
+        "query": 131,
+        "reason": "same_shape_orbit_capacity",
+        "sampled_orbits_at_shape": 1,
+        "seed": 37897196906075,
+        "shape": [
+          3,
+          3
+        ]
+      },
+      {
+        "capacity_draws": 2000,
+        "input": [
+          [
+            9,
+            0,
+            5
+          ],
+          [
+            2,
+            0,
+            5
+          ],
+          [
+            0,
+            0,
+            0
+          ]
+        ],
+        "query": 132,
+        "reason": "same_shape_orbit_capacity",
+        "sampled_orbits_at_shape": 1,
+        "seed": 161642130517191,
+        "shape": [
+          3,
+          3
+        ]
+      },
+      {
+        "capacity_draws": 2000,
+        "input": [
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            3,
+            0,
+            5
+          ],
+          [
+            9,
+            0,
+            5
+          ]
+        ],
+        "query": 133,
+        "reason": "same_shape_orbit_capacity",
+        "sampled_orbits_at_shape": 1,
+        "seed": 247133370654515,
+        "shape": [
+          3,
+          3
+        ]
+      },
+      {
+        "capacity_draws": 2000,
+        "input": [
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            7,
+            0,
+            5
+          ],
+          [
+            3,
+            0,
+            5
+          ]
+        ],
+        "query": 134,
+        "reason": "same_shape_orbit_capacity",
+        "sampled_orbits_at_shape": 1,
+        "seed": 109261235494116,
+        "shape": [
+          3,
+          3
+        ]
+      },
+      {
+        "capacity_draws": 2000,
+        "input": [
+          [
+            6,
+            0,
+            5
+          ],
+          [
+            3,
+            0,
+            5
+          ],
+          [
+            0,
+            0,
+            0
+          ]
+        ],
+        "query": 135,
+        "reason": "same_shape_orbit_capacity",
+        "sampled_orbits_at_shape": 1,
+        "seed": 132978868219814,
+        "shape": [
+          3,
+          3
+        ]
+      },
+      {
+        "capacity_draws": 2000,
+        "input": [
+          [
+            4,
+            0,
+            5
+          ],
+          [
+            8,
+            0,
+            5
+          ],
+          [
+            0,
+            0,
+            0
+          ]
+        ],
+        "query": 136,
+        "reason": "same_shape_orbit_capacity",
+        "sampled_orbits_at_shape": 1,
+        "seed": 138327559944395,
+        "shape": [
+          3,
+          3
+        ]
+      },
+      {
+        "capacity_draws": 2000,
+        "input": [
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            3,
+            0,
+            5
+          ],
+          [
+            2,
+            0,
+            5
+          ]
+        ],
+        "query": 137,
+        "reason": "same_shape_orbit_capacity",
+        "sampled_orbits_at_shape": 1,
+        "seed": 212769964036701,
+        "shape": [
+          3,
+          3
+        ]
+      },
+      {
+        "capacity_draws": 2000,
+        "input": [
+          [
+            3,
+            0,
+            5
+          ],
+          [
+            6,
+            0,
+            5
+          ],
+          [
+            0,
+            0,
+            0
+          ]
+        ],
+        "query": 138,
+        "reason": "same_shape_orbit_capacity",
+        "sampled_orbits_at_shape": 1,
+        "seed": 79247720720288,
+        "shape": [
+          3,
+          3
+        ]
+      },
+      {
+        "capacity_draws": 2000,
+        "input": [
+          [
+            1,
+            0,
+            5
+          ],
+          [
+            8,
+            0,
+            5
+          ],
+          [
+            0,
+            0,
+            0
+          ]
+        ],
+        "query": 139,
+        "reason": "same_shape_orbit_capacity",
+        "sampled_orbits_at_shape": 1,
+        "seed": 127100426258000,
+        "shape": [
+          3,
+          3
+        ]
+      },
+      {
+        "capacity_draws": 2000,
+        "input": [
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            1,
+            0,
+            5
+          ],
+          [
+            3,
+            0,
+            5
+          ]
+        ],
+        "query": 140,
+        "reason": "same_shape_orbit_capacity",
+        "sampled_orbits_at_shape": 1,
+        "seed": 176045799051521,
+        "shape": [
+          3,
+          3
+        ]
+      },
+      {
+        "capacity_draws": 2000,
+        "input": [
+          [
+            1,
+            0,
+            5
+          ],
+          [
+            2,
+            0,
+            5
+          ],
+          [
+            0,
+            0,
+            0
+          ]
+        ],
+        "query": 141,
+        "reason": "same_shape_orbit_capacity",
+        "sampled_orbits_at_shape": 1,
+        "seed": 178474160677296,
+        "shape": [
+          3,
+          3
+        ]
+      },
+      {
+        "capacity_draws": 2000,
+        "input": [
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            1,
+            0,
+            5
+          ],
+          [
+            9,
+            0,
+            5
+          ]
+        ],
+        "query": 142,
+        "reason": "same_shape_orbit_capacity",
+        "sampled_orbits_at_shape": 1,
+        "seed": 94978044687070,
+        "shape": [
+          3,
+          3
+        ]
+      },
+      {
+        "capacity_draws": 2000,
+        "input": [
+          [
+            6,
+            0,
+            5
+          ],
+          [
+            1,
+            0,
+            5
+          ],
+          [
+            0,
+            0,
+            0
+          ]
+        ],
+        "query": 143,
+        "reason": "same_shape_orbit_capacity",
+        "sampled_orbits_at_shape": 1,
+        "seed": 61145312308126,
+        "shape": [
+          3,
+          3
+        ]
+      },
+      {
+        "capacity_draws": 2000,
+        "input": [
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            9,
+            0,
+            5
+          ],
+          [
+            6,
+            0,
+            5
+          ]
+        ],
+        "query": 144,
+        "reason": "same_shape_orbit_capacity",
+        "sampled_orbits_at_shape": 1,
+        "seed": 147137286827500,
+        "shape": [
+          3,
+          3
+        ]
+      },
+      {
+        "capacity_draws": 2000,
+        "input": [
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            2,
+            0,
+            5
+          ],
+          [
+            3,
+            0,
+            5
+          ]
+        ],
+        "query": 145,
+        "reason": "same_shape_orbit_capacity",
+        "sampled_orbits_at_shape": 1,
+        "seed": 58011489102568,
+        "shape": [
+          3,
+          3
+        ]
+      },
+      {
+        "capacity_draws": 2000,
+        "input": [
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            1,
+            0,
+            5
+          ],
+          [
+            3,
+            0,
+            5
+          ]
+        ],
+        "query": 146,
+        "reason": "same_shape_orbit_capacity",
+        "sampled_orbits_at_shape": 1,
+        "seed": 196183454192756,
+        "shape": [
+          3,
+          3
+        ]
+      },
+      {
+        "capacity_draws": 2000,
+        "input": [
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            8,
+            0,
+            5
+          ],
+          [
+            4,
+            0,
+            5
+          ]
+        ],
+        "query": 147,
+        "reason": "same_shape_orbit_capacity",
+        "sampled_orbits_at_shape": 1,
+        "seed": 280517281489011,
+        "shape": [
+          3,
+          3
+        ]
+      },
+      {
+        "capacity_draws": 2000,
+        "input": [
+          [
+            6,
+            0,
+            5
+          ],
+          [
+            9,
+            0,
+            5
+          ],
+          [
+            0,
+            0,
+            0
+          ]
+        ],
+        "query": 148,
+        "reason": "same_shape_orbit_capacity",
+        "sampled_orbits_at_shape": 1,
+        "seed": 91068671339701,
+        "shape": [
+          3,
+          3
+        ]
+      },
+      {
+        "capacity_draws": 2000,
+        "input": [
+          [
+            9,
+            0,
+            5
+          ],
+          [
+            6,
+            0,
+            5
+          ],
+          [
+            0,
+            0,
+            0
+          ]
+        ],
+        "query": 149,
+        "reason": "same_shape_orbit_capacity",
+        "sampled_orbits_at_shape": 1,
+        "seed": 94194026315338,
+        "shape": [
+          3,
+          3
+        ]
+      },
+      {
+        "capacity_draws": 2000,
+        "input": [
+          [
+            9,
+            0,
+            5
+          ],
+          [
+            8,
+            0,
+            5
+          ],
+          [
+            0,
+            0,
+            0
+          ]
+        ],
+        "query": 150,
+        "reason": "same_shape_orbit_capacity",
+        "sampled_orbits_at_shape": 1,
+        "seed": 104097852217874,
+        "shape": [
+          3,
+          3
+        ]
+      },
+      {
+        "capacity_draws": 2000,
+        "input": [
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            8,
+            0,
+            5
+          ],
+          [
+            6,
+            0,
+            5
+          ]
+        ],
+        "query": 151,
+        "reason": "same_shape_orbit_capacity",
+        "sampled_orbits_at_shape": 1,
+        "seed": 96491921359775,
+        "shape": [
+          3,
+          3
+        ]
+      },
+      {
+        "capacity_draws": 2000,
+        "input": [
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            3,
+            0,
+            5
+          ],
+          [
+            4,
+            0,
+            5
+          ]
+        ],
+        "query": 152,
+        "reason": "same_shape_orbit_capacity",
+        "sampled_orbits_at_shape": 1,
+        "seed": 179210738774342,
+        "shape": [
+          3,
+          3
+        ]
+      },
+      {
+        "capacity_draws": 2000,
+        "input": [
+          [
+            9,
+            0,
+            5
+          ],
+          [
+            8,
+            0,
+            5
+          ],
+          [
+            0,
+            0,
+            0
+          ]
+        ],
+        "query": 153,
+        "reason": "same_shape_orbit_capacity",
+        "sampled_orbits_at_shape": 1,
+        "seed": 176106412550752,
+        "shape": [
+          3,
+          3
+        ]
+      },
+      {
+        "capacity_draws": 2000,
+        "input": [
+          [
+            2,
+            0,
+            5
+          ],
+          [
+            1,
+            0,
+            5
+          ],
+          [
+            0,
+            0,
+            0
+          ]
+        ],
+        "query": 154,
+        "reason": "same_shape_orbit_capacity",
+        "sampled_orbits_at_shape": 1,
+        "seed": 232644713028692,
+        "shape": [
+          3,
+          3
+        ]
+      },
+      {
+        "capacity_draws": 2000,
+        "input": [
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            3,
+            0,
+            5
+          ],
+          [
+            9,
+            0,
+            5
+          ]
+        ],
+        "query": 155,
+        "reason": "same_shape_orbit_capacity",
+        "sampled_orbits_at_shape": 1,
+        "seed": 132189284918076,
+        "shape": [
+          3,
+          3
+        ]
+      },
+      {
+        "capacity_draws": 2000,
+        "input": [
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            6,
+            0,
+            5
+          ],
+          [
+            9,
+            0,
+            5
+          ]
+        ],
+        "query": 156,
+        "reason": "same_shape_orbit_capacity",
+        "sampled_orbits_at_shape": 1,
+        "seed": 141154227888438,
+        "shape": [
+          3,
+          3
+        ]
+      },
+      {
+        "capacity_draws": 2000,
+        "input": [
+          [
+            7,
+            0,
+            5
+          ],
+          [
+            8,
+            0,
+            5
+          ],
+          [
+            0,
+            0,
+            0
+          ]
+        ],
+        "query": 157,
+        "reason": "same_shape_orbit_capacity",
+        "sampled_orbits_at_shape": 1,
+        "seed": 251938987638705,
+        "shape": [
+          3,
+          3
+        ]
+      },
+      {
+        "capacity_draws": 2000,
+        "input": [
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            6,
+            0,
+            5
+          ],
+          [
+            9,
+            0,
+            5
+          ]
+        ],
+        "query": 158,
+        "reason": "same_shape_orbit_capacity",
+        "sampled_orbits_at_shape": 1,
+        "seed": 113779844938951,
+        "shape": [
+          3,
+          3
+        ]
+      },
+      {
+        "capacity_draws": 2000,
+        "input": [
+          [
+            8,
+            0,
+            5
+          ],
+          [
+            7,
+            0,
+            5
+          ],
+          [
+            0,
+            0,
+            0
+          ]
+        ],
+        "query": 159,
+        "reason": "same_shape_orbit_capacity",
+        "sampled_orbits_at_shape": 1,
+        "seed": 144528558905289,
+        "shape": [
+          3,
+          3
+        ]
+      },
+      {
+        "capacity_draws": 2000,
+        "input": [
+          [
+            2,
+            0,
+            5
+          ],
+          [
+            7,
+            0,
+            5
+          ],
+          [
+            0,
+            0,
+            0
+          ]
+        ],
+        "query": 160,
+        "reason": "same_shape_orbit_capacity",
+        "sampled_orbits_at_shape": 1,
+        "seed": 90557753613310,
+        "shape": [
+          3,
+          3
+        ]
+      },
+      {
+        "capacity_draws": 2000,
+        "input": [
+          [
+            4,
+            0,
+            5
+          ],
+          [
+            6,
+            0,
+            5
+          ],
+          [
+            0,
+            0,
+            0
+          ]
+        ],
+        "query": 161,
+        "reason": "same_shape_orbit_capacity",
+        "sampled_orbits_at_shape": 1,
+        "seed": 84549727893676,
+        "shape": [
+          3,
+          3
+        ]
+      },
+      {
+        "capacity_draws": 2000,
+        "input": [
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            8,
+            0,
+            5
+          ],
+          [
+            3,
+            0,
+            5
+          ]
+        ],
+        "query": 162,
+        "reason": "same_shape_orbit_capacity",
+        "sampled_orbits_at_shape": 1,
+        "seed": 223738496609938,
+        "shape": [
+          3,
+          3
+        ]
+      },
+      {
+        "capacity_draws": 2000,
+        "input": [
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            2,
+            0,
+            5
+          ],
+          [
+            7,
+            0,
+            5
+          ]
+        ],
+        "query": 163,
+        "reason": "same_shape_orbit_capacity",
+        "sampled_orbits_at_shape": 1,
+        "seed": 27364662091949,
+        "shape": [
+          3,
+          3
+        ]
+      },
+      {
+        "capacity_draws": 2000,
+        "input": [
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            6,
+            0,
+            5
+          ],
+          [
+            3,
+            0,
+            5
+          ]
+        ],
+        "query": 164,
+        "reason": "same_shape_orbit_capacity",
+        "sampled_orbits_at_shape": 1,
+        "seed": 51242118488775,
+        "shape": [
+          3,
+          3
+        ]
+      },
+      {
+        "capacity_draws": 2000,
+        "input": [
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            1,
+            0,
+            5
+          ],
+          [
+            2,
+            0,
+            5
+          ]
+        ],
+        "query": 165,
+        "reason": "same_shape_orbit_capacity",
+        "sampled_orbits_at_shape": 1,
+        "seed": 7734610415440,
+        "shape": [
+          3,
+          3
+        ]
+      },
+      {
+        "capacity_draws": 2000,
+        "input": [
+          [
+            8,
+            0,
+            5
+          ],
+          [
+            2,
+            0,
+            5
+          ],
+          [
+            0,
+            0,
+            0
+          ]
+        ],
+        "query": 166,
+        "reason": "same_shape_orbit_capacity",
+        "sampled_orbits_at_shape": 1,
+        "seed": 179931391038417,
+        "shape": [
+          3,
+          3
+        ]
+      },
+      {
+        "capacity_draws": 2000,
+        "input": [
+          [
+            4,
+            0,
+            5
+          ],
+          [
+            3,
+            0,
+            5
+          ],
+          [
+            0,
+            0,
+            0
+          ]
+        ],
+        "query": 167,
+        "reason": "same_shape_orbit_capacity",
+        "sampled_orbits_at_shape": 1,
+        "seed": 166268009963880,
+        "shape": [
+          3,
+          3
+        ]
+      },
+      {
+        "capacity_draws": 2000,
+        "input": [
+          [
+            1,
+            0,
+            5
+          ],
+          [
+            2,
+            0,
+            5
+          ],
+          [
+            0,
+            0,
+            0
+          ]
+        ],
+        "query": 168,
+        "reason": "same_shape_orbit_capacity",
+        "sampled_orbits_at_shape": 1,
+        "seed": 32209010588749,
+        "shape": [
+          3,
+          3
+        ]
+      },
+      {
+        "capacity_draws": 2000,
+        "input": [
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            9,
+            0,
+            5
+          ],
+          [
+            2,
+            0,
+            5
+          ]
+        ],
+        "query": 169,
+        "reason": "same_shape_orbit_capacity",
+        "sampled_orbits_at_shape": 1,
+        "seed": 73574761394440,
+        "shape": [
+          3,
+          3
+        ]
+      },
+      {
+        "capacity_draws": 2000,
+        "input": [
+          [
+            7,
+            0,
+            5
+          ],
+          [
+            2,
+            0,
+            5
+          ],
+          [
+            0,
+            0,
+            0
+          ]
+        ],
+        "query": 170,
+        "reason": "same_shape_orbit_capacity",
+        "sampled_orbits_at_shape": 1,
+        "seed": 84842101099370,
+        "shape": [
+          3,
+          3
+        ]
+      },
+      {
+        "capacity_draws": 2000,
+        "input": [
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            7,
+            0,
+            5
+          ],
+          [
+            8,
+            0,
+            5
+          ]
+        ],
+        "query": 171,
+        "reason": "same_shape_orbit_capacity",
+        "sampled_orbits_at_shape": 1,
+        "seed": 38646731941924,
+        "shape": [
+          3,
+          3
+        ]
+      },
+      {
+        "capacity_draws": 2000,
+        "input": [
+          [
+            9,
+            0,
+            5
+          ],
+          [
+            7,
+            0,
+            5
+          ],
+          [
+            0,
+            0,
+            0
+          ]
+        ],
+        "query": 172,
+        "reason": "same_shape_orbit_capacity",
+        "sampled_orbits_at_shape": 1,
+        "seed": 267991869858369,
+        "shape": [
+          3,
+          3
+        ]
+      },
+      {
+        "capacity_draws": 2000,
+        "input": [
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            8,
+            0,
+            5
+          ],
+          [
+            6,
+            0,
+            5
+          ]
+        ],
+        "query": 173,
+        "reason": "same_shape_orbit_capacity",
+        "sampled_orbits_at_shape": 1,
+        "seed": 87462195941766,
+        "shape": [
+          3,
+          3
+        ]
+      },
+      {
+        "capacity_draws": 2000,
+        "input": [
+          [
+            2,
+            0,
+            5
+          ],
+          [
+            3,
+            0,
+            5
+          ],
+          [
+            0,
+            0,
+            0
+          ]
+        ],
+        "query": 174,
+        "reason": "same_shape_orbit_capacity",
+        "sampled_orbits_at_shape": 1,
+        "seed": 129928843775984,
+        "shape": [
+          3,
+          3
+        ]
+      },
+      {
+        "capacity_draws": 2000,
+        "input": [
+          [
+            2,
+            0,
+            5
+          ],
+          [
+            9,
+            0,
+            5
+          ],
+          [
+            0,
+            0,
+            0
+          ]
+        ],
+        "query": 175,
+        "reason": "same_shape_orbit_capacity",
+        "sampled_orbits_at_shape": 1,
+        "seed": 264145453351101,
+        "shape": [
+          3,
+          3
+        ]
+      },
+      {
+        "capacity_draws": 2000,
+        "input": [
+          [
+            2,
+            0,
+            5
+          ],
+          [
+            4,
+            0,
+            5
+          ],
+          [
+            0,
+            0,
+            0
+          ]
+        ],
+        "query": 176,
+        "reason": "same_shape_orbit_capacity",
+        "sampled_orbits_at_shape": 1,
+        "seed": 229488011172888,
+        "shape": [
+          3,
+          3
+        ]
+      },
+      {
+        "capacity_draws": 2000,
+        "input": [
+          [
+            7,
+            0,
+            5
+          ],
+          [
+            3,
+            0,
+            5
+          ],
+          [
+            0,
+            0,
+            0
+          ]
+        ],
+        "query": 177,
+        "reason": "same_shape_orbit_capacity",
+        "sampled_orbits_at_shape": 1,
+        "seed": 266219876052818,
+        "shape": [
+          3,
+          3
+        ]
+      },
+      {
+        "capacity_draws": 2000,
+        "input": [
+          [
+            8,
+            0,
+            5
+          ],
+          [
+            4,
+            0,
+            5
+          ],
+          [
+            0,
+            0,
+            0
+          ]
+        ],
+        "query": 178,
+        "reason": "same_shape_orbit_capacity",
+        "sampled_orbits_at_shape": 1,
+        "seed": 1815665378775,
+        "shape": [
+          3,
+          3
+        ]
+      },
+      {
+        "capacity_draws": 2000,
+        "input": [
+          [
+            7,
+            0,
+            5
+          ],
+          [
+            6,
+            0,
+            5
+          ],
+          [
+            0,
+            0,
+            0
+          ]
+        ],
+        "query": 179,
+        "reason": "same_shape_orbit_capacity",
+        "sampled_orbits_at_shape": 1,
+        "seed": 20384251013777,
+        "shape": [
+          3,
+          3
+        ]
+      },
+      {
+        "capacity_draws": 2000,
+        "input": [
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            7,
+            0,
+            5
+          ],
+          [
+            8,
+            0,
+            5
+          ]
+        ],
+        "query": 180,
+        "reason": "same_shape_orbit_capacity",
+        "sampled_orbits_at_shape": 1,
+        "seed": 194140196271014,
+        "shape": [
+          3,
+          3
+        ]
+      },
+      {
+        "capacity_draws": 2000,
+        "input": [
+          [
+            4,
+            0,
+            5
+          ],
+          [
+            3,
+            0,
+            5
+          ],
+          [
+            0,
+            0,
+            0
+          ]
+        ],
+        "query": 181,
+        "reason": "same_shape_orbit_capacity",
+        "sampled_orbits_at_shape": 1,
+        "seed": 104848752316175,
+        "shape": [
+          3,
+          3
+        ]
+      },
+      {
+        "capacity_draws": 2000,
+        "input": [
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            1,
+            0,
+            5
+          ],
+          [
+            6,
+            0,
+            5
+          ]
+        ],
+        "query": 182,
+        "reason": "same_shape_orbit_capacity",
+        "sampled_orbits_at_shape": 1,
+        "seed": 211940309897146,
+        "shape": [
+          3,
+          3
+        ]
+      },
+      {
+        "capacity_draws": 2000,
+        "input": [
+          [
+            4,
+            0,
+            5
+          ],
+          [
+            9,
+            0,
+            5
+          ],
+          [
+            0,
+            0,
+            0
+          ]
+        ],
+        "query": 183,
+        "reason": "same_shape_orbit_capacity",
+        "sampled_orbits_at_shape": 1,
+        "seed": 103125618782441,
+        "shape": [
+          3,
+          3
+        ]
+      },
+      {
+        "capacity_draws": 2000,
+        "input": [
+          [
+            2,
+            0,
+            5
+          ],
+          [
+            9,
+            0,
+            5
+          ],
+          [
+            0,
+            0,
+            0
+          ]
+        ],
+        "query": 184,
+        "reason": "same_shape_orbit_capacity",
+        "sampled_orbits_at_shape": 1,
+        "seed": 76631366830400,
+        "shape": [
+          3,
+          3
+        ]
+      },
+      {
+        "capacity_draws": 2000,
+        "input": [
+          [
+            2,
+            0,
+            5
+          ],
+          [
+            9,
+            0,
+            5
+          ],
+          [
+            0,
+            0,
+            0
+          ]
+        ],
+        "query": 185,
+        "reason": "same_shape_orbit_capacity",
+        "sampled_orbits_at_shape": 1,
+        "seed": 64037650522357,
+        "shape": [
+          3,
+          3
+        ]
+      },
+      {
+        "capacity_draws": 2000,
+        "input": [
+          [
+            6,
+            0,
+            5
+          ],
+          [
+            3,
+            0,
+            5
+          ],
+          [
+            0,
+            0,
+            0
+          ]
+        ],
+        "query": 186,
+        "reason": "same_shape_orbit_capacity",
+        "sampled_orbits_at_shape": 1,
+        "seed": 116594246063967,
+        "shape": [
+          3,
+          3
+        ]
+      },
+      {
+        "capacity_draws": 2000,
+        "input": [
+          [
+            4,
+            0,
+            5
+          ],
+          [
+            3,
+            0,
+            5
+          ],
+          [
+            0,
+            0,
+            0
+          ]
+        ],
+        "query": 187,
+        "reason": "same_shape_orbit_capacity",
+        "sampled_orbits_at_shape": 1,
+        "seed": 35547671843299,
+        "shape": [
+          3,
+          3
+        ]
+      },
+      {
+        "capacity_draws": 2000,
+        "input": [
+          [
+            6,
+            0,
+            5
+          ],
+          [
+            9,
+            0,
+            5
+          ],
+          [
+            0,
+            0,
+            0
+          ]
+        ],
+        "query": 188,
+        "reason": "same_shape_orbit_capacity",
+        "sampled_orbits_at_shape": 1,
+        "seed": 216122086324759,
+        "shape": [
+          3,
+          3
+        ]
+      },
+      {
+        "capacity_draws": 2000,
+        "input": [
+          [
+            2,
+            0,
+            5
+          ],
+          [
+            9,
+            0,
+            5
+          ],
+          [
+            0,
+            0,
+            0
+          ]
+        ],
+        "query": 189,
+        "reason": "same_shape_orbit_capacity",
+        "sampled_orbits_at_shape": 1,
+        "seed": 142591340643219,
+        "shape": [
+          3,
+          3
+        ]
+      },
+      {
+        "capacity_draws": 2000,
+        "input": [
+          [
+            3,
+            0,
+            5
+          ],
+          [
+            2,
+            0,
+            5
+          ],
+          [
+            0,
+            0,
+            0
+          ]
+        ],
+        "query": 190,
+        "reason": "same_shape_orbit_capacity",
+        "sampled_orbits_at_shape": 1,
+        "seed": 36735773876003,
+        "shape": [
+          3,
+          3
+        ]
+      },
+      {
+        "capacity_draws": 2000,
+        "input": [
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            6,
+            0,
+            5
+          ],
+          [
+            1,
+            0,
+            5
+          ]
+        ],
+        "query": 191,
+        "reason": "same_shape_orbit_capacity",
+        "sampled_orbits_at_shape": 1,
+        "seed": 133929764040525,
+        "shape": [
+          3,
+          3
+        ]
+      },
+      {
+        "capacity_draws": 2000,
+        "input": [
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            4,
+            0,
+            5
+          ],
+          [
+            9,
+            0,
+            5
+          ]
+        ],
+        "query": 192,
+        "reason": "same_shape_orbit_capacity",
+        "sampled_orbits_at_shape": 1,
+        "seed": 161943370565903,
+        "shape": [
+          3,
+          3
+        ]
+      },
+      {
+        "capacity_draws": 2000,
+        "input": [
+          [
+            9,
+            0,
+            5
+          ],
+          [
+            3,
+            0,
+            5
+          ],
+          [
+            0,
+            0,
+            0
+          ]
+        ],
+        "query": 193,
+        "reason": "same_shape_orbit_capacity",
+        "sampled_orbits_at_shape": 1,
+        "seed": 49818160069987,
+        "shape": [
+          3,
+          3
+        ]
+      },
+      {
+        "capacity_draws": 2000,
+        "input": [
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            3,
+            0,
+            5
+          ],
+          [
+            6,
+            0,
+            5
+          ]
+        ],
+        "query": 194,
+        "reason": "same_shape_orbit_capacity",
+        "sampled_orbits_at_shape": 1,
+        "seed": 185909799681972,
+        "shape": [
+          3,
+          3
+        ]
+      },
+      {
+        "capacity_draws": 2000,
+        "input": [
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            9,
+            0,
+            5
+          ],
+          [
+            6,
+            0,
+            5
+          ]
+        ],
+        "query": 195,
+        "reason": "same_shape_orbit_capacity",
+        "sampled_orbits_at_shape": 1,
+        "seed": 145104134565617,
+        "shape": [
+          3,
+          3
+        ]
+      },
+      {
+        "capacity_draws": 2000,
+        "input": [
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            8,
+            0,
+            5
+          ],
+          [
+            2,
+            0,
+            5
+          ]
+        ],
+        "query": 196,
+        "reason": "same_shape_orbit_capacity",
+        "sampled_orbits_at_shape": 1,
+        "seed": 280092527195836,
+        "shape": [
+          3,
+          3
+        ]
+      },
+      {
+        "capacity_draws": 2000,
+        "input": [
+          [
+            9,
+            0,
+            5
+          ],
+          [
+            4,
+            0,
+            5
+          ],
+          [
+            0,
+            0,
+            0
+          ]
+        ],
+        "query": 197,
+        "reason": "same_shape_orbit_capacity",
+        "sampled_orbits_at_shape": 1,
+        "seed": 277998274451184,
+        "shape": [
+          3,
+          3
+        ]
+      },
+      {
+        "capacity_draws": 2000,
+        "input": [
+          [
+            6,
+            0,
+            5
+          ],
+          [
+            4,
+            0,
+            5
+          ],
+          [
+            0,
+            0,
+            0
+          ]
+        ],
+        "query": 198,
+        "reason": "same_shape_orbit_capacity",
+        "sampled_orbits_at_shape": 1,
+        "seed": 216634594136421,
+        "shape": [
+          3,
+          3
+        ]
+      },
+      {
+        "capacity_draws": 2000,
+        "input": [
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            2,
+            0,
+            5
+          ],
+          [
+            8,
+            0,
+            5
+          ]
+        ],
+        "query": 199,
+        "reason": "same_shape_orbit_capacity",
+        "sampled_orbits_at_shape": 1,
+        "seed": 14399510969655,
+        "shape": [
+          3,
+          3
+        ]
+      },
+      {
+        "capacity_draws": 2000,
+        "input": [
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            3,
+            0,
+            5
+          ],
+          [
+            6,
+            0,
+            5
+          ]
+        ],
+        "query": 200,
+        "reason": "same_shape_orbit_capacity",
+        "sampled_orbits_at_shape": 1,
+        "seed": 265572900309585,
+        "shape": [
+          3,
+          3
+        ]
+      },
+      {
+        "capacity_draws": 2000,
+        "input": [
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            6,
+            0,
+            5
+          ],
+          [
+            2,
+            0,
+            5
+          ]
+        ],
+        "query": 201,
+        "reason": "same_shape_orbit_capacity",
+        "sampled_orbits_at_shape": 1,
+        "seed": 279365824975668,
+        "shape": [
+          3,
+          3
+        ]
+      },
+      {
+        "capacity_draws": 2000,
+        "input": [
+          [
+            6,
+            0,
+            5
+          ],
+          [
+            3,
+            0,
+            5
+          ],
+          [
+            0,
+            0,
+            0
+          ]
+        ],
+        "query": 202,
+        "reason": "same_shape_orbit_capacity",
+        "sampled_orbits_at_shape": 1,
+        "seed": 248662676964217,
+        "shape": [
+          3,
+          3
+        ]
+      },
+      {
+        "capacity_draws": 2000,
+        "input": [
+          [
+            9,
+            0,
+            5
+          ],
+          [
+            4,
+            0,
+            5
+          ],
+          [
+            0,
+            0,
+            0
+          ]
+        ],
+        "query": 203,
+        "reason": "same_shape_orbit_capacity",
+        "sampled_orbits_at_shape": 1,
+        "seed": 52462291611999,
+        "shape": [
+          3,
+          3
+        ]
+      },
+      {
+        "capacity_draws": 2000,
+        "input": [
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            9,
+            0,
+            5
+          ],
+          [
+            3,
+            0,
+            5
+          ]
+        ],
+        "query": 204,
+        "reason": "same_shape_orbit_capacity",
+        "sampled_orbits_at_shape": 1,
+        "seed": 164989077454012,
+        "shape": [
+          3,
+          3
+        ]
+      },
+      {
+        "capacity_draws": 2000,
+        "input": [
+          [
+            3,
+            0,
+            5
+          ],
+          [
+            1,
+            0,
+            5
+          ],
+          [
+            0,
+            0,
+            0
+          ]
+        ],
+        "query": 205,
+        "reason": "same_shape_orbit_capacity",
+        "sampled_orbits_at_shape": 1,
+        "seed": 242646870680022,
+        "shape": [
+          3,
+          3
+        ]
+      },
+      {
+        "capacity_draws": 2000,
+        "input": [
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            7,
+            0,
+            5
+          ],
+          [
+            9,
+            0,
+            5
+          ]
+        ],
+        "query": 206,
+        "reason": "same_shape_orbit_capacity",
+        "sampled_orbits_at_shape": 1,
+        "seed": 160771110153228,
+        "shape": [
+          3,
+          3
+        ]
+      },
+      {
+        "capacity_draws": 2000,
+        "input": [
+          [
+            4,
+            0,
+            5
+          ],
+          [
+            2,
+            0,
+            5
+          ],
+          [
+            0,
+            0,
+            0
+          ]
+        ],
+        "query": 207,
+        "reason": "same_shape_orbit_capacity",
+        "sampled_orbits_at_shape": 1,
+        "seed": 26372469897352,
+        "shape": [
+          3,
+          3
+        ]
+      },
+      {
+        "capacity_draws": 2000,
+        "input": [
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            6,
+            0,
+            5
+          ],
+          [
+            8,
+            0,
+            5
+          ]
+        ],
+        "query": 208,
+        "reason": "same_shape_orbit_capacity",
+        "sampled_orbits_at_shape": 1,
+        "seed": 62709680299097,
+        "shape": [
+          3,
+          3
+        ]
+      },
+      {
+        "capacity_draws": 2000,
+        "input": [
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            7,
+            0,
+            5
+          ],
+          [
+            6,
+            0,
+            5
+          ]
+        ],
+        "query": 209,
+        "reason": "same_shape_orbit_capacity",
+        "sampled_orbits_at_shape": 1,
+        "seed": 230349647703142,
+        "shape": [
+          3,
+          3
+        ]
+      },
+      {
+        "capacity_draws": 2000,
+        "input": [
+          [
+            9,
+            0,
+            5
+          ],
+          [
+            8,
+            0,
+            5
+          ],
+          [
+            0,
+            0,
+            0
+          ]
+        ],
+        "query": 210,
+        "reason": "same_shape_orbit_capacity",
+        "sampled_orbits_at_shape": 1,
+        "seed": 144388241400669,
+        "shape": [
+          3,
+          3
+        ]
+      },
+      {
+        "capacity_draws": 2000,
+        "input": [
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            6,
+            0,
+            5
+          ],
+          [
+            3,
+            0,
+            5
+          ]
+        ],
+        "query": 211,
+        "reason": "same_shape_orbit_capacity",
+        "sampled_orbits_at_shape": 1,
+        "seed": 227556638122869,
+        "shape": [
+          3,
+          3
+        ]
+      },
+      {
+        "capacity_draws": 2000,
+        "input": [
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            2,
+            0,
+            5
+          ],
+          [
+            7,
+            0,
+            5
+          ]
+        ],
+        "query": 212,
+        "reason": "same_shape_orbit_capacity",
+        "sampled_orbits_at_shape": 1,
+        "seed": 91323077469632,
+        "shape": [
+          3,
+          3
+        ]
+      },
+      {
+        "capacity_draws": 2000,
+        "input": [
+          [
+            4,
+            0,
+            5
+          ],
+          [
+            6,
+            0,
+            5
+          ],
+          [
+            0,
+            0,
+            0
+          ]
+        ],
+        "query": 213,
+        "reason": "same_shape_orbit_capacity",
+        "sampled_orbits_at_shape": 1,
+        "seed": 108215286661646,
+        "shape": [
+          3,
+          3
+        ]
+      },
+      {
+        "capacity_draws": 2000,
+        "input": [
+          [
+            2,
+            0,
+            5
+          ],
+          [
+            3,
+            0,
+            5
+          ],
+          [
+            0,
+            0,
+            0
+          ]
+        ],
+        "query": 214,
+        "reason": "same_shape_orbit_capacity",
+        "sampled_orbits_at_shape": 1,
+        "seed": 103185472220167,
+        "shape": [
+          3,
+          3
+        ]
+      },
+      {
+        "capacity_draws": 2000,
+        "input": [
+          [
+            8,
+            0,
+            5
+          ],
+          [
+            6,
+            0,
+            5
+          ],
+          [
+            0,
+            0,
+            0
+          ]
+        ],
+        "query": 215,
+        "reason": "same_shape_orbit_capacity",
+        "sampled_orbits_at_shape": 1,
+        "seed": 91032072005946,
+        "shape": [
+          3,
+          3
+        ]
+      },
+      {
+        "capacity_draws": 2000,
+        "input": [
+          [
+            9,
+            0,
+            5
+          ],
+          [
+            1,
+            0,
+            5
+          ],
+          [
+            0,
+            0,
+            0
+          ]
+        ],
+        "query": 216,
+        "reason": "same_shape_orbit_capacity",
+        "sampled_orbits_at_shape": 1,
+        "seed": 62267027130460,
+        "shape": [
+          3,
+          3
+        ]
+      },
+      {
+        "capacity_draws": 2000,
+        "input": [
+          [
+            3,
+            0,
+            5
+          ],
+          [
+            1,
+            0,
+            5
+          ],
+          [
+            0,
+            0,
+            0
+          ]
+        ],
+        "query": 217,
+        "reason": "same_shape_orbit_capacity",
+        "sampled_orbits_at_shape": 1,
+        "seed": 183220739790065,
+        "shape": [
+          3,
+          3
+        ]
+      },
+      {
+        "capacity_draws": 2000,
+        "input": [
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            3,
+            0,
+            5
+          ],
+          [
+            8,
+            0,
+            5
+          ]
+        ],
+        "query": 218,
+        "reason": "same_shape_orbit_capacity",
+        "sampled_orbits_at_shape": 1,
+        "seed": 275200780032452,
+        "shape": [
+          3,
+          3
+        ]
+      },
+      {
+        "capacity_draws": 2000,
+        "input": [
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            9,
+            0,
+            5
+          ],
+          [
+            8,
+            0,
+            5
+          ]
+        ],
+        "query": 219,
+        "reason": "same_shape_orbit_capacity",
+        "sampled_orbits_at_shape": 1,
+        "seed": 131008158652570,
+        "shape": [
+          3,
+          3
+        ]
+      },
+      {
+        "capacity_draws": 2000,
+        "input": [
+          [
+            6,
+            0,
+            5
+          ],
+          [
+            8,
+            0,
+            5
+          ],
+          [
+            0,
+            0,
+            0
+          ]
+        ],
+        "query": 220,
+        "reason": "same_shape_orbit_capacity",
+        "sampled_orbits_at_shape": 1,
+        "seed": 235423314180515,
+        "shape": [
+          3,
+          3
+        ]
+      },
+      {
+        "capacity_draws": 2000,
+        "input": [
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            8,
+            0,
+            5
+          ],
+          [
+            3,
+            0,
+            5
+          ]
+        ],
+        "query": 221,
+        "reason": "same_shape_orbit_capacity",
+        "sampled_orbits_at_shape": 1,
+        "seed": 80876633793206,
+        "shape": [
+          3,
+          3
+        ]
+      },
+      {
+        "capacity_draws": 2000,
+        "input": [
+          [
+            7,
+            0,
+            5
+          ],
+          [
+            6,
+            0,
+            5
+          ],
+          [
+            0,
+            0,
+            0
+          ]
+        ],
+        "query": 222,
+        "reason": "same_shape_orbit_capacity",
+        "sampled_orbits_at_shape": 1,
+        "seed": 221467044126771,
+        "shape": [
+          3,
+          3
+        ]
+      },
+      {
+        "capacity_draws": 2000,
+        "input": [
+          [
+            8,
+            0,
+            5
+          ],
+          [
+            6,
+            0,
+            5
+          ],
+          [
+            0,
+            0,
+            0
+          ]
+        ],
+        "query": 223,
+        "reason": "same_shape_orbit_capacity",
+        "sampled_orbits_at_shape": 1,
+        "seed": 243590304175900,
+        "shape": [
+          3,
+          3
+        ]
+      },
+      {
+        "capacity_draws": 2000,
+        "input": [
+          [
+            9,
+            0,
+            5
+          ],
+          [
+            7,
+            0,
+            5
+          ],
+          [
+            0,
+            0,
+            0
+          ]
+        ],
+        "query": 224,
+        "reason": "same_shape_orbit_capacity",
+        "sampled_orbits_at_shape": 1,
+        "seed": 108334807062138,
+        "shape": [
+          3,
+          3
+        ]
+      },
+      {
+        "capacity_draws": 2000,
+        "input": [
+          [
+            9,
+            0,
+            5
+          ],
+          [
+            6,
+            0,
+            5
+          ],
+          [
+            0,
+            0,
+            0
+          ]
+        ],
+        "query": 225,
+        "reason": "same_shape_orbit_capacity",
+        "sampled_orbits_at_shape": 1,
+        "seed": 110896329235968,
+        "shape": [
+          3,
+          3
+        ]
+      },
+      {
+        "capacity_draws": 2000,
+        "input": [
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            1,
+            0,
+            5
+          ],
+          [
+            2,
+            0,
+            5
+          ]
+        ],
+        "query": 226,
+        "reason": "same_shape_orbit_capacity",
+        "sampled_orbits_at_shape": 1,
+        "seed": 71821987480317,
+        "shape": [
+          3,
+          3
+        ]
+      },
+      {
+        "capacity_draws": 2000,
+        "input": [
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            8,
+            0,
+            5
+          ],
+          [
+            9,
+            0,
+            5
+          ]
+        ],
+        "query": 227,
+        "reason": "same_shape_orbit_capacity",
+        "sampled_orbits_at_shape": 1,
+        "seed": 134375700078076,
+        "shape": [
+          3,
+          3
+        ]
+      },
+      {
+        "capacity_draws": 2000,
+        "input": [
+          [
+            1,
+            0,
+            5
+          ],
+          [
+            4,
+            0,
+            5
+          ],
+          [
+            0,
+            0,
+            0
+          ]
+        ],
+        "query": 228,
+        "reason": "same_shape_orbit_capacity",
+        "sampled_orbits_at_shape": 1,
+        "seed": 212556084688157,
+        "shape": [
+          3,
+          3
+        ]
+      },
+      {
+        "capacity_draws": 2000,
+        "input": [
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            4,
+            0,
+            5
+          ],
+          [
+            8,
+            0,
+            5
+          ]
+        ],
+        "query": 229,
+        "reason": "same_shape_orbit_capacity",
+        "sampled_orbits_at_shape": 1,
+        "seed": 174938485381272,
+        "shape": [
+          3,
+          3
+        ]
+      },
+      {
+        "capacity_draws": 2000,
+        "input": [
+          [
+            9,
+            0,
+            5
+          ],
+          [
+            7,
+            0,
+            5
+          ],
+          [
+            0,
+            0,
+            0
+          ]
+        ],
+        "query": 230,
+        "reason": "same_shape_orbit_capacity",
+        "sampled_orbits_at_shape": 1,
+        "seed": 61236771561302,
+        "shape": [
+          3,
+          3
+        ]
+      },
+      {
+        "capacity_draws": 2000,
+        "input": [
+          [
+            2,
+            0,
+            5
+          ],
+          [
+            9,
+            0,
+            5
+          ],
+          [
+            0,
+            0,
+            0
+          ]
+        ],
+        "query": 231,
+        "reason": "same_shape_orbit_capacity",
+        "sampled_orbits_at_shape": 1,
+        "seed": 245514317940298,
+        "shape": [
+          3,
+          3
+        ]
+      },
+      {
+        "capacity_draws": 2000,
+        "input": [
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            7,
+            0,
+            5
+          ],
+          [
+            9,
+            0,
+            5
+          ]
+        ],
+        "query": 232,
+        "reason": "same_shape_orbit_capacity",
+        "sampled_orbits_at_shape": 1,
+        "seed": 61250607353263,
+        "shape": [
+          3,
+          3
+        ]
+      },
+      {
+        "capacity_draws": 2000,
+        "input": [
+          [
+            4,
+            0,
+            5
+          ],
+          [
+            7,
+            0,
+            5
+          ],
+          [
+            0,
+            0,
+            0
+          ]
+        ],
+        "query": 233,
+        "reason": "same_shape_orbit_capacity",
+        "sampled_orbits_at_shape": 1,
+        "seed": 244989714497404,
+        "shape": [
+          3,
+          3
+        ]
+      },
+      {
+        "capacity_draws": 2000,
+        "input": [
+          [
+            4,
+            0,
+            5
+          ],
+          [
+            1,
+            0,
+            5
+          ],
+          [
+            0,
+            0,
+            0
+          ]
+        ],
+        "query": 234,
+        "reason": "same_shape_orbit_capacity",
+        "sampled_orbits_at_shape": 1,
+        "seed": 68073848193317,
+        "shape": [
+          3,
+          3
+        ]
+      },
+      {
+        "capacity_draws": 2000,
+        "input": [
+          [
+            4,
+            0,
+            5
+          ],
+          [
+            8,
+            0,
+            5
+          ],
+          [
+            0,
+            0,
+            0
+          ]
+        ],
+        "query": 235,
+        "reason": "same_shape_orbit_capacity",
+        "sampled_orbits_at_shape": 1,
+        "seed": 146577507128304,
+        "shape": [
+          3,
+          3
+        ]
+      },
+      {
+        "capacity_draws": 2000,
+        "input": [
+          [
+            3,
+            0,
+            5
+          ],
+          [
+            8,
+            0,
+            5
+          ],
+          [
+            0,
+            0,
+            0
+          ]
+        ],
+        "query": 236,
+        "reason": "same_shape_orbit_capacity",
+        "sampled_orbits_at_shape": 1,
+        "seed": 233222618789629,
+        "shape": [
+          3,
+          3
+        ]
+      },
+      {
+        "capacity_draws": 2000,
+        "input": [
+          [
+            9,
+            0,
+            5
+          ],
+          [
+            8,
+            0,
+            5
+          ],
+          [
+            0,
+            0,
+            0
+          ]
+        ],
+        "query": 237,
+        "reason": "same_shape_orbit_capacity",
+        "sampled_orbits_at_shape": 1,
+        "seed": 169894081250755,
+        "shape": [
+          3,
+          3
+        ]
+      },
+      {
+        "capacity_draws": 2000,
+        "input": [
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            1,
+            0,
+            5
+          ],
+          [
+            8,
+            0,
+            5
+          ]
+        ],
+        "query": 238,
+        "reason": "same_shape_orbit_capacity",
+        "sampled_orbits_at_shape": 1,
+        "seed": 74392026210262,
+        "shape": [
+          3,
+          3
+        ]
+      },
+      {
+        "capacity_draws": 2000,
+        "input": [
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            8,
+            0,
+            5
+          ],
+          [
+            1,
+            0,
+            5
+          ]
+        ],
+        "query": 239,
+        "reason": "same_shape_orbit_capacity",
+        "sampled_orbits_at_shape": 1,
+        "seed": 215196301582927,
+        "shape": [
+          3,
+          3
+        ]
+      },
+      {
+        "capacity_draws": 2000,
+        "input": [
+          [
+            2,
+            0,
+            5
+          ],
+          [
+            8,
+            0,
+            5
+          ],
+          [
+            0,
+            0,
+            0
+          ]
+        ],
+        "query": 240,
+        "reason": "same_shape_orbit_capacity",
+        "sampled_orbits_at_shape": 1,
+        "seed": 183238845551500,
+        "shape": [
+          3,
+          3
+        ]
+      },
+      {
+        "capacity_draws": 2000,
+        "input": [
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            8,
+            0,
+            5
+          ],
+          [
+            2,
+            0,
+            5
+          ]
+        ],
+        "query": 241,
+        "reason": "same_shape_orbit_capacity",
+        "sampled_orbits_at_shape": 1,
+        "seed": 54311752038313,
+        "shape": [
+          3,
+          3
+        ]
+      },
+      {
+        "capacity_draws": 2000,
+        "input": [
+          [
+            1,
+            0,
+            5
+          ],
+          [
+            4,
+            0,
+            5
+          ],
+          [
+            0,
+            0,
+            0
+          ]
+        ],
+        "query": 242,
+        "reason": "same_shape_orbit_capacity",
+        "sampled_orbits_at_shape": 1,
+        "seed": 173743152458411,
+        "shape": [
+          3,
+          3
+        ]
+      },
+      {
+        "capacity_draws": 2000,
+        "input": [
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            8,
+            0,
+            5
+          ],
+          [
+            9,
+            0,
+            5
+          ]
+        ],
+        "query": 243,
+        "reason": "same_shape_orbit_capacity",
+        "sampled_orbits_at_shape": 1,
+        "seed": 196518436126641,
+        "shape": [
+          3,
+          3
+        ]
+      },
+      {
+        "capacity_draws": 2000,
+        "input": [
+          [
+            4,
+            0,
+            5
+          ],
+          [
+            3,
+            0,
+            5
+          ],
+          [
+            0,
+            0,
+            0
+          ]
+        ],
+        "query": 244,
+        "reason": "same_shape_orbit_capacity",
+        "sampled_orbits_at_shape": 1,
+        "seed": 15660537905835,
+        "shape": [
+          3,
+          3
+        ]
+      },
+      {
+        "capacity_draws": 2000,
+        "input": [
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            8,
+            0,
+            5
+          ],
+          [
+            9,
+            0,
+            5
+          ]
+        ],
+        "query": 245,
+        "reason": "same_shape_orbit_capacity",
+        "sampled_orbits_at_shape": 1,
+        "seed": 94330344826725,
+        "shape": [
+          3,
+          3
+        ]
+      },
+      {
+        "capacity_draws": 2000,
+        "input": [
+          [
+            9,
+            0,
+            5
+          ],
+          [
+            1,
+            0,
+            5
+          ],
+          [
+            0,
+            0,
+            0
+          ]
+        ],
+        "query": 246,
+        "reason": "same_shape_orbit_capacity",
+        "sampled_orbits_at_shape": 1,
+        "seed": 58526602437061,
+        "shape": [
+          3,
+          3
+        ]
+      },
+      {
+        "capacity_draws": 2000,
+        "input": [
+          [
+            1,
+            0,
+            5
+          ],
+          [
+            7,
+            0,
+            5
+          ],
+          [
+            0,
+            0,
+            0
+          ]
+        ],
+        "query": 247,
+        "reason": "same_shape_orbit_capacity",
+        "sampled_orbits_at_shape": 1,
+        "seed": 255931721573806,
+        "shape": [
+          3,
+          3
+        ]
+      },
+      {
+        "capacity_draws": 2000,
+        "input": [
+          [
+            3,
+            0,
+            5
+          ],
+          [
+            6,
+            0,
+            5
+          ],
+          [
+            0,
+            0,
+            0
+          ]
+        ],
+        "query": 248,
+        "reason": "same_shape_orbit_capacity",
+        "sampled_orbits_at_shape": 1,
+        "seed": 115269453067055,
+        "shape": [
+          3,
+          3
+        ]
+      },
+      {
+        "capacity_draws": 2000,
+        "input": [
+          [
+            3,
+            0,
+            5
+          ],
+          [
+            7,
+            0,
+            5
+          ],
+          [
+            0,
+            0,
+            0
+          ]
+        ],
+        "query": 249,
+        "reason": "same_shape_orbit_capacity",
+        "sampled_orbits_at_shape": 1,
+        "seed": 152984253869225,
+        "shape": [
+          3,
+          3
+        ]
+      }
+    ],
+    "queries_failed_by_reason": {
+      "same_shape_orbit_capacity": 250
+    },
+    "queries_needing_search_beyond_panel": 0,
+    "queries_requested": 250,
+    "query_domain": "min_canvas",
+    "query_input_shapes": 1,
+    "query_inputs_sha256": "efce432bc0d84514bab5d169c9e1c709df6bf5c84344fa283e0d491bca3b122d",
+    "query_kwargs": {
+      "height": 3,
+      "width": 3
+    },
+    "seconds": 11.39,
+    "semantic_checks_passed": true,
+    "source_sha256": {
+      "colour_evidence": "9f9841816eaf804850493ae32372b62b3e270977a82cf01b01ad5e3dac1ec36c",
+      "competitors": "53943e24873e995091253ec8fd206a06dc5ab3520a2f5050a7f3e4d723bddf4a",
+      "constructor": "bbdf032e5943cc3f8667ebddcab6e98c267eeafcd5fe4391a29f9494c9f94f7e",
+      "dot_motion_d47aa2ff_evidence": "22a6ff5faed62f6fe4479ed8d0db6fa9c2e7946778e1340d1e8b03ee4e4f435d",
+      "factory": "e7d7c61c30b96650b766573b16545a3a639303a257a553c3c16a6fdc56e72c7f",
+      "factory_certificate": "feb4a4955e09bbf980d61dfe762ac76b31b3a21481d4f99e49afed89b2b8bd88",
+      "harness": "f11bc8b97ee2a1d94d000932e18c3308f5646c54eaed23ef8c5edc660d955259",
+      "prepare": "fa501ed06ef338fead5a5655cef07e95850576ce43ec5cc9660c817115a687fa",
+      "program_targets": "88298f336ca6a50ee91e58a08f24a4997c7c49e832eda1e68f98153dd59ed790",
+      "verified_rules": "a54743d7f19075966af22be6abfaa09863427822593ef186b0a2da13ca8ec853"
+    },
+    "task_id": "c7d4e6ad"
+  },
+  "c7d4e6ad@narrow_30x3": {
+    "all_queries_accepted": true,
+    "context_failure_reasons": {
+      "duplicate_input_orbit": 3
+    },
+    "contexts_evaluated": 2000,
+    "contexts_rejected": 3,
+    "d4_inconsistent_contexts": 0,
+    "distinct_surviving_rule_sets_per_query_histogram": {
+      "1": 250
+    },
+    "first_accepted_index_histogram": {
+      "0": 250
+    },
+    "gate_competitor_disagreements": 0,
+    "gated": false,
+    "make_record_calls": 15976,
+    "max_candidate_answers_in_panel_histogram": {
+      "1": 250
+    },
+    "max_contexts_per_query": 64,
+    "method": "gate-aware-fixed-query-same-shape-orbit-distinct-context-panel",
+    "method_version": 2,
+    "mixed_first_context_ambiguous": 0,
+    "pair_draws": 7000,
+    "panel_acceptance_rate": 0.9985,
+    "panel_accepted_histogram": {
+      "7": 3,
+      "8": 247
+    },
+    "panel_contexts_per_query": 8,
+    "panel_first_context_rejected": 0,
+    "passed": true,
+    "queries_accepted": 250,
+    "queries_failed": [],
+    "queries_failed_by_reason": {},
+    "queries_needing_search_beyond_panel": 0,
+    "queries_requested": 250,
+    "query_domain": "narrow_30x3",
+    "query_input_shapes": 1,
+    "query_inputs_sha256": "c6245fbd954f4c5ab6eaeb239966be3ead08f9f2f81e80744ca1c4d3a7c8d0df",
+    "query_kwargs": {
+      "height": 30,
+      "width": 3
+    },
+    "seconds": 36.98,
+    "semantic_checks_passed": true,
+    "source_sha256": {
+      "colour_evidence": "9f9841816eaf804850493ae32372b62b3e270977a82cf01b01ad5e3dac1ec36c",
+      "competitors": "53943e24873e995091253ec8fd206a06dc5ab3520a2f5050a7f3e4d723bddf4a",
+      "constructor": "bbdf032e5943cc3f8667ebddcab6e98c267eeafcd5fe4391a29f9494c9f94f7e",
+      "dot_motion_d47aa2ff_evidence": "22a6ff5faed62f6fe4479ed8d0db6fa9c2e7946778e1340d1e8b03ee4e4f435d",
+      "factory": "e7d7c61c30b96650b766573b16545a3a639303a257a553c3c16a6fdc56e72c7f",
+      "factory_certificate": "feb4a4955e09bbf980d61dfe762ac76b31b3a21481d4f99e49afed89b2b8bd88",
+      "harness": "f11bc8b97ee2a1d94d000932e18c3308f5646c54eaed23ef8c5edc660d955259",
+      "prepare": "fa501ed06ef338fead5a5655cef07e95850576ce43ec5cc9660c817115a687fa",
+      "program_targets": "88298f336ca6a50ee91e58a08f24a4997c7c49e832eda1e68f98153dd59ed790",
+      "verified_rules": "a54743d7f19075966af22be6abfaa09863427822593ef186b0a2da13ca8ec853"
+    },
+    "task_id": "c7d4e6ad"
+  },
+  "c7d4e6ad@thin_3x30": {
+    "all_queries_accepted": true,
+    "context_failure_reasons": {
+      "duplicate_input_orbit": 43
+    },
+    "contexts_evaluated": 2000,
+    "contexts_rejected": 43,
+    "d4_inconsistent_contexts": 0,
+    "distinct_surviving_rule_sets_per_query_histogram": {
+      "1": 250
+    },
+    "first_accepted_index_histogram": {
+      "0": 244,
+      "1": 6
+    },
+    "gate_competitor_disagreements": 0,
+    "gated": false,
+    "make_record_calls": 15656,
+    "max_candidate_answers_in_panel_histogram": {
+      "1": 250
+    },
+    "max_contexts_per_query": 64,
+    "method": "gate-aware-fixed-query-same-shape-orbit-distinct-context-panel",
+    "method_version": 2,
+    "mixed_first_context_ambiguous": 0,
+    "pair_draws": 7000,
+    "panel_acceptance_rate": 0.9785,
+    "panel_accepted_histogram": {
+      "6": 3,
+      "7": 37,
+      "8": 210
+    },
+    "panel_contexts_per_query": 8,
+    "panel_first_context_rejected": 6,
+    "passed": true,
+    "queries_accepted": 250,
+    "queries_failed": [],
+    "queries_failed_by_reason": {},
+    "queries_needing_search_beyond_panel": 0,
+    "queries_requested": 250,
+    "query_domain": "thin_3x30",
+    "query_input_shapes": 1,
+    "query_inputs_sha256": "e2971e216749ff2e45964d38537fbb20eddd2a5d079e002f81f149a08d95c3e4",
+    "query_kwargs": {
+      "height": 3,
+      "width": 30
+    },
+    "seconds": 29.76,
+    "semantic_checks_passed": true,
+    "source_sha256": {
+      "colour_evidence": "9f9841816eaf804850493ae32372b62b3e270977a82cf01b01ad5e3dac1ec36c",
+      "competitors": "53943e24873e995091253ec8fd206a06dc5ab3520a2f5050a7f3e4d723bddf4a",
+      "constructor": "bbdf032e5943cc3f8667ebddcab6e98c267eeafcd5fe4391a29f9494c9f94f7e",
+      "dot_motion_d47aa2ff_evidence": "22a6ff5faed62f6fe4479ed8d0db6fa9c2e7946778e1340d1e8b03ee4e4f435d",
+      "factory": "e7d7c61c30b96650b766573b16545a3a639303a257a553c3c16a6fdc56e72c7f",
+      "factory_certificate": "feb4a4955e09bbf980d61dfe762ac76b31b3a21481d4f99e49afed89b2b8bd88",
+      "harness": "f11bc8b97ee2a1d94d000932e18c3308f5646c54eaed23ef8c5edc660d955259",
+      "prepare": "fa501ed06ef338fead5a5655cef07e95850576ce43ec5cc9660c817115a687fa",
+      "program_targets": "88298f336ca6a50ee91e58a08f24a4997c7c49e832eda1e68f98153dd59ed790",
+      "verified_rules": "a54743d7f19075966af22be6abfaa09863427822593ef186b0a2da13ca8ec853"
+    },
+    "task_id": "c7d4e6ad"
+  },
+  "d47aa2ff": {
+    "all_queries_accepted": true,
+    "context_failure_reasons": {
+      "batch_competitors_ambiguous": 23,
+      "d47aa2ff: demonstrations leave the query reading ambiguous": 184
+    },
+    "contexts_evaluated": 2000,
+    "contexts_rejected": 23,
+    "d4_inconsistent_contexts": 0,
+    "distinct_surviving_rule_sets_per_query_histogram": {
+      "1": 218,
+      "2": 32
+    },
+    "first_accepted_index_histogram": {
+      "0": 248,
+      "1": 2
+    },
+    "gate_competitor_disagreements": 0,
+    "gated": true,
+    "make_record_calls": 15816,
+    "max_candidate_answers_in_panel_histogram": {
+      "1": 228,
+      "2": 15,
+      "3": 5,
+      "5": 1,
+      "6": 1
+    },
+    "max_contexts_per_query": 64,
+    "method": "gate-aware-fixed-query-same-shape-orbit-distinct-context-panel",
+    "method_version": 2,
+    "mixed_first_context_ambiguous": 5,
+    "pair_draws": 7000,
+    "panel_acceptance_rate": 0.9885,
+    "panel_accepted_histogram": {
+      "6": 1,
+      "7": 21,
+      "8": 228
+    },
+    "panel_contexts_per_query": 8,
+    "panel_first_context_rejected": 2,
+    "passed": true,
+    "queries_accepted": 250,
+    "queries_failed": [],
+    "queries_failed_by_reason": {},
+    "queries_needing_search_beyond_panel": 0,
+    "queries_requested": 250,
+    "query_domain": "default",
+    "query_input_shapes": 174,
+    "query_inputs_sha256": "e36ae28a5167015c1e939abad2014852ddcb516fc9b48b7d66526c7c01053db3",
+    "query_kwargs": {},
+    "seconds": 130.82,
+    "semantic_checks_passed": true,
+    "source_sha256": {
+      "colour_evidence": "9f9841816eaf804850493ae32372b62b3e270977a82cf01b01ad5e3dac1ec36c",
+      "competitors": "53943e24873e995091253ec8fd206a06dc5ab3520a2f5050a7f3e4d723bddf4a",
+      "constructor": "cead94cfe049b8d6877c2839f33c5437365fdc67b5c03b3d8fdea566888ab9d9",
+      "dot_motion_d47aa2ff_evidence": "22a6ff5faed62f6fe4479ed8d0db6fa9c2e7946778e1340d1e8b03ee4e4f435d",
+      "factory": "5206d6b295169148e5f9308909721afcbfc8daa84b6099af8d51c8387b8e34b0",
+      "factory_certificate": "e8cb8f3a16bc6e0f8832f1fa291fa7a156201c805798dc87a95492c9310b2bb2",
+      "harness": "f11bc8b97ee2a1d94d000932e18c3308f5646c54eaed23ef8c5edc660d955259",
+      "prepare": "fa501ed06ef338fead5a5655cef07e95850576ce43ec5cc9660c817115a687fa",
+      "program_targets": "88298f336ca6a50ee91e58a08f24a4997c7c49e832eda1e68f98153dd59ed790",
+      "verified_rules": "a54743d7f19075966af22be6abfaa09863427822593ef186b0a2da13ca8ec853"
+    },
+    "task_id": "d47aa2ff"
+  },
+  "d47aa2ff@legacy_panels": {
+    "all_queries_accepted": true,
+    "context_failure_reasons": {
+      "batch_competitors_ambiguous": 29,
+      "d47aa2ff: demonstrations leave the query reading ambiguous": 232
+    },
+    "contexts_evaluated": 2000,
+    "contexts_rejected": 29,
+    "d4_inconsistent_contexts": 0,
+    "distinct_surviving_rule_sets_per_query_histogram": {
+      "1": 214,
+      "2": 36
+    },
+    "first_accepted_index_histogram": {
+      "0": 247,
+      "1": 3
+    },
+    "gate_competitor_disagreements": 0,
+    "gated": true,
+    "make_record_calls": 15768,
+    "max_candidate_answers_in_panel_histogram": {
+      "1": 223,
+      "2": 16,
+      "3": 10,
+      "6": 1
+    },
+    "max_contexts_per_query": 64,
+    "method": "gate-aware-fixed-query-same-shape-orbit-distinct-context-panel",
+    "method_version": 2,
+    "mixed_first_context_ambiguous": 1,
+    "pair_draws": 7000,
+    "panel_acceptance_rate": 0.9855,
+    "panel_accepted_histogram": {
+      "6": 2,
+      "7": 25,
+      "8": 223
+    },
+    "panel_contexts_per_query": 8,
+    "panel_first_context_rejected": 3,
+    "passed": true,
+    "queries_accepted": 250,
+    "queries_failed": [],
+    "queries_failed_by_reason": {},
+    "queries_needing_search_beyond_panel": 0,
+    "queries_requested": 250,
+    "query_domain": "legacy_panels",
+    "query_input_shapes": 1,
+    "query_inputs_sha256": "be82e2ed30e2d05befdc44c1031f4ded254ca259681899875ce512e275f5318d",
+    "query_kwargs": {
+      "height": 10,
+      "width": 10
+    },
+    "seconds": 305.43,
+    "semantic_checks_passed": true,
+    "source_sha256": {
+      "colour_evidence": "9f9841816eaf804850493ae32372b62b3e270977a82cf01b01ad5e3dac1ec36c",
+      "competitors": "53943e24873e995091253ec8fd206a06dc5ab3520a2f5050a7f3e4d723bddf4a",
+      "constructor": "cead94cfe049b8d6877c2839f33c5437365fdc67b5c03b3d8fdea566888ab9d9",
+      "dot_motion_d47aa2ff_evidence": "22a6ff5faed62f6fe4479ed8d0db6fa9c2e7946778e1340d1e8b03ee4e4f435d",
+      "factory": "5206d6b295169148e5f9308909721afcbfc8daa84b6099af8d51c8387b8e34b0",
+      "factory_certificate": "e8cb8f3a16bc6e0f8832f1fa291fa7a156201c805798dc87a95492c9310b2bb2",
+      "harness": "f11bc8b97ee2a1d94d000932e18c3308f5646c54eaed23ef8c5edc660d955259",
+      "prepare": "fa501ed06ef338fead5a5655cef07e95850576ce43ec5cc9660c817115a687fa",
+      "program_targets": "88298f336ca6a50ee91e58a08f24a4997c7c49e832eda1e68f98153dd59ed790",
+      "verified_rules": "a54743d7f19075966af22be6abfaa09863427822593ef186b0a2da13ca8ec853"
+    },
+    "task_id": "d47aa2ff"
+  },
+  "d47aa2ff@max_panels": {
+    "all_queries_accepted": true,
+    "context_failure_reasons": {
+      "batch_competitors_ambiguous": 20,
+      "d47aa2ff: demonstrations leave the query reading ambiguous": 160
+    },
+    "contexts_evaluated": 2000,
+    "contexts_rejected": 20,
+    "d4_inconsistent_contexts": 0,
+    "distinct_surviving_rule_sets_per_query_histogram": {
+      "1": 226,
+      "2": 22,
+      "3": 2
+    },
+    "first_accepted_index_histogram": {
+      "0": 247,
+      "1": 3
+    },
+    "gate_competitor_disagreements": 0,
+    "gated": true,
+    "make_record_calls": 15840,
+    "max_candidate_answers_in_panel_histogram": {
+      "1": 233,
+      "2": 8,
+      "3": 4,
+      "5": 2,
+      "6": 2,
+      "7": 1
+    },
+    "max_contexts_per_query": 64,
+    "method": "gate-aware-fixed-query-same-shape-orbit-distinct-context-panel",
+    "method_version": 2,
+    "mixed_first_context_ambiguous": 7,
+    "pair_draws": 7000,
+    "panel_acceptance_rate": 0.99,
+    "panel_accepted_histogram": {
+      "6": 3,
+      "7": 14,
+      "8": 233
+    },
+    "panel_contexts_per_query": 8,
+    "panel_first_context_rejected": 3,
+    "passed": true,
+    "queries_accepted": 250,
+    "queries_failed": [],
+    "queries_failed_by_reason": {},
+    "queries_needing_search_beyond_panel": 0,
+    "queries_requested": 250,
+    "query_domain": "max_panels",
+    "query_input_shapes": 1,
+    "query_inputs_sha256": "a9cb533a7015016c8534cf7c328e316c0ae37d6840130e05a103bf51a9e6d264",
+    "query_kwargs": {
+      "height": 30,
+      "width": 14
+    },
+    "seconds": 464.03,
+    "semantic_checks_passed": true,
+    "source_sha256": {
+      "colour_evidence": "9f9841816eaf804850493ae32372b62b3e270977a82cf01b01ad5e3dac1ec36c",
+      "competitors": "53943e24873e995091253ec8fd206a06dc5ab3520a2f5050a7f3e4d723bddf4a",
+      "constructor": "cead94cfe049b8d6877c2839f33c5437365fdc67b5c03b3d8fdea566888ab9d9",
+      "dot_motion_d47aa2ff_evidence": "22a6ff5faed62f6fe4479ed8d0db6fa9c2e7946778e1340d1e8b03ee4e4f435d",
+      "factory": "5206d6b295169148e5f9308909721afcbfc8daa84b6099af8d51c8387b8e34b0",
+      "factory_certificate": "e8cb8f3a16bc6e0f8832f1fa291fa7a156201c805798dc87a95492c9310b2bb2",
+      "harness": "f11bc8b97ee2a1d94d000932e18c3308f5646c54eaed23ef8c5edc660d955259",
+      "prepare": "fa501ed06ef338fead5a5655cef07e95850576ce43ec5cc9660c817115a687fa",
+      "program_targets": "88298f336ca6a50ee91e58a08f24a4997c7c49e832eda1e68f98153dd59ed790",
+      "verified_rules": "a54743d7f19075966af22be6abfaa09863427822593ef186b0a2da13ca8ec853"
+    },
+    "task_id": "d47aa2ff"
+  },
+  "d47aa2ff@min_panels": {
+    "all_queries_accepted": true,
+    "context_failure_reasons": {
+      "batch_competitors_ambiguous": 142,
+      "d47aa2ff: demonstrations leave the query reading ambiguous": 1136,
+      "duplicate_input_orbit": 43
+    },
+    "contexts_evaluated": 2000,
+    "contexts_rejected": 185,
+    "d4_inconsistent_contexts": 0,
+    "distinct_surviving_rule_sets_per_query_histogram": {
+      "1": 61,
+      "2": 141,
+      "3": 48
+    },
+    "first_accepted_index_histogram": {
+      "0": 230,
+      "1": 15,
+      "2": 5
+    },
+    "gate_competitor_disagreements": 0,
+    "gated": true,
+    "make_record_calls": 14520,
+    "max_candidate_answers_in_panel_histogram": {
+      "1": 160,
+      "2": 32,
+      "3": 31,
+      "4": 9,
+      "5": 13,
+      "6": 5
+    },
+    "max_contexts_per_query": 64,
+    "method": "gate-aware-fixed-query-same-shape-orbit-distinct-context-panel",
+    "method_version": 2,
+    "mixed_first_context_ambiguous": 2,
+    "pair_draws": 7000,
+    "panel_acceptance_rate": 0.9075,
+    "panel_accepted_histogram": {
+      "3": 1,
+      "4": 3,
+      "5": 13,
+      "6": 33,
+      "7": 63,
+      "8": 137
+    },
+    "panel_contexts_per_query": 8,
+    "panel_first_context_rejected": 20,
+    "passed": true,
+    "queries_accepted": 250,
+    "queries_failed": [],
+    "queries_failed_by_reason": {},
+    "queries_needing_search_beyond_panel": 0,
+    "queries_requested": 250,
+    "query_domain": "min_panels",
+    "query_input_shapes": 1,
+    "query_inputs_sha256": "a700acc2090ec18b7e76a132e977dcd00454633fb83264d93bd7d9fdda1feeac",
+    "query_kwargs": {
+      "height": 3,
+      "width": 3
+    },
+    "seconds": 159.25,
+    "semantic_checks_passed": true,
+    "source_sha256": {
+      "colour_evidence": "9f9841816eaf804850493ae32372b62b3e270977a82cf01b01ad5e3dac1ec36c",
+      "competitors": "53943e24873e995091253ec8fd206a06dc5ab3520a2f5050a7f3e4d723bddf4a",
+      "constructor": "cead94cfe049b8d6877c2839f33c5437365fdc67b5c03b3d8fdea566888ab9d9",
+      "dot_motion_d47aa2ff_evidence": "22a6ff5faed62f6fe4479ed8d0db6fa9c2e7946778e1340d1e8b03ee4e4f435d",
+      "factory": "5206d6b295169148e5f9308909721afcbfc8daa84b6099af8d51c8387b8e34b0",
+      "factory_certificate": "e8cb8f3a16bc6e0f8832f1fa291fa7a156201c805798dc87a95492c9310b2bb2",
+      "harness": "f11bc8b97ee2a1d94d000932e18c3308f5646c54eaed23ef8c5edc660d955259",
+      "prepare": "fa501ed06ef338fead5a5655cef07e95850576ce43ec5cc9660c817115a687fa",
+      "program_targets": "88298f336ca6a50ee91e58a08f24a4997c7c49e832eda1e68f98153dd59ed790",
+      "verified_rules": "a54743d7f19075966af22be6abfaa09863427822593ef186b0a2da13ca8ec853"
+    },
+    "task_id": "d47aa2ff"
+  }
+}

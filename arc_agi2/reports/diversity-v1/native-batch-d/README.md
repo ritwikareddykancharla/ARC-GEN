@@ -97,8 +97,8 @@ each ID. Every canonical three-demo sub-context is informative (0/20, 0/140, 0/1
 
 Concrete competing rules the gates now block:
 - **OR vs XOR:** demos with no overlapping cells, e.g. every demo is `(0,0),(1,0),(0,1),(0,0)`, fit both OR and XOR. A query containing a (1,1) cell is rejected; a query without one is accepted.
-- **Missing (0,0):** fully covered demos, e.g. `(1,0),(0,1),(1,1),(1,0)`, also fit "always on" (or "always off" under XOR). A query containing a (0,0) cell is rejected.
-- **Missing (0,1) or (1,0):** "first panel only" fits the demos alongside OR/XOR, so the same rule applies.
+- **Missing (0,0):** fully covered demos, e.g. `(1,0),(0,1),(1,1),(1,0)`, cannot distinguish the intended truth table from one differing only at (0,0). A query containing a (0,0) cell is rejected.
+- **Missing (0,1) or (1,0):** truth tables differing only at the unobserved combination also fit every demo, so a query using that combination is rejected.
 - **31d5ba1a square inputs (w = 2h):** the shape alone does not give the split axis; the gate reads it from D4.
 - **281123b4:**
   - Disjoint demos leave all 24 orders alive, so an overlap query is rejected.

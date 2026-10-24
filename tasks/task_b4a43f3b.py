@@ -27,9 +27,11 @@ MAX_FREE_CELLS = 2
 def _motif_masks():
   """Every 3x3 mask with all rows and columns occupied, 8-connected.
 
-  These are exactly the shapes common.diagonally_connected_sprite can return
-  (it never empties a row or column), enumerated once so that sampling needs
-  no unbounded rejection loop. Sizes 3..9; the helper only reached 4..9.
+  This keeps the two properties of common.diagonally_connected_sprite masks:
+  a full 3x3 span (no empty row or column) and 8-connectivity. It is
+  enumerated once, so sampling needs no unbounded rejection loop. The mask
+  size range widens from the helper's 4..9 cells (at most 5 deletions) to
+  3..9: three-cell diagonals and other spanning triples are now included.
   """
   masks = []
   for bits in range(1, 512):
@@ -66,7 +68,7 @@ def _random_motif():
 
 
 def _random_map(height, width):
-  """A non-empty binary map: axis segments plus free cells, or a scatter."""
+  """A non-empty binary map: 1..8 axis segments plus 0..2 free cells, or a scatter."""
   grid = common.grid(width, height)
   if common.randint(0, 2):
     for _ in range(common.randint(1, MAX_SEGMENTS)):
@@ -80,13 +82,11 @@ def _random_map(height, width):
     for _ in range(common.randint(0, MAX_FREE_CELLS)):
       grid[common.randint(0, height - 1)][common.randint(0, width - 1)] = MARK
   else:
-    # One anchor cell keeps the map non-empty without rejection.
-    grid[common.randint(0, height - 1)][common.randint(0, width - 1)] = MARK
-    density = 0.1 + 0.5 * common.randint(0, 100) / 100
-    for r in range(height):
-      for c in range(width):
-        if common.randint(0, 999) < 1000 * density:
-          grid[r][c] = MARK
+    # Scatter: a uniform number 1..area of distinct marked cells, so sparse,
+    # dense and full maps all occur without rejection.
+    cells = [(r, c) for r in range(height) for c in range(width)]
+    for r, c in common.sample(cells, common.randint(1, len(cells))):
+      grid[r][c] = MARK
   return "".join(str(x) for x in common.flatten(grid))
 
 

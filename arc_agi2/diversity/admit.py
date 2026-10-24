@@ -90,6 +90,9 @@ def main():
             "self_match_evidence.py",
             "native_i_evidence.py",
             "dot_motion_d47aa2ff_evidence.py",
+            "histogram_order_evidence.py",
+            "band_reflection_evidence.py",
+            "rect_ring_a04b2602_evidence.py",
         )
     ]
     for result in results:

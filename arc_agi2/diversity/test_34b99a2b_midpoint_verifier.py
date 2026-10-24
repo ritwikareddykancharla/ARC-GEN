@@ -38,7 +38,7 @@ def test_registered_and_documented():
     # Batch D adds only this ID and the later root-authorised 195ba7dc/281123b4;
     # batch E later adds the root-authorised e0fb7511/f3cdc58f checkers.
     assert {"78332cb0", "de493100", "3a301edc", "d6542281", "aaecdb9a", "007bbfb7",
-            "7e2bad24", TID, "195ba7dc", "281123b4", "e0fb7511", "f3cdc58f"} == set(VERIFIERS)
+            "7e2bad24", TID, "195ba7dc", "281123b4", "e0fb7511", "f3cdc58f", "b4a43f3b", "e74e1818", "a04b2602"} == set(VERIFIERS)
 
 
 def test_fixture_labels_untouched_and_midpoint_geometry():

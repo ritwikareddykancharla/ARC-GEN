@@ -41,7 +41,9 @@ REPAIRED = ("007bbfb7", "009d5c81", "00dbd492", "0934a4d8", "09c534e7", "1e0a9b1
             # Colour-matched self-tiling with fixed-query evidence checks.
             "973e499e",
             # Expanded band/motif matching, routing panels, legends and motion.
-            "18447a8d", "b4a43f3b", "7491f3cf", "98c475bf", "c7d4e6ad", "d47aa2ff")
+            "18447a8d", "b4a43f3b", "7491f3cf", "98c475bf", "c7d4e6ad", "d47aa2ff",
+            # Rectangular band reflection and canonical-gap rectangle rings.
+            "e74e1818", "a04b2602")
 
 # Reviewed adequate existing domains, not constructor expansions. Each has a
 # current semantic review and fresh 1000/8000/16 native recertification.

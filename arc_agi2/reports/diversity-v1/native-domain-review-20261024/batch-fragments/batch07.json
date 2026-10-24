@@ -201,18 +201,18 @@
    "review_kind": "first_review",
    "constructor_sha256": "c7bac10a2384098385919e1765d4cbcc2ffaf35f7453b9e588c24dcd143a9118",
    "baseline_commit": "96be8033a32ac47104ec737310778baffa7f5159",
-   "mechanism": "Fork addition. Two border columns, a fixed width of 20 (54) and height 12..30 (56-57, 309). One input motif line in a colour with a fixed decoration from the five-entry MOTIFS table (63-70). 1..3 marker pairs (59, 282) of distinct motif colours (293) are packed randomly with one empty row between them (113-132). The input line avoids marker rows (323-327). The output erases the interior and stamps each marker colour's motif on its row (339-341).",
-   "fixture_evidence": "5 pairs (4 train, 1 test), all 20x20. Probe A: all latent scenes satisfy every guard (marker count, separation, footprint). The canonical test markers 3 and 6 both have motifs shown in train. Probe B: 200/200 unique, 19 shapes, archived verifier 200/200. The production gate (line_motif_evidence via require_colour_evidence) rejected 41/200 three-demo episodes built from consecutive native draws. The program solved 159/159 accepted episodes.",
+   "mechanism": "Fork addition. Two border columns on a module-wide fixed width of 20 (54, used at 137, 145-148, 338) and height 12..30 (56-57, 309). One input motif line in a colour with a fixed decoration from the five-entry MOTIFS table, at absolute x positions up to 16 (63-70). 1..3 marker pairs (59, 282) of distinct motif colours (293) are packed randomly with one empty row between them (113-132). The input line avoids marker rows (323-327). The output erases the interior and stamps each marker colour's motif on its row (339-341).",
+   "fixture_evidence": "5 pairs (4 train, 1 test), all 20x20; the canonical profile is uniform/seen. Probe A: all latent scenes satisfy every guard. The canonical test markers 3 and 6 both have motifs shown in train. Probe B: 200/200 unique, 19 shapes, archived verifier 200/200. The gate rejected 41/200 three-demo episodes built from consecutive draws. The program solved 159/159 accepted episodes. Width probe (fixture_stats_batch7_width98.py, module WIDTH set to 18/20/24/30 temporarily and restored; height 20; 100 fixed queries per width; 3-demo contexts at the same width; at most 64 tries): every width accepted 100/100 queries with 0 failures (retries 24/25/23/7). The archived verifier, the demo-learned motif_context, the gate prediction and the factory were each exact on 100/100. All 8 D4 x 2 palettes on 20 queries per width: gate and factory 320/320. Cross-width demonstrations (20 with 24, 24 with 20) were refused by the gate 20/20 and by the factory 20/20.",
    "axes": {
     "dimensions": {
-     "disposition": "mixed",
+     "disposition": "incidental_restriction",
      "lines": [
       54,
-      56,
-      57,
-      309
+      137,
+      145,
+      338
      ],
-     "why": "Height 12..30 is broadly variable (a synthetic extension; all fixtures are 20). The width literal 20 is held on purpose because decorations sit at absolute x (the docstring explains: anchoring would be ambiguous)."
+     "why": "The width literal 20 is incidental when demonstrations and query share a width, as the canonical uniform/seen profile requires. The factory stores and checks the line span; the gate refuses span mismatches. Widths 18..30 fit the absolute-x table, and all checks are exact (width probe). Height 12..30 already varies."
     },
     "objects": {
      "disposition": "mixed",
@@ -262,19 +262,21 @@
       46,
       47
      ],
-     "why": "A motif is only knowable from demonstrations. The docstring requires the episode builder to check demonstrated motifs. The factory learns templates from demo lines, and the gate rejects episodes whose query colour is undemonstrated (41/200 rejected)."
+     "why": "A motif is only knowable from demonstrations at the query's width. The factory learns templates with their span and the gate rejects undemonstrated colours (41/200) and other widths (20/20 cross-width)."
     }
    },
-   "proposal": "None required. Optional: widths 18..30 with left-anchored decorations, but fixture support for the anchoring is absent. Candidate for REVIEWED_NATIVE after a fresh 1000/8000/16 recertification, keeping the line_motif_evidence gate pinned and reporting its retry rate, followed by an unmodified prepare 200/20 export.",
-   "patch_priority": "low",
-   "uncertainties": "Whether the decorations would anchor left or right on another width is unknowable from the fixtures. The gate retry rate in a real export was not measured; 41/200 is a simple consecutive-draw episode model.",
-   "adequacy": "adequate_unchanged_candidate",
+   "proposal": "Make the canvas width a per-scene parameter, 18..30, with the same left-anchored absolute-x decorations; production keeps demonstrations and query at one shape through the uniform/seen profile. This is the same-width demonstrated-template expansion the width probe supports. Keep the line_motif_evidence gate pinned and report its retry rate. Recertify 1000/8000/16 and run an unmodified prepare 200/20 export that reports same-shape support, since width and height now both vary.",
+   "patch_priority": "medium",
+   "uncertainties": "Cross-width and novel-width anchoring is undetermined: whether decorations would anchor left, right or scale on an unseen width cannot be read from the fixtures, which are all width 20. The factory and gate refuse such episodes (20/20 each), so the supported expansion is same-width demonstrated templates only, not arbitrary anchoring. Varying width as well as height thins same-shape demonstration support; this was not measured in an export. The width probe uses height 20 only.",
+   "adequacy": "needs_constructor_work",
    "evidence": [
     "probes/fixture_stats_batch7.py",
     "probes/fixture_stats_batch7_evidence.json",
     "arc_agi2/direct_factories/98c475bf.json",
     "arc_agi2/line_motif_evidence.py",
-    "arc_agi2/motif_context.py"
+    "arc_agi2/motif_context.py",
+    "probes/fixture_stats_batch7_width98.py",
+    "probes/fixture_stats_batch7_width98_evidence.json"
    ],
    "certificate_note": "direct_factory record arc_agi2/direct_factories/98c475bf.json: passed=True, 1000 fresh / 8000 augmented / 16 fixture variants, 1000 unique base inputs, constructor c7bac10a, factory 4ccb80b0. context_retries=40. certified_factory_source returned a program in the probe, so every recorded hash is current. A passed certificate is a finite audit, not a proof.",
    "admission": "Not admitted: absent from prepare.REPAIRED, prepare.REVIEWED_NATIVE and RE-ARC admission.json at 96be803; family-status.csv has broader_source_admitted=False. release_ready stays false.",

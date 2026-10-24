@@ -38,6 +38,10 @@ Also read:
   - Output sha256 `036706f8…`. Two runs were byte-identical.
   - Evidence: `probes/fixture_stats_batch7_rect_evidence.json`.
   - Covers independent H/W rectangular scenes for 7491f3cf and 973e499e against independent reference relations. On square shapes, the builders equal the constructors (100/100 and 200/200).
+- **`probes/fixture_stats_batch7_width98.py`** (follow-up)
+  - Output sha256 `3161e11e…`. Two runs were byte-identical.
+  - Evidence: `probes/fixture_stats_batch7_width98_evidence.json`.
+  - Covers 98c475bf at module WIDTH 18/20/24/30, set temporarily and restored. Each width has 100 fixed queries, same-width 3-demo contexts and at most 64 tries, with all 8 D4 x 2 palettes on 20 queries per width and a cross-width negative check.
 
 ### Negative evidence kept
 
@@ -66,19 +70,29 @@ The draft called **7491f3cf** and **973e499e** adequate unchanged. The superviso
   - With H and W independently 2..5, program and verifier agree on 227/227 rectangular and 73/73 square scenes against the independent relation.
   - Dimensions are now `incidental_restriction`; colour count is kept as a separate `mixed` axis. Medium, `needs_constructor_work`.
 
+## Second supervisor correction: 98c475bf (follow-up commit)
+
+The fixed width of 20 is incidental when demonstrations and query share a width. The canonical uniform/seen profile requires that, the factory (`_store`/`_template`) records and checks the line span, and `line_motif_evidence` refuses span mismatches.
+
+The supervisor's probe was reproduced independently:
+- At each width, 100/100 fixed queries were accepted with 0 failures (retries 24/25/23/7).
+- The archived verifier, the demo-learned `motif_context`, the gate prediction and the factory were each exact on 100/100.
+- Under all 8 D4 x 2 palettes, gate and factory were exact on 320/320 per width.
+- Cross-width demonstrations were refused 20/20 by the gate and 20/20 by the factory.
+
+Dimensions are now `incidental_restriction`. The record is medium and `needs_constructor_work`. The proposal is a per-scene width of 18..30 with same-width demonstrated templates. Novel-width or cross-width anchoring stays a separate, unresolved uncertainty; the fixtures do not show arbitrary anchoring.
+
 ## Results
 
 **Patch priority:**
 - **High (11):** 456873bc, 52fd389e, 5ecac7f7, 8fbca751, 981add89, 985ae207, c8b7cc0f, ef26cbf6, 17b866bd, 1e5d6875, 2e65ae53.
-- **Medium (16):** 817e6c09, 458e3a53, 470c91de, 5783df64, 758abdf0, 7d7772cc, df9fd884, e9ac8c9e, 25e02866, 2601afb7, 48131b3c, 5751f35e, 963c33f8, 9968a131, 7491f3cf, 973e499e.
-- **Low (5):** c1990cce, 98c475bf, 762cd429, 42a15761, 9ddd00f0.
+- **Medium (17):** 817e6c09, 458e3a53, 470c91de, 5783df64, 758abdf0, 7d7772cc, df9fd884, e9ac8c9e, 25e02866, 2601afb7, 48131b3c, 5751f35e, 963c33f8, 9968a131, 7491f3cf, 973e499e, 98c475bf.
+- **Low (4):** c1990cce, 762cd429, 42a15761, 9ddd00f0.
 
 **Adequacy:**
-- `adequate_unchanged_candidate`: **98c475bf** only.
-  - Caveat: its width literal 20 is kept on purpose, because absolute-x decorations make the anchoring on other widths ambiguous.
-  - Requires the `line_motif_evidence` gate to stay pinned. The gate rejected 41/200 simple three-demo episodes.
+- `adequate_unchanged_candidate`: **none**. 98c475bf was withdrawn by the second correction.
 - `finite_domain_no_change_without_new_semantics`: c1990cce (13 inputs) and 762cd429 (13,122).
-- `needs_constructor_work`: the other 29.
+- `needs_constructor_work`: the other 30.
 
 **Canonical inputs unreachable natively (probe A):**
 
@@ -119,7 +133,7 @@ The draft called **7491f3cf** and **973e499e** adequate unchanged. The superviso
   - 985ae207's overshoot;
   - 963c33f8's floor clearing;
   - rectangular panels or inputs (7491f3cf, 973e499e);
-  - 98c475bf's width anchoring;
+  - 98c475bf's anchoring on a novel width (same-width episodes are supported);
   - 758abdf0's far-edge mark on other widths.
 - **Pre-existing state:** `extract.py --check` reports 4 errors in this worktree, for the nativeE families `e0fb7511`, `f0df5ff0`, `f3cdc58f` and `0c786b71`, whose constructors changed before this pass. This fragment does not cause them, and they are for the global refresh owner.
 - This is not release readiness and not full-1120 completion.

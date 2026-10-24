@@ -1,0 +1,27 @@
+{
+ "probe": "probes/fixture_stats_batch7_width98.py",
+ "probe_sha256": "8f9c635d68749bea0372a78b324ba8a84cd49e911a8a8abaac68b123f2a1e893",
+ "command": "PYTHONPATH=. /Users/ritwika/projects/arc-agi2/.venv/bin/python arc_agi2/reports/diversity-v1/native-domain-review-20261024/probes/fixture_stats_batch7_width98.py",
+ "baseline_commit": "96be8033a32ac47104ec737310778baffa7f5159",
+ "output_sha256": "3161e11ef641ac723bbc8eb8eb83f86ecb9bb898f75abbb0cc4983d8f33ced1f",
+ "reproducibility": "Two runs gave byte-identical output.",
+ "reason": "Supervisor correction to the 98c475bf adequacy claim. This independently reproduces a supervisor probe (seed 2509, height 20, 100 fixed queries per width, 3 demonstrations per context, 64 tries; at widths 18/24/30 all 100 queries were accepted and checker, factory and gate were exact, with retries 26/29/20 and 0 failures). Seeds differ here (2509*100 + width), so retry counts differ. The module WIDTH is set temporarily and restored in a finally block; no source file was changed.",
+ "output_lines": [
+  "== 98c475bf independent width, same-width episodes (module WIDTH set temporarily)",
+  "  width 18: accepted 100/100 fixed queries, demo retries 24, failures 0, shapes [(20, 18)]; archived verifier 100/100, motif_context 100/100, gate prediction 100/100, factory 100/100",
+  "  width 20: accepted 100/100 fixed queries, demo retries 25, failures 0, shapes [(20, 20)]; archived verifier 100/100, motif_context 100/100, gate prediction 100/100, factory 100/100",
+  "  width 24: accepted 100/100 fixed queries, demo retries 23, failures 0, shapes [(20, 24)]; archived verifier 100/100, motif_context 100/100, gate prediction 100/100, factory 100/100",
+  "  width 30: accepted 100/100 fixed queries, demo retries 7, failures 0, shapes [(20, 30)]; archived verifier 100/100, motif_context 100/100, gate prediction 100/100, factory 100/100",
+  "",
+  "== all 8 D4 x 2 palettes on the first 20 accepted episodes per width (gate and factory)",
+  "  width 18: gate accepted and exact 320/320, factory exact 320/320",
+  "  width 20: gate accepted and exact 320/320, factory exact 320/320",
+  "  width 24: gate accepted and exact 320/320, factory exact 320/320",
+  "  width 30: gate accepted and exact 320/320, factory exact 320/320",
+  "",
+  "== cross-width negative check (demonstrations at another width must be refused)",
+  "  query width 20, demo width 24: gate refused 20/20, factory raised 20/20",
+  "  query width 24, demo width 20: gate refused 20/20, factory raised 20/20",
+  "  module WIDTH after probe: 20"
+ ]
+}

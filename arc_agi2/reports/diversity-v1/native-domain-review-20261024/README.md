@@ -5,8 +5,8 @@ prepare/admission or release-readiness code was changed. `release_ready` is
 `false` for every record. A source review is not enough to set it, and neither
 is a smoke test.
 
-**Progress:** 96 of 729 families have hand-written semantic reviews (batches
-1–3). The other 633 are `pending`. Not all 729 families have been
+**Progress:** 128 of 729 families have hand-written semantic reviews (batches
+1–4). The other 601 are `pending`. Not all 729 families have been
 semantically reviewed.
 
 ## Files
@@ -15,8 +15,8 @@ semantically reviewed.
 |---|---|
 | `extract.py` | Reproducible extraction, merge and validation (`--check` validates without writing) |
 | `inventory.jsonl` | One record per family (729), sorted by review rank |
-| `semantic_reviews.json` | Hand-written semantic reviews (batches 1–3, 96 families), each bound to a constructor sha256 |
-| `probes/` | Small read-only, seeded measurement scripts cited by batch-2 and batch-3 reviews |
+| `semantic_reviews.json` | Hand-written semantic reviews (batches 1–4, 128 families), each bound to a constructor sha256 |
+| `probes/` | Small read-only, seeded measurement scripts cited by batch-2, batch-3 and batch-4 reviews |
 | `summary.json` | Counts, ID lists, all batches, validation errors (currently none) |
 
 ```bash
@@ -24,7 +24,7 @@ PYTHONPATH=. .venv/bin/python arc_agi2/reports/diversity-v1/native-domain-review
 ```
 
 Running the script twice gives byte-identical `inventory.jsonl` and
-`summary.json`. `REVIEWED_BATCHES` in `extract.py` (currently `(1, 2, 3)`) sets
+`summary.json`. `REVIEWED_BATCHES` in `extract.py` (currently `(1, 2, 3, 4)`) sets
 which batches must be fully and currently reviewed. Validation fails if any
 other batch has a non-`pending` record.
 
@@ -62,8 +62,8 @@ other batch has a non-`pending` record.
   `demonstrations`. That flag is a lead only.
 - **Priority:** rank, batch and tier.
 
-Mechanical extraction is not semantic review. All 633 families outside
-batches 1–3 are `semantic_review.status = "pending"`.
+Mechanical extraction is not semantic review. All 601 families outside
+batches 1–4 are `semantic_review.status = "pending"`.
 
 Totals:
 - **Tiers:** Tier A has 122 families: the audit-sampled input height and width
@@ -424,6 +424,114 @@ ARC-GEN constructors differ from this worktree, and their reviews are
 likewise unchanged. Only their mechanical `worklist` fields were regenerated.
 `782b5218` has the same constructor in both places.
 
+## Batch 4 semantic review (32 families, ranks 97–128)
+
+**Scope:**
+- 18 tier-A families with a current audit.
+- 8 tier-A families with a stale audit:
+  - 7 native repairs from `1ed7790`/`5436f3f`: `137f0df0`, `31adaf00`,
+    `84db8fc4`, `a406ac07`, `ce039d91`, `d282b262` and `f45f5ca7`;
+  - `aaecdb9a`, hand-written in `d71ead8`.
+- 6 tier-B families.
+
+Every constructor sha256 is unchanged since the ordering commit and equals the
+ARC-GEN constructor. Certificates: 30 are `current`. `00576224` and `0692e18c`
+are `unavailable`: there is no certificate and no factory, only an
+uncertified `direct_programs.py` candidate.
+
+**What was read:**
+- for each family: the whole `generate()` body, its helpers, every canonical
+  train/test grid and the audit record;
+- every factory's `solve` body (in full where demonstrations are read:
+  `f3e62deb`, `17cae0c1`).
+
+For the 8 audit-stale families the 128-sample audit describes an older
+source. Their current domain was taken from
+`../native-domain-expansion-20261024/measurements.json` (its source hashes
+equal the current files) and from `native-certificates/`. No repair that
+those files already record is proposed again.
+
+**Code run:** a new read-only, seeded probe, `probes/fixture_stats_batch4.py`
+(seed 0, N=2000). Two runs gave byte-identical output. No certificate or
+audit was rerun.
+
+### Axis dispositions (count of families)
+
+| Axis | incidental | mixed | intrinsic / rule-supported | broadly variable | unknown |
+|---|---|---|---|---|---|
+| dimensions | 17 | 7 | 0 | 7 | 1 |
+| objects | 2 | 20 | 4 | 6 | 0 |
+| placement | 0 | 15 | 15 | 2 | 0 |
+| density / colours | 5 | 19 | 8 | 0 | 0 |
+| rule parameters | 0 | 0 | 32 | 0 | 0 |
+| demonstration context | 0 | 4 | 28 | 0 | 0 |
+
+**Dimensions:**
+- The 7 broadly variable families are exactly the seven expansion repairs.
+  `ce039d91` keeps an even width as a rule boundary.
+- `fd02da9e` is `unknown`: no fixture shows how its corner templates scale.
+
+**Patch priority:**
+- **High (4):**
+  - `15696249`: canonical inputs fall outside the native domain.
+  - `f3e62deb` (64 inputs), `17cae0c1` (60 inputs) and `fd02da9e`
+    (15 corner patterns): tiny domains.
+- **Medium (16).**
+- **Low (6):**
+  - `e2092e0c`, `e99362f0`, `ea9794b1` and `0c9aba6e` already have size
+    parameters on the configured path.
+  - `00576224` and `0692e18c` are blocked on certification, not on their
+    domain.
+- **None (6):** `137f0df0`, `84db8fc4`, `a406ac07`, `ce039d91`, `d282b262` and
+  `f45f5ca7` already have wide, certified support. They only need the stale
+  audit rerun.
+
+### Discoveries
+
+- **Canonical inputs outside the native domain.**
+  - `15696249`: line 49 forces exactly 3 cells per hue, but canonical
+    `train[0]` and the test input have counts 2/3/4.
+  - `31adaf00` (repaired): native grey density is median 0.59 at a requested
+    10×10 (165/200 draws above 0.5). The canonical inputs are 0.35–0.41.
+    Line 59's order-independence rejection pushes scenes towards high grey.
+    This is a density drift, not invalidity: the certificate passed.
+- **Tiny or finite domains, enumerated by the probe.**
+  - `f3e62deb`: 64 inputs.
+  - `17cae0c1`: 60 inputs.
+  - `fd02da9e`: 5508 inputs from only 15 occupancy patterns.
+  - `f1bcbc2c`: exactly 4156 inputs (2078 per flop).
+  - `0692e18c`: 223 sprite masks reached.
+    `common.conway_sprite` shuffles rows and columns independently, so
+    every mask covers all rows and columns.
+- **Legend conventions that episodes may not show.**
+  - `f3e62deb`: in 42.6% of simulated 3-demo episodes the query colour is
+    missing from the demos. Canonical `test[0]` (colour 3) is also missing
+    from train, so elimination is canonical.
+  - `17cae0c1`: 19.8% of episodes.
+  - Both factories hard-code the legend. They read demonstrations only for
+    unknown keys, which native scenes never produce.
+- **Undemonstrated tie-break.** In `e45ef808`, the leftmost-shortest rule
+  decides about 55% of native draws, but no canonical pair shows a shortest
+  tie.
+- **Latent defect (no patch applied).** In `ff2825db`, line 65 swaps the
+  clutter-box bounds, so 42.9% of parameter draws are clipped by the
+  interior. Scenes stay valid.
+- **Verifier mismatch, not invalidity.** `aaecdb9a` dense scenes are covered
+  by the `verified_rules.legend_object_chart` override and its counterexample
+  file.
+
+### Unknowns
+
+- `fd02da9e`: whether corner templates are corner-anchored on larger canvases.
+- `e45ef808`: the original shortest tie-break.
+- `f3e62deb` and `17cae0c1`: whether elimination-only queries are intended.
+- `e99362f0` and `ea9794b1`: whether priority follows colour or quadrant.
+  Native data always binds the two together.
+- `00576224` and `0692e18c`: whether the `direct-candidate-audit.json`
+  failure applies to the current `direct_programs.py` candidates.
+- Not measured: episode-level coverage under the production sampler, and
+  acceptance after any proposed patch.
+
 ## Not covered
 
 - **No changes:** constructors, factories, fixtures and admission code are
@@ -439,17 +547,13 @@ likewise unchanged. Only their mechanical `worklist` fields were regenerated.
 - **Stale reviews:** if a constructor changes after review, `extract.py` marks
   that review `stale`.
 
-## Next batch (batch 4, ranks 97–128)
+## Next batch (batch 5, ranks 129–160)
 
-`e2092e0c e45ef808 e57337a4 e5c44e8f e7a25a18 e84fef15 e99362f0 e9b4f6fc
-ea9794b1 edcc2ff0 f0df5ff0 f1bcbc2c f28a3cbb f3cdc58f f3e62deb fc4aaf52
-fd02da9e ff2825db 137f0df0 31adaf00 84db8fc4 a406ac07 aaecdb9a ce039d91
-d282b262 f45f5ca7 00576224 0692e18c 0c786b71 0c9aba6e 15696249 17cae0c1`
+`195ba7dc 2072aba6 27f8ce4f 281123b4 31d5ba1a 337b420f 34b99a2b 3979b1a8
+3d31c5b3 46c35fc7 48f8583b 4cd1b7b2 506d28a5 59341089 5ad8a7c0 5b6cbef5
+5d2a5c43 626c0bcc 66e6c45b 66f2d22f 68b67ca3 6a11f6da 6d1d5c90 6ea4a07e
+7953d61e 79cce52d 833966f4 8719f442 87ab05b8 8b28cd80 8ba14f53 8e2edd66`
 
-The batch has three parts:
-- 18 tier-A audit-current families;
-- the 8 tier-A audit-stale families (their audit records predate the current
-  constructor, so remeasure before trusting any range);
-- the first 6 tier-B families.
-
-`00576224` and `0692e18c` have no certificate (`unavailable`).
+All are tier B. Another lane owns implementation work for `195ba7dc`,
+`281123b4`, `31d5ba1a` and `34b99a2b`; check their constructor hashes before
+reviewing.

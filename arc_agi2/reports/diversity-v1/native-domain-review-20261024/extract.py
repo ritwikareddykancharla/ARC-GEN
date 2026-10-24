@@ -43,7 +43,7 @@ BATCH = 32
 MAX_CONSTRAINTS = 28
 # Batches whose every family must carry a hand-written, current semantic review.
 # All other batches must stay "pending".
-REVIEWED_BATCHES = (1, 2, 3)
+REVIEWED_BATCHES = (1, 2, 3, 4)
 
 CERT_DIRS = {
     "direct_factory": ROOT / "arc_agi2/direct_factories",

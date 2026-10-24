@@ -433,6 +433,92 @@ def fixed_background_band_reflection(grid):
     return out
 
 
+def rectangle_red_rings(grid):
+    """a04b2602: each red (2) inside a green (3) rectangle gets a blue (1) ring.
+
+    Pair label checker only (native colours). Every canonical fixture and
+    every constructor output is a black (0) canvas with 2..3 disjoint green
+    rectangles and scattered red cells, some inside the rectangles. Each red
+    inside a rectangle is framed by a 3x3 blue ring; ring cells that are
+    themselves such reds stay red, and rings overwrite green, black and other
+    reds.
+
+    Reds can cut a rectangle into several green components (a full red row,
+    or a staircase cutting off a corner), so a rectangle is NOT one green
+    component. Here green components are merged while the bounding box of the
+    merged set still holds only green and red cells; the merged boxes are the
+    rectangles. The constructor accepts a scene only when the reds inside
+    rectangles are exactly the reds with >= 2 orthogonal green neighbours.
+    Both readings are computed and the checker raises when they disagree,
+    instead of guessing. It also raises on colours outside 0, 2 and 3, on a
+    green shape whose box holds black, and on scenes with no red inside a
+    rectangle.
+    """
+    rows = [list(row) for row in grid]
+    width = len(rows[0]) if rows else 0
+    if not rows or not width or any(len(r) != width for r in rows):
+        raise ValueError('Expected a rectangular grid')
+    if any(v not in (0, 2, 3) for r in rows for v in r):
+        raise ValueError('Input holds a colour outside 0, 2 and 3')
+    height = len(rows)
+    steps = ((1, 0), (-1, 0), (0, 1), (0, -1))
+    seen, boxes = set(), []
+    for y in range(height):
+        for x in range(width):
+            if rows[y][x] != 3 or (y, x) in seen:
+                continue
+            seen.add((y, x))
+            stack, box = [(y, x)], [y, x, y, x]
+            while stack:
+                cy, cx = stack.pop()
+                box = [min(box[0], cy), min(box[1], cx), max(box[2], cy), max(box[3], cx)]
+                for dy, dx in steps:
+                    ny, nx = cy + dy, cx + dx
+                    if (0 <= ny < height and 0 <= nx < width and rows[ny][nx] == 3
+                            and (ny, nx) not in seen):
+                        seen.add((ny, nx))
+                        stack.append((ny, nx))
+            boxes.append(tuple(box))
+
+    def solid(box):
+        return all(rows[r][c] in (2, 3) for r in range(box[0], box[2] + 1)
+                   for c in range(box[1], box[3] + 1))
+
+    if not all(solid(b) for b in boxes):
+        raise ValueError('A green shape is not a rectangle of green and red cells')
+    merged = True
+    while merged:
+        merged = False
+        for i in range(len(boxes)):
+            for j in range(i):
+                a, b = boxes[i], boxes[j]
+                joint = (min(a[0], b[0]), min(a[1], b[1]), max(a[2], b[2]), max(a[3], b[3]))
+                if solid(joint):
+                    boxes[j] = joint
+                    del boxes[i]
+                    merged = True
+                    break
+            if merged:
+                break
+    inside = {(r, c) for b in boxes for r in range(b[0], b[2] + 1)
+              for c in range(b[1], b[3] + 1) if rows[r][c] == 2}
+    touching = {(r, c) for r in range(height) for c in range(width) if rows[r][c] == 2
+                and sum(0 <= r + dy < height and 0 <= c + dx < width
+                        and rows[r + dy][c + dx] == 3 for dy, dx in steps) >= 2}
+    if inside != touching:
+        raise ValueError('Reds inside rectangles differ from reds touching two greens')
+    if not inside:
+        raise ValueError('No red lies inside a rectangle')
+    out = [list(r) for r in rows]
+    for r, c in inside:
+        for dy in (-1, 0, 1):
+            for dx in (-1, 0, 1):
+                y, x = r + dy, c + dx
+                if 0 <= y < height and 0 <= x < width and (y, x) not in inside:
+                    out[y][x] = 1
+    return out
+
+
 VERIFIERS = {'78332cb0': panel_chain, 'de493100': cropped_mirror_patch,
              '3a301edc': nested_frame_band,
              'd6542281': joint_fragment_completion,
@@ -440,7 +526,8 @@ VERIFIERS = {'78332cb0': panel_chain, 'de493100': cropped_mirror_patch,
              '7e2bad24': native_side_beam, '34b99a2b': midpoint_xor_panels,
              '195ba7dc': midpoint_or_panels, '281123b4': separated_priority_panels,
              'e0fb7511': native_zero_adjacency, 'f3cdc58f': fixed_colour_histogram,
-             'b4a43f3b': separated_motif_stamp, 'e74e1818': fixed_background_band_reflection}
+             'b4a43f3b': separated_motif_stamp, 'e74e1818': fixed_background_band_reflection,
+             'a04b2602': rectangle_red_rings}
 VERIFIER_EVIDENCE = {
     'e74e1818': {
         'mode': 'fixed_background_colour_span_reflection',
@@ -552,6 +639,14 @@ VERIFIER_EVIDENCE = {
         'module': 'arc_agi2.verified_rules.separated_motif_stamp',
         'reason': 'The archived solver takes as separator the FIRST full uniform non-background row whose colour occurs only there, else the first uniform non-background row. At motif scale 1 a full single-colour motif row is such a row. The legal native scene with motif 111/202/030 (all rows and columns occupied, 8-connected) has three 1s, all in row 0, so the archived solver cuts at row 0 and returns an empty 0x9 grid. In legacy explicit 13x6 scenes with a motif row of colour 5, no row passes the uniqueness test, and the fallback takes that motif row. Every canonical and teaching fixture and every constructor output places the motif square in rows 0..W-1 of a W = 3s wide grid and the colour-5 separator at row W, with any non-0 map cell marked. So this checker reads that geometry. The direct factory, which locates palette[5], is unchanged.',
         'counterexample': 'arc_agi2/reports/diversity-v1/native-batch-i/b4a43f3b-archived-verifier-counterexample.json',
+        'canonical_data_changed': False,
+        'archived_reference_changed': False,
+    },
+    'a04b2602': {
+        'mode': 'reviewed_merged_rectangle_red_rings',
+        'module': 'arc_agi2.verified_rules.rectangle_red_rings',
+        'reason': 'The archived solver frames the reds inside the bounding box of each 4-connected green component. Reds can cut one rectangle into several components (a full red row or column, or a staircase cutting off a corner), and the cut reds then lie outside every component box, so they stay unframed. The constructor frames them: they are inside the rectangle it drew and each has >= 2 orthogonal green neighbours. This is not caused by the batch-a04b expansion: the LEGACY constructor (sha bdc12773) gives 7 such scenes in 20000 per-draw-seeded default draws, and the current one also 7. Every canonical and teaching fixture and every constructor output frames exactly the reds inside rectangles, which the constructor guarantees equal the reds with >= 2 orthogonal green neighbours. This checker therefore merges green components while their joint box holds only green and red, and requires both readings to agree. It raises instead of guessing on colours outside 0/2/3, a non-rectangular green shape, disagreeing readings or no framed red. It was exact on all 8 fixture pairs and on all 40000 draws. The direct factory, which already adds the neighbour test, is unchanged.',
+        'counterexample': 'arc_agi2/reports/diversity-v1/native-batch-a04b/a04b2602-archived-verifier-counterexample.json',
         'canonical_data_changed': False,
         'archived_reference_changed': False,
     },

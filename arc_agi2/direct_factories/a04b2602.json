@@ -1,21 +1,24 @@
 {
   "task_id": "a04b2602",
-  "factory_sha256": "d9e8477a5d2e1c4b59d774e1fda7ec59c80b9c162c10175b0b9f2ac9b4e5a21f",
-  "constructor_sha256": "bdc127732747d186de38978a1ba859b0ac8783c8b065e7abd791982131f44b7c",
   "passed": true,
   "fresh_pairs_checked": 1000,
   "augmented_pair_checks": 8000,
   "fixture_variants_checked": 16,
-  "sampler_rejections": [],
-  "seed": 35804515649003,
-  "d4": 7,
-  "unique_base_inputs": 1000,
-  "seconds": 12.375796666019596,
-  "factory_version": 1,
+  "constructor_sha256": "a141eb4b3bbe53dc878c3dd57a313ace84efdbb558159aff4c7e11fc16a39325",
+  "auditor_sha256": "1e194cb80d11ccda4026cb83a61c6dd407f1b9d94117090b31de26b01a3f191d",
   "requires_per_episode_verification": true,
+  "sampler_rejections": [],
+  "program_provider": "factory",
+  "factory_sha256": "d9e8477a5d2e1c4b59d774e1fda7ec59c80b9c162c10175b0b9f2ac9b4e5a21f",
+  "factory_version": 1,
+  "unique_base_inputs": 1000,
+  "fixture_basis": "canonical",
+  "seconds": 6.650656417012215,
+  "previous_constructor_sha256": "bdc127732747d186de38978a1ba859b0ac8783c8b065e7abd791982131f44b7c",
   "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
   "draft_notes": {
     "explanation": "Colour roles are specialised from the palette: rectangle colour palette[3], marker colour palette[2], and ring colour palette[1]. The background colour palette[0] never needs to be referenced. The mechanism is invariant under every D4 transform, so no axis or direction needs rewriting. The emitted program works directly in the visible coordinates. First it finds the 4-connected components of the rectangle colour. Every marker cell inside one of those bounding boxes becomes active, as in the archived solver. A marker with at least two orthogonal rectangle-coloured neighbours also becomes active. That second test is the generator's own criterion, and the generator only accepts scenes where it matches the bounding-box set. It also keeps the answer correct if a line of markers splits a rectangle into several components. Each active marker paints its 8 neighbours with the ring colour, clipped at the grid border. Active markers are never overwritten, so adjacent active markers share a merged ring. Inactive markers and background cells under a ring become ring-coloured. This reproduces the generator's 'draw all rings, then redraw outlined reds' order.",
     "limitations": "The program has not been run. The generator rejects any scene where the neighbour-count rule and the inside-rectangle rule disagree, so on its domain the union of the two tests equals both. Outside that domain, for example with touching rectangles or non-rectangular colour-3 shapes, the union may differ from either rule alone. The archived solver can miss markers when a full row or column of markers splits a rectangle. The generator would accept such a scene, and this program covers it with the neighbour-count test. I found no contradictions in the fixtures and no reliance on generator tie-break defects. Demonstrations are not consulted, because the colour roles come entirely from the palette."
-  }
+  },
+  "recertification_note": "Native batch a04b: constructor widened (rectangle spacing 2 -> 1, admitting the canonical train[0] gap of one row; red rate 1/k with k in 12..30 instead of 1/20; bounded retries; same-shape width/height path). Re-certified with unmodified recertify. The pair checker is now the reviewed verified_rules.rectangle_red_rings, because the archived component-box solver mislabels scenes where reds cut a rectangle (legacy bytes too). draft_notes describe the legacy domain; the factory bytes are unchanged."
 }

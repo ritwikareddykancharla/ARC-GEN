@@ -169,3 +169,14 @@ after. These come from a bounded pool, so they are not a finite-capacity claim.
 | `diversity/test_native_batch_e.py` | fixture replay; legacy canvas and RNG replay; random-domain structure; partial and explicit arguments; invalid arguments, including floats; boundary shapes on both sides via checker and factory on 8 D4; dense f0 under a 3 s deadline; bounded `RuntimeError`; gate witnesses are constructor scenes; certificate and audit hash binding |
 | `test_mirror_neighbourhood_evidence.py` | fixture acceptance (canonical and teaching, 24 variants); anchor, adjacency and dilation witnesses; e0 threshold witnesses (no isolated cell → T = 1, no marked pair → T = 3, only 4-cell components → T 2..4, nothing marked → T unbounded); informative contexts accept any query; no-fit demos; exhaustive brute-force cross-check; `make_record` runs the gate while `verify` passes; f3 not gated |
 | `diversity/test_e0_f3_verifiers.py` | checker registration, fixtures, counterexamples, adversarial cases, raising on out-of-domain inputs |
+
+## Rerun on batch F shared sources (2026-10-25)
+
+Batch F added a three-ID dispatch to `colour_evidence.py`, so its whole-file hash changed
+from 6789d3d8 to 51a6c404. `context_audit.py` was rerun unmodified on the final batch F
+sources. The preceding report is kept as `context-audit-pre-batch-f-95ffc02.json`.
+- **Unchanged:** every semantic field, in all 8 runs.
+- **Changed:** only the `colour_evidence` source hash and the wall-clock `seconds` (about
+  2–3× longer; cause not measured).
+
+See `native-batch-f/README.md`.

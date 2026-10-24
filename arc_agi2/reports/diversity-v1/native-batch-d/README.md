@@ -170,3 +170,14 @@ Run results:
 - The six batch D files, including `test_colour_evidence` and `test_verified_rules`: 195 passed, plus 104 subtests.
 - batch B/C, `program_targets`, `pool_signature`, `hybrid_extensions`, `coverage_export_gates`: 125 passed.
 - `generator_boundaries`, `sampling_domains`, `direct_certificates`: 17 passed.
+
+## Rerun on batch F shared sources (2026-10-25)
+
+Batch F added a three-ID dispatch to `colour_evidence.py`, so its whole-file hash changed
+from 6789d3d8 to 51a6c404. `context_audit.py` was rerun unmodified on the final batch F
+sources. The preceding report is kept as `context-audit-pre-batch-f-c0effbf.json`.
+- **Unchanged:** every semantic field, in all 8 runs.
+- **Changed:** only the `colour_evidence` source hash and the wall-clock `seconds` (about
+  2–3× longer; cause not measured).
+
+See `native-batch-f/README.md`.

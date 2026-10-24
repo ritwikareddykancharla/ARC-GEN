@@ -1,0 +1,280 @@
+{
+  "195ba7dc": {
+    "task_id": "195ba7dc",
+    "query_domain": "default",
+    "passed": true,
+    "method": "gate-aware-query-preserving-same-shape-context",
+    "method_version": 1,
+    "source_sha256": {
+      "constructor": "5424f2732ddb826e59214b197cfe33c928f569470758df6763eefdf4d0fc5026",
+      "factory": "e4f612963970ced31949c5121796026bb812b25eb3cd6a167db042f419e1d4e7",
+      "factory_certificate": "9262e88f47827f9648b03124c18a52f6c04d17179f841ca80297bd91c62702df",
+      "panel_overlay_evidence": "b78b1542898c7879f6d92b2bbe53cb555b6fc25e663373b236b4fae515fb9861",
+      "colour_evidence": "6789d3d80f42268c0e66732ef04ff6e05c39de5dd8e69447bf4029431161b221",
+      "verified_rules": "a54743d7f19075966af22be6abfaa09863427822593ef186b0a2da13ca8ec853",
+      "program_targets": "88298f336ca6a50ee91e58a08f24a4997c7c49e832eda1e68f98153dd59ed790",
+      "harness": "af60808383a0845cb18d7058eb0acd97e20c78c81a32529bbf255e2a9057fe92"
+    },
+    "queries_requested": 250,
+    "queries_accepted": 250,
+    "queries_failed": [],
+    "max_contexts_per_query": 64,
+    "context_retries": 0,
+    "context_retry_histogram": {
+      "0": 250
+    },
+    "context_failure_reasons": {},
+    "make_record_calls": 2000,
+    "pair_draws": 1750,
+    "first_context_ambiguous": {
+      "same_shape": 0,
+      "mixed_shape": 0
+    },
+    "query_output_shapes": 183,
+    "seconds": 2.71
+  },
+  "281123b4": {
+    "task_id": "281123b4",
+    "query_domain": "default",
+    "passed": true,
+    "method": "gate-aware-query-preserving-same-shape-context",
+    "method_version": 1,
+    "source_sha256": {
+      "constructor": "e6f2fe522ee6e5c5c3540ed303fbd08ac1186f22a77a4fd40e11bd7ff41c0cf0",
+      "factory": "439cca9a507d9ae9965bf3f05d8fcb46adac8f9982ed41d60c67a3357a0efda8",
+      "factory_certificate": "07b8a6a3ceea81fa00ac740c21f26e0df8eb1aa9b0ec855db74899979dccf039",
+      "panel_overlay_evidence": "b78b1542898c7879f6d92b2bbe53cb555b6fc25e663373b236b4fae515fb9861",
+      "colour_evidence": "6789d3d80f42268c0e66732ef04ff6e05c39de5dd8e69447bf4029431161b221",
+      "verified_rules": "a54743d7f19075966af22be6abfaa09863427822593ef186b0a2da13ca8ec853",
+      "program_targets": "88298f336ca6a50ee91e58a08f24a4997c7c49e832eda1e68f98153dd59ed790",
+      "harness": "af60808383a0845cb18d7058eb0acd97e20c78c81a32529bbf255e2a9057fe92"
+    },
+    "queries_requested": 250,
+    "queries_accepted": 250,
+    "queries_failed": [],
+    "max_contexts_per_query": 64,
+    "context_retries": 1,
+    "context_retry_histogram": {
+      "0": 249,
+      "1": 1
+    },
+    "context_failure_reasons": {
+      "281123b4: demonstrations leave the query panel priority unresolved": 1
+    },
+    "make_record_calls": 2000,
+    "pair_draws": 1753,
+    "first_context_ambiguous": {
+      "same_shape": 1,
+      "mixed_shape": 0
+    },
+    "query_output_shapes": 77,
+    "seconds": 9.99
+  },
+  "31d5ba1a": {
+    "task_id": "31d5ba1a",
+    "query_domain": "default",
+    "passed": true,
+    "method": "gate-aware-query-preserving-same-shape-context",
+    "method_version": 1,
+    "source_sha256": {
+      "constructor": "5bd13763d20032de61c6e52edb4e9c3d0a9059b91b278a375e9e2dd8a3244394",
+      "factory": "c3092eb8fbb50337c108de38c0cdcd4c177326fd7bdc632acc5c685d0fb3bca3",
+      "factory_certificate": "b6ceb5a4bdf66022a2512520915ee8fa35f91fe7cba2930919d81e581b63003f",
+      "panel_overlay_evidence": "b78b1542898c7879f6d92b2bbe53cb555b6fc25e663373b236b4fae515fb9861",
+      "colour_evidence": "6789d3d80f42268c0e66732ef04ff6e05c39de5dd8e69447bf4029431161b221",
+      "verified_rules": "a54743d7f19075966af22be6abfaa09863427822593ef186b0a2da13ca8ec853",
+      "program_targets": "88298f336ca6a50ee91e58a08f24a4997c7c49e832eda1e68f98153dd59ed790",
+      "harness": "af60808383a0845cb18d7058eb0acd97e20c78c81a32529bbf255e2a9057fe92"
+    },
+    "queries_requested": 250,
+    "queries_accepted": 250,
+    "queries_failed": [],
+    "max_contexts_per_query": 64,
+    "context_retries": 0,
+    "context_retry_histogram": {
+      "0": 250
+    },
+    "context_failure_reasons": {},
+    "make_record_calls": 2000,
+    "pair_draws": 1750,
+    "first_context_ambiguous": {
+      "same_shape": 0,
+      "mixed_shape": 0
+    },
+    "query_output_shapes": 180,
+    "seconds": 2.12
+  },
+  "34b99a2b": {
+    "task_id": "34b99a2b",
+    "query_domain": "default",
+    "passed": true,
+    "method": "gate-aware-query-preserving-same-shape-context",
+    "method_version": 1,
+    "source_sha256": {
+      "constructor": "bfe8a3abdb5bf5a4d800a899fb749c301d2cecedf7de018bdefd6412f0e290dd",
+      "factory": "b22e39c8312e10d1c12175171972f63090397b51adc1ec97a14822f1a712ee23",
+      "factory_certificate": "cc33cfa4bd10a114f3af8ef36b4260beff73c783694da180d3a3237d9f575f69",
+      "panel_overlay_evidence": "b78b1542898c7879f6d92b2bbe53cb555b6fc25e663373b236b4fae515fb9861",
+      "colour_evidence": "6789d3d80f42268c0e66732ef04ff6e05c39de5dd8e69447bf4029431161b221",
+      "verified_rules": "a54743d7f19075966af22be6abfaa09863427822593ef186b0a2da13ca8ec853",
+      "program_targets": "88298f336ca6a50ee91e58a08f24a4997c7c49e832eda1e68f98153dd59ed790",
+      "harness": "af60808383a0845cb18d7058eb0acd97e20c78c81a32529bbf255e2a9057fe92"
+    },
+    "queries_requested": 250,
+    "queries_accepted": 250,
+    "queries_failed": [],
+    "max_contexts_per_query": 64,
+    "context_retries": 0,
+    "context_retry_histogram": {
+      "0": 250
+    },
+    "context_failure_reasons": {},
+    "make_record_calls": 2000,
+    "pair_draws": 1750,
+    "first_context_ambiguous": {
+      "same_shape": 0,
+      "mixed_shape": 0
+    },
+    "query_output_shapes": 173,
+    "seconds": 2.73
+  },
+  "195ba7dc@min_corner": {
+    "task_id": "195ba7dc",
+    "query_domain": "min_corner",
+    "passed": true,
+    "method": "gate-aware-query-preserving-same-shape-context",
+    "method_version": 1,
+    "source_sha256": {
+      "constructor": "5424f2732ddb826e59214b197cfe33c928f569470758df6763eefdf4d0fc5026",
+      "factory": "e4f612963970ced31949c5121796026bb812b25eb3cd6a167db042f419e1d4e7",
+      "factory_certificate": "9262e88f47827f9648b03124c18a52f6c04d17179f841ca80297bd91c62702df",
+      "panel_overlay_evidence": "b78b1542898c7879f6d92b2bbe53cb555b6fc25e663373b236b4fae515fb9861",
+      "colour_evidence": "6789d3d80f42268c0e66732ef04ff6e05c39de5dd8e69447bf4029431161b221",
+      "verified_rules": "a54743d7f19075966af22be6abfaa09863427822593ef186b0a2da13ca8ec853",
+      "program_targets": "88298f336ca6a50ee91e58a08f24a4997c7c49e832eda1e68f98153dd59ed790",
+      "harness": "af60808383a0845cb18d7058eb0acd97e20c78c81a32529bbf255e2a9057fe92"
+    },
+    "queries_requested": 250,
+    "queries_accepted": 250,
+    "queries_failed": [],
+    "max_contexts_per_query": 64,
+    "context_retries": 0,
+    "context_retry_histogram": {
+      "0": 250
+    },
+    "context_failure_reasons": {},
+    "make_record_calls": 2000,
+    "pair_draws": 1750,
+    "first_context_ambiguous": {
+      "same_shape": 0,
+      "mixed_shape": 0
+    },
+    "query_output_shapes": 1,
+    "seconds": 1.46
+  },
+  "281123b4@min_corner": {
+    "task_id": "281123b4",
+    "query_domain": "min_corner",
+    "passed": true,
+    "method": "gate-aware-query-preserving-same-shape-context",
+    "method_version": 1,
+    "source_sha256": {
+      "constructor": "e6f2fe522ee6e5c5c3540ed303fbd08ac1186f22a77a4fd40e11bd7ff41c0cf0",
+      "factory": "439cca9a507d9ae9965bf3f05d8fcb46adac8f9982ed41d60c67a3357a0efda8",
+      "factory_certificate": "07b8a6a3ceea81fa00ac740c21f26e0df8eb1aa9b0ec855db74899979dccf039",
+      "panel_overlay_evidence": "b78b1542898c7879f6d92b2bbe53cb555b6fc25e663373b236b4fae515fb9861",
+      "colour_evidence": "6789d3d80f42268c0e66732ef04ff6e05c39de5dd8e69447bf4029431161b221",
+      "verified_rules": "a54743d7f19075966af22be6abfaa09863427822593ef186b0a2da13ca8ec853",
+      "program_targets": "88298f336ca6a50ee91e58a08f24a4997c7c49e832eda1e68f98153dd59ed790",
+      "harness": "af60808383a0845cb18d7058eb0acd97e20c78c81a32529bbf255e2a9057fe92"
+    },
+    "queries_requested": 250,
+    "queries_accepted": 250,
+    "queries_failed": [],
+    "max_contexts_per_query": 64,
+    "context_retries": 10,
+    "context_retry_histogram": {
+      "0": 240,
+      "1": 10
+    },
+    "context_failure_reasons": {
+      "281123b4: demonstrations leave the query panel priority unresolved": 10
+    },
+    "make_record_calls": 2000,
+    "pair_draws": 1780,
+    "first_context_ambiguous": {
+      "same_shape": 10,
+      "mixed_shape": 0
+    },
+    "query_output_shapes": 1,
+    "seconds": 3.64
+  },
+  "31d5ba1a@min_corner": {
+    "task_id": "31d5ba1a",
+    "query_domain": "min_corner",
+    "passed": true,
+    "method": "gate-aware-query-preserving-same-shape-context",
+    "method_version": 1,
+    "source_sha256": {
+      "constructor": "5bd13763d20032de61c6e52edb4e9c3d0a9059b91b278a375e9e2dd8a3244394",
+      "factory": "c3092eb8fbb50337c108de38c0cdcd4c177326fd7bdc632acc5c685d0fb3bca3",
+      "factory_certificate": "b6ceb5a4bdf66022a2512520915ee8fa35f91fe7cba2930919d81e581b63003f",
+      "panel_overlay_evidence": "b78b1542898c7879f6d92b2bbe53cb555b6fc25e663373b236b4fae515fb9861",
+      "colour_evidence": "6789d3d80f42268c0e66732ef04ff6e05c39de5dd8e69447bf4029431161b221",
+      "verified_rules": "a54743d7f19075966af22be6abfaa09863427822593ef186b0a2da13ca8ec853",
+      "program_targets": "88298f336ca6a50ee91e58a08f24a4997c7c49e832eda1e68f98153dd59ed790",
+      "harness": "af60808383a0845cb18d7058eb0acd97e20c78c81a32529bbf255e2a9057fe92"
+    },
+    "queries_requested": 250,
+    "queries_accepted": 250,
+    "queries_failed": [],
+    "max_contexts_per_query": 64,
+    "context_retries": 0,
+    "context_retry_histogram": {
+      "0": 250
+    },
+    "context_failure_reasons": {},
+    "make_record_calls": 2000,
+    "pair_draws": 1750,
+    "first_context_ambiguous": {
+      "same_shape": 0,
+      "mixed_shape": 0
+    },
+    "query_output_shapes": 1,
+    "seconds": 0.84
+  },
+  "34b99a2b@min_corner": {
+    "task_id": "34b99a2b",
+    "query_domain": "min_corner",
+    "passed": true,
+    "method": "gate-aware-query-preserving-same-shape-context",
+    "method_version": 1,
+    "source_sha256": {
+      "constructor": "bfe8a3abdb5bf5a4d800a899fb749c301d2cecedf7de018bdefd6412f0e290dd",
+      "factory": "b22e39c8312e10d1c12175171972f63090397b51adc1ec97a14822f1a712ee23",
+      "factory_certificate": "cc33cfa4bd10a114f3af8ef36b4260beff73c783694da180d3a3237d9f575f69",
+      "panel_overlay_evidence": "b78b1542898c7879f6d92b2bbe53cb555b6fc25e663373b236b4fae515fb9861",
+      "colour_evidence": "6789d3d80f42268c0e66732ef04ff6e05c39de5dd8e69447bf4029431161b221",
+      "verified_rules": "a54743d7f19075966af22be6abfaa09863427822593ef186b0a2da13ca8ec853",
+      "program_targets": "88298f336ca6a50ee91e58a08f24a4997c7c49e832eda1e68f98153dd59ed790",
+      "harness": "af60808383a0845cb18d7058eb0acd97e20c78c81a32529bbf255e2a9057fe92"
+    },
+    "queries_requested": 250,
+    "queries_accepted": 250,
+    "queries_failed": [],
+    "max_contexts_per_query": 64,
+    "context_retries": 0,
+    "context_retry_histogram": {
+      "0": 250
+    },
+    "context_failure_reasons": {},
+    "make_record_calls": 2000,
+    "pair_draws": 1750,
+    "first_context_ambiguous": {
+      "same_shape": 0,
+      "mixed_shape": 0
+    },
+    "query_output_shapes": 1,
+    "seconds": 1.21
+  }
+}

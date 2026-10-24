@@ -5,13 +5,15 @@ prepare/admission or release-readiness code was changed. `release_ready` is
 `false` for every record. A source review is not enough to set it, and neither
 is a smoke test.
 
-**Progress:** 224 of 729 families have current, hand-written semantic reviews:
-batches 1–6 (ranks 1–192) and batch 22 (ranks 673–704). None is stale.
-Coverage is **not consecutive**. Batches 7–21 (ranks 193–672) and batch 23
-(ranks 705–729) are `pending`: 505 families with no semantic review. Batch 22 was
+**Progress:** 256 of 729 families have current, hand-written semantic reviews:
+batches 1–7 (ranks 1–224) and batch 22 (ranks 673–704). None is stale.
+Coverage is **not consecutive**. Batches 8–21 (ranks 225–672) and batch 23
+(ranks 705–729) are `pending`: 473 families with no semantic review. Batch 22 was
 reviewed ahead of order to assess families that already sample shapes broadly.
+Batch 7 was integrated from its committed fragment; see
+[Batch 7 semantic review](#batch-7-semantic-review-32-families-ranks-193224-integrated-fragment).
 Nothing in this record implies that a skipped batch was reviewed. The next
-pending batch is **batch 7**.
+pending batch is **batch 8**.
 
 **Rereview (2026-10-24):** 11 of the 128 reviews went stale when native batches B
 and C changed their constructors. They were reviewed again against the
@@ -33,9 +35,10 @@ suggested next repair candidates. It is not an approval or an admission.
 |---|---|
 | `extract.py` | Reproducible extraction, merge and validation (`--check` validates without writing) |
 | `inventory.jsonl` | One record per family (729), sorted by review rank |
-| `semantic_reviews.json` | Current hand-written semantic reviews (batches 1–6 and 22, 224 families), each bound to a constructor sha256 and to the source at its `baseline_commit` |
+| `semantic_reviews.json` | Current hand-written semantic reviews (batches 1–7 and 22, 256 families), each bound to a constructor sha256 and to the source at its `baseline_commit` |
+| `batch-fragments/` | Immutable committed review fragments merged into `semantic_reviews.json` verbatim (`batch07.json` with its summary `batch07.md`) |
 | `review_history.json` | Superseded reviews (15 families: 11 from batches B/C, 4 from batch E), each kept verbatim with its constructor binding and the mechanical record it was written against |
-| `probes/` | Small read-only, seeded measurement scripts cited by the batch-2 to batch-6 and batch-22 reviews, the rereviews (`rereview_batch_bc.py`, `rereview_batch_e.py`) and the priority queue (`priority_candidates.py`) |
+| `probes/` | Small read-only, seeded measurement scripts cited by the batch-2 to batch-7 and batch-22 reviews (batch 7 also keeps its evidence JSON), the rereviews (`rereview_batch_bc.py`, `rereview_batch_e.py`) and the priority queue (`priority_candidates.py`) |
 | `summary.json` | Counts, ID lists, all batches, reviewed and pending batch numbers, the next pending batch, rereviewed and history IDs, validation errors (currently none) |
 | `implementation-priorities.json` | Review queue of suggested next repairs, with already-implemented, in-progress (lane-owned), proposed and pending status. Not an approval, admission or source reservation |
 
@@ -45,13 +48,13 @@ PYTHONPATH=. .venv/bin/python arc_agi2/reports/diversity-v1/native-domain-review
 
 Running the script twice gives byte-identical `inventory.jsonl` and
 `summary.json`. `REVIEWED_BATCHES` in `extract.py` (currently
-`(1, 2, 3, 4, 5, 6, 22)`) sets which batches must be fully and currently
+`(1, 2, 3, 4, 5, 6, 7, 22)`) sets which batches must be fully and currently
 reviewed. Validation fails if any other batch has a non-`pending` record.
 
-`summary.json` lists `reviewed_batches`, `pending_batches` (currently 7–21 and
+`summary.json` lists `reviewed_batches`, `pending_batches` (currently 8–21 and
 23), `next_batch_number` and `next_batch`. The next batch is the **first
 unreviewed batch in the fixed batch order**, not `max(reviewed) + 1`, so it is
-batch 7 after the jump to batch 22. Batch membership itself is unchanged: it is
+batch 8 after the batch-7 integration. Batch membership itself is unchanged: it is
 still pinned to the ordering commit.
 
 Validation also checks:
@@ -81,7 +84,14 @@ the seeded wrong-selector cases are listed in the batch-22 section.
 
 ## Provenance
 
-- **Batch-E rereview (latest):** the 4 records bind to the worktree HEAD
+- **Batch 7 (integrated fragment, latest):** the 32 records bind to the
+  integrated baseline `96be8033a32ac47104ec737310778baffa7f5159`. They were
+  committed as a fragment in `2619ce8`, with the follow-up `cee7f7c`, and were
+  merged verbatim at worktree HEAD `cee7f7c`. No file under `tasks/`, the
+  direct factories or the direct certificates changed between `96be803` and
+  `cee7f7c`. All 32 constructor hashes equal the source at `96be803`, at the
+  ordering commit `5436f3f`, at HEAD and in the worktree.
+- **Batch-E rereview:** the 4 records bind to the worktree HEAD
   `e64baab92377355d6f9335ddf10a0fbda1e0e6a3` (the batch-22 report commit). It
   contains native batch E (`4909572`, `c35ae5a`, `a7edea3`, `c0effbf`,
   `4895174`, `3a08f5f`, `95ffc02`), and root's registration and admission
@@ -147,8 +157,8 @@ the seeded wrong-selector cases are listed in the batch-22 section.
   `demonstrations`. That flag is a lead only.
 - **Priority:** rank, batch and tier.
 
-Mechanical extraction is not semantic review. All 505 families outside
-batches 1–6 and 22 (that is, batches 7–21 and 23) are
+Mechanical extraction is not semantic review. All 473 families outside
+batches 1–7 and 22 (that is, batches 8–21 and 23) are
 `semantic_review.status = "pending"`.
 
 Totals:
@@ -541,8 +551,11 @@ and root's paired-source priority comes first. Each record has one status:
   - **Follow-up:** `b4a43f3b`. Its native three-segment sampler omits the
     canonical four-segment map. Map resizing needs a layout decision and a
     factory probe first.
-- **`pending`:** all 729 families keep their status in `inventory.jsonl` (224
-  reviewed, 505 pending). The shortlist never implies all-family completion.
+- **`pending`:** all 729 families keep their status in `inventory.jsonl` (256
+  reviewed, 473 pending since the batch-7 integration; it was 224/505 when the
+  queue was written). The shortlist never implies all-family completion. Only
+  the coverage fields were updated for batch 7. The ownership and candidate
+  snapshot is unchanged and does not yet consider batch-7 findings.
 
 **Evidence for the candidates.** `probes/priority_candidates.py` (read-only,
 seeded, two runs byte-identical) checks the two candidates whose explicit
@@ -1414,6 +1427,83 @@ ambiguous beams. It still cannot produce its canonical test input.
   certificate or audit was rerun. The `9110e3c5` `direct-candidate-audit.json`
   failure was not traced to a specific candidate version.
 
+## Batch 7 semantic review (32 families, ranks 193–224; integrated fragment)
+
+**Source of the records:** the immutable fragment
+[`batch-fragments/batch07.json`](batch-fragments/batch07.json), committed in
+`2619ce8`, with the 98c475bf follow-up in `cee7f7c`. Its summary, method,
+supervisor corrections and kept negative evidence are in
+[`batch-fragments/batch07.md`](batch-fragments/batch07.md). This section does
+not restate them. The 32 records were copied into `semantic_reviews.json`
+verbatim. No measurement, unknown or finding was edited.
+
+**Probes (cited by the records, not rerun at integration):**
+- [`probes/fixture_stats_batch7.py`](probes/fixture_stats_batch7.py) and
+  [`probes/fixture_stats_batch7_evidence.json`](probes/fixture_stats_batch7_evidence.json):
+  self-tests (S), canonical latent reach (A), native verifier/program/gate
+  agreement (B), widened scenes (C) and exact finite domains (D).
+- [`probes/fixture_stats_batch7_rect.py`](probes/fixture_stats_batch7_rect.py) and
+  [`probes/fixture_stats_batch7_rect_evidence.json`](probes/fixture_stats_batch7_rect_evidence.json):
+  rectangular scenes for 7491f3cf and 973e499e.
+- [`probes/fixture_stats_batch7_width98.py`](probes/fixture_stats_batch7_width98.py) and
+  [`probes/fixture_stats_batch7_width98_evidence.json`](probes/fixture_stats_batch7_width98_evidence.json):
+  98c475bf at widths 18/20/24/30.
+
+**Integration checks (this merge):**
+- the fragment `ids` equal `summary.json` `batches["7"]` exactly, in order;
+- none of the 32 had a current review or a history entry, and all were
+  `pending`;
+- each `constructor_sha256` equals the worktree file, the source at
+  `baseline_commit` `96be803`, HEAD and the ordering commit;
+- every axis line reference is a non-empty source line;
+- all six axes have valid dispositions;
+- every `evidence` path exists;
+- `certified_evidence` (all `current`) equals the mechanical state;
+- the key set equals the batch-22 record schema.
+
+There were no mismatches, so no record or hash was changed. The 224 earlier
+reviews are unchanged in content and order (the diff is insertion-only), and
+the 15 `review_history.json` entries are byte-identical. The fragment's note
+about 4 pre-existing `--check` errors (nativeE) referred to its own lane. In
+this worktree those 4 were already rereviewed (`97f75b9`), and `--check`
+reports 0 errors.
+
+### Axis dispositions (count of families)
+
+| Axis | incidental | mixed | intrinsic / rule-supported | broadly variable | unknown |
+|---|---|---|---|---|---|
+| dimensions | 23 | 8 | 1 | 0 | 0 |
+| objects | 12 | 7 | 9 | 4 | 0 |
+| placement | 3 | 13 | 10 | 6 | 0 |
+| density / colours | 1 | 28 | 2 | 1 | 0 |
+| rule parameters | 0 | 4 | 28 | 0 | 0 |
+| demonstration context | 0 | 1 | 31 | 0 | 0 |
+
+### Results
+
+- **High (11):** `456873bc`, `52fd389e`, `5ecac7f7`, `8fbca751`, `981add89`,
+  `985ae207`, `c8b7cc0f`, `ef26cbf6`, `17b866bd`, `1e5d6875`, `2e65ae53`. In
+  each, at least one canonical input is unreachable natively (probe A). The
+  production verifier also disagrees on native draws for `5ecac7f7` (115/200),
+  `985ae207` (8/11) and `981add89` (192/200). `963c33f8` (medium) also has an
+  unreachable `train[2]`, through a known label quirk.
+- **Medium (17):** `817e6c09`, `98c475bf`, `458e3a53`, `470c91de`, `5783df64`,
+  `758abdf0`, `7d7772cc`, `df9fd884`, `e9ac8c9e`, `25e02866`, `2601afb7`,
+  `48131b3c`, `5751f35e`, `7491f3cf`, `963c33f8`, `973e499e`, `9968a131`.
+- **Low (4):** `c1990cce`, `762cd429`, `42a15761`, `9ddd00f0`.
+- **Adequate unchanged candidates: none.** `98c475bf`, `7491f3cf` and
+  `973e499e` were withdrawn by the supervisor corrections recorded in
+  `batch07.md`.
+- **Finite domain, no change without new semantics:** `c1990cce` (13 inputs)
+  and `762cd429` (13,122).
+- **Needs constructor work:** the other 30.
+
+The unreachable-canonical and verifier-disagreement tables, the 985ae207
+feasibility finding and the open semantics are in `batch07.md`. None of the 32
+is admitted, and none is release-ready. No certificate, audit or `prepare`
+export was rerun, and the randomized probes were not repeated for this
+integration.
+
 ## Batch 22 semantic review (32 families, ranks 673–704; reviewed out of order)
 
 **Why this batch:** it was reviewed ahead of batches 7–21. Its families already
@@ -1422,7 +1512,9 @@ inputs each). The aim was to test whether broad sampling means an adequate
 domain, and to find adequate families that need no change.
 
 **Batches 7–21 and 23 remain unreviewed.** Their 505 records are `pending`.
-Nothing in this section describes them.
+Nothing in this section describes them. *(Snapshot at the batch-22 review.
+Batch 7 has since been integrated; see the batch-7 section. Batches 8–21 and
+23, 473 records, are still pending.)*
 
 **Scope:**
 - 32 tier-B first reviews.
@@ -1659,18 +1751,25 @@ None is release-ready.
 | Batches | Ranks | Families | Status |
 |---|---|---|---|
 | 1–6 | 1–192 | 192 | reviewed (current) |
-| 7–21 | 193–672 | 480 | **pending, not reviewed** |
+| 7 | 193–224 | 32 | reviewed (current, integrated fragment) |
+| 8–21 | 225–672 | 448 | **pending, not reviewed** |
 | 22 | 673–704 | 32 | reviewed (current, out of order) |
 | 23 | 705–729 | 25 | **pending, not reviewed** |
 
-The next pending batch is the first unreviewed batch in fixed order: **batch 7
-(ranks 193–224)**, which is `summary.json` `next_batch`. Batch membership is
+Total: 256 reviewed and 473 pending.
+
+The next pending batch is the first unreviewed batch in fixed order: **batch 8
+(ranks 225–256)**, which is `summary.json` `next_batch`. Batch membership is
 unchanged.
 
-`817e6c09 c1990cce 98c475bf 456873bc 458e3a53 470c91de 52fd389e 5783df64
-5ecac7f7 758abdf0 762cd429 7d7772cc 8fbca751 981add89 985ae207 c8b7cc0f
-df9fd884 e9ac8c9e ef26cbf6 17b866bd 1e5d6875 25e02866 2601afb7 2e65ae53
-42a15761 48131b3c 5751f35e 7491f3cf 963c33f8 973e499e 9968a131 9ddd00f0`
+`ac605cbb ad7e01d0 bae5c565 e69241bd 1efba499 27a77e38 310f3251 342dd610
+3bd292e8 45bbe264 58743b76 5a5a2103 60c09cac 695367ec 6ffe8f07 78e78cff
+7ec998c9 8ee62060 8fff9e47 9caf5b84 9f41bd9c 9f5f939b c658a4bd c803e39c
+ccd554ac e39e9282 e734a0e8 f0f8a26d fb791726 0934a4d8 230f2e48 252143c9`
 
-All are tier B. Check each constructor hash against the current HEAD before
-reviewing.
+All are tier B, and all certificates are `current`. Every constructor is
+unchanged since the ordering commit. `45bbe264` and `0934a4d8` are in the
+`early_repairs` group of `prepare.REPAIRED` (worklist `native_repaired`). Their
+128-sample audit was already stale at the original extraction, and a remeasure
+is pending. Check each constructor hash against the current HEAD
+before reviewing.

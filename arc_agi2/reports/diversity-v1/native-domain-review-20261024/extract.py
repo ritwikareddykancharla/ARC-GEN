@@ -49,8 +49,9 @@ BATCH = 32
 MAX_CONSTRAINTS = 28
 # Batches whose every family must carry a hand-written, current semantic review.
 # All other batches must stay "pending". Coverage need not be consecutive:
-# batch 22 was reviewed ahead of batches 7..21, which remain pending.
-REVIEWED_BATCHES = (1, 2, 3, 4, 5, 6, 22)
+# batch 22 was reviewed ahead of batches 7..21; batch 7 has since been reviewed
+# and batches 8..21 remain pending.
+REVIEWED_BATCHES = (1, 2, 3, 4, 5, 6, 7, 22)
 
 CERT_DIRS = {
     "direct_factory": ROOT / "arc_agi2/direct_factories",

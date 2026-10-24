@@ -572,11 +572,10 @@
   "note": "All 729 families keep their review status in inventory.jsonl. This shortlist is a few reviewed candidates and never implies that every family was reviewed or prioritised.",
   "inventory": "arc_agi2/reports/diversity-v1/native-domain-review-20261024/inventory.jsonl",
   "semantic_status": {
-   "reviewed": 224,
-   "pending": 505
+   "reviewed": 256,
+   "pending": 473
   },
   "pending_batches": [
-   7,
    8,
    9,
    10,
@@ -593,6 +592,7 @@
    21,
    23
   ],
-  "next_review_batch": 7
+  "next_review_batch": 8,
+  "coverage_note": "Coverage fields (semantic_status, pending_batches, next_review_batch) were updated when the batch-7 fragment was integrated: batches 1-7 and 22 are reviewed. Everything above (bound_to, already_implemented, in_progress, proposed, proposed_order) is the unchanged snapshot bound to bound_to and does not yet consider batch-7 findings."
  }
 }

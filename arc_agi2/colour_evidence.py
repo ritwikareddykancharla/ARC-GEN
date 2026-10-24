@@ -234,6 +234,10 @@ def require_colour_evidence(task_id, demonstrations, queries, palette=None, d4=0
         require_latin_fill_evidence(demonstrations, queries,
                     list(range(10)) if palette is None else palette)
         return
+    if task_id == 'd47aa2ff':
+        from .dot_motion_d47aa2ff_evidence import require_dot_motion_evidence
+        require_dot_motion_evidence(demonstrations, queries, palette, d4)
+        return
     if task_id == '80214e03':
         from .mosaic_band_evidence import require_mosaic_band_evidence
         require_mosaic_band_evidence(demonstrations, queries,

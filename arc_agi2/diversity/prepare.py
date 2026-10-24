@@ -223,7 +223,7 @@ def prepare(item):
     target_pool = max(160, options["train"] * 2 + options["validation"] * 8)
     base_trials = target_pool * 40
     margin = {s: max(2, -(-options[s] // 10)) for s in pools}
-    pool_stop, trial = "trial_budget", -1
+    pool_stop, pool_trials = "trial_budget", 0
     for trial in range(base_trials * POOL_EXTENSION_FACTOR):
         if time.monotonic() - started > options["seconds"] * 0.6:
             pool_stop = "time_share"
@@ -241,6 +241,7 @@ def prepare(item):
             ):
                 pool_stop = "support" if trial < base_trials else "support_after_extension"
                 break
+        pool_trials += 1
         seed = int(digest([options["seed"], tid, "pair", trial])[:15], 16)
         mode = "rearc-compatible-v1" if use_broader and randomizer.random() < 0.5 else "native"
         try:
@@ -341,7 +342,7 @@ def prepare(item):
         "requested": {s: options[s] for s in pools},
         "pool_counts": {s: len(p) for s, p in pools.items()},
         "pool_sources": dict(sources),
-        "pool_trials": trial + 1,
+        "pool_trials": pool_trials,
         "pool_stop": pool_stop,
         "query_support": support_stats,
         "rejections": dict(rejected),

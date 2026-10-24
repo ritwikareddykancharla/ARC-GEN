@@ -39,9 +39,11 @@ seeds. The support check ran a quadratic shape scan every 64 accepted trials.
 * Pool sampling stops once strict support reaches the quota plus a margin of
   `max(2, ⌈quota/10⌉)`. It may extend to 4× the base trial budget only while
   support remains below the quota, and always within the original 60% time
-  share. Every extra proposal still passes both verifiers.
-* Feasibility checking is O(rows) and exactly equivalent to the old check,
-  which is used as the test oracle.
+  share. Every accepted extra proposal passes the unchanged source-specific
+  verification gates.
+* Feasibility checking is O(rows) for the uniform/seen pattern shared by
+  these eight families. Other patterns cache checks by query shape and
+  identity. Results match the old check, used as the test oracle.
 * Reports add `pool_trials`, `pool_stop` and per-split `query_support`. A
   shortfall records its stop reason and states explicitly that it is an
   observed bounded-pool shortfall, **not** a finite-capacity claim.
@@ -50,9 +52,14 @@ seeds. The support check ran a quadratic shape scan every 64 accepted trials.
 
 | family | before (original) | after | pool stop | val feasible ids |
 |---|---|---|---|---|
-| 0962bcdd | 200/18, 54.9 s | **200/20**, 21.6 s | support, 11,265 trials | 25 |
-| 44f52bb0 | 200/9, 117.8 s | **200/20**, 52.4 s | support_after_extension, 32,129 trials | 21 |
+| 0962bcdd | 200/18, 54.9 s | **200/20**, 21.6 s | support, 11,264 proposals | 25 |
+| 44f52bb0 | 200/9, 117.8 s | **200/20**, 52.4 s | support_after_extension, 32,128 proposals | 21 |
 | feca6190 | 54/0 | 54/0 (shortfall reported) | trial_budget, 89,600 trials, 35.2 s | 0 |
+
+These timings compare different hosts/worker counts and are not a speed
+benchmark. The initial local report counted the terminating support-check
+iteration as a trial; the reviewed implementation counts actual proposals,
+shown above. This counter correction does not change emitted episodes.
 
 feca6190 observed support: 58 train identities in 5 shape bins, 54 of them
 feasible, and one validation identity. This agrees with root's independent
@@ -61,9 +68,13 @@ separately.
 
 An independent audit of all 494 exported rows found zero violations: global
 input split, four distinct canonical and exact inputs, unique query orbits,
-strict matched shapes and program re-verification. The new tests in
-`diversity/test_prepare_sampling.py` (10) pass, as do 68 tests in the related
-diversity, profile, finite-input and shape-policy suites.
+strict matched shapes and program re-verification. All 68 tests in the
+diversity, profile, finite-input and shape-policy suites pass, including the
+10 new tests in `diversity/test_prepare_sampling.py`.
+
+Reviewer checks also passed the four augmentation-context tests and a real
+2/2 episode smoke run. Its 2,432 proposals exactly equal accepted pool rows
+plus duplicate and rejected proposals, verifying the corrected trial count.
 
 ## Unresolved
 

@@ -1,0 +1,746 @@
+{
+ "calls_per_version": 2000,
+ "families": {
+  "7491f3cf": {
+   "after": {
+    "aspect_hist": {
+     "square": 578,
+     "tall": 1328,
+     "wide": 94
+    },
+    "calls": 2000,
+    "canvas_heights": {
+     "max": 30,
+     "mean": 14.565,
+     "median": 12.0,
+     "min": 5
+    },
+    "canvas_widths": {
+     "max": 29,
+     "mean": 23.546,
+     "median": 25.0,
+     "min": 17
+    },
+    "distinct_dot_placements": 1237,
+    "dot_on_panel_edge_share": 0.787,
+    "dot_region_share": {
+     "max": 0.9873,
+     "mean": 0.6312,
+     "median": 0.6667,
+     "min": 0.0348
+    },
+    "errors": {},
+    "largest_shape_share": 0.163,
+    "pairs": 2000,
+    "panel_heights": {
+     "10": 59,
+     "11": 58,
+     "12": 53,
+     "13": 55,
+     "14": 53,
+     "15": 50,
+     "16": 55,
+     "17": 55,
+     "18": 60,
+     "19": 52,
+     "20": 62,
+     "21": 55,
+     "22": 52,
+     "23": 52,
+     "24": 49,
+     "25": 41,
+     "26": 63,
+     "27": 61,
+     "28": 60,
+     "3": 43,
+     "4": 177,
+     "5": 362,
+     "6": 169,
+     "7": 71,
+     "8": 80,
+     "9": 53
+    },
+    "panel_ink_density": {
+     "max": 0.6889,
+     "mean": 0.3365,
+     "median": 0.3333,
+     "min": 0.0564
+    },
+    "panel_shape_hist": {
+     "10x3": 14,
+     "10x4": 17,
+     "10x5": 16,
+     "10x6": 12,
+     "11x3": 13,
+     "11x4": 16,
+     "11x5": 14,
+     "11x6": 15,
+     "12x3": 13,
+     "12x4": 14,
+     "12x5": 13,
+     "12x6": 13,
+     "13x3": 15,
+     "13x4": 13,
+     "13x5": 14,
+     "13x6": 13,
+     "14x3": 15,
+     "14x4": 15,
+     "14x5": 12,
+     "14x6": 11,
+     "15x3": 12,
+     "15x4": 13,
+     "15x5": 10,
+     "15x6": 15,
+     "16x3": 17,
+     "16x4": 12,
+     "16x5": 12,
+     "16x6": 14,
+     "17x3": 19,
+     "17x4": 10,
+     "17x5": 15,
+     "17x6": 11,
+     "18x3": 14,
+     "18x4": 19,
+     "18x5": 14,
+     "18x6": 13,
+     "19x3": 15,
+     "19x4": 12,
+     "19x5": 16,
+     "19x6": 9,
+     "20x3": 14,
+     "20x4": 14,
+     "20x5": 16,
+     "20x6": 18,
+     "21x3": 13,
+     "21x4": 7,
+     "21x5": 18,
+     "21x6": 17,
+     "22x3": 14,
+     "22x4": 12,
+     "22x5": 14,
+     "22x6": 12,
+     "23x3": 15,
+     "23x4": 14,
+     "23x5": 10,
+     "23x6": 13,
+     "24x3": 10,
+     "24x4": 9,
+     "24x5": 16,
+     "24x6": 14,
+     "25x3": 11,
+     "25x4": 12,
+     "25x5": 9,
+     "25x6": 9,
+     "26x3": 15,
+     "26x4": 18,
+     "26x5": 15,
+     "26x6": 15,
+     "27x3": 9,
+     "27x4": 14,
+     "27x5": 11,
+     "27x6": 27,
+     "28x3": 17,
+     "28x4": 11,
+     "28x5": 14,
+     "28x6": 18,
+     "3x4": 18,
+     "3x5": 10,
+     "3x6": 15,
+     "4x3": 16,
+     "4x4": 125,
+     "4x5": 21,
+     "4x6": 15,
+     "5x3": 9,
+     "5x4": 12,
+     "5x5": 326,
+     "5x6": 15,
+     "6x3": 14,
+     "6x4": 16,
+     "6x5": 12,
+     "6x6": 127,
+     "7x3": 20,
+     "7x4": 21,
+     "7x5": 14,
+     "7x6": 16,
+     "8x3": 27,
+     "8x4": 14,
+     "8x5": 23,
+     "8x6": 16,
+     "9x3": 17,
+     "9x4": 17,
+     "9x5": 8,
+     "9x6": 11
+    },
+    "panel_shapes": 103,
+    "panel_widths": {
+     "3": 368,
+     "4": 475,
+     "5": 673,
+     "6": 484
+    },
+    "pattern_cells": {
+     "max": 92,
+     "mean": 21.136,
+     "median": 15.0,
+     "min": 3
+    },
+    "pattern_kind_hist": {
+     "blocks": 317,
+     "checker": 430,
+     "diamond": 222,
+     "ells": 295,
+     "plus": 368,
+     "random": 436,
+     "ring": 364,
+     "stripes": 364,
+     "sym": 805,
+     "x": 399
+    },
+    "source_sha256": "7e63ecacb08572182b4784a718ad6063e2161482fcb06fc1895a347648d1650b",
+    "straight_wall_axis_hist": {
+     "column": 252,
+     "row": 223
+    },
+    "support": {
+     "largest_shape_bin": 92,
+     "pool_identities": 559,
+     "pool_rows": 560,
+     "shape_bins": 102,
+     "strict_shape_feasible_query_rows": 472,
+     "strict_shape_feasible_share": 0.8429
+    },
+    "support_full": {
+     "largest_shape_bin": 326,
+     "pool_identities": 1999,
+     "pool_rows": 2000,
+     "shape_bins": 103,
+     "strict_shape_feasible_query_rows": 2000,
+     "strict_shape_feasible_share": 1.0
+    },
+    "unique_input_orbits": 1999,
+    "unique_raw_inputs": 2000,
+    "wall_evidence_both_branches_share": 0.669,
+    "wall_kind_by_aspect": {
+     "square": {
+      "diagonal": 72,
+      "ell": 174,
+      "path": 182,
+      "straight": 150
+     },
+     "tall": {
+      "diagonal": 247,
+      "ell": 529,
+      "path": 273,
+      "straight": 279
+     },
+     "wide": {
+      "diagonal": 12,
+      "ell": 15,
+      "path": 35,
+      "straight": 32
+     }
+    },
+    "wall_kind_hist": {
+     "diagonal": 331,
+     "ell": 718,
+     "path": 490,
+     "straight": 461
+    },
+    "wall_length": {
+     "max": 28,
+     "mean": 9.0215,
+     "median": 6.0,
+     "min": 3
+    }
+   },
+   "before": {
+    "aspect_hist": {
+     "square": 2000
+    },
+    "calls": 2000,
+    "canvas_heights": {
+     "max": 8,
+     "mean": 7.0635,
+     "median": 7.0,
+     "min": 6
+    },
+    "canvas_widths": {
+     "max": 29,
+     "mean": 25.254,
+     "median": 25.0,
+     "min": 21
+    },
+    "distinct_dot_placements": 72,
+    "dot_on_panel_edge_share": 0.871,
+    "dot_region_share": {
+     "max": 0.9375,
+     "mean": 0.6369,
+     "median": 0.6667,
+     "min": 0.129
+    },
+    "errors": {},
+    "largest_shape_share": 0.5795,
+    "pairs": 2000,
+    "panel_heights": {
+     "4": 357,
+     "5": 1159,
+     "6": 484
+    },
+    "panel_ink_density": {
+     "max": 0.625,
+     "mean": 0.3739,
+     "median": 0.3611,
+     "min": 0.1759
+    },
+    "panel_shape_hist": {
+     "4x4": 357,
+     "5x5": 1159,
+     "6x6": 484
+    },
+    "panel_shapes": 3,
+    "panel_widths": {
+     "4": 357,
+     "5": 1159,
+     "6": 484
+    },
+    "pattern_cells": {
+     "max": 32,
+     "mean": 11.1605,
+     "median": 11.0,
+     "min": 3
+    },
+    "pattern_kind_hist": {
+     "blocks": 343,
+     "checker": 408,
+     "diamond": 273,
+     "ells": 324,
+     "plus": 375,
+     "random": 358,
+     "ring": 381,
+     "stripes": 405,
+     "sym": 744,
+     "x": 389
+    },
+    "source_sha256": "43812195d7d1ce3fd651303304e14a0704538f14222d7ce7f082922c0c5e39ff",
+    "straight_wall_axis_hist": {
+     "column": 250,
+     "row": 217
+    },
+    "support": {
+     "largest_shape_bin": 329,
+     "pool_identities": 559,
+     "pool_rows": 560,
+     "shape_bins": 3,
+     "strict_shape_feasible_query_rows": 560,
+     "strict_shape_feasible_share": 1.0
+    },
+    "support_full": {
+     "largest_shape_bin": 1159,
+     "pool_identities": 1987,
+     "pool_rows": 2000,
+     "shape_bins": 3,
+     "strict_shape_feasible_query_rows": 2000,
+     "strict_shape_feasible_share": 1.0
+    },
+    "unique_input_orbits": 1987,
+    "unique_raw_inputs": 2000,
+    "wall_evidence_both_branches_share": 0.656,
+    "wall_kind_by_aspect": {
+     "square": {
+      "diagonal": 271,
+      "ell": 622,
+      "path": 653,
+      "straight": 454
+     },
+     "tall": {},
+     "wide": {}
+    },
+    "wall_kind_hist": {
+     "diagonal": 271,
+     "ell": 622,
+     "path": 653,
+     "straight": 454
+    },
+    "wall_length": {
+     "max": 9,
+     "mean": 5.196,
+     "median": 5.0,
+     "min": 4
+    }
+   },
+   "feasibility": {
+    "exhaustive_wall_dot_enumeration": {
+     "3x3": {
+      "guarded_walls_min_region_2": 40,
+      "guarded_walls_with_a_dot_cell": 0,
+      "two_region_walls": 192,
+      "two_region_walls_with_a_dot_cell": 16
+     },
+     "3x4": {
+      "guarded_walls_min_region_2": 425,
+      "guarded_walls_with_a_dot_cell": 90,
+      "two_region_walls": 1076,
+      "two_region_walls_with_a_dot_cell": 234
+     },
+     "4x3": {
+      "guarded_walls_min_region_2": 425,
+      "guarded_walls_with_a_dot_cell": 90,
+      "two_region_walls": 1076,
+      "two_region_walls_with_a_dot_cell": 234
+     }
+    },
+    "source_sha256": "7e63ecacb08572182b4784a718ad6063e2161482fcb06fc1895a347648d1650b",
+    "wall_evidence_acceptance": {
+     "calls_per_shape": 60,
+     "rates": {
+      "10x3": 0.1657,
+      "10x4": 0.25,
+      "10x5": 0.2459,
+      "10x6": 0.2372,
+      "11x3": 0.1796,
+      "11x4": 0.2317,
+      "11x5": 0.3046,
+      "11x6": 0.3,
+      "12x3": 0.184,
+      "12x4": 0.2532,
+      "12x5": 0.2553,
+      "12x6": 0.2553,
+      "13x3": 0.1635,
+      "13x4": 0.2429,
+      "13x5": 0.2459,
+      "13x6": 0.2353,
+      "14x3": 0.1609,
+      "14x4": 0.2083,
+      "14x5": 0.251,
+      "14x6": 0.2586,
+      "15x3": 0.1835,
+      "15x4": 0.2419,
+      "15x5": 0.2913,
+      "15x6": 0.2449,
+      "16x3": 0.1775,
+      "16x4": 0.2899,
+      "16x5": 0.2586,
+      "16x6": 0.223,
+      "17x3": 0.1802,
+      "17x4": 0.2479,
+      "17x5": 0.239,
+      "17x6": 0.2985,
+      "18x3": 0.2091,
+      "18x4": 0.2459,
+      "18x5": 0.3015,
+      "18x6": 0.249,
+      "19x3": 0.2007,
+      "19x4": 0.2956,
+      "19x5": 0.2299,
+      "19x6": 0.2098,
+      "20x3": 0.2299,
+      "20x4": 0.2344,
+      "20x5": 0.1929,
+      "20x6": 0.2857,
+      "21x3": 0.1583,
+      "21x4": 0.2655,
+      "21x5": 0.2174,
+      "21x6": 0.2372,
+      "22x3": 0.1858,
+      "22x4": 0.2913,
+      "22x5": 0.2372,
+      "22x6": 0.274,
+      "23x3": 0.2264,
+      "23x4": 0.2532,
+      "23x5": 0.251,
+      "23x6": 0.2381,
+      "24x3": 0.1662,
+      "24x4": 0.2542,
+      "24x5": 0.251,
+      "24x6": 0.2439,
+      "25x3": 0.2256,
+      "25x4": 0.2469,
+      "25x5": 0.25,
+      "25x6": 0.2459,
+      "26x3": 0.1893,
+      "26x4": 0.2791,
+      "26x5": 0.223,
+      "26x6": 0.2609,
+      "27x3": 0.2034,
+      "27x4": 0.2703,
+      "27x5": 0.2256,
+      "27x6": 0.3243,
+      "28x3": 0.1881,
+      "28x4": 0.297,
+      "28x5": 0.2655,
+      "28x6": 0.2542,
+      "3x4": 0.0733,
+      "3x5": 0.1143,
+      "3x6": 0.1511,
+      "4x3": 0.0626,
+      "4x4": 0.2048,
+      "4x5": 0.2151,
+      "4x6": 0.2353,
+      "5x3": 0.1402,
+      "5x4": 0.2586,
+      "5x5": 0.1527,
+      "5x6": 0.2098,
+      "6x3": 0.1399,
+      "6x4": 0.2222,
+      "6x5": 0.2098,
+      "6x6": 0.223,
+      "7x3": 0.1339,
+      "7x4": 0.2469,
+      "7x5": 0.2632,
+      "7x6": 0.2372,
+      "8x3": 0.1835,
+      "8x4": 0.2214,
+      "8x5": 0.2521,
+      "8x6": 0.2198,
+      "9x3": 0.1739,
+      "9x4": 0.2113,
+      "9x5": 0.2479,
+      "9x6": 0.2439
+     },
+     "runtime_errors": 0,
+     "shapes": 103,
+     "worst_rate": 0.0626,
+     "worst_shape": "4x3",
+     "worst_shape_exhaustion_log10_probability_at_max_tries": -11.23
+    }
+   }
+  },
+  "98c475bf": {
+   "after": {
+    "border_colour_hist": {
+     "1": 149,
+     "2": 134,
+     "3": 145,
+     "4": 323,
+     "5": 321,
+     "6": 129,
+     "7": 144,
+     "8": 323,
+     "9": 332
+    },
+    "calls": 2000,
+    "canvas_heights": {
+     "max": 30,
+     "mean": 21.385,
+     "median": 22.0,
+     "min": 12
+    },
+    "canvas_widths": {
+     "max": 30,
+     "mean": 23.9885,
+     "median": 24.0,
+     "min": 18
+    },
+    "distinct_marker_layouts": 1965,
+    "errors": {},
+    "heights_hist": {
+     "12": 89,
+     "13": 98,
+     "14": 97,
+     "15": 90,
+     "16": 87,
+     "17": 106,
+     "18": 100,
+     "19": 125,
+     "20": 113,
+     "21": 91,
+     "22": 115,
+     "23": 107,
+     "24": 96,
+     "25": 98,
+     "26": 114,
+     "27": 124,
+     "28": 125,
+     "29": 127,
+     "30": 98
+    },
+    "largest_shape_share": 0.008,
+    "line_colour_hist": {
+     "1": 430,
+     "2": 390,
+     "3": 391,
+     "6": 373,
+     "7": 416
+    },
+    "line_row_relative": {
+     "max": 0.9655,
+     "mean": 0.4945,
+     "median": 0.5,
+     "min": 0.037
+    },
+    "marker_colour_hist": {
+     "1": 607,
+     "2": 707,
+     "3": 655,
+     "6": 666,
+     "7": 636
+    },
+    "marker_count_hist": {
+     "1": 1034,
+     "2": 661,
+     "3": 305
+    },
+    "output_interior_density": {
+     "max": 0.2656,
+     "mean": 0.1044,
+     "median": 0.0935,
+     "min": 0.0369
+    },
+    "pairs": 2000,
+    "shapes": 247,
+    "source_sha256": "8aa790e85569ce903d172a1c4cb5e4c6829ed5117125a3aba3554bf5e17f244e",
+    "support": {
+     "largest_shape_bin": 6,
+     "motif_coverage_feasible_query_rows": 194,
+     "motif_coverage_feasible_share": 0.3464,
+     "pool_identities": 560,
+     "pool_rows": 560,
+     "shape_bins": 219,
+     "strict_shape_feasible_query_rows": 230,
+     "strict_shape_feasible_share": 0.4107
+    },
+    "support_full": {
+     "largest_shape_bin": 16,
+     "motif_coverage_feasible_query_rows": 1944,
+     "motif_coverage_feasible_share": 0.972,
+     "pool_identities": 1989,
+     "pool_rows": 2000,
+     "shape_bins": 247,
+     "strict_shape_feasible_query_rows": 1971,
+     "strict_shape_feasible_share": 0.9855
+    },
+    "unique_input_orbits": 1989,
+    "unique_raw_inputs": 2000,
+    "widths_hist": {
+     "18": 164,
+     "19": 156,
+     "20": 156,
+     "21": 139,
+     "22": 157,
+     "23": 149,
+     "24": 165,
+     "25": 139,
+     "26": 148,
+     "27": 163,
+     "28": 150,
+     "29": 163,
+     "30": 151
+    }
+   },
+   "before": {
+    "border_colour_hist": {
+     "1": 144,
+     "2": 130,
+     "3": 149,
+     "4": 340,
+     "5": 322,
+     "6": 150,
+     "7": 131,
+     "8": 329,
+     "9": 305
+    },
+    "calls": 2000,
+    "canvas_heights": {
+     "max": 30,
+     "mean": 21.4735,
+     "median": 22.0,
+     "min": 12
+    },
+    "canvas_widths": {
+     "max": 20,
+     "mean": 20.0,
+     "median": 20.0,
+     "min": 20
+    },
+    "distinct_marker_layouts": 1692,
+    "errors": {},
+    "heights_hist": {
+     "12": 82,
+     "13": 98,
+     "14": 70,
+     "15": 94,
+     "16": 95,
+     "17": 112,
+     "18": 111,
+     "19": 109,
+     "20": 96,
+     "21": 119,
+     "22": 107,
+     "23": 131,
+     "24": 85,
+     "25": 114,
+     "26": 125,
+     "27": 108,
+     "28": 119,
+     "29": 118,
+     "30": 107
+    },
+    "largest_shape_share": 0.0655,
+    "line_colour_hist": {
+     "1": 409,
+     "2": 400,
+     "3": 389,
+     "6": 390,
+     "7": 412
+    },
+    "line_row_relative": {
+     "max": 0.9655,
+     "mean": 0.4826,
+     "median": 0.4783,
+     "min": 0.037
+    },
+    "marker_colour_hist": {
+     "1": 653,
+     "2": 690,
+     "3": 659,
+     "6": 678,
+     "7": 630
+    },
+    "marker_count_hist": {
+     "1": 1016,
+     "2": 658,
+     "3": 326
+    },
+    "output_interior_density": {
+     "max": 0.2674,
+     "mean": 0.1095,
+     "median": 0.0977,
+     "min": 0.0389
+    },
+    "pairs": 2000,
+    "shapes": 19,
+    "source_sha256": "c7bac10a2384098385919e1765d4cbcc2ffaf35f7453b9e588c24dcd143a9118",
+    "support": {
+     "largest_shape_bin": 39,
+     "motif_coverage_feasible_query_rows": 560,
+     "motif_coverage_feasible_share": 1.0,
+     "pool_identities": 543,
+     "pool_rows": 560,
+     "shape_bins": 19,
+     "strict_shape_feasible_query_rows": 560,
+     "strict_shape_feasible_share": 1.0
+    },
+    "support_full": {
+     "largest_shape_bin": 131,
+     "motif_coverage_feasible_query_rows": 2000,
+     "motif_coverage_feasible_share": 1.0,
+     "pool_identities": 1868,
+     "pool_rows": 2000,
+     "shape_bins": 19,
+     "strict_shape_feasible_query_rows": 2000,
+     "strict_shape_feasible_share": 1.0
+    },
+    "unique_input_orbits": 1868,
+    "unique_raw_inputs": 1997,
+    "widths_hist": {
+     "20": 2000
+    }
+   }
+  }
+ },
+ "legacy_commit": "99def42",
+ "output_sha256": "62f62b9f3af7440fba583d95e047eff9f922d08223bf7f18f026da3fc4e9a779",
+ "pool_rows": 560,
+ "probe": "domain_probe.py",
+ "probe_sha256": "2b37c3271158b5b074579b612891cae3e3c6ef39955c96c3dd02fe16087a8e94"
+}

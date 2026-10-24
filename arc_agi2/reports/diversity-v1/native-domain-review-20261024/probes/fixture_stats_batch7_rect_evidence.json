@@ -1,0 +1,33 @@
+{
+ "probe": "probes/fixture_stats_batch7_rect.py",
+ "probe_sha256": "2426b43fd740406555782e77967a0e925d2100cf9665a2fed46ca4324bf44801",
+ "command": "PYTHONPATH=. /Users/ritwika/projects/arc-agi2/.venv/bin/python arc_agi2/reports/diversity-v1/native-domain-review-20261024/probes/fixture_stats_batch7_rect.py 300 0",
+ "n": 300,
+ "seed": 0,
+ "baseline_commit": "96be8033a32ac47104ec737310778baffa7f5159",
+ "output_sha256": "036706f88425b70d2bf53f04482d5b0fd9d471a8a36b237975c64a86ce4d4771",
+ "reproducibility": "Two runs gave byte-identical output.",
+ "reason": "Supervisor source review: 7491f3cf and 973e499e had been marked adequate unchanged from square-only sampling. This probe tests independent H/W against independent reference relations. No constructor or factory was changed.",
+ "corrections_made_before_final_run": [
+  "The first run used a square control over 3..6. 3x3 panels are outside the constructor range (MIN_SIZE 4), and every 3x3 try failed (no room for a dot away from the wall). The control is now 4..6, and 3x3 is reported on its own line as 0/300 rather than dropped."
+ ],
+ "output_lines": [
+  "== S. self-tests (square shapes reproduce the constructor)",
+  "  7491f3cf: rectangular builder at H = W equals generate(**explicit) on 100/100 scenes",
+  "  973e499e: independent relation equals the constructor on 200/200 native draws",
+  "  973e499e: independent relation equals 5/5 canonical pairs",
+  "",
+  "== A. 7491f3cf rectangular panels (300 scenes per aspect class)",
+  "  tall H > W: scenes=300/300 panel_shapes=30 program=300/300 archived_verifier=300/300 acceptance=300/1026 rejections={'no_dot': 83, 'overlay_equal': 3, 'pattern_bad': 41, 'region_unshown': 103, 'wall_bad': 259, 'wall_evidence': 237} wall_kinds={'diagonal': 61, 'ell': 103, 'path': 86, 'straight': 50}",
+  "  wide H < W: scenes=300/300 panel_shapes=6 program=300/300 archived_verifier=300/300 acceptance=300/1263 rejections={'no_dot': 222, 'overlay_equal': 1, 'pattern_bad': 80, 'region_unshown': 87, 'wall_bad': 334, 'wall_evidence': 239} wall_kinds={'diagonal': 84, 'ell': 63, 'path': 97, 'straight': 56}",
+  "  square H = W 4..6 (control, constructor range): scenes=300/300 panel_shapes=3 program=300/300 archived_verifier=300/300 acceptance=300/861 rejections={'no_dot': 4, 'pattern_bad': 48, 'region_unshown': 86, 'wall_bad': 203, 'wall_evidence': 220} wall_kinds={'diagonal': 49, 'ell': 73, 'path': 94, 'straight': 84}",
+  "  square 3x3 (outside constructor range, reported not filtered): scenes=0/300 panel_shapes=0 program=0/0 archived_verifier=0/0 acceptance=0/120000 rejections={'no_dot': 51976, 'wall_bad': 68024} wall_kinds={}",
+  "  wall-evidence scenes buildable within 400 tries: 3x6:40/40 (tries 306), 8x3:40/40 (tries 286), 10x5:40/40 (tries 145), 12x6:40/40 (tries 183), 28x6:40/40 (tries 158), 20x4:40/40 (tries 126)",
+  "  extreme tall panels (canvas up to 30x29): scenes=60/60 program=60/60",
+  "",
+  "== B. 973e499e rectangular inputs (300 scenes; H, W independent in 2..5)",
+  "  rectangular: scenes=227 program=227/227 archived_verifier=227/227",
+  "  square: scenes=73 program=73/73 archived_verifier=73/73",
+  "  output sizes reached: H^2 x W^2 from 4x4 to 25x25, all <= 30"
+ ]
+}

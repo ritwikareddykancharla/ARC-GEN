@@ -17,13 +17,75 @@
 import common
 
 
+def _legacy_explicit(width, height, colors):
+  """Historical explicit generate(width, height, colors) semantics.
+
+  This is a compatibility path, not part of the certified random grammar. It
+  runs the draw() of the generator before 238f085 verbatim, so every explicit
+  call that returned a result there returns equal grids here, including
+  repeated nonadjacent band colours (each contiguous run is reflected on its
+  own), ink on the border (output rows 0 and height - 1 are cleared when
+  height >= 3), widths below 3, height 2, a colour list shorter than the canvas
+  (remaining cells are 0) and mixed-colour rows (grouped by the historical
+  list(set(row)) key). Calls on which the historical code raised (an interior
+  row without ink, more colours than cells, height below 2) raise ValueError.
+  Values outside ARC grids (non-int or bool dimensions or colours, colours
+  outside 0..9, sides above 30, empty grids) are rejected, although the
+  historical code sometimes returned something for them. The factory and the
+  coordinate checker are certified only on the random grammar and the
+  canonical fixtures; they may disagree with legacy-only explicit scenes.
+  """
+  if type(width) is not int or not 1 <= width <= 30:
+    raise ValueError("Explicit width must be an integer in [1, 30]")
+  if type(height) is not int or not 2 <= height <= 30:
+    raise ValueError("Explicit height must be an integer in [2, 30]")
+  try:
+    colors = list(colors)
+  except TypeError:
+    raise ValueError("Explicit colours must be a sequence") from None
+  if len(colors) > width * height or any(type(c) is not int or not 0 <= c <= 9 for c in colors):
+    raise ValueError("Explicit colours must give at most one colour in 0..9 per cell")
+  filled = colors + [0] * (width * height - len(colors))
+  if any(not any(filled[r * width:(r + 1) * width]) for r in range(1, height - 1)):
+    raise ValueError("Every interior row of an explicit scene must contain ink")
+
+  def draw():
+    grid, output = common.grids(width, height)
+    for i, color in enumerate(colors):
+      grid[i // width][i % width] = color
+    last, length, lengths = -1, 1, []
+    for row in range(1, height - 1):
+      subset = list(set(grid[row]))
+      if 0 in subset: subset.remove(0)
+      if subset[0] == last:
+        length += 1
+      else:
+        if last != -1: lengths.append(length)
+        last, length = subset[0], 1
+    lengths.append(length)
+    inrow = outrow = 1
+    for length in lengths:
+      outrow = outrow + length - 1
+      for _ in range(length):
+        output[outrow] = grid[inrow]
+        inrow, outrow = inrow + 1, outrow - 1
+      outrow = inrow
+    return grid, output
+
+  grid, output = draw()
+  # The historical output aliased input rows; return equal, independent rows.
+  return {"input": grid, "output": [row[:] for row in output]}
+
+
 def generate(width=None, height=None, colors=None, *, num_bands=None, symmetric=None):
   """Reflect each monochromatic row band vertically on a rectangular canvas.
 
-  Random scenes use independent dimensions 3..30, 1..9 distinct bands, and
-  symmetric or asymmetric nonempty row patterns. The black border and
-  distinct colours of contiguous bands are retained. Complete explicit
-  width/height/colors scenes preserve the original labels.
+  Certified random grammar (colors=None): independent dimensions 3..30, 1..9
+  bands with distinct colours, symmetric or asymmetric nonempty monochromatic
+  row patterns, native black border; num_bands/symmetric are validated.
+  Complete explicit width/height/colors calls keep their historical
+  (pre-238f085) labels through _legacy_explicit, which is compatibility
+  support only and is not covered by the certificate.
   """
   import random
 
@@ -32,29 +94,31 @@ def generate(width=None, height=None, colors=None, *, num_bands=None, symmetric=
       raise ValueError(f"{name} must be an integer in [{low}, {high}]")
     return value
 
-  if colors is not None and (width is None or height is None):
-    raise ValueError("Explicit colours require width and height")
+  if colors is not None:
+    if width is None or height is None:
+      raise ValueError("Explicit colours require width and height")
+    if num_bands is not None or symmetric is not None:
+      raise ValueError("Random band controls cannot accompany explicit colours")
+    return _legacy_explicit(width, height, colors)
   width = random.randint(3, 30) if width is None else integer(width, 3, 30, "width")
   height = random.randint(3, 30) if height is None else integer(height, 3, 30, "height")
   if symmetric is not None and type(symmetric) is not bool:
     raise ValueError("symmetric must be a boolean")
-  if colors is None:
-    n = random.randint(1, min(9, height - 2)) if num_bands is None else integer(
-        num_bands, 1, min(9, height - 2), "num_bands")
-    cuts = [0] + sorted(random.sample(range(1, height - 2), n - 1)) + [height - 2]
-    palette = random.sample(range(1, 10), n)
-    grid = common.grid(width, height)
-    for j, colour in enumerate(palette):
-      mirror = random.choice([False, True]) if symmetric is None else symmetric
-      for r in range(1 + cuts[j], 1 + cuts[j + 1]):
-        positions = list(range(1, (width + 1) // 2)) if mirror else list(range(1, width - 1))
-        selected = random.sample(positions, random.randint(1, len(positions)))
-        for c in selected:
-          grid[r][c] = colour
-          if mirror: grid[r][width - 1 - c] = colour
-    colors = common.flatten(grid)
-  elif num_bands is not None or symmetric is not None:
-    raise ValueError("Random band controls cannot accompany explicit colours")
+  n = random.randint(1, min(9, height - 2)) if num_bands is None else integer(
+      num_bands, 1, min(9, height - 2), "num_bands")
+  cuts = [0] + sorted(random.sample(range(1, height - 2), n - 1)) + [height - 2]
+  palette = random.sample(range(1, 10), n)
+  grid = common.grid(width, height)
+  for j, colour in enumerate(palette):
+    mirror = random.choice([False, True]) if symmetric is None else symmetric
+    for r in range(1 + cuts[j], 1 + cuts[j + 1]):
+      positions = list(range(1, (width + 1) // 2)) if mirror else list(range(1, width - 1))
+      selected = random.sample(positions, random.randint(1, len(positions)))
+      for c in selected:
+        grid[r][c] = colour
+        if mirror: grid[r][width - 1 - c] = colour
+  colors = common.flatten(grid)
+  # Invariants of the certified random grammar; sampled scenes always hold them.
   if len(colors) != width * height or any(type(c) is not int or not 0 <= c <= 9 for c in colors):
     raise ValueError("Explicit colours must contain one valid colour per cell")
   grid = [list(colors[r * width:(r + 1) * width]) for r in range(height)]

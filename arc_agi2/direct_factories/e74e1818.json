@@ -4,7 +4,7 @@
   "fresh_pairs_checked": 1000,
   "augmented_pair_checks": 8000,
   "fixture_variants_checked": 16,
-  "constructor_sha256": "1163953c6c859624c01dffa38e91e9e06e7095a24f4fa8c9f5478137d8c61434",
+  "constructor_sha256": "20b0184b6ae22deda534c3777aa25fd785df8f8bbc486cd2b4697e001554d8e7",
   "auditor_sha256": "1e194cb80d11ccda4026cb83a61c6dd407f1b9d94117090b31de26b01a3f191d",
   "requires_per_episode_verification": true,
   "sampler_rejections": [],
@@ -13,7 +13,7 @@
   "factory_version": 1,
   "unique_base_inputs": 1000,
   "fixture_basis": "canonical",
-  "seconds": 3.03338862513192,
+  "seconds": 2.9866150422021747,
   "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
   "draft_notes": {
     "explanation": "In the original task, the grid is a stack of horizontal bands. Each band is a run of consecutive rows that use one non-background colour. The generator's draw() finds these runs by the colour present in each row, then writes each run back in reverse row order. Mirroring a band is its own inverse, so only the band axis matters under D4. A horizontal flip (d4>=4) keeps rows as rows. An odd number of clockwise rotations turns rows into columns. The factory therefore picks rows when d4%4 is 0 or 2, and columns otherwise. It then emits code that scans visible lines along that axis. Each line's key is its set of non-background colours, with the background fixed to palette[0]. Consecutive lines with the same non-empty key form a band. Each band's lines are reversed in place, either rows top-to-bottom or columns left-to-right. Empty border lines are left unchanged. This matches the constructor's segmentation directly. It also matches the archived per-colour bounding-box flip whenever band colours are distinct, which holds in the generator's domain.",
@@ -34,5 +34,27 @@
     "constructor_sha256": "7108c49b0de8bf0d0d0e2f723166747563c25a4763b6fce8fb5ddfa8118d728d",
     "factory_sha256": "12f72602726eaee60e0863524ac5a4e09588a0fb8c98eefe352ab8f12dd563b1"
   },
-  "previous_domain_limitations": "Odd square 7..15; 3..7 colours; horizontally symmetric bands; repeated rejection loops."
+  "previous_domain_limitations": "Odd square 7..15; 3..7 colours; horizontally symmetric bands; repeated rejection loops.",
+  "certificate_history": [
+    {
+      "task_id": "e74e1818",
+      "passed": true,
+      "fresh_pairs_checked": 1000,
+      "augmented_pair_checks": 8000,
+      "fixture_variants_checked": 16,
+      "constructor_sha256": "1163953c6c859624c01dffa38e91e9e06e7095a24f4fa8c9f5478137d8c61434",
+      "auditor_sha256": "1e194cb80d11ccda4026cb83a61c6dd407f1b9d94117090b31de26b01a3f191d",
+      "requires_per_episode_verification": true,
+      "sampler_rejections": [],
+      "program_provider": "factory",
+      "factory_sha256": "12f72602726eaee60e0863524ac5a4e09588a0fb8c98eefe352ab8f12dd563b1",
+      "factory_version": 1,
+      "unique_base_inputs": 1000,
+      "fixture_basis": "canonical",
+      "seconds": 3.03338862513192,
+      "status": "superseded; record at 238f085. Constructor bytes changed only to restore historical explicit-call labels; the random grammar is unchanged."
+    }
+  ],
+  "certificate_scope": "Certified: the default random grammar of tasks/task_e74e1818.py (colors=None; independent height and width 3..30, 1..9 contiguous bands with distinct colours, symmetric or asymmetric nonempty monochromatic rows, native black border; num_bands/symmetric controls validated) and the 16 canonical fixture variants. Explicit width/height/colors calls run the pre-238f085 draw() for compatibility. Scenes that only that path accepts (repeated nonadjacent colours, border ink, sides below 3, partial colour lists, mixed-colour rows) are not certified. On them the coordinate checker (per-colour row-span reflection) and the factory may disagree with the legacy labels.",
+  "certification_provenance": "Measured fields written by the unmodified standard harness (arc_agi2.diversity.recertify.check). Non-measured keys are carried verbatim from the record at 238f085 by native-band-reflection/recertify_merge.py."
 }

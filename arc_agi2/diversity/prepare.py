@@ -35,7 +35,7 @@ REPAIRED = ("007bbfb7", "009d5c81", "00dbd492", "0934a4d8", "09c534e7", "1e0a9b1
 
 # Reviewed adequate existing domains, not constructor expansions. Each has a
 # current semantic review and fresh 1000/8000/16 native recertification.
-REVIEWED_NATIVE = ("981571dc",)
+REVIEWED_NATIVE = ("981571dc", "dc2aa30b")
 
 
 def digest(value):

@@ -1,0 +1,515 @@
+{
+ "task_id": "1b2d62fb",
+ "certificate": false,
+ "status": "EXCLUDED: native recertification blocked by archived checker",
+ "proof_of_candidate_semantics": [
+  "Both constructors put a divider of one non-empty colour on the exact centre line (native: blue column 3 of 7; RE-ARC: barcol between two w-wide halves, hconcat, then an optional dmirror). D4 maps the centre line to a centre line.",
+  "The perpendicular centre line (if any) contains the divider cell and >= 2 half cells. Half cells are empty or panel colours, never the divider colour (native 0/9 vs 1; RE-ARC remcols removes barcol before cola/colb). It is never uniform non-empty, so exactly one divider is found.",
+  "Both outputs mark 8 where both halves are 0 at the same relative cell (native grid_intersect: n=maroon is 'full', y=black is 'empty'; RE-ARC ofcolor(gia,0) & ofcolor(gib,0)), else 0. D4 mirrors both halves together and NOR is symmetric. Palette maps the fixed 0 and 8 roles to palette[0] and palette[8]."
+ ],
+ "minimal_native_counterexample": {
+  "construction": "generate(rows=[0,1,2,3,4], cols=[0,0,0,0,0])",
+  "pair": {
+   "input": [
+    [
+     0,
+     9,
+     9,
+     1,
+     9,
+     9,
+     9
+    ],
+    [
+     0,
+     9,
+     9,
+     1,
+     9,
+     9,
+     9
+    ],
+    [
+     0,
+     9,
+     9,
+     1,
+     9,
+     9,
+     9
+    ],
+    [
+     0,
+     9,
+     9,
+     1,
+     9,
+     9,
+     9
+    ],
+    [
+     0,
+     9,
+     9,
+     1,
+     9,
+     9,
+     9
+    ]
+   ],
+   "output": [
+    [
+     0,
+     0,
+     0
+    ],
+    [
+     0,
+     0,
+     0
+    ],
+    [
+     0,
+     0,
+     0
+    ],
+    [
+     0,
+     0,
+     0
+    ],
+    [
+     0,
+     0,
+     0
+    ]
+   ]
+  },
+  "archived_output": "ValueError('Invalid ARC grid')",
+  "archived_agrees": false,
+  "candidate_output": [
+   [
+    0,
+    0,
+    0
+   ],
+   [
+    0,
+    0,
+    0
+   ],
+   [
+    0,
+    0,
+    0
+   ],
+   [
+    0,
+    0,
+    0
+   ],
+   [
+    0,
+    0,
+    0
+   ]
+  ],
+  "candidate_exact": true
+ },
+ "native": {
+  "fresh_pairs": 1000,
+  "candidate_augmented_pair_checks": 8000,
+  "candidate_failures": [],
+  "archived_disagreements": [
+   {
+    "recertify_index": 3,
+    "seed": 271565439521319,
+    "pair_in_group": 0,
+    "shape": [
+     5,
+     7
+    ],
+    "archived_error": "ValueError('Invalid ARC grid')"
+   },
+   {
+    "recertify_index": 5,
+    "seed": 45552014871037,
+    "pair_in_group": 2,
+    "shape": [
+     5,
+     7
+    ],
+    "archived_error": null
+   },
+   {
+    "recertify_index": 11,
+    "seed": 52137217170377,
+    "pair_in_group": 1,
+    "shape": [
+     5,
+     7
+    ],
+    "archived_error": null
+   },
+   {
+    "recertify_index": 27,
+    "seed": 37887222954694,
+    "pair_in_group": 3,
+    "shape": [
+     5,
+     7
+    ],
+    "archived_error": null
+   },
+   {
+    "recertify_index": 34,
+    "seed": 124864987519194,
+    "pair_in_group": 1,
+    "shape": [
+     5,
+     7
+    ],
+    "archived_error": null
+   },
+   {
+    "recertify_index": 36,
+    "seed": 44181253728674,
+    "pair_in_group": 2,
+    "shape": [
+     5,
+     7
+    ],
+    "archived_error": null
+   },
+   {
+    "recertify_index": 40,
+    "seed": 133241871743501,
+    "pair_in_group": 0,
+    "shape": [
+     5,
+     7
+    ],
+    "archived_error": null
+   },
+   {
+    "recertify_index": 42,
+    "seed": 70733652271818,
+    "pair_in_group": 3,
+    "shape": [
+     5,
+     7
+    ],
+    "archived_error": null
+   },
+   {
+    "recertify_index": 47,
+    "seed": 196490479436921,
+    "pair_in_group": 3,
+    "shape": [
+     5,
+     7
+    ],
+    "archived_error": null
+   },
+   {
+    "recertify_index": 50,
+    "seed": 242201698131648,
+    "pair_in_group": 2,
+    "shape": [
+     5,
+     7
+    ],
+    "archived_error": null
+   },
+   {
+    "recertify_index": 71,
+    "seed": 105688655674104,
+    "pair_in_group": 0,
+    "shape": [
+     5,
+     7
+    ],
+    "archived_error": null
+   },
+   {
+    "recertify_index": 72,
+    "seed": 101950983141046,
+    "pair_in_group": 1,
+    "shape": [
+     5,
+     7
+    ],
+    "archived_error": null
+   },
+   {
+    "recertify_index": 78,
+    "seed": 28054381135277,
+    "pair_in_group": 2,
+    "shape": [
+     5,
+     7
+    ],
+    "archived_error": null
+   },
+   {
+    "recertify_index": 85,
+    "seed": 39589705326721,
+    "pair_in_group": 2,
+    "shape": [
+     5,
+     7
+    ],
+    "archived_error": null
+   },
+   {
+    "recertify_index": 109,
+    "seed": 29943674145272,
+    "pair_in_group": 2,
+    "shape": [
+     5,
+     7
+    ],
+    "archived_error": null
+   },
+   {
+    "recertify_index": 129,
+    "seed": 170502617327859,
+    "pair_in_group": 0,
+    "shape": [
+     5,
+     7
+    ],
+    "archived_error": "ValueError('Invalid ARC grid')"
+   },
+   {
+    "recertify_index": 154,
+    "seed": 180703146481893,
+    "pair_in_group": 3,
+    "shape": [
+     5,
+     7
+    ],
+    "archived_error": null
+   },
+   {
+    "recertify_index": 162,
+    "seed": 17391276977303,
+    "pair_in_group": 3,
+    "shape": [
+     5,
+     7
+    ],
+    "archived_error": null
+   },
+   {
+    "recertify_index": 178,
+    "seed": 25702127300497,
+    "pair_in_group": 2,
+    "shape": [
+     5,
+     7
+    ],
+    "archived_error": "ValueError('Invalid ARC grid')"
+   },
+   {
+    "recertify_index": 180,
+    "seed": 107580064923622,
+    "pair_in_group": 0,
+    "shape": [
+     5,
+     7
+    ],
+    "archived_error": null
+   },
+   {
+    "recertify_index": 185,
+    "seed": 77695555754282,
+    "pair_in_group": 2,
+    "shape": [
+     5,
+     7
+    ],
+    "archived_error": null
+   },
+   {
+    "recertify_index": 195,
+    "seed": 223314741686339,
+    "pair_in_group": 2,
+    "shape": [
+     5,
+     7
+    ],
+    "archived_error": null
+   },
+   {
+    "recertify_index": 209,
+    "seed": 75828550987105,
+    "pair_in_group": 3,
+    "shape": [
+     5,
+     7
+    ],
+    "archived_error": null
+   },
+   {
+    "recertify_index": 213,
+    "seed": 201528887690935,
+    "pair_in_group": 0,
+    "shape": [
+     5,
+     7
+    ],
+    "archived_error": null
+   },
+   {
+    "recertify_index": 214,
+    "seed": 278045626788296,
+    "pair_in_group": 2,
+    "shape": [
+     5,
+     7
+    ],
+    "archived_error": "ValueError('Invalid ARC grid')"
+   },
+   {
+    "recertify_index": 224,
+    "seed": 124322202813725,
+    "pair_in_group": 1,
+    "shape": [
+     5,
+     7
+    ],
+    "archived_error": null
+   },
+   {
+    "recertify_index": 225,
+    "seed": 15486915346653,
+    "pair_in_group": 1,
+    "shape": [
+     5,
+     7
+    ],
+    "archived_error": "ValueError('Invalid ARC grid')"
+   },
+   {
+    "recertify_index": 226,
+    "seed": 94769779083729,
+    "pair_in_group": 2,
+    "shape": [
+     5,
+     7
+    ],
+    "archived_error": null
+   },
+   {
+    "recertify_index": 238,
+    "seed": 154892177597633,
+    "pair_in_group": 2,
+    "shape": [
+     5,
+     7
+    ],
+    "archived_error": null
+   },
+   {
+    "recertify_index": 242,
+    "seed": 244956250296511,
+    "pair_in_group": 2,
+    "shape": [
+     5,
+     7
+    ],
+    "archived_error": null
+   },
+   {
+    "recertify_index": 246,
+    "seed": 238960467024835,
+    "pair_in_group": 3,
+    "shape": [
+     5,
+     7
+    ],
+    "archived_error": null
+   }
+  ],
+  "fixture_variants_checked": 16,
+  "unique_base_inputs": 1000,
+  "recertify_would_fail_at": {
+   "recertify_index": 3,
+   "seed": 271565439521319,
+   "pair_in_group": 0,
+   "shape": [
+    5,
+    7
+   ],
+   "archived_error": "ValueError('Invalid ARC grid')"
+  },
+  "archived_error_count": 5
+ },
+ "rearc": {
+  "requested_proposals": 2560,
+  "accepted_pairs": 1136,
+  "probe_rejections": {
+   "fork_verifier_disagreement": 1371,
+   "ValueError": 53
+  },
+  "probe_verified_episodes": 284,
+  "bounded_stop": false,
+  "input_shape_count": 344,
+  "augmented_episode_checks": 2048,
+  "augmented_pair_checks": 8192,
+  "admission_gate_passed": true,
+  "admission_gate_error": null,
+  "candidate_program_sha256": "f4df6bf13a81edd807d25ab55ac0a8a8defd9c0a5ec6f1de7e971cd5e37cb882",
+  "rejection_attribution": {
+   "archived_agrees/candidate_exact": 1136,
+   "archived_rejects/candidate_exact": 1424
+  }
+ },
+ "demonstration_ambiguity": {
+  "canonical_fixture": {
+   "fitting": 3,
+   "distinct_query_predictions": 1,
+   "truth_predicted": true,
+   "rivals": {
+    "TRUE": [
+     "('and_full', 9, 8, 0)",
+     "('either_empty', 9, 0, 8)",
+     "('nor', 0, 8, 0)"
+    ]
+   }
+  },
+  "rearc_admission_episodes": {
+   "episodes": 256,
+   "witnesses": []
+  },
+  "native_recertify_episodes": {
+   "episodes": 250,
+   "witnesses": []
+  }
+ },
+ "source_sha256": {
+  "tasks/task_1b2d62fb.py": "cb2cce724edae0a49aa2025b03aa99e8fd2fdc564db52243ca8c31525b3ae106",
+  "arc_agi2/direct_factories/task_1b2d62fb.py": "fbaa5f3d83c2aad3c6f057438e49ad4ccce0ec30cc91c25979b642c6653ade26",
+  "arc_agi2/direct_factories/1b2d62fb.json": "653edcc183c3e0ea0f67a32d35a6abeccaf86a9848c328aa368b0236ce800a57",
+  "arc_agi2/references/1b2d62fb.json": "7280fb4eeeb963dcc8886582f6b811987be5c6075fd5fde2b29482d836da7b22",
+  "arc_agi2/diversity/rearc/generators.py": "7eb7b6620afe08760fb52761c7dd46796e9e44958714efc950b11e923a8281ae",
+  "arc_agi2/diversity/rearc/verifiers.py": "1a79a559f670943968c9dbee66a0b02d71d71296adb922330fe72935f7ef7ddd",
+  "arc_agi2/diversity/recertify.py": "1e194cb80d11ccda4026cb83a61c6dd407f1b9d94117090b31de26b01a3f191d",
+  "arc_agi2/diversity/probe.py": "d298d64de78bc7a22705480b337aadad9c68715e3f9654118c774fffbbff7e73",
+  "arc_agi2/diversity/admit.py": "a39b993ab3c6d24cbbd3aba4ffef9dc7fdc8a85667b87408ff7b03f8a3c3e65f",
+  "arc_agi2/diversity/certify_programs.py": "12ae1301abc2469546c92554fa5bdcd9e3cbe9568e3a020a9418ecb71dc7ba60",
+  "arc_agi2/program_targets.py": "88298f336ca6a50ee91e58a08f24a4997c7c49e832eda1e68f98153dd59ed790",
+  "arc_agi2/runtime.py": "193bd69c8c2114da2a9b2bbc73805742164b3c0f214279d832317e6f5b52e839",
+  "arc_agi2/helpers.py": "7bbe003f70d11c949b9a7827da7d3659a7da0c247c1dfbf2cd18785e477bfa92",
+  "arc_agi2/augmentation.py": "f8d18daf8c78aa7882b88cda5f6c19bca492c87212b48430c6b2bc2d525758bd",
+  "arc_agi2/colour_evidence.py": "2617143cf4e358a97cc0f9eccfce5f586ced33cb319062270040835ed2d682eb",
+  "arc_agi2/verified_rules.py": "8ad9a385e545b8a2ca8b5eab3e8deb72bf9f9eb2152a585dc9e68116a457f853",
+  "arc_agi2/direct_programs.py": "ca303d8069010a148aa40ee6c2bd6043f30f5a8a8b6281d345893f13ef3ba82b",
+  "arc_agi2/direct_certificates.py": "34f8c88f025236f1a632753329e2a815e2deea9352cddb3a298e9e84f100af15",
+  "arc_agi2/diversity/final3_review.py": "c75c9a386c652e49d299965519f746e2dcfe4a9cd142a18bff7f3c9ca47c88c1",
+  "archived_solver_code": "8d9e9cd5567f6b3e5e5c74a3b6cc2064939902a58a0925d47bbfb84fc2454837",
+  "candidate_program_identity_palette": "f4df6bf13a81edd807d25ab55ac0a8a8defd9c0a5ec6f1de7e971cd5e37cb882"
+ },
+ "seconds": 4.808
+}

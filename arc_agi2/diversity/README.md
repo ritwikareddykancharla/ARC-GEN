@@ -169,6 +169,34 @@ the RE-ARC domain. Native recertification rejects them because their archived
 verifiers disagree with the native constructor. Their factories are unchanged
 pending reviewed verifiers; see `blocked-verifier-defects.json`.
 
+An independent review (`final3_review.py`, `final3_summary.py`, reports in
+`final3-review/`) confirms that all three stay excluded. It finds the following:
+
+- **Factory-independent block.** Recertify checks the archived reference solver
+  before any program runs. On its 1,000 fixed-seed native pairs, that solver
+  disagrees with the native constructor on 15, 31 and 17 pairs respectively.
+  Every disagreement is a defect in the archived solver, confirmed against the
+  constructor's latent parameters. Hand-built minimal native counterexamples
+  (15×15, 5×7 and 10×10) are saved.
+- **Compatible rules.** Native and RE-ARC rules agree. The candidate programs,
+  derived from source, are exact or reject; they never return a wrong grid.
+  They pass all diagnostic gates:
+  - 16 fixture variants.
+  - 1,000 native pairs with 8,000 D4 checks.
+  - At least 1,067 accepted RE-ARC pairs (from 1,280, 2,560 and 2,048
+    proposals), with 2,048 episodes and 8,192 pair checks.
+  - Every RE-ARC proposal rejected by the archived verifier.
+- **Demonstrated ambiguity.** In `de1cd16c`, 43 of 256 RE-ARC episodes are
+  ambiguous between rarest-colour noise and structural noise, and 23 of 250
+  native episodes between most noise and highest noise density. In `0b148d64`,
+  4 of 250 native episodes are ambiguous between rarest-non-modal and
+  odd-quadrant.
+- **Filter selection effects.** The archived filter keeps no transposed
+  `1b2d62fb` scene. It accepts 139 of 1,192 `de1cd16c` pairs only by
+  coincidence, after choosing the wrong dot colour.
+
+Diagnostic only: no factory, certificate, verifier, admission or label changed.
+
 `background-role-candidates.json` lists 17 further families whose sampled
 labels pass the program once the modal background is mapped to 0. They are
 not adopted. Adoption needs a per-family review of fixed colours, plus

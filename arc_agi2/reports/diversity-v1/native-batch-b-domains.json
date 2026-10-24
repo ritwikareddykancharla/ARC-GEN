@@ -1,7 +1,7 @@
 {
   "batch": "native-generator-diversity-B",
   "measurement": "1000 seeded samples per revision (before = HEAD ea0a620 constructor, after = final constructor); signatures are input-only structural tuples (shape plus a family count). Sample statistics, not domain guarantees.",
-  "boundary_agreement": "3000 samples per family cycling free, (min,min), (30,30), (min,30), (30,min) canvases, archived independent verifier",
+  "boundary_agreement": "3000 samples per family against the archived independent verifier. Five families cycle free, (min,min), (30,30), (min,30), (30,min) canvases. The 03560426 and 2685904e sweep varies height (free/min/30) while width is generated; separate focused tests verify 03560426 fixed-width extremes including 6x30 and 12x30 (height x width).",
   "families": {
     "03560426": {
       "before": {
@@ -320,7 +320,7 @@
     }
   },
   "notes": {
-    "14b8e18c": "The HEAD sampler mislabelled ~1/1000 scenes: boxes sharing or overlapping a diagonal's bounding box (e.g. two diagonals in one 2x2 box) draw a merged solid square that the constructor left unmarked, contradicting the canonical solid-2x2 marking. Random scenes now require disjoint boxes or strict nesting inside a hollow box; explicit scenes are unchanged.",
+    "14b8e18c": "The baseline sampler mislabelled one scene in the 1000-seed measurement: boxes sharing or overlapping a diagonal's bounding box (e.g. two diagonals in one 2x2 box) draw a merged solid square that the constructor left unmarked, contradicting the canonical solid-2x2 marking. Random scenes now require disjoint boxes or strict nesting inside a hollow box; explicit scenes are unchanged.",
     "03560426": "Fixed-width requests are built from feasible width/height compositions (all feasible box counts and trailing blanks reachable, e.g. 6x30 needs five 5x2 boxes); the free-width default keeps its bounded rejection sampler."
   },
   "deferred": {

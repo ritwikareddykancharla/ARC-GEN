@@ -17,11 +17,23 @@
 import common
 
 
-def generate(colors=None):
+MIN_BLANKS, MAX_BLANKS = 1, 7
+MAX_ATTEMPTS = 1000
+
+
+def generate(colors=None, blanks=None):
   """Returns input and output grids according to the given parameters.
 
   Args:
     colors: colors of the pixels.
+    blanks: number of blank cells (sampling only, 1..7).
+
+  Each blank is carved from a row or column that is still complete, so the
+  zeros can be restored in reverse order by single-line propagation and the
+  Latin completion is unique. Each carved blank permanently breaks the
+  perpendicular line through it, so at most seven of the eight lines can be
+  used: 1..7 is the full range of this scheme (the legacy sampler kept only
+  5..6). The 4x4 grid and colours 1..4 are rule-tied and unchanged.
   """
 
   def solve(ingrid):
@@ -58,32 +70,45 @@ def generate(colors=None):
       rows.append(candidate)
     return rows
 
-  def strip_grid(grid):
+  def strip_grid(grid, limit):
     num_zeroed = 0
     strips = common.shuffle([(0, 0), (0, 1), (0, 2), (0, 3), (1, 0), (1, 1), (1, 2), (1, 3)])
     for strip in strips:
+      if num_zeroed == limit: break
       cdir, val = strip
       if cdir == 1 and sum([grid[val][r] for r in range(4)]) == 10:
         grid[val][common.randint(0, 3)] = 0
         num_zeroed += 1
-      if cdir == 0 and sum([grid[c][val] for c in range(4)]) == 10:
+      elif cdir == 0 and sum([grid[c][val] for c in range(4)]) == 10:
         grid[common.randint(0, 3)][val] = 0
         num_zeroed += 1
     return num_zeroed
 
   if colors is None:
-    num_zeroes = common.randint(5, 6)
-    while True:
+    if blanks is None:
+      blanks = common.randint(MIN_BLANKS, MAX_BLANKS)
+    if (type(blanks) is not int or not MIN_BLANKS <= blanks <= MAX_BLANKS):
+      raise ValueError("blanks must be an int in 1..7")
+    for _ in range(MAX_ATTEMPTS):
       grid = create_grid()
-      if strip_grid(grid) == num_zeroes: break
+      if strip_grid(grid, blanks) == blanks: break
+    else:
+      raise RuntimeError("no Latin square reached the requested blank count")
     colors = []
     for row in grid:
       colors.extend(row)
+  elif blanks is not None:
+    raise ValueError("blanks is a sampling argument; it cannot accompany colors")
+  elif (len(colors) != 16
+        or any(type(c) is not int or not 0 <= c <= 4 for c in colors)):
+    raise ValueError("colors must be sixteen ints in 0..4")
 
   grid = common.grid(4, 4)
   for i, color in enumerate(colors):
     grid[i // 4][i % 4] = color
   output = solve(grid)
+  if any(0 in row for row in output):
+    raise ValueError("line propagation does not complete this scene")
   return {"input": grid, "output": output}
 
 

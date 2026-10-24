@@ -4597,6 +4597,2282 @@
    "uncertainties": "Whether non-30 sizes belong to the original family is unknown (all fixtures are 30x30); the configured/legacy extension path (legacy_extension_available=true) was not reviewed here.",
    "certified_evidence": "current",
    "release_ready": false
+  },
+  "996ec1f3": {
+   "status": "reviewed",
+   "reviewer": "claude-opus-5-5 (hybrid-claude-native worktree)",
+   "reviewed_on": "2026-10-24",
+   "review_batch": 3,
+   "constructor_sha256": "58c69c15fe73a51d556edd20c797780d6b43752d659554b5c874977092bd256c",
+   "baseline_commit": "f1b8bb9548c0361b9a9d93cbbf8b24ec81966baa",
+   "mechanism": "A 19x19 grid of uniform noise from colours 1-9 (line 34, random_color) is split into quadrants by a full plus of colours[4] at row prow and column pcol, each drawn from 6-12 (line 32). Each quadrant is then overwritten by a solid rectangle of a distinct colour, inset by one noise cell from the border and from the plus (lines 41-44). The output is a 3x3 summary: the four quadrant colours in the corners and the plus colour in the cross (lines 45-49).",
+   "fixture_evidence": "4 canonical pairs, all 19x19 -> 3x3. Pair 0: plus colour 3 at row 11, col 8; blocks 1/9/8/2; output 139/333/832. Noise never uses 0. probes/fixture_stats_batch3.py counts zeros per input as [0, 0, 37, 72]: pair 2's 37 zeros are its 0-coloured plus (19+19-1), and the test's 72 are its 0-coloured bottom-left block. This matches random_color's 1-9 range. Noise reuses role colours (pair 0, row 10 contains 3, the plus colour), as native noise can. Audit native: 128/128 valid and unique, fixed 19x19. Configured path: approved size overrides 18, 21, 24, 27 and 30 give 6 square shapes (18-30).",
+   "axes": {
+    "dimensions": {
+     "disposition": "mixed",
+     "lines": [
+      20,
+      32,
+      36
+     ],
+     "why": "Size is a parameter (default 19, line 20), and the configured path already samples square sizes 18-30. But the canvas is always square (grid(size, size), line 36). The plus range 6-12 (line 32) is a literal that does not scale with size, so at size 30 the plus never passes row or column 12 and the bottom-right block is always the largest. The quadrant-summary rule needs neither."
+    },
+    "objects": {
+     "disposition": "intrinsic_or_rule_supported",
+     "lines": [
+      41,
+      42,
+      43,
+      44
+     ],
+     "why": "Exactly four solid blocks, one per quadrant, each inset by one cell: this is the task structure. Block sizes follow from prow/pcol, with a minimum of 4x4 at the ends of 6-12. The direct program takes each quadrant's majority non-divider colour, which the inset construction guarantees is the block."
+    },
+    "placement": {
+     "disposition": "mixed",
+     "lines": [
+      32,
+      39,
+      40
+     ],
+     "why": "The plus must be interior so that four quadrants exist (rule-supported). But the 6-12 band is tied to the default 19 and is reused unchanged at the configured sizes 18-30."
+    },
+    "density_colours": {
+     "disposition": "intrinsic_or_rule_supported",
+     "lines": [
+      33,
+      34
+     ],
+     "why": "Five distinct role colours come from 0-9 (line 33). Noise comes from 1-9 and may repeat role colours, as in the fixtures. A noise row equal to the plus colour would need 19 identical draws, which is negligible."
+    },
+    "rule_parameters": {
+     "disposition": "intrinsic_or_rule_supported",
+     "lines": [
+      45,
+      46,
+      47,
+      48,
+      49
+     ],
+     "why": "The fixed 3x3 corner/cross layout is the rule itself: corners carry the quadrant colours and the cross carries the plus colour."
+    },
+    "demonstration_context": {
+     "disposition": "intrinsic_or_rule_supported",
+     "lines": [
+      45,
+      49
+     ],
+     "why": "Each query is self-contained. The family is certified by a direct_certificate program (reference transform(grid)), which takes only the grid and finds the uniform divider row and column. No demonstration is read."
+    }
+   },
+   "proposal": "Low priority, because the configured path already widens sizes. Optionally draw height and width independently, scale the plus range per axis as randint(6, size-7), and keep the one-cell inset. Recertify the direct program on non-square canvases.",
+   "patch_priority": "low",
+   "uncertainties": "Not measured: whether the reference program's rows[0] (the first fully uniform row) can be fooled on large canvases, and how much the fixed plus band reduces configured-size diversity. Non-square canvases are untested.",
+   "certified_evidence": "current",
+   "release_ready": false
+  },
+  "9a4bb226": {
+   "status": "reviewed",
+   "reviewer": "claude-opus-5-5 (hybrid-claude-native worktree)",
+   "reviewed_on": "2026-10-24",
+   "review_batch": 3,
+   "constructor_sha256": "0e6d697def667ec0292a38cde60b8186703a21548965f7ff555fed1929226a82",
+   "baseline_commit": "f1b8bb9548c0361b9a9d93cbbf8b24ec81966baa",
+   "mechanism": "Four 3x3 boxes on a 15x15 black canvas (lines 44-53). Box 0 uses exactly three colours (lines 30-33). Boxes 1-3 use exactly two colours each (lines 36-41). All colours come from 1-9 (random_colors). Box positions are drawn from 1-11 with a one-cell gap between boxes (line 47). The output is box 0, the only three-colour box (line 54).",
+   "fixture_evidence": "4 canonical pairs, 15x15 -> 3x3, each with four 3x3 boxes. One box has three colours (e.g. pair 0 output 555/688/655) and the others two. Boxes never touch the border: rows/cols 0 and 14 are empty in every fixture, as lines 45-46 enforce. Audit native: 128/128 unique, fixed 15x15.",
+   "axes": {
+    "dimensions": {
+     "disposition": "incidental_restriction",
+     "lines": [
+      49,
+      45,
+      46
+     ],
+     "why": "grid(15, 15) and the 1-11 position bounds are literals. Selecting the box with the most colours does not depend on canvas size."
+    },
+    "objects": {
+     "disposition": "mixed",
+     "lines": [
+      36,
+      50,
+      51,
+      52
+     ],
+     "why": "The 3-versus-2 colour contrast is the rule signal (rule-supported). The fixed count of four boxes and the fixed 3x3 box size are incidental: the reference program selects by colour count and crops any bounding box. Because of the fixed size, the output is always 3x3."
+    },
+    "placement": {
+     "disposition": "mixed",
+     "lines": [
+      45,
+      46,
+      47
+     ],
+     "why": "The one-cell gap (line 47) keeps boxes as separate multicolour objects for the reference objects() call (rule-supported). The 1-11 bounds always leave a blank one-cell border ring (incidental)."
+    },
+    "density_colours": {
+     "disposition": "intrinsic_or_rule_supported",
+     "lines": [
+      30,
+      33,
+      37,
+      40
+     ],
+     "why": "Each box has an exact colour count (3 versus 2), enforced by the rejections at lines 33 and 40. Colours may repeat across boxes, so the contrast lies in colour count, not hue."
+    },
+    "rule_parameters": {
+     "disposition": "intrinsic_or_rule_supported",
+     "lines": [
+      54
+     ],
+     "why": "The output is box 0's content, copied cell for cell."
+    },
+    "demonstration_context": {
+     "disposition": "intrinsic_or_rule_supported",
+     "lines": [
+      33,
+      54
+     ],
+     "why": "Each query is self-contained. The direct_certificate reference transform(grid) picks max(colour count, size) without demonstrations. Natively, 'most colours' and 'exactly three colours' coincide, so no episode can separate them."
+    }
+   },
+   "proposal": "Medium: sample H and W (e.g. 12-20), 3-6 boxes, a shared box size of 2-4 per scene, and one box with strictly more colours than the rest. Keep the gap rule and allow border contact. Recertify.",
+   "patch_priority": "medium",
+   "uncertainties": "Unknown: whether the original family allows boxes other than 3x3 or more than four boxes (all fixtures use four 3x3 boxes). The reference program's size tie-break was not exercised.",
+   "certified_evidence": "current",
+   "release_ready": false
+  },
+  "9c1e755f": {
+   "status": "reviewed",
+   "reviewer": "claude-opus-5-5 (hybrid-claude-native worktree)",
+   "reviewed_on": "2026-10-24",
+   "review_batch": 3,
+   "constructor_sha256": "ee8af22c45d547ccb76e6914e9a058a1af7646095d5585b0ac85e57328bc8d2a",
+   "baseline_commit": "f1b8bb9548c0361b9a9d93cbbf8b24ec81966baa",
+   "mechanism": "1-2 'combs' on a 10x10 black canvas. Each comb has a grey (5) bar along its top row (cdir 0) or left column (cdir 1), and a seed pattern 1-2 lines thick along the bar's far edge: the left columns of a horizontal bar, or the bottom rows of a vertical bar (lines 62-77). The output tiles the seed with period 'thick' across the whole box (lines 66-68, 74-76). With two combs, their directions are forced to differ (lines 42-44).",
+   "fixture_evidence": "5 canonical pairs, 10x10. Pair 0: horizontal bar on row 1 with a 1-column seed in col 1 (2,1,2,6,1,1) extended right. Pair 1: vertical bar in col 0 with a 2-row seed in rows 7-8 extended upward. Pairs 2 and 4 hold one comb of each direction. Every fixture has the bar at top or left and the seed at left or bottom, the same two orientations native produces. Audit native: 128/128 unique.",
+   "axes": {
+    "dimensions": {
+     "disposition": "incidental_restriction",
+     "lines": [
+      59,
+      39,
+      40
+     ],
+     "why": "grids(10, 10) and the 10-wide/tall bounds are literals. The factory tiles from any bar and seed geometry."
+    },
+    "objects": {
+     "disposition": "mixed",
+     "lines": [
+      35,
+      37,
+      38,
+      43,
+      44
+     ],
+     "why": "1-2 combs of 4-8 by 4-8. The distinct-direction rule for two combs (line 44) is incidental, and it also caps the count at 2. Bar plus seed is the rule structure."
+    },
+    "placement": {
+     "disposition": "mixed",
+     "lines": [
+      41,
+      63,
+      67,
+      73,
+      75
+     ],
+     "why": "The one-cell gap between boxes (line 41) stops a seed from touching another comb's bar, which the factory's 8-neighbour patch-to-bar scoring needs (rule-supported). Only 2 of 8 orientations occur natively (bar top/left, seed left/bottom), and fixtures are no wider. Per-episode D4 augmentation restores the others at episode level: the factory takes d4 and its tiling is orientation-agnostic."
+    },
+    "density_colours": {
+     "disposition": "intrinsic_or_rule_supported",
+     "lines": [
+      55,
+      57,
+      64,
+      72
+     ],
+     "why": "Each comb's seed draws, with replacement, from a 3-colour subset of 1-9 excluding grey (line 55). The bar is always grey 5 on black 0, and the factory receives these roles through the palette."
+    },
+    "rule_parameters": {
+     "disposition": "mixed",
+     "lines": [
+      47,
+      48,
+      49,
+      50,
+      52
+     ],
+     "why": "The period is 1-2, and odd extents force period 1 (lines 47-50), so tiling always ends on a whole period. The fixtures agree (pair 1: tall 8, period 2). Whether partial final periods belong to the rule is unknown."
+    },
+    "demonstration_context": {
+     "disposition": "intrinsic_or_rule_supported",
+     "lines": [
+      62,
+      70
+     ],
+     "why": "Deterministic per query. The factory solve accepts demonstrations but never reads them."
+    }
+   },
+   "proposal": "Medium: sample H and W (8-16), allow 1-3 combs in any directions, and optionally period 3. Keep the one-cell gap. Recertify.",
+   "patch_priority": "medium",
+   "uncertainties": "Unknown: whether partial-period tiling and same-direction combs fit the original task. Untested: the factory's patch-to-bar attribution with more than two combs.",
+   "certified_evidence": "current",
+   "release_ready": false
+  },
+  "9caba7c3": {
+   "status": "reviewed",
+   "reviewer": "claude-opus-5-5 (hybrid-claude-native worktree)",
+   "reviewed_on": "2026-10-24",
+   "review_batch": 3,
+   "constructor_sha256": "7500058878c4856f79f735de0188c52ec3338a4d1928f46d9d54ffb47a4279f4",
+   "baseline_commit": "f1b8bb9548c0361b9a9d93cbbf8b24ec81966baa",
+   "mechanism": "19x19 grey (5) / black (0) noise at 50% (lines 70-73). Four 3x3 windows are forced to a grey centre and ring cells that are red (2) with probability 1/3, otherwise grey (lines 74-80). In the output, each window's centre becomes 4 and its non-red ring cells become 7 (line 44). Scenes are rejected unless: each window has 1-6 reds (lines 45-46); no other black-free window within +-2 has the same red count (lines 48-59); and reds from different windows are more than 3 apart in Chebyshev distance (lines 61-63).",
+   "fixture_evidence": "4 canonical pairs, all 19x19, colours 0/2/5. probes/fixture_stats_batch3.py finds exactly 4 stamped windows per pair, with reds per window [3,6,3,4], [2,4,6,1], [2,5,3,2] and [3,2,2,3], and 0 reds outside any window. Native matches, because reds are drawn only in rings (line 80). Windows come close to the border (pair 3 centre (7,1)), as brows/bcols 1-17 allow (lines 68-69). Audit native: 128/128 unique, 0.73 s total.",
+   "axes": {
+    "dimensions": {
+     "disposition": "incidental_restriction",
+     "lines": [
+      31,
+      68,
+      69,
+      71,
+      72
+     ],
+     "why": "grids(19, 19) and the 1-17 centre bounds are literals. The factory groups reds and finds unique black-free centres at any size."
+    },
+    "objects": {
+     "disposition": "mixed",
+     "lines": [
+      68,
+      45,
+      46
+     ],
+     "why": "There are always four windows. This is fixture-faithful, but the count is incidental. The 1-6 red bound keeps each window recognisable as a partial ring (rule-supported)."
+    },
+    "placement": {
+     "disposition": "intrinsic_or_rule_supported",
+     "lines": [
+      48,
+      52,
+      59,
+      63
+     ],
+     "why": "The local uniqueness check (lines 48-59) and the separation of more than 3 (line 63) make the factory's unique-centre reading well defined. With clusters more than 3 apart, any centre that covers a cluster's reds has the same red count, so the native check implies factory uniqueness."
+    },
+    "density_colours": {
+     "disposition": "mixed",
+     "lines": [
+      73,
+      80
+     ],
+     "why": "The 50% grey density and the 1/3 red rate are fixed literals (incidental), so noise density never varies. The roles 0/2/5/4/7 are rule colours, handled by the factory palette."
+    },
+    "rule_parameters": {
+     "disposition": "intrinsic_or_rule_supported",
+     "lines": [
+      44,
+      58
+     ],
+     "why": "Stamp a centre of 4 and a ring of 7 (non-red cells only) on the unique black-free window. Black cells disqualify a window (line 58), the same visible criterion the factory uses."
+    },
+    "demonstration_context": {
+     "disposition": "intrinsic_or_rule_supported",
+     "lines": [
+      44,
+      59
+     ],
+     "why": "Self-contained per query. The factory solve does not read demonstrations."
+    }
+   },
+   "proposal": "Medium: sample H and W (13-25), use 2-6 windows scaled to area, and optionally vary grey density (35-65%). Keep all three guards and bound the whole-scene rejection loop (line 67, currently unbounded). Recertify.",
+   "patch_priority": "medium",
+   "uncertainties": "Not measured: acceptance rates at other densities and sizes. Not checked against further fixtures: whether the original rule needs exactly the 'same red count' notion of ambiguity rather than 'covers all reds'.",
+   "certified_evidence": "current",
+   "release_ready": false
+  },
+  "9f27f097": {
+   "status": "reviewed",
+   "reviewer": "claude-opus-5-5 (hybrid-claude-native worktree)",
+   "reviewed_on": "2026-10-24",
+   "review_batch": 3,
+   "constructor_sha256": "e8ac24c95c7972b60aa896590224eaf15130aa21f00250cdfd77c118e8f19dbd",
+   "baseline_commit": "f1b8bb9548c0361b9a9d93cbbf8b24ec81966baa",
+   "mechanism": "A 12x12 canvas with background bg from {1,2,3,4,8}. A wide x tall (4-6 x 3-5) pattern in the remaining two of three sampled colours is drawn once. A same-size black (0) hole sits in disjoint rows and overlapping columns (lines 33-39). The output fills the hole with the left-right mirror of the pattern (line 49).",
+   "fixture_evidence": "4 canonical pairs, 12x12, backgrounds 2/2/1/8, colours within {0,1,2,3,4,8}. In every pair the pattern and hole are stacked vertically with overlapping columns (pair 0: pattern rows 6-10 cols 1-5, hole rows 0-4 cols 5-9). Pair 1's pattern row 1131 becomes 1311 in the hole. Audit native: 128/128 unique, colour count always 4.",
+   "axes": {
+    "dimensions": {
+     "disposition": "incidental_restriction",
+     "lines": [
+      46,
+      34,
+      35
+     ],
+     "why": "grids(12, 12) and the 12 bounds are literals. The factory mirrors into any hole."
+    },
+    "objects": {
+     "disposition": "mixed",
+     "lines": [
+      32,
+      43,
+      44
+     ],
+     "why": "Exactly one pattern and one hole of identical size. The two-colour minimum (line 44) keeps the mirror visible (rule-supported). The 4-6 x 3-5 size range is incidental."
+    },
+    "placement": {
+     "disposition": "mixed",
+     "lines": [
+      36,
+      37,
+      38
+     ],
+     "why": "Disjoint rows and overlapping columns (lines 37-38) always stack the pair vertically. This is fixture-faithful, but the factory reads bounding boxes and would accept other layouts, so the restriction is incidental."
+    },
+    "density_colours": {
+     "disposition": "mixed",
+     "lines": [
+      40,
+      41,
+      50
+     ],
+     "why": "Colours are confined to {1,2,3,4,8} (line 40) and the hole is always 0 (line 50). This matches the fixtures but is a literal subset; the factory takes roles from the palette."
+    },
+    "rule_parameters": {
+     "disposition": "intrinsic_or_rule_supported",
+     "lines": [
+      49
+     ],
+     "why": "Left-right mirror. The factory maps the axis to up-down for odd D4 rotations, so the axis is tied to orientation, not sampled."
+    },
+    "demonstration_context": {
+     "disposition": "intrinsic_or_rule_supported",
+     "lines": [
+      49,
+      50
+     ],
+     "why": "Self-contained per query. The factory takes d4 but does not read demonstrations. A left-right symmetric native pattern (where mirror equals identity) would weaken an episode's evidence; its rate was not measured."
+    }
+   },
+   "proposal": "Medium: sample H and W (10-18), allow side-by-side or diagonal layouts, use any colours except bg and hole, and scale the pattern size. Recertify; the factory's bounding-box reading should generalise.",
+   "patch_priority": "medium",
+   "uncertainties": "Not measured: the rate of mirror-symmetric native patterns. The mirror reading (rather than a copy or 180-degree rotation) rests on 4 fixture pairs, and the factory fixes it.",
+   "certified_evidence": "current",
+   "release_ready": false
+  },
+  "9f8de559": {
+   "status": "reviewed",
+   "reviewer": "claude-opus-5-5 (hybrid-claude-native worktree)",
+   "reviewed_on": "2026-10-24",
+   "review_batch": 3,
+   "constructor_sha256": "e531724204bbde4bce659b3eec9c52062d0716f9d92c006bc68432a30f29dfaf",
+   "baseline_commit": "f1b8bb9548c0361b9a9d93cbbf8b24ec81966baa",
+   "mechanism": "A 14x14 grid: an orange (7) rectangle 9-12 x 9-12 inside a 1-3-cell border band tiled with rectangles of {5,8,9} (lines 28-55). Inside it is a 5-cell line of 4 pink (6) cells with a red (2) tip at one end (lines 57-73), running horizontally, vertically or diagonally, and never on the rectangle's edge rows or columns. The output follows the tip away from the pink and paints the first border cell it reaches orange (lines 81-95).",
+   "fixture_evidence": "5 canonical pairs, 14x14, colours {2,5,6,7,8,9}. Every line is 5 cells: 4 pink plus the red tip (pair 0 vertical tip-down, pair 1 diagonal, pair 2 horizontal tip-left). Border bands are 1-3 thick in all pairs. Audit native: 128/128 unique, colour count always 6.",
+   "axes": {
+    "dimensions": {
+     "disposition": "incidental_restriction",
+     "lines": [
+      34,
+      76,
+      29,
+      30
+     ],
+     "why": "The 14x14 canvas and the 9-12 rectangle are literals. The ray to the border works at any size."
+    },
+    "objects": {
+     "disposition": "mixed",
+     "lines": [
+      60,
+      63,
+      66,
+      69
+     ],
+     "why": "The line is always 5 cells (range(5)) in every direction. This is fixture-faithful, but the rule needs only 2 or more cells to define a direction, so the fixed length is incidental. One rectangle and one line per scene is the rule's structure."
+    },
+    "placement": {
+     "disposition": "mixed",
+     "lines": [
+      31,
+      32,
+      59,
+      62,
+      65,
+      68
+     ],
+     "why": "The border thickness cap of 3 (lines 31-32) is fixture-faithful. Line 59 and its siblings keep the line off the rectangle's edge rows/cols, so the tip never sits on the border band (rule-supported)."
+    },
+    "density_colours": {
+     "disposition": "mixed",
+     "lines": [
+      41,
+      55,
+      71,
+      73
+     ],
+     "why": "Border colours are always {5,8,9}, and all three must appear (line 55). Pink, red and orange are fixed. These are literal roles, which the factory palette remaps at episode level."
+    },
+    "rule_parameters": {
+     "disposition": "intrinsic_or_rule_supported",
+     "lines": [
+      72,
+      94,
+      95
+     ],
+     "why": "The tip end is chosen at random (line 72). The walk continues through cells of 2 or 7 and stops at the first border cell (line 94), which becomes 7."
+    },
+    "demonstration_context": {
+     "disposition": "intrinsic_or_rule_supported",
+     "lines": [
+      94,
+      95
+     ],
+     "why": "Self-contained per query. The factory solve accepts demonstrations but does not read them."
+    }
+   },
+   "proposal": "Medium: sample H and W (10-20), the rectangle's placement, and a line length of 3-7 (bounded by the interior). Keep the off-edge guard. Recertify.",
+   "patch_priority": "medium",
+   "uncertainties": "Unknown: whether line lengths other than 5 belong to the original task (all 5 fixtures use 5). Untested: how the factory handles very short lines.",
+   "certified_evidence": "current",
+   "release_ready": false
+  },
+  "a1aa0c1e": {
+   "status": "reviewed",
+   "reviewer": "claude-opus-5-5 (hybrid-claude-native worktree)",
+   "reviewed_on": "2026-10-24",
+   "review_batch": 3,
+   "constructor_sha256": "756ed9634cfec4f85ca0f62979cba217440c644b0935d175802d02bcbbec0e2e",
+   "baseline_commit": "f1b8bb9548c0361b9a9d93cbbf8b24ec81966baa",
+   "mechanism": "A 21x21 canvas with three coloured full-width floors and a maroon (9) floor at row 19 or 20, with gaps of 4-8 (lines 32-39). Each of the first three floors hangs a ladder: posts, plus a rung every other row (line 63). The third ladder is always full. The first two are full, partial or absent (lines 44-50), and the three lengths are either all equal or all distinct (line 51). A grey (5) climber stands on the bottom floor, at least 3 columns from ladder 2 (lines 41-42, 65). The 3x5 output gives, per floor, 0-3 cells of that floor's colour by ladder-length rank, then a column of 9. A grey marker goes in the row of the highest floor reachable by full ladders from below (lines 66-82).",
+   "fixture_evidence": "4 canonical pairs, 21x21 -> 3x5, with ladder lengths [0,5,7], [3,5,7], [5,5,5] and [5,3,7]. probes/ladder_rules_a1aa0c1e.py runs the certified factory's two readings, length RANK and RUNG count. Both reproduce all 4 canonical pairs, so the canonical episode cannot tell them apart. On 2000 native draws (seed 0), RANK reproduces 2000/2000 native outputs, and the two readings differ on 1241/2000 (62%). Audit native: 128/128 unique, fixed 21x21.",
+   "axes": {
+    "dimensions": {
+     "disposition": "mixed",
+     "lines": [
+      53,
+      35
+     ],
+     "why": "The canvas and output size are literals. The 3x5 output follows from the three-level count (rule-tied). The 21x21 canvas and the floor at row 19-20 (line 35) are incidental."
+    },
+    "objects": {
+     "disposition": "mixed",
+     "lines": [
+      31,
+      34,
+      45,
+      51
+     ],
+     "why": "Always exactly 3 ladders plus the floor (fixture-faithful), and the 4-8 gap caps ladder length at 7. The all-equal-or-all-distinct guard (line 51) avoids partial ties in the rank reading (rule-supported)."
+    },
+    "placement": {
+     "disposition": "mixed",
+     "lines": [
+      32,
+      41,
+      42,
+      65
+     ],
+     "why": "Ladder columns are free in 1-19. Keeping the climber at least 3 columns from ladder 2 (line 42) stops it standing on a ladder (rule-supported). The floor stack is always anchored to the bottom (incidental)."
+    },
+    "density_colours": {
+     "disposition": "intrinsic_or_rule_supported",
+     "lines": [
+      31,
+      65,
+      69
+     ],
+     "why": "Three distinct level colours (excluding 5 and 9), the floor 9 and the climber 5 are fixed roles. The factory receives them as palette[5] and palette[9]."
+    },
+    "rule_parameters": {
+     "disposition": "mixed",
+     "lines": [
+      66,
+      71,
+      73,
+      76,
+      77,
+      79
+     ],
+     "why": "Native implements length rank: shortest gets 1 cell, median 2, longest 3, absent 0. Rung count floor(L/2) agrees with rank on every canonical pair but differs on 62% of native pairs. Which reading the original task intends cannot be settled from the fixtures."
+    },
+    "demonstration_context": {
+     "disposition": "mixed",
+     "lines": [
+      51,
+      66
+     ],
+     "why": "The factory solve keeps whichever of RANK and RUNGS fits every demonstration, and raises if they disagree on the query. Admission resamples the 3-demo context (certificate context_retries 5). So the rule's identity is learned from context."
+    }
+   },
+   "proposal": "Medium: sample H and W independently (floors spaced 4-8, extra canvas margin), and allow 2-4 levels with a matching output height. This needs a factory change, since the factory raises unless it finds exactly 4 lines. Keep the RANK/RUNGS disambiguation. Recertify.",
+   "patch_priority": "medium",
+   "uncertainties": "Unknown: whether the original rule is rank or rung count; the canonical pairs fit both. Not measured here: the episode-level context-retry rate. The 62% figure comes from one seeded run of 2000.",
+   "certified_evidence": "current",
+   "release_ready": false
+  },
+  "a416fc5b": {
+   "status": "reviewed",
+   "reviewer": "claude-opus-5-5 (hybrid-claude-native worktree)",
+   "reviewed_on": "2026-10-24",
+   "review_batch": 3,
+   "constructor_sha256": "7b4b6e20fad36eb937b63b190b970fa89b20ec709f52a34e9517392d032fe9f9",
+   "baseline_commit": "f1b8bb9548c0361b9a9d93cbbf8b24ec81966baa",
+   "mechanism": "An 11x11 orange (7) board split by magenta (6) lines at rows/cols 3 and 7 into 3x3 panels (lines 42-45). A fixed 4-cell red (2) diamond motif sits in the centre panel and in one of 8 ring panels (index; lines 46-51). The output paints the motif in grey (5) and azure (8) into the two panels on either side of the panel opposite the marker (lines 52-53). With invert=1, the input is that solved board and the output is a blank 16x16 orange grid (line 54).",
+   "fixture_evidence": "4 canonical pairs, all inputs 11x11. Outputs are 11x11 except pair 2, whose input is a solved board and whose output is a blank 16x16 of 7s (the invert branch). The motif is the same 4-cell diamond in every pair. Audit native: 16 unique inputs, 4 orbits. The certificate records finite_default_domain as exhaustive: 8 marker positions x 2 states = 16.",
+   "axes": {
+    "dimensions": {
+     "disposition": "mixed",
+     "lines": [
+      42,
+      45,
+      54
+     ],
+     "why": "The 11x11 board with 3x3 panels is a literal (incidental); the factory finds dividers at any spacing. The 16x16 blank output for an already-solved board (line 54) is a canonical quirk, kept as fixture-faithful."
+    },
+    "objects": {
+     "disposition": "incidental_restriction",
+     "lines": [
+      51,
+      46
+     ],
+     "why": "The motif is always the same 4-cell diamond, so object variety is nil. The factory copies whatever mask the centre panel holds, so any motif would work."
+    },
+    "placement": {
+     "disposition": "intrinsic_or_rule_supported",
+     "lines": [
+      35,
+      39,
+      47,
+      51
+     ],
+     "why": "The marker's ring position (8 options) and the paired targets at index+3 and index+5 are the rule."
+    },
+    "density_colours": {
+     "disposition": "incidental_restriction",
+     "lines": [
+      42,
+      45,
+      51,
+      52,
+      53
+     ],
+     "why": "Colours 7/6/2/5/8 are fixed literals. The factory remaps them through the palette, but natively there is no colour variety."
+    },
+    "rule_parameters": {
+     "disposition": "intrinsic_or_rule_supported",
+     "lines": [
+      35,
+      39,
+      52,
+      53
+     ],
+     "why": "Targets are opposite-of-marker +-1, with a fixed grey/azure assignment. The factory flips the clockwise sense under reflection (S8)."
+    },
+    "demonstration_context": {
+     "disposition": "intrinsic_or_rule_supported",
+     "lines": [
+      52,
+      53
+     ],
+     "why": "Self-contained per query; the factory does not read demonstrations. With only 16 possible inputs, episodes reuse inputs heavily, which the certificate's exhaustive finite-domain record acknowledges."
+    }
+   },
+   "proposal": "High: randomise the centre motif (any connected sprite fitting the panel), and optionally the panel size (3-5) and canvas. The rule and factory are motif-agnostic, so this lifts the domain from 16 to thousands. Recertify; the finite-domain exemption would then lapse.",
+   "patch_priority": "high",
+   "uncertainties": "Unknown: whether the 16x16 blank output for solved boards is a meaningful rule or a fixture artefact (it is kept as canonical). Untested: panel sizes other than 3 in the factory.",
+   "certified_evidence": "current",
+   "release_ready": false
+  },
+  "aa300dc3": {
+   "status": "reviewed",
+   "reviewer": "claude-opus-5-5 (hybrid-claude-native worktree)",
+   "reviewed_on": "2026-10-24",
+   "review_batch": 3,
+   "constructor_sha256": "402ceacca81c428ea0d83fa996905f68693e9ee731d67695b9bf216cac1771af",
+   "baseline_commit": "f1b8bb9548c0361b9a9d93cbbf8b24ec81966baa",
+   "mechanism": "A 10x10 grey (5) canvas whose black (0) interior is carved by grey runs of length 1-4 from all four edges (lines 69-74). The black region must be 4-connected (line 39). The output marks with azure (8) the black cells on the diagonal, of either slope, holding the most black cells. The count covers the whole diagonal, not a contiguous run (lines 41-51, 58-65). Native sampling rejects ties (multi_diags=False, lines 52 and 75). Explicit calls instead break ties by alternately dropping the last and first candidates (lines 53-57).",
+   "fixture_evidence": "5 canonical pairs, 10x10, colours 0/5. probes/fixture_stats_batch3.py finds a unique maximum in pairs 0, 2, 3 and 4. Pair 1 has a 3-way tie on anti-diagonals offset -1, 0 and +1 (7 black cells each), and its output marks the middle one (r+c=9). Native draws never contain such a tie, so the centre tie convention is canonical-only. Audit native: 128/128 unique.",
+   "axes": {
+    "dimensions": {
+     "disposition": "incidental_restriction",
+     "lines": [
+      31,
+      34,
+      44
+     ],
+     "why": "The 10x10 canvas and the loop bounds of 10 are literals; the longest-diagonal rule applies on any rectangle."
+    },
+    "objects": {
+     "disposition": "mixed",
+     "lines": [
+      39,
+      69
+     ],
+     "why": "One connected black region is rule-supported (line 39). The edge-run lengths come from a fixed 1-4 histogram, which is incidental."
+    },
+    "placement": {
+     "disposition": "mixed",
+     "lines": [
+      71,
+      72,
+      73,
+      74
+     ],
+     "why": "Every row and column gets an edge run on all four sides. This keeps the shape a grey-framed blob: a fixture-faithful but fixed construction."
+    },
+    "density_colours": {
+     "disposition": "incidental_restriction",
+     "lines": [
+      33,
+      69
+     ],
+     "why": "Grey on black is fixed. Black density follows the fixed run-length histogram (non-modal fraction 0.26-0.49)."
+    },
+    "rule_parameters": {
+     "disposition": "mixed",
+     "lines": [
+      47,
+      52,
+      53,
+      54,
+      56
+     ],
+     "why": "The native rule is the longest diagonal by total black count (line 47). The tie rule (lines 53-57) appears only in canonical pair 1, never natively. Construction also does not separate the full-count reading from a contiguous-run reading."
+    },
+    "demonstration_context": {
+     "disposition": "mixed",
+     "lines": [
+      52,
+      75
+     ],
+     "why": "The factory solve enumerates 10 hypotheses: full diagonal or contiguous run, crossed with five tie criteria. It keeps those that uniquely reproduce every demonstration and raises unless the survivors agree on the query. The certificate records 113 context retries, so the rule's identity is chosen from context."
+    }
+   },
+   "proposal": "Medium: sample H and W (8-14) with run lengths scaled. Optionally admit tie scenes resolved by the centre convention, so that native episodes can show the canonical tie-break. Recertify against the factory's hypothesis class.",
+   "patch_priority": "medium",
+   "uncertainties": "Unknown: whether the original rule counts contiguous runs or the whole diagonal, and how ties break beyond the single canonical example. Not measured here: how often native contexts separate the run reading from the full-count reading.",
+   "certified_evidence": "current",
+   "release_ready": false
+  },
+  "aaef0977": {
+   "status": "reviewed",
+   "reviewer": "claude-opus-5-5 (hybrid-claude-native worktree)",
+   "reviewed_on": "2026-10-24",
+   "review_batch": 3,
+   "constructor_sha256": "0123e4edfd69c21624db1d02b1ec89554c2512b39c28c42ed6049697590718b9",
+   "baseline_commit": "f1b8bb9548c0361b9a9d93cbbf8b24ec81966baa",
+   "mechanism": "An 8x8 orange (7) grid holding one seed pixel at a random position. The seed's colour is one of nine colours in a fixed cycle (lines 29-35). Each output cell is the cycle colour at the seed's index plus that cell's Manhattan distance from the seed, mod 9 (lines 36-38).",
+   "fixture_evidence": "3 canonical pairs, 8x8, with seeds 3 at (0,6), 5 at (5,2) and 0 at (2,1). Outputs show the cycle 0,5,2,8,9,6,1,3,4 radiating in Manhattan rings. Audit native: 118 of 128 inputs unique but only 10 orbits, the D4 position classes of a single pixel on an 8x8 board. The whole native domain is 64 positions x 9 seed colours = 576 inputs; the certificate saw 474 unique in 1000 draws.",
+   "axes": {
+    "dimensions": {
+     "disposition": "incidental_restriction",
+     "lines": [
+      34,
+      36,
+      37
+     ],
+     "why": "The 8x8 canvas is a literal. The ring rule is defined on any HxW, and the factory reads H and W from the grid."
+    },
+    "objects": {
+     "disposition": "intrinsic_or_rule_supported",
+     "lines": [
+      35
+     ],
+     "why": "A single seed pixel is the rule's whole input."
+    },
+    "placement": {
+     "disposition": "broadly_variable",
+     "lines": [
+      32
+     ],
+     "why": "The seed may sit anywhere on the board, including corners and edges."
+    },
+    "density_colours": {
+     "disposition": "intrinsic_or_rule_supported",
+     "lines": [
+      29,
+      38
+     ],
+     "why": "The 9-colour cycle order is the rule. The factory remaps it through the palette, keeping the order."
+    },
+    "rule_parameters": {
+     "disposition": "intrinsic_or_rule_supported",
+     "lines": [
+      38
+     ],
+     "why": "colour = cycle[(index + |dr| + |dc|) mod 9], with no free parameter beyond seed position and colour."
+    },
+    "demonstration_context": {
+     "disposition": "intrinsic_or_rule_supported",
+     "lines": [
+      29,
+      38
+     ],
+     "why": "The cycle must be learned from demonstration outputs. Any output reaching distance 8 or more shows the whole cycle, so one 8x8 pair suffices. The factory hardcodes the cycle through the palette and does not read demonstrations."
+    }
+   },
+   "proposal": "High: the domain is only 576 inputs. Sample H and W independently (e.g. 5-16), with a guard that H+W >= 10 so outputs still show all nine cycle colours. Recertify.",
+   "patch_priority": "high",
+   "uncertainties": "Untested: on small canvases, demonstrations might not reveal the whole cycle. Unknown: whether non-square canvases fit the original task.",
+   "certified_evidence": "current",
+   "release_ready": false
+  },
+  "ad38a9d0": {
+   "status": "reviewed",
+   "reviewer": "claude-opus-5-5 (hybrid-claude-native worktree)",
+   "reviewed_on": "2026-10-24",
+   "review_batch": 3,
+   "constructor_sha256": "9e4b93731076907d075a318f8b445a2152e8e55d866afe7e7ab79e7d92856e88",
+   "baseline_commit": "f1b8bb9548c0361b9a9d93cbbf8b24ec81966baa",
+   "mechanism": "A 9x9 orange (7) board holding 6-8 grey (6) shapes. There are six fixed silhouettes (I3, plus, L-tromino, 2x3 block, S-tetromino, domino); each scene has one of each plus 0-2 repeats (lines 128-132). Shapes are packed with edge clearance; diagonal contact is allowed (_sample_positions, lines 20-61; adjacency checks, lines 115-123). The output recolours each grey shape by a fixed silhouette-to-colour map onto 2, 3, 4, 5, 8 and 9 (lines 84-114).",
+   "fixture_evidence": "3 canonical pairs, 9x9, colours 6/7. Pair 0 has 8 shapes (all six plus repeats of 4 and 2), pair 1 exactly six, and the test seven. Every fixture shows all six silhouettes in a fixed orientation; e.g. the 4-shape is always (0,0),(0,1),(1,1). Audit native: 128/128 unique.",
+   "axes": {
+    "dimensions": {
+     "disposition": "incidental_restriction",
+     "lines": [
+      76,
+      34,
+      35,
+      77
+     ],
+     "why": "The 9x9 board is a literal, also used for the packer's bounds."
+    },
+    "objects": {
+     "disposition": "intrinsic_or_rule_supported",
+     "lines": [
+      130,
+      131,
+      132
+     ],
+     "why": "Every input contains all six silhouettes, so a single demonstration reveals the whole map. The 0-2 extras are incidental and could scale with area."
+    },
+    "placement": {
+     "disposition": "intrinsic_or_rule_supported",
+     "lines": [
+      37,
+      38,
+      116,
+      119,
+      123
+     ],
+     "why": "Shapes never share an edge, so each is a separate 4-connected component (rule-supported). Diagonal contact is allowed, as in the fixtures."
+    },
+    "density_colours": {
+     "disposition": "intrinsic_or_rule_supported",
+     "lines": [
+      81,
+      82,
+      86,
+      113
+     ],
+     "why": "Grey-on-orange input and the fixed map to six output colours are the rule's roles. The factory palette remaps them."
+    },
+    "rule_parameters": {
+     "disposition": "intrinsic_or_rule_supported",
+     "lines": [
+      86,
+      90,
+      96,
+      100,
+      107,
+      112
+     ],
+     "why": "The silhouette-to-colour map is fixed and orientation-specific. D4 augmentation rotates the whole episode consistently, so the fixed orientation is part of the rule here."
+    },
+    "demonstration_context": {
+     "disposition": "intrinsic_or_rule_supported",
+     "lines": [
+      130,
+      132
+     ],
+     "why": "The map is learnable from any one demonstration because all six shapes are always present. The factory hardcodes the map through the palette and does not read demonstrations."
+    }
+   },
+   "proposal": "Medium: sample H and W (8-14) and scale the extra-shape count with area. Keep all six silhouettes present and the edge clearance. The packer is already bounded (max_nodes 4096, 256 tries, raises on failure). Recertify.",
+   "patch_priority": "medium",
+   "uncertainties": "Unknown: whether the original task ever omits a silhouette (all fixtures include all six). Not measured: packer success rates on other canvases.",
+   "certified_evidence": "current",
+   "release_ready": false
+  },
+  "af24b4cc": {
+   "status": "reviewed",
+   "reviewer": "claude-opus-5-5 (hybrid-claude-native worktree)",
+   "reviewed_on": "2026-10-24",
+   "review_batch": 3,
+   "constructor_sha256": "f5e2ca4eac92c480f3680b6c666aa78bdf36dd244750f72f7fed468f8f3c3176",
+   "baseline_commit": "f1b8bb9548c0361b9a9d93cbbf8b24ec81966baa",
+   "mechanism": "A 9x10 black canvas with a 2x3 array of 3x2 tiles at rows 1-3/5-7 and cols 1-2/4-5/7-8 (lines 28-37). Each tile mixes two colours from 1-9, with the minority colour appearing 1-2 times (line 34). The 4x5 output is a black border around the 2x3 grid of tile majorities (lines 43-50).",
+   "fixture_evidence": "4 canonical pairs, 9x10 -> 4x5. Every tile is 3x2 with two colours and a clear majority: e.g. pair 0's tile 11/11/33 gives 1, and its tile 44/44/48 gives 4. No tile uses 0. Audit native: 128/128 unique.",
+   "axes": {
+    "dimensions": {
+     "disposition": "incidental_restriction",
+     "lines": [
+      28,
+      40,
+      37
+     ],
+     "why": "The canvas, tile array and tile size are all literals. The reference program derives the tile rows and columns from runs of non-background cells and sizes its output from their counts."
+    },
+    "objects": {
+     "disposition": "mixed",
+     "lines": [
+      29,
+      30,
+      33,
+      34
+     ],
+     "why": "Six tiles of exactly two colours, each with a unique majority (rule-supported). The 2x3 array and 3x2 tile size are incidental."
+    },
+    "placement": {
+     "disposition": "mixed",
+     "lines": [
+      37
+     ],
+     "why": "The fixed lattice with one-cell gaps keeps tiles separable by background runs, as the reference program needs (rule-supported). That the positions never vary is incidental."
+    },
+    "density_colours": {
+     "disposition": "intrinsic_or_rule_supported",
+     "lines": [
+      31,
+      34
+     ],
+     "why": "Two distinct non-zero colours per tile, with the majority on 4-5 of 6 cells: the majority is unique by construction."
+    },
+    "rule_parameters": {
+     "disposition": "intrinsic_or_rule_supported",
+     "lines": [
+      49,
+      50
+     ],
+     "why": "Each output cell is its tile's majority colour."
+    },
+    "demonstration_context": {
+     "disposition": "intrinsic_or_rule_supported",
+     "lines": [
+      50
+     ],
+     "why": "Self-contained. The direct_certificate reference transform(grid) uses only the query grid."
+    }
+   },
+   "proposal": "Medium: sample tile-array rows 1-4 and columns 2-5, tile size 2-4 per axis, and 2-3 colours per tile with a strict majority. The canvas follows from these. Recertify the reference program.",
+   "patch_priority": "medium",
+   "uncertainties": "Unknown: whether the original task varies the tile array (all fixtures use 2x3) and whether three-colour tiles fit it.",
+   "certified_evidence": "current",
+   "release_ready": false
+  },
+  "afe3afe9": {
+   "status": "reviewed",
+   "reviewer": "claude-opus-5-5 (hybrid-claude-native worktree)",
+   "reviewed_on": "2026-10-24",
+   "review_batch": 3,
+   "constructor_sha256": "47dab0604f93a2c09de709ffa014a2cbe1c0f4ba5ae122d4d911f525522fd569",
+   "baseline_commit": "f1b8bb9548c0361b9a9d93cbbf8b24ec81966baa",
+   "mechanism": "A 30x30 black canvas with a blue (1) marker line along one edge (line 49). Beside it is a 7x7 lattice of hollow 3x3 squares at pitch 4 (lines 50-55). The left three lattice columns hold two colour groups (rows 0-2 and 4-6, line 37); the right three hold azure (8) squares; the centre column is empty. The output is the 7x6 lattice with each row's squares packed toward the azure side (lines 56-63). Flip, flop and transpose are each applied independently, to input and output together (lines 42-44, 64-66).",
+   "fixture_evidence": "4 canonical pairs, 30x30, with output shapes 7x6, 6x7, 7x6 and 6x7. Orientation therefore varies within the episode, as it does natively. Pair 0 uses colours 2 and 3 on the left and 8 on the right, and its output rows are right-packed (222888, 000028, ...). Audit native: 128/128 unique, outputs 6x7 or 7x6.",
+   "axes": {
+    "dimensions": {
+     "disposition": "mixed",
+     "lines": [
+      47,
+      55,
+      31
+     ],
+     "why": "30x30 is the 7-row lattice at pitch 4 plus margin and the marker row, so the size is tied to the lattice. But the 7x7 lattice is itself fixed (incidental), and the factory raises on any other lattice size."
+    },
+    "objects": {
+     "disposition": "mixed",
+     "lines": [
+      33,
+      34,
+      35,
+      39
+     ],
+     "why": "Each lattice row has 1-3 squares per side (randint(1,3)). The two left colour groups follow a fixture-faithful layout."
+    },
+    "placement": {
+     "disposition": "intrinsic_or_rule_supported",
+     "lines": [
+      42,
+      43,
+      44,
+      55
+     ],
+     "why": "Orientation is random per pair. The flop offset (line 55) keeps the lattice aligned, so orientation varies as in the fixtures."
+    },
+    "density_colours": {
+     "disposition": "mixed",
+     "lines": [
+      32,
+      41,
+      49
+     ],
+     "why": "Two foreground colours come from 1-9 excluding 1 and 8. Azure and blue are fixed roles, which the factory receives as palette[1] and palette[8]."
+    },
+    "rule_parameters": {
+     "disposition": "mixed",
+     "lines": [
+      56,
+      57,
+      58,
+      62
+     ],
+     "why": "Native packs toward the azure side. The certificate notes that canonical pairs also fit a 'clockwise relative to the marker' reading; odd-handed native cases separate the two."
+    },
+    "demonstration_context": {
+     "disposition": "mixed",
+     "lines": [
+      64,
+      65,
+      66
+     ],
+     "why": "The factory keeps three hypotheses (toward azure, clockwise, counter-clockwise), filters them on the demonstrations, and raises if they disagree on the query. The certificate records 39 context retries."
+    }
+   },
+   "proposal": "Low/medium: vary the lattice height (5-7) and per-side width (2-4), with the canvas following. This needs a matching factory change, because the factory hardcodes a 7x7 lattice. Orientation and colour variety are already good. Recertify.",
+   "patch_priority": "medium",
+   "uncertainties": "Unknown: whether lattice sizes other than 7x7 belong to the original task (all fixtures use 7x7), and what context-retry rates a different geometry would need.",
+   "certified_evidence": "current",
+   "release_ready": false
+  },
+  "b2bc3ffd": {
+   "status": "reviewed",
+   "reviewer": "claude-opus-5-5 (hybrid-claude-native worktree)",
+   "reviewed_on": "2026-10-24",
+   "review_batch": 3,
+   "constructor_sha256": "9c87952ab47555e3dff25df6471578e381298a718e99d558d60cb40d2e377e85",
+   "baseline_commit": "f1b8bb9548c0361b9a9d93cbbf8b24ec81966baa",
+   "mechanism": "An 8x8 orange (7) canvas with an azure (8) floor in row 7. On the floor sit objects: bars or corner-trimmed blocks 1-6 wide and 1-3 tall, each a distinct colour from 1-9 excluding 7 and 8, separated by 1-2 empty columns (lines 28-54). In the output each object rises by its own cell count (lines 59-69).",
+   "fixture_evidence": "4 canonical pairs, 8x8. In pair 0 the maroon object (4 cells) rises 4 rows and the red bar (3 cells) rises 3. In pair 3 a 6-wide grey bar rises 6 to row 0. Every object stands on the floor and has its own colour. Audit native: 127 of 128 unique, 98 orbits; the certificate counted 940 unique in 1000.",
+   "axes": {
+    "dimensions": {
+     "disposition": "mixed",
+     "lines": [
+      56,
+      31,
+      34,
+      35
+     ],
+     "why": "The 8x8 literal is tied to lift headroom: the largest object (6 cells, or 3 tall plus a lift of 3) still fits in 7 rows. A larger canvas needs these caps to scale with it."
+    },
+    "objects": {
+     "disposition": "mixed",
+     "lines": [
+      31,
+      34,
+      35,
+      38,
+      39
+     ],
+     "why": "Width and height histograms plus corner trimming give simple bars and steps (incidental). One colour per object (line 36) is rule-supported, because the lift counts cells by colour (lines 59-65)."
+    },
+    "placement": {
+     "disposition": "mixed",
+     "lines": [
+      45,
+      46,
+      49,
+      52
+     ],
+     "why": "Objects are packed left to right with gaps of 1-2 on a bottom floor. This is fixture-faithful but a fixed scan order."
+    },
+    "density_colours": {
+     "disposition": "intrinsic_or_rule_supported",
+     "lines": [
+      36,
+      56,
+      58
+     ],
+     "why": "Distinct object colours on an orange background with an azure floor are rule roles, remapped by the factory palette."
+    },
+    "rule_parameters": {
+     "disposition": "intrinsic_or_rule_supported",
+     "lines": [
+      64,
+      65,
+      69
+     ],
+     "why": "Each object's lift equals its total cell count."
+    },
+    "demonstration_context": {
+     "disposition": "intrinsic_or_rule_supported",
+     "lines": [
+      69
+     ],
+     "why": "Self-contained. The factory maps the lift direction from d4 and does not read demonstrations."
+    }
+   },
+   "proposal": "Medium: sample H (8-14) and W (6-14), bounding object size so that cells plus height stays at most H-1. This widens the domain beyond about 1000 inputs. Recertify.",
+   "patch_priority": "medium",
+   "uncertainties": "Unknown: whether objects in the original task are always floor-anchored bars (the fixtures agree). The domain size is estimated from certificate and audit uniqueness, not enumerated.",
+   "certified_evidence": "current",
+   "release_ready": false
+  },
+  "b7fb29bc": {
+   "status": "reviewed",
+   "reviewer": "claude-opus-5-5 (hybrid-claude-native worktree)",
+   "reviewed_on": "2026-10-24",
+   "review_batch": 3,
+   "constructor_sha256": "d2256129df1a63d4b575f5f2bbe62ccf80cd3de1e8690ae2296cffcf02e04c6e",
+   "baseline_commit": "f1b8bb9548c0361b9a9d93cbbf8b24ec81966baa",
+   "mechanism": "A fixed 9x9 green (3) frame at rows 2-10 and cols 3-11 on a 15x15 black canvas, with one green seed inside its 7x7 interior (lines 29-36, 41). The output colours each interior cell red (2) or yellow (4) by the parity of its Chebyshev distance from the seed (lines 37-40).",
+   "fixture_evidence": "4 canonical pairs, 15x15, colours 0/3. The frame is identical in every pair, and the seeds sit at interior (5,1), (3,3), (0,5) and (2,0). Audit native: 46 unique inputs, 26 orbits. The certificate records an exhaustive finite domain of the 49 seed positions.",
+   "axes": {
+    "dimensions": {
+     "disposition": "incidental_restriction",
+     "lines": [
+      31,
+      33,
+      34,
+      35,
+      36
+     ],
+     "why": "Canvas size, frame position and frame size are literals. The factory finds the largest green component and works inside it."
+    },
+    "objects": {
+     "disposition": "incidental_restriction",
+     "lines": [
+      32,
+      33,
+      35
+     ],
+     "why": "One frame of fixed size; the only variation is the seed position."
+    },
+    "placement": {
+     "disposition": "mixed",
+     "lines": [
+      29,
+      41
+     ],
+     "why": "The seed may be anywhere in the interior (rule-supported), but the frame never moves (incidental)."
+    },
+    "density_colours": {
+     "disposition": "incidental_restriction",
+     "lines": [
+      33,
+      40
+     ],
+     "why": "The green frame, red/yellow rings and black background are fixed; the palette remaps them only at episode level."
+    },
+    "rule_parameters": {
+     "disposition": "intrinsic_or_rule_supported",
+     "lines": [
+      39,
+      40
+     ],
+     "why": "Parity of Chebyshev distance from the seed: even distances red, odd yellow."
+    },
+    "demonstration_context": {
+     "disposition": "intrinsic_or_rule_supported",
+     "lines": [
+      39,
+      40
+     ],
+     "why": "Self-contained; the factory does not read demonstrations."
+    }
+   },
+   "proposal": "High: the domain is only 49 inputs. Randomise frame height and width (e.g. 5-13 per side, rectangular), frame position and canvas size; the rule and factory already handle any frame. Recertify; the finite-domain exemption would then lapse.",
+   "patch_priority": "high",
+   "uncertainties": "Unknown: whether non-square frames fit the original task (all fixtures share one 9x9 frame).",
+   "certified_evidence": "current",
+   "release_ready": false
+  },
+  "b9630600": {
+   "status": "reviewed",
+   "reviewer": "claude-opus-5-5 (hybrid-claude-native worktree)",
+   "reviewed_on": "2026-10-24",
+   "review_batch": 3,
+   "constructor_sha256": "68779c89e29ea41f7a7a9b49a0fa5f675018403c8b44363b99036fb5bf1c3ad4",
+   "baseline_commit": "f1b8bb9548c0361b9a9d93cbbf8b24ec81966baa",
+   "mechanism": "6-8 hollow green (3) rectangles, 3-12 per side, on a 30x30 black canvas. They grow outward from a seed box: each new neighbour is centred on its parent's side with matching parity (lines 158-183). The output joins nested-span neighbours with two-line 'pipes' along a minimum spanning tree of gap lengths, opening the walls where pipes meet (lines 107-151). A scene is accepted only if all boxes merge with at least 5 merges (lines 152-153) and the MST over visible pipe candidates is unique (_visibly_determined, lines 81-85, 185).",
+   "fixture_evidence": "4 canonical pairs, 30x30, colours 0/3, with 7, 6, 7 and 8 boxes. Pair 0's output shows pipes; e.g. rows 5-6 join the box at cols 2-7 to the box at cols 11-14 through opened walls. Audit native: 128/128 unique, 0.34 s.",
+   "axes": {
+    "dimensions": {
+     "disposition": "incidental_restriction",
+     "lines": [
+      96,
+      159,
+      164
+     ],
+     "why": "30 is a literal in the canvas and in the bounds; the pipe rule works at any size."
+    },
+    "objects": {
+     "disposition": "mixed",
+     "lines": [
+      95,
+      153,
+      158
+     ],
+     "why": "6-8 boxes with at least 5 merges match the fixture counts. Both bounds follow from the 30x30 canvas."
+    },
+    "placement": {
+     "disposition": "intrinsic_or_rule_supported",
+     "lines": [
+      112,
+      118,
+      172,
+      175,
+      185
+     ],
+     "why": "Children are centred with matching parity (lines 172-182). The ill-defined guards (lines 112 and 118) require centred nesting, so each pipe lies on symmetric interior lines. The visible-uniqueness gate (line 185) makes the answer determinable from the input."
+    },
+    "density_colours": {
+     "disposition": "incidental_restriction",
+     "lines": [
+      105,
+      106
+     ],
+     "why": "Green on black is fixed; the factory palette remaps it."
+    },
+    "rule_parameters": {
+     "disposition": "intrinsic_or_rule_supported",
+     "lines": [
+      123,
+      125,
+      136,
+      139
+     ],
+     "why": "Pipes are added in increasing gap order, skipping already-merged groups (Kruskal's algorithm), and the resulting tree is unique."
+    },
+    "demonstration_context": {
+     "disposition": "intrinsic_or_rule_supported",
+     "lines": [
+      185
+     ],
+     "why": "Self-contained per query. The factory raises on a non-unique tree and does not read demonstrations."
+    }
+   },
+   "proposal": "Medium: sample H and W (20-30) and use 4-8 boxes scaled to area. The sampler is already bounded (_MAX_SCENES). Recertify.",
+   "patch_priority": "medium",
+   "uncertainties": "Not measured: acceptance rates on smaller canvases. Unknown: whether fewer than 6 boxes fit the original task.",
+   "certified_evidence": "current",
+   "release_ready": false
+  },
+  "bb52a14b": {
+   "status": "reviewed",
+   "reviewer": "claude-opus-5-5 (hybrid-claude-native worktree)",
+   "reviewed_on": "2026-10-24",
+   "review_batch": 3,
+   "constructor_sha256": "eff19e522825709771280481ad46e9b1cdfc3a00ef62e8c934cafadbf813ce36",
+   "baseline_commit": "f1b8bb9548c0361b9a9d93cbbf8b24ec81966baa",
+   "mechanism": "A 22x22 grid of 20% blue/azure (1/8) noise (line 76). It holds 2-3 copies of a 3x3 pattern of 1, 8 and 0; in copy 0 the pattern's zero cells are yellow (4) (lines 59-71, 81). The output stamps the full yellow-holed pattern on every other place where the non-yellow cells match (lines 34-55). A scene is rejected if any match has a non-zero cell at a yellow position (lines 43, 46), lies on the border (line 47), or overlaps another match (line 50).",
+   "fixture_evidence": "4 canonical pairs, 22x22, colours 0/1/4/8, with 2-3 pattern copies each (pair 0: yellow copy at (12,4), stamps at (2,10) and (12,18)). Audit native: only 70 valid of 72 attempted, with 2 TimeoutErrors. probes/time_draws.py (seeds 0 and 1, 5 s limit) gave 46/48 and 45/48 valid draws. Successful draws had a median of 1.1 ms and a maximum of 4 ms, and the 5 failures all hit the limit: a bimodal pattern, not a heavy tail. probes/stuck_scenes_bb52a14b.py (300 scenes, 200 noise redraws each, seed 0) found 10/300 scenes (3.3%) that never accept, and all 10 are rejected even with zero noise. Every printed stuck example has a box centred at row or column 1 or 20, i.e. touching the border.",
+   "axes": {
+    "dimensions": {
+     "disposition": "incidental_restriction",
+     "lines": [
+      28,
+      41,
+      47,
+      68,
+      69,
+      73
+     ],
+     "why": "22 is a literal throughout. The fixed 22x22 audit signal is real (it comes from the source), not a sampling artefact, but the audit's other ranges describe only 70 scenes."
+    },
+    "objects": {
+     "disposition": "mixed",
+     "lines": [
+      59,
+      61,
+      64,
+      65,
+      66
+     ],
+     "why": "2-3 copies of one pattern, a cross or X template with one extra zero (fixture-faithful). The copy count is incidental."
+    },
+    "placement": {
+     "disposition": "mixed",
+     "lines": [
+      47,
+      50,
+      68,
+      69,
+      70
+     ],
+     "why": "The 7x7 non-overlap spacing (line 50) and the no-border-match rule (line 47) are rule-supported. But the copy positions and pattern are drawn once, outside the noise loop (lines 59-71), so a rejection caused by the copies alone can never clear: the loop at line 72 then never ends."
+    },
+    "density_colours": {
+     "disposition": "incidental_restriction",
+     "lines": [
+      76
+     ],
+     "why": "Noise density is fixed at 1/5 and noise colours at 1/8, with yellow as the marker. The palette remaps the colours only at episode level."
+    },
+    "rule_parameters": {
+     "disposition": "intrinsic_or_rule_supported",
+     "lines": [
+      42,
+      43,
+      44,
+      55
+     ],
+     "why": "Match on the non-yellow cells, require 0 or 4 at the yellow cells, then stamp the yellow-holed pattern."
+    },
+    "demonstration_context": {
+     "disposition": "intrinsic_or_rule_supported",
+     "lines": [
+      44,
+      55
+     ],
+     "why": "Self-contained per query; the factory does not read demonstrations."
+    }
+   },
+   "proposal": "High. Fix sampling first: about 3% of native scenes hang forever at line 72. Either move the pattern and copy draws (lines 59-71) inside a bounded retry loop, or reject copy placements whose partial border matches trip lines 41 and 47. Re-run the audit (the existing record has 70 valid draws), then sample H, W and noise density. Recertify.",
+   "patch_priority": "high",
+   "uncertainties": "The border-partial-match explanation is inferred from the stuck examples (each has a copy at an edge) and from line 41 skipping out-of-bounds cells before line 47 rejects; the failing match was not traced per example. The 3.3% rate comes from one seeded run of 300 scenes.",
+   "certified_evidence": "current",
+   "release_ready": false
+  },
+  "bd283c4a": {
+   "status": "reviewed",
+   "reviewer": "claude-opus-5-5 (hybrid-claude-native worktree)",
+   "reviewed_on": "2026-10-24",
+   "review_batch": 3,
+   "constructor_sha256": "303c437d80f5943358019377cffd5b3c16fbca2b88ffed4a29c9bfe3ea6d4a93",
+   "baseline_commit": "f1b8bb9548c0361b9a9d93cbbf8b24ec81966baa",
+   "mechanism": "A 10x10 grid fully filled with four colours from 1-9, drawn with fixed weights 10/6/3/1 out of 20 (lines 28-30). The output stacks colours by descending count, filling column by column from the bottom-left, upward then rightward (lines 36-41). Tied counts keep dict insertion order, i.e. first appearance in row-major order (line 36, with the stable sort at line 38).",
+   "fixture_evidence": "3 canonical pairs, 10x10, using 3-4 colours each. Pair 0 (colours 4, 9, 5, 8) fills 4s in the left columns and ends with 8s at the top right. Audit native: 128/128 unique, always 4 colours. probes/fixture_stats_batch3.py found tied counts in 38/2000 native inputs (1.9%, seed 0); in those, the first-appearance tie-break decides the output. The factory reproduces that convention through a d4-mapped scan.",
+   "axes": {
+    "dimensions": {
+     "disposition": "incidental_restriction",
+     "lines": [
+      33,
+      35,
+      40
+     ],
+     "why": "The 10x10 literal is also hardcoded in the fill index (line 40)."
+    },
+    "objects": {
+     "disposition": "mixed",
+     "lines": [
+      28,
+      29
+     ],
+     "why": "Always 4 colours; the rarest is absent in only about 0.6% of draws. 3-6 colours would not change the rule."
+    },
+    "placement": {
+     "disposition": "broadly_variable",
+     "lines": [
+      30
+     ],
+     "why": "Every one of the 100 cells is drawn independently from the weighted list (line 30), so colour positions are unconstrained."
+    },
+    "density_colours": {
+     "disposition": "incidental_restriction",
+     "lines": [
+      29
+     ],
+     "why": "The fixed 10/6/3/1 weights pin the colour-count profile, while the fixtures show varied profiles."
+    },
+    "rule_parameters": {
+     "disposition": "mixed",
+     "lines": [
+      36,
+      38,
+      40
+     ],
+     "why": "The descending-count fill is the rule. The first-appearance tie-break is an implementation artefact that demonstrations rarely show (1.9% of pairs)."
+    },
+    "demonstration_context": {
+     "disposition": "mixed",
+     "lines": [
+      38
+     ],
+     "why": "Deterministic per query. The factory hardcodes the tie convention and does not read demonstrations, but a learner sees the convention only in the rare tied pairs."
+    }
+   },
+   "proposal": "Medium: sample H and W (6-14) and 2-6 colours with random weights. Either reject tied counts (about 2% cost) or document the tie-break as a convention. Recertify.",
+   "patch_priority": "medium",
+   "uncertainties": "The 1.9% tie rate comes from one seeded run of 2000. Whether the original task ever has ties is unknown.",
+   "certified_evidence": "current",
+   "release_ready": false
+  },
+  "c35c1b4c": {
+   "status": "reviewed",
+   "reviewer": "claude-opus-5-5 (hybrid-claude-native worktree)",
+   "reviewed_on": "2026-10-24",
+   "review_batch": 3,
+   "constructor_sha256": "533b5f5f79f809da164291f5d4c4a109c599339aabfea1119c4af10ca99469b1",
+   "baseline_commit": "f1b8bb9548c0361b9a9d93cbbf8b24ec81966baa",
+   "mechanism": "A 10x10 grid of noise drawn from two colours plus black (line 35). A foreground blob of a third colour grows from (4,4) within rows 1-8 and cols 0-4, and each added cell is mirrored into the right half with probability 1/2 (lines 36-48). The output mirrors every left-half foreground cell onto the right half and keeps the existing right-half cells (lines 54-56). This completes a left-right symmetric blob.",
+   "fixture_evidence": "4 canonical pairs, 10x10, 4 colours each (pair 0: 0/3/7/9, foreground 3). Every output completes the blob symmetrically about the vertical centre line; e.g. pair 3's row 4 becomes all 9. Audit native: 128/128 unique.",
+   "axes": {
+    "dimensions": {
+     "disposition": "incidental_restriction",
+     "lines": [
+      32,
+      43,
+      45,
+      51,
+      54,
+      55
+     ],
+     "why": "10 is a literal in the canvas, the growth bounds and the mirror index (9 - c). The factory needs only even dimensions with a central 2x2 block."
+    },
+    "objects": {
+     "disposition": "mixed",
+     "lines": [
+      29,
+      36,
+      43
+     ],
+     "why": "One blob of 18-24 growth steps, seeded at (4,4) and kept off the top and bottom rows. Anchoring at the centre is rule-supported; the sizes are incidental."
+    },
+    "placement": {
+     "disposition": "mixed",
+     "lines": [
+      43,
+      45
+     ],
+     "why": "Growth is confined to the left half, and right-half cells exist only as mirrors. The mirror axis is always vertical natively; D4 augmentation varies it at episode level."
+    },
+    "density_colours": {
+     "disposition": "intrinsic_or_rule_supported",
+     "lines": [
+      30,
+      31,
+      35
+     ],
+     "why": "Three distinct non-zero colours plus black, with the foreground excluded from the noise. These are rule roles, preserved under the palette."
+    },
+    "rule_parameters": {
+     "disposition": "mixed",
+     "lines": [
+      36,
+      56
+     ],
+     "why": "Natively, the foreground is the colour at (4,4) and the axis is vertical. The factory keeps 8 hypotheses: 4 central cells x 2 axes."
+    },
+    "demonstration_context": {
+     "disposition": "mixed",
+     "lines": [
+      36,
+      56
+     ],
+     "why": "The factory solve keeps the central-cell and axis hypotheses that fit every demonstration and raises unless they agree on the query. The certificate records 26 context retries."
+    }
+   },
+   "proposal": "Medium: sample even H and W (8-16), seed at a central cell, and scale growth with the half-area. Optionally vary which central cell seeds the blob, provided the hypothesis class stays identifiable. Recertify.",
+   "patch_priority": "medium",
+   "uncertainties": "Unknown: whether the original rule picks the foreground by centre position or by another cue (e.g. the largest symmetric object). The factory's hypothesis class is a modelling choice.",
+   "certified_evidence": "current",
+   "release_ready": false
+  },
+  "c6e1b8da": {
+   "status": "reviewed",
+   "reviewer": "claude-opus-5-5 (hybrid-claude-native worktree)",
+   "reviewed_on": "2026-10-24",
+   "review_batch": 3,
+   "constructor_sha256": "7373350a8e68de14ce950aa8ab902d0693797988c82283ae228597d558e049a3",
+   "baseline_commit": "f1b8bb9548c0361b9a9d93cbbf8b24ec81966baa",
+   "mechanism": "3-5 solid rectangles (3-9 per side) in distinct colours on a 20x20 black canvas (lines 92-98). At least two have a one-cell-wide 'stick' of length 1-5 leaving one side away from the corners (lines 46-56, 99-102). The output slides each such box by its stick length in the stick's direction and removes the stick (lines 57-68). Draws are rejected if a pulled box would be overdrawn, any cell leaves the canvas, or any box shows fewer than 3 visible corners before or after the move (lines 44, 55, 62, 67, 70-88).",
+   "fixture_evidence": "4 canonical pairs, 20x20. In pair 0 the orange box has a 2-cell downward stick at col 9 (rows 7-8) and has moved down 2 in the output. Still and moving boxes overlap, as in pair 1. Audit native: 128/128 unique, 4.3 s for 128 draws.",
+   "axes": {
+    "dimensions": {
+     "disposition": "incidental_restriction",
+     "lines": [
+      37,
+      53,
+      62,
+      97,
+      98
+     ],
+     "why": "20 is a literal. The bound at line 62 is asymmetric: it rejects row+tall >= 20, so a moved box may touch the top or left edge but never the bottom or right. Input boxes never touch any edge (lines 97-98)."
+    },
+    "objects": {
+     "disposition": "mixed",
+     "lines": [
+      92,
+      95,
+      96,
+      102
+     ],
+     "why": "3-5 boxes with at least 2 sticks match the fixtures. The box size ranges are incidental."
+    },
+    "placement": {
+     "disposition": "mixed",
+     "lines": [
+      44,
+      55,
+      67,
+      77,
+      88
+     ],
+     "why": "The no-overdraw and at-least-3-corners guards keep every box recoverable from the input (rule-supported). Overlap with still boxes is allowed."
+    },
+    "density_colours": {
+     "disposition": "intrinsic_or_rule_supported",
+     "lines": [
+      93
+     ],
+     "why": "Distinct box colours identify objects, which the per-colour analysis in the factory relies on."
+    },
+    "rule_parameters": {
+     "disposition": "intrinsic_or_rule_supported",
+     "lines": [
+      58,
+      59,
+      60,
+      61,
+      101
+     ],
+     "why": "Each box shifts by its stick length toward the stick. The 'down' offset keeps sticks off corners (line 101), so the stick side is unambiguous."
+    },
+    "demonstration_context": {
+     "disposition": "intrinsic_or_rule_supported",
+     "lines": [
+      44,
+      77
+     ],
+     "why": "The factory reads demonstrations only to reject contradictory ones; the answer comes from the query alone (_recover). Ambiguous queries are rejected by the admission gate (certificate audit_scope)."
+    }
+   },
+   "proposal": "Medium: sample H and W (14-26) with scaled bounds, and fix the >= 20 off-by-one so moved boxes may touch every edge. Recertify.",
+   "patch_priority": "medium",
+   "uncertainties": "Not measured: whether the edge asymmetry is visible at episode level after D4 augmentation, and acceptance rates at other sizes.",
+   "certified_evidence": "current",
+   "release_ready": false
+  },
+  "c7d4e6ad": {
+   "status": "reviewed",
+   "reviewer": "claude-opus-5-5 (hybrid-claude-native worktree)",
+   "reviewed_on": "2026-10-24",
+   "review_batch": 3,
+   "constructor_sha256": "6c88d33d0ea07a8a0287037d101dcca94647f3be73cf0a746ab224908705dc04",
+   "baseline_commit": "f1b8bb9548c0361b9a9d93cbbf8b24ec81966baa",
+   "mechanism": "A 10x10 black canvas with a colour legend in column 0: 2-4 distinct non-grey colours in segments of 1-4 rows, 7-8 rows in total (lines 29-40). A connected grey (5) shape starting at column 3 grows in random segments until every legend row contains grey (lines 42-69). The output recolours every non-black cell with its row's legend colour (lines 75-77).",
+   "fixture_evidence": "3 canonical pairs, 10x10. Pair 0's legend 9,9,6,6,6,4,4,4 recolours the grey shape row by row. In all pairs the grey starts at column 3 and stays within columns 3-7, matching native widths 3-5. Audit native: 128/128 unique.",
+   "axes": {
+    "dimensions": {
+     "disposition": "incidental_restriction",
+     "lines": [
+      36,
+      72,
+      30,
+      29
+     ],
+     "why": "The 10x10 canvas and the 7-8 legend height are literals."
+    },
+    "objects": {
+     "disposition": "mixed",
+     "lines": [
+      42,
+      45,
+      51,
+      69
+     ],
+     "why": "A single grey shape is required to be connected (line 69), which is rule-supported. It is built from random runs; its 3-5 width is incidental."
+    },
+    "placement": {
+     "disposition": "mixed",
+     "lines": [
+      49,
+      55,
+      58,
+      62
+     ],
+     "why": "Grey covers every legend row (lines 58-62), so every grey cell has a defined colour (rule-supported). The fixed start column 3 is incidental."
+    },
+    "density_colours": {
+     "disposition": "intrinsic_or_rule_supported",
+     "lines": [
+      31,
+      33,
+      34
+     ],
+     "why": "Legend colours are distinct and exclude grey, and the segment lengths sum to the legend height."
+    },
+    "rule_parameters": {
+     "disposition": "intrinsic_or_rule_supported",
+     "lines": [
+      77
+     ],
+     "why": "Recolour each cell by its row's column-0 colour."
+    },
+    "demonstration_context": {
+     "disposition": "intrinsic_or_rule_supported",
+     "lines": [
+      77
+     ],
+     "why": "Self-contained; the factory does not read demonstrations."
+    }
+   },
+   "proposal": "Medium: sample H and W (8-16), a legend height up to H-2, and the grey start column and width; optionally allow 2-6 legend colours. Recertify.",
+   "patch_priority": "medium",
+   "uncertainties": "Unknown: whether grey rows outside the legend span belong to the original task (native forbids them).",
+   "certified_evidence": "current",
+   "release_ready": false
+  },
+  "cf133acc": {
+   "status": "reviewed",
+   "reviewer": "claude-opus-5-5 (hybrid-claude-native worktree)",
+   "reviewed_on": "2026-10-24",
+   "review_batch": 3,
+   "constructor_sha256": "d1422dd4b4b5088c3d77fccde97380f3d92dda936692694c2a9dd21d895c9e6b",
+   "baseline_commit": "f1b8bb9548c0361b9a9d93cbbf8b24ec81966baa",
+   "mechanism": "A 15x15 black canvas. Two vertical stubs of length 1-6 stand at the bottom, one each side of a midline at 6-8 (lines 57-60). There are 2-6 horizontal bars, each running from the left (reaching mid or mid+1), from the right, or across the full width, with a gap at a stub column (lines 61-74, 52). Bars on the same side are non-adjacent, and both sides occur (lines 35-39). The output extends each stub to the top row, switching to each crossed bar's colour (lines 46-53).",
+   "fixture_evidence": "4 canonical pairs, 15x15. Pair 0 has stubs 1 (col 3) and 5 (col 9), with bars 3 and 4 on the left and 6 and 7 on the right; output column 3 reads 3,3,3,3,4,4,4,4,4,1,... from the top. Audit native: 128/128 unique. Line 77 prints mid, hsides and hlengths to stdout on every native draw: a leftover debug print with no semantic effect.",
+   "axes": {
+    "dimensions": {
+     "disposition": "incidental_restriction",
+     "lines": [
+      40,
+      43,
+      57,
+      58,
+      74
+     ],
+     "why": "15 is a literal throughout: the canvas, the right-side index 14 - col (line 43), the midline 6-8 and stub columns up to 13 (lines 57-58), and the full-width length 15 (line 74)."
+    },
+    "objects": {
+     "disposition": "mixed",
+     "lines": [
+      58,
+      60,
+      62
+     ],
+     "why": "Exactly two stubs (fixture-faithful, but incidental), and 2-6 bars."
+    },
+    "placement": {
+     "disposition": "intrinsic_or_rule_supported",
+     "lines": [
+      35,
+      37,
+      39,
+      49,
+      50
+     ],
+     "why": "Both sides occur, same-side bars are non-adjacent, and each row has the same colour on both sides of a stub (lines 49-50). So every gap lies inside a bar and the colour switch is well defined (rule-supported)."
+    },
+    "density_colours": {
+     "disposition": "intrinsic_or_rule_supported",
+     "lines": [
+      59,
+      66
+     ],
+     "why": "Bar colours are distinct and exclude the stub colours, so every crossing is visible."
+    },
+    "rule_parameters": {
+     "disposition": "intrinsic_or_rule_supported",
+     "lines": [
+      51,
+      53
+     ],
+     "why": "Moving upward from the bottom, each stub cell takes the colour of the last bar crossed."
+    },
+    "demonstration_context": {
+     "disposition": "intrinsic_or_rule_supported",
+     "lines": [
+      53
+     ],
+     "why": "Self-contained; the factory does not read demonstrations."
+    }
+   },
+   "proposal": "Medium: sample H and W (11-20) and 1-3 stubs with bars aligned to them. Remove the debug print at line 77; it does not change outputs. Recertify.",
+   "patch_priority": "medium",
+   "uncertainties": "Unknown: whether more than two stubs fit the original task. Not checked: whether the stdout print disturbs harnesses that capture output.",
+   "certified_evidence": "current",
+   "release_ready": false
+  },
+  "cfb2ce5a": {
+   "status": "reviewed",
+   "reviewer": "claude-opus-5-5 (hybrid-claude-native worktree)",
+   "reviewed_on": "2026-10-24",
+   "review_batch": 3,
+   "constructor_sha256": "75f1acd5532a00836cd61386386492736d4e296de0610c3a1ed4cd9d1cbb1bb2",
+   "baseline_commit": "f1b8bb9548c0361b9a9d93cbbf8b24ec81966baa",
+   "mechanism": "A 10x10 black canvas. The top-left quadrant, rows and cols 1-4, holds a 4x4 two-class bitmap with 6-10 ones, drawn in one colour pair (lines 35-37, 49). The other three quadrants are left-right, up-down and both-way mirrors, each with its own colour pair, and each shows only two hint pixels, one per class (lines 38-43, 50-52). The output completes all four quadrants (lines 53-56).",
+   "fixture_evidence": "4 canonical pairs, 10x10. The top-left quadrant is always full; the others show 1-2 hint pixels. In pair 1 the bottom-right pair includes colour 0, so one hint pixel is invisible (black on black), and the completed quadrant uses 0 for that class. Native can do the same, since sample(range(0, 10), 2) admits 0 (line 33). Audit native: 128/128 unique.",
+   "axes": {
+    "dimensions": {
+     "disposition": "mixed",
+     "lines": [
+      46,
+      49,
+      52
+     ],
+     "why": "The canvas is 2*4+2, tied to the 4x4 bitmap plus a one-cell margin, so the two literals go together. The factory hardcodes H=W=10, but only to place the full block under d4."
+    },
+    "objects": {
+     "disposition": "mixed",
+     "lines": [
+      36,
+      37
+     ],
+     "why": "A 4x4 bitmap with 6-10 ones, so both classes are present (rule-supported). The fixed 4x4 size is incidental."
+    },
+    "placement": {
+     "disposition": "mixed",
+     "lines": [
+      49,
+      50,
+      51,
+      52
+     ],
+     "why": "The full quadrant is always the top-left natively. D4 varies it at episode level, since the factory takes d4 to locate the full block."
+    },
+    "density_colours": {
+     "disposition": "mixed",
+     "lines": [
+      33,
+      34
+     ],
+     "why": "Four colour pairs with at least 7 distinct colours. 0 is allowed as a class colour, which can make a hint invisible: fixture-faithful, but visually ambiguous."
+    },
+    "rule_parameters": {
+     "disposition": "intrinsic_or_rule_supported",
+     "lines": [
+      42,
+      54,
+      55,
+      56
+     ],
+     "why": "One hint per class per quadrant (line 42) fixes each quadrant's recolouring, and the mirrors are the rule."
+    },
+    "demonstration_context": {
+     "disposition": "intrinsic_or_rule_supported",
+     "lines": [
+      42
+     ],
+     "why": "Self-contained; the factory does not read demonstrations."
+    }
+   },
+   "proposal": "Medium: sample the bitmap size k (3-6) with canvas 2k+2 or larger, and let the factory read H and W from the grid. Keep the hint rule. Recertify.",
+   "patch_priority": "medium",
+   "uncertainties": "Inferring a class colour whose only hint is 0 (invisible) relies on the convention 'unseen = background'. That convention is canonical but subtle. Unknown: whether k other than 4 fits the original task.",
+   "certified_evidence": "current",
+   "release_ready": false
+  },
+  "d304284e": {
+   "status": "reviewed",
+   "reviewer": "claude-opus-5-5 (hybrid-claude-native worktree)",
+   "reviewed_on": "2026-10-24",
+   "review_batch": 3,
+   "constructor_sha256": "58ce1bd80ae12b6cf150476c3ab8e735bdd146957a9318b134779b63d7687ced",
+   "baseline_commit": "f1b8bb9548c0361b9a9d93cbbf8b24ec81966baa",
+   "mechanism": "An orange (7) sprite, 3 wide by 3-5 tall with full row and column coverage (conway_sprite), sits at brow and bcol 2-8 on a 23x28 black canvas (lines 34-44). The output repeats it to the right with one-column gaps; every third copy is magenta (6) and also repeats downward (lines 45-60).",
+   "fixture_evidence": "3 canonical pairs, 23x28, colours 0/7. Pair 0 has a 3x3 ring sprite with copies at pitch 4; the 3rd, 6th, ... copies are 6 and stack downward. The rightmost copy is cut by the right edge: this clipping is fixture-faithful. Audit native: 126 of 128 unique, fixed 23x28. The configured path has 7 approved width/height overrides from 10x12 to 27x30. probes/configured_clip_d304284e.py (400 draws per size, seed 0) found the input sprite cut by the bottom edge in 95/400 draws at 10x12 and 17/400 at 12x14, and 0 at larger sizes. No canonical input sprite is clipped.",
+   "axes": {
+    "dimensions": {
+     "disposition": "mixed",
+     "lines": [
+      20,
+      21,
+      44
+     ],
+     "why": "Width and height are parameters (default 28x23), and the configured path already samples 10x12 to 27x30. But the sprite placement range 2-8 (line 36) does not scale, so small approved sizes clip the input sprite."
+    },
+    "objects": {
+     "disposition": "mixed",
+     "lines": [
+      35,
+      38,
+      39,
+      52,
+      53
+     ],
+     "why": "One sprite, 3-5 tall, diagonally connected. wide is a parameter (default 3), but the drawing indexes with a literal 3 (j // 3 and j % 3 at lines 52, 53 and 58), so any other wide would draw wrongly. This is a latent defect."
+    },
+    "placement": {
+     "disposition": "mixed",
+     "lines": [
+      36,
+      47,
+      59
+     ],
+     "why": "Position 2-8 on both axes is incidental. The horizontal pitch wide+1 and vertical pitch tall+1 are the rule."
+    },
+    "density_colours": {
+     "disposition": "intrinsic_or_rule_supported",
+     "lines": [
+      49
+     ],
+     "why": "Copies are 7 with every third copy 6; these are rule roles."
+    },
+    "rule_parameters": {
+     "disposition": "intrinsic_or_rule_supported",
+     "lines": [
+      49,
+      54,
+      56,
+      59
+     ],
+     "why": "Every third copy turns magenta and repeats downward."
+    },
+    "demonstration_context": {
+     "disposition": "intrinsic_or_rule_supported",
+     "lines": [
+      49,
+      54
+     ],
+     "why": "Self-contained; the factory does not read demonstrations."
+    }
+   },
+   "proposal": "Low: size variety already exists through the configured path. At small sizes, clamp brow so that brow+tall <= height-1 (and bcol+3 <= width-1). If wide is ever varied, replace the literal 3s at lines 52, 53 and 58 with wide. Recertify the small sizes.",
+   "patch_priority": "low",
+   "uncertainties": "Whether bottom-clipped input sprites matter depends on whether learners must infer tall. A clipped sprite's downward copies all fall off-canvas, so outputs stay consistent. Not checked against the factory.",
+   "certified_evidence": "current",
+   "release_ready": false
+  },
+  "d47aa2ff": {
+   "status": "reviewed",
+   "reviewer": "claude-opus-5-5 (hybrid-claude-native worktree)",
+   "reviewed_on": "2026-10-24",
+   "review_batch": 3,
+   "constructor_sha256": "fd5d1120f720c045ea6668bc1690ef50c035540e87d23f5e6b0a9bb81fd135ea",
+   "baseline_commit": "f1b8bb9548c0361b9a9d93cbbf8b24ec81966baa",
+   "mechanism": "Two 10x10 panels separated by a grey (5) column (21 wide; lines 39-41). Both panels hold the same 5-10 pixels in 2-3 colours (excluding 1, 2 and 5), except that 1-2 pixels, each a different colour, are displaced by at most 2 cells, never (+-2,+-2), in the right panel (lines 63-78). Initial pixels are at least one cell apart (line 33). The output is the left panel with each moved pixel's old cell red (2) and new cell blue (1) (lines 55-59).",
+   "fixture_evidence": "4 canonical pairs, 10x21 -> 10x10. In pair 0 the 8 at (3,5) moves to (3,4) and the 9 at (8,7) moves to (7,6); the output marks red at the old cells and blue at the new ones. Audit native: 128/128 unique.",
+   "axes": {
+    "dimensions": {
+     "disposition": "incidental_restriction",
+     "lines": [
+      39,
+      44,
+      45,
+      54
+     ],
+     "why": "The 10x10 panels and the 21-wide canvas are literals."
+    },
+    "objects": {
+     "disposition": "mixed",
+     "lines": [
+      63,
+      64,
+      65
+     ],
+     "why": "5-10 pixels with 1-2 moved, matching the fixtures. The counts are incidental."
+    },
+    "placement": {
+     "disposition": "intrinsic_or_rule_supported",
+     "lines": [
+      33,
+      37,
+      48,
+      49,
+      50,
+      51
+     ],
+     "why": "Initial spacing, at most one mover per colour (line 37) and no collisions keep the cross-panel correspondence unique (rule-supported)."
+    },
+    "density_colours": {
+     "disposition": "intrinsic_or_rule_supported",
+     "lines": [
+      63,
+      68
+     ],
+     "why": "2-3 colours, all present, excluding marker colours 1 and 2 and the divider 5."
+    },
+    "rule_parameters": {
+     "disposition": "intrinsic_or_rule_supported",
+     "lines": [
+      58,
+      59,
+      75
+     ],
+     "why": "Old cell 2, new cell 1. Displacement stays within a 5x5 window, excluding corner jumps."
+    },
+    "demonstration_context": {
+     "disposition": "intrinsic_or_rule_supported",
+     "lines": [
+      58,
+      59
+     ],
+     "why": "Self-contained; the factory does not read demonstrations."
+    }
+   },
+   "proposal": "Medium: sample panel H and W (6-14) and scale the pixel count with area. Vertical panel stacking is optional, since D4 already covers it at episode level. Recertify.",
+   "patch_priority": "medium",
+   "uncertainties": "Unknown: whether larger displacements fit the original task (fixtures move at most 2).",
+   "certified_evidence": "current",
+   "release_ready": false
+  },
+  "d753a70b": {
+   "status": "reviewed",
+   "reviewer": "claude-opus-5-5 (hybrid-claude-native worktree)",
+   "reviewed_on": "2026-10-24",
+   "review_batch": 3,
+   "constructor_sha256": "360f67408c7686994bc653a66cee51883ee45034ef4311b140a24389aa05d103",
+   "baseline_commit": "f1b8bb9548c0361b9a9d93cbbf8b24ec81966baa",
+   "mechanism": "3-6 hollow Manhattan diamonds of radius 0-3 in colours {2,5,8,9} on a 16x16 orange (7) canvas, with at least one red and one grey (lines 57-63). Centres may sit anywhere, so diamonds can be clipped. In the output red shrinks by 1 and grey grows by 1 (lines 31-33). Overdraws and non-empty interiors are rejected (lines 39-53).",
+   "fixture_evidence": "4 canonical pairs, 16x16. Pair 2 has a red diamond of radius 6 centred at (0,5), outside the native radius range 0-3 (line 61). Pair 0 uses extra=[0,0,0,0,1,0] (validate line 76): the clipped grey diamond at the bottom edge shifts one column right as it grows. Native never sets extra, so this boundary translation is canonical-only. The certificate agrees: original_fixture_context_passed is false and a teaching fixture is used, and its draft_notes state that canonical train[0] has a one-column translated gray boundary ring. Audit native: 128/128 unique.",
+   "axes": {
+    "dimensions": {
+     "disposition": "incidental_restriction",
+     "lines": [
+      36,
+      59,
+      60
+     ],
+     "why": "The 16x16 canvas is a literal; the ring rule works at any size."
+    },
+    "objects": {
+     "disposition": "mixed",
+     "lines": [
+      57,
+      61,
+      62
+     ],
+     "why": "3-6 diamonds of radius 0-3. Canonical pair 2 uses radius 6, so the native radius cap is narrower than the fixtures (incidental)."
+    },
+    "placement": {
+     "disposition": "mixed",
+     "lines": [
+      39,
+      44,
+      48,
+      52
+     ],
+     "why": "No overdraw, and interiors stay empty before and after (rule-supported). Centres span the whole canvas, so clipping occurs."
+    },
+    "density_colours": {
+     "disposition": "intrinsic_or_rule_supported",
+     "lines": [
+      32,
+      33,
+      62,
+      63
+     ],
+     "why": "Red shrinks, grey grows and other colours stay; red and grey are both required in every scene."
+    },
+    "rule_parameters": {
+     "disposition": "mixed",
+     "lines": [
+      33,
+      41
+     ],
+     "why": "Shrink and grow by 1 are the rule. The extra translation hook (line 41) exists only for the canonical boundary case and is not explained by the rule."
+    },
+    "demonstration_context": {
+     "disposition": "intrinsic_or_rule_supported",
+     "lines": [
+      41,
+      44
+     ],
+     "why": "The factory solves each query alone by exact-cover ring decomposition and rejects ambiguous inputs. It reads no demonstrations and deliberately does not model the canonical translation."
+    }
+   },
+   "proposal": "Medium: widen radius to 0-6 (keeping the interior and overdraw guards) and sample H and W (12-20). Do not add the translation quirk without a rule explanation. Recertify, minding the exact-cover search's 100000-node budget.",
+   "patch_priority": "medium",
+   "uncertainties": "Unknown: whether the canonical pair-0 translation is an error in the original task or a real rule. Untested: the search budget at larger radii or canvases.",
+   "certified_evidence": "current",
+   "release_ready": false
+  },
+  "d94c3b52": {
+   "status": "reviewed",
+   "reviewer": "claude-opus-5-5 (hybrid-claude-native worktree)",
+   "reviewed_on": "2026-10-24",
+   "review_batch": 3,
+   "constructor_sha256": "31adb5e57a5f567149ba537ab59c67512c007db79422b8c8dca6e652f8911644",
+   "baseline_commit": "f1b8bb9548c0361b9a9d93cbbf8b24ec81966baa",
+   "mechanism": "A 4x6 array of 3x3 glyphs in blue (1) on a 17x25 black canvas. Each scene draws 6 of the 25 glyphs in common.letter_map (lines 55-75). One glyph is azure (8) and marks the target. The output turns every glyph equal to the target azure, and every glyph strictly between two targets in a row or column orange (7) (lines 29-52). Scenes are rejected if a target lies between two targets (lines 42, 50) or if no glyph lies between targets (line 58).",
+   "fixture_evidence": "4 canonical pairs, 17x25, colours 0/1/8. In pair 0 the azure glyph is the '+' at row 0, col 3. The output marks every '+' azure and the glyphs between '+'s orange, along rows and columns. probes/fixture_stats_batch3.py confirms all 25 letter_map glyphs are pairwise distinct, so glyph equality is well defined. Audit native: 128/128 unique.",
+   "axes": {
+    "dimensions": {
+     "disposition": "incidental_restriction",
+     "lines": [
+      55,
+      62,
+      71,
+      73
+     ],
+     "why": "The canvas is 4*rows+1 by 4*cols+1, with literal 4 rows and 6 columns of glyphs."
+    },
+    "objects": {
+     "disposition": "mixed",
+     "lines": [
+      68,
+      74
+     ],
+     "why": "6 glyph types over 24 slots, which is fixture-faithful. The type count and array size are incidental."
+    },
+    "placement": {
+     "disposition": "intrinsic_or_rule_supported",
+     "lines": [
+      42,
+      50,
+      58
+     ],
+     "why": "A target between two targets is rejected (ambiguous: 8 or 7?), and at least one in-between glyph is required so the rule is visible."
+    },
+    "density_colours": {
+     "disposition": "intrinsic_or_rule_supported",
+     "lines": [
+      35,
+      43,
+      51,
+      63
+     ],
+     "why": "Roles are fixed: blue glyphs, an azure target, orange in-betweens; the palette remaps them."
+    },
+    "rule_parameters": {
+     "disposition": "intrinsic_or_rule_supported",
+     "lines": [
+      39,
+      40,
+      41,
+      47,
+      48,
+      49
+     ],
+     "why": "A glyph counts as in-between when a target lies anywhere on both sides in its row or column, not only adjacently."
+    },
+    "demonstration_context": {
+     "disposition": "intrinsic_or_rule_supported",
+     "lines": [
+      63,
+      64
+     ],
+     "why": "Self-contained; the factory does not read demonstrations."
+    }
+   },
+   "proposal": "Medium: sample array rows 3-6 and columns 4-8 (canvas 4n+1), and 4-8 glyph types. Keep both rejection guards. Recertify.",
+   "patch_priority": "medium",
+   "uncertainties": "Unknown: whether a target between two targets should become 7 or stay 8 (native avoids the case), and whether the original allows other array sizes.",
+   "certified_evidence": "current",
+   "release_ready": false
+  },
+  "da2b0fe3": {
+   "status": "reviewed",
+   "reviewer": "claude-opus-5-5 (hybrid-claude-native worktree)",
+   "reviewed_on": "2026-10-24",
+   "review_batch": 3,
+   "constructor_sha256": "f9632d3b3a668fdcc5d2f92ce0fb5ef060c40efbd292e77328e3e7313497e690",
+   "baseline_commit": "f1b8bb9548c0361b9a9d93cbbf8b24ec81966baa",
+   "mechanism": "A left-right symmetric sprite, 4-7 wide and 5-6 tall, in one colour from 1-9 excluding 3, with density set by likelihood 1-3 (lines 48-58). It sits at offset 1-2 on a 10x10 black canvas. Canvas row 4 is blanked, splitting the sprite (line 37). The output fills that whole row with green (3) (lines 36-37). With probability 1/2 the scene is transposed (lines 44, 50).",
+   "fixture_evidence": "5 canonical pairs (3 train, 2 test), 10x10. The gap is always row 4 (pairs 1, 2 and 4) or column 4 (transposed pairs 0 and 3), and every sprite is left-right symmetric. Audit native: 128 unique, 124 orbits.",
+   "axes": {
+    "dimensions": {
+     "disposition": "incidental_restriction",
+     "lines": [
+      32,
+      36
+     ],
+     "why": "The 10x10 canvas is a literal, and the green line spans exactly 10."
+    },
+    "objects": {
+     "disposition": "mixed",
+     "lines": [
+      48,
+      57,
+      59,
+      60,
+      64
+     ],
+     "why": "The sprite spans its full bounding box and is connected before blanking (lines 59-64). Its left-right symmetry (line 57) is fixture-faithful but incidental to the rule."
+    },
+    "placement": {
+     "disposition": "mixed",
+     "lines": [
+      34,
+      37,
+      39,
+      43,
+      49
+     ],
+     "why": "The gap is at absolute row 4 whatever the offset or height (incidental). Requiring no empty column inside the sprite (lines 39-43) prevents a second gap (rule-supported)."
+    },
+    "density_colours": {
+     "disposition": "mixed",
+     "lines": [
+      49,
+      50,
+      56
+     ],
+     "why": "One sprite colour; density varies through likelihood 1-3. Green is reserved for the gap fill."
+    },
+    "rule_parameters": {
+     "disposition": "intrinsic_or_rule_supported",
+     "lines": [
+      37
+     ],
+     "why": "Fill the single empty line crossing the shape with 3 across the whole canvas."
+    },
+    "demonstration_context": {
+     "disposition": "intrinsic_or_rule_supported",
+     "lines": [
+      44
+     ],
+     "why": "Self-contained; the factory does not read demonstrations. Transposition varies within an episode, as in the fixtures."
+    }
+   },
+   "proposal": "Medium: sample H and W (8-16), place the gap at any interior row of the sprite, and optionally allow asymmetric sprites. Keep the no-second-gap guard. Recertify.",
+   "patch_priority": "medium",
+   "uncertainties": "Unknown: whether asymmetric sprites or gaps away from the middle fit the original task (all 5 fixtures are symmetric with the gap at index 4).",
+   "certified_evidence": "current",
+   "release_ready": false
+  },
+  "db7260a4": {
+   "status": "reviewed",
+   "reviewer": "claude-opus-5-5 (hybrid-claude-native worktree)",
+   "reviewed_on": "2026-10-24",
+   "review_batch": 3,
+   "constructor_sha256": "2b7b5f71b890a644394904ef8dcd7e66537629f269f5423ec5fbbb5f55a4efef",
+   "baseline_commit": "f1b8bb9548c0361b9a9d93cbbf8b24ec81966baa",
+   "mechanism": "A 10x10 black canvas with red (2) cups in one of two templates. Single: walls at rows 3-6 in columns 2 and 7, plus an optional middle wall. Double: two stacked cups with walls of length 3 at rows 2 and 6. Cup bottoms extend 0-3 cells sideways, clamped to columns 2-8 (lines 82-115). A blue (1) drop placed at the top in columns 1-8 falls, sliding through a single hole (lines 63-75). It fills the enclosing cup to the rim, or forms a full-width puddle on row 9 if it reaches the bottom (lines 46-55, 77-79). More than one hole is rejected as ill-defined (line 74).",
+   "fixture_evidence": "6 canonical pairs (5 train, 1 test), 10x10, colours 0/1/2. All training pairs use the single-cup template (walls at rows 3-6, columns 2 and 7, sometimes a middle wall at column 5 or a bottom extension); the test uses the double template (rows 2 and 6). Pairs 1 and 2 end in the puddle. Audit native: 95 of 128 unique and 82 orbits; the certificate counted 502 unique in 1000.",
+   "axes": {
+    "dimensions": {
+     "disposition": "incidental_restriction",
+     "lines": [
+      34,
+      38,
+      48,
+      78
+     ],
+     "why": "10 is a literal in the canvas, the scans and the puddle row."
+    },
+    "objects": {
+     "disposition": "mixed",
+     "lines": [
+      86,
+      89,
+      93,
+      96,
+      97
+     ],
+     "why": "Exactly two cup templates with fixed rows and wall lengths, the same ones the fixtures use. Only columns and extensions vary, which keeps the domain small."
+    },
+    "placement": {
+     "disposition": "mixed",
+     "lines": [
+      86,
+      93,
+      102,
+      107,
+      116
+     ],
+     "why": "Wall rows are fixed (3 or 2/6), while columns, extensions and the drop column 1-8 vary."
+    },
+    "density_colours": {
+     "disposition": "intrinsic_or_rule_supported",
+     "lines": [
+      61,
+      64,
+      51,
+      79
+     ],
+     "why": "Red walls, a blue drop and blue water on black are fixed rule roles; the palette remaps them."
+    },
+    "rule_parameters": {
+     "disposition": "intrinsic_or_rule_supported",
+     "lines": [
+      69,
+      72,
+      74,
+      77
+     ],
+     "why": "The drop falls, slides through a unique hole, then fills the cup or makes a bottom puddle. Multiple holes are rejected."
+    },
+    "demonstration_context": {
+     "disposition": "intrinsic_or_rule_supported",
+     "lines": [
+      74
+     ],
+     "why": "Self-contained; the factory does not read demonstrations."
+    }
+   },
+   "proposal": "High: the domain is small (95/128 audit-unique, about 500 per 1000). Sample cup heights (2-5), wall rows, widths, the number of cups (1-3) and H and W (8-14). Keep the single-hole guard. Recertify.",
+   "patch_priority": "high",
+   "uncertainties": "Unknown: whether the original task intends only these templates (the fixtures use exactly them). The domain size is estimated from audit and certificate uniqueness, not enumerated.",
+   "certified_evidence": "current",
+   "release_ready": false
+  },
+  "dc2aa30b": {
+   "status": "reviewed",
+   "reviewer": "claude-opus-5-5 (hybrid-claude-native worktree)",
+   "reviewed_on": "2026-10-24",
+   "review_batch": 3,
+   "constructor_sha256": "340fa36882a38d0ef7e64e70ba7975a657db6fe1502495e553c5d40c897e18aa",
+   "baseline_commit": "f1b8bb9548c0361b9a9d93cbbf8b24ec81966baa",
+   "mechanism": "An 11x11 grid of nine 3x3 panels separated by black lines at rows and columns 3 and 7. Each panel mixes blue (1) and red (2), and the nine panels have distinct blue counts drawn from 0-9 (line 29). The output reorders panels by ascending blue count: the bottom row left to right, then the middle row, then the top row (lines 49-54).",
+   "fixture_evidence": "4 canonical pairs, 11x11, colours 0/1/2. In pair 0 the output's bottom-left panel holds the fewest blues and the top-right panel is all blue. Audit native: 128/128 unique.",
+   "axes": {
+    "dimensions": {
+     "disposition": "incidental_restriction",
+     "lines": [
+      38,
+      46,
+      54
+     ],
+     "why": "The 11x11 canvas and the 3x3 panel layout are literals. The factory finds dividers and panel spans at any size."
+    },
+    "objects": {
+     "disposition": "mixed",
+     "lines": [
+      29,
+      31
+     ],
+     "why": "Distinct blue counts (line 29) make the sort order unique (rule-supported). The 3x3 panel size and the 3x3 panel array are incidental."
+    },
+    "placement": {
+     "disposition": "intrinsic_or_rule_supported",
+     "lines": [
+      46,
+      54
+     ],
+     "why": "The input order is free, and the output slot order (bottom-left first) is the rule."
+    },
+    "density_colours": {
+     "disposition": "intrinsic_or_rule_supported",
+     "lines": [
+      36
+     ],
+     "why": "Two colours, blue as the counted colour and red as filler, are fixed roles."
+    },
+    "rule_parameters": {
+     "disposition": "intrinsic_or_rule_supported",
+     "lines": [
+      49,
+      54
+     ],
+     "why": "Sort panels by blue count and place them bottom row first."
+    },
+    "demonstration_context": {
+     "disposition": "intrinsic_or_rule_supported",
+     "lines": [
+      54
+     ],
+     "why": "Self-contained. The factory maps the slot order through d4 and does not read demonstrations."
+    }
+   },
+   "proposal": "Low: variety is already wide (128/128 unique, a combinatorial domain). An optional patch would allow 4x4 panels or other panel arrays, but only dimension variety would gain. Recertify if changed.",
+   "patch_priority": "low",
+   "uncertainties": "Unknown: whether panel arrays other than 3x3 fit the original's slot order.",
+   "certified_evidence": "current",
+   "release_ready": false
+  },
+  "dc46ea44": {
+   "status": "reviewed",
+   "reviewer": "claude-opus-5-5 (hybrid-claude-native worktree)",
+   "reviewed_on": "2026-10-24",
+   "review_batch": 3,
+   "constructor_sha256": "ae85b35a470a63ac673a8e37f43320b80f5ba70e7e1096ff0ef6868d0f5c73ae",
+   "baseline_commit": "f1b8bb9548c0361b9a9d93cbbf8b24ec81966baa",
+   "mechanism": "An 11x11 orange (7) canvas with a full yellow (4) line at row 5 (lines 49-51). Below the line are a pink (6) J-hook at rows 6-9 (column jcol 3-10, lines 38-42) and a 3x2 single-colour shape (hue from 1-9 excluding 4, 6 and 7) at brow 5-8 and bcol 0-9 (lines 55-61). In the output the J moves to rows 0-3, and the shape sits in the hook, bottom-aligned, at rows 0-2 and columns jcol-3 to jcol-2 (lines 38-47). Guards keep the middle and bottom rows and both columns non-empty (lines 30-33), keep the shape out of the J's columns (line 35), and keep row 5 clear (line 50).",
+   "fixture_evidence": "4 canonical pairs, 11x11. Every input has the J at rows 6-9 and every output has it at rows 0-3. Shapes are 2-3 rows by 2 columns; pair 0's [0,0,2,0,2,2] has an empty top row and lands bottom-aligned at output rows 1-2. Audit native: 128 unique, 127 orbits.",
+   "axes": {
+    "dimensions": {
+     "disposition": "incidental_restriction",
+     "lines": [
+      36,
+      49
+     ],
+     "why": "The 11x11 canvas and row 5 for the yellow line are literals."
+    },
+    "objects": {
+     "disposition": "mixed",
+     "lines": [
+      38,
+      39,
+      40,
+      41,
+      42,
+      58
+     ],
+     "why": "The J is a fixed 5-cell hook and the shape a single-colour 3x2 (incidental sizes). The non-empty guards (lines 30-33) make the shape's bottom anchoring visible (rule-supported)."
+    },
+    "placement": {
+     "disposition": "mixed",
+     "lines": [
+      35,
+      59,
+      60,
+      61
+     ],
+     "why": "The J's rows are fixed and its column varies 3-10. The shape lies below the line in free columns that avoid the J."
+    },
+    "density_colours": {
+     "disposition": "intrinsic_or_rule_supported",
+     "lines": [
+      55,
+      38,
+      51
+     ],
+     "why": "Pink J, yellow line and orange background are fixed roles; the hue excludes them."
+    },
+    "rule_parameters": {
+     "disposition": "intrinsic_or_rule_supported",
+     "lines": [
+      47,
+      31
+     ],
+     "why": "The shape is placed into the hook aligned at its bottom row, which is always non-empty (line 31)."
+    },
+    "demonstration_context": {
+     "disposition": "intrinsic_or_rule_supported",
+     "lines": [
+      47
+     ],
+     "why": "Self-contained; the factory does not read demonstrations."
+    }
+   },
+   "proposal": "Medium: sample H and W, the line row, the J size, and a shape size of 2-4 by 2-3 that fits the hook. Recertify.",
+   "patch_priority": "medium",
+   "uncertainties": "Unknown: whether the hook geometry or shape width varies in the original task (all fixtures use the same J and 2-wide shapes).",
+   "certified_evidence": "current",
+   "release_ready": false
+  },
+  "e0fb7511": {
+   "status": "reviewed",
+   "reviewer": "claude-opus-5-5 (hybrid-claude-native worktree)",
+   "reviewed_on": "2026-10-24",
+   "review_batch": 3,
+   "constructor_sha256": "3857588ff73d8b3866193818d618dc323c66986853ee719a64ee247ff18c48f4",
+   "baseline_commit": "f1b8bb9548c0361b9a9d93cbbf8b24ec81966baa",
+   "mechanism": "A 13x13 blue (1) grid where each cell is black (0) with probability 1/8 (lines 41-43). In the output, every black cell with a 4-adjacent black neighbour becomes azure (8); isolated black cells stay black (lines 31-36). Scenes need at least 13 azure cells (line 37).",
+   "fixture_evidence": "4 canonical pairs, 13x13, colours 0/1. probes/fixture_stats_batch3.py measures canonical black densities of 0.266, 0.16, 0.195 and 0.308, with 21, 14, 18 and 33 azure cells. Native density is fixed at 1/8, and the audit's non-modal fraction spans 0.107-0.219. So two of the four fixtures (0.266 and 0.308) are denser than any of the 128 audit draws.",
+   "axes": {
+    "dimensions": {
+     "disposition": "incidental_restriction",
+     "lines": [
+      28,
+      30,
+      42
+     ],
+     "why": "The 13x13 canvas is a literal in grids(13, 13), the flat index i // 13 and i % 13, and the 13*13 draw (lines 28, 30, 42). The adjacency rule works on any HxW."
+    },
+    "objects": {
+     "disposition": "intrinsic_or_rule_supported",
+     "lines": [
+      34,
+      35,
+      36
+     ],
+     "why": "Components arise from noise; the rule distinguishes only isolated black cells from connected ones."
+    },
+    "placement": {
+     "disposition": "broadly_variable",
+     "lines": [
+      42
+     ],
+     "why": "Every cell is drawn independently (line 42), so black components can appear anywhere, including along edges."
+    },
+    "density_colours": {
+     "disposition": "incidental_restriction",
+     "lines": [
+      42,
+      43
+     ],
+     "why": "Black probability is fixed at 1/8, below half of the canonical densities. Denser scenes with larger black components are never produced."
+    },
+    "rule_parameters": {
+     "disposition": "intrinsic_or_rule_supported",
+     "lines": [
+      34,
+      36
+     ],
+     "why": "4-adjacency defines 'connected'; diagonal neighbours do not count."
+    },
+    "demonstration_context": {
+     "disposition": "intrinsic_or_rule_supported",
+     "lines": [
+      36
+     ],
+     "why": "Self-contained; the factory does not read demonstrations."
+    }
+   },
+   "proposal": "Medium: sample the black density per scene in 0.10-0.35, covering the canonical range, and H and W in 8-20. Keep the minimum-azure guard, scaled with area. Recertify.",
+   "patch_priority": "medium",
+   "uncertainties": "Fixture densities come from only 4 pairs. Not checked: whether higher densities create very large components that change learnability.",
+   "certified_evidence": "current",
+   "release_ready": false
   }
  }
 }

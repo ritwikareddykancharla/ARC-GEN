@@ -10,6 +10,26 @@ from .task_registry import NEW_TASK_IDS
 from .fixture_policy import fixture_basis
 from .augmentation import apply_episode,settings,exhaustive_variants
 
+def native_recertification(tid,constructor_sha):
+    """Return the diversity recertification of this exact constructor, if valid.
+
+    It must be a passing canonical-fixture certificate (1,000 fresh pairs and
+    8,000 augmented checks), identical to the record the builder admits, and
+    production certificate validation must accept it for the current sources.
+    """
+    from .direct_certificates import certified_factory_source,certified_source,qualifies
+    path=BASE/'reports'/'diversity-v1'/'native-certificates'/f'{tid}.json'
+    if not path.exists():return None
+    cert=json.loads(path.read_text())
+    factory=BASE/'direct_factories'/f'{tid}.json'
+    admitted=factory if factory.exists() else BASE/'reports'/'direct-certificates'/f'{tid}.json'
+    if not (cert.get('task_id')==tid and qualifies(cert) and cert.get('constructor_sha256')==constructor_sha
+            and cert.get('fixture_variants_checked')==16 and cert.get('fixture_basis')=='canonical'
+            and admitted.exists() and json.loads(admitted.read_text())==cert):
+        return None
+    program=certified_factory_source(tid,0,list(range(10))) if factory.exists() else certified_source(tid)
+    return cert if program is not None else None
+
 class GeneratorTests(unittest.TestCase):
     def test_containment_keeps_outside_distractors_at_requested_counts(self):
         m=importlib.import_module('tasks.task_9720b24f')
@@ -1504,7 +1524,12 @@ class GeneratorTests(unittest.TestCase):
             module=importlib.import_module('tasks.task_'+tid)
             source=Path(module.__file__).read_bytes()
             report=json.loads((BASE/'reports'/'standalone'/f'{tid}.json').read_text())
-            self.assertEqual(hashlib.sha256(source).hexdigest(),report['stress_test']['sha256'],tid)
+            digest=hashlib.sha256(source).hexdigest()
+            # A later domain expansion leaves the historical stress record
+            # stale; only a current, production-admitted recertification of
+            # this exact constructor may supersede it.
+            if digest!=report['stress_test']['sha256']:
+                self.assertIsNotNone(native_recertification(tid,digest),tid)
             self.assertTrue(report['stress_test']['ready'],tid)
             actual=call(module.validate,seconds=30)
             expected=reference(tid)[fixture_basis(tid)['fixture']]

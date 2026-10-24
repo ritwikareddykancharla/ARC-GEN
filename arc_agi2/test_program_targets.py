@@ -19,17 +19,12 @@ class ProgramTargets(unittest.TestCase):
 
     def test_smallest_box_sampler_is_nonempty(self):
         import random
-        from unittest.mock import patch
         from tasks import task_00dbd492
-        original = task_00dbd492.common.randint
-        def smallest_canvas(a, b):
-            return 7 if (a, b) == (7, 23) else original(a, b)
         state = random.getstate()
         try:
             for seed in range(20):
                 random.seed(seed)
-                with patch.object(task_00dbd492.common, 'randint', smallest_canvas):
-                    pair = task_00dbd492.generate()
+                pair = task_00dbd492.generate(width=7, height=7)
                 self.assertEqual(len(pair['input']), 7)
                 self.assertEqual(len({v for row in pair['input'] for v in row}), 2)
                 self.assertNotEqual(pair['input'], pair['output'])

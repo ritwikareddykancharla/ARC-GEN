@@ -33,6 +33,15 @@ Certificates are in `reports/diversity-v1/native-certificates/` and are tied to
 the constructor and program source hashes. These tests are finite checks, not
 a proof of unrestricted correctness or sufficient demonstration context.
 
+Two later batches widen fourteen more native domains under the same
+1,000-fresh-pair, 8,000-augmented-check and 16-fixture-variant certificate:
+`137f0df0`, `31adaf00`, `84db8fc4`, `a406ac07`, `ce039d91`, `d282b262` and
+`f45f5ca7` (`reports/diversity-v1/native-domain-expansion-20261024/`), and the
+no-RE-ARC families `03560426`, `0becf7df`, `0f63c0b9`, `14b8e18c`, `21f83797`,
+`2685904e` and `2a28add5` (`reports/diversity-v1/native-batch-b-domains.json`).
+`22806e14` was deferred unchanged: its archived verifier disagrees with the
+constructor on 160 of 300 fresh scenes and needs a reviewed verifier first.
+
 Three archived verifier restrictions were exposed by these changes. The tiling
 verifier allocated a fixed three-times size even though its rule needs squared
 dimensions. The object-count verifier used the modal colour as background,
@@ -45,9 +54,11 @@ unchanged. The nested-frame verifier now identifies containment using bounding b
 `probe.py` samples 128 proposals per overlapping family under bounded deadlines.
 It checks the constructor label against RE-ARC's verifier and the fork's verifier,
 then checks fresh three-demo/one-query episodes against the current program target.
-134 families now pass the initial threshold. `admit.py` additionally checks complete
-episodes under all eight D4 transforms and random palette permutations; **122**
-passed that gate. `admission.json` lists the IDs, checks and dependency hashes.
+152 families now pass the initial threshold (the 18 colour-role families use
+1,152 proposals). `admit.py` additionally checks complete episodes under all eight
+D4 transforms and random palette permutations; **140** passed that gate. The other
+12 fail exact program checks on some augmented episodes and stay excluded.
+`admission.json` lists the IDs, checks and dependency hashes.
 
 Every sampled proposal still runs both verifiers. Every exported augmented
 episode still runs its standalone program on all demonstrations and the query.
@@ -100,8 +111,7 @@ roughly 97% of aligned RE-ARC pairs they did not reproduce the label:
 Native inputs give unchanged results. The repaired factories were re-certified
 on 1,000 fresh native pairs and 16 fixture variants. Both verifiers agree with
 them on the broader domain, and all three passed the same 2,048-episode gate.
-All eighteen families still need the regenerated `admission.json` before the
-sampler uses them.
+All eighteen families are in the regenerated `admission.json`.
 
 A separate 1,000-sample measurement records actual generated variation in
 `extension-domain-measurements.json`: `09c534e7` has 943 rectangular scenes and
@@ -115,8 +125,9 @@ new fixes and is an intermediate artifact, not the complete hybrid dataset.
 
 ## Readable episode preparation
 
-`prepare.py` prepares a **supplement**, comprising the 122 admitted families and
-eleven native repairs (132 distinct IDs; gravity overlaps). Each row contains the program, demonstrations,
+`prepare.py` prepares a **supplement**, comprising the 140 admitted families and
+the 26 native repairs in `prepare.REPAIRED` (164 distinct IDs; `1e0a9b12` and `feca6190` overlap).
+The three program-only repairs `22233c11`, `543a7ed5` and `5c0a986e` enter through admission, not `REPAIRED`. Each row contains the program, demonstrations,
 query input and expected query grid together, with a lossless PNG alongside it.
 There are no Arrow or Parquet publication files. It does not upload or alter an
 existing dataset, and it does not launch training.

@@ -1,12 +1,24 @@
 """Exercise proposed actual make_episodes AST with deterministic storage/model fakes.
 No jobs, network, repository mutations, generation or model training.
 """
-import ast, collections, copy, importlib, json, pathlib, random, sys, tempfile, types, unittest
+import ast, builtins, collections, copy, hashlib, importlib, json, pathlib, random, symtable, sys, tempfile, types, unittest
 from unittest.mock import patch
 HERE=pathlib.Path(__file__).resolve().parent
 REPO=HERE.parent
 from arc_agi2.colour_evidence import MissingColourEvidence,IntrinsicQueryEvidence,EvidenceSearchBudget,require_colour_evidence
 from arc_agi2.augmentation import exhaustive_variants,demonstrations_disambiguate
+# Real production helpers used by make_episodes; only storage, models and
+# randomness are faked below.
+from arc_agi2.finite_input_policy import (FAMILY_PROVENANCE,FINITE_INPUT_TASK_IDS,
+    POLICY_SIGNATURE as FINITE_INPUT_POLICY_SIGNATURE,identity_key,input_split,minimum_class_requirement)
+from arc_agi2.episode_shape_policy import profile_from_task,select_demonstrations,describe as describe_shapes
+from arc_agi2.context_budget import reuse_limits,VERSION as CONTEXT_BUDGET_VERSION
+from arc_agi2.runtime import call
+from arc_agi2.contextual import verify_shared_picture_episode
+from arc_agi2.motif_context import MissingMotifEvidence,solve_demonstrated_motifs
+# Reached only by the legacy Parquet format or legend families, never by this
+# PNG-format synthetic family; any other unsupplied global fails loudly.
+UNREACHED_GLOBALS={'pa','legend_solver'}
 class TargetError(ValueError):pass
 class Writer:
     def __init__(self,*a):self.records=0;self.paths=[];self.manifest=[];self.items=[]
@@ -16,12 +28,28 @@ class Writer:
 class FakeRandom:
     def __init__(self,*a):self.calls=0
     def shuffle(self,a):pass
+    def choice(self,a):return a[0]
     def sample(self,a,n):
         self.calls+=1;offset=(self.calls-1)%len(a);return (a[offset:]+a[:offset])[:n]
 
+def global_names(func):
+    """Module-level names make_episodes needs, so harness drift fails explicitly."""
+    table=symtable.symtable(ast.unparse(ast.Module(body=[func],type_ignores=[])),'make_episodes','exec')
+    names=set();stack=[table]
+    while stack:
+        t=stack.pop();stack+=t.get_children()
+        names|={s.get_name() for s in t.get_symbols() if s.is_global()}
+    return {n for n in names if not hasattr(builtins,n)}
+
 def assembly(gate,record=lambda row,**kw:{},n=1,output_poison=False,variants=exhaustive_variants,disambiguate=demonstrations_disambiguate):
-    rows=[{'input':[[i,0],[0,0]],'output':[[0,i],[0,0]],'input_hash':str(i),'canonical_input_hash':str(i),
-           'split':'train','stratum':'small','seed':i,'parameters':{},'generator_mode':'default'} for i in range(1,7)]
+    # Synthetic SHA-256 canonical hashes, split by the real global policy.
+    rows=[{'input':[[i,0],[0,0]],'output':[[0,i],[0,0]],'input_hash':str(i),
+           'canonical_input_hash':hashlib.sha256(f'test0000-canonical-{i}'.encode()).hexdigest(),
+           'stratum':'small','seed':i,'parameters':{},'generator_mode':'default'} for i in range(1,7)]
+    for row in rows:row['split']=input_split(row['canonical_input_hash'])
+    assert all(row['split']=='train' for row in rows)
+    fixture={'train':[{'input':r['input'],'output':r['output']} for r in rows[:3]],
+             'test':[{'input':rows[3]['input'],'output':rows[3]['output']}]}
     if output_poison:rows[0]['output']=[[9,9],[9,9]]
     logs={};captured=[]
     def checked_gate(tid,demos,queries):
@@ -29,6 +57,8 @@ def assembly(gate,record=lambda row,**kw:{},n=1,output_poison=False,variants=exh
         captured.append(copy.deepcopy((demos,queries)));return gate(tid,demos,queries)
     tree=ast.parse((HERE/'build_million.py').read_text())
     func=next(x for x in tree.body if isinstance(x,ast.FunctionDef) and x.name=='make_episodes')
+    # The production per-variant program check, which calls make_record.
+    variant=next(x for x in tree.body if isinstance(x,ast.FunctionDef) and x.name=='verified_variant')
     with tempfile.TemporaryDirectory() as temp:
         env=dict(fixture_basis=lambda _: {'fixture':'canonical','corrected':False},
             pq=types.SimpleNamespace(read_table=lambda _:types.SimpleNamespace(to_pylist=lambda:copy.deepcopy(rows))),
@@ -40,8 +70,18 @@ def assembly(gate,record=lambda row,**kw:{},n=1,output_poison=False,variants=exh
             POLICY={'augmentation':{'colour_permutation_default':False,'colour_permutation_task_ids':[]}},
             exhaustive_variants=variants,demonstrations_disambiguate=disambiguate,os=types.SimpleNamespace(environ={}),
             json=json,relation=lambda p:'same',make_record=record,TargetError=TargetError,
-            dump=lambda path,obj:logs.update({str(path):copy.deepcopy(obj)}))
-        exec(compile(ast.Module(body=[func],type_ignores=[]),'actual_proposed_make_episodes','exec'),env)
+            dump=lambda path,obj:logs.update({str(path):copy.deepcopy(obj)}),
+            reference=lambda _:{'canonical':copy.deepcopy(fixture)},
+            identity_key=identity_key,input_split=input_split,minimum_class_requirement=minimum_class_requirement,
+            FINITE_INPUT_TASK_IDS=FINITE_INPUT_TASK_IDS,FAMILY_PROVENANCE=FAMILY_PROVENANCE,
+            FINITE_INPUT_POLICY_SIGNATURE=FINITE_INPUT_POLICY_SIGNATURE,
+            profile_from_task=profile_from_task,select_demonstrations=select_demonstrations,describe_shapes=describe_shapes,
+            reuse_limits=reuse_limits,CONTEXT_BUDGET_VERSION=CONTEXT_BUDGET_VERSION,
+            call=call,verify_shared_picture_episode=verify_shared_picture_episode,
+            MissingMotifEvidence=MissingMotifEvidence,solve_demonstrated_motifs=solve_demonstrated_motifs)
+        missing=global_names(func)-set(env)-{'make_episodes','verified_variant'}-UNREACHED_GLOBALS
+        assert not missing,f'make_episodes harness lacks production helpers: {sorted(missing)}'
+        exec(compile(ast.Module(body=[variant,func],type_ignores=[]),'actual_proposed_make_episodes','exec'),env)
         result=env['make_episodes'](('test0000',{'train':{'small':n}}))
     return result['splits']['train'],captured,logs
 

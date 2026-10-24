@@ -24,7 +24,11 @@ from ..visual_dataset import render
 from .sampler import admission, eligible, sample_checked
 
 REPAIRED = ("007bbfb7", "009d5c81", "00dbd492", "0934a4d8", "09c534e7", "1e0a9b12", "3194b014",
-            "3a301edc", "45bbe264", "aaecdb9a", "ecb67b6d", "feca6190")
+            "3a301edc", "45bbe264", "aaecdb9a", "ecb67b6d", "feca6190",
+            # Native domain expansion A (reports/diversity-v1/native-domain-expansion-20261024).
+            "137f0df0", "31adaf00", "84db8fc4", "a406ac07", "ce039d91", "d282b262", "f45f5ca7",
+            # Native batch B (reports/diversity-v1/native-batch-b-domains.json).
+            "03560426", "0becf7df", "0f63c0b9", "14b8e18c", "21f83797", "2685904e", "2a28add5")
 
 
 def digest(value):

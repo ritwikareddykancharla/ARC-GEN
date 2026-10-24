@@ -20,9 +20,7 @@ own row; the legend maps to itself.
 
 Native batch c7d4/d47a widens the sampled domain only:
 
-* canvas height 4..30 and width 4..30, sampled independently (was 10x10).
-  Not 3: a 3x3 canvas admits a single input orbit (D4 + colour renaming)
-  and 4x3 only five, too few for distinct same-shape demonstrations;
+* canvas height 3..30 and width 3..30, sampled independently (was 10x10);
 * legend height 2..H (was 7..8) at any vertical offset, including touching the
   top or bottom edge (was always one blank row above and below);
 * 2..8 legend colours (was 2..4) with run lengths >= 1 (was 1..4);
@@ -45,7 +43,7 @@ Sampling retries are bounded and raise ``RuntimeError``; there is no fallback.
 
 import common
 
-MIN_DIM, MAX_DIM = 4, 30
+MIN_DIM, MAX_DIM = 3, 30
 LEGEND_COLORS = (1, 2, 3, 4, 6, 7, 8, 9)
 GREY = 5
 ATTEMPTS = 200
@@ -89,7 +87,7 @@ def check_scene(grid):
   """Raises ValueError unless ``grid`` is in the documented input domain."""
   height, width = len(grid), len(grid[0])
   if not (MIN_DIM <= height <= MAX_DIM and MIN_DIM <= width <= MAX_DIM):
-    raise ValueError(f"canvas outside {MIN_DIM}..{MAX_DIM}")
+    raise ValueError("canvas outside 3..30")
   legend = [r for r in range(height) if grid[r][0]]
   if len(legend) < 2 or legend != list(range(legend[0], legend[-1] + 1)):
     raise ValueError("legend must be one contiguous run of >= 2 rows")
@@ -163,8 +161,8 @@ def generate(colors=None, height=None, width=None):
   Args:
     colors: A flattened input grid (row-major); 10x10 unless height and width
       are given.
-    height: Canvas height, 4..30 (random if omitted).
-    width: Canvas width, 4..30 (random if omitted).
+    height: Canvas height, 3..30 (random if omitted).
+    width: Canvas width, 3..30 (random if omitted).
   """
 
   if colors is None:

@@ -17,18 +17,50 @@
 import common
 
 
-def generate(top=None, bottom=None, width=4, height=5):
+def _dimension(value, name, limit):
+  """Returns a validated explicit or sampled panel dimension."""
+  if isinstance(value, bool) or not isinstance(value, int):
+    raise ValueError(f"{name} must be an int, got {value!r}")
+  if not 1 <= value <= limit:
+    raise ValueError(f"{name} must be in 1..{limit} so grids fit 30x30, got {value}")
+  return value
+
+
+def _mask(values, name, size):
+  """Validates an explicit or sampled Boolean panel mask."""
+  if len(values) != size:
+    raise ValueError(f"{name} has {len(values)} values; width * height is {size}")
+  if any(v not in (0, 1) for v in values):
+    raise ValueError(f"{name} must contain only 0/1 or False/True values")
+  return values
+
+
+def generate(top=None, bottom=None, width=None, height=None):
   """Returns input and output grids according to the given parameters.
 
   Args:
     top: Boolean values for the top grid.
     bottom: Boolean values for the top grid.
-    width: Width of the output grid.
-    height: Height of the output grid.
+    width: Width of the output grid (panel width), 1..14. None samples
+      3..14, or uses the legacy 4 when a mask is given.
+    height: Height of the output grid (panel height), 1..30. None samples
+      3..30, or uses the legacy 5 when a mask is given.
+
+  Masks left as None are sampled; explicit values are never replaced.
   """
+  explicit = top is not None or bottom is not None
+  if width is None:
+    width = 4 if explicit else common.randint(3, 14)
+  if height is None:
+    height = 5 if explicit else common.randint(3, 30)
+  width = _dimension(width, "width", 14)
+  height = _dimension(height, "height", 30)
   if top is None:
     top = [common.randint(0, 1) for _ in range(width * height)]
+  if bottom is None:
     bottom = [common.randint(0, 1) for _ in range(width * height)]
+  top = _mask(top, "top", width * height)
+  bottom = _mask(bottom, "bottom", width * height)
 
   grid = common.grid(2 * width + 1, height)
   output = common.grid(width, height)

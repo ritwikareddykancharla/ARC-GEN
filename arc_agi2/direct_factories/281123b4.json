@@ -1,21 +1,23 @@
 {
   "task_id": "281123b4",
-  "factory_sha256": "439cca9a507d9ae9965bf3f05d8fcb46adac8f9982ed41d60c67a3357a0efda8",
-  "constructor_sha256": "91c64590592220df177e06d352c66c1d30c6c97ae340df5e12d85d6ffad8e594",
   "passed": true,
   "fresh_pairs_checked": 1000,
   "augmented_pair_checks": 8000,
   "fixture_variants_checked": 16,
-  "sampler_rejections": [],
-  "seed": 238832606378237,
-  "d4": 7,
-  "unique_base_inputs": 1000,
-  "seconds": 3.3358144169906154,
-  "factory_version": 1,
+  "constructor_sha256": "e6f2fe522ee6e5c5c3540ed303fbd08ac1186f22a77a4fd40e11bd7ff41c0cf0",
+  "auditor_sha256": "c7c525a7ef21debe8a3e1cd459009003846a69e4a45d032a5447efc16b14f283",
   "requires_per_episode_verification": true,
+  "sampler_rejections": [],
+  "program_provider": "factory",
+  "factory_sha256": "439cca9a507d9ae9965bf3f05d8fcb46adac8f9982ed41d60c67a3357a0efda8",
+  "factory_version": 1,
+  "unique_base_inputs": 1000,
+  "fixture_basis": "canonical",
+  "seconds": 4.589267582865432,
   "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
   "draft_notes": {
     "explanation": "In the original task, the input is four equal panels separated by full columns of colour 3. Each panel uses one colour (8, 5, 9 or 4) on background 0. The output overlays the panels. It paints from lowest to highest priority, 5 then 8 then 4 then 9, so later colours overwrite earlier ones.\n\nThe separator columns sit at positions that map onto each other under every D4 transform, so each panel is transformed in place. Overlaying cell by cell gives the same result whether you transform before or after the overlay. In visible coordinates, the transformed output is therefore the overlay of the transformed panels.\n\nThe factory sets the separator axis from d4. When d4%4 is odd the grid is transposed, so the separators are full rows; otherwise they are full columns. Colour roles are fixed as constants: palette[3] is the separator, palette[0] is the background, and the paint order is [palette[5], palette[8], palette[4], palette[9]].\n\nThe emitted program finds separator lines along the chosen axis by checking for lines made entirely of the separator colour. Only the separator colour counts, so a full line of a panel's own colour (8, 5, 9 or 4) is never treated as a cut, which was the bug noted in the rule text. If no separators are found on the chosen axis, it tries the other axis. It then cuts out the panels, starts from a background canvas, and paints each priority colour from every panel in order.\n\nPanels are not identified by position, so the reversed panel order under reflections and rotations needs no special handling. Empty panels are harmless. Generator widths and heights other than 4 are supported.",
     "limitations": "This has not been run. It assumes palette is indexable by original colour (0 to 9), that d4 follows the stated convention (reverse each row for index 4 and above, then rotate clockwise d4%4 times), and that the constructor's structure holds: equal-size panels, separator-colour lines that run the full grid, and no separator colour inside panels. The fixtures are consistent with this uniform rule; I found no contradictions."
-  }
+  },
+  "previous_constructor_sha256": "91c64590592220df177e06d352c66c1d30c6c97ae340df5e12d85d6ffad8e594"
 }

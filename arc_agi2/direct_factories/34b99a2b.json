@@ -1,21 +1,23 @@
 {
   "task_id": "34b99a2b",
-  "factory_sha256": "b22e39c8312e10d1c12175171972f63090397b51adc1ec97a14822f1a712ee23",
-  "constructor_sha256": "e08df2c2c01b4b1d91be950f255e3f18dffb2d6454822c6ff81a3bd8528d8cac",
   "passed": true,
   "fresh_pairs_checked": 1000,
   "augmented_pair_checks": 8000,
   "fixture_variants_checked": 16,
-  "sampler_rejections": [],
-  "seed": 238506409255895,
-  "d4": 7,
-  "unique_base_inputs": 1000,
-  "seconds": 2.3427524170838296,
-  "factory_version": 1,
+  "constructor_sha256": "bfe8a3abdb5bf5a4d800a899fb749c301d2cecedf7de018bdefd6412f0e290dd",
+  "auditor_sha256": "c7c525a7ef21debe8a3e1cd459009003846a69e4a45d032a5447efc16b14f283",
   "requires_per_episode_verification": true,
+  "sampler_rejections": [],
+  "program_provider": "factory",
+  "factory_sha256": "b22e39c8312e10d1c12175171972f63090397b51adc1ec97a14822f1a712ee23",
+  "factory_version": 1,
+  "unique_base_inputs": 1000,
+  "fixture_basis": "canonical",
+  "seconds": 3.5274475829210132,
   "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
   "draft_notes": {
     "explanation": "In the original task a full line of colour 4 splits the grid into two equal panels. The output is the panels' cell-wise XOR, drawn in colour 2 on a background of 0.\n\nA D4 transform T maps each contiguous panel block to a contiguous block whose content is T of that panel. That gives T(xor(L,R)) = xor(T(L), T(R)), so in visible coordinates the two transformed panels still overlap by plain translation.\n\nThe only thing that changes with d4 is the divider's orientation. When d4 % 4 is odd the divider becomes a full row (the input is 9x5), and the panels are the blocks above and below it. Otherwise it stays a full column. Reflections only swap which panel holds which colour, and XOR is symmetric, so they do not matter.\n\nColour roles are fixed as constants:\n- background is palette[0]\n- the divider is palette[4]\n- the output mark is palette[2]\n\nThe emitted program:\n1. Finds the full line of the divider colour along the chosen axis. If there are several, it takes the one nearest the middle; if there are none, it falls back to the middle.\n2. Slices out the two panels.\n3. Marks every cell where exactly one panel is non-background, and fills every other cell with the background colour.",
     "limitations": "This assumes the constructor's domain: exactly one full divider line whose colour is palette[4], and two equal-sized panels on a palette[0] background. If the panels ever differed in size the program would crop both to the smaller one, but the generator never produces that. The fixtures are consistent with the uniform XOR rule. No tests were run."
-  }
+  },
+  "previous_constructor_sha256": "e08df2c2c01b4b1d91be950f255e3f18dffb2d6454822c6ff81a3bd8528d8cac"
 }

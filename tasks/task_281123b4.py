@@ -17,7 +17,25 @@
 import common
 
 
-def generate(top=None, upper=None, lower=None, bottom=None, width=4, height=4):
+def _dimension(value, name, limit):
+  """Returns a validated explicit or sampled panel dimension."""
+  if isinstance(value, bool) or not isinstance(value, int):
+    raise ValueError(f"{name} must be an int, got {value!r}")
+  if not 1 <= value <= limit:
+    raise ValueError(f"{name} must be in 1..{limit} so grids fit 30x30, got {value}")
+  return value
+
+
+def _mask(values, name, size):
+  """Validates an explicit or sampled Boolean panel mask."""
+  if len(values) != size:
+    raise ValueError(f"{name} has {len(values)} values; width * height is {size}")
+  if any(v not in (0, 1) for v in values):
+    raise ValueError(f"{name} must contain only 0/1 or False/True values")
+  return values
+
+
+def generate(top=None, upper=None, lower=None, bottom=None, width=None, height=None):
   """Returns input and output grids according to the given parameters.
 
   Args:
@@ -25,14 +43,33 @@ def generate(top=None, upper=None, lower=None, bottom=None, width=4, height=4):
     upper: Boolean values for the upper grid.
     lower: Boolean values for the lower grid.
     bottom: Boolean values for the top grid.
-    width: Width of the output grid.
-    height: Height of the output grid.
+    width: Width of the output grid (panel width), 1..6. None samples 4..6,
+      or uses the legacy 4 when a mask is given.
+    height: Height of the output grid (panel height), 1..30. None samples
+      4..30, or uses the legacy 4 when a mask is given.
+
+  Masks left as None are sampled; explicit values are never replaced.
   """
+  explicit = any(m is not None for m in (top, upper, lower, bottom))
+  if width is None:
+    width = 4 if explicit else common.randint(4, 6)
+  if height is None:
+    height = 4 if explicit else common.randint(4, 30)
+  width = _dimension(width, "width", 6)
+  height = _dimension(height, "height", 30)
+  size = width * height
   if top is None:
-    top = [common.randint(0, 1) for _ in range(width * height)]
-    upper = [common.randint(0, 1) for _ in range(width * height)]
-    lower = [common.randint(0, 1) for _ in range(width * height)]
-    bottom = [common.randint(0, 1) for _ in range(width * height)]
+    top = [common.randint(0, 1) for _ in range(size)]
+  if upper is None:
+    upper = [common.randint(0, 1) for _ in range(size)]
+  if lower is None:
+    lower = [common.randint(0, 1) for _ in range(size)]
+  if bottom is None:
+    bottom = [common.randint(0, 1) for _ in range(size)]
+  top = _mask(top, "top", size)
+  upper = _mask(upper, "upper", size)
+  lower = _mask(lower, "lower", size)
+  bottom = _mask(bottom, "bottom", size)
 
   grid = common.grid(4 * width + 3, height)
   output = common.grid(width, height)

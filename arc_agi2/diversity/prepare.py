@@ -24,7 +24,7 @@ from ..visual_dataset import render
 from .sampler import admission, eligible, sample_checked
 
 REPAIRED = ("007bbfb7", "009d5c81", "00dbd492", "0934a4d8", "09c534e7", "1e0a9b12", "3194b014",
-            "3a301edc", "45bbe264", "aaecdb9a", "ecb67b6d")
+            "3a301edc", "45bbe264", "aaecdb9a", "ecb67b6d", "feca6190")
 
 
 def digest(value):

@@ -17,16 +17,27 @@
 import common
 
 
-def generate(colors=None):
+def generate(colors=None, width=None):
   """Returns input and output grids according to the given parameters.
 
   Args:
     colors: a list of digits representing the colors to be used
+    width: Input strip length; random widths span 2..30. The coloured-cell
+      count is bounded so the output side remains at most 30.
   """
   if colors is None:
-    colors = common.random_colors(common.randint(1, 5))
-    colors.extend([0] * (5 - len(colors)))
+    width = common.randint(2, 30) if width is None else width
+    if not 2 <= width <= 30:
+      raise ValueError('Random strip width must be 2..30')
+    count = common.randint(1, min(width, 9, 30 // width))
+    if common.randint(0, 1):
+      colors = common.choices(common.random_colors(common.randint(1, count)), k=count)
+    else:
+      colors = common.random_colors(count)
+    colors.extend([0] * (width - len(colors)))
     colors = common.shuffle(colors)
+  elif width is not None and width != len(colors):
+    raise ValueError('Explicit colors must match the requested width')
 
   num_colors = sum([1 for c in colors if c > 0])
   size = num_colors * len(colors)

@@ -75,6 +75,11 @@ def _hole_count(cells):
 
 
 def require_colour_evidence(task_id, demonstrations, queries, palette=None, d4=0):
+    if task_id == 'feca6190':
+        from .feca6190_evidence import require_strip_count_evidence
+        require_strip_count_evidence(demonstrations, queries,
+                                     list(range(10)) if palette is None else palette)
+        return
     if task_id == 'a64e4611':
         from .corridor_a64e4611_evidence import require_corridor_evidence
         require_corridor_evidence(demonstrations, queries,

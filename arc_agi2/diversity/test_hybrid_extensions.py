@@ -92,3 +92,34 @@ def test_box_rectangular_boundary_and_palette():
     for d4 in range(8):
         source, _ = compile_target('00dbd492', d4, palette)
         verify(source, episode([pair] * 4, d4, palette))
+
+
+def test_strip_repeated_colour_needs_disambiguating_context():
+    from arc_agi2.colour_evidence import MissingColourEvidence, require_colour_evidence
+    from arc_agi2.diversity.recertify import episode
+    from tasks import task_feca6190 as strips
+    unique = strips.generate(colors=[0, 1, 0, 2, 0])
+    repeated = strips.generate(colors=[0, 1, 0, 1, 0])
+    query = strips.generate(colors=[1, 0, 1, 0, 0])
+    palette = [3, 9, 0, 7, 2, 8, 1, 6, 4, 5]
+    for d4 in range(8):
+        ambiguous = episode([unique, unique, unique, query], d4, palette)
+        with pytest.raises(MissingColourEvidence):
+            require_colour_evidence('feca6190', ambiguous['train'], ambiguous['test'], palette, d4)
+        resolved = episode([unique, unique, repeated, query], d4, palette)
+        require_colour_evidence('feca6190', resolved['train'], resolved['test'], palette, d4)
+
+
+def test_strip_width_and_output_bounds():
+    from tasks import task_feca6190 as strips
+    seen = set()
+    repeated = False
+    for seed in range(200):
+        random.seed(seed)
+        pair = strips.generate()
+        row = pair['input'][0]
+        seen.add(len(row))
+        ink = [c for c in row if c != 0]
+        repeated |= len(ink) > len(set(ink))
+        assert len(pair['output']) == len(row) * len(ink) <= 30
+    assert min(seen) == 2 and max(seen) == 30 and repeated

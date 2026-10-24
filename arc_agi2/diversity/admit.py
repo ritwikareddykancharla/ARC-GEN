@@ -73,6 +73,8 @@ def main():
             "program_targets.py",
             "runtime.py",
             "helpers.py",
+            "colour_evidence.py",
+            "feca6190_evidence.py",
         )
     ]
     for result in results:

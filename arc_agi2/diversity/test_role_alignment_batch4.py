@@ -1,6 +1,7 @@
 """Regression checks for the fourth batch of reviewed RE-ARC colour roles.
 
-All six use background alignment only; their saved direct programs are unchanged.
+Six use background alignment only and three add one named grey foreground; their
+saved direct programs are unchanged. 868de0fa also has a reviewed program repair.
 """
 
 import hashlib
@@ -17,16 +18,21 @@ from arc_agi2.program_targets import audit_target, compile_target, verify
 from arc_agi2.runtime import call, grid, reference, verification_solver
 
 BATCH4 = ("7b6016b9", "8eb1be9a", "97999447", "ba97ae07", "d4a91cb9", "f35d900a")
+NAMED = ("95990924", "b60334d2", "ce22a75a")
+REPAIRED = ("868de0fa",)
+ALL = BATCH4 + NAMED + REPAIRED
 ROOT = Path(__file__).parent
 CERTS = ROOT.parent / "reports/diversity-v1/role-certificates"
 
 
 def test_batch_specs_are_background_only():
-    for tid in BATCH4:
+    for tid in BATCH4 + REPAIRED:
         assert set(ROLE_SPECS[tid]) <= {"fixed", "input_colours"}, tid
+    for tid in NAMED:
+        assert ROLE_SPECS[tid]["foreground"] == 5 and ROLE_SPECS[tid]["input_colours"] == 2
 
 
-@pytest.mark.parametrize("tid", BATCH4)
+@pytest.mark.parametrize("tid", ALL)
 def test_native_fixtures_are_role_fixed_points(tid):
     ref = reference(tid)["canonical"]
     for pair in ref["train"] + ref["test"]:
@@ -35,7 +41,7 @@ def test_native_fixtures_are_role_fixed_points(tid):
         assert aligned["input"] == pair["input"] and aligned["output"] == pair["output"]
 
 
-@pytest.mark.parametrize("tid", BATCH4)
+@pytest.mark.parametrize("tid", ALL)
 def test_fresh_aligned_episodes_under_all_d4(tid):
     pairs, seed = [], 0
     while len(pairs) < 8:
@@ -95,7 +101,7 @@ def test_background_swap_keeps_endpoint_and_path_colours():
     assert grid(call(verification_solver("d4a91cb9"), aligned["input"])) == aligned["output"]
 
 
-@pytest.mark.parametrize("tid", BATCH4)
+@pytest.mark.parametrize("tid", ALL)
 def test_certificate_matches_current_sources(tid):
     cert = json.loads((CERTS / (tid + ".json")).read_text())
     assert cert["passed"] and cert["admission_gate_passed"]
@@ -107,3 +113,66 @@ def test_certificate_matches_current_sources(tid):
         assert digest == hashlib.sha256((ROOT.parent / name).read_bytes()).hexdigest(), name
     text, _ = compile_target(tid)
     assert cert["program_sha256"] == hashlib.sha256(text.encode()).hexdigest()
+
+
+def test_named_grey_foreground_and_markers():
+    # b60334d2: a brown dot on a green background. Green becomes 0, brown becomes
+    # grey 5, and the displaced colours swap in; blue 1 stays the plus colour.
+    g = [[3] * 5 for _ in range(5)]
+    g[2][2] = 9
+    out = [[3] * 5 for _ in range(5)]
+    for r, c in ((1, 2), (3, 2), (2, 1), (2, 3)):
+        out[r][c] = 1
+    for r, c in ((1, 1), (1, 3), (3, 1), (3, 3)):
+        out[r][c] = 9
+    aligned, palette = align_pair("b60334d2", {"input": g, "output": out})
+    assert (palette[3], palette[9], palette[1]) == (0, 5, 1)
+    assert sorted(palette) == list(range(10))
+    assert grid(call(verification_solver("b60334d2"), aligned["input"])) == aligned["output"]
+
+
+def test_named_foreground_rejects_marker_coloured_seed():
+    # ce22a75a: blue 1 is the output fill, so a blue seed has no free foreground.
+    g = [[0] * 5 for _ in range(5)]
+    g[2][2] = 1
+    with pytest.raises(ValueError, match="Foreground role"):
+        align_pair("ce22a75a", {"input": g, "output": g})
+
+
+def _run(tid, grid_in):
+    text, _ = compile_target(tid)
+    namespace = {}
+    exec(compile(text, "<target>", "exec"), namespace)
+    return namespace["solve"]([], grid_in)
+
+
+def test_frames_of_every_colour_are_filled():
+    # 868de0fa: a blue 4x4 frame (even interior) and a pink 5x5 frame (odd interior).
+    # The former program filled only blue frames.
+    g = [[0] * 13 for _ in range(8)]
+    for r in range(1, 5):
+        for c in range(1, 5):
+            if r in (1, 4) or c in (1, 4):
+                g[r][c] = 1
+    for r in range(1, 6):
+        for c in range(7, 12):
+            if r in (1, 5) or c in (7, 11):
+                g[r][c] = 6
+    out = _run("868de0fa", g)
+    assert out[2][2] == out[3][3] == 2
+    assert out[2][8] == out[4][10] == out[3][9] == 7
+    assert out[1][1] == 1 and out[1][7] == 6 and out[0][0] == out[7][12] == 0
+
+
+def test_repaired_factory_has_current_native_certificate():
+    from arc_agi2.direct_certificates import certified_factory_source
+    base = ROOT.parent
+    cert = json.loads((base / "direct_factories/868de0fa.json").read_text())
+    mirror = json.loads((base / "reports/diversity-v1/native-certificates/868de0fa.json").read_text())
+    assert cert == mirror and cert["passed"]
+    assert cert["fresh_pairs_checked"] >= 1000 and cert["augmented_pair_checks"] >= 8000
+    assert cert["fixture_variants_checked"] == 16 and cert["unique_base_inputs"] >= 100
+    digest = lambda p: hashlib.sha256(p.read_bytes()).hexdigest()
+    assert cert["factory_sha256"] == digest(base / "direct_factories/task_868de0fa.py")
+    assert cert["auditor_sha256"] == digest(ROOT / "recertify.py")
+    assert certified_factory_source("868de0fa", 0, list(range(10))) == compile_target("868de0fa")[0]

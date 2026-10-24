@@ -239,9 +239,41 @@ counted:
 - `d4a91cb9`: 1 duplicate input
 - The other four: none
 
-Because `colour_roles.py` changed, all 28 earlier role certificates were rerun.
+Four families from the earlier "alignment insufficient" triage list were also
+reviewed and adopted. In three, RE-ARC randomizes the colour that the native
+program names as grey 5. The existing named-foreground role covers this, and
+their programs are unchanged:
+
+| Family | Fixed | Foreground | Rule |
+|---|---|---|---|
+| `95990924` | 1, 2, 3, 4 | 5 | four corner colours around each 2×2 square |
+| `b60334d2` | 1 | 5 | each dot becomes a blue plus with grey corners |
+| `ce22a75a` | 1 | 5 | each dot becomes a blue 3×3 block |
+
+`868de0fa` (fixed 2, 7) also needed a program repair. The native program
+filled only blue frames, while RE-ARC draws each frame in its own colour.
+The repaired factory treats every non-background colour's four-connected
+components as frames. Native inputs give unchanged results. It was re-certified
+on 1,000 fresh native pairs (999 distinct inputs), 8,000 D4 checks and 16 fixture
+variants under the current auditor hash. Its native certificate is mirrored in
+`native-certificates/`.
+
+All four passed the same 1,152-proposal, 2,048-episode role gate. Accepted
+pairs: 1,152 each for `868de0fa`, `b60334d2` and `ce22a75a`. `95990924` has
+1,146 accepted pairs; its 6 rejections are single-colour inputs where RE-ARC
+placed no square.
+
+Because `colour_roles.py` changed, all earlier role certificates were rerun.
 Only that hash and the timing changed. `role-certificates/summary-subset.json`
-now has 34 rows. Admission is rebuilt separately.
+now has 38 rows. Admission is rebuilt separately.
+
+Still not adopted:
+- `941d9a10`: its grey grid lines are modal in 3 of the 4 native fixtures, so
+  modal inference would move the native line role. It needs a reviewed
+  corner-based role rule.
+- `f8b3ba0a`: same issue (cell filler modal in 88 of 256 inputs). The line
+  colour is the whole outer border, but `colour_roles.py` has no reviewed border
+  rule yet.
 
 ## Readable episode preparation
 

@@ -78,6 +78,12 @@ ROLE_SPECS = {
     "ba97ae07": {"input_colours": 3},        # swap top band at the crossing
     "d4a91cb9": {"fixed": (2, 4, 8), "input_colours": 3},  # yellow elbow cyan->red
     "f35d900a": {"fixed": (5,), "input_colours": 3},  # partner rings; grey edge dots
+    # Fourth batch: background plus one named grey foreground; markers fixed.
+    "95990924": {"fixed": (1, 2, 3, 4), "foreground": 5, "input_colours": 2},  # corners
+    "b60334d2": {"fixed": (1,), "foreground": 5, "input_colours": 2},  # blue plus
+    "ce22a75a": {"fixed": (1,), "foreground": 5, "input_colours": 2},  # blue 3x3
+    # Fourth batch: alignment plus a reviewed program repair (frames of any colour).
+    "868de0fa": {"fixed": (2, 7)},           # parity fill inside square frames
 }
 
 ROLE_ALIGNED = frozenset(ROLE_SPECS)

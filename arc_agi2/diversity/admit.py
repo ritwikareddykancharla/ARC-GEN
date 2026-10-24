@@ -15,6 +15,9 @@ from .colour_roles import ROLE_ALIGNED
 from .recertify import episode
 
 
+PROGRAM_REPAIRED = frozenset(("1a07d186", "272f95fa", "57aa92db", "63613498", "8403a5d5", "aabf363d", "fcb5c309"))
+
+
 def check(tid, pair_budget=None, required=None):
     """Defaults are the global admission budgets; certifiers may request more."""
     evidence = json.loads((BASE / "reports/diversity-v1" / (tid + ".json")).read_text())
@@ -24,7 +27,7 @@ def check(tid, pair_budget=None, required=None):
         text, _ = compile_target(tid)
         result["program_sha256"] = hashlib.sha256(text.encode()).hexdigest()
         if pair_budget is None:
-            pair_budget = 1024 if tid in ROLE_ALIGNED else 32
+            pair_budget = 1024 if tid in ROLE_ALIGNED or tid in PROGRAM_REPAIRED else 32
         result["available_pairs"] = len(pairs)
         result["requested_pair_checks"] = pair_budget
         for offset in range(0, min(len(pairs) - 3, pair_budget), 4):
@@ -38,7 +41,7 @@ def check(tid, pair_budget=None, required=None):
                 verify(text, ep, seconds=2)
                 result["verified_variants"] += 1
         if required is None:
-            required = 2048 if tid in ROLE_ALIGNED else 32
+            required = 2048 if tid in ROLE_ALIGNED or tid in PROGRAM_REPAIRED else 32
         result["passed"] = result["verified_variants"] >= required
     except Exception as exc:
         result["error"] = repr(exc)

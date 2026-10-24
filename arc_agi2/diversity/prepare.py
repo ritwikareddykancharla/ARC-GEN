@@ -14,6 +14,7 @@ import time
 from collections import Counter, defaultdict
 from concurrent.futures import ProcessPoolExecutor, as_completed
 from pathlib import Path
+from functools import lru_cache
 
 from ..augmentation import transformed
 from ..episode_shape_policy import profile_from_task, select_demonstrations
@@ -255,9 +256,27 @@ def assemble_split(pool, profile, identity, quota, randomizer, emit, attempts, d
     return produced, stats
 
 
+@lru_cache(maxsize=4)
+def reserved_validation_orbits(path, expected_sha256):
+    """Protect validation inputs from previous training stages without relabelling splits."""
+    if not path:
+        return frozenset()
+    raw = Path(path).read_bytes()
+    if hashlib.sha256(raw).hexdigest() != expected_sha256:
+        raise ValueError("Reserved validation orbit ledger changed")
+    values = json.loads(raw)
+    if not isinstance(values, list) or any(
+        not isinstance(x, str) or len(x) != 64 or any(c not in "0123456789abcdef" for c in x)
+        for x in values
+    ):
+        raise ValueError("Expected a JSON list of canonical SHA256 input orbits")
+    return frozenset(values)
+
+
 def prepare(item):
     tid, options = item
     root = Path(options["out"])
+    reserved = reserved_validation_orbits(options.get("reserved_validation_orbits"), options.get("reserved_validation_sha256"))
     report_path = root / "reports" / (tid + ".json")
     if report_path.exists():
         old = json.loads(report_path.read_text())
@@ -315,6 +334,9 @@ def prepare(item):
                 continue
             seen.add(exact)
             split = input_split(orbit)
+            if split == "train" and orbit in reserved:
+                rejected["reserved_prior_validation_orbit"] += 1
+                continue
             pair.update(
                 input_hash=exact, canonical_input_hash=orbit, generator_mode=mode, seed=seed
             )
@@ -420,6 +442,7 @@ def main():
     parser.add_argument("--seconds", type=int, default=180)
     parser.add_argument("--seed", type=int, default=2026102401)
     parser.add_argument("--tasks", nargs="+")
+    parser.add_argument("--reserved-validation-orbits", help="JSON orbit ledger from earlier validation; exclude these inputs from train pools")
     args = parser.parse_args()
     ids = sorted(set(admission()["admitted"]) | set(REPAIRED) | set(REVIEWED_NATIVE))
     if args.tasks:
@@ -451,6 +474,11 @@ def main():
     options = dict(
         vars(args), source_signature=signature, global_split_policy=POLICY_SIGNATURE, task_ids=ids
     )
+    if args.reserved_validation_orbits:
+        ledger = Path(args.reserved_validation_orbits).resolve()
+        options["reserved_validation_orbits"] = str(ledger)
+        options["reserved_validation_sha256"] = hashlib.sha256(ledger.read_bytes()).hexdigest()
+        reserved_validation_orbits(str(ledger), options["reserved_validation_sha256"])
     config = root / "config.json"
     if config.exists() and json.loads(config.read_text()) != options:
         raise ValueError("Use a fresh output directory: source or requested dataset changed")

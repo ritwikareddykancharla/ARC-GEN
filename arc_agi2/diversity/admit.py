@@ -11,6 +11,7 @@ from pathlib import Path
 from ..colour_evidence import require_colour_evidence
 from ..program_targets import audit_target, compile_target, verify
 from ..runtime import BASE
+from .colour_roles import ROLE_ALIGNED
 from .recertify import episode
 
 
@@ -21,7 +22,10 @@ def check(tid):
     try:
         text, _ = compile_target(tid)
         result["program_sha256"] = hashlib.sha256(text.encode()).hexdigest()
-        for offset in range(0, min(len(pairs) - 3, 32), 4):
+        pair_budget = 1024 if tid in ROLE_ALIGNED else 32
+        result["available_pairs"] = len(pairs)
+        result["requested_pair_checks"] = pair_budget
+        for offset in range(0, min(len(pairs) - 3, pair_budget), 4):
             palette = list(range(10))
             random.Random(4811 + offset).shuffle(palette)
             for d4 in range(8):
@@ -31,7 +35,8 @@ def check(tid):
                 audit_target(tid, text)
                 verify(text, ep, seconds=2)
                 result["verified_variants"] += 1
-        result["passed"] = result["verified_variants"] >= 32
+        required = 2048 if tid in ROLE_ALIGNED else 32
+        result["passed"] = result["verified_variants"] >= required
     except Exception as exc:
         result["error"] = repr(exc)
     return result
@@ -90,6 +95,9 @@ def main():
         "target_source_hashes": {
             str(p.relative_to(BASE.parent)): hashlib.sha256(p.read_bytes()).hexdigest()
             for p in target_files
+        },
+        "proposal_source_hashes": {
+            "colour_roles.py": hashlib.sha256((root / "colour_roles.py").read_bytes()).hexdigest()
         },
         "candidate_families": len(ids),
         "admitted": {r["task_id"]: r for r in results if r["passed"]},

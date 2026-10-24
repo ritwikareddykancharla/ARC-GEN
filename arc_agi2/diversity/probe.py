@@ -17,6 +17,7 @@ from pathlib import Path
 from ..colour_evidence import require_colour_evidence
 from ..program_targets import audit_target, compile_target, verify
 from ..runtime import BASE, call, grid, verification_solver
+from .colour_roles import align_pair
 from .rearc import generators, utils, verifiers
 
 
@@ -60,6 +61,8 @@ def probe(item):
             if grid(call(check, tuple(map(tuple, pair["input"])), seconds=1)) != expected:
                 reject["rearc_verifier_disagreement"] += 1
                 continue
+            pair, source_palette = align_pair(tid, pair)
+            expected = pair["output"]
             if grid(call(saved, pair["input"], seconds=1)) != expected:
                 reject["fork_verifier_disagreement"] += 1
                 continue
@@ -68,7 +71,8 @@ def probe(item):
                 reject["duplicate_input"] += 1
                 continue
             seen.add(identity)
-            result["accepted_pairs"].append({"seed": seed, **pair})
+            result["accepted_pairs"].append({"seed": seed, "source_colour_map": source_palette,
+                                              **pair})
             shapes[f"{len(pair['input'])}x{len(pair['input'][0])}"] += 1
         except Exception as exc:
             reject[type(exc).__name__] += 1
@@ -108,6 +112,7 @@ def main():
     parser.add_argument("--samples", type=int, default=128)
     parser.add_argument("--workers", type=int, default=12)
     parser.add_argument("--out", required=True)
+    parser.add_argument("--tasks", nargs="+")
     args = parser.parse_args()
     out = Path(args.out)
     out.mkdir(parents=True, exist_ok=True)
@@ -116,6 +121,10 @@ def main():
         for r in json.loads((BASE / "reference_index.json").read_text())["tasks"]
         if hasattr(generators, "generate_" + r["task_id"])
     ]
+    if args.tasks:
+        if not set(args.tasks) <= set(ids):
+            raise ValueError("Task has no RE-ARC counterpart")
+        ids = sorted(set(args.tasks))
     summary = []
     with concurrent.futures.ProcessPoolExecutor(
         max_workers=args.workers, mp_context=multiprocessing.get_context("spawn")
@@ -144,6 +153,9 @@ def main():
                     ),
                     flush=True,
                 )
+    if args.tasks and (out / "summary.json").exists():
+        summary += [r for r in json.loads((out / "summary.json").read_text())
+                    if r["task_id"] not in set(ids)]
     (out / "summary.json").write_text(
         json.dumps(sorted(summary, key=lambda r: r["task_id"]), indent=2) + "\n"
     )

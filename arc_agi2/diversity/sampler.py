@@ -8,6 +8,7 @@ from pathlib import Path
 
 from ..program_targets import compile_target
 from ..runtime import BASE, call, grid, verification_solver
+from .colour_roles import align_pair
 
 ROOT = Path(__file__).parent
 PROFILE = "rearc-compatible-v1"
@@ -24,6 +25,9 @@ def admission():
     for name, digest in report.get("target_source_hashes", {}).items():
         if hashlib.sha256((BASE.parent / name).read_bytes()).hexdigest() != digest:
             raise ValueError("Target dependency changed since diversity admission: " + name)
+    for name, digest in report.get("proposal_source_hashes", {}).items():
+        if hashlib.sha256((ROOT / name).read_bytes()).hexdigest() != digest:
+            raise ValueError("Proposal alignment changed since admission: " + name)
     return report
 
 
@@ -61,14 +65,18 @@ def sample_checked(tid, seed):
         )
         if grid(external) != expected:
             raise ValueError("RE-ARC constructor/verifier disagreement")
+        pair, source_palette = align_pair(tid, pair)
+        expected = pair["output"]
         if grid(call(fork_checker(tid), pair["input"], seconds=2)) != expected:
             raise ValueError("Fork/RE-ARC domain disagreement")
+        pair["source_colour_map"] = source_palette
         return pair, {
             "mode": PROFILE,
             "seed": seed,
             "attempts": [],
             "label_source": "constructor",
             "verifiers_checked": 2,
+            "source_colour_map": source_palette,
         }
     finally:
         random.setstate(state)

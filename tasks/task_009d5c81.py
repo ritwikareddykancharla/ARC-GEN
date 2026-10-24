@@ -83,21 +83,35 @@ def generate(width=None, height=None, drawing=None, draw_row=None,
     sym_col: left column of the 3x3 legend symbol
   """
   if width is None:
-    width = random.randint(12, 20)
+    width = random.randint(12, 30)
   if height is None:
-    height = random.randint(12, 20)
+    height = random.randint(12, 30)
   if drawing is None:
     for _ in range(100):
-      dh = random.randint(3, min(8, height - 6))
-      dw = random.randint(4, min(10, width))
-      cand = _random_drawing(dh, dw)
+      dh = random.randint(3, height - 6)
+      dw = random.randint(4, width)
+      if random.random() < 0.5:
+        cand = _random_drawing(dh, dw)
+      else:
+        # Canonical drawings need not be connected. Include sparse, separated
+        # strokes as well as grown blobs; every drawing cell is recoloured.
+        density = random.uniform(0.2, 0.7)
+        cand = ["".join("#" if random.random() < density else "."
+                        for _ in range(dw)) for _ in range(dh)]
+        cells = [(r, c) for r, line in enumerate(cand)
+                 for c, value in enumerate(line) if value == "#"]
+        if not cells:
+          continue
+        r0, r1 = min(r for r, c in cells), max(r for r, c in cells)
+        c0, c1 = min(c for r, c in cells), max(c for r, c in cells)
+        cand = [line[c0:c1 + 1] for line in cand[r0:r1 + 1]]
       ch, cw = len(cand), len(cand[0])
       # Bounding box must dominate the 3x3 symbol's bounding box.
       if ch * cw >= 12 and max(ch, cw) >= 4 and ch <= height - 6:
         drawing = cand
         break
     if drawing is None:
-      drawing = ["####", "#..#", "####"]
+      raise RuntimeError('Could not sample a drawing distinct from the legend')
   dh, dw = len(drawing), len(drawing[0])
   if draw_row is None:
     draw_row = random.randint(0, height - dh - 5)

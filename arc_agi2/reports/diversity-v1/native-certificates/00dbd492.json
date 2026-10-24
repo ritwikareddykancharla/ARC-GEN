@@ -1,0 +1,22 @@
+{
+  "task_id": "00dbd492",
+  "passed": true,
+  "fresh_pairs_checked": 1000,
+  "augmented_pair_checks": 8000,
+  "fixture_variants_checked": 16,
+  "constructor_sha256": "919c112ac637db85ca10141f4e5c8c2a04c28fb69e1fa46a7c28a8f5ff33283a",
+  "auditor_sha256": "c7c525a7ef21debe8a3e1cd459009003846a69e4a45d032a5447efc16b14f283",
+  "requires_per_episode_verification": true,
+  "sampler_rejections": [
+    {
+      "seed": 41657178668516,
+      "error": "RuntimeError('Cannot pack requested boxes; retry the scene')"
+    }
+  ],
+  "program_provider": "direct_source",
+  "program_sha256": "8483ca954a7034e94cb031a105990ef1969ed8971d9f80f2a6f0309cc01a95c3",
+  "certificate_version": 1,
+  "unique_base_inputs": 992,
+  "fixture_basis": "canonical",
+  "seconds": 10.407245624810457
+}

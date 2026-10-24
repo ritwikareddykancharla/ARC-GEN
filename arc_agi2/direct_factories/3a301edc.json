@@ -1,29 +1,16 @@
 {
   "task_id": "3a301edc",
-  "factory_sha256": "fb88754b5c9eb653ae023fb040042e25c99b8cdc2ffaa6c351d12dfefd9468b1",
-  "constructor_sha256": "6794f65ca73cf724703e4645f08517c9538f61f852451f102a68f45e605b88fe",
   "passed": true,
   "fresh_pairs_checked": 1000,
   "augmented_pair_checks": 8000,
   "fixture_variants_checked": 16,
-  "context_retries": 0,
-  "sampler_rejections": [],
-  "audit_scope": "250 fresh queries held fixed while resampling3demo context using visible frame band evidence only; no query labels in admission; all four pairs executed under8D4per acceptedepisode.",
-  "unique_base_inputs": 997,
-  "seconds": 5.974927167058922,
-  "factory_version": 1,
+  "constructor_sha256": "3a8406146c608f1c91c51644fb1ca0edbd6314f3f46e0c65e0e27c9942c760b2",
+  "auditor_sha256": "9b8263c2ef0e959536a06068a649a9471fefc11f950f7dff3f27665ae7cbb4ea",
   "requires_per_episode_verification": true,
-  "provenance": "Host-authored direct program with constructor/source review, source restrictions and execution verification.",
-  "draft_notes": {
-    "author": "host",
-    "explanation": "Parse nested filled rectangles with a uniform outer frame. Compare band thickness equal to inner short side, clamped to tightest border gap, or2*short-long. Fit all demo outputs; require all surviving query predictions equal. Preserve original pixels and clip painting to the grid.",
-    "limitations": "Three explicit thickness rules. Native random sampler uses square inner blocks with adequate margins, where all rules agree; the original non-square fixture eliminates side but leaves gap/aspect indistinguishable on its canonical query. Other non-square/edge cases require informative demonstrations. No claim that default sampler covers non-square geometry.",
-    "host_review": {
-      "status": "reviewed",
-      "constructor_unchanged": true,
-      "reason": "Remove fixed gap>aspect>side fallback and background-majority guess. Do not edit the disputed-looking original rectangle label; all supplied pairs fit visible rules.",
-      "extra_parameter": "Native extra>0 relation produces uniform band2*short-long when dimensions remain valid. Native random extra stays0. Explicit extra cases are tested separately.",
-      "audit": "1000fresh pairs (997distinct),8000augmented checks,16fixture variants. Six focused tests preserve original non-square demo, larger-margin aspect case, counterfactual thickness, non-majority background and clipped borders. Full quota1000bases/7996verified records,4symmetry duplicates removed,zero shortfalls. Default sampler remains square-inner; explicit non-square tests reported separately."
-    }
-  }
+  "sampler_rejections": [],
+  "factory_sha256": "fb88754b5c9eb653ae023fb040042e25c99b8cdc2ffaa6c351d12dfefd9468b1",
+  "factory_version": 1,
+  "unique_base_inputs": 1000,
+  "fixture_basis": "canonical",
+  "seconds": 9.233169416896999
 }

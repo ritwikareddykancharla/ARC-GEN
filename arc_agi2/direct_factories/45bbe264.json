@@ -1,21 +1,16 @@
 {
   "task_id": "45bbe264",
-  "factory_sha256": "85bec3bbbbc7fbac9ce76af3dff55ed8ee0e03a0c2d1f184ebfd5cb871542b15",
-  "constructor_sha256": "340b7116353338b4e0600e9125114dd44072dbd9eb365621d456acc9133277b7",
   "passed": true,
   "fresh_pairs_checked": 1000,
   "augmented_pair_checks": 8000,
   "fixture_variants_checked": 16,
-  "sampler_rejections": [],
-  "seed": 214068171144911,
-  "d4": 7,
-  "unique_base_inputs": 1000,
-  "seconds": 3.9568147499812767,
-  "factory_version": 1,
+  "constructor_sha256": "8f5f8a2a183d7a67faa3c10e0e36ed4e5a5975170bd8d35cb923f2514d9720fc",
+  "auditor_sha256": "9b8263c2ef0e959536a06068a649a9471fefc11f950f7dff3f27665ae7cbb4ea",
   "requires_per_episode_verification": true,
-  "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
-  "draft_notes": {
-    "explanation": "The family draws, for every single-pixel seed, a full row line and a full column line in the seed's colour. Where a row line of one seed meets a column line of a different seed the cell becomes colour 2; a seed's own row/column intersection keeps the seed colour. Because the constructor samples seed rows and seed columns without replacement, every cell lies on at most one seed row and one seed column. That makes the rule fully symmetric under all D4 transforms: a transpose swaps row lines and column lines, but the crossing rule is the same either way. So the emitted program works directly in visible coordinates and needs no orientation change. Palette handling is done through constants: the background is palette[0] and the crossing colour is palette[2]. Seed colours are read from the pixels, since the generator excludes original colour 2 from the seeds.",
-    "limitations": "d4 is intentionally unused because the mechanism is invariant under D4. The program assumes the constructor's domain: a palette[0] background, seeds that are single cells with distinct rows and distinct columns, and seed colours that never equal palette[2]. If two seeds shared a row or column (which is outside the domain), the result would follow the archived solver's convention of drawing columns first and then rows. No contradictions with the fixtures were found. I have not executed any tests."
-  }
+  "sampler_rejections": [],
+  "factory_sha256": "85bec3bbbbc7fbac9ce76af3dff55ed8ee0e03a0c2d1f184ebfd5cb871542b15",
+  "factory_version": 1,
+  "unique_base_inputs": 1000,
+  "fixture_basis": "canonical",
+  "seconds": 3.8068650409113616
 }

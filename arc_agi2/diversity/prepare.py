@@ -23,7 +23,8 @@ from ..runtime import BASE, call, grid, reference, verification_solver
 from ..visual_dataset import render
 from .sampler import admission, eligible, sample_checked
 
-REPAIRED = ("007bbfb7", "0934a4d8", "1e0a9b12", "3194b014", "aaecdb9a", "ecb67b6d")
+REPAIRED = ("007bbfb7", "009d5c81", "00dbd492", "0934a4d8", "09c534e7", "1e0a9b12", "3194b014",
+            "3a301edc", "45bbe264", "aaecdb9a", "ecb67b6d")
 
 
 def digest(value):
@@ -195,12 +196,13 @@ def prepare(item):
                         file_name=eid + ".png",
                         pair_provenance=[
                             {
-                                k: p[k]
+                                k: p.get(k)
                                 for k in (
                                     "seed",
                                     "generator_mode",
                                     "input_hash",
                                     "canonical_input_hash",
+                                    "source_colour_map",
                                 )
                             }
                             for p in four

@@ -15,6 +15,7 @@ from pathlib import Path
 
 from ..audit_direct_candidates import candidate
 from ..augmentation import transformed
+from ..direct_programs import direct_source
 from ..program_targets import audit_target, verify
 from ..runtime import BASE, call, grid, reference, verification_solver
 
@@ -41,10 +42,12 @@ def check(tid):
         if factory_path.exists()
         else None
     )
-    native = None if factory else candidate(tid)[0]
+    builtin = None if factory else direct_source(tid, 0, list(range(10)))
+    native = None if factory else (builtin or candidate(tid)[0])
 
     def source(d4, palette):
-        text = factory.build_program(d4, palette) if factory else native
+        text = (factory.build_program(d4, palette) if factory else
+                direct_source(tid, d4, palette) if builtin else native)
         audit_target(tid, text)
         return text
 
@@ -58,6 +61,7 @@ def check(tid):
         "auditor_sha256": sha(Path(__file__).read_bytes()),
         "requires_per_episode_verification": True,
         "sampler_rejections": [],
+        "program_provider": "factory" if factory else "direct_source" if builtin else "native_candidate",
     }
     if factory:
         report["factory_sha256"] = sha(factory_path.read_bytes())

@@ -177,12 +177,58 @@ def legend_object_chart(grid):
              for colour, count in zip(legend, counts)] for r in range(height)]
 
 
+def nested_frame_band(grid):
+    """3a301edc: identify nesting by bounding-box containment, not ink area.
+
+    A thin outer frame can have fewer ink cells than the solid inner square.
+    The archived size sort reverses the two objects in that case.
+    """
+    height, width = len(grid), len(grid[0])
+    colours = {c for row in grid for c in row if c != 0}
+    if len(colours) != 2:
+        raise ValueError('Expected two nested foreground colours')
+    boxes = []
+    for colour in colours:
+        cells = [(r, c) for r, row in enumerate(grid) for c, v in enumerate(row)
+                 if v == colour]
+        y0, y1 = min(r for r, c in cells), max(r for r, c in cells)
+        x0, x1 = min(c for r, c in cells), max(c for r, c in cells)
+        boxes.append(((y1-y0+1)*(x1-x0+1), (y0, x0, y1, x1), colour))
+    boxes.sort(reverse=True)
+    _, (y0, x0, y1, x1), frame = boxes[0]
+    _, (iy0, ix0, iy1, ix1), ink = boxes[1]
+    if not (y0 < iy0 <= iy1 < y1 and x0 < ix0 <= ix1 < x1):
+        raise ValueError('Expected strictly nested boxes')
+    for r in range(height):
+        for c in range(width):
+            expected = ink if iy0 <= r <= iy1 and ix0 <= c <= ix1 else (
+                frame if y0 <= r <= y1 and x0 <= c <= x1 else 0)
+            if grid[r][c] != expected:
+                raise ValueError('Invalid nested rectangle')
+    thick = min(iy1-iy0+1, ix1-ix0+1, y0, x0)
+    out = [row[:] for row in grid]
+    for r in range(max(0, y0-thick), min(height, y1+thick+1)):
+        for c in range(max(0, x0-thick), min(width, x1+thick+1)):
+            if not (y0 <= r <= y1 and x0 <= c <= x1):
+                out[r][c] = ink
+    return out
+
+
 from .joint_fragments import transform as joint_fragment_completion
 
 VERIFIERS = {'78332cb0': panel_chain, 'de493100': cropped_mirror_patch,
+             '3a301edc': nested_frame_band,
              'd6542281': joint_fragment_completion,
              'aaecdb9a': legend_object_chart, '007bbfb7': self_tiling}
 VERIFIER_EVIDENCE = {
+    '3a301edc': {
+        'mode': 'nested_bounding_box_containment',
+        'module': 'arc_agi2.verified_rules.nested_frame_band',
+        'reason': 'A 5x5 interior has 25 cells while its one-cell frame has 24. Sorting objects by ink area reverses their semantic roles; bounding-box containment identifies the frame independently of the constructor.',
+        'counterexample': 'arc_agi2/reports/diversity-v1/3a301edc-broader-counterexample.json',
+        'canonical_data_changed': False,
+        'archived_reference_changed': False,
+    },
     '007bbfb7': {
         'mode': 'dimension_aware_self_tiling',
         'module': 'arc_agi2.verified_rules.self_tiling',

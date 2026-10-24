@@ -22,7 +22,7 @@ interior of one of its blocks. In the output, the interior (block minus its
 structure's seed colour. Corridors and block borders stay blue.
 
 Scope: random scenes have a random grid size (14..30 per side), 2-4
-structures, each a tree of 2-9 blocks (up to four on smaller grids) grown by attaching corridors (length
+structures, each a connected graph of 2-9 blocks (up to four on smaller grids) grown by attaching corridors (length
 1-6) to non-corner border cells of existing blocks. Blocks range from 3x3 up
 to 8x12. Structures and their parts keep a one-cell clearance from every
 unrelated cell, so the latent block interiors are exactly the cells whose
@@ -187,6 +187,56 @@ def _filled_count(owner):
   return sum(1 for row in owner for v in row if v != -1)
 
 
+def _close_cycles(owner, width, height, structures):
+  """Add clear straight corridors between already-connected blocks.
+
+  Tree growth alone misses cycles. Extra corridors preserve block interiors,
+  never join different seeded structures, and obey the same clearance rule.
+  """
+  added = 0
+  for sid, st in enumerate(structures):
+    proposals = []
+    for a in st['boxes']:
+      for b in st['boxes']:
+        # Only left-to-right and top-to-bottom, avoiding duplicate proposals.
+        if 1 <= b[1] - a[3] - 1 <= 6:
+          for row in range(max(a[0], b[0]) + 1, min(a[2], b[2])):
+            proposals.append(((row, a[3] + 1, row, b[1] - 1), a, b))
+        if 1 <= b[0] - a[2] - 1 <= 6:
+          for col in range(max(a[1], b[1]) + 1, min(a[3], b[3])):
+            proposals.append(((a[2] + 1, col, b[0] - 1, col), a, b))
+    random.shuffle(proposals)
+    for corridor, a, b in proposals:
+      if random.random() > 0.5:
+        continue
+      cells = _rect_cells(corridor)
+      if _filled_count(owner) + len(cells) > _MAX_FILL_PERCENT * width * height // 100:
+        continue
+      first, last = cells[0], cells[-1]
+      allowed_a, allowed_b = set(_rect_cells(a)), set(_rect_cells(b))
+      valid = True
+      for r, c in cells:
+        if owner[r][c] != -1:
+          valid = False
+          break
+        for dr in (-1, 0, 1):
+          for dc in (-1, 0, 1):
+            point = nr, nc = r + dr, c + dc
+            if not (0 <= nr < height and 0 <= nc < width) or owner[nr][nc] == -1:
+              continue
+            if (r, c) == first and point in allowed_a:
+              continue
+            if (r, c) == last and point in allowed_b:
+              continue
+            valid = False
+      if valid:
+        st['corridors'].append(corridor)
+        for r, c in cells:
+          owner[r][c] = sid
+        added += 1
+  return added
+
+
 def _random_structures(width, height, num_structures):
   """Samples structures keeping the background a clear majority."""
   for _ in range(80):
@@ -202,6 +252,7 @@ def _random_structures(width, height, num_structures):
       continue
     if _filled_count(owner) * 100 > _MAX_FILL_PERCENT * width * height:
       continue
+    _close_cycles(owner, width, height, result)
     return result
   return None
 

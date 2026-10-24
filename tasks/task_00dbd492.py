@@ -17,7 +17,7 @@
 import common
 
 
-def generate(size=None, rows=None, cols=None, thicks=None):
+def generate(size=None, rows=None, cols=None, thicks=None, width=None, height=None):
   """Returns input and output grids according to the given parameters.
 
   Args:
@@ -25,23 +25,35 @@ def generate(size=None, rows=None, cols=None, thicks=None):
     rows: The rows of the boxes.
     cols: The columns of the boxes.
     thicks: The thicknesses of the boxes.
+    width: Rectangular canvas width; sampled independently in 7..30.
+    height: Rectangular canvas height; sampled independently in 7..30.
   """
 
   colors = [8, 4, 3]
-  if size is None:
-    size = common.randint(7, 23)
-    max_thick = 2 if size < 9 else 3
+  if size is not None:
+    if width is not None or height is not None:
+      raise ValueError('Specify size or width/height, not both')
+    width = height = size
+  else:
+    width = common.randint(7, 30) if width is None else width
+    height = common.randint(7, 30) if height is None else height
+  if rows is None:
+    if not (7 <= width <= 30 and 7 <= height <= 30):
+      raise ValueError('Random dimensions must be 7..30')
+    max_thick = 2 if min(width, height) < 9 else 3
     # A 7x7 canvas still fits one 5x5 box. Zero boxes would produce a
     # background-only identity pair that teaches none of this task's rule.
-    num_boxes = max(1, size // 4 - 1)
-    while True:
+    num_boxes = common.randint(1, max(1, min(width, height) // 4 - 1))
+    for _ in range(1000):
       thicks = [common.randint(1, max_thick) for _ in range(num_boxes)]
       sizes = [2 * thick + 3 for thick in thicks]
-      rows = [common.randint(0, size - s) for s in sizes]
-      cols = [common.randint(0, size - s) for s in sizes]
+      rows = [common.randint(0, height - s) for s in sizes]
+      cols = [common.randint(0, width - s) for s in sizes]
       if not common.overlaps(rows, cols, sizes, sizes, 1): break
+    else:
+      raise RuntimeError('Cannot pack requested boxes; retry the scene')
 
-  grid, output = common.grids(size, size)
+  grid, output = common.grids(width, height)
   for row, col, thick in zip(rows, cols, thicks):
     length = 2 * thick + 3
     for r in range(length):

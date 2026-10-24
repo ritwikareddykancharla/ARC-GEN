@@ -32,10 +32,10 @@ def generate(width=None, height=None, row=None, col=None, thicks=None,
   """
 
   if width is None:
-    thicks = [common.randint(1, 3) for _ in range(2)]
+    thicks = [common.randint(1, 5) for _ in range(2)]
     bigthick = 2 * thicks[0] + 3 * thicks[1]
-    width = bigthick + common.randint(2, 5)
-    height = bigthick + common.randint(2, 5)
+    width = common.randint(bigthick + 2, 30)
+    height = common.randint(bigthick + 2, 30)
     row = common.randint(0, height - bigthick)
     col = common.randint(0, width - bigthick)
     row += thicks[1]

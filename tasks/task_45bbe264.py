@@ -17,7 +17,7 @@
 import common
 
 
-def generate(size=None, rows=None, cols=None, colors=None):
+def generate(size=None, rows=None, cols=None, colors=None, width=None, height=None):
   """Returns input and output grids according to the given parameters.
 
   Args:
@@ -25,28 +25,38 @@ def generate(size=None, rows=None, cols=None, colors=None):
     rows: The rows of the pixels.
     cols: The columns of the pixels.
     colors: The colors of the pixels.
+    width: Optional rectangular width; random scenes span 6..30.
+    height: Optional rectangular height; random scenes span 6..30.
   """
 
-  if size is None:
-    size = common.randint(12, 15)
-    pixels = common.randint(2, 3)
+  if size is not None:
+    if width is not None or height is not None:
+      raise ValueError('Specify size or width/height, not both')
+    width = height = size
+  else:
+    width = common.randint(6, 30) if width is None else width
+    height = common.randint(6, 30) if height is None else height
+  if rows is None:
+    if not (6 <= width <= 30 and 6 <= height <= 30):
+      raise ValueError('Random dimensions must be 6..30')
+    pixels = common.randint(2, min(6, (height - 1) // 2, (width - 1) // 2))
     colors = common.random_colors(pixels, exclude=[2])
     while True:
       good = True
-      rows = common.sample(range(1, size - 1), pixels)
-      cols = common.sample(range(1, size - 1), pixels)
+      rows = common.sample(range(1, height - 1), pixels)
+      cols = common.sample(range(1, width - 1), pixels)
       sorted_rows, sorted_cols = sorted(rows), sorted(cols)
       for i in range(1, pixels):
         if sorted_rows[i - 1] + 1 == sorted_rows[i]: good = False
         if sorted_cols[i - 1] + 1 == sorted_cols[i]: good = False
       if good: break
 
-  grid, output = common.grids(size, size)
+  grid, output = common.grids(width, height)
   for row, col, color in zip(rows, cols, colors):
     output[row][col] = grid[row][col] = color
-    for r in range(size):
+    for r in range(height):
       if r != row: output[r][col] = color if output[r][col] == 0 else 2
-    for c in range(size):
+    for c in range(width):
       if c != col: output[row][c] = color if output[row][c] == 0 else 2
   return {"input": grid, "output": output}
 

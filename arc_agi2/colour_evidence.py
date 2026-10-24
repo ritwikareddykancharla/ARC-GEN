@@ -75,6 +75,10 @@ def _hole_count(cells):
 
 
 def require_colour_evidence(task_id, demonstrations, queries, palette=None, d4=0):
+    if task_id == 'e74e1818':
+        from .band_reflection_evidence import require_band_reflection_evidence
+        require_band_reflection_evidence(demonstrations, queries, palette, d4)
+        return
     if task_id == '973e499e':
         from .self_match_evidence import require_self_match_evidence
         require_self_match_evidence(demonstrations, queries)

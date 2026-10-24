@@ -17,76 +17,62 @@
 import common
 
 
-def generate(width=None, height=None, colors=None):
-  """Returns input and output grids according to the given parameters.
+def generate(width=None, height=None, colors=None, *, num_bands=None, symmetric=None):
+  """Reflect each monochromatic row band vertically on a rectangular canvas.
 
-  Args:
-    width: The width of the grid.
-    height: The height of the grid.
-    colors: A list of colors to use.
+  Random scenes use independent dimensions 3..30, 1..9 distinct bands, and
+  symmetric or asymmetric nonempty row patterns. The black border and
+  distinct colours of contiguous bands are retained. Complete explicit
+  width/height/colors scenes preserve the original labels.
   """
+  import random
 
-  def draw():
-    grid, output = common.grids(width, height)
-    for i, color in enumerate(colors):
-      grid[i // width][i % width] = color
-    last, length, lengths = -1, 1, []
-    for row in range(1, height - 1):
-      subset = list(set(grid[row]))
-      if 0 in subset: subset.remove(0)
-      if subset[0] == last:
-        length += 1
-      else:
-        if last != -1: lengths.append(length)
-        last, length = subset[0], 1
-    lengths.append(length)
-    inrow = outrow = 1
-    for length in lengths:
-      outrow = outrow + length - 1
-      for _ in range(length):
-        output[outrow] = grid[inrow]
-        inrow, outrow = inrow + 1, outrow - 1
-      outrow = inrow
-    return grid, output
+  def integer(value, low, high, name):
+    if type(value) is not int or not low <= value <= high:
+      raise ValueError(f"{name} must be an integer in [{low}, {high}]")
+    return value
 
-  if width is None:
-    width = height = 2 * common.randint(3, 7) + 1
-    # Each of n bands has length at most n. Exclude impossible n values
-    # before sampling lengths (e.g. three bands cannot occupy thirteen rows).
-    counts = [n for n in range(3, height // 2 + 1) if n * n >= height - 2]
-    colors = common.random_colors(common.choice(counts))
-    while True:
-      lengths = [common.randint(1, len(colors)) for _ in colors]
-      if sum(lengths) + 2 == height: break
-    while True:
-      offset = 1
-      grid = common.grid(width, height)
-      for i, color in enumerate(colors):
-        spacing = common.randint(1, max(1, width // 2 - 3))
-        while True:
-          sprite = common.grid(width, lengths[i])
-          for r in range(lengths[i]):
-            for c in range(spacing, width - spacing):
-              if common.randint(0, 3): continue
-              sprite[r][c] = sprite[r][width - 1 - c] = color
-          good, pixels = True, []
-          for r in range(lengths[i]):
-            covered = False
-            for c in range(1, width - 1):
-              if not sprite[r][c]: continue
-              covered = True
-              pixels.append((r, c))
-            if not covered: good = False
-          if good and pixels: break
-        for r in range(lengths[i]):
-          for c in range(1, width - 1):
-            grid[offset + r][c] = sprite[r][c]
-        offset += lengths[i]
-      colors = common.flatten(grid)
-      grid, _ = draw()
-      if grid: break
-
-  grid, output = draw()
+  if colors is not None and (width is None or height is None):
+    raise ValueError("Explicit colours require width and height")
+  width = random.randint(3, 30) if width is None else integer(width, 3, 30, "width")
+  height = random.randint(3, 30) if height is None else integer(height, 3, 30, "height")
+  if symmetric is not None and type(symmetric) is not bool:
+    raise ValueError("symmetric must be a boolean")
+  if colors is None:
+    n = random.randint(1, min(9, height - 2)) if num_bands is None else integer(
+        num_bands, 1, min(9, height - 2), "num_bands")
+    cuts = [0] + sorted(random.sample(range(1, height - 2), n - 1)) + [height - 2]
+    palette = random.sample(range(1, 10), n)
+    grid = common.grid(width, height)
+    for j, colour in enumerate(palette):
+      mirror = random.choice([False, True]) if symmetric is None else symmetric
+      for r in range(1 + cuts[j], 1 + cuts[j + 1]):
+        positions = list(range(1, (width + 1) // 2)) if mirror else list(range(1, width - 1))
+        selected = random.sample(positions, random.randint(1, len(positions)))
+        for c in selected:
+          grid[r][c] = colour
+          if mirror: grid[r][width - 1 - c] = colour
+    colors = common.flatten(grid)
+  elif num_bands is not None or symmetric is not None:
+    raise ValueError("Random band controls cannot accompany explicit colours")
+  if len(colors) != width * height or any(type(c) is not int or not 0 <= c <= 9 for c in colors):
+    raise ValueError("Explicit colours must contain one valid colour per cell")
+  grid = [list(colors[r * width:(r + 1) * width]) for r in range(height)]
+  if any(grid[0]) or any(grid[-1]) or any(row[0] or row[-1] for row in grid):
+    raise ValueError("A black outer border is required")
+  keys = []
+  for row in grid[1:-1]:
+    values = set(row) - {0}
+    if len(values) != 1:
+      raise ValueError("Every interior row must contain exactly one nonblack colour")
+    keys.append(next(iter(values)))
+  runs = [(key, i + 1) for i, key in enumerate(keys) if i == 0 or key != keys[i - 1]]
+  if len({key for key, _ in runs}) != len(runs):
+    raise ValueError("Each colour must occupy a single contiguous band")
+  output = [row[:] for row in grid]
+  for j, (_, a) in enumerate(runs):
+    b = runs[j + 1][1] if j + 1 < len(runs) else height - 1
+    output[a:b] = [row[:] for row in reversed(grid[a:b])]
   return {"input": grid, "output": output}
 
 

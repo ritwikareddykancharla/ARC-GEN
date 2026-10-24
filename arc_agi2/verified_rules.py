@@ -413,6 +413,26 @@ def separated_motif_stamp(grid):
     return out
 
 
+def fixed_background_band_reflection(grid):
+    """e74e1818: reflect each colour within its own vertical span; native BG=0.
+
+    Dense one-band scenes can have more ink than background. Background is a
+    task colour with a full outer border, not the most frequent pixel value.
+    This coordinate check is independent of the factory's row-block scan.
+    """
+    g = [list(map(int, row)) for row in grid]
+    h, w = len(g), len(g[0])
+    if any(len(row) != w for row in g) or any(g[0]) or any(g[-1]) or any(row[0] or row[-1] for row in g):
+        raise ValueError('Expected a rectangular grid with a black border')
+    out = [[0] * w for _ in range(h)]
+    for colour in {c for row in g for c in row} - {0}:
+        pixels = [(r,c) for r,row in enumerate(g) for c,v in enumerate(row) if v==colour]
+        lo, hi = min(r for r,c in pixels), max(r for r,c in pixels)
+        for r,c in pixels:
+            out[lo+hi-r][c]=colour
+    return out
+
+
 VERIFIERS = {'78332cb0': panel_chain, 'de493100': cropped_mirror_patch,
              '3a301edc': nested_frame_band,
              'd6542281': joint_fragment_completion,
@@ -420,8 +440,16 @@ VERIFIERS = {'78332cb0': panel_chain, 'de493100': cropped_mirror_patch,
              '7e2bad24': native_side_beam, '34b99a2b': midpoint_xor_panels,
              '195ba7dc': midpoint_or_panels, '281123b4': separated_priority_panels,
              'e0fb7511': native_zero_adjacency, 'f3cdc58f': fixed_colour_histogram,
-             'b4a43f3b': separated_motif_stamp}
+             'b4a43f3b': separated_motif_stamp, 'e74e1818': fixed_background_band_reflection}
 VERIFIER_EVIDENCE = {
+    'e74e1818': {
+        'mode': 'fixed_background_colour_span_reflection',
+        'module': 'arc_agi2.verified_rules.fixed_background_band_reflection',
+        'reason': 'The archived modal-background heuristic can select ink on dense one-band scenes. Native background remains 0 with a full black border; reflect each nonzero colour within its own row span.',
+        'counterexample': 'arc_agi2/reports/diversity-v1/native-band-reflection/archived-checker-failures.json',
+        'canonical_data_changed': False,
+        'archived_reference_changed': False,
+    },
     'e0fb7511': {
         'mode': 'reviewed_native_zero_four_adjacency',
         'module': 'arc_agi2.verified_rules.native_zero_adjacency',

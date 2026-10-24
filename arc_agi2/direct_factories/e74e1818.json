@@ -1,18 +1,19 @@
 {
   "task_id": "e74e1818",
-  "factory_sha256": "12f72602726eaee60e0863524ac5a4e09588a0fb8c98eefe352ab8f12dd563b1",
-  "constructor_sha256": "7108c49b0de8bf0d0d0e2f723166747563c25a4763b6fce8fb5ddfa8118d728d",
   "passed": true,
   "fresh_pairs_checked": 1000,
   "augmented_pair_checks": 8000,
   "fixture_variants_checked": 16,
-  "sampler_rejections": [],
-  "seed": 16602184326224,
-  "d4": 7,
-  "unique_base_inputs": 1000,
-  "seconds": 3.245459917001426,
-  "factory_version": 1,
+  "constructor_sha256": "1163953c6c859624c01dffa38e91e9e06e7095a24f4fa8c9f5478137d8c61434",
+  "auditor_sha256": "1e194cb80d11ccda4026cb83a61c6dd407f1b9d94117090b31de26b01a3f191d",
   "requires_per_episode_verification": true,
+  "sampler_rejections": [],
+  "program_provider": "factory",
+  "factory_sha256": "12f72602726eaee60e0863524ac5a4e09588a0fb8c98eefe352ab8f12dd563b1",
+  "factory_version": 1,
+  "unique_base_inputs": 1000,
+  "fixture_basis": "canonical",
+  "seconds": 3.03338862513192,
   "provenance": "Opus 5.5 subscription CLI draft with host review/repairs, source restrictions and execution verification.",
   "draft_notes": {
     "explanation": "In the original task, the grid is a stack of horizontal bands. Each band is a run of consecutive rows that use one non-background colour. The generator's draw() finds these runs by the colour present in each row, then writes each run back in reverse row order. Mirroring a band is its own inverse, so only the band axis matters under D4. A horizontal flip (d4>=4) keeps rows as rows. An odd number of clockwise rotations turns rows into columns. The factory therefore picks rows when d4%4 is 0 or 2, and columns otherwise. It then emits code that scans visible lines along that axis. Each line's key is its set of non-background colours, with the background fixed to palette[0]. Consecutive lines with the same non-empty key form a band. Each band's lines are reversed in place, either rows top-to-bottom or columns left-to-right. Empty border lines are left unchanged. This matches the constructor's segmentation directly. It also matches the archived per-colour bounding-box flip whenever band colours are distinct, which holds in the generator's domain.",
@@ -26,5 +27,12 @@
       "regression_module": "arc_agi2.test_sampling_domains",
       "independent_review": "Host source review; no additional CLI review claimed."
     }
-  }
+  },
+  "draft_notes_status": "historical; constructor expanded and re-certified",
+  "previous_certificate": {
+    "status": "superseded constructor domain",
+    "constructor_sha256": "7108c49b0de8bf0d0d0e2f723166747563c25a4763b6fce8fb5ddfa8118d728d",
+    "factory_sha256": "12f72602726eaee60e0863524ac5a4e09588a0fb8c98eefe352ab8f12dd563b1"
+  },
+  "previous_domain_limitations": "Odd square 7..15; 3..7 colours; horizontally symmetric bands; repeated rejection loops."
 }

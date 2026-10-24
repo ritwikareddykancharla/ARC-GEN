@@ -74,6 +74,25 @@ Each passed 1,024 accepted pairs grouped into fresh episodes under all eight
 spatial transforms: 2,048 episode checks, or 8,192 pair checks, per family.
 Every exported episode is checked again with its own demonstrations and palette.
 
+A second reviewed batch adds fifteen families to `ROLE_SPECS` in
+`colour_roles.py`. Their RE-ARC constructors differ from the native programs only
+by colour roles. Background only: `0a938d79`, `25ff71a9`, `4347f46a`, `46f33fce`
+and `7468f01a`. Background with fixed constructor markers kept in place:
+`0ca9ddb6`, `1caeab9d`, `31aa019c`, `50cb2852` and `60b61512`. Background plus
+one named foreground: `3aa6fb7a`, `4258a5f9`, `6d75e8bb` and `6e82a1ae`, plus
+`56dc2b01`, which also has a fixed bar and marker. The mapping reads input
+grids only. Every native fixture is a fixed point of its family's mapping.
+`certify_roles.py` reuses the probe and admission gates and writes per-family
+certificates to `reports/diversity-v1/role-certificates/`. All fifteen passed
+with the same 2,048-episode budget.
+Recorded alignment rejections:
+- `31aa019c`: 104 of 1,152 proposals, because a red background would hide the red ring.
+- `46f33fce`: 84 of 1,152, all single-colour, empty inputs.
+- `3aa6fb7a`: 2 of 1,152, both modal ties.
+
+These families still need the regenerated `admission.json` before the sampler
+uses them.
+
 A separate 1,000-sample measurement records actual generated variation in
 `extension-domain-measurements.json`: `09c534e7` has 943 rectangular scenes and
 197 scenes with added cycles; `45bbe264` has 952 rectangular scenes and all seed

@@ -7,7 +7,7 @@ from pathlib import Path
 
 import pytest
 
-from arc_agi2.diversity.colour_roles import ROLE_ALIGNED, align_pair
+from arc_agi2.diversity.colour_roles import ROLE_ALIGNED, ROLE_SPECS, align_pair
 from arc_agi2.diversity.rearc import generators, utils, verifiers
 from arc_agi2.runtime import call, grid
 from arc_agi2.verified_rules import nested_frame_band
@@ -26,12 +26,20 @@ def test_alignment_preserves_constructor_relation(tid):
         raw = call(getattr(generators, "generate_" + tid), 0., 1., seconds=2)
         raw = {k: grid(v) for k, v in raw.items()}
         counts = Counter(c for row in raw["input"] for c in row).most_common()
-        if len(counts) < 2 or counts[0][1] == counts[1][1]:
+        spec = ROLE_SPECS[tid]
+        fixed = set(spec.get("fixed", ()))
+        free = [c for c, _ in counts[1:] if c not in fixed]
+        if (len(counts) < 2 or counts[0][1] == counts[1][1] or counts[0][0] in fixed
+                or len(counts) != spec.get("input_colours", len(counts))
+                or ("foreground" in spec and len(free) != 1)):
             with pytest.raises(ValueError):
                 align_pair(tid, raw)
             continue
         aligned, palette = align_pair(tid, raw)
         assert sorted(palette) == list(range(10))
+        assert palette[counts[0][0]] == 0 and all(palette[c] == c for c in fixed)
+        if "foreground" in spec:
+            assert palette[free[0]] == spec["foreground"]
         for key in ("input", "output"):
             restored = [[palette.index(c) for c in row] for row in aligned[key]]
             assert restored == raw[key]

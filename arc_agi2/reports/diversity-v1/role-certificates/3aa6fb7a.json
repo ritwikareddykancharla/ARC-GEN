@@ -1,0 +1,36 @@
+{
+  "task_id": "3aa6fb7a",
+  "passed": true,
+  "role_spec": {
+    "fixed": [
+      1
+    ],
+    "foreground": 8,
+    "input_colours": 2
+  },
+  "requested_proposals": 1152,
+  "fixture_pairs_identity_mapped": 3,
+  "fixture_variants_checked": 16,
+  "accepted_pairs": 1150,
+  "probe_rejections": {
+    "ValueError": 2
+  },
+  "probe_verified_episodes": 287,
+  "bounded_stop": false,
+  "input_shape_count": 605,
+  "alignment_rejection_reasons": {
+    "Colour-role alignment requires a unique modal background": 2
+  },
+  "augmented_episode_checks": 2048,
+  "augmented_pair_checks": 8192,
+  "admission_gate_passed": true,
+  "program_sha256": "ae70d251eff1a41046c66e1f01fe5ebbf0e4bf6d33885f70ac94d1e4d6fef8da",
+  "dependency_sha256": {
+    "diversity/colour_roles.py": "185846d5f73c5c49e4b62673d8e32f69f95cad68853084d812e4bf5f130d537a",
+    "diversity/rearc/generators.py": "7eb7b6620afe08760fb52761c7dd46796e9e44958714efc950b11e923a8281ae",
+    "diversity/rearc/verifiers.py": "1a79a559f670943968c9dbee66a0b02d71d71296adb922330fe72935f7ef7ddd",
+    "direct_factories/task_3aa6fb7a.py": "083ca8e1222c656c544072d5f1ef0f0ffa4f9cd4e4014ac0e6034c5d915185d0"
+  },
+  "seconds": 8.191,
+  "limitations": "Finite sampled checks of a bijective pre-palette colour mapping; not proof of unrestricted semantic equivalence."
+}

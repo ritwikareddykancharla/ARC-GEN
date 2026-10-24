@@ -1,0 +1,32 @@
+{
+  "task_id": "4258a5f9",
+  "passed": true,
+  "role_spec": {
+    "fixed": [
+      1
+    ],
+    "foreground": 5,
+    "input_colours": 2
+  },
+  "requested_proposals": 1152,
+  "fixture_pairs_identity_mapped": 3,
+  "fixture_variants_checked": 16,
+  "accepted_pairs": 1152,
+  "probe_rejections": {},
+  "probe_verified_episodes": 288,
+  "bounded_stop": false,
+  "input_shape_count": 631,
+  "alignment_rejection_reasons": {},
+  "augmented_episode_checks": 2048,
+  "augmented_pair_checks": 8192,
+  "admission_gate_passed": true,
+  "program_sha256": "e0cdd2ec4cda29e94df0dad6aa18b6705d867f2d1e64127944d82fa3e0a4c155",
+  "dependency_sha256": {
+    "diversity/colour_roles.py": "185846d5f73c5c49e4b62673d8e32f69f95cad68853084d812e4bf5f130d537a",
+    "diversity/rearc/generators.py": "7eb7b6620afe08760fb52761c7dd46796e9e44958714efc950b11e923a8281ae",
+    "diversity/rearc/verifiers.py": "1a79a559f670943968c9dbee66a0b02d71d71296adb922330fe72935f7ef7ddd",
+    "direct_factories/task_4258a5f9.py": "da06129d6aeb4ac43684f7e20a631009cd901961dce7dcd57e6aec1a3547ec02"
+  },
+  "seconds": 10.061,
+  "limitations": "Finite sampled checks of a bijective pre-palette colour mapping; not proof of unrestricted semantic equivalence."
+}
